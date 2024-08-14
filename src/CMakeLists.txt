@@ -1,0 +1,134 @@
+include(cmake/Library.cmake)
+include(cmake/BLAS.cmake)
+find_package(guanaqo REQUIRED)
+if (KOQKATOO_WITH_OPENMP)
+    find_package(OpenMP REQUIRED COMPONENTS CXX)
+endif()
+
+# Configuration options
+# ------------------------------------------------------------------------------
+add_library(config INTERFACE)
+configure_file("koqkatoo/include/koqkatoo/config.hpp.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/include/koqkatoo/config.hpp" @ONLY)
+target_sources(config INTERFACE FILE_SET headers TYPE HEADERS
+    BASE_DIRS "${CMAKE_CURRENT_BINARY_DIR}/include"
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/include/koqkatoo/config.hpp"
+)
+target_compile_definitions(config INTERFACE
+    $<$<BOOL:${KOQKATOO_WITH_MKL}>:KOQKATOO_WITH_MKL>
+    $<$<BOOL:${KOQKATOO_WITH_OPENMP}>:KOQKATOO_WITH_OPENMP>
+    $<$<BOOL:${KOQKATOO_WITH_LIBFORK}>:KOQKATOO_WITH_LIBFORK>
+)
+koqkatoo_configure_interface_library(config EXPORT_PREFIX koqkatoo)
+
+# Main library
+# ------------------------------------------------------------------------------
+add_library(koqkatoo
+    "koqkatoo/src/koqkatoo.cpp"
+)
+target_sources(koqkatoo PUBLIC FILE_SET headers TYPE HEADERS
+    BASE_DIRS "koqkatoo/include"
+    FILES "koqkatoo/include/koqkatoo/koqkatoo.hpp"
+          "koqkatoo/include/koqkatoo/matrix-view.hpp"
+          "koqkatoo/include/koqkatoo/openmp.h"
+          "koqkatoo/include/koqkatoo/stringify.h"
+          "koqkatoo/include/koqkatoo/unroll.h"
+          "koqkatoo/include/koqkatoo/assume.hpp"
+)
+target_link_libraries(koqkatoo PUBLIC koqkatoo::config guanaqo::guanaqo)
+koqkatoo_configure_library(koqkatoo)
+if (KOQKATOO_WITH_OPENMP)
+    target_link_libraries(koqkatoo PUBLIC OpenMP::OpenMP_CXX)
+endif()
+
+# Linear algebra routines and BLAS interface
+# ------------------------------------------------------------------------------
+add_library(linalg "linalg/src/blas-interface.cpp")
+target_sources(linalg PUBLIC FILE_SET headers TYPE HEADERS
+    BASE_DIRS "linalg/include"
+    FILES "linalg/include/koqkatoo/linalg/lapack.hpp"
+          "linalg/include/koqkatoo/linalg/blas-interface.hpp"
+          "linalg/include/koqkatoo/linalg/blas.hpp"
+)
+target_link_libraries(linalg PUBLIC koqkatoo::koqkatoo koqkatoo::blas-lapack-lib)
+target_compile_features(linalg PRIVATE cxx_std_20)
+koqkatoo_configure_library(linalg EXPORT_PREFIX koqkatoo)
+
+# Linear algebra routines for compact batches of matrices
+# ------------------------------------------------------------------------------
+add_library(linalg-compact "linalg-compact/src/compact.cpp")
+target_sources(linalg-compact PUBLIC FILE_SET headers TYPE HEADERS
+    BASE_DIRS "linalg-compact/include"
+    FILES "linalg-compact/include/koqkatoo/linalg-compact/compact.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/aligned-storage.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/preferred-backend.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/mkl.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/matrix-batch.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/util.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/xtrsm.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro_kernels/xtrsm.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro_kernels/xgemm-diag.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro_kernels/xgemmt.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro_kernels/xgemm.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro_kernels/xpotrf.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro_kernels/xgemmt-diag.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/xsyrk.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/xgemm.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/xpotrf.tpp"
+)
+target_link_libraries(linalg-compact PUBLIC koqkatoo::linalg)
+target_compile_features(linalg-compact PRIVATE cxx_std_20)
+koqkatoo_configure_library(linalg-compact EXPORT_PREFIX koqkatoo)
+
+# Optimal control problem backend
+# ------------------------------------------------------------------------------
+add_library(ocp
+    "ocp/src/conversion.cpp"
+    "ocp/src/solve.cpp"
+)
+target_sources(ocp PUBLIC FILE_SET headers TYPE HEADERS
+    BASE_DIRS "ocp/include"
+    FILES "ocp/include/koqkatoo/ocp/ocp.hpp"
+          "ocp/include/koqkatoo/ocp/solver/solve.hpp"
+          "ocp/include/koqkatoo/ocp/solver/storage.hpp"
+          "ocp/include/koqkatoo/ocp/conversion.hpp"
+          "ocp/include/koqkatoo/ocp/random-ocp.hpp"
+          "ocp/include/koqkatoo/ocp/solver/storage.tpp"
+          "ocp/include/koqkatoo/ocp/solver/mat-vec.tpp"
+          "ocp/include/koqkatoo/ocp/solver/solve.tpp"
+)
+target_link_libraries(ocp PUBLIC koqkatoo::linalg-compact)
+target_compile_features(ocp PRIVATE cxx_std_23)
+koqkatoo_configure_library(ocp EXPORT_PREFIX koqkatoo)
+
+# ==============================================================================
+
+# Save the project version to a generated file
+configure_file("cmake/koqkatoo-version.h.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/include/koqkatoo-version.h" @ONLY)
+target_sources(koqkatoo PUBLIC FILE_SET headers TYPE HEADERS
+    BASE_DIRS "${CMAKE_CURRENT_BINARY_DIR}/include"
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/include/koqkatoo-version.h"
+)
+
+# Build time
+if (KOQKATOO_WITH_ACCURATE_BUILD_TIME)
+    set(KOQKATOO_BUILD_TIME_CPP "${CMAKE_CURRENT_BINARY_DIR}/koqkatoo-build-time.cpp")
+    add_custom_target(koqkatoo-build-time-generate
+        BYPRODUCTS ${KOQKATOO_BUILD_TIME_CPP}
+        COMMAND ${CMAKE_COMMAND}
+            -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/BuildTime.cmake"
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+    target_sources(koqkatoo PRIVATE ${KOQKATOO_BUILD_TIME_CPP})
+    add_dependencies(koqkatoo koqkatoo-build-time-generate)
+else()
+    set(KOQKATOO_BUILD_TIME_CPP "${CMAKE_CURRENT_BINARY_DIR}/koqkatoo-build-time.cpp")
+    if (NOT EXISTS ${KOQKATOO_BUILD_TIME_CPP})
+        include(cmake/BuildTime.cmake)
+    endif()
+    target_sources(koqkatoo PRIVATE ${KOQKATOO_BUILD_TIME_CPP})
+endif()
+
+# Installation
+include(cmake/Install.cmake)

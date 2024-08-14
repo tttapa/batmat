@@ -1,0 +1,215 @@
+#pragma once
+
+#include <koqkatoo/config.hpp>
+#include <koqkatoo/linalg-compact/aligned-storage.hpp>
+#include <koqkatoo/linalg-compact/matrix-batch.hpp>
+#include <koqkatoo/ocp/ocp.hpp>
+
+#include <experimental/simd>
+
+namespace koqkatoo::ocp {
+
+using linalg::compact::aligned_simd_storage;
+using linalg::compact::BatchedMatrix;
+using linalg::compact::BatchedMatrixLayout;
+using linalg::compact::BatchedMatrixView;
+
+namespace stdx = std::experimental;
+
+template <class Abi>
+concept simd_abi_tag = stdx::is_abi_tag_v<Abi>;
+
+/// ed in other classes.
+template <simd_abi_tag Abi>
+struct SolverTypes {
+    using simd          = stdx::simd<real_t, Abi>;
+    using mask          = typename simd::mask_type;
+    using simd_stride_t = stdx::simd_size<real_t, Abi>;
+    using simd_align_t  = stdx::memory_alignment<simd>;
+    using mask_align_t  = stdx::memory_alignment<mask>;
+    static_assert(simd_align_t() <= simd_stride_t() * sizeof(real_t));
+    using scalar_abi           = stdx::simd_abi::scalar;
+    using scalar_simd          = stdx::simd<real_t, scalar_abi>;
+    using scalar_simd_stride_t = stdx::simd_size<real_t, scalar_abi>;
+    using scalar_simd_align_t  = stdx::memory_alignment<scalar_simd>;
+
+    /// View of an arbitrary number of batches of matrices.
+    template <class T>
+    using view_type = BatchedMatrixView<T, index_t, simd_stride_t>;
+    /// View of an arbitrary number of batches of matrices.
+    using real_view = view_type<const real_t>;
+    /// View of an arbitrary number of batches of matrices.
+    using bool_view = view_type<const bool>;
+    /// Mutable view of an arbitrary number of batches of matrices.
+    using mut_real_view = view_type<real_t>;
+    /// Mutable view of a single batch of matrices.
+    using single_mut_real_view =
+        BatchedMatrixView<real_t, index_t, simd_stride_t, simd_stride_t>;
+
+    /// Type that owns an arbitrary number of batches of matrices.
+    using real_matrix =
+        BatchedMatrix<real_t, index_t, simd_stride_t, index_t, simd_align_t>;
+    /// Type that owns an arbitrary number of batches of boolean matrices.
+    using mask_matrix =
+        BatchedMatrix<bool, index_t, simd_stride_t, index_t, mask_align_t>;
+
+    /// View of a scalar, non-interleaved batch of matrices.
+    using scalar_mut_real_view =
+        BatchedMatrixView<real_t, index_t, scalar_simd_stride_t>;
+    /// Layout of a scalar, non-interleaved batch of matrices.
+    using scalar_layout = BatchedMatrixLayout<index_t, scalar_simd_stride_t>;
+};
+
+/// Workspaces and other storage of matrices/vectors used by the OCP solver.
+template <simd_abi_tag Abi>
+struct SolverStorage {
+    using types = SolverTypes<Abi>;
+
+    template <class T>
+    using view_type            = typename types::template view_type<T>;
+    using real_view            = typename types::real_view;
+    using bool_view            = typename types::bool_view;
+    using mut_real_view        = typename types::mut_real_view;
+    using single_mut_real_view = typename types::single_mut_real_view;
+    using scalar_mut_real_view = typename types::scalar_mut_real_view;
+    using scalar_layout        = typename types::scalar_layout;
+    using real_matrix          = typename types::real_matrix;
+    using mask_matrix          = typename types::mask_matrix;
+    static constexpr index_t simd_stride = typename types::simd_stride_t();
+
+    const OCPDim dim;
+
+    real_matrix H = [this] {
+        return real_matrix{{.depth = dim.N_horiz + 1, //
+                            .rows  = dim.nx + dim.nu,
+                            .cols  = dim.nx + dim.nu}};
+    }();
+    real_matrix LH = [this] {
+        return real_matrix{{.depth = dim.N_horiz + 1, //
+                            .rows  = dim.nx + dim.nu,
+                            .cols  = dim.nx + dim.nu}};
+    }();
+    real_matrix CD = [this] {
+        return real_matrix{{.depth = dim.N_horiz + 1,
+                            .rows  = dim.ny, // assuming ny >= ny_N
+                            .cols  = dim.nx + dim.nu}};
+    }();
+    real_matrix LΨd = [this] {
+        return real_matrix{{.depth = dim.N_horiz + 1, //
+                            .rows  = dim.nx,
+                            .cols  = dim.nx}};
+    }();
+    scalar_layout scalar_layout_LΨd = [this] {
+        return scalar_layout{{.depth = dim.N_horiz + 1, //
+                              .rows  = dim.nx,
+                              .cols  = dim.nx}};
+    }();
+    real_matrix LΨs = [this] {
+        return real_matrix{{.depth = dim.N_horiz, //
+                            .rows  = dim.nx,
+                            .cols  = dim.nx}};
+    }();
+    scalar_layout scalar_layout_LΨs = [this] {
+        return scalar_layout{{.depth = dim.N_horiz, //
+                              .rows  = dim.nx,
+                              .cols  = dim.nx}};
+    }();
+    real_matrix VV = [this] {
+        return real_matrix{{.depth = dim.N_horiz + 1, //
+                            .rows  = dim.nx,
+                            .cols  = dim.nx}};
+    }();
+    real_matrix AB = [this] {
+        return real_matrix{{.depth = dim.N_horiz, //
+                            .rows  = dim.nx,
+                            .cols  = dim.nx + dim.nu}};
+    }();
+    real_matrix λ1 = [this] {
+        return real_matrix{{.depth = dim.N_horiz, //
+                            .rows  = dim.nx,
+                            .cols  = 1}};
+    }();
+    real_matrix mFx = [this] {
+        return real_matrix{{.depth = dim.N_horiz, //
+                            .rows  = dim.nx,
+                            .cols  = 1}};
+    }();
+    real_matrix work_W{{.depth = 0}};
+    real_matrix work_V{{.depth = 0}};
+
+    std::vector<real_t> work_chol_Ψ =
+        std::vector<real_t>(2 * simd_stride * dim.nx * dim.nx);
+    std::vector<real_t> Δλ_scalar =
+        std::vector<real_t>((dim.N_horiz + 1) * dim.nx);
+
+    auto work_LΨd(index_t i) -> scalar_mut_real_view {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        assert(i < simd_stride);
+        auto offset = i * 2 * nx * nx;
+        return {{.data = &work_chol_Ψ[offset], .rows = nx, .cols = nx}};
+    }
+
+    auto work_LΨs(index_t i) -> scalar_mut_real_view {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        assert(i < simd_stride);
+        auto offset = (i * 2 + 1) * nx * nx;
+        return {{.data = &work_chol_Ψ[offset], .rows = nx, .cols = nx}};
+    }
+
+    [[nodiscard]] scalar_mut_real_view LΨd_scalar() {
+        return {LΨd.data(), scalar_layout_LΨd};
+    }
+
+    [[nodiscard]] scalar_mut_real_view LΨs_scalar() {
+        return {LΨs.data(), scalar_layout_LΨs};
+    }
+
+    void allocate_work_prepare_Ψ(int num_threads) {
+        auto n = static_cast<index_t>(work_W.batch_size()) *
+                 static_cast<index_t>(num_threads);
+        auto [N, nx, nu, ny, ny_N] = dim;
+        if (work_W.depth() < n)
+            work_W.resize({{.depth = n, .rows = nx + nu, .cols = nx}});
+        if (work_V.depth() < n)
+            work_V.resize({{.depth = n, .rows = nx, .cols = nx + nu}});
+    }
+
+    auto get_work_prepare_ψ(int thread_id)
+        -> std::tuple<single_mut_real_view, single_mut_real_view> {
+        auto tid = static_cast<index_t>(thread_id);
+        return {work_W.batch(tid), work_V.batch(tid)};
+    }
+
+    void copy_active_set(std::span<const bool> in, view_type<bool> out) const;
+    void restore_active_set(view_type<const bool> in,
+                            std::span<bool> out) const;
+    void copy_constraints(std::span<const real_t> in,
+                          view_type<real_t> out) const;
+    void restore_constraints(view_type<const real_t> in,
+                             std::span<real_t> out) const;
+    void copy_dynamics_constraints(std::span<const real_t> in,
+                                   view_type<real_t> out) const;
+    void restore_dynamics_constraints(view_type<const real_t> in,
+                                      std::span<real_t> out) const;
+    void copy_variables(std::span<const real_t> in,
+                        view_type<real_t> out) const;
+    void restore_variables(view_type<const real_t> in,
+                           std::span<real_t> out) const;
+
+    [[nodiscard]] real_matrix
+    initialize_constraints(std::span<const real_t> in) const;
+    [[nodiscard]] real_matrix
+    initialize_dynamics_constraints(std::span<const real_t> in) const;
+    [[nodiscard]] mask_matrix
+    initialize_active_set(std::span<const bool> in) const;
+    [[nodiscard]] real_matrix
+    initialize_variables(std::span<const real_t> in) const;
+
+    [[nodiscard]] real_matrix initialize_constraints(real_t x = 0) const;
+    [[nodiscard]] real_matrix
+    initialize_dynamics_constraints(real_t x = 0) const;
+    [[nodiscard]] mask_matrix initialize_active_set(bool x = false) const;
+    [[nodiscard]] real_matrix initialize_variables(real_t x = 0) const;
+};
+
+} // namespace koqkatoo::ocp

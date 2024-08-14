@@ -1,0 +1,100 @@
+import os
+
+from conan import ConanFile
+from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
+from conan.tools.build import can_run
+
+
+class KoqkatooRecipe(ConanFile):
+    name = "koqkatoo"
+    version = "1.0.0"
+
+    # Optional metadata
+    license = "LGPLv3"
+    author = "Pieter P <pieter.p.dev@outlook.com>"
+    url = "https://github.com/tttapa/koqkatoo"
+    description = "Linear solvers and adapters for solving KKT systems."
+    topics = "scientific software"
+
+    # Binary configuration
+    package_type = "library"
+    settings = "os", "compiler", "build_type", "arch"
+    bool_koqkatoo_options = {
+        "with_openblas": True,
+        "with_mkl": False,
+        "with_openmp": False,
+        "with_benchmarks": False,
+        "with_python": False,
+        "with_libfork": True,
+    }
+    options = {
+        "shared": [True, False],
+        "fPIC": [True, False],
+    } | {k: [True, False] for k in bool_koqkatoo_options}
+    default_options = {
+        "shared": False,
+        "fPIC": True,
+    } | bool_koqkatoo_options
+
+    # Sources are located in the same place as this recipe, copy them to the recipe
+    exports_sources = (
+        "CMakeLists.txt",
+        "src/*",
+        "cmake/*",
+        "interfaces/*",
+        "test/*",
+        "benchmarks/*",
+        "LICENSE",
+        "README.md",
+    )
+
+    generators = ("CMakeDeps",)
+
+    def requirements(self):
+        self.requires("guanaqo/1.0.0-alpha.1")
+        if self.options.with_openblas:
+            self.requires("openblas/0.3.27")
+        if self.options.with_benchmarks:
+            self.requires("benchmark/1.8.4")
+        if self.options.with_python:
+            self.requires("eigen/3.4.0")
+        else:
+            self.test_requires("eigen/3.4.0")
+        self.test_requires("gtest/1.14.0")
+        if self.options.with_python:
+            self.requires("pybind11/2.12.0")
+        if self.options.with_libfork:
+            self.requires("libfork/3.8.0")
+
+    def config_options(self):
+        if self.settings.get_safe("os") == "Windows":
+            self.options.rm_safe("fPIC")
+
+    def layout(self):
+        cmake_layout(self)
+
+    def generate(self):
+        tc = CMakeToolchain(self)
+        for k in self.bool_koqkatoo_options:
+            value = getattr(self.options, k, None)
+            if value is not None and value.value is not None:
+                tc.variables["KOQKATOO_" + k.upper()] = bool(value)
+        if self.options.with_python:
+            tc.variables["USE_GLOBAL_PYBIND11"] = True
+        if can_run(self):
+            tc.variables["KOQKATOO_FORCE_TEST_DISCOVERY"] = True
+        tc.generate()
+
+    def build(self):
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
+        cmake.test()
+
+    def package(self):
+        cmake = CMake(self)
+        cmake.install()
+
+    def package_info(self):
+        self.cpp_info.set_property("cmake_find_mode", "none")
+        self.cpp_info.builddirs.append(os.path.join("lib", "cmake", "koqkatoo"))

@@ -1,0 +1,22 @@
+#pragma once
+
+// NOLINTBEGIN(*-macro-to-enum)
+#define KOQKATOO_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
+#define KOQKATOO_VERSION_MINOR @PROJECT_VERSION_MINOR@
+#define KOQKATOO_VERSION_PATCH @PROJECT_VERSION_PATCH@
+#define KOQKATOO_VERSION_SUFFIX "@PY_VERSION_SUFFIX@"
+#define KOQKATOO_VERSION "@PROJECT_VERSION@"
+#define KOQKATOO_VERSION_FULL "@PROJECT_VERSION@@PY_VERSION_SUFFIX@"
+#define KOQKATOO_BUILD_TIME koqkatoo_build_time
+#define KOQKATOO_COMMIT_HASH koqkatoo_commit_hash
+// NOLINTEND(*-macro-to-enum)
+
+#include <koqkatoo/export.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+extern KOQKATOO_EXPORT const char *const koqkatoo_build_time;
+extern KOQKATOO_EXPORT const char *const koqkatoo_commit_hash;
+#ifdef __cplusplus
+}
+#endif

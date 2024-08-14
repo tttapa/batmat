@@ -1,0 +1,30 @@
+#pragma once
+
+#include <cstdint>
+#include <stdfloat>
+
+namespace koqkatoo {
+
+#ifdef __clangd__
+using real_t = double; // clangd does not support std::float128_t etc.
+#else
+using real_t  = @KOQKATOO_DENSE_REAL_TYPE@;
+#endif
+using index_t = @KOQKATOO_DENSE_INDEX_TYPE@;
+
+} // namespace koqkatoo
+
+#ifndef KOQKATOO_WITH_MKL
+#cmakedefine01 KOQKATOO_WITH_MKL
+#endif
+#ifndef KOQKATOO_WITH_OPENMP
+#cmakedefine01 KOQKATOO_WITH_OPENMP
+#endif
+#ifndef KOQKATOO_WITH_LIBFORK
+#cmakedefine01 KOQKATOO_WITH_LIBFORK
+#endif
+
+#ifdef __clangd__
+#undef KOQKATOO_WITH_OPENMP // clangd sometimes crashes on OpenMP constructs
+#define KOQKATOO_WITH_OPENMP 0
+#endif

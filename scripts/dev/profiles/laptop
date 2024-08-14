@@ -1,0 +1,8 @@
+include({{ os.path.join(profile_dir, "gcc14") }})
+
+[conf]
+tools.build:cflags=["-march=skylake"]
+tools.build:cxxflags=["-march=skylake"]
+tools.build:cflags+=["-g3"]
+tools.build:cxxflags+=["-g3"]
+tools.build.cross_building:can_run=true

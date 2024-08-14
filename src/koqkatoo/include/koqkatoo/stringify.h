@@ -1,0 +1,4 @@
+#pragma once
+
+#define KOQKATOO_STRINGIFY(s) KOQKATOO_STRINGIFY_IMPL(s)
+#define KOQKATOO_STRINGIFY_IMPL(s) #s
