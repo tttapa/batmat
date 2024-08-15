@@ -101,12 +101,12 @@ if (KOQKATOO_WITH_TESTS)
     add_subdirectory(test)
 endif()
 
-if (false) # TODO
-    # Benchmarks
-    if (KOQKATOO_WITH_BENCHMARKS)
-        add_subdirectory(benchmarks)
-    endif()
+# Benchmarks
+if (KOQKATOO_WITH_BENCHMARKS)
+    add_subdirectory(benchmarks)
+endif()
 
+if (false) # TODO
     # Interfaces to other languages
     add_subdirectory(interfaces)
 endif()
