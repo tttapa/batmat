@@ -7,7 +7,8 @@
 #include <cmath>
 #include <concepts>
 
-#include "micro_kernels/xpotrf.tpp"
+#include <koqkatoo/linalg-compact/compact-new/micro-kernels/xpotrf.hpp>
+#include "util.hpp"
 
 namespace koqkatoo::linalg::compact {
 
@@ -18,7 +19,6 @@ template <class Abi>
 void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H) {
     using std::sqrt;
     const index_t n = H.rows();
-    [[assume(n >= 0)]];
     // Base case
     if (n == 0)
         return;
@@ -26,7 +26,7 @@ void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H) {
         return sqrt(simd{&H(0, 0, 0), stdx::vector_aligned})
             .copy_to(&H(0, 0, 0), stdx::vector_aligned);
     else if (n <= micro_kernels::potrf::RowsReg)
-        return micro_kernels::potrf::xpotrf_register<simd>(H);
+        return micro_kernels::potrf::microkernel_lut<Abi>[n - 1](H);
     // Recursively factor as 2×2 block matrix
     index_t n1 = (n + 1) / 2, n2 = n - n1;
     auto H11 = H.top_left(n1, n1), H21 = H.bottom_left(n2, n1),

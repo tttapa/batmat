@@ -3,7 +3,7 @@
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
 
-#include "micro_kernels/xgemm.tpp"
+#include <koqkatoo/linalg-compact/compact-new/micro-kernels/xgemm.hpp>
 #include "util.hpp"
 
 #include <concepts>
@@ -30,9 +30,9 @@ void CompactBLAS<Abi>::xgemm_ref(single_batch_view A, single_batch_view B,
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.cols() - l);
         for (index_t i = 0; i < A.rows(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
-            micro_kernels::gemm::xgemm_register<simd, {}>(A.block(i, l, ni, nl),
-                                                          B.middle_rows(l, nl),
-                                                          C.middle_rows(i, ni));
+            micro_kernels::gemm::xgemm_register<Abi, {}>(A.block(i, l, ni, nl),
+                                                         B.middle_rows(l, nl),
+                                                         C.middle_rows(i, ni));
         }
     }
 }
@@ -50,7 +50,7 @@ void CompactBLAS<Abi>::xgemm_neg_ref(single_batch_view A, single_batch_view B,
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.cols() - l);
         for (index_t i = 0; i < A.rows(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
-            micro_kernels::gemm::xgemm_register<simd, {.negate = true}>(
+            micro_kernels::gemm::xgemm_register<Abi, {.negate = true}>(
                 A.block(i, l, ni, nl), B.middle_rows(l, nl),
                 C.middle_rows(i, ni));
         }
@@ -60,10 +60,15 @@ void CompactBLAS<Abi>::xgemm_neg_ref(single_batch_view A, single_batch_view B,
 template <class Abi>
 void CompactBLAS<Abi>::xgemm_add_ref(single_batch_view A, single_batch_view B,
                                      mut_single_batch_view C) {
+    static constexpr micro_kernels::gemm::KernelConfig conf{.negate = false};
     assert(A.rows() == C.rows());
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
-    static constexpr micro_kernels::gemm::KernelConfig conf{.negate = false};
+    const index_t I = C.rows(), J = C.cols(), K = A.cols();
+    if (I == 0 || J == 0 || K == 0)
+        return;
+    if (I <= GemmBlockSizeRows && J <= GemmBlockSizeCols)
+        return micro_kernels::gemm::xgemm_register<Abi, conf>(A, B, C);
     using mat   = BatchedMatrix<real_t, index_t, simd_stride_t, simd_stride_t>;
     bool packed = B.outer_stride() * B.batch_size() * sizeof(real_t) > 4096;
     mat B_packed{{
@@ -77,7 +82,7 @@ void CompactBLAS<Abi>::xgemm_add_ref(single_batch_view A, single_batch_view B,
         auto Bl = packed ? B_packed.view.top_rows(nl) : B.middle_rows(l, nl);
         for (index_t i = 0; i < A.rows(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
-            micro_kernels::gemm::xgemm_register<simd, conf>(
+            micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(i, l, ni, nl), Bl, C.middle_rows(i, ni));
         }
     }
@@ -94,7 +99,7 @@ void CompactBLAS<Abi>::xgemm_sub_ref(single_batch_view A, single_batch_view B,
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.cols() - l);
         for (index_t i = 0; i < A.rows(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
-            micro_kernels::gemm::xgemm_register<simd, conf>(
+            micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(i, l, ni, nl), B.middle_rows(l, nl),
                 C.middle_rows(i, ni));
         }
@@ -114,7 +119,7 @@ void CompactBLAS<Abi>::xgemm_TN_sub_ref(single_batch_view A,
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.rows() - l);
         for (index_t i = 0; i < A.cols(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.cols() - i);
-            micro_kernels::gemm::xgemm_register<simd, conf>(
+            micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(l, i, nl, ni), B.middle_rows(l, nl),
                 C.middle_rows(i, ni));
         }
@@ -136,7 +141,7 @@ void CompactBLAS<Abi>::xgemm_TN_ref(single_batch_view A, single_batch_view B,
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.rows() - l);
         for (index_t i = 0; i < A.cols(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.cols() - i);
-            micro_kernels::gemm::xgemm_register<simd, conf>(
+            micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(l, i, nl, ni), B.middle_rows(l, nl),
                 C.middle_rows(i, ni));
         }

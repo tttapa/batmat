@@ -3,8 +3,7 @@
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
 
-#include "micro_kernels/xgemmt-diag.tpp"
-#include "micro_kernels/xgemmt.tpp"
+#include <koqkatoo/linalg-compact/compact-new/micro-kernels/xgemm.hpp>
 #include "util.hpp"
 
 namespace koqkatoo::linalg::compact {
@@ -18,12 +17,12 @@ void CompactBLAS<Abi>::xsyrk_schur(single_batch_view A, single_batch_view d,
     assert(C.rows() == C.cols());
     assert(C.rows() == A.rows());
     assert(d.rows() == A.cols());
-    constexpr micro_kernels::gemmt_diag::KernelConfig conf{.trans_B = true};
+    constexpr micro_kernels::gemm::KernelConfig conf{.trans_B = true};
     for (index_t j = 0; j < C.cols(); ++j)
         for (index_t i = j; i < C.rows(); ++i)
             simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned);
     // TODO: cache blocking
-    micro_kernels::gemmt_diag::xgemmt_diag_register<simd, conf>(A, d, A, C);
+    micro_kernels::gemm::xgemmt_diag_register<Abi, conf>(A, A, C, d);
 }
 
 template <class Abi>
@@ -36,9 +35,9 @@ void CompactBLAS<Abi>::xsyrk_T_schur_copy(single_batch_view C,
         for (index_t i = j; i < H_out.rows(); ++i)
             aligned_store(&H_out(0, i, j), aligned_load(&H_in(0, i, j)));
     // TODO: cache blocking
-    constexpr micro_kernels::gemmt_diag::KernelConfig conf{.trans_A = true};
-    micro_kernels::gemmt_diag::xgemmt_diag_register_mask<simd, conf>(C, Σ, mask,
-                                                                     C, H_out);
+    constexpr micro_kernels::gemm::KernelConfig conf{.trans_A = true};
+    micro_kernels::gemm::xgemmt_diag_mask_register<Abi, conf>(C, C, H_out, Σ,
+                                                              mask);
 }
 
 template <class Abi>
@@ -48,7 +47,7 @@ void CompactBLAS<Abi>::xsyrk_T_ref(single_batch_view A,
         for (index_t i = j; i < C.rows(); ++i)
             aligned_store(&C(0, i, j), simd{0});
     // TODO: cache blocking
-    micro_kernels::gemmt::xgemmt_register<simd, {.trans_A = true}>(A, A, C);
+    micro_kernels::gemm::xgemmt_register<Abi, {.trans_A = true}>(A, A, C);
 }
 
 template <class Abi>
@@ -59,7 +58,7 @@ void CompactBLAS<Abi>::xsyrk_ref(single_batch_view A, mut_single_batch_view C) {
         for (index_t i = j; i < C.rows(); ++i)
             aligned_store(&C(0, i, j), simd{0});
     // TODO: cache blocking
-    micro_kernels::gemmt::xgemmt_register<simd, {.trans_B = true}>(A, A, C);
+    micro_kernels::gemm::xgemmt_register<Abi, {.trans_B = true}>(A, A, C);
 }
 
 template <class Abi>
@@ -68,9 +67,9 @@ void CompactBLAS<Abi>::xsyrk_sub_ref(single_batch_view A,
     assert(C.rows() == C.cols());
     assert(C.rows() == A.rows());
     // TODO: cache blocking
-    constexpr micro_kernels::gemmt::KernelConfig conf{.negate  = true,
-                                                      .trans_B = true};
-    micro_kernels::gemmt::xgemmt_register<simd, conf>(A, A, C);
+    constexpr micro_kernels::gemm::KernelConfig conf{.negate  = true,
+                                                     .trans_B = true};
+    micro_kernels::gemm::xgemmt_register<Abi, conf>(A, A, C);
 }
 
 // Parallel batched implementations

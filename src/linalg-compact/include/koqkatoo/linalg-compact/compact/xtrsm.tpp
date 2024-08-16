@@ -3,8 +3,8 @@
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
 
-#include "koqkatoo/unroll.h"
-#include "micro_kernels/xtrsm.tpp"
+#include <koqkatoo/linalg-compact/compact-new/micro-kernels/xtrsm.hpp>
+#include "util.hpp"
 
 namespace koqkatoo::linalg::compact {
 
@@ -16,7 +16,7 @@ void CompactBLAS<Abi>::xtrsm_RLTN_ref(single_batch_view L,
                                       mut_single_batch_view H) {
     assert(L.rows() == L.cols());
     assert(H.cols() == L.rows());
-    micro_kernels::trsm::trsm_register<simd, {.trans = true}>(L, H);
+    micro_kernels::trsm::xtrsm_register<Abi, {.trans = true}>(L, H);
 }
 
 template <class Abi>
@@ -24,7 +24,7 @@ void CompactBLAS<Abi>::xtrsm_LLNN_ref(single_batch_view L,
                                       mut_single_batch_view H) {
     assert(L.rows() == L.cols());
     assert(L.rows() == H.rows());
-    micro_kernels::trsm::trsm_register<simd, {.trans = false}>(L, H);
+    micro_kernels::trsm::xtrsm_register<Abi, {.trans = false}>(L, H);
 }
 
 template <class Abi>
