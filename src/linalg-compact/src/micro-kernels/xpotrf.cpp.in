@@ -1,0 +1,11 @@
+#pragma clang fp contract(fast)
+
+#include <koqkatoo/linalg-compact/compact-new/micro-kernels/xpotrf.tpp>
+
+namespace koqkatoo::linalg::compact::micro_kernels::potrf {
+
+using Abi = stdx::simd_abi::@simd_abi@;
+
+template const constinit decltype(microkernel_lut<Abi>) microkernel_lut<Abi>;
+
+}

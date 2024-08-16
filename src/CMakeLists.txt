@@ -56,8 +56,8 @@ koqkatoo_configure_library(linalg EXPORT_PREFIX koqkatoo)
 
 # Linear algebra routines for compact batches of matrices
 # ------------------------------------------------------------------------------
-add_library(linalg-compact "linalg-compact/src/compact.cpp")
-target_sources(linalg-compact PUBLIC FILE_SET headers TYPE HEADERS
+add_library(_linalg-compact INTERFACE)
+target_sources(_linalg-compact INTERFACE FILE_SET headers TYPE HEADERS
     BASE_DIRS "linalg-compact/include"
     FILES "linalg-compact/include/koqkatoo/linalg-compact/compact.hpp"
           "linalg-compact/include/koqkatoo/linalg-compact/aligned-storage.hpp"
@@ -77,8 +77,15 @@ target_sources(linalg-compact PUBLIC FILE_SET headers TYPE HEADERS
           "linalg-compact/include/koqkatoo/linalg-compact/compact/xgemm.tpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/xpotrf.tpp"
 )
-target_link_libraries(linalg-compact PUBLIC koqkatoo::linalg)
-target_compile_features(linalg-compact PRIVATE cxx_std_20)
+target_link_libraries(_linalg-compact INTERFACE koqkatoo::linalg)
+target_compile_features(_linalg-compact INTERFACE cxx_std_20)
+
+include("linalg-compact/src/micro-kernels/Codegen.cmake")
+codegen_compact_microkernels(_linalg-compact)
+
+add_library(linalg-compact "linalg-compact/src/compact.cpp")
+target_link_libraries(linalg-compact PRIVATE _linalg-compact-microkernels)
+target_link_libraries(linalg-compact PUBLIC _linalg-compact)
 koqkatoo_configure_library(linalg-compact EXPORT_PREFIX koqkatoo)
 
 # Optimal control problem backend

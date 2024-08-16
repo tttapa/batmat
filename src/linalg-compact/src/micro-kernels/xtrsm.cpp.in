@@ -1,0 +1,14 @@
+#pragma clang fp contract(fast)
+
+#include <koqkatoo/linalg-compact/compact-new/micro-kernels/xtrsm.tpp>
+
+namespace koqkatoo::linalg::compact::micro_kernels::trsm {
+
+using Abi = stdx::simd_abi::@simd_abi@;
+
+template void xtrsm_register<Abi, {}>(
+    single_batch_view<Abi> A, mut_single_batch_view<Abi> B);
+template void xtrsm_register<Abi, {.trans = true}>(
+    single_batch_view<Abi> A, mut_single_batch_view<Abi> B);
+
+}
