@@ -37,6 +37,20 @@ void xgemmt_microkernel(single_batch_matrix_accessor<Abi, Conf.trans_A> A,
                         mut_single_batch_matrix_accessor<Abi> C,
                         index_t k) noexcept;
 
+template <class Abi, KernelConfig Conf, index_t RowsReg>
+void xgemmt_diag_microkernel(single_batch_matrix_accessor<Abi, Conf.trans_A> A,
+                             single_batch_matrix_accessor<Abi, Conf.trans_B> B,
+                             mut_single_batch_matrix_accessor<Abi> C, index_t k,
+                             single_batch_vector_accessor<Abi> d) noexcept;
+
+template <class Abi, KernelConfig Conf, index_t RowsReg>
+void xgemmt_diag_mask_microkernel(
+    single_batch_matrix_accessor<Abi, Conf.trans_A> A,
+    single_batch_matrix_accessor<Abi, Conf.trans_B> B,
+    mut_single_batch_matrix_accessor<Abi> C, index_t k,
+    single_batch_vector_accessor<Abi> d,
+    single_batch_vector_mask_accessor<Abi> m) noexcept;
+
 template <class Abi, KernelConfig Conf>
 void xgemm_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
                     mut_single_batch_view<Abi> C) noexcept;
@@ -44,6 +58,18 @@ void xgemm_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
 template <class Abi, KernelConfig Conf>
 void xgemmt_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
                      mut_single_batch_view<Abi> C) noexcept;
+
+template <class Abi, KernelConfig Conf>
+void xgemmt_diag_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
+                          mut_single_batch_view<Abi> C,
+                          single_batch_view<Abi> d) noexcept;
+
+template <class Abi, KernelConfig Conf>
+void xgemmt_diag_mask_register(single_batch_view<Abi> A,
+                               single_batch_view<Abi> B,
+                               mut_single_batch_view<Abi> C,
+                               single_batch_view<Abi> d,
+                               bool_single_batch_view<Abi> m) noexcept;
 
 #ifdef __AVX512F__
 // AVX512 has 32 vector registers, we use 25 registers for a 5×5 accumulator
@@ -81,6 +107,18 @@ template <class Abi, KernelConfig Conf>
 inline const constinit auto microkernel_t_lut =
     make_1d_lut<RowsReg>([]<index_t Row>(index_constant<Row>) {
         return xgemmt_microkernel<Abi, Conf, Row + 1>;
+    });
+
+template <class Abi, KernelConfig Conf>
+inline const constinit auto microkernel_t_diag_lut =
+    make_1d_lut<RowsReg>([]<index_t Row>(index_constant<Row>) {
+        return xgemmt_diag_microkernel<Abi, Conf, Row + 1>;
+    });
+
+template <class Abi, KernelConfig Conf>
+inline const constinit auto microkernel_t_diag_mask_lut =
+    make_1d_lut<RowsReg>([]<index_t Row>(index_constant<Row>) {
+        return xgemmt_diag_mask_microkernel<Abi, Conf, Row + 1>;
     });
 
 } // namespace koqkatoo::linalg::compact::micro_kernels::gemm

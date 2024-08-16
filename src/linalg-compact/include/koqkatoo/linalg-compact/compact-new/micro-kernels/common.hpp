@@ -37,6 +37,7 @@ struct simd_view_types {
             : simd_view_types<Abi>::type{o} {}                                 \
     }
 
+KOQKATOO_STRONG_ALIAS_MICRO_KERNEL_PARAM_TYPE(bool_single_batch_view);
 KOQKATOO_STRONG_ALIAS_MICRO_KERNEL_PARAM_TYPE(mut_single_batch_view);
 KOQKATOO_STRONG_ALIAS_MICRO_KERNEL_PARAM_TYPE(single_batch_view);
 KOQKATOO_STRONG_ALIAS_MICRO_KERNEL_PARAM_TYPE(mut_batch_view);
@@ -92,10 +93,12 @@ struct mat_access_impl {
     [[gnu::always_inline]] mat_access_impl(
         const types::single_batch_view &o) noexcept
         requires Const
-        : data{o.data}, outer_stride{o.outer_stride() * inner_stride} {}
+        : data{o.data},
+          outer_stride{o.outer_stride() * static_cast<index_t>(inner_stride)} {}
     [[gnu::always_inline]] mat_access_impl(
         const types::mut_single_batch_view &o) noexcept
-        : data{o.data}, outer_stride{o.outer_stride() * inner_stride} {}
+        : data{o.data},
+          outer_stride{o.outer_stride() * static_cast<index_t>(inner_stride)} {}
 };
 
 template <index_t Size, class Abi, bool Const, bool Transpose>
@@ -183,14 +186,21 @@ struct vec_access_impl {
         : data{data} {}
     [[gnu::always_inline]] vec_access_impl(
         const types::single_batch_view &o) noexcept
-        requires std::is_const_v<T>
+        requires std::is_same_v<T, const real_t>
         : data{o.data} {
-        assert(o.cols() == 0);
+        assert(o.cols() == 1);
     }
     [[gnu::always_inline]] vec_access_impl(
         const types::mut_single_batch_view &o) noexcept
+        requires std::is_same_v<std::remove_const_t<T>, real_t>
         : data{o.data} {
-        assert(o.cols() == 0);
+        assert(o.cols() == 1);
+    }
+    [[gnu::always_inline]] vec_access_impl(
+        const types::bool_single_batch_view &o) noexcept
+        requires std::is_same_v<T, const bool>
+        : data{o.data} {
+        assert(o.cols() == 1);
     }
 };
 
