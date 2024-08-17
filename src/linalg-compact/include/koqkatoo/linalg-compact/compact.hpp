@@ -29,6 +29,8 @@ struct CompactBLAS {
         BatchedMatrixView<const real_t, index_t, simd_stride_t, simd_stride_t>;
     using bool_single_batch_view =
         BatchedMatrixView<const bool, index_t, simd_stride_t, simd_stride_t>;
+    using bool_batch_view =
+        BatchedMatrixView<const bool, index_t, simd_stride_t>;
     using batch_view = BatchedMatrixView<const real_t, index_t, simd_stride_t>;
     using mut_batch_view = BatchedMatrixView<real_t, index_t, simd_stride_t>;
 
@@ -45,12 +47,17 @@ struct CompactBLAS {
     /// C ← A D Aᵀ
     static void xsyrk_schur(single_batch_view A, single_batch_view d,
                             mut_single_batch_view C);
+    static void xsyrk_schur(batch_view A, batch_view d, mut_batch_view C,
+                            PreferredBackend b);
     /// H_out ← H_in + Cᵀ Σ C
     /// where Σ[!mask] = 0
     static void xsyrk_T_schur_copy(single_batch_view C, single_batch_view Σ,
                                    bool_single_batch_view mask,
                                    single_batch_view H_in,
                                    mut_single_batch_view H_out);
+    static void xsyrk_T_schur_copy(batch_view C, batch_view Σ,
+                                   bool_batch_view mask, batch_view H_in,
+                                   mut_batch_view H_out, PreferredBackend b);
 
     /// C = AᵀA
     static void xsyrk_T_ref(single_batch_view A, mut_single_batch_view C);

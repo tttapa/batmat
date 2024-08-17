@@ -57,6 +57,30 @@ class TrsmTest : public ::testing::Test {
                         << k << ")";
     }
 
+    void RunTestTrtri(PreferredBackend backend, index_t n) {
+        Mat A{{.depth = 15, .rows = n, .cols = n}};
+        Mat I{{.depth = 15, .rows = n, .cols = n}};
+        std::ranges::generate(A, [&] { return nrml(rng); });
+        A.view.add_to_diagonal(10);
+        I.view.set_constant(0);
+        I.view.add_to_diagonal(1);
+
+        Mat A_inv = A;
+        CompactBLAS_t::xtrti(A_inv, backend);
+
+        // Perform the reference operation for comparison
+        CompactBLAS_t::xtrsm_LLNN(A, I, backend);
+
+        // Verify that the results match the reference implementation
+        for (index_t i = 0; i < A_inv.depth(); ++i)
+            for (index_t j = 0; j < A_inv.rows(); ++j)
+                for (index_t k = 0; k <= j; ++k)
+                    ASSERT_NEAR(A_inv(i, j, k), I(i, j, k), ε)
+                        << enum_name(backend) << "[" << n
+                        << "]: TRTRI mismatch at (" << i << ", " << j << ", "
+                        << k << ")";
+    }
+
     static void naive_trsm_RLTN(View L, MutView H) {
         for (index_t l = 0; l < L.depth(); ++l) {
             for (index_t k = 0; k < L.rows(); ++k) {
@@ -129,4 +153,9 @@ TYPED_TEST(TrsmTest, TrsmLLTN) {
         for (index_t i : koqkatoo::tests::sizes)
             this->RunTest(backend, i, TestFixture::CompactBLAS_t::xtrsm_LLTN,
                           TestFixture::naive_trsm_LLTN);
+}
+TYPED_TEST(TrsmTest, Trtri) {
+    for (auto backend : koqkatoo::tests::backends)
+        for (index_t i : koqkatoo::tests::sizes)
+            this->RunTestTrtri(backend, i);
 }

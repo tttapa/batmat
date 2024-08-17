@@ -94,6 +94,33 @@ void CompactBLAS<Abi>::xsyrk_T(batch_view A, mut_batch_view C,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xsyrk_schur(batch_view A, batch_view d, mut_batch_view C,
+                                   PreferredBackend b) {
+    assert(A.ceil_depth() == C.ceil_depth());
+    assert(A.ceil_depth() == d.ceil_depth());
+    std::ignore = b; // not supported by BLAS
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < A.num_batches(); ++i)
+        xsyrk_schur(A.batch(i), d.batch(i), C.batch(i));
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xsyrk_T_schur_copy(batch_view C, batch_view Σ,
+                                          bool_batch_view mask, batch_view H_in,
+                                          mut_batch_view H_out,
+                                          PreferredBackend b) {
+    assert(C.ceil_depth() == Σ.ceil_depth());
+    assert(C.ceil_depth() == mask.ceil_depth());
+    assert(C.ceil_depth() == H_in.ceil_depth());
+    assert(C.ceil_depth() == H_out.ceil_depth());
+    std::ignore = b; // not supported by BLAS
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < C.num_batches(); ++i)
+        xsyrk_T_schur_copy(C.batch(i), Σ.batch(i), mask.batch(i), H_in.batch(i),
+                           H_out.batch(i));
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xsyrk(batch_view A, mut_batch_view C,
                              PreferredBackend b) {
     assert(A.ceil_depth() == C.ceil_depth());

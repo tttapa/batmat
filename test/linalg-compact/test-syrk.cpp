@@ -19,6 +19,7 @@ class SyrkTest : public ::testing::Test {
     using simd          = stdx::simd<real_t, abi_t>;
     using simd_stride_t = stdx::simd_size<real_t, abi_t>;
     using Mat           = BatchedMatrix<real_t, index_t, simd_stride_t>;
+    using BMat          = BatchedMatrix<bool, index_t, simd_stride_t>;
     using View    = BatchedMatrixView<const real_t, index_t, simd_stride_t>;
     using MutView = BatchedMatrixView<real_t, index_t, simd_stride_t>;
     using func_t  = void(View, MutView, PreferredBackend);
@@ -49,7 +50,7 @@ class SyrkTest : public ::testing::Test {
         // Verify that the results match the reference implementation
         for (index_t i = 0; i < C.depth(); ++i)
             for (index_t j = 0; j < C.rows(); ++j)
-                for (index_t k = 0; k <= j; ++k)
+                for (index_t k = 0; k < C.cols(); ++k)
                     ASSERT_NEAR(C(i, j, k), C_reference(i, j, k), ε)
                         << enum_name(backend) << "[" << n
                         << "]: SYRK mismatch at (" << i << ", " << j << ", "
@@ -80,6 +81,33 @@ class SyrkTest : public ::testing::Test {
     static void naive_syrk(bool trans, real_t α, real_t β, View A, MutView C) {
         naive_gemmt(trans, !trans, α, β, A, A, C);
     }
+
+    static void naive_gemmt_diag(bool transA, bool transB, real_t α, real_t β,
+                                 View A, View B, MutView C, View d) {
+        auto M = transA ? A.cols() : A.rows();
+        auto N = transB ? B.rows() : B.cols();
+        auto K = transA ? A.rows() : A.cols();
+        for (index_t l = 0; l < A.depth(); ++l) {
+            for (index_t r = 0; r < M; ++r) {
+                for (index_t c = 0; c <= std::min(r, N); ++c) {
+                    auto Crc = C(l, r, c);
+                    Crc *= β;
+                    for (index_t k = 0; k < K; ++k) {
+                        auto Ark = transA ? A(l, k, r) : A(l, r, k);
+                        auto Bkc = transB ? B(l, c, k) : B(l, k, c);
+                        auto dk  = d(l, k, 0);
+                        Crc += α * (Ark * dk) * Bkc;
+                    }
+                    C(l, r, c) = Crc;
+                }
+            }
+        }
+    }
+
+    static void naive_syrk_diag(bool trans, real_t α, real_t β, View A,
+                                MutView C, View d) {
+        naive_gemmt_diag(trans, !trans, α, β, A, A, C, d);
+    }
 };
 
 TYPED_TEST_SUITE(SyrkTest, koqkatoo::tests::Abis);
@@ -103,4 +131,46 @@ TYPED_TEST(SyrkTest, SyrkTN) {
         for (index_t i : koqkatoo::tests::sizes)
             this->RunTest(backend, i, TestFixture::CompactBLAS_t::xsyrk_T,
                           std::bind_front(TestFixture::naive_syrk, true, 1, 0));
+}
+TYPED_TEST(SyrkTest, SyrkTSchurCopy) {
+    for (index_t n : koqkatoo::tests::sizes) {
+        using Mat          = TestFixture::Mat;
+        using BMat         = TestFixture::BMat;
+        const index_t m    = n * 2 + 3;
+        const auto backend = PreferredBackend::Reference;
+        std::bernoulli_distribution bernoulli{0.5};
+        Mat C{{.depth = 15, .rows = m, .cols = n}};
+        Mat Σ{{.depth = 15, .rows = m, .cols = 1}};
+        BMat J{{.depth = 15, .rows = m, .cols = 1}};
+        Mat H{{.depth = 15, .rows = n, .cols = n}};
+        Mat H_out{{.depth = 15, .rows = n, .cols = n}};
+        Mat ΣJ{{.depth = 15, .rows = m, .cols = 1}};
+        std::ranges::generate(C, [&] { return this->nrml(this->rng); });
+        std::ranges::generate(Σ, [&] { return this->nrml(this->rng); });
+        std::ranges::generate(J, [&] { return bernoulli(this->rng); });
+        std::ranges::generate(H, [&] { return this->nrml(this->rng); });
+        std::ranges::generate(H_out, [&] { return this->nrml(this->rng); });
+
+        TestFixture::CompactBLAS_t::xsyrk_T_schur_copy(C, Σ, J, H, H_out,
+                                                       backend);
+
+        Mat H_out_ref = H;
+        for (index_t l = 0; l < J.depth(); ++l)
+            for (index_t i = 0; i < J.rows(); ++i)
+                ΣJ(l, i, 0) = J(l, i, 0) ? Σ(l, i, 0) : 0;
+        this->naive_gemmt_diag(true, false, 1, 1, C, C, H_out_ref, ΣJ);
+        for (index_t l = 0; l < J.depth(); ++l)
+            for (index_t i = 0; i < J.rows(); ++i)
+                for (index_t k = i + 1; k < H_out.cols(); ++k)
+                    H_out_ref(l, i, k) = H_out(l, i, k);
+
+        // Verify that the results match the reference implementation
+        for (index_t i = 0; i < H_out.depth(); ++i)
+            for (index_t j = 0; j < H_out.rows(); ++j)
+                for (index_t k = 0; k < H_out.cols(); ++k)
+                    ASSERT_NEAR(H_out(i, j, k), H_out_ref(i, j, k), ε)
+                        << enum_name(backend) << "[" << n
+                        << "]: SYRK mismatch at (" << i << ", " << j << ", "
+                        << k << ")";
+    }
 }
