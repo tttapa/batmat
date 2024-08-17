@@ -6,3 +6,6 @@ tools.build:cxxflags=["-march=rocketlake", "-mavx512f"]
 tools.build:cflags+=["-g3"]
 tools.build:cxxflags+=["-g3"]
 tools.build.cross_building:can_run=true
+
+[options]
+openblas/*:target=SKYLAKEX

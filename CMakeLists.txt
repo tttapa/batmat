@@ -17,7 +17,7 @@ option(KOQKATOO_WITH_LIBFORK
     "Use libfork for parallelization" Off)
 set(KOQKATOO_DENSE_REAL_TYPE "double" CACHE STRING
     "The main floating point type for representing real numbers")
-set(KOQKATOO_DENSE_INDEX_TYPE "int" CACHE STRING
+set(KOQKATOO_DENSE_INDEX_TYPE "long long" CACHE STRING
     "The main integer type for indices and sizes")
 # Enable/disable optional components
 option(KOQKATOO_WITH_TESTS
