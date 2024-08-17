@@ -70,6 +70,7 @@ void xgemmt_diag_mask_register(single_batch_view<Abi> A,
                                mut_single_batch_view<Abi> C,
                                single_batch_view<Abi> d,
                                bool_single_batch_view<Abi> m) noexcept {
+    static_assert(RowsReg == ColsReg, "Square blocks required");
     const index_t I = C.rows(), J = C.cols();
     const index_t K = Conf.trans_A ? A.rows() : A.cols();
     KOQKATOO_ASSUME(I > 0);
@@ -88,7 +89,7 @@ void xgemmt_diag_mask_register(single_batch_view<Abi> A,
     for (index_t j = 0; j < J; j += ColsReg) {
         const auto nj = std::min<index_t>(ColsReg, J - j);
         const auto Bj = B_.middle_cols(j);
-        for (index_t i = 0; i < I; i += RowsReg) {
+        for (index_t i = j; i < I; i += RowsReg) {
             const index_t ni = std::min<index_t>(RowsReg, I - i);
             const auto Ai    = A_.middle_rows(i);
             const auto Cij   = C_.block(i, j);
