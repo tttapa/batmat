@@ -15,7 +15,10 @@ add_executable(tests
     "ocp/test-solve.cpp"
     "linalg-compact/test-gemm.cpp"
     "linalg-compact/test-trsm.cpp"
+    "linalg-compact/test-syrk.cpp"
 )
+target_compile_definitions(tests PRIVATE
+    $<$<BOOL:${KOQKATOO_EXTENSIVE_TESTS}>:KOQKATOO_EXTENSIVE_TESTS>)
 target_include_directories(tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(tests PRIVATE _CRT_SECURE_NO_WARNINGS)
 target_link_libraries(tests PRIVATE

@@ -28,6 +28,8 @@ option(KOQKATOO_WITH_BENCHMARKS
 option(KOQKATOO_WITH_PYTHON
     "Build the Python bindings" Off)
 # Developer options
+option(KOQKATOO_EXTENSIVE_TESTS Off
+    "Longer tests with more combinations of sizes and parameters")
 option(KOQKATOO_WARNINGS_AS_ERRORS
     "Enable -Werror or /WX" Off)
 option(KOQKATOO_WITH_COVERAGE

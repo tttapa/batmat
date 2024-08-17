@@ -4,6 +4,8 @@
 #include <limits>
 #include <random>
 
+#include "config.hpp"
+
 using namespace koqkatoo::linalg::compact;
 using koqkatoo::index_t;
 using koqkatoo::real_t;
@@ -50,8 +52,9 @@ class TrsmTest : public ::testing::Test {
             for (index_t j = 0; j < B.rows(); ++j)
                 for (index_t k = 0; k < B.cols(); ++k)
                     ASSERT_NEAR(B(i, j, k), B_reference(i, j, k), ε)
-                        << enum_name(backend) << ": TRSM mismatch at (" << i
-                        << ", " << j << ", " << k << ")";
+                        << enum_name(backend) << "[" << n
+                        << "]: TRSM mismatch at (" << i << ", " << j << ", "
+                        << k << ")";
     }
 
     static void naive_trsm_RLTN(View L, MutView H) {
@@ -107,31 +110,23 @@ class TrsmTest : public ::testing::Test {
     }
 };
 
-using Abis = ::testing::Types<stdx::simd_abi::scalar, //
-                              stdx::simd_abi::deduce_t<real_t, 2>,
-                              stdx::simd_abi::deduce_t<real_t, 4>,
-                              stdx::simd_abi::deduce_t<real_t, 8>>;
-TYPED_TEST_SUITE(TrsmTest, Abis);
-
-constexpr PreferredBackend backends[] // NOLINT(*-c-arrays)
-    {
-        PreferredBackend::Reference,        PreferredBackend::BLASScalar,
-        PreferredBackend::MKLCompact,       PreferredBackend::MKLBatched,
-        PreferredBackend::MKLScalarBatched, PreferredBackend::MKLAll,
-    };
+TYPED_TEST_SUITE(TrsmTest, koqkatoo::tests::Abis);
 
 TYPED_TEST(TrsmTest, TrsmRLTN) {
-    for (auto backend : backends)
-        this->RunTest(backend, 71, TestFixture::CompactBLAS_t::xtrsm_RLTN,
-                      TestFixture::naive_trsm_RLTN);
+    for (auto backend : koqkatoo::tests::backends)
+        for (index_t i : koqkatoo::tests::sizes)
+            this->RunTest(backend, i, TestFixture::CompactBLAS_t::xtrsm_RLTN,
+                          TestFixture::naive_trsm_RLTN);
 }
 TYPED_TEST(TrsmTest, TrsmLLNN) {
-    for (auto backend : backends)
-        this->RunTest(backend, 71, TestFixture::CompactBLAS_t::xtrsm_LLNN,
-                      TestFixture::naive_trsm_LLNN);
+    for (auto backend : koqkatoo::tests::backends)
+        for (index_t i : koqkatoo::tests::sizes)
+            this->RunTest(backend, i, TestFixture::CompactBLAS_t::xtrsm_LLNN,
+                          TestFixture::naive_trsm_LLNN);
 }
 TYPED_TEST(TrsmTest, TrsmLLTN) {
-    for (auto backend : backends)
-        this->RunTest(backend, 71, TestFixture::CompactBLAS_t::xtrsm_LLTN,
-                      TestFixture::naive_trsm_LLTN);
+    for (auto backend : koqkatoo::tests::backends)
+        for (index_t i : koqkatoo::tests::sizes)
+            this->RunTest(backend, i, TestFixture::CompactBLAS_t::xtrsm_LLTN,
+                          TestFixture::naive_trsm_LLTN);
 }
