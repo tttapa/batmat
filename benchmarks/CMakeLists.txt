@@ -1,13 +1,13 @@
 find_package(benchmark REQUIRED)
 
-add_executable(benchmark-gemm gemm.cpp)
+add_executable(benchmark-gemm gemm.cpp benchmark-main.cpp)
 target_link_libraries(benchmark-gemm PRIVATE
     benchmark::benchmark koqkatoo::linalg-compact koqkatoo::warnings)
 
-add_executable(benchmark-trsm trsm.cpp)
+add_executable(benchmark-trsm trsm.cpp benchmark-main.cpp)
 target_link_libraries(benchmark-trsm PRIVATE
     benchmark::benchmark koqkatoo::linalg-compact koqkatoo::warnings)
 
-    add_executable(benchmark-potrf potrf.cpp)
+    add_executable(benchmark-potrf potrf.cpp benchmark-main.cpp)
 target_link_libraries(benchmark-potrf PRIVATE
     benchmark::benchmark koqkatoo::linalg-compact koqkatoo::warnings)

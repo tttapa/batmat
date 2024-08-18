@@ -40,18 +40,16 @@ using stdx::simd_abi::scalar;
 using enum PreferredBackend;
 
 #define BM_RANGES()                                                            \
-    DenseRange(1, 31)                                                          \
+    DenseRange(1, 63)                                                          \
         ->RangeMultiplier(2)                                                   \
-        ->Range(32, 1024)                                                      \
+        ->Range(64, 512)                                                       \
         ->MeasureProcessCPUTime()
-// BENCHMARK(dgemm<deduce_t<real_t, 16>, Reference>)->BM_RANGES();
 BENCHMARK(dgemm<deduce_t<real_t, 8>, Reference>)->BM_RANGES();
 BENCHMARK(dgemm<deduce_t<real_t, 4>, Reference>)->BM_RANGES();
+BENCHMARK(dgemm<deduce_t<real_t, 2>, Reference>)->BM_RANGES();
 BENCHMARK(dgemm<scalar, Reference>)->BM_RANGES();
 
-// BENCHMARK(dgemm<deduce_t<real_t, 16>, MKLAll>)->BM_RANGES();
 BENCHMARK(dgemm<deduce_t<real_t, 8>, MKLAll>)->BM_RANGES();
 BENCHMARK(dgemm<deduce_t<real_t, 4>, MKLAll>)->BM_RANGES();
+BENCHMARK(dgemm<deduce_t<real_t, 2>, MKLAll>)->BM_RANGES();
 BENCHMARK(dgemm<scalar, MKLAll>)->BM_RANGES();
-
-BENCHMARK_MAIN();

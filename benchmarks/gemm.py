@@ -17,7 +17,7 @@ df = pd.DataFrame(data["benchmarks"])
 
 # Extract the final part of the name after the last slash for the x-axis
 df["version"] = df["name"].apply(lambda x: int(x.split("/", 2)[1]))
-df.sort_values(by="version", inplace=True)
+df.sort_values(by="version", inplace=True, kind="stable")
 
 # Plot the data
 df["full name"] = df["name"]
