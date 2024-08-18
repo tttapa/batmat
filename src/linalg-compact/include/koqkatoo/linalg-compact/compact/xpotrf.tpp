@@ -7,6 +7,7 @@
 #include <cmath>
 #include <concepts>
 
+#include <koqkatoo/linalg-compact/compact-new/micro-kernels/xgemm.hpp>
 #include <koqkatoo/linalg-compact/compact-new/micro-kernels/xpotrf.hpp>
 #include "util.hpp"
 
@@ -16,7 +17,7 @@ namespace koqkatoo::linalg::compact {
 // -----------------------------------------------------------------------------
 
 template <class Abi>
-void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H) {
+void CompactBLAS<Abi>::xpotrf_recursive_ref(mut_single_batch_view H) {
     using std::sqrt;
     const index_t n = H.rows();
     // Base case
@@ -39,6 +40,42 @@ void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H) {
     xsyrk_sub_ref(H21, H22);
     // Factor H₂₂
     xpotrf_ref(H22);
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H) {
+    using std::sqrt;
+    using namespace micro_kernels;
+    const index_t n = H.rows();
+    // Base case
+    if (n == 0)
+        return;
+    else if (n == 1)
+        return sqrt(simd{&H(0, 0, 0), stdx::vector_aligned})
+            .copy_to(&H(0, 0, 0), stdx::vector_aligned);
+    else if (n <= potrf::RowsReg)
+        return potrf::microkernel_lut<Abi>[n - 1](H);
+    mut_single_batch_matrix_accessor<Abi> H_ = H;
+    constexpr index_t R                      = gemm::RowsReg;
+    // Loop over columns of H with block size R
+    index_t i;
+    for (i = 0; i + R <= n; i += R) {
+        const index_t n2 = n - R - i;
+        auto H11         = H_.block(i, i);
+        auto H21         = H_.block(i + R, i);
+        // Factor the diagonal block and update the subdiagonal block
+        potrf::microkernel_trsm_lut<Abi>[R - 1](H11, H21, n2);
+        // Update the tail with the outer product of the subdiagonal block
+        for (index_t j = i + R; j < n; j += R) {
+            auto H21         = H_.block(j, i);
+            auto H22         = H_.block(j, j);
+            const index_t nj = std::min(R, n - j);
+            potrf::microkernel_syrk_lut<Abi>[nj - 1][R - 1](H21, H22, n - j);
+        }
+    }
+    const index_t rem = n - i;
+    if (rem > 0)
+        potrf::microkernel_lut<Abi>[rem - 1](H_.block(i, i));
 }
 
 // Parallel batched implementations

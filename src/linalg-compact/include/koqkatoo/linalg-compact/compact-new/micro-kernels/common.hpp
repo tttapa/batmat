@@ -99,6 +99,11 @@ struct mat_access_impl {
         const types::mut_single_batch_view &o) noexcept
         : data{o.data},
           outer_stride{o.outer_stride() * static_cast<index_t>(inner_stride)} {}
+    [[gnu::always_inline]] mat_access_impl(
+        const mat_access_impl<Abi, false, Transpose> &o) noexcept
+        requires Const
+        : data{o.data}, outer_stride{o.outer_stride} {}
+    [[gnu::always_inline]] mat_access_impl(const mat_access_impl &o) = default;
 };
 
 template <index_t Size, class Abi, bool Const, bool Transpose>

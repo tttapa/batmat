@@ -16,6 +16,7 @@ add_executable(tests
     "linalg-compact/test-gemm.cpp"
     "linalg-compact/test-trsm.cpp"
     "linalg-compact/test-syrk.cpp"
+    "linalg-compact/test-potrf.cpp"
 )
 target_compile_definitions(tests PRIVATE
     $<$<BOOL:${KOQKATOO_EXTENSIVE_TESTS}>:KOQKATOO_EXTENSIVE_TESTS>)

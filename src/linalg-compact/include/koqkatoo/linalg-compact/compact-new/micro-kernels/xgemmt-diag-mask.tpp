@@ -9,8 +9,6 @@
 
 namespace koqkatoo::linalg::compact::micro_kernels::gemm {
 
-#define CACHE_C_INDICES 1
-
 /// Generalized matrix multiplication C = C ± A⁽ᵀ⁾ diag(d) B⁽ᵀ⁾ computing only
 /// the lower triangle of C. Single register block.
 template <class Abi, KernelConfig Conf, index_t RowsReg>

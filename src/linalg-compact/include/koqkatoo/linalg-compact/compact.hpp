@@ -99,6 +99,7 @@ struct CompactBLAS {
     static void xpotrf(mut_single_batch_view H, PreferredBackend b);
     static void xpotrf(mut_batch_view H, PreferredBackend b);
     static void xpotrf_ref(mut_single_batch_view H);
+    static void xpotrf_recursive_ref(mut_single_batch_view H);
 
     /// x ← L x
     static void xtrmv_ref(single_batch_view L, mut_single_batch_view x);
