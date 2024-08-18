@@ -19,13 +19,14 @@ void xpotrf_xsyrk_microkernel(single_batch_matrix_accessor<Abi> A21,
                               index_t num_rows) noexcept;
 
 #ifdef __AVX512F__
-// AVX512 has 32 vector registers, we use 28 to cache the lower triangle of
-// the matrix:
-static constexpr index_t RowsReg = 7;
-#else
-// AVX2 has 16 vector registers, we use 15 to cache the lower triangle of
+// AVX512 has 32 vector registers, we use 25 to cache part of the A21 block of
 // the matrix:
 static constexpr index_t RowsReg = 5;
+#else
+// AVX2 has 16 vector registers, we (try to) use 16 to cache part of the A21
+// block of the matrix, and spill some elements to load the other data. This
+// seems to be ~10% faster than 3×3 on an Intel i7-10750H.
+static constexpr index_t RowsReg = 4;
 #endif
 
 template <class Abi>
@@ -35,16 +36,9 @@ inline const constinit auto microkernel_lut =
     });
 
 template <class Abi>
-inline const constinit auto microkernel_trsm_lut =
-    make_1d_lut<RowsReg>([]<index_t Row>(index_constant<Row>) {
-        return xpotrf_xtrsm_microkernel<Abi, Row + 1>;
-    });
-
-template <class Abi>
 inline const constinit auto microkernel_syrk_lut =
-    make_2d_lut<RowsReg, RowsReg>(
-        []<index_t Row, index_t Col>(index_constant<Row>, index_constant<Col>) {
-            return xpotrf_xsyrk_microkernel<Abi, Row + 1, Col + 1>;
-        });
+    make_1d_lut<RowsReg>([]<index_t Row>(index_constant<Row>) {
+        return xpotrf_xsyrk_microkernel<Abi, Row + 1, RowsReg>;
+    });
 
 } // namespace koqkatoo::linalg::compact::micro_kernels::potrf

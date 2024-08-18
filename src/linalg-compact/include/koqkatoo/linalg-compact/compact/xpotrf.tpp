@@ -6,8 +6,8 @@
 
 #include <cmath>
 #include <concepts>
+#include <type_traits>
 
-#include <koqkatoo/linalg-compact/compact-new/micro-kernels/xgemm.hpp>
 #include <koqkatoo/linalg-compact/compact-new/micro-kernels/xpotrf.hpp>
 #include "util.hpp"
 
@@ -46,7 +46,8 @@ template <class Abi>
 void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H) {
     using std::sqrt;
     using namespace micro_kernels;
-    const index_t n = H.rows();
+    constexpr index_t R = potrf::RowsReg; // Block size
+    const index_t n     = H.rows();
     // Base case
     if (n == 0)
         return;
@@ -56,7 +57,6 @@ void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H) {
     else if (n <= potrf::RowsReg)
         return potrf::microkernel_lut<Abi>[n - 1](H);
     mut_single_batch_matrix_accessor<Abi> H_ = H;
-    constexpr index_t R                      = gemm::RowsReg;
     // Loop over columns of H with block size R
     index_t i;
     for (i = 0; i + R <= n; i += R) {
@@ -64,13 +64,24 @@ void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H) {
         auto H11         = H_.block(i, i);
         auto H21         = H_.block(i + R, i);
         // Factor the diagonal block and update the subdiagonal block
-        potrf::microkernel_trsm_lut<Abi>[R - 1](H11, H21, n2);
+        potrf::xpotrf_xtrsm_microkernel<Abi, R>(H11, H21, n2);
         // Update the tail with the outer product of the subdiagonal block
-        for (index_t j = i + R; j < n; j += R) {
-            auto H21         = H_.block(j, i);
-            auto H22         = H_.block(j, j);
-            const index_t nj = std::min(R, n - j);
-            potrf::microkernel_syrk_lut<Abi>[nj - 1][R - 1](H21, H22, n - j);
+        const index_t cols = n - (i + R);
+        const index_t rem  = cols % R;
+        // Remainder block (bottom right) with size less than R
+        if (rem > 0) {
+            index_t j = n - rem;
+            auto H21  = H_.block(j, i);
+            auto H22  = H_.block(j, j);
+            potrf::microkernel_syrk_lut<Abi>[rem - 1](H21, H22, n - j);
+        }
+        // Loop backwards for cache locality (we'll use the next column in the
+        // next interation, so we want the syrk operation to leave it in cache).
+        for (index_t j = n - rem - R; j >= i + R; j -= R) {
+            static_assert(std::is_signed_v<index_t>);
+            auto H21 = H_.block(j, i);
+            auto H22 = H_.block(j, j);
+            potrf::xpotrf_xsyrk_microkernel<Abi, R, R>(H21, H22, n - j);
         }
     }
     const index_t rem = n - i;

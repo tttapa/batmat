@@ -6,8 +6,10 @@ namespace koqkatoo::linalg::compact::micro_kernels::potrf {
 
 using Abi = stdx::simd_abi::@simd_abi@;
 
+template void xpotrf_xtrsm_microkernel<Abi, RowsReg>(
+    mut_single_batch_matrix_accessor<Abi> A11, mut_single_batch_matrix_accessor<Abi> A21, index_t k);
+
 template const constinit decltype(microkernel_lut<Abi>) microkernel_lut<Abi>;
-template const constinit decltype(microkernel_trsm_lut<Abi>) microkernel_trsm_lut<Abi>;
 template const constinit decltype(microkernel_syrk_lut<Abi>) microkernel_syrk_lut<Abi>;
 
 }
