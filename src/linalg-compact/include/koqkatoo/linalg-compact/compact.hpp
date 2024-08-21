@@ -98,8 +98,11 @@ struct CompactBLAS {
     /// H ← cholesky(H)
     static void xpotrf(mut_single_batch_view H, PreferredBackend b);
     static void xpotrf(mut_batch_view H, PreferredBackend b);
+    static void xpotrf_base(mut_batch_view H, PreferredBackend b);
+    static void xpotrf_recursive(mut_batch_view H, PreferredBackend b);
     static void xpotrf_ref(mut_single_batch_view H);
     static void xpotrf_recursive_ref(mut_single_batch_view H);
+    static void xpotrf_base_ref(mut_single_batch_view H);
 
     /// x ← L x
     static void xtrmv_ref(single_batch_view L, mut_single_batch_view x);

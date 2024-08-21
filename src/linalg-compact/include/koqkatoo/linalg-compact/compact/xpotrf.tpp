@@ -33,8 +33,30 @@ void CompactBLAS<Abi>::xpotrf_recursive_ref(mut_single_batch_view H) {
     auto H11 = H.top_left(n1, n1), H21 = H.bottom_left(n2, n1),
          H22 = H.bottom_right(n2, n2);
     // Factor H₁₁
+    xpotrf_recursive_ref(H11);
+    // Compute L₂₁ = H₂₁ L₁₁⁻ᵀ
+    xtrsm_RLTN_ref(H11, H21);
+    // Update H₂₂ -= L₂₁ L₂₁ᵀ
+    xsyrk_sub_ref(H21, H22);
+    // Factor H₂₂
+    xpotrf_recursive_ref(H22);
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H) {
+    using std::sqrt;
+    const index_t n = H.rows();
+    // Base case
+    if (simd_stride * n * n * sizeof(real_t) <=
+        static_cast<index_t>(48) * 1024 * 32) // TODO: tune
+        return xpotrf_base_ref(H);
+    // Recursively factor as 2×2 block matrix
+    index_t n1 = (n + 1) / 2, n2 = n - n1;
+    auto H11 = H.top_left(n1, n1), H21 = H.bottom_left(n2, n1),
+         H22 = H.bottom_right(n2, n2);
+    // Factor H₁₁
     xpotrf_ref(H11);
-    // Compute L₂₁ = H₂₁ L₁₁⁻¹
+    // Compute L₂₁ = H₂₁ L₁₁⁻ᵀ
     xtrsm_RLTN_ref(H11, H21);
     // Update H₂₂ -= L₂₁ L₂₁ᵀ
     xsyrk_sub_ref(H21, H22);
@@ -43,7 +65,7 @@ void CompactBLAS<Abi>::xpotrf_recursive_ref(mut_single_batch_view H) {
 }
 
 template <class Abi>
-void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H) {
+void CompactBLAS<Abi>::xpotrf_base_ref(mut_single_batch_view H) {
     using std::sqrt;
     using namespace micro_kernels;
     constexpr index_t R = potrf::RowsReg; // Block size
@@ -112,9 +134,64 @@ void CompactBLAS<Abi>::xpotrf(mut_batch_view H, PreferredBackend b) {
             return;
         }
     }
+    if (H.rows() > 6) {
+        KOQKATOO_OMP(parallel for)
+        for (index_t i = 0; i < H.num_batches(); ++i)
+            xpotrf_ref(H.batch(i));
+    } else {
+        for (index_t i = 0; i < H.num_batches(); ++i)
+            xpotrf_ref(H.batch(i));
+    }
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xpotrf_base(mut_batch_view H, PreferredBackend b) {
+    assert(H.rows() == H.cols());
+    KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
+        if (use_mkl_compact(b)) {
+            MKL_INT info = 0;
+            xpotrf_compact(MKL_COL_MAJOR, MKL_LOWER, H.rows(), H.data, H.rows(),
+                           &info, vector_format_mkl<real_t, Abi>::format,
+                           H.ceil_depth());
+            lapack_throw_on_err("xpotrf_compact", info);
+            return;
+        }
+    })
+    if constexpr (std::same_as<Abi, scalar_abi>) {
+        if (use_mkl_batched(b)) {
+            xpotrf_batch_strided("L", H.rows(), H.data, H.rows(),
+                                 H.rows() * H.cols(), H.depth());
+            return;
+        }
+    }
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < H.num_batches(); ++i)
-        xpotrf_ref(H.batch(i));
+        xpotrf_base_ref(H.batch(i));
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xpotrf_recursive(mut_batch_view H, PreferredBackend b) {
+    assert(H.rows() == H.cols());
+    KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
+        if (use_mkl_compact(b)) {
+            MKL_INT info = 0;
+            xpotrf_compact(MKL_COL_MAJOR, MKL_LOWER, H.rows(), H.data, H.rows(),
+                           &info, vector_format_mkl<real_t, Abi>::format,
+                           H.ceil_depth());
+            lapack_throw_on_err("xpotrf_compact", info);
+            return;
+        }
+    })
+    if constexpr (std::same_as<Abi, scalar_abi>) {
+        if (use_mkl_batched(b)) {
+            xpotrf_batch_strided("L", H.rows(), H.data, H.rows(),
+                                 H.rows() * H.cols(), H.depth());
+            return;
+        }
+    }
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < H.num_batches(); ++i)
+        xpotrf_recursive_ref(H.batch(i));
 }
 
 // BLAS specializations (scalar)
