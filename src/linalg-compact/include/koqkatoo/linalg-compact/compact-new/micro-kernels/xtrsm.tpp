@@ -74,19 +74,27 @@ void xtrsm_register(single_batch_view<Abi> A,
     static const auto microkernel              = microkernel_lut<Abi, Conf>;
     const single_batch_matrix_accessor<Abi> A_ = A;
     const mut_single_batch_matrix_accessor<Abi, Conf.trans> B_ = B;
-    // Loop over the columns of B.
-    for (index_t j = 0; j < J; j += ColsReg) {
+    auto do_block = [&](index_t i, index_t j) {
         const index_t nj = std::min<index_t>(ColsReg, J - j);
+        const index_t ni = std::min<index_t>(RowsReg, I - i);
+        auto Aii         = A_.block(i, i); // diagonal block (lower triangular)
+        auto Bij         = B_.block(i, j); // rhs block to solve now
+        auto Ais         = A_.middle_rows(i); // subdiagonal block
+        auto X0j = B_.middle_cols(j); // first rows of rhs (already solved)
+        microkernel[ni - 1][nj - 1](Aii, Bij, Ais, X0j, i);
+    };
+    if constexpr (Conf.trans)
         // Loop over the diagonal of L.
-        for (index_t i = 0; i < I; i += RowsReg) {
-            const index_t ni = std::min<index_t>(RowsReg, I - i);
-            auto Aii = A_.block(i, i);    // diagonal block (lower triangular)
-            auto Bij = B_.block(i, j);    // rhs block to solve now
-            auto Ais = A_.middle_rows(i); // subdiagonal block
-            auto X0j = B_.middle_cols(j); // first rows of rhs (already solved)
-            microkernel[ni - 1][nj - 1](Aii, Bij, Ais, X0j, i);
-        }
-    }
+        for (index_t i = 0; i < I; i += RowsReg)
+            // Loop over the columns of B.
+            for (index_t j = 0; j < J; j += ColsReg)
+                do_block(i, j);
+    else
+        // Loop over the columns of B.
+        for (index_t j = 0; j < J; j += ColsReg)
+            // Loop over the diagonal of L.
+            for (index_t i = 0; i < I; i += RowsReg)
+                do_block(i, j);
 }
 
 } // namespace koqkatoo::linalg::compact::micro_kernels::trsm
