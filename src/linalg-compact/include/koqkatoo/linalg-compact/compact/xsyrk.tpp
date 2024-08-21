@@ -1,9 +1,10 @@
 #pragma once
 
+#include <koqkatoo/kib.hpp>
+#include <koqkatoo/linalg-compact/aligned-storage.hpp>
+#include <koqkatoo/linalg-compact/compact-new/micro-kernels/xgemm.hpp>
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
-
-#include <koqkatoo/linalg-compact/compact-new/micro-kernels/xgemm.hpp>
 #include "util.hpp"
 
 namespace koqkatoo::linalg::compact {
@@ -69,7 +70,67 @@ void CompactBLAS<Abi>::xsyrk_sub_ref(single_batch_view A,
     // TODO: cache blocking
     constexpr micro_kernels::gemm::KernelConfig conf{.negate  = true,
                                                      .trans_B = true};
-    micro_kernels::gemm::xgemmt_register<Abi, conf>(A, A, C);
+    static const index_t L1_cache_size = 48_KiB; // TODO: determine dynamically
+    static const index_t L2_cache_size = 512_KiB;
+    static const index_t L3_cache_size = 16_MiB;
+    static const index_t n_cores       = 8; // TODO: OMP
+    static const index_t N_reg         = micro_kernels::gemm::ColsReg;
+    static const index_t M_reg         = micro_kernels::gemm::RowsReg;
+    static const index_t K_cache =
+        L1_cache_size / sizeof(real_t) / simd_stride / 2 / N_reg;
+    static const index_t M_cache = L2_cache_size / sizeof(real_t) /
+                                   simd_stride / K_cache / 2 / M_reg * M_reg;
+    static const index_t N_cache =
+        // TODO
+        // std::max<index_t>(1, L3_cache_size / sizeof(real_t) / simd_stride /
+        //                          K_cache / n_cores / M_cache) *
+        M_cache;
+
+    const index_t M = C.rows(), N = C.cols(), K = A.cols();
+    if (M <= M_cache && N <= N_cache && K <= K_cache) // TODO
+        return micro_kernels::gemm::xgemmt_register<Abi, conf>(A, A, C);
+
+    using sto_t                    = aligned_simd_storage<real_t, simd_align>;
+    const index_t B_cache_sto_size = A.ceil_depth() * K_cache * N_cache;
+    const index_t A_cache_sto_size = A.ceil_depth() * M_cache * K_cache;
+    sto_t B_cache_sto{static_cast<size_t>(B_cache_sto_size)};
+    sto_t A_cache_sto{static_cast<size_t>(A_cache_sto_size)};
+
+    for (index_t j_cache = 0; j_cache < N; j_cache += N_cache) {
+        index_t n_cache = std::min(N_cache, N - j_cache);
+        for (index_t p_cache = 0; p_cache < K; p_cache += K_cache) {
+            index_t k_cache = std::min(K_cache, K - p_cache);
+            mut_single_batch_view B_cache{{
+                .data       = B_cache_sto.data(),
+                .depth      = A.depth(),
+                .rows       = n_cache,
+                .cols       = k_cache,
+                .batch_size = A.batch_size(),
+            }};
+            // TODO: proper packing
+            B_cache = A.block(j_cache, p_cache, n_cache, k_cache);
+            for (index_t i_cache = j_cache; i_cache < M; i_cache += M_cache) {
+                index_t m_cache = std::min(M_cache, M - i_cache);
+                auto Cij        = C.block(i_cache, j_cache, m_cache, n_cache);
+                if (i_cache == j_cache) {
+                    micro_kernels::gemm::xgemmt_register<Abi, conf>(
+                        B_cache.as_const(), B_cache.as_const(), Cij);
+                } else {
+                    mut_single_batch_view A_cache{{
+                        .data       = A_cache_sto.data(),
+                        .depth      = A.depth(),
+                        .rows       = m_cache,
+                        .cols       = k_cache,
+                        .batch_size = A.batch_size(),
+                    }};
+                    // TODO: proper packing
+                    A_cache = A.block(i_cache, p_cache, m_cache, k_cache);
+                    micro_kernels::gemm::xgemm_register<Abi, conf>(
+                        A_cache.as_const(), B_cache.as_const(), Cij);
+                }
+            }
+        }
+    }
 }
 
 // Parallel batched implementations
