@@ -108,7 +108,7 @@ void CompactBLAS<Abi>::xsyrk_sub_ref(single_batch_view A,
                 .batch_size = A.batch_size(),
             }};
             // TODO: proper packing
-            B_cache = A.block(j_cache, p_cache, n_cache, k_cache);
+            xcopy(A.block(j_cache, p_cache, n_cache, k_cache), B_cache);
             for (index_t i_cache = j_cache; i_cache < M; i_cache += M_cache) {
                 index_t m_cache = std::min(M_cache, M - i_cache);
                 auto Cij        = C.block(i_cache, j_cache, m_cache, n_cache);
@@ -124,7 +124,7 @@ void CompactBLAS<Abi>::xsyrk_sub_ref(single_batch_view A,
                         .batch_size = A.batch_size(),
                     }};
                     // TODO: proper packing
-                    A_cache = A.block(i_cache, p_cache, m_cache, k_cache);
+                    xcopy(A.block(i_cache, p_cache, m_cache, k_cache), A_cache);
                     micro_kernels::gemm::xgemm_register<Abi, conf>(
                         A_cache.as_const(), B_cache.as_const(), Cij);
                 }
