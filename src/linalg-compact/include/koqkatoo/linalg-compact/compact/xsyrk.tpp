@@ -93,40 +93,58 @@ void CompactBLAS<Abi>::xsyrk_sub_ref(single_batch_view A,
     using sto_t                    = aligned_simd_storage<real_t, simd_align>;
     const index_t B_cache_sto_size = A.ceil_depth() * K_cache * N_cache;
     const index_t A_cache_sto_size = A.ceil_depth() * M_cache * K_cache;
-    sto_t B_cache_sto{static_cast<size_t>(B_cache_sto_size)};
-    sto_t A_cache_sto{static_cast<size_t>(A_cache_sto_size)};
+    const index_t B_size           = A.ceil_depth() * K * N;
+    const index_t A_size           = A.ceil_depth() * M * K;
+    const bool pack_B = B_size >= 2 * B_cache_sto_size; // TODO: tune
+    const bool pack_A = A_size >= 2 * A_cache_sto_size; // TODO: tune
+    sto_t B_cache_sto{static_cast<size_t>(B_cache_sto_size), uninitialized};
+    sto_t A_cache_sto{static_cast<size_t>(A_cache_sto_size), uninitialized};
 
     for (index_t j_cache = 0; j_cache < N; j_cache += N_cache) {
         index_t n_cache = std::min(N_cache, N - j_cache);
         for (index_t p_cache = 0; p_cache < K; p_cache += K_cache) {
             index_t k_cache = std::min(K_cache, K - p_cache);
-            mut_single_batch_view B_cache{{
-                .data       = B_cache_sto.data(),
-                .depth      = A.depth(),
-                .rows       = n_cache,
-                .cols       = k_cache,
-                .batch_size = A.batch_size(),
-            }};
-            // TODO: proper packing
-            xcopy(A.block(j_cache, p_cache, n_cache, k_cache), B_cache);
+            auto Bkj        = [&] {
+                auto Bkj = A.block(j_cache, p_cache, n_cache, k_cache);
+                if (pack_B) {
+                    mut_single_batch_view B_cache{{
+                               .data       = B_cache_sto.data(),
+                               .depth      = A.depth(),
+                               .rows       = n_cache,
+                               .cols       = k_cache,
+                               .batch_size = A.batch_size(),
+                    }};
+                    // TODO: proper packing
+                    xcopy(Bkj, B_cache);
+                    return B_cache.as_const();
+                }
+                return Bkj;
+            }();
             for (index_t i_cache = j_cache; i_cache < M; i_cache += M_cache) {
                 index_t m_cache = std::min(M_cache, M - i_cache);
                 auto Cij        = C.block(i_cache, j_cache, m_cache, n_cache);
                 if (i_cache == j_cache) {
-                    micro_kernels::gemm::xgemmt_register<Abi, conf>(
-                        B_cache.as_const(), B_cache.as_const(), Cij);
+                    micro_kernels::gemm::xgemmt_register<Abi, conf>(Bkj, Bkj,
+                                                                    Cij);
                 } else {
-                    mut_single_batch_view A_cache{{
-                        .data       = A_cache_sto.data(),
-                        .depth      = A.depth(),
-                        .rows       = m_cache,
-                        .cols       = k_cache,
-                        .batch_size = A.batch_size(),
-                    }};
-                    // TODO: proper packing
-                    xcopy(A.block(i_cache, p_cache, m_cache, k_cache), A_cache);
-                    micro_kernels::gemm::xgemm_register<Abi, conf>(
-                        A_cache.as_const(), B_cache.as_const(), Cij);
+                    auto Aik = [&] {
+                        auto Aik = A.block(i_cache, p_cache, m_cache, k_cache);
+                        if (pack_A) {
+                            mut_single_batch_view A_cache{{
+                                .data       = A_cache_sto.data(),
+                                .depth      = A.depth(),
+                                .rows       = m_cache,
+                                .cols       = k_cache,
+                                .batch_size = A.batch_size(),
+                            }};
+                            // TODO: proper packing
+                            xcopy(Aik, A_cache);
+                            return A_cache.as_const();
+                        }
+                        return Aik;
+                    }();
+                    micro_kernels::gemm::xgemm_register<Abi, conf>(Aik, Bkj,
+                                                                   Cij);
                 }
             }
         }

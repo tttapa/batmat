@@ -8,6 +8,10 @@
 
 #include <experimental/simd>
 
+#if KOQKATOO_WITH_OPENMP
+#include <omp.h>
+#endif
+
 namespace koqkatoo::linalg::compact {
 
 namespace stdx = std::experimental;

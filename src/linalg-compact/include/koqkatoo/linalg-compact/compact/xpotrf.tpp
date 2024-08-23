@@ -134,14 +134,16 @@ void CompactBLAS<Abi>::xpotrf(mut_batch_view H, PreferredBackend b) {
             return;
         }
     }
-    if (H.rows() > 6) {
-        KOQKATOO_OMP(parallel for)
+#if KOQKATOO_WITH_OPENMP
+    if (omp_get_max_threads() == 1) {
         for (index_t i = 0; i < H.num_batches(); ++i)
             xpotrf_ref(H.batch(i));
-    } else {
-        for (index_t i = 0; i < H.num_batches(); ++i)
-            xpotrf_ref(H.batch(i));
+        return;
     }
+#endif
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < H.num_batches(); ++i)
+        xpotrf_ref(H.batch(i));
 }
 
 template <class Abi>
