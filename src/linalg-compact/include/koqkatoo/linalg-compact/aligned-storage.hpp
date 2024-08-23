@@ -3,40 +3,24 @@
 #include <cstddef>
 #include <memory>
 #include <new>
+#include <tuple>
 
 namespace koqkatoo::linalg::compact {
 
-/// Returns a smart pointer to an array of @p T that satisfies the given
-/// alignment requirements.
-template <class T, size_t Align>
-auto make_aligned_unique_ptr(size_t size) {
-    static constexpr auto raw_aligned_delete = [](void *p) {
+struct uninitialized_t {};
+inline constexpr uninitialized_t uninitialized;
+
+template <class T, size_t Align = 0>
+struct aligned_deleter {
+    size_t size = 0;
+    void operator()(T *p) const {
+        std::destroy_n(p, size);
         ::operator delete(p, std::align_val_t{Align});
-    };
-    struct aligned_delete {
-        size_t size = 0;
-        void operator()(T *p) const {
-            std::destroy_n(p, size);
-            raw_aligned_delete(p);
-        }
-    };
-    if (size == 0)
-        return std::unique_ptr<T[], aligned_delete>{};
-    std::unique_ptr<void, decltype(raw_aligned_delete)> raw{
-        ::operator new(size * sizeof(T), std::align_val_t{Align}),
-        raw_aligned_delete,
-    };
-    auto *uninitialized = static_cast<T *>(raw.get());
-    std::uninitialized_value_construct_n(uninitialized, size);
-    raw.release();
-    return std::unique_ptr<T[], aligned_delete>{
-        uninitialized,
-        {.size = size},
-    };
-}
+    }
+};
 
 template <class T>
-struct aligned_deleter {
+struct aligned_deleter<T, 0> {
     size_t size  = 0;
     size_t align = 0;
     void operator()(T *p) const {
@@ -45,20 +29,70 @@ struct aligned_deleter {
     }
 };
 
-template <class T>
-auto make_aligned_unique_ptr(size_t size, size_t align) {
-    auto raw_aligned_delete = [align](void *p) {
+template <size_t Align>
+struct aligned_deleter<void, Align> {
+    void operator()(void *p) const {
+        ::operator delete(p, std::align_val_t{Align});
+    }
+};
+
+template <>
+struct aligned_deleter<void, 0> {
+    size_t align = 0;
+    void operator()(void *p) const {
         ::operator delete(p, std::align_val_t{align});
-    };
+    }
+};
+
+/// Returns a smart pointer to an array of @p T that satisfies the given
+/// alignment requirements.
+template <class T, size_t Align>
+auto make_aligned_unique_ptr(size_t size) {
+    static_assert(Align > 0);
     if (size == 0)
-        return std::unique_ptr<T[], aligned_deleter<T>>{};
-    std::unique_ptr<void, decltype(raw_aligned_delete)> raw{
-        ::operator new(size * sizeof(T), std::align_val_t{align}),
-        raw_aligned_delete,
+        return std::unique_ptr<T[], aligned_deleter<T, Align>>{};
+    std::unique_ptr<void, aligned_deleter<void, Align>> raw{
+        ::operator new(size * sizeof(T), std::align_val_t{Align}),
     };
     auto *uninitialized = static_cast<T *>(raw.get());
     std::uninitialized_value_construct_n(uninitialized, size);
-    raw.release();
+    std::ignore = raw.release();
+    return std::unique_ptr<T[], aligned_deleter<T, Align>>{
+        uninitialized,
+        {.size = size},
+    };
+}
+
+/// Returns a smart pointer to an array of @p T that satisfies the given
+/// alignment requirements.
+template <class T, size_t Align>
+auto make_aligned_unique_ptr(size_t size, uninitialized_t) {
+    static_assert(Align > 0);
+    if (size == 0)
+        return std::unique_ptr<T[], aligned_deleter<T, Align>>{};
+    std::unique_ptr<void, aligned_deleter<void, Align>> raw{
+        ::operator new(size * sizeof(T), std::align_val_t{Align}),
+    };
+    auto *uninitialized = static_cast<T *>(raw.get());
+    std::uninitialized_default_construct_n(uninitialized, size);
+    std::ignore = raw.release();
+    return std::unique_ptr<T[], aligned_deleter<T, Align>>{
+        uninitialized,
+        {.size = size},
+    };
+}
+
+template <class T>
+auto make_aligned_unique_ptr(size_t size, size_t align) {
+    if (size == 0)
+        return std::unique_ptr<T[], aligned_deleter<T>>{};
+    std::unique_ptr<void, aligned_deleter<void>> raw{
+        ::operator new(size * sizeof(T), std::align_val_t{align}),
+        {.align = align},
+    };
+    auto *uninitialized = static_cast<T *>(raw.get());
+    std::uninitialized_value_construct_n(uninitialized, size);
+    std::ignore = raw.release();
     return std::unique_ptr<T[], aligned_deleter<T>>{
         uninitialized,
         {.size = size, .align = align},
@@ -70,6 +104,8 @@ class aligned_simd_storage {
   public:
     explicit aligned_simd_storage(size_t size = 0)
         : storage{make_aligned_unique_ptr<T, Align>(size)} {}
+    explicit aligned_simd_storage(size_t size, uninitialized_t t)
+        : storage{make_aligned_unique_ptr<T, Align>(size, t)} {}
     aligned_simd_storage(const aligned_simd_storage &other)
         : storage{make_aligned_unique_ptr<T, Align>(other.size())} {
         std::ranges::copy(other, begin());
@@ -79,8 +115,8 @@ class aligned_simd_storage {
         std::ranges::copy(other, begin());
         return *this;
     }
-    aligned_simd_storage(aligned_simd_storage &&)            = default;
-    aligned_simd_storage &operator=(aligned_simd_storage &&) = default;
+    aligned_simd_storage(aligned_simd_storage &&) noexcept            = default;
+    aligned_simd_storage &operator=(aligned_simd_storage &&) noexcept = default;
 
     [[nodiscard]] size_t size() const { return storage.get_deleter().size; }
     [[nodiscard]] T *data() { return storage.get(); }
