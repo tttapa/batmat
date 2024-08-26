@@ -11,6 +11,8 @@ include(CTest)
 include(CMakeDependentOption)
 option(KOQKATOO_WITH_MKL
     "Use the Intel MKL" Off)
+option(KOQKATOO_WITH_OPENBLAS
+    "Use the OpenBLAS library" Off)
 option(KOQKATOO_WITH_OPENMP
     "Enable parallelization using OpenMP" Off)
 option(KOQKATOO_WITH_LIBFORK
