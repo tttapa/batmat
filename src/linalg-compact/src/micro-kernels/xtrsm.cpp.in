@@ -1,6 +1,6 @@
 #pragma clang fp contract(fast)
 
-#include <koqkatoo/linalg-compact/compact-new/micro-kernels/xtrsm.tpp>
+#include <koqkatoo/linalg-compact/compact/micro-kernels/xtrsm.tpp>
 
 namespace koqkatoo::linalg::compact::micro_kernels::trsm {
 

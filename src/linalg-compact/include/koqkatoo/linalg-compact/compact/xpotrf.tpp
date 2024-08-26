@@ -8,7 +8,7 @@
 #include <concepts>
 #include <type_traits>
 
-#include <koqkatoo/linalg-compact/compact-new/micro-kernels/xpotrf.hpp>
+#include <koqkatoo/linalg-compact/compact/micro-kernels/xpotrf.hpp>
 #include "util.hpp"
 
 namespace koqkatoo::linalg::compact {

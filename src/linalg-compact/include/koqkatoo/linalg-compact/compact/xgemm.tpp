@@ -4,7 +4,7 @@
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
 
-#include <koqkatoo/linalg-compact/compact-new/micro-kernels/xgemm.hpp>
+#include <koqkatoo/linalg-compact/compact/micro-kernels/xgemm.hpp>
 #include "util.hpp"
 
 #include <concepts>

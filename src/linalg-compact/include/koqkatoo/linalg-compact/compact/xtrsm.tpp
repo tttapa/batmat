@@ -3,7 +3,7 @@
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
 
-#include <koqkatoo/linalg-compact/compact-new/micro-kernels/xtrsm.hpp>
+#include <koqkatoo/linalg-compact/compact/micro-kernels/xtrsm.hpp>
 #include "util.hpp"
 
 namespace koqkatoo::linalg::compact {

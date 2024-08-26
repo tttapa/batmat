@@ -7,7 +7,7 @@ include(GoogleTest)
 find_package(GTest REQUIRED)
 find_package(Eigen3 REQUIRED)
 if (NOT TARGET koqkatoo::koqkatoo)
-    find_package(koqkatoo REQUIRED COMPONENTS Extra)
+    find_package(koqkatoo REQUIRED COMPONENTS Extra) # TODO
 endif()
 
 add_executable(tests

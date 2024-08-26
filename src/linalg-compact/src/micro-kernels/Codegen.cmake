@@ -2,7 +2,7 @@ function(codegen_compact_microkernels tgt)
 
     add_library(${tgt}-microkernels INTERFACE)
     set(OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/${tgt}/codegen")
-    set(TPP_DIR "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../../include/koqkatoo/linalg-compact/compact-new/micro-kernels")
+    set(TPP_DIR "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../../include/koqkatoo/linalg-compact/compact/micro-kernels")
     foreach(op "xgemm" "xgemm-diag" "xgemm-diag-mask" "xgemmt" "xgemmt-diag" "xgemmt-diag-mask" "xtrsm" "xpotrf")
         add_library(${tgt}-microkernels-${op} OBJECT)
         target_link_libraries(${tgt}-microkernels-${op} PRIVATE ${tgt})

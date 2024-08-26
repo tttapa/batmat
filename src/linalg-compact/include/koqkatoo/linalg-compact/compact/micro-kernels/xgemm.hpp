@@ -1,6 +1,6 @@
 #pragma once
 
-#include <koqkatoo/linalg-compact/compact-new/micro-kernels/common.hpp>
+#include <koqkatoo/linalg-compact/compact/micro-kernels/common.hpp>
 #include <koqkatoo/lut.hpp>
 
 namespace koqkatoo::linalg::compact::micro_kernels::gemm {

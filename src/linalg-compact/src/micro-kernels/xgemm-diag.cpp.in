@@ -1,6 +1,6 @@
 #pragma clang fp contract(fast)
 
-#include <koqkatoo/linalg-compact/compact-new/micro-kernels/xgemm-diag.tpp>
+#include <koqkatoo/linalg-compact/compact/micro-kernels/xgemm-diag.tpp>
 
 namespace koqkatoo::linalg::compact::micro_kernels::gemm {
 

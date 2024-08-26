@@ -1,6 +1,6 @@
 #pragma clang fp contract(fast)
 
-#include <koqkatoo/linalg-compact/compact-new/micro-kernels/xpotrf.tpp>
+#include <koqkatoo/linalg-compact/compact/micro-kernels/xpotrf.tpp>
 
 namespace koqkatoo::linalg::compact::micro_kernels::potrf {
 

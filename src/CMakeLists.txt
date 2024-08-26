@@ -29,11 +29,13 @@ add_library(koqkatoo
 target_sources(koqkatoo PUBLIC FILE_SET headers TYPE HEADERS
     BASE_DIRS "koqkatoo/include"
     FILES "koqkatoo/include/koqkatoo/koqkatoo.hpp"
+          "koqkatoo/include/koqkatoo/assume.hpp"
+          "koqkatoo/include/koqkatoo/kib.hpp"
+          "koqkatoo/include/koqkatoo/lut.hpp"
           "koqkatoo/include/koqkatoo/matrix-view.hpp"
           "koqkatoo/include/koqkatoo/openmp.h"
           "koqkatoo/include/koqkatoo/stringify.h"
           "koqkatoo/include/koqkatoo/unroll.h"
-          "koqkatoo/include/koqkatoo/assume.hpp"
 )
 target_link_libraries(koqkatoo PUBLIC koqkatoo::config guanaqo::guanaqo)
 koqkatoo_configure_library(koqkatoo)
@@ -65,17 +67,23 @@ target_sources(_linalg-compact INTERFACE FILE_SET headers TYPE HEADERS
           "linalg-compact/include/koqkatoo/linalg-compact/mkl.hpp"
           "linalg-compact/include/koqkatoo/linalg-compact/matrix-batch.hpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/util.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/common.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xpotrf.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xgemm.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xtrsm.hpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact.tpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/xtrsm.tpp"
-          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro_kernels/xtrsm.tpp"
-          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro_kernels/xgemm-diag.tpp"
-          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro_kernels/xgemmt.tpp"
-          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro_kernels/xgemm.tpp"
-          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro_kernels/xpotrf.tpp"
-          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro_kernels/xgemmt-diag.tpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/xsyrk.tpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/xgemm.tpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/xpotrf.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xgemm-diag-mask.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xtrsm.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xgemm-diag.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xgemmt-diag-mask.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xgemmt.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xgemm.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xpotrf.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xgemmt-diag.tpp"
 )
 target_link_libraries(_linalg-compact INTERFACE koqkatoo::linalg)
 target_compile_features(_linalg-compact INTERFACE cxx_std_20)
