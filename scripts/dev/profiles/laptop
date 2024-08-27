@@ -1,6 +1,7 @@
 include({{ os.path.join(profile_dir, "gcc14") }})
 
 [conf]
+tools.cmake.cmaketoolchain:user_toolchain+={{profile_dir}}/toolchains/laptop.cmake
 tools.build:cflags=["-march=skylake"]
 tools.build:cxxflags=["-march=skylake"]
 tools.build:cflags+=["-g3"]

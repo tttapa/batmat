@@ -1,8 +1,9 @@
 include({{ os.path.join(profile_dir, "gcc14") }})
 
 [conf]
-tools.build:cflags=["-march=rocketlake", "-mavx512f"]
-tools.build:cxxflags=["-march=rocketlake", "-mavx512f"]
+tools.cmake.cmaketoolchain:user_toolchain+={{profile_dir}}/toolchains/desktop.cmake
+tools.build:cflags=["-march=rocketlake", "-mavx512f", "-mavx512dq", "-mavx512ifma", "-mavx512cd", "-mavx512bw", "-mavx512vl", "-mavx512vbmi", "-mavx512vbmi2", "-mavx512vnni", "-mavx512bitalg", "-mavx512vpopcntdq", "-mfma"]
+tools.build:cxxflags=["-march=rocketlake", "-mavx512f", "-mavx512dq", "-mavx512ifma", "-mavx512cd", "-mavx512bw", "-mavx512vl", "-mavx512vbmi", "-mavx512vbmi2", "-mavx512vnni", "-mavx512bitalg", "-mavx512vpopcntdq", "-mfma"]
 tools.build:cflags+=["-g3"]
 tools.build:cxxflags+=["-g3"]
 tools.build.cross_building:can_run=true
