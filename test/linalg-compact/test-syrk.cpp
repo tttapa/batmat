@@ -57,14 +57,42 @@ class SyrkTest : public ::testing::Test {
                         << k << ")";
     }
 
+    void RunTestNonSquare(index_t m, index_t n, func_t func,
+                          naive_func_t naive_func) {
+        const auto backend = PreferredBackend::Reference;
+
+        Mat A{{.depth = 15, .rows = m, .cols = n}};
+        Mat C{{.depth = 15, .rows = m, .cols = n}};
+        std::ranges::generate(A, [&] { return nrml(rng); });
+        std::ranges::generate(C, [&] { return nrml(rng); });
+
+        // Save the original C matrix for comparison
+        Mat C_reference = C;
+
+        // Perform the operation
+        func(A, C, backend);
+
+        // Perform the reference operation for comparison
+        naive_func(A, C_reference);
+
+        // Verify that the results match the reference implementation
+        for (index_t i = 0; i < C.depth(); ++i)
+            for (index_t j = 0; j < C.rows(); ++j)
+                for (index_t k = 0; k < C.cols(); ++k)
+                    ASSERT_NEAR(C(i, j, k), C_reference(i, j, k), ε)
+                        << enum_name(backend) << "[" << m << ", " << n
+                        << "]: SYRK mismatch at (" << i << ", " << j << ", "
+                        << k << ")";
+    }
+
     static void naive_gemmt(bool transA, bool transB, real_t α, real_t β,
                             View A, View B, MutView C) {
-        auto M = transA ? A.cols() : A.rows();
-        auto N = transB ? B.rows() : B.cols();
+        auto M = C.rows();
+        auto N = C.cols();
         auto K = transA ? A.rows() : A.cols();
         for (index_t l = 0; l < A.depth(); ++l) {
             for (index_t r = 0; r < M; ++r) {
-                for (index_t c = 0; c <= std::min(r, N); ++c) {
+                for (index_t c = 0; c <= std::min(r, N - 1); ++c) {
                     auto Crc = C(l, r, c);
                     Crc *= β;
                     for (index_t k = 0; k < K; ++k) {
@@ -84,12 +112,12 @@ class SyrkTest : public ::testing::Test {
 
     static void naive_gemmt_diag(bool transA, bool transB, real_t α, real_t β,
                                  View A, View B, MutView C, View d) {
-        auto M = transA ? A.cols() : A.rows();
-        auto N = transB ? B.rows() : B.cols();
+        auto M = C.rows();
+        auto N = C.cols();
         auto K = transA ? A.rows() : A.cols();
         for (index_t l = 0; l < A.depth(); ++l) {
             for (index_t r = 0; r < M; ++r) {
-                for (index_t c = 0; c <= std::min(r, N); ++c) {
+                for (index_t c = 0; c <= std::min(r, N - 1); ++c) {
                     auto Crc = C(l, r, c);
                     Crc *= β;
                     for (index_t k = 0; k < K; ++k) {
@@ -131,6 +159,14 @@ TYPED_TEST(SyrkTest, SyrkTN) {
         for (index_t i : koqkatoo::tests::sizes)
             this->RunTest(backend, i, TestFixture::CompactBLAS_t::xsyrk_T,
                           std::bind_front(TestFixture::naive_syrk, true, 1, 0));
+}
+TYPED_TEST(SyrkTest, SyrkSubNonSquare) {
+    for (index_t i : koqkatoo::tests::sizes)
+        for (index_t j : koqkatoo::tests::sizes)
+            if (i >= j)
+                this->RunTestNonSquare(
+                    i, j, TestFixture::CompactBLAS_t::xsyrk_sub,
+                    std::bind_front(TestFixture::naive_syrk, false, -1, 1));
 }
 TYPED_TEST(SyrkTest, SyrkTSchurCopy) {
     for (index_t n : koqkatoo::tests::sizes) {

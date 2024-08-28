@@ -59,30 +59,53 @@ void xgemmt_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
     static_assert(RowsReg == ColsReg, "Square blocks required");
     const index_t I = C.rows(), J = C.cols();
     const index_t K = Conf.trans_A ? A.rows() : A.cols();
+    KOQKATOO_ASSUME(I == Conf.trans_A ? A.cols() : A.rows());
+    KOQKATOO_ASSUME(J == Conf.trans_B ? B.rows() : B.cols());
     KOQKATOO_ASSUME(I > 0);
     KOQKATOO_ASSUME(J > 0);
     KOQKATOO_ASSUME(K > 0);
-    KOQKATOO_ASSUME(I == J);
     static const auto microkernel_t = microkernel_t_lut<Abi, Conf>;
     static const auto microkernel   = microkernel_lut<Abi, Conf>;
     const single_batch_matrix_accessor<Abi, Conf.trans_A> A_ = A;
     const single_batch_matrix_accessor<Abi, Conf.trans_B> B_ = B;
     const mut_single_batch_matrix_accessor<Abi> C_           = C;
     // Optimization for very small matrices
-    if (I <= RowsReg)
+    if (I <= RowsReg && I == J)
         return microkernel_t[I - 1](A_, B_, C_, K);
     // Simply loop over all blocks in the given matrices.
-    for (index_t j = 0; j < J; j += ColsReg) {
-        const auto nj = std::min<index_t>(ColsReg, J - j);
+    index_t j;
+    for (j = 0; j + ColsReg <= J; j += ColsReg) {
+        const auto nj = ColsReg;
         const auto Bj = B_.middle_cols(j);
         for (index_t i = j; i < I; i += RowsReg) {
             const index_t ni = std::min<index_t>(RowsReg, I - i);
             const auto Ai    = A_.middle_rows(i);
             const auto Cij   = C_.block(i, j);
-            if (i == j)
-                microkernel_t[ni - 1](Ai, Bj, Cij, K);
-            else
+            if (i == j) {
+                KOQKATOO_ASSUME(ni == nj);
+                microkernel_t[nj - 1](Ai, Bj, Cij, K);
+            } else {
                 microkernel[ni - 1][nj - 1](Ai, Bj, Cij, K);
+            }
+        }
+    }
+    // Final block column is smaller
+    const auto nj = J - j;
+    if (nj > 0) {
+        const auto Bj = B_.middle_cols(j);
+        for (index_t i = j; i < I; i += RowsReg) {
+            const index_t ni = std::min<index_t>(RowsReg, I - i);
+            const auto Ai    = A_.middle_rows(i);
+            const auto Cij   = C_.block(i, j);
+            if (i == j) {
+                KOQKATOO_ASSUME(ni >= nj);
+                microkernel_t[nj - 1](Ai, Bj, Cij, K);
+                if (nj < ni) [[unlikely]]
+                    microkernel[ni - nj - 1][nj - 1](Ai.middle_rows(nj), Bj,
+                                                     Cij.middle_rows(nj), K);
+            } else {
+                microkernel[ni - 1][nj - 1](Ai, Bj, Cij, K);
+            }
         }
     }
 }

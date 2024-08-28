@@ -75,8 +75,8 @@ xpotrf_xtrsm_microkernel(const mut_single_batch_matrix_accessor<Abi> A11,
             A11_reg[index(i, j)] = A11_cached.load(i, j);
     // Actual Cholesky kernel (Cholesky–Crout)
     KOQKATOO_FULLY_UNROLLED_FOR (index_t j = 0; j < RowsReg; ++j) {
-        KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < j; ++k)
-            A11_reg[index(j, j)] -= A11_reg[index(j, k)] * A11_reg[index(j, k)];
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < j; ++l)
+            A11_reg[index(j, j)] -= A11_reg[index(j, l)] * A11_reg[index(j, l)];
         auto piv = A11_reg[index(j, j)] = sqrt(A11_reg[index(j, j)]);
         auto inv_piv = A11_reg[inv_index(j)] = simd{1} / piv;
         KOQKATOO_FULLY_UNROLLED_FOR (index_t i = j + 1; i < RowsReg; ++i) {

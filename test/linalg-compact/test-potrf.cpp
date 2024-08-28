@@ -22,7 +22,6 @@ class PotrfTest : public ::testing::Test {
     using View    = BatchedMatrixView<const real_t, index_t, simd_stride_t>;
     using MutView = BatchedMatrixView<real_t, index_t, simd_stride_t>;
     using func_t  = void(MutView, PreferredBackend);
-    using naive_func_t  = std::function<void(MutView)>;
     using CompactBLAS_t = CompactBLAS<abi_t>;
 
     void SetUp() override { rng.seed(12345); }
@@ -30,8 +29,7 @@ class PotrfTest : public ::testing::Test {
     std::mt19937 rng{12345};
     std::normal_distribution<real_t> nrml{0, 1};
 
-    void RunTest(PreferredBackend backend, index_t n, func_t func,
-                 naive_func_t naive_func) {
+    void RunTest(PreferredBackend backend, index_t n, func_t func) {
         Mat A{{.depth = 15, .rows = n, .cols = n}};
         std::ranges::generate(A, [&] { return nrml(rng); });
         A.view.add_to_diagonal(100);
@@ -43,7 +41,7 @@ class PotrfTest : public ::testing::Test {
         func(A, backend);
 
         // Perform the reference operation for comparison
-        naive_func(A_reference);
+        naive_potrf(A_reference);
 
         // Verify that the results match the reference implementation
         for (index_t i = 0; i < A.depth(); ++i)
@@ -53,6 +51,33 @@ class PotrfTest : public ::testing::Test {
                         << enum_name(backend) << "[" << n
                         << "]: POTRF mismatch at (" << i << ", " << j << ", "
                         << k << ")";
+    }
+
+    void RunTestSchur(PreferredBackend backend, index_t n, func_t func) {
+        Mat A{{.depth = 15, .rows = n, .cols = n}};
+        Mat B{{.depth = 15, .rows = n + 13, .cols = n}};
+        Mat AB{{.depth = 15, .rows = 2 * n + 13, .cols = n}};
+        std::ranges::generate(A, [&] { return nrml(rng); });
+        std::ranges::generate(B, [&] { return nrml(rng); });
+        A.view.add_to_diagonal(100);
+        AB.view.top_rows(n)         = A;
+        AB.view.bottom_rows(n + 13) = B;
+
+        // Perform the operation
+        func(AB, backend);
+
+        // Perform the reference operation for comparison
+        naive_potrf(A);
+        naive_trsm_RLTN(A, B);
+
+        // Verify that the results match the reference implementation
+        for (index_t i = 0; i < A.depth(); ++i)
+            for (index_t j = 0; j < B.rows(); ++j)
+                for (index_t k = 0; k < B.cols(); ++k)
+                    ASSERT_NEAR(AB(i, n + j, k), B(i, j, k), ε)
+                        << enum_name(backend) << "[" << n
+                        << "]: POTRF Schur mismatch at (" << i << ", " << j
+                        << ", " << k << ")";
     }
 
     static void naive_potrf(MutView A) {
@@ -72,6 +97,25 @@ class PotrfTest : public ::testing::Test {
             }
         }
     }
+
+    static void naive_trsm_RLTN(View L, MutView H) {
+        for (index_t l = 0; l < L.depth(); ++l) {
+            for (index_t k = 0; k < L.rows(); ++k) {
+                auto pivot     = L(l, k, k);
+                auto inv_pivot = 1 / pivot;
+                for (index_t i = 0; i < H.rows(); ++i)
+                    H(l, i, k) = H(l, i, k) * inv_pivot;
+                for (index_t j = k + 1; j < L.rows(); ++j) {
+                    auto Ljk = L(l, j, k);
+                    for (index_t i = 0; i < H.rows(); ++i) {
+                        auto Hij = H(l, i, j);
+                        Hij -= Ljk * H(l, i, k);
+                        H(l, i, j) = Hij;
+                    }
+                }
+            }
+        }
+    }
 };
 
 TYPED_TEST_SUITE(PotrfTest, koqkatoo::tests::Abis);
@@ -79,6 +123,10 @@ TYPED_TEST_SUITE(PotrfTest, koqkatoo::tests::Abis);
 TYPED_TEST(PotrfTest, Potrf) {
     for (auto backend : koqkatoo::tests::backends)
         for (index_t i : koqkatoo::tests::sizes)
-            this->RunTest(backend, i, TestFixture::CompactBLAS_t::xpotrf,
-                          TestFixture::naive_potrf);
+            this->RunTest(backend, i, TestFixture::CompactBLAS_t::xpotrf);
+}
+TYPED_TEST(PotrfTest, PotrfSchur) {
+    for (auto backend : koqkatoo::tests::backends)
+        for (index_t i : koqkatoo::tests::sizes)
+            this->RunTestSchur(backend, i, TestFixture::CompactBLAS_t::xpotrf);
 }

@@ -36,6 +36,12 @@ inline const constinit auto microkernel_lut =
     });
 
 template <class Abi>
+inline const constinit auto microkernel_trsm_lut =
+    make_1d_lut<RowsReg>([]<index_t Row>(index_constant<Row>) {
+        return xpotrf_xtrsm_microkernel<Abi, Row + 1>;
+    });
+
+template <class Abi>
 inline const constinit auto microkernel_syrk_lut =
     make_1d_lut<RowsReg>([]<index_t Row>(index_constant<Row>) {
         return xpotrf_xsyrk_microkernel<Abi, Row + 1, RowsReg>;
