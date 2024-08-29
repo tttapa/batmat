@@ -1,3 +1,7 @@
+#ifdef __clang__
+#pragma clang fp contract(fast)
+#endif
+
 #include <koqkatoo/linalg-compact/compact.tpp>
 
 namespace koqkatoo::linalg::compact {

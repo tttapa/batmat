@@ -12,6 +12,10 @@
 
 namespace koqkatoo::linalg::compact {
 
+struct size_last_t {
+    index_t rows, cols;
+};
+
 namespace stdx = std::experimental;
 
 template <class Abi = stdx::simd_abi::native<real_t>>
@@ -175,9 +179,17 @@ struct CompactBLAS {
     static void xcopy(single_batch_view A, mut_single_batch_view B);
     static void xcopy(batch_view A, mut_batch_view B);
 
+    /// A ← -A
+    static void xneg(mut_single_batch_view A);
+    static void xneg(mut_batch_view A);
+
     /// y += a x
     static void xaxpy(real_t a, single_batch_view x, mut_single_batch_view y);
     static void xaxpy(real_t a, batch_view x, mut_batch_view y);
+
+    /// y ← a x + b y
+    static void xaxpby(real_t a, single_batch_view x, real_t b, mut_single_batch_view y);
+    static void xaxpby(real_t a, batch_view x, real_t b, mut_batch_view y);
 
     /// Sum
     template <class... Views>
@@ -197,10 +209,96 @@ struct CompactBLAS {
 
     /// Dot product
     static real_t xdot(batch_view x, batch_view y);
+    static real_t xdot(size_last_t size_last, batch_view x, batch_view y);
     /// Square of the 2-norm
     static real_t xnrm2sq(batch_view x);
+    static real_t xnrm2sq(size_last_t size_last, batch_view x);
     /// Infinity/max norm
     static real_t xnrminf(batch_view x);
+    static real_t xnrminf(size_last_t size_last, batch_view x);
+
+    template <class T0, class F, class R, class... Args>
+    static auto xreduce(T0 init, F fun, R reduce, batch_view x0,
+                        const Args &...xs) {
+        const auto Bs   = static_cast<index_t>(x0.batch_size());
+        const index_t m = x0.rows(), n = x0.cols();
+        assert(((x0.rows() == xs.rows()) && ...));
+        assert(((x0.cols() == xs.cols()) && ...));
+        assert(((x0.depth() == xs.depth()) && ...));
+        assert(((x0.batch_size() == xs.batch_size()) && ...));
+        const index_t N_batched = x0.depth();
+        index_t i;
+        for (i = 0; i + Bs <= N_batched; i += Bs)
+            for (index_t c = 0; c < n; ++c)
+                for (index_t r = 0; r < m; ++r)
+                    init = fun(init, aligned_load(&x0(i, r, c)),
+                               aligned_load(&xs(i, r, c))...);
+        auto accum_scal = reduce(init);
+        for (; i < x0.depth(); ++i)
+            for (index_t c = 0; c < n; ++c)
+                for (index_t r = 0; r < m; ++r)
+                    accum_scal = fun(accum_scal, x0(i, r, c), (xs(i, r, c))...);
+        return accum_scal;
+    }
+
+    template <class T0, class F, class R, class... Args>
+    static auto xreduce(size_last_t size_last, T0 init, F fun, R reduce,
+                        batch_view x0, const Args &...xs) {
+        const auto Bs   = static_cast<index_t>(x0.batch_size());
+        const index_t m = x0.rows(), n = x0.cols();
+        assert(((x0.rows() == xs.rows()) && ...));
+        assert(((x0.cols() == xs.cols()) && ...));
+        assert(((x0.depth() == xs.depth()) && ...));
+        assert(((x0.batch_size() == xs.batch_size()) && ...));
+        const index_t N_batched = x0.depth() - 1;
+        index_t i;
+        for (i = 0; i + Bs <= N_batched; i += Bs)
+            for (index_t c = 0; c < n; ++c)
+                for (index_t r = 0; r < m; ++r)
+                    init = fun(init, aligned_load(&x0(i, r, c)),
+                               aligned_load(&xs(i, r, c))...);
+        auto accum_scal = reduce(init);
+        for (; i < x0.depth() - 1; ++i)
+            for (index_t c = 0; c < n; ++c)
+                for (index_t r = 0; r < m; ++r)
+                    accum_scal = fun(accum_scal, x0(i, r, c), (xs(i, r, c))...);
+        if (i < x0.depth())
+            for (index_t c = 0; c < size_last.cols; ++c)
+                for (index_t r = 0; r < size_last.rows; ++r)
+                    accum_scal = fun(accum_scal, x0(i, r, c), (xs(i, r, c))...);
+        return accum_scal;
+    }
+
+    template <class T0, class F, class R, class... Args>
+    static auto xreduce_enumerate(size_last_t size_last, T0 init, F fun,
+                                  R reduce, batch_view x0, const Args &...xs) {
+        const auto Bs   = static_cast<index_t>(x0.batch_size());
+        const index_t m = x0.rows(), n = x0.cols();
+        assert(((x0.rows() == xs.rows()) && ...));
+        assert(((x0.cols() == xs.cols()) && ...));
+        assert(((x0.depth() == xs.depth()) && ...));
+        assert(((x0.batch_size() == xs.batch_size()) && ...));
+        const index_t N_batched = x0.depth() - 1;
+        index_t i;
+        for (i = 0; i + Bs <= N_batched; i += Bs)
+            for (index_t c = 0; c < n; ++c)
+                for (index_t r = 0; r < m; ++r)
+                    init = fun(std::make_tuple(i, r, c), init,
+                               aligned_load(&x0(i, r, c)),
+                               aligned_load(&xs(i, r, c))...);
+        auto accum_scal = reduce(init);
+        for (; i < x0.depth() - 1; ++i)
+            for (index_t c = 0; c < n; ++c)
+                for (index_t r = 0; r < m; ++r)
+                    accum_scal = fun(std::make_tuple(i, r, c), accum_scal,
+                                     x0(i, r, c), (xs(i, r, c))...);
+        if (i < x0.depth())
+            for (index_t c = 0; c < size_last.cols; ++c)
+                for (index_t r = 0; r < size_last.rows; ++r)
+                    accum_scal = fun(std::make_tuple(i, r, c), accum_scal,
+                                     x0(i, r, c), (xs(i, r, c))...);
+        return accum_scal;
+    }
 
     /// y = x - clamp(x, l, u)
     static void proj_diff(single_batch_view x, single_batch_view l,

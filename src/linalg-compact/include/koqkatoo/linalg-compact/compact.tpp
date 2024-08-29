@@ -13,6 +13,8 @@
 #include "compact/xsyrk.tpp"
 #include "compact/xtrsm.tpp"
 
+#include <array>
+
 namespace koqkatoo::linalg::compact {
 
 template <class Abi>
@@ -138,6 +140,21 @@ void CompactBLAS<Abi>::xcopy(batch_view A, mut_batch_view B) {
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xneg(mut_single_batch_view A) {
+    const index_t n = A.rows(), m = A.cols();
+    for (index_t j = 0; j < m; ++j)
+        KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t i = 0; i < n; ++i)
+            aligned_store(&A(0, i, j), -aligned_load(&A(0, i, j)));
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xneg(mut_batch_view A) {
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < A.num_batches(); ++i)
+        xneg(A.batch(i));
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xaxpy(real_t a, single_batch_view x,
                              mut_single_batch_view y) {
     assert(x.rows() == y.rows());
@@ -146,31 +163,52 @@ void CompactBLAS<Abi>::xaxpy(real_t a, single_batch_view x,
     const index_t n = x.rows();
     for (index_t j = 0; j < x.cols(); ++j) {
         KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t i = 0; i < n; ++i) {
-            aligned_store(&y(0, i, j), fma(a_simd, aligned_load(&x(0, i, j)),
-                                           aligned_load(&y(0, i, j))));
+            aligned_store(&y(0, i, j), a_simd * aligned_load(&x(0, i, j)) +
+                                           aligned_load(&y(0, i, j)));
         }
     }
 }
 
 template <class Abi>
 void CompactBLAS<Abi>::xaxpy(real_t a, batch_view x, mut_batch_view y) {
+    assert(x.ceil_depth() == y.ceil_depth());
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < x.num_batches(); ++i)
+        xaxpy(a, x.batch(i), y.batch(i));
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xaxpby(real_t a, single_batch_view x, real_t b,
+                              mut_single_batch_view y) {
     assert(x.rows() == y.rows());
     assert(x.cols() == y.cols());
-    assert(x.cols() == 1);
-    simd a_simd{a};
-    index_t i;
-    const auto Bs   = static_cast<index_t>(x.batch_size());
     const index_t n = x.rows();
-    KOQKATOO_OMP(parallel for lastprivate(i))
-    for (i = 0; i <= x.depth() - Bs; i += Bs) {
-        KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t r = 0; r < n; ++r) {
-            aligned_store(&y(i, r, 0), fma(a_simd, aligned_load(&x(i, r, 0)),
-                                           aligned_load(&y(i, r, 0))));
+    if (b == 0) {
+        simd a_simd{a};
+        for (index_t j = 0; j < x.cols(); ++j) {
+            KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t i = 0; i < n; ++i) {
+                aligned_store(&y(0, i, j), a_simd * aligned_load(&x(0, i, j)));
+            }
+        }
+    } else {
+        simd a_simd{a}, b_simd{b};
+        for (index_t j = 0; j < x.cols(); ++j) {
+            KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t i = 0; i < n; ++i) {
+                aligned_store(&y(0, i, j),
+                              a_simd * aligned_load(&x(0, i, j)) +
+                                  b_simd * aligned_load(&y(0, i, j)));
+            }
         }
     }
-    for (; i < x.depth(); ++i)
-        for (index_t r = 0; r < n; ++r)
-            y(i, r, 0) += a * x(i, r, 0);
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xaxpby(real_t a, batch_view x, real_t b,
+                              mut_batch_view y) {
+    assert(x.ceil_depth() == y.ceil_depth());
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < x.num_batches(); ++i)
+        xaxpby(a, x.batch(i), b, y.batch(i));
 }
 
 template <class Abi>
@@ -237,49 +275,36 @@ void CompactBLAS<Abi>::xsub_copy_impl(mut_batch_view out, batch_view x1,
 template <class Abi>
 real_t CompactBLAS<Abi>::xdot(batch_view x, batch_view y) {
     using std::fma;
-    assert(x.depth() == y.depth());
-    assert(x.batch_size() == y.batch_size());
-    assert(x.rows() == y.rows());
-    assert(x.cols() == y.cols());
-    assert(x.cols() == 1);
-    simd dot_simd{0};
-    index_t i;
-    const auto Bs   = static_cast<index_t>(x.batch_size());
-    const index_t n = x.rows();
-    // KOQKATOO_OMP(parallel for reduction(+:dot_simd) lastprivate(i)) // TODO
-    for (i = 0; i <= x.depth() - Bs; i += Bs) {
-        KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t r = 0; r < n; ++r) {
-            dot_simd = fma(aligned_load(&x(i, r, 0)), aligned_load(&y(i, r, 0)),
-                           dot_simd);
-        }
-    }
-    real_t dot_scal{0};
-    for (; i < x.depth(); ++i)
-        for (index_t r = 0; r < n; ++r)
-            dot_scal = fma(x(i, r, 0), y(i, r, 0), dot_scal);
-    return reduce(dot_simd) + dot_scal;
+    // TODO: why does fma(xi, yi, accum) give such terrible code gen?
+    return xreduce(
+        simd{0}, [](auto accum, auto xi, auto yi) { return xi * yi + accum; },
+        [](auto accum) { return reduce(accum); }, x, y);
+}
+
+template <class Abi>
+real_t CompactBLAS<Abi>::xdot(size_last_t size_last, batch_view x,
+                              batch_view y) {
+    using std::fma;
+    return xreduce(
+        size_last, simd{0},
+        [](auto accum, auto xi, auto yi) { return xi * yi + accum; },
+        [](auto accum) { return reduce(accum); }, x, y);
 }
 
 template <class Abi>
 real_t CompactBLAS<Abi>::xnrm2sq(batch_view x) {
     using std::fma;
-    assert(x.cols() == 1);
-    simd dot_simd{0};
-    index_t i;
-    const auto Bs   = static_cast<index_t>(x.batch_size());
-    const index_t n = x.rows();
-    // KOQKATOO_OMP(parallel for reduction(+:dot_simd) lastprivate(i)) // TODO
-    for (i = 0; i <= x.depth() - Bs; i += Bs) {
-        KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t r = 0; r < n; ++r) {
-            auto xir = aligned_load(&x(i, r, 0));
-            dot_simd = fma(xir, xir, dot_simd);
-        }
-    }
-    real_t dot_scal{0};
-    for (; i < x.depth(); ++i)
-        for (index_t r = 0; r < n; ++r)
-            dot_scal = fma(x(i, r, 0), x(i, r, 0), dot_scal);
-    return reduce(dot_simd) + dot_scal;
+    return xreduce(
+        simd{0}, [](auto accum, auto xi) { return xi * xi + accum; },
+        [](auto accum) { return reduce(accum); }, x);
+}
+
+template <class Abi>
+real_t CompactBLAS<Abi>::xnrm2sq(size_last_t size_last, batch_view x) {
+    using std::fma;
+    return xreduce(
+        size_last, simd{0}, [](auto accum, auto xi) { return xi * xi + accum; },
+        [](auto accum) { return reduce(accum); }, x);
 }
 
 template <class Abi>
@@ -288,27 +313,30 @@ real_t CompactBLAS<Abi>::xnrminf(batch_view x) {
     using std::fma;
     using std::isfinite;
     using std::max;
-    assert(x.cols() == 1);
-    simd nrm_simd{0}, l1_nrm_simd{0};
-    index_t i;
-    const auto Bs   = static_cast<index_t>(x.batch_size());
-    const index_t n = x.rows();
-    // KOQKATOO_OMP(parallel for reduction(max:nrm_simd) reduction(+:l1_nrm_simd) lastprivate(i)) // TODO
-    for (i = 0; i <= x.depth() - Bs; i += Bs) {
-        KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t r = 0; r < n; ++r) {
-            auto axir = abs(aligned_load(&x(i, r, 0)));
-            nrm_simd  = max(axir, nrm_simd);
-            l1_nrm_simd += axir;
-        }
-    }
-    real_t nrm_scal = hmax(nrm_simd), l1_nrm_scal = reduce(l1_nrm_simd);
-    for (; i < x.depth(); ++i)
-        for (index_t r = 0; r < n; ++r) {
-            auto axir = abs(x(i, r, 0));
-            nrm_scal  = max(axir, nrm_scal);
-            l1_nrm_scal += axir;
-        }
-    return isfinite(l1_nrm_scal) ? nrm_scal : l1_nrm_scal;
+    auto [inf_nrm, l1_norm] = xreduce(
+        std::array<simd, 2>{0, 0},
+        [](auto accum, auto xi) {
+            return std::array{max(abs(xi), accum[0]), abs(xi) + accum[1]};
+        },
+        [](auto accum) { return std::array{hmax(accum[0]), reduce(accum[1])}; },
+        x);
+    return isfinite(l1_norm) ? inf_nrm : l1_norm;
+}
+
+template <class Abi>
+real_t CompactBLAS<Abi>::xnrminf(size_last_t size_last, batch_view x) {
+    using std::abs;
+    using std::fma;
+    using std::isfinite;
+    using std::max;
+    auto [inf_nrm, l1_norm] = xreduce(
+        size_last, std::array<simd, 2>{0, 0},
+        [](auto accum, auto xi) {
+            return std::array{max(abs(xi), accum[0]), abs(xi) + accum[1]};
+        },
+        [](auto accum) { return std::array{hmax(accum[0]), reduce(accum[1])}; },
+        x);
+    return isfinite(l1_norm) ? inf_nrm : l1_norm;
 }
 
 template <class Abi>
