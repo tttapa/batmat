@@ -75,6 +75,23 @@ struct Solver {
     void residual_dynamics_constr(real_view x, real_view b, mut_real_view Mxb);
     /// Aᵀy
     void mat_vec_transpose_constr(real_view y, mut_real_view Aᵀy);
+    /// Qx
+    void mat_vec_cost_add(real_view x, mut_real_view Qx);
+    /// Qx + q
+    void cost_gradient(real_view x, real_view q, mut_real_view grad_f);
+
+    [[nodiscard]] index_t num_variables() const {
+        auto [N, nx, nu, ny, ny_N] = storage.dim;
+        return N * (nx + nu) + nx;
+    }
+    [[nodiscard]] index_t num_constraints() const {
+        auto [N, nx, nu, ny, ny_N] = storage.dim;
+        return N * ny + ny_N;
+    }
+    [[nodiscard]] index_t num_dynamics_constraints() const {
+        auto [N, nx, nu, ny, ny_N] = storage.dim;
+        return (N + 1) * nx;
+    }
 
     Solver(const LinearOCPStorage &ocp);
 };

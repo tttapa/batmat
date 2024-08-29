@@ -48,4 +48,21 @@ void Solver<Abi>::mat_vec_transpose_constr(real_view y, mut_real_view Aᵀy) {
     compact_blas::xgemm_TN(CD(), y, Aᵀy, settings.preferred_backend);
 }
 
+template <simd_abi_tag Abi>
+void Solver<Abi>::mat_vec_cost_add(real_view x, mut_real_view Qx) {
+    // Qx += Q * x
+    compact_blas::xsymv_add(H(), x, Qx, settings.preferred_backend);
+}
+
+template <simd_abi_tag Abi>
+void Solver<Abi>::cost_gradient(real_view x, real_view q,
+                                mut_real_view grad_f) {
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < H().num_batches(); ++i) {
+        compact_blas::xcopy(q.batch(i), grad_f.batch(i));
+        compact_blas::xsymv_add(H().batch(i), x.batch(i), grad_f.batch(i),
+                                settings.preferred_backend);
+    }
+}
+
 } // namespace koqkatoo::ocp
