@@ -677,8 +677,9 @@ struct BatchedMatrix {
     BatchedMatrix(const BatchedMatrix &o) : BatchedMatrix{o.layout()} {
         this->view.copy_values(o.view); // TODO: exception safety
     }
-    BatchedMatrix(BatchedMatrix &&o) noexcept
-        : view{std::exchange(o.view, {})} {}
+    BatchedMatrix(BatchedMatrix &&o) noexcept : view{o.view} {
+        o.view.reassign({});
+    }
     BatchedMatrix &operator=(const BatchedMatrix &o) {
         if (&o != this) {
             clear();
@@ -690,8 +691,11 @@ struct BatchedMatrix {
         return *this;
     }
     BatchedMatrix &operator=(BatchedMatrix &&o) noexcept {
-        if (&o != this)
-            swap(o.view, this->view);
+        using std::swap;
+        if (&o != this) {
+            swap(o.view.data, this->view.data);
+            swap(o.view.layout, this->view.layout);
+        }
         return *this;
     }
     ~BatchedMatrix() { clear(); }
