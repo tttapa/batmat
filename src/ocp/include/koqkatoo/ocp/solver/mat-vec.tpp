@@ -65,4 +65,35 @@ void Solver<Abi>::cost_gradient(real_view x, real_view q,
     }
 }
 
+template <simd_abi_tag Abi>
+void Solver<Abi>::cost_gradient_regularized(real_t S, real_view x, real_view x0,
+                                            real_view q, mut_real_view grad_f) {
+    assert(x.depth() == x0.depth());
+    assert(x.depth() == q.depth());
+    assert(x.depth() == grad_f.depth());
+    assert(x.rows() == x0.rows());
+    assert(x.rows() == q.rows());
+    assert(x.rows() == grad_f.rows());
+    assert(x.cols() == 1);
+    assert(x.cols() == x0.cols());
+    assert(x.cols() == q.cols());
+    assert(x.cols() == grad_f.cols());
+    using simd = types::simd;
+    simd invS{1 / S};
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < H().num_batches(); ++i) {
+        auto qi = q.batch(i), grad_fi = grad_f.batch(i), xi = x.batch(i),
+             x0i = x0.batch(i);
+        for (index_t j = 0; j < x.rows(); ++j) {
+            simd qij{&qi(0, j, 0), stdx::vector_aligned},
+                xij{&xi(0, j, 0), stdx::vector_aligned},
+                x0ij{&x0i(0, j, 0), stdx::vector_aligned};
+            simd grad_fij = invS * (xij - x0ij) + qij;
+            grad_fij.copy_to(&grad_fi(0, j, 0), stdx::vector_aligned);
+        }
+        compact_blas::xsymv_add(H().batch(i), x.batch(i), grad_f.batch(i),
+                                settings.preferred_backend);
+    }
+}
+
 } // namespace koqkatoo::ocp
