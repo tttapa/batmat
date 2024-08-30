@@ -140,6 +140,21 @@ void CompactBLAS<Abi>::xcopy(batch_view A, mut_batch_view B) {
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xfill(real_t a, mut_single_batch_view B) {
+    const index_t n = B.rows(), m = B.cols();
+    for (index_t j = 0; j < m; ++j)
+        KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t i = 0; i < n; ++i)
+            aligned_store(&B(0, i, j), simd{a});
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xfill(real_t a, mut_batch_view B) {
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < B.num_batches(); ++i)
+        xfill(a, B.batch(i));
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xneg(mut_single_batch_view A) {
     const index_t n = A.rows(), m = A.cols();
     for (index_t j = 0; j < m; ++j)
