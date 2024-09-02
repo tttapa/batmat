@@ -82,6 +82,10 @@ struct Solver {
     /// Qx + q + S⁻¹(x - x₀)
     void cost_gradient_regularized(real_t S, real_view x, real_view x0,
                                    real_view q, mut_real_view grad_f);
+    /// grad_f -= S⁻¹(x - x₀)
+    void cost_gradient_remove_regularization(real_t S, real_view x,
+                                             real_view x0,
+                                             mut_real_view grad_f);
 
     [[nodiscard]] index_t num_variables() const {
         auto [N, nx, nu, ny, ny_N] = storage.dim;

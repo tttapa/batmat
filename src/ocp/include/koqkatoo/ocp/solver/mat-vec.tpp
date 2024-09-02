@@ -96,4 +96,30 @@ void Solver<Abi>::cost_gradient_regularized(real_t S, real_view x, real_view x0,
     }
 }
 
+template <simd_abi_tag Abi>
+void Solver<Abi>::cost_gradient_remove_regularization(real_t S, real_view x,
+                                                      real_view x0,
+                                                      mut_real_view grad_f) {
+    assert(x.depth() == x0.depth());
+    assert(x.depth() == grad_f.depth());
+    assert(x.rows() == x0.rows());
+    assert(x.rows() == grad_f.rows());
+    assert(x.cols() == 1);
+    assert(x.cols() == x0.cols());
+    assert(x.cols() == grad_f.cols());
+    using simd = types::simd;
+    simd invS{1 / S};
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < x.num_batches(); ++i) {
+        auto grad_fi = grad_f.batch(i), xi = x.batch(i), x0i = x0.batch(i);
+        for (index_t j = 0; j < x.rows(); ++j) {
+            simd grad_fij{&grad_fi(0, j, 0), stdx::vector_aligned},
+                xij{&xi(0, j, 0), stdx::vector_aligned},
+                x0ij{&x0i(0, j, 0), stdx::vector_aligned};
+            grad_fij += invS * (x0ij - xij);
+            grad_fij.copy_to(&grad_fi(0, j, 0), stdx::vector_aligned);
+        }
+    }
+}
+
 } // namespace koqkatoo::ocp
