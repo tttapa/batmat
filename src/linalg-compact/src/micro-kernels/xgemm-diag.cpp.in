@@ -1,4 +1,6 @@
+#ifdef __clang__
 #pragma clang fp contract(fast)
+#endif
 
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xgemm-diag.tpp>
 
