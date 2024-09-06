@@ -24,6 +24,12 @@ void xtrsm_register(single_batch_view<Abi> A,
 // AVX512 has 32 vector registers, we use 25 registers for a 5×5 accumulator
 // block of matrix B (leaving some registers for loading A):
 constexpr index_t RowsReg = 5, ColsReg = 5;
+#elif defined(__ARM_NEON)
+// NEON has 32 vector registers, we use 16 registers for a 4×4 accumulator
+// block of matrix B (leaving some registers for loading A).
+// On the Raspberry Pi 3B+ (Cortex A53) I used for testing, a 5×5 accumulator
+// was >16% slower for 20×20 matrices.
+constexpr index_t RowsReg = 4, ColsReg = 4;
 #else
 // AVX2 has 16 vector registers, we use 9 registers for a 3×3 accumulator
 // block of matrix B (leaving some registers for loading A):

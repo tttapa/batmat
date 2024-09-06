@@ -75,6 +75,19 @@ void xgemmt_diag_mask_register(single_batch_view<Abi> A,
 // AVX512 has 32 vector registers, we use 25 registers for a 5×5 accumulator
 // block of matrix C (leaving some registers for loading A and B):
 constexpr index_t RowsReg = 5, ColsReg = 5;
+#elif defined(__ARM_NEON)
+// NEON has 32 vector registers, we use 16 registers for a 4×4 accumulator
+// block of matrix C (leaving plenty of registers for loading A and B):
+// On the Raspberry Pi 3B+ (Cortex A53) I used for testing, a 5×5 accumulator
+// was >6% slower for 15×15 matrix-matrix multiplication, and >5% slower for
+// 20×20 matrices.
+// My conjecture is that since pre-loading the elements of A and B requires
+// RowsReg+ColsReg registers, the total number of registers required is then 35
+// for the 5×5 case, and the compiler prevents spilling those three extra
+// registers by interleaving the loads of A and B with FMA instructions, and
+// this is suboptimal because of the higher instruction latencies.
+// TODO: re-evaluate after implementing panel-major storage format.
+constexpr index_t RowsReg = 5, ColsReg = 5;
 #else
 // AVX2 has 16 vector registers, we use 9 registers for a 3×3 accumulator
 // block of matrix C (leaving some registers for loading A and B):

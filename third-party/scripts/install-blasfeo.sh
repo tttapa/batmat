@@ -3,6 +3,7 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"/..
 
 build_type="${1:-Release}"
 target="${2:-X64_INTEL_HASWELL}"
+host_triple="${3:-x86_64-bionic-linux-gnu}"
 version="master"
 
 set -ex
@@ -26,7 +27,7 @@ cmake -S. -Bbuild-$target \
     -D CMAKE_BUILD_TYPE=$build_type \
     -D TARGET=$target \
     -D BLASFEO_EXAMPLES=Off \
-    --toolchain "$HOME/opt/gcc14/x-tools/x86_64-bionic-linux-gnu.toolchain.cmake"
+    --toolchain "$HOME/opt/gcc14/x-tools/$host_triple.toolchain.cmake"
 cmake --build build-$target -j
 cmake --install build-$target
 popd

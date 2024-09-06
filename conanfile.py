@@ -30,10 +30,12 @@ class KoqkatooRecipe(ConanFile):
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
+        "dense_index_type": ["int", "long", "long long"],
     } | {k: [True, False] for k in bool_koqkatoo_options}
     default_options = {
         "shared": False,
         "fPIC": True,
+        "dense_index_type": "long long",
     } | bool_koqkatoo_options
 
     # Sources are located in the same place as this recipe, copy them to the recipe
@@ -69,12 +71,16 @@ class KoqkatooRecipe(ConanFile):
     def config_options(self):
         if self.settings.get_safe("os") == "Windows":
             self.options.rm_safe("fPIC")
+        # There is currently no 64-bit indices option for OpenBLAS using Conan
+        if self.options.with_openblas:
+            self.options.dense_index_type = "int"
 
     def layout(self):
         cmake_layout(self)
 
     def generate(self):
         tc = CMakeToolchain(self)
+        tc.variables["KOQKATOO_DENSE_INDEX_TYPE"] = self.options.dense_index_type
         for k in self.bool_koqkatoo_options:
             value = getattr(self.options, k, None)
             if value is not None and value.value is not None:

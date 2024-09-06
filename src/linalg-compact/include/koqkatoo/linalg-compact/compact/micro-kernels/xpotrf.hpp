@@ -22,6 +22,12 @@ void xpotrf_xsyrk_microkernel(single_batch_matrix_accessor<Abi> A21,
 // AVX512 has 32 vector registers, we use 25 to cache part of the A21 block of
 // the matrix:
 static constexpr index_t RowsReg = 5;
+#elif defined(__ARM_NEON)
+// NEON has 32 vector registers, we use 25 to cache part of the A21 block of
+// the matrix.
+// On the Raspberry Pi 3B+ (Cortex A53) I used for testing, a 4×4 accumulator is
+// around 1% slower than a 5×5 accumulator for 20×20 matrices.
+static constexpr index_t RowsReg = 5;
 #else
 // AVX2 has 16 vector registers, we (try to) use 16 to cache part of the A21
 // block of the matrix, and spill some elements to load the other data. This

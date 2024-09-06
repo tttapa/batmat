@@ -1,0 +1,14 @@
+include({{ os.path.join(os.getenv("HOME"), "opt/gcc14/x-tools/aarch64-rpi3-linux-gnu.profile.conan") }})
+
+[settings]
+compiler.cppstd=gnu23
+
+[conf]
+tools.cmake.cmaketoolchain:user_toolchain+={{profile_dir}}/toolchains/rpi3.cmake
+tools.build:cflags=["-mcpu=cortex-a53+crc+simd"]
+tools.build:cxxflags=["-mcpu=cortex-a53+crc+simd"]
+tools.build:cflags+=["-g3"]
+tools.build:cxxflags+=["-g3"]
+
+[options]
+openblas/*:target=CORTEXA53

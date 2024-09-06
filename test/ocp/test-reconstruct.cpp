@@ -31,7 +31,7 @@ using koqkatoo::RealMatrixView;
 namespace sp = guanaqo::linalg::sparsity;
 using namespace std::chrono_literals;
 
-#ifndef __clang__
+#if !(defined(__clang__) || defined(__aarch64__))
 namespace std {
 static ostream &operator<<(ostream &os, float128_t f) {
     return os << static_cast<long double>(f);
