@@ -45,7 +45,6 @@ void CompactBLAS<Abi>::xpotrf_recursive_ref(mut_single_batch_view H) {
 
 template <class Abi>
 void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H) {
-    using std::sqrt;
     const index_t m = H.rows(), n = H.cols();
     // Base case
     if (simd_stride * m * n * sizeof(real_t) <= 48_KiB * 32) // TODO: tune
@@ -66,7 +65,6 @@ void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H) {
 
 template <class Abi>
 void CompactBLAS<Abi>::xpotrf_base_ref(mut_single_batch_view H) {
-    using std::sqrt;
     using namespace micro_kernels;
     constexpr index_t R = potrf::RowsReg; // Block size
     const index_t m = H.rows(), n = H.cols();
