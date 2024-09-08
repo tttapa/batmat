@@ -4,6 +4,7 @@ py-build-cmake.local.toml
 
 # Temporary build and cache folders
 build
+/build-*
 .*cache
 __pycache__
 /build-local
@@ -26,6 +27,7 @@ wheelhouse
 *.o
 *.a
 *.so
+*.S
 a.out
 
 # Profiling
@@ -62,3 +64,4 @@ test.*.er
 *.mp4
 
 /data/**/*.csv
+/results/**/*.json
