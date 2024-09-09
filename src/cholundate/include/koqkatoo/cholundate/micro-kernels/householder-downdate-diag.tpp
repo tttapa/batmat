@@ -11,10 +11,12 @@
 namespace koqkatoo::cholundate::micro_kernels::householder {
 
 template <index_t R>
-[[gnu::hot]] void downdate_diag(mut_matrix_accessor L, mut_matrix_accessor A,
-                                index_t colsA, mut_W_accessor<R> W) noexcept {
+[[gnu::hot]] void downdate_diag(index_t colsA, mut_W_accessor<R> W,
+                                real_t *__restrict Ld, index_t ldL,
+                                real_t *__restrict Ad, index_t ldA) noexcept {
     using std::sqrt;
-    using simd                 = diag_simd_t<R>;
+    using simd = diag_simd_t<R>;
+    const mut_matrix_accessor L{Ld, ldL}, A{Ad, ldA};
     static constexpr index_t N = simd::size();
     static_assert(R % N == 0);
     static_assert(R > 0);

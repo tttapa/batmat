@@ -65,16 +65,16 @@ struct matrix_W_storage {
 };
 
 template <index_t R>
-void downdate_diag(mut_matrix_accessor L, mut_matrix_accessor A, index_t colsA,
-                   mut_W_accessor<R> W) noexcept;
+void downdate_diag(index_t colsA, mut_W_accessor<R> W, real_t *Ld, index_t ldL,
+                   real_t *Ad, index_t ldA) noexcept;
 
 template <index_t R>
-void downdate_full(mut_matrix_accessor L, mut_matrix_accessor A,
-                   index_t colsA) noexcept;
+void downdate_full(index_t colsA, real_t *Ld, index_t ldL, real_t *Ad,
+                   index_t ldA) noexcept;
 
 template <Config Conf>
-void downdate_tail(mut_matrix_accessor L, matrix_accessor B,
-                   mut_matrix_accessor A, index_t colsA,
-                   mut_W_accessor<Conf.block_size_r> W) noexcept;
+void downdate_tail(index_t colsA, mut_W_accessor<Conf.block_size_r> W,
+                   real_t *Lp, index_t ldL, const real_t *Bp, index_t ldB,
+                   real_t *Ap, index_t ldA) noexcept;
 
 } // namespace koqkatoo::cholundate::micro_kernels::householder

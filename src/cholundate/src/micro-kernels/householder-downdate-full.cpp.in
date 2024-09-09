@@ -7,6 +7,6 @@
 namespace koqkatoo::cholundate::micro_kernels::householder {
 
 template void downdate_full<@R@>(
-    mut_matrix_accessor L, mut_matrix_accessor A, index_t colsA) noexcept;
+    index_t colsA, real_t *Ld, index_t ldL, real_t *Ad, index_t ldA) noexcept;
 
 }

@@ -64,33 +64,34 @@ struct mat_access_impl {
         x.copy_to(&operator()(r, c), align);
     }
     template <class Self>
-    [[gnu::always_inline]] Self block(this const Self &self, index_t r,
-                                      index_t c) noexcept {
+    [[gnu::always_inline]] constexpr Self block(this const Self &self,
+                                                index_t r, index_t c) noexcept {
         return {&self(r, c), self.outer_stride};
     }
     template <class Self>
-    [[gnu::always_inline]] Self middle_rows(this const Self &self,
-                                            index_t r) noexcept {
+    [[gnu::always_inline]] constexpr Self middle_rows(this const Self &self,
+                                                      index_t r) noexcept {
         return {&self(r, 0), self.outer_stride};
     }
     template <class Self>
-    [[gnu::always_inline]] Self middle_cols(this const Self &self,
-                                            index_t c) noexcept {
+    [[gnu::always_inline]] constexpr Self middle_cols(this const Self &self,
+                                                      index_t c) noexcept {
         return {&self(0, c), self.outer_stride};
     }
 
-    [[gnu::always_inline]] mat_access_impl(
+    [[gnu::always_inline]] constexpr mat_access_impl(
         value_type *data, OuterStrideT outer_stride = {}) noexcept
         : data{data}, outer_stride{outer_stride} {}
-    [[gnu::always_inline]] mat_access_impl(
+    [[gnu::always_inline]] constexpr mat_access_impl(
         const guanaqo::MatrixView<T, index_t> &o) noexcept
         : data{o.data},
           outer_stride{o.outer_stride * static_cast<index_t>(inner_stride)} {}
-    [[gnu::always_inline]] mat_access_impl(
+    [[gnu::always_inline]] constexpr mat_access_impl(
         const mat_access_impl<std::remove_const_t<T>> &o) noexcept
         requires(std::is_const_v<T>)
         : data{o.data}, outer_stride{o.outer_stride} {}
-    [[gnu::always_inline]] mat_access_impl(const mat_access_impl &o) = default;
+    [[gnu::always_inline]] constexpr mat_access_impl(const mat_access_impl &o) =
+        default;
 };
 
 struct matrix_accessor : mat_access_impl<const real_t> {

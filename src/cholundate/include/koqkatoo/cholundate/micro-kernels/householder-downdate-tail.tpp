@@ -11,11 +11,14 @@
 namespace koqkatoo::cholundate::micro_kernels::householder {
 
 template <Config Conf>
-[[gnu::hot]] void downdate_tail(mut_matrix_accessor L, matrix_accessor B,
-                                mut_matrix_accessor A, index_t colsA,
-                                mut_W_accessor<Conf.block_size_r> W) noexcept {
-    using simdA                 = tail_simd_A_t<Conf>;
-    using simdL                 = tail_simd_L_t<Conf>;
+[[gnu::hot]] void
+downdate_tail(index_t colsA, mut_W_accessor<Conf.block_size_r> W,
+              real_t *__restrict Lp, index_t ldL, const real_t *__restrict Bp,
+              index_t ldB, real_t *__restrict Ap, index_t ldA) noexcept {
+    using simdA = tail_simd_A_t<Conf>;
+    using simdL = tail_simd_L_t<Conf>;
+    const mut_matrix_accessor L{Lp, ldL}, A{Ap, ldA};
+    const matrix_accessor B{Bp, ldB};
     static constexpr index_t NA = simdA::size(), NL = simdL::size();
     static constexpr index_t S = Conf.block_size_s, R = Conf.block_size_r;
     static_assert(S % NA == 0);
@@ -35,16 +38,20 @@ template <Config Conf>
                     V[i / NA][kk + k] += A.load<simdA>(i, j) * Akj[k];
         }
     // Solve system V = (L+U)W⁻¹ (in-place)
-    UNROLL_FOR (index_t k = 0; k < R; ++k)
+    UNROLL_FOR (index_t k = 0; k < R; ++k) {
+        simdL Wk[R / NL];
+        UNROLL_FOR (index_t l = 0; l < k; l += NL)
+            Wk[l / NL] = W.template load<simdL>(l, k, stdx::vector_aligned);
         UNROLL_FOR (index_t i = 0; i < S; i += NA) {
             auto Lik = L.load<simdA>(i, k);
             V[i / NA][k] += Lik;
             UNROLL_FOR (index_t l = 0; l < k; ++l)
-                V[i / NA][k] -= V[i / NA][l] * W(l, k);
+                V[i / NA][k] -= V[i / NA][l] * Wk[l / NL][l % NL];
             V[i / NA][k] *= W(k, k); // diagonal already inverted
             Lik += V[i / NA][k];
             L.store(Lik, i, k);
         }
+    }
 #if 0
     // Update A -= V Bᵀ
     UNROLL_FOR_A_COLS (index_t j = 0; j < colsA; ++j)
