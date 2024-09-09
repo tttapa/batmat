@@ -1,4 +1,5 @@
 find_package(benchmark REQUIRED)
+find_package(Eigen3)
 
 add_executable(benchmark-gemm gemm.cpp benchmark-main.cpp)
 target_link_libraries(benchmark-gemm PRIVATE
@@ -11,6 +12,13 @@ target_link_libraries(benchmark-trsm PRIVATE
 add_executable(benchmark-potrf potrf.cpp benchmark-main.cpp)
 target_link_libraries(benchmark-potrf PRIVATE
     benchmark::benchmark koqkatoo::linalg-compact koqkatoo::warnings)
+
+if (TARGET Eigen3::Eigen)
+    add_executable(benchmark-shh shh.cpp benchmark-main.cpp)
+    target_link_libraries(benchmark-shh PRIVATE
+        Eigen3::Eigen benchmark::benchmark koqkatoo::linalg koqkatoo::cholundate
+        koqkatoo::warnings)
+endif()
 
 set(KOQKATOO_BLASFEO_TARGET "X64_INTEL_HASWELL" CACHE STRING
     "Target architecture for the BLASFEO library")
