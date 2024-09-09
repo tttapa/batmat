@@ -17,6 +17,7 @@ add_executable(tests
     "linalg-compact/test-trsm.cpp"
     "linalg-compact/test-syrk.cpp"
     "linalg-compact/test-potrf.cpp"
+    "cholundate/test-shh-downdate.cpp"
 )
 target_compile_definitions(tests PRIVATE
     $<$<BOOL:${KOQKATOO_EXTENSIVE_TESTS}>:KOQKATOO_EXTENSIVE_TESTS>)
@@ -24,7 +25,7 @@ target_include_directories(tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(tests PRIVATE _CRT_SECURE_NO_WARNINGS)
 target_link_libraries(tests PRIVATE
     koqkatoo::koqkatoo koqkatoo::linalg-compact koqkatoo::warnings
-    koqkatoo::ocp
+    koqkatoo::ocp koqkatoo::cholundate
     GTest::gtest_main GTest::gmock
     Eigen3::Eigen)
 if (MSVC)

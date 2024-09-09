@@ -57,8 +57,8 @@ endmacro()
 set(KOQKATOO_INSTALLED_TARGETS_MSG "\nSummary of koqkatoo components and targets to install:\n\n")
 
 # Install the koqkatoo core libraries
-set(KOQKATOO_CORE_HIDDEN_TARGETS warnings blas-lapack-lib common_options linalg-compact-headers ${KOQKATOO_CODEGEN_TARGETS})
-set(KOQKATOO_CORE_TARGETS config koqkatoo linalg linalg-compact ocp)
+set(KOQKATOO_CORE_HIDDEN_TARGETS warnings blas-lapack-lib common_options linalg-compact-headers cholundate-headers ${KOQKATOO_CODEGEN_TARGETS})
+set(KOQKATOO_CORE_TARGETS config koqkatoo linalg linalg-compact ocp cholundate)
 if (KOQKATOO_CORE_TARGETS)
     install(TARGETS ${KOQKATOO_CORE_HIDDEN_TARGETS} ${KOQKATOO_CORE_TARGETS}
         EXPORT koqkatooCoreTargets

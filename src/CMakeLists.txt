@@ -56,6 +56,28 @@ target_link_libraries(linalg PUBLIC koqkatoo::koqkatoo koqkatoo::blas-lapack-lib
 target_compile_features(linalg PRIVATE cxx_std_20)
 koqkatoo_configure_library(linalg EXPORT_PREFIX koqkatoo)
 
+# Cholesky factorization up/downdates
+# ------------------------------------------------------------------------------
+add_library(cholundate-headers INTERFACE)
+target_sources(cholundate-headers INTERFACE FILE_SET headers TYPE HEADERS
+    BASE_DIRS "cholundate/include"
+    FILES "cholundate/include/koqkatoo/cholundate/cholundate.hpp"
+          "cholundate/include/koqkatoo/cholundate/householder-downdate.hpp"
+          "cholundate/include/koqkatoo/cholundate/micro-kernels/common.hpp"
+          "cholundate/include/koqkatoo/cholundate/micro-kernels/householder-downdate-diag.tpp"
+          "cholundate/include/koqkatoo/cholundate/micro-kernels/householder-downdate-tail.tpp"
+)
+target_link_libraries(cholundate-headers INTERFACE koqkatoo::koqkatoo)
+target_compile_features(cholundate-headers INTERFACE cxx_std_20)
+
+include("cholundate/src/micro-kernels/Codegen.cmake")
+codegen_cholundate_microkernels(cholundate-headers)
+
+add_library(cholundate "cholundate/src/cholundate.cpp")
+target_link_libraries(cholundate PRIVATE cholundate-headers-microkernels)
+target_link_libraries(cholundate PUBLIC cholundate-headers)
+koqkatoo_configure_library(cholundate EXPORT_PREFIX koqkatoo)
+
 # Linear algebra routines for compact batches of matrices
 # ------------------------------------------------------------------------------
 add_library(linalg-compact-headers INTERFACE)

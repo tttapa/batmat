@@ -1,0 +1,12 @@
+#ifdef __clang__
+#pragma clang fp contract(fast)
+#endif
+
+#include <koqkatoo/cholundate/micro-kernels/householder-downdate-full.tpp>
+
+namespace koqkatoo::cholundate::micro_kernels::householder {
+
+template void downdate_full<@R@>(
+    mut_matrix_accessor L, mut_matrix_accessor A, index_t colsA) noexcept;
+
+}
