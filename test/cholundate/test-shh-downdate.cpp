@@ -102,7 +102,7 @@ TEST_P(SHHDown, VariousSizes) {
     }
 }
 
-#if KOQKATOO_WITH_LIBFORK && 0 // TODO
+#if KOQKATOO_WITH_LIBFORK
 TEST_P(SHHDown, VariousSizesLibFork) {
     index_t n = GetParam();
     for (index_t m : {1, 2, 3, 4, 5, 6, 7, 8, 11, 16, 17, 31, 32}) {
@@ -119,4 +119,4 @@ TEST_P(SHHDown, VariousSizesLibFork) {
 }
 #endif
 
-INSTANTIATE_TEST_SUITE_P(Cholundate, SHHDown, testing::Range(1, 256));
+INSTANTIATE_TEST_SUITE_P(Cholundate, SHHDown, testing::Range<index_t>(1, 256));

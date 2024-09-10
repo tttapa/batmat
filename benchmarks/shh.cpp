@@ -202,10 +202,29 @@ BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 2
 BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 32)->RNGS();
 BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 12, 4)->RNGS();
 BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 12, 8)->RNGS();
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 12, 12)->RNGS();
 BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 8)->RNGS();
 BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 12)->RNGS();
 BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 16)->RNGS();
 BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 24)->RNGS();
 BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 32)->RNGS();
 BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 32, 8)->RNGS();
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 32, 32)->RNGS();
+#if KOQKATOO_WITH_LIBFORK
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 1, 32)->RNGS()->MeasureProcessCPUTime();
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 4)->RNGS()->MeasureProcessCPUTime();
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 8)->RNGS()->MeasureProcessCPUTime();
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 12)->RNGS()->MeasureProcessCPUTime();
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 16)->RNGS()->MeasureProcessCPUTime();
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 24)->RNGS()->MeasureProcessCPUTime();
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 32)->RNGS()->MeasureProcessCPUTime();
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 8, 8)->RNGS()->MeasureProcessCPUTime();
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 8, 16)->RNGS()->MeasureProcessCPUTime();
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 8, 24)->RNGS()->MeasureProcessCPUTime();
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 8, 32)->RNGS()->MeasureProcessCPUTime();
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 12, 12)->RNGS()->MeasureProcessCPUTime();
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 16, 16)->RNGS()->MeasureProcessCPUTime();
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 16, 32)->RNGS()->MeasureProcessCPUTime();
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 32, 32)->RNGS()->MeasureProcessCPUTime();
+#endif
 // clang-format on

@@ -87,6 +87,11 @@ struct mat_access_impl {
         : data{o.data},
           outer_stride{o.outer_stride * static_cast<index_t>(inner_stride)} {}
     [[gnu::always_inline]] constexpr mat_access_impl(
+        const guanaqo::MatrixView<std::remove_const_t<T>, index_t> &o) noexcept
+        requires(std::is_const_v<T>)
+        : data{o.data},
+          outer_stride{o.outer_stride * static_cast<index_t>(inner_stride)} {}
+    [[gnu::always_inline]] constexpr mat_access_impl(
         const mat_access_impl<std::remove_const_t<T>> &o) noexcept
         requires(std::is_const_v<T>)
         : data{o.data}, outer_stride{o.outer_stride} {}
