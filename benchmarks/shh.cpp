@@ -139,13 +139,14 @@ BENCHMARK_DEFINE_F(CholeskyFixture, blas)(benchmark::State &state) {
         state.ResumeTiming();
         benchmark::DoNotOptimize(matrices->second.A.data());
         benchmark::DoNotOptimize(L̃.data());
-        const real_t one = 1, negone = -1;
         const auto ldA = static_cast<index_t>(matrices->second.A.outerStride());
         const auto ldL = static_cast<index_t>(L̃.outerStride());
-        dsyrk("L", "N", &n, &m, &negone, matrices->second.A.data(), &ldA, &one,
-              L̃.data(), &ldL);
+        koqkatoo::linalg::xsyrk<real_t, index_t>(
+            CblasColMajor, CblasLower, CblasNoTrans, n, m, -1,
+            matrices->second.A.data(), ldA, 1, L̃.data(), ldL);
         index_t info = 0;
-        dpotrf("L", &n, L̃.data(), &ldL, &info);
+        koqkatoo::linalg::xpotrf<real_t, index_t>("L", &n, L̃.data(), &ldL,
+                                                  &info);
         benchmark::ClobberMemory();
     }
     state.SetComplexityN(m); // (n * n * n / 6 - n / 6 + m * n * n / 2)
