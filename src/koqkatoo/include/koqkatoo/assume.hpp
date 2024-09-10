@@ -1,10 +1,12 @@
 #pragma once
 
+#include <koqkatoo/config.hpp>
+
 /// @def KOQKATOO_ASSUME(x)
 /// Invokes undefined behavior if the expression @p x does not evaluate to true.
 /// @throws std::logic_error in debug mode (when `NDEBUG` is not defined).
 
-#ifdef NDEBUG
+#if defined(NDEBUG) && !KOQKATOO_VERIFY_ASSUMPTIONS
 #if __has_cpp_attribute(assume) >= 202207L
 #define KOQKATOO_ASSUME(x) [[assume(x)]]
 #else
@@ -25,7 +27,7 @@
 #define KOQKATOO_ASSUME(x) __assume(x)
 #endif // __cpp_lib_unreachable >= 202202L
 #endif // __has_cpp_attribute(assume)
-#endif // NDEBUG
+#endif // defined(NDEBUG) && !KOQKATOO_VERIFY_ASSUMPTIONS
 
 #ifndef KOQKATOO_ASSUME
 #include <koqkatoo/stringify.h>

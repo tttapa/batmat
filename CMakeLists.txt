@@ -40,6 +40,8 @@ set(KOQKATOO_DOXYFILE "Doxyfile" CACHE FILEPATH
     "The Doxyfile to use for the docs target")
 option(KOQKATOO_WITH_ACCURATE_BUILD_TIME
     "Update the build time on every build" On)
+option(KOQKATOO_VERIFY_ASSUMPTIONS
+    "Check assumptions at run time instead of blindly assuming" Off)
 option(KOQKATOO_DEVELOPER_MODE
     "Enable developer options such as ccache and colored compiler output" Off)
 
