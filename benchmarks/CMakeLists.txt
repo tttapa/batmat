@@ -14,7 +14,7 @@ target_link_libraries(benchmark-potrf PRIVATE
     benchmark::benchmark koqkatoo::linalg-compact koqkatoo::warnings)
 
 if (TARGET Eigen3::Eigen)
-    add_executable(benchmark-shh shh.cpp benchmark-main.cpp)
+    add_executable(benchmark-shh shh.cpp)
     target_link_libraries(benchmark-shh PRIVATE
         Eigen3::Eigen benchmark::benchmark koqkatoo::linalg koqkatoo::cholundate
         koqkatoo::warnings)

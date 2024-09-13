@@ -16,6 +16,7 @@
 using koqkatoo::index_t;
 using koqkatoo::real_t;
 static constexpr auto use_index_t = guanaqo::with_index_type<index_t>;
+using std::pow;
 
 #if KOQKATOO_WITH_OPENMP
 #include <omp.h>
@@ -110,6 +111,15 @@ struct CholeskyFixture : benchmark::Fixture {
         const char *color = r < 1e-9 ? "" : "\x1b[0;31m";
         const char *reset = r < 1e-9 ? "" : "\x1b[0m";
         state.SetLabel(std::format("{}resid={:7e}{}", color, r, reset));
+        compute_flops(state);
+    }
+
+    virtual void compute_flops(benchmark::State &state) const {
+        auto nd = static_cast<double>(n), md = static_cast<double>(m);
+        auto flop_cnt                 = pow(nd, 3) / 6 + md * pow(nd, 2) / 2;
+        state.counters["GFLOP count"] = {1e-9 * flop_cnt};
+        state.counters["GFLOPS"]      = {
+            1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
     }
 
     template <auto Func>
@@ -125,12 +135,19 @@ struct CholeskyFixture : benchmark::Fixture {
             Func(as_view(L̃, use_index_t), as_view(Ã, use_index_t));
             benchmark::ClobberMemory();
         }
-        state.SetComplexityN(m); // (m * n * n + n * n + m * n)
     }
 };
 
 template <index_t BsL, index_t BsA, auto...>
-struct BlockedFixture : CholeskyFixture {};
+struct BlockedFixture : CholeskyFixture {
+    void compute_flops(benchmark::State &state) const override {
+        auto nd = static_cast<double>(n), md = static_cast<double>(m);
+        auto flop_cnt                 = md * pow(nd, 2) + pow(nd, 2) + md * nd;
+        state.counters["GFLOP count"] = {1e-9 * flop_cnt};
+        state.counters["GFLOPS"]      = {
+            1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
+    }
+};
 
 BENCHMARK_DEFINE_F(CholeskyFixture, blas)(benchmark::State &state) {
     for (auto _ : state) {
@@ -149,9 +166,19 @@ BENCHMARK_DEFINE_F(CholeskyFixture, blas)(benchmark::State &state) {
                                                   &info);
         benchmark::ClobberMemory();
     }
-    state.SetComplexityN(m); // (n * n * n / 6 - n / 6 + m * n * n / 2)
 }
 
+std::vector<::benchmark::internal::Benchmark *> benchmarks;
+
+#define BM_BLK_REGISTER_F(BaseClass, Method)                                   \
+    BM_BLK_PRIVATE_REGISTER_F(BENCHMARK_PRIVATE_CONCAT_NAME(BaseClass, Method))
+#define BM_BLK_PRIVATE_REGISTER_F(TestName)                                    \
+    BENCHMARK_PRIVATE_DECLARE(TestName) = [] {                                 \
+        using ::benchmark::internal::RegisterBenchmarkInternal;                \
+        auto *bm = RegisterBenchmarkInternal(new TestName());                  \
+        benchmarks.push_back(bm);                                              \
+        return bm;                                                             \
+    }()
 #define BM_BLK_IMPL_NAME(name, BsL, BsA, ...) name##_L##BsL##_A##BsA
 #define BM_BLK_NAME(name, BsL, BsA, ...) #name "<" #BsL ", " #BsA ">"
 #define BENCHMARK_BLOCKED(name, func, ...)                                     \
@@ -160,72 +187,120 @@ BENCHMARK_DEFINE_F(CholeskyFixture, blas)(benchmark::State &state) {
     (benchmark::State & state) {                                               \
         this->customRun<func<{__VA_ARGS__}>>(state);                           \
     }                                                                          \
-    BENCHMARK_REGISTER_F(BlockedFixture,                                       \
-                         BM_BLK_IMPL_NAME(name, __VA_ARGS__, 0))               \
+    BM_BLK_REGISTER_F(BlockedFixture, BM_BLK_IMPL_NAME(name, __VA_ARGS__, 0))  \
         ->Name(BM_BLK_NAME(name, __VA_ARGS__, 0))
 
-#if 0
-#define N 512
-auto m_range = [] {
-    std::vector<int64_t> v;
-    for (int64_t i = 1; i < 16; ++i)
-        v.push_back(i);
-    for (int64_t i = 16; i <= N; i *= 2)
-        v.push_back(i);
-    return v;
-}();
-std::vector<int64_t> n_range{N};
-#else
-auto n_range = [] {
-    std::vector<int64_t> v;
-    for (int64_t i = 4; i <= 8192; i *= 2)
-        v.push_back(i);
-    return v;
-}();
-std::vector<int64_t> m_range{128};
-#endif
+void configure_benchmarks(bool fix_m, int64_t M, int64_t N);
 
-#define RNGS() ArgNames({"m", "n"})->ArgsProduct({m_range, n_range})
+int main(int argc, char **argv) {
+    if (argc < 1)
+        return 1;
+    // Parse command-line arguments
+    std::vector<char *> argvv{argv, argv + argc};
+    bool fix_m = false;
+    int64_t M = 8, N = 256;
+    for (auto it = argvv.begin(); it != argvv.end();) {
+        std::string_view arg = *it;
+        if (arg == "--fix_m") {
+            fix_m = true;
+            argvv.erase(it);
+        } else if (arg == "--fix_n") {
+            fix_m = false;
+            argvv.erase(it);
+        } else if (std::string_view flag = "--m="; arg.starts_with(flag)) {
+            M = std::stoi(std::string(arg.substr(flag.size())));
+            argvv.erase(it);
+        } else if (std::string_view flag = "--n="; arg.starts_with(flag)) {
+            N = std::stoi(std::string(arg.substr(flag.size())));
+            argvv.erase(it);
+        } else {
+            ++it;
+        }
+    }
+    configure_benchmarks(fix_m, M, N);
+
+    argc = static_cast<int>(argvv.size());
+    ::benchmark::Initialize(&argc, argvv.data());
+    if (::benchmark::ReportUnrecognizedArguments(argc, argvv.data()))
+        return 1;
+#if KOQKATOO_WITH_OPENMP
+    benchmark::AddCustomContext("OMP_NUM_THREADS",
+                                std::to_string(omp_get_max_threads()));
+#endif
+    benchmark::AddCustomContext("koqkatoo_build_time", koqkatoo_build_time);
+    benchmark::AddCustomContext("koqkatoo_commit_hash", koqkatoo_commit_hash);
+#if defined(__AVX512F__)
+    benchmark::AddCustomContext("arch", "avx512f");
+#elif defined(__AVX2__)
+    benchmark::AddCustomContext("arch", "avx2");
+#elif defined(__AVX__)
+    benchmark::AddCustomContext("arch", "avx");
+#elif defined(__SSE3__)
+    benchmark::AddCustomContext("arch", "sse3");
+#endif
+    ::benchmark::RunSpecifiedBenchmarks();
+    ::benchmark::Shutdown();
+}
 
 // clang-format off
-BENCHMARK_REGISTER_F(CholeskyFixture, blas)->Name("blas")->RNGS()->MeasureProcessCPUTime();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 1, 32)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 4, 4)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 4, 8)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 4, 12)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 4, 16)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 4, 24)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 4, 32)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 8)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 12)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 16)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 24)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 32)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 12, 4)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 12, 8)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 12, 12)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 8)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 12)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 16)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 24)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 32)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 32, 8)->RNGS();
-BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 32, 32)->RNGS();
+BM_BLK_REGISTER_F(CholeskyFixture, blas)->Name("blas");
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 1, 32);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 4, 4);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 4, 8);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 4, 12);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 4, 16);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 4, 24);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 4, 32);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 8);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 12);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 16);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 24);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 32);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 12, 4);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 12, 8);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 12, 12);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 8);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 12);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 16);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 24);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 32);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 32, 8);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 32, 32);
 #if KOQKATOO_WITH_LIBFORK
-BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 1, 32)->RNGS()->MeasureProcessCPUTime();
-BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 4)->RNGS()->MeasureProcessCPUTime();
-BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 8)->RNGS()->MeasureProcessCPUTime();
-BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 12)->RNGS()->MeasureProcessCPUTime();
-BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 16)->RNGS()->MeasureProcessCPUTime();
-BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 24)->RNGS()->MeasureProcessCPUTime();
-BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 32)->RNGS()->MeasureProcessCPUTime();
-BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 8, 8)->RNGS()->MeasureProcessCPUTime();
-BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 8, 16)->RNGS()->MeasureProcessCPUTime();
-BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 8, 24)->RNGS()->MeasureProcessCPUTime();
-BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 8, 32)->RNGS()->MeasureProcessCPUTime();
-BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 12, 12)->RNGS()->MeasureProcessCPUTime();
-BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 16, 16)->RNGS()->MeasureProcessCPUTime();
-BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 16, 32)->RNGS()->MeasureProcessCPUTime();
-BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 32, 32)->RNGS()->MeasureProcessCPUTime();
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 1, 32);
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 4);
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 8);
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 12);
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 16);
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 24);
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 32);
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 8, 8);
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 8, 16);
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 8, 24);
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 8, 32);
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 12, 12);
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 16, 16);
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 16, 32);
+BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 32, 32);
 #endif
 // clang-format on
+
+void configure_benchmarks(bool fix_m, int64_t M, int64_t N) {
+    std::vector<int64_t> m_range{M}, n_range{N};
+    if (fix_m) {
+        n_range.clear();
+        for (int64_t i = 4; i <= N; i *= 2)
+            n_range.push_back(i);
+    } else {
+        m_range.clear();
+        for (int64_t i = 1; i <= std::min<int64_t>(16, M); ++i)
+            m_range.push_back(i);
+        for (int64_t i = 32; i <= M; i *= 2)
+            m_range.push_back(i);
+    }
+    for (auto *bm : benchmarks)
+        bm->ArgNames({"m", "n"})
+            ->ArgsProduct({m_range, n_range})
+            ->MeasureProcessCPUTime()
+            ->UseRealTime();
+}
