@@ -14,6 +14,10 @@ function(koqkatoo_set_mkl_interface)
     set(MKL_INTERFACE "${MKL_INTERFACE_${INDEX_TYPE}}" PARENT_SCOPE)
 endfunction()
 
+if (KOQKATOO_WITH_MKL AND KOQKATOO_WITH_OPENBLAS)
+    message(WARNING "Options KOQKATOO_WITH_MKL and KOQKATOO_WITH_OPENBLAS are both enabled. Using MKL and ignoring OpenBLAS.")
+endif()
+
 add_library(blas-lapack-lib INTERFACE)
 target_compile_definitions(blas-lapack-lib INTERFACE
     $<$<BOOL:${KOQKATOO_WITH_MKL}>:KOQKATOO_WITH_MKL>)
