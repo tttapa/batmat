@@ -30,13 +30,16 @@ downdate_tail(index_t colsA, mut_W_accessor<Conf.block_size_r> W,
 
     // Compute product U = A B
     simdA V[S / NA][R]{};
-    UNROLL_FOR_A_COLS (index_t j = 0; j < colsA; ++j)
+    UNROLL_FOR_A_COLS (index_t j = 0; j < colsA; ++j) {
+        if (Conf.prefetch_dist_col_a > 0)
+            _mm_prefetch(&A(0, j + Conf.prefetch_dist_col_a), _MM_HINT_T0);
         UNROLL_FOR (index_t kk = 0; kk < R; kk += NL) {
             auto Akj = B.load<simdL>(kk, j);
             UNROLL_FOR (index_t k = 0; k < NL; ++k)
                 UNROLL_FOR (index_t i = 0; i < S; i += NA)
                     V[i / NA][kk + k] += A.load<simdA>(i, j) * Akj[k];
         }
+    }
     // Solve system V = (L+U)W⁻¹ (in-place)
     UNROLL_FOR (index_t k = 0; k < R; ++k) {
         simdL Wk[R / NL];
@@ -67,6 +70,8 @@ downdate_tail(index_t colsA, mut_W_accessor<Conf.block_size_r> W,
 #else
     // Update A -= V Bᵀ
     UNROLL_FOR_A_COLS (index_t j = 0; j < colsA; ++j) {
+        if (Conf.prefetch_dist_col_a > 0)
+            _mm_prefetch(&A(0, j + Conf.prefetch_dist_col_a), _MM_HINT_T0);
         simdL Akj[R / NL];
         UNROLL_FOR (index_t kk = 0; kk < R; kk += NL)
             Akj[kk / NL] = B.load<simdL>(kk, j);

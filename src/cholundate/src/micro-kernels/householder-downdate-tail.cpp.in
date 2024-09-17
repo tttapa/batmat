@@ -6,7 +6,14 @@
 
 namespace koqkatoo::cholundate::micro_kernels::householder {
 
-template void downdate_tail<{.block_size_r = @R@, .block_size_s = @S@}>(
-    index_t colsA, mut_W_accessor<@R@> W, real_t *Lp, index_t ldL, const real_t *Bp, index_t ldB, real_t *Ap, index_t ldA) noexcept;
+template void downdate_tail<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 0}>(index_t colsA, mut_W_accessor<@R@> W, real_t *Lp, index_t ldL, const real_t *Bp, index_t ldB, real_t *Ap, index_t ldA) noexcept;
+template void downdate_tail<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 1}>(index_t colsA, mut_W_accessor<@R@> W, real_t *Lp, index_t ldL, const real_t *Bp, index_t ldB, real_t *Ap, index_t ldA) noexcept;
+template void downdate_tail<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 2}>(index_t colsA, mut_W_accessor<@R@> W, real_t *Lp, index_t ldL, const real_t *Bp, index_t ldB, real_t *Ap, index_t ldA) noexcept;
+template void downdate_tail<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 3}>(index_t colsA, mut_W_accessor<@R@> W, real_t *Lp, index_t ldL, const real_t *Bp, index_t ldB, real_t *Ap, index_t ldA) noexcept;
+template void downdate_tail<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 4}>(index_t colsA, mut_W_accessor<@R@> W, real_t *Lp, index_t ldL, const real_t *Bp, index_t ldB, real_t *Ap, index_t ldA) noexcept;
+template void downdate_tail<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 5}>(index_t colsA, mut_W_accessor<@R@> W, real_t *Lp, index_t ldL, const real_t *Bp, index_t ldB, real_t *Ap, index_t ldA) noexcept;
+template void downdate_tail<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 6}>(index_t colsA, mut_W_accessor<@R@> W, real_t *Lp, index_t ldL, const real_t *Bp, index_t ldB, real_t *Ap, index_t ldA) noexcept;
+template void downdate_tail<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 7}>(index_t colsA, mut_W_accessor<@R@> W, real_t *Lp, index_t ldL, const real_t *Bp, index_t ldB, real_t *Ap, index_t ldA) noexcept;
+template void downdate_tail<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 8}>(index_t colsA, mut_W_accessor<@R@> W, real_t *Lp, index_t ldL, const real_t *Bp, index_t ldB, real_t *Ap, index_t ldA) noexcept;
 
 }

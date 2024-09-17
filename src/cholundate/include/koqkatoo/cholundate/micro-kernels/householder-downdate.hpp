@@ -9,6 +9,8 @@ struct Config {
     index_t block_size_r;
     /// Block size of the block row of L to process in the micro-kernels.
     index_t block_size_s;
+    /// Column prefetch distance for the matrix A.
+    index_t prefetch_dist_col_a = 4;
 };
 
 // Since we're dealing with triangular matrices, it pays off to use a smaller

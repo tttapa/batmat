@@ -13,6 +13,8 @@ struct Config {
     index_t num_blocks_r = 1;
     /// Number of block rows per cache block.
     index_t num_blocks_s = 1;
+    /// Column prefetch distance for the matrix A.
+    index_t prefetch_dist_col_a = 4;
     /// Enable cache blocking by copying the current block row of A to a
     /// temporary buffer.
     bool enable_packing = true;

@@ -80,7 +80,7 @@ struct mat_access_impl {
     }
 
     [[gnu::always_inline]] constexpr mat_access_impl(
-        value_type *data, OuterStrideT outer_stride = {}) noexcept
+        value_type *data = nullptr, OuterStrideT outer_stride = {}) noexcept
         : data{data}, outer_stride{outer_stride} {}
     [[gnu::always_inline]] constexpr mat_access_impl(
         const guanaqo::MatrixView<T, index_t> &o) noexcept
