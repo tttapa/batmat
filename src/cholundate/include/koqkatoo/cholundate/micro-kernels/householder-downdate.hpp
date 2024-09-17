@@ -22,9 +22,6 @@ struct Config {
 // since these CPUs also have two 512-bit FMA units (0.5 CPI), resulting
 // in a higher throughput for 8-element vectors.
 #if __AVX512F__
-#ifndef KOQKATOO_HAVE_TWO_512_FMA_UNITS
-#define KOQKATOO_HAVE_TWO_512_FMA_UNITS 0
-#endif
 #if KOQKATOO_HAVE_TWO_512_FMA_UNITS
 template <index_t R>
 using diag_simd_t = optimal_simd_type_t<R, native_simd_size>;

@@ -21,6 +21,9 @@ set(KOQKATOO_DENSE_REAL_TYPE "double" CACHE STRING
     "The main floating point type for representing real numbers")
 set(KOQKATOO_DENSE_INDEX_TYPE "long long" CACHE STRING
     "The main integer type for indices and sizes")
+# Target options
+option(KOQKATOO_HAVE_TWO_512_FMA_UNITS
+    "Does the CPU have 0.5 CPI 512-bit FMA" Off)
 # Enable/disable optional components
 option(KOQKATOO_WITH_TESTS
     "Build the tests" ${BUILD_TESTING})
