@@ -1,5 +1,6 @@
 #include <koqkatoo/cholundate/householder-downdate.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
+#include <koqkatoo/preprocessor.h>
 #include <Eigen/Dense>
 #include <benchmark/benchmark.h>
 #include <guanaqo/eigen/view.hpp>
@@ -179,16 +180,17 @@ std::vector<::benchmark::internal::Benchmark *> benchmarks;
         benchmarks.push_back(bm);                                              \
         return bm;                                                             \
     }()
-#define BM_BLK_IMPL_NAME(name, BsL, BsA, ...) name##_L##BsL##_A##BsA
-#define BM_BLK_NAME(name, BsL, BsA, ...) #name "<" #BsL ", " #BsA ">"
+#define BM_BLK_IMPL_NAME(name, ...)                                            \
+    KQT_CONCATENATE_TOKENS(name, KQT_JOIN_TOKENS(__VA_ARGS__))
+#define BM_BLK_NAME(name, ...) #name "<" KQT_JOIN_STRINGS(", ", __VA_ARGS__) ">"
 #define BENCHMARK_BLOCKED(name, func, ...)                                     \
     BENCHMARK_TEMPLATE_DEFINE_F(                                               \
-        BlockedFixture, BM_BLK_IMPL_NAME(name, __VA_ARGS__, 0), __VA_ARGS__)   \
+        BlockedFixture, BM_BLK_IMPL_NAME(name, __VA_ARGS__), __VA_ARGS__)      \
     (benchmark::State & state) {                                               \
         this->customRun<func<{__VA_ARGS__}>>(state);                           \
     }                                                                          \
-    BM_BLK_REGISTER_F(BlockedFixture, BM_BLK_IMPL_NAME(name, __VA_ARGS__, 0))  \
-        ->Name(BM_BLK_NAME(name, __VA_ARGS__, 0))
+    BM_BLK_REGISTER_F(BlockedFixture, BM_BLK_IMPL_NAME(name, __VA_ARGS__))     \
+        ->Name(BM_BLK_NAME(name, __VA_ARGS__))
 
 void configure_benchmarks(bool fix_m, int64_t M, int64_t N);
 
@@ -266,6 +268,25 @@ BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 
 BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 32);
 BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 32, 8);
 BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 32, 32);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 24, 2);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 24, 4);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 24, 8);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 24, 16);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 24, 32);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 16, 2);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 16, 4);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 16, 8);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 16, 16);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 16, 16, 32);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 24, 1, 1, 0);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 24, 1, 1, 1);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 24, 1, 1, 2);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 24, 1, 1, 3);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 24, 1, 1, 4);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 24, 1, 1, 5);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 24, 1, 1, 6);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 24, 1, 1, 7);
+BENCHMARK_BLOCKED(shh, koqkatoo::cholundate::householder::downdate_blocked, 8, 24, 1, 1, 8);
 #if KOQKATOO_WITH_LIBFORK
 BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 1, 32);
 BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 4, 4);
@@ -283,6 +304,21 @@ BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdat
 BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 16, 32);
 BENCHMARK_BLOCKED(shh_fork, koqkatoo::cholundate::householder::parallel::downdate_blocked, 32, 32);
 #endif
+BENCHMARK_BLOCKED(shh_static, koqkatoo::cholundate::householder::parallel_static::downdate_blocked, 1, 32);
+BENCHMARK_BLOCKED(shh_static, koqkatoo::cholundate::householder::parallel_static::downdate_blocked, 4, 4);
+BENCHMARK_BLOCKED(shh_static, koqkatoo::cholundate::householder::parallel_static::downdate_blocked, 4, 8);
+BENCHMARK_BLOCKED(shh_static, koqkatoo::cholundate::householder::parallel_static::downdate_blocked, 4, 12);
+BENCHMARK_BLOCKED(shh_static, koqkatoo::cholundate::householder::parallel_static::downdate_blocked, 4, 16);
+BENCHMARK_BLOCKED(shh_static, koqkatoo::cholundate::householder::parallel_static::downdate_blocked, 4, 24);
+BENCHMARK_BLOCKED(shh_static, koqkatoo::cholundate::householder::parallel_static::downdate_blocked, 4, 32);
+BENCHMARK_BLOCKED(shh_static, koqkatoo::cholundate::householder::parallel_static::downdate_blocked, 8, 8);
+BENCHMARK_BLOCKED(shh_static, koqkatoo::cholundate::householder::parallel_static::downdate_blocked, 8, 16);
+BENCHMARK_BLOCKED(shh_static, koqkatoo::cholundate::householder::parallel_static::downdate_blocked, 8, 24);
+BENCHMARK_BLOCKED(shh_static, koqkatoo::cholundate::householder::parallel_static::downdate_blocked, 8, 32);
+BENCHMARK_BLOCKED(shh_static, koqkatoo::cholundate::householder::parallel_static::downdate_blocked, 12, 12);
+BENCHMARK_BLOCKED(shh_static, koqkatoo::cholundate::householder::parallel_static::downdate_blocked, 16, 16);
+BENCHMARK_BLOCKED(shh_static, koqkatoo::cholundate::householder::parallel_static::downdate_blocked, 16, 32);
+BENCHMARK_BLOCKED(shh_static, koqkatoo::cholundate::householder::parallel_static::downdate_blocked, 32, 32);
 // clang-format on
 
 void configure_benchmarks(bool fix_m, int64_t M, int64_t N) {
