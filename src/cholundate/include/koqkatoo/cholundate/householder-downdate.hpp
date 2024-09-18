@@ -32,4 +32,9 @@ void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A);
 }
 #endif
 
+namespace parallel_static {
+template <Config Conf>
+void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A);
+}
+
 } // namespace koqkatoo::cholundate::householder
