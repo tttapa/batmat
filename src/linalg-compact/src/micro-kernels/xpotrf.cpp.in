@@ -11,5 +11,6 @@ using Abi = stdx::simd_abi::@simd_abi@;
 template const constinit decltype(microkernel_lut<Abi>) microkernel_lut<Abi>;
 template const constinit decltype(microkernel_trsm_lut<Abi>) microkernel_trsm_lut<Abi>;
 template const constinit decltype(microkernel_syrk_lut<Abi>) microkernel_syrk_lut<Abi>;
+template const constinit decltype(microkernel_syrk_lut_2<Abi>) microkernel_syrk_lut_2<Abi>;
 
 }

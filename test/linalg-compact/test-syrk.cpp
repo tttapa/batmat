@@ -20,9 +20,11 @@ class SyrkTest : public ::testing::Test {
     using simd_stride_t = stdx::simd_size<real_t, abi_t>;
     using Mat           = BatchedMatrix<real_t, index_t, simd_stride_t>;
     using BMat          = BatchedMatrix<bool, index_t, simd_stride_t>;
-    using View    = BatchedMatrixView<const real_t, index_t, simd_stride_t>;
-    using MutView = BatchedMatrixView<real_t, index_t, simd_stride_t>;
-    using func_t  = void(View, MutView, PreferredBackend);
+    using View = BatchedMatrixView<const real_t, index_t, simd_stride_t,
+                                   index_t, index_t>;
+    using MutView =
+        BatchedMatrixView<real_t, index_t, simd_stride_t, index_t, index_t>;
+    using func_t        = void(View, MutView, PreferredBackend);
     using naive_func_t  = std::function<void(View, MutView)>;
     using CompactBLAS_t = CompactBLAS<abi_t>;
 

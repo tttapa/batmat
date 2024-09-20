@@ -4,10 +4,10 @@
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
 #include <koqkatoo/linalg/lapack.hpp>
+#include <koqkatoo/loop.hpp>
 
 #include <cmath>
 #include <concepts>
-#include <type_traits>
 
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xpotrf.hpp>
 #include "util.hpp"
@@ -44,13 +44,16 @@ void CompactBLAS<Abi>::xpotrf_recursive_ref(mut_single_batch_view H) {
 }
 
 template <class Abi>
-void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H) {
-    const index_t m = H.rows(), n = H.cols();
+void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H, index_t n) {
+    const index_t m = H.rows(), N = H.cols();
+    if (n < 0)
+        n = N;
     // Base case
-    if (simd_stride * m * n * sizeof(real_t) <= 48_KiB * 32) // TODO: tune
-        return xpotrf_base_ref(H);
+    if (simd_stride * m * N * sizeof(real_t) <= 48_KiB * 32) // TODO: tune
+        return xpotrf_base_ref(H, n);
     // Recursively factor as 2×2 block matrix
-    index_t n1 = (n + 1) / 2, n2 = n - n1, m2 = m - n1;
+    // TODO: the min(..., n) is not ideal, but it keeps things simpler.
+    index_t n1 = std::min<index_t>((N + 1) / 2, n), n2 = N - n1, m2 = m - n1;
     auto H11 = H.top_left(n1, n1), H21 = H.bottom_left(m2, n1),
          H22 = H.bottom_right(m2, n2);
     // Factor H₁₁
@@ -60,26 +63,69 @@ void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H) {
     // Update H₂₂ -= L₂₁ L₂₁ᵀ
     xsyrk_sub_ref(H21, H22);
     // Factor H₂₂
-    xpotrf_ref(H22);
+    if (n > n1)
+        xpotrf_ref(H22, n - n1);
 }
 
 template <class Abi>
-void CompactBLAS<Abi>::xpotrf_base_ref(mut_single_batch_view H) {
+void CompactBLAS<Abi>::xpotrf_base_ref(mut_single_batch_view H, index_t n) {
     using namespace micro_kernels;
     constexpr index_t R = potrf::RowsReg; // Block size
-    const index_t m = H.rows(), n = H.cols();
+    const index_t m = H.rows(), N = H.cols();
+    assert(m >= N);
+    assert((n == m && m == N) || (n == N && m >= N) || (n < m && m == N));
+    if (n < 0)
+        n = N;
     mut_single_batch_matrix_accessor<Abi> H_ = H;
+
+    // TODO: run benchmark to see if we need a special case for
+    // n == H.rows() == H.cols().
+
+    // Compute the Cholesky factorization of the very last block (right before
+    // the Schur complement block), which has size r×r rather than R×R.
+    // If requested, also update the rows below the Cholesky factor, and the
+    // Schur complement to the bottom right of the given block.
+    // These extra blocks are always sizes (m-n)×r and (m-n)×(m-n) respectively.
+    auto process_bottom_right = [m, N, n](auto Hii, index_t r) {
+        // If we're factorizing the full matrix, just use Cholesky micro-kernel.
+        if (m == n) {
+            potrf::microkernel_lut<Abi>[r - 1](Hii);
+        }
+        // If we're not factorizing the full matrix, we need either the sub-
+        // diagonal block, or the sub-diagonal block and the Schur complement.
+        else {
+            // Cholesky of last block to be factorized + triangular solve with
+            // sub-diagonal block.
+            auto H21 = Hii.middle_rows(r);
+            potrf::microkernel_trsm_lut<Abi>[r - 1](Hii, H21, m - n);
+            // Update the Schur complement (bottom right) with the outer product
+            // of the sub-diagonal block column.
+            if (n < N) {
+                auto H22 = Hii.block(r, r);
+                foreach_chunked(
+                    0, m - n, R,
+                    [&](index_t j) {
+                        auto Hj1 = H21.block(j, 0), Hjj = H22.block(j, j);
+                        potrf::microkernel_syrk_lut_2<Abi>[R - 1][r - 1](
+                            Hj1, Hjj, m - n - j);
+                    },
+                    [&](index_t j, index_t rem) {
+                        auto Hj1 = H21.block(j, 0), Hjj = H22.block(j, j);
+                        potrf::microkernel_syrk_lut_2<Abi>[rem - 1][r - 1](
+                            Hj1, Hjj, m - n - j);
+                    });
+            }
+        }
+    };
+
     // Base case
     if (n == 0) {
         return;
     } else if (n <= potrf::RowsReg) {
-        auto H11 = H_.block(0, 0);
-        auto H21 = H_.block(n, 0);
-        m == n ? potrf::microkernel_lut<Abi>[n - 1](H11)
-               : potrf::microkernel_trsm_lut<Abi>[n - 1](H11, H21, m - n);
+        process_bottom_right(H_, n);
         return;
     }
-    // Loop over columns of H with block size R
+    // Loop over columns of H with block size R.
     index_t i;
     for (i = 0; i + R <= n; i += R) {
         const index_t m2 = m - R - i;
@@ -87,31 +133,27 @@ void CompactBLAS<Abi>::xpotrf_base_ref(mut_single_batch_view H) {
         auto H21         = H_.block(i + R, i);
         // Factor the diagonal block and update the subdiagonal block
         potrf::xpotrf_xtrsm_microkernel<Abi, R>(H11, H21, m2);
-        // Update the tail with the outer product of the subdiagonal block
-        const index_t cols = n - (i + R);
-        const index_t rem  = cols % R;
-        // Remainder block (bottom right) with size less than R
-        if (rem > 0) {
-            index_t j = n - rem;
-            auto H21  = H_.block(j, i);
-            auto H22  = H_.block(j, j);
-            potrf::microkernel_syrk_lut<Abi>[rem - 1](H21, H22, m - j);
-        }
+        // Update the Schur complement (bottom right) with the outer product of
+        // the subdiagonal block.
+        foreach_chunked(
+            i + R, N, R,
+            [&](index_t j) {
+                auto H21 = H_.block(j, i), H22 = H_.block(j, j);
+                potrf::xpotrf_xsyrk_microkernel<Abi, R, R>(H21, H22, m - j);
+            },
+            [&](index_t j, index_t rem) {
+                auto H21 = H_.block(j, i), H22 = H_.block(j, j);
+                potrf::microkernel_syrk_lut<Abi>[rem - 1](H21, H22, m - j);
+            },
+            LoopDir::Backward);
         // Loop backwards for cache locality (we'll use the next column in the
         // next interation, so we want the syrk operation to leave it in cache).
-        for (index_t j = n - rem - R; j >= i + R; j -= R) {
-            static_assert(std::is_signed_v<index_t>);
-            auto H21 = H_.block(j, i);
-            auto H22 = H_.block(j, j);
-            potrf::xpotrf_xsyrk_microkernel<Abi, R, R>(H21, H22, m - j);
-        }
+        // TODO: verify in benchmark.
     }
     const index_t rem = n - i;
     if (rem > 0) {
-        auto H11 = H_.block(i, i);
-        auto H21 = H_.block(n, i);
-        m == n ? potrf::microkernel_lut<Abi>[rem - 1](H11)
-               : potrf::microkernel_trsm_lut<Abi>[rem - 1](H11, H21, m - n);
+        auto Hii = H_.block(i, i);
+        process_bottom_right(Hii, rem);
     }
 }
 
@@ -119,54 +161,81 @@ void CompactBLAS<Abi>::xpotrf_base_ref(mut_single_batch_view H) {
 // -----------------------------------------------------------------------------
 
 template <class Abi>
-void CompactBLAS<Abi>::xpotrf(mut_batch_view H, PreferredBackend b) {
+void CompactBLAS<Abi>::xpotrf(mut_batch_view H, PreferredBackend b, index_t n) {
     assert(H.rows() >= H.cols());
+    if (n < 0)
+        n = H.cols();
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
-        if (use_mkl_compact(b) && H.rows() == H.cols()) {
+        if (use_mkl_compact(b) && H.has_full_layer_stride() && n == H.cols()) {
+            auto H11     = H.top_left(n, n);
             MKL_INT info = 0;
-            xpotrf_compact(MKL_COL_MAJOR, MKL_LOWER, H.rows(), H.data, H.rows(),
-                           &info, vector_format_mkl<real_t, Abi>::format,
-                           H.ceil_depth());
+            xpotrf_compact(MKL_COL_MAJOR, MKL_LOWER, H11.rows(), H11.data,
+                           H11.outer_stride(), &info,
+                           vector_format_mkl<real_t, Abi>::format,
+                           H11.ceil_depth());
             lapack_throw_on_err("xpotrf_compact", info);
+            if (n < H.rows()) {
+                auto H21 = H.bottom_left(H.rows() - n, n);
+                xtrsm_compact(
+                    MKL_COL_MAJOR, MKL_RIGHT, MKL_LOWER, MKL_TRANS, MKL_NONUNIT,
+                    H21.rows(), H21.cols(), real_t(1), H11.data,
+                    H11.outer_stride(), H21.data, H21.outer_stride(),
+                    vector_format_mkl<real_t, Abi>::format, H.ceil_depth());
+            }
             return;
         }
     })
     if constexpr (std::same_as<Abi, scalar_abi>) {
-        if (use_mkl_batched(b) && H.rows() == H.cols()) {
-            xpotrf_batch_strided("L", H.rows(), H.data, H.rows(),
-                                 H.rows() * H.cols(), H.depth());
+        if (use_mkl_batched(b)) {
+            auto H11 = H.top_left(n, n);
+            xpotrf_batch_strided("L", H11.rows(), H11.data, H11.outer_stride(),
+                                 H11.layer_stride(), H11.depth());
+            if (n < H.rows()) {
+                auto H21 = H.bottom_left(H.rows() - n, n);
+                xtrsm_batch_strided(
+                    CblasColMajor, CblasRight, CblasLower, CblasTrans,
+                    CblasNonUnit, H21.rows(), H21.cols(), real_t(1), H11.data,
+                    H11.outer_stride(), H11.layer_stride(), H21.data,
+                    H21.outer_stride(), H21.layer_stride(), H.depth());
+                if (n < H.cols()) {
+                    auto H22 = H.bottom_right(H.rows() - n, H.cols() - n);
+                    assert(H22.rows() == H22.cols());
+                    xsyrk_sub(H21, H22, b);
+                }
+            }
             return;
         }
     }
 #if KOQKATOO_WITH_OPENMP
     if (omp_get_max_threads() == 1) {
         for (index_t i = 0; i < H.num_batches(); ++i)
-            xpotrf_ref(H.batch(i));
+            xpotrf_ref(H.batch(i), n);
         return;
     }
 #endif
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < H.num_batches(); ++i)
-        xpotrf_ref(H.batch(i));
+        xpotrf_ref(H.batch(i), n);
 }
 
 template <class Abi>
 void CompactBLAS<Abi>::xpotrf_base(mut_batch_view H, PreferredBackend b) {
     assert(H.rows() >= H.cols());
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
-        if (use_mkl_compact(b) && H.rows() == H.cols()) {
+        if (use_mkl_compact(b) && H.rows() == H.cols() &&
+            H.has_full_layer_stride()) {
             MKL_INT info = 0;
-            xpotrf_compact(MKL_COL_MAJOR, MKL_LOWER, H.rows(), H.data, H.rows(),
-                           &info, vector_format_mkl<real_t, Abi>::format,
-                           H.ceil_depth());
+            xpotrf_compact(
+                MKL_COL_MAJOR, MKL_LOWER, H.rows(), H.data, H.outer_stride(),
+                &info, vector_format_mkl<real_t, Abi>::format, H.ceil_depth());
             lapack_throw_on_err("xpotrf_compact", info);
             return;
         }
     })
     if constexpr (std::same_as<Abi, scalar_abi>) {
         if (use_mkl_batched(b) && H.rows() == H.cols()) {
-            xpotrf_batch_strided("L", H.rows(), H.data, H.rows(),
-                                 H.rows() * H.cols(), H.depth());
+            xpotrf_batch_strided("L", H.rows(), H.data, H.outer_stride(),
+                                 H.layer_stride(), H.depth());
             return;
         }
     }
@@ -179,11 +248,12 @@ template <class Abi>
 void CompactBLAS<Abi>::xpotrf_recursive(mut_batch_view H, PreferredBackend b) {
     assert(H.rows() >= H.cols());
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
-        if (use_mkl_compact(b) && H.rows() == H.cols()) {
+        if (use_mkl_compact(b) && H.rows() == H.cols() &&
+            H.has_full_layer_stride()) {
             MKL_INT info = 0;
-            xpotrf_compact(MKL_COL_MAJOR, MKL_LOWER, H.rows(), H.data, H.rows(),
-                           &info, vector_format_mkl<real_t, Abi>::format,
-                           H.ceil_depth());
+            xpotrf_compact(
+                MKL_COL_MAJOR, MKL_LOWER, H.rows(), H.data, H.outer_stride(),
+                &info, vector_format_mkl<real_t, Abi>::format, H.ceil_depth());
             lapack_throw_on_err("xpotrf_compact", info);
             return;
         }
@@ -204,18 +274,34 @@ void CompactBLAS<Abi>::xpotrf_recursive(mut_batch_view H, PreferredBackend b) {
 // -----------------------------------------------------------------------------
 
 template <class Abi>
-void CompactBLAS<Abi>::xpotrf(mut_single_batch_view H, PreferredBackend b) {
+void CompactBLAS<Abi>::xpotrf(mut_single_batch_view H, PreferredBackend b,
+                              index_t n) {
     assert(H.rows() >= H.cols());
+    if (n < 0)
+        n = H.cols();
     if constexpr (std::same_as<Abi, scalar_abi>) {
-        if (use_blas_scalar(b) && H.rows() == H.cols()) {
+        if (use_blas_scalar(b)) {
+            auto H11     = H.top_left(n, n);
             index_t info = 0;
-            index_t n = H.cols(), ldh = H.outer_stride();
-            linalg::xpotrf("L", &n, H.data, &ldh, &info);
+            linalg::xpotrf("L", H11.rows(), H11.data, H11.outer_stride(),
+                           &info);
             lapack_throw_on_err("xpotrf", info);
+            if (n < H.rows()) {
+                auto H21 = H.bottom_left(H.rows() - n, n);
+                linalg::xtrsm(CblasColMajor, CblasRight, CblasLower, CblasTrans,
+                              CblasNonUnit, H21.rows(), H21.cols(), real_t(1),
+                              H11.data, H11.outer_stride(), H21.data,
+                              H21.outer_stride());
+                if (n < H.cols()) {
+                    auto H22 = H.bottom_right(H.rows() - n, H.cols() - n);
+                    assert(H22.rows() == H22.cols());
+                    xsyrk_sub(H21, H22, b);
+                }
+            }
             return;
         }
     }
-    xpotrf_ref(H);
+    xpotrf_ref(H, n);
 }
 
 } // namespace koqkatoo::linalg::compact

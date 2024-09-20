@@ -53,4 +53,11 @@ inline const constinit auto microkernel_syrk_lut =
         return xpotrf_xsyrk_microkernel<Abi, Row + 1, RowsReg>;
     });
 
+template <class Abi>
+inline const constinit auto microkernel_syrk_lut_2 =
+    make_2d_lut<RowsReg, RowsReg>(
+        []<index_t Row, index_t Col>(index_constant<Row>, index_constant<Col>) {
+            return xpotrf_xsyrk_microkernel<Abi, Row + 1, Col + 1>;
+        });
+
 } // namespace koqkatoo::linalg::compact::micro_kernels::potrf

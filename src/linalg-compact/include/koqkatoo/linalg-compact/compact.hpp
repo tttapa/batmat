@@ -34,9 +34,11 @@ struct CompactBLAS {
     using bool_single_batch_view =
         BatchedMatrixView<const bool, index_t, simd_stride_t, simd_stride_t>;
     using bool_batch_view =
-        BatchedMatrixView<const bool, index_t, simd_stride_t>;
-    using batch_view = BatchedMatrixView<const real_t, index_t, simd_stride_t>;
-    using mut_batch_view = BatchedMatrixView<real_t, index_t, simd_stride_t>;
+        BatchedMatrixView<const bool, index_t, simd_stride_t, index_t>;
+    using batch_view = BatchedMatrixView<const real_t, index_t, simd_stride_t,
+                                         index_t, index_t>;
+    using mut_batch_view =
+        BatchedMatrixView<real_t, index_t, simd_stride_t, index_t, index_t>;
 
     static simd aligned_load(const real_t *p) {
         return {p, stdx::vector_aligned};
@@ -100,13 +102,14 @@ struct CompactBLAS {
     static void xtrsm_LLTN_ref(single_batch_view L, mut_single_batch_view H);
 
     /// H ← cholesky(H)
-    static void xpotrf(mut_single_batch_view H, PreferredBackend b);
-    static void xpotrf(mut_batch_view H, PreferredBackend b);
+    static void xpotrf(mut_single_batch_view H, PreferredBackend b,
+                       index_t n = -1);
+    static void xpotrf(mut_batch_view H, PreferredBackend b, index_t n = -1);
     static void xpotrf_base(mut_batch_view H, PreferredBackend b);
     static void xpotrf_recursive(mut_batch_view H, PreferredBackend b);
-    static void xpotrf_ref(mut_single_batch_view H);
+    static void xpotrf_ref(mut_single_batch_view H, index_t n = -1);
     static void xpotrf_recursive_ref(mut_single_batch_view H);
-    static void xpotrf_base_ref(mut_single_batch_view H);
+    static void xpotrf_base_ref(mut_single_batch_view H, index_t n = -1);
 
     /// x ← L x
     static void xtrmv_ref(single_batch_view L, mut_single_batch_view x);
@@ -192,7 +195,8 @@ struct CompactBLAS {
     static void xaxpy(real_t a, batch_view x, mut_batch_view y);
 
     /// y ← a x + b y
-    static void xaxpby(real_t a, single_batch_view x, real_t b, mut_single_batch_view y);
+    static void xaxpby(real_t a, single_batch_view x, real_t b,
+                       mut_single_batch_view y);
     static void xaxpby(real_t a, batch_view x, real_t b, mut_batch_view y);
 
     /// Sum
