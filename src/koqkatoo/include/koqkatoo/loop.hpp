@@ -9,10 +9,10 @@ enum class LoopDir {
     Backward,
 };
 
-[[gnu::always_inline]] void foreach_chunked(index_t i_begin, index_t i_end,
-                                            auto chunk_size, auto func_chunk,
-                                            auto func_rem,
-                                            LoopDir dir = LoopDir::Forward) {
+[[gnu::always_inline]] inline void
+foreach_chunked(index_t i_begin, index_t i_end, auto chunk_size,
+                auto func_chunk, auto func_rem,
+                LoopDir dir = LoopDir::Forward) {
     if (dir == LoopDir::Forward) {
         index_t i;
         for (i = i_begin; i + chunk_size <= i_end; i += chunk_size)
