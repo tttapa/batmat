@@ -219,20 +219,21 @@ void CompactBLAS<Abi>::xgemm(batch_view A, batch_view B, mut_batch_view C,
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
-        if (use_mkl_compact(b))
+        if (use_mkl_compact(b) && A.has_full_layer_stride() &&
+            B.has_full_layer_stride() && C.has_full_layer_stride())
             return xgemm_compact(
                 MKL_COL_MAJOR, MKL_NOTRANS, MKL_NOTRANS, A.rows(), B.cols(),
-                A.cols(), real_t{1}, A.data, A.rows(), B.data, B.rows(),
-                real_t{0}, C.data, C.rows(),
+                A.cols(), real_t{1}, A.data, A.outer_stride(), B.data,
+                B.outer_stride(), real_t{0}, C.data, C.outer_stride(),
                 vector_format_mkl<real_t, Abi>::format, A.ceil_depth());
     })
     if constexpr (std::same_as<Abi, scalar_abi>) {
         if (use_mkl_batched(b)) {
             linalg::xgemm_batch_strided(
                 CblasColMajor, CblasNoTrans, CblasNoTrans, A.rows(), B.cols(),
-                A.cols(), real_t{1}, A.data, A.rows(), A.rows() * A.cols(),
-                B.data, B.rows(), B.rows() * B.cols(), real_t{0}, C.data,
-                C.rows(), C.rows() * C.cols(), A.depth());
+                A.cols(), real_t{1}, A.data, A.outer_stride(), A.layer_stride(),
+                B.data, B.outer_stride(), B.layer_stride(), real_t{0}, C.data,
+                C.outer_stride(), C.layer_stride(), A.depth());
             return;
         }
     }
@@ -250,20 +251,22 @@ void CompactBLAS<Abi>::xgemm_neg(batch_view A, batch_view B, mut_batch_view C,
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
-        if (use_mkl_compact(b))
+        if (use_mkl_compact(b) && A.has_full_layer_stride() &&
+            B.has_full_layer_stride() && C.has_full_layer_stride())
             return xgemm_compact(
                 MKL_COL_MAJOR, MKL_NOTRANS, MKL_NOTRANS, A.rows(), B.cols(),
-                A.cols(), real_t{-1}, A.data, A.rows(), B.data, B.rows(),
-                real_t{0}, C.data, C.rows(),
+                A.cols(), real_t{-1}, A.data, A.outer_stride(), B.data,
+                B.outer_stride(), real_t{0}, C.data, C.outer_stride(),
                 vector_format_mkl<real_t, Abi>::format, A.ceil_depth());
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b))
             return linalg::xgemm_batch_strided(
                 CblasColMajor, CblasNoTrans, CblasNoTrans, A.rows(), B.cols(),
-                A.cols(), real_t{-1}, A.data, A.rows(), A.rows() * A.cols(),
-                B.data, B.rows(), B.rows() * B.cols(), real_t{0}, C.data,
-                C.rows(), C.rows() * C.cols(), A.depth());
+                A.cols(), real_t{-1}, A.data, A.outer_stride(),
+                A.layer_stride(), B.data, B.outer_stride(), B.layer_stride(),
+                real_t{0}, C.data, C.outer_stride(), C.layer_stride(),
+                A.depth());
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < A.num_batches(); ++i)
         xgemm_neg_ref(A.batch(i), B.batch(i), C.batch(i));
@@ -278,20 +281,21 @@ void CompactBLAS<Abi>::xgemm_add(batch_view A, batch_view B, mut_batch_view C,
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
-        if (use_mkl_compact(b))
+        if (use_mkl_compact(b) && A.has_full_layer_stride() &&
+            B.has_full_layer_stride() && C.has_full_layer_stride())
             return xgemm_compact(
                 MKL_COL_MAJOR, MKL_NOTRANS, MKL_NOTRANS, A.rows(), B.cols(),
-                A.cols(), real_t{1}, A.data, A.rows(), B.data, B.rows(),
-                real_t{1}, C.data, C.rows(),
+                A.cols(), real_t{1}, A.data, A.outer_stride(), B.data,
+                B.outer_stride(), real_t{1}, C.data, C.outer_stride(),
                 vector_format_mkl<real_t, Abi>::format, A.ceil_depth());
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b))
             return linalg::xgemm_batch_strided(
                 CblasColMajor, CblasNoTrans, CblasNoTrans, A.rows(), B.cols(),
-                A.cols(), real_t{1}, A.data, A.rows(), A.rows() * A.cols(),
-                B.data, B.rows(), B.rows() * B.cols(), real_t{1}, C.data,
-                C.rows(), C.rows() * C.cols(), A.depth());
+                A.cols(), real_t{1}, A.data, A.outer_stride(), A.layer_stride(),
+                B.data, B.outer_stride(), B.layer_stride(), real_t{1}, C.data,
+                C.outer_stride(), C.layer_stride(), A.depth());
 #if KOQKATOO_WITH_OPENMP
     if (omp_get_max_threads() == 1) {
         for (index_t i = 0; i < A.num_batches(); ++i)
@@ -313,20 +317,22 @@ void CompactBLAS<Abi>::xgemm_sub(batch_view A, batch_view B, mut_batch_view C,
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
-        if (use_mkl_compact(b))
+        if (use_mkl_compact(b) && A.has_full_layer_stride() &&
+            B.has_full_layer_stride() && C.has_full_layer_stride())
             return xgemm_compact(
                 MKL_COL_MAJOR, MKL_NOTRANS, MKL_NOTRANS, A.rows(), B.cols(),
-                A.cols(), real_t{-1}, A.data, A.rows(), B.data, B.rows(),
-                real_t{1}, C.data, C.rows(),
+                A.cols(), real_t{-1}, A.data, A.outer_stride(), B.data,
+                B.outer_stride(), real_t{1}, C.data, C.outer_stride(),
                 vector_format_mkl<real_t, Abi>::format, A.ceil_depth());
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b))
             return linalg::xgemm_batch_strided(
                 CblasColMajor, CblasNoTrans, CblasNoTrans, A.rows(), B.cols(),
-                A.cols(), real_t{-1}, A.data, A.rows(), A.rows() * A.cols(),
-                B.data, B.rows(), B.rows() * B.cols(), real_t{1}, C.data,
-                C.rows(), C.rows() * C.cols(), A.depth());
+                A.cols(), real_t{-1}, A.data, A.outer_stride(),
+                A.layer_stride(), B.data, B.outer_stride(), B.layer_stride(),
+                real_t{1}, C.data, C.outer_stride(), C.layer_stride(),
+                A.depth());
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < A.num_batches(); ++i)
         xgemm_sub_ref(A.batch(i), B.batch(i), C.batch(i));
@@ -341,20 +347,22 @@ void CompactBLAS<Abi>::xgemm_TN_sub(batch_view A, batch_view B,
     assert(A.rows() == B.rows());
     assert(B.cols() == C.cols());
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
-        if (use_mkl_compact(b))
+        if (use_mkl_compact(b) && A.has_full_layer_stride() &&
+            B.has_full_layer_stride() && C.has_full_layer_stride())
             return xgemm_compact(
                 MKL_COL_MAJOR, MKL_TRANS, MKL_NOTRANS, A.cols(), B.cols(),
-                A.rows(), real_t{-1}, A.data, A.rows(), B.data, B.rows(),
-                real_t{1}, C.data, C.rows(),
+                A.rows(), real_t{-1}, A.data, A.outer_stride(), B.data,
+                B.outer_stride(), real_t{1}, C.data, C.outer_stride(),
                 vector_format_mkl<real_t, Abi>::format, A.ceil_depth());
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b))
             return linalg::xgemm_batch_strided(
                 CblasColMajor, CblasTrans, CblasNoTrans, A.cols(), B.cols(),
-                A.rows(), real_t{-1}, A.data, A.rows(), A.rows() * A.cols(),
-                B.data, B.rows(), B.rows() * B.cols(), real_t{1}, C.data,
-                C.rows(), C.rows() * C.cols(), A.depth());
+                A.rows(), real_t{-1}, A.data, A.outer_stride(),
+                A.layer_stride(), B.data, B.outer_stride(), B.layer_stride(),
+                real_t{1}, C.data, C.outer_stride(), C.layer_stride(),
+                A.depth());
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < A.num_batches(); ++i)
         xgemm_TN_sub_ref(A.batch(i), B.batch(i), C.batch(i));
@@ -369,20 +377,21 @@ void CompactBLAS<Abi>::xgemm_TN(batch_view A, batch_view B, mut_batch_view C,
     assert(A.rows() == B.rows());
     assert(B.cols() == C.cols());
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
-        if (use_mkl_compact(b))
+        if (use_mkl_compact(b) && A.has_full_layer_stride() &&
+            B.has_full_layer_stride() && C.has_full_layer_stride())
             return xgemm_compact(
                 MKL_COL_MAJOR, MKL_TRANS, MKL_NOTRANS, A.cols(), B.cols(),
-                A.rows(), real_t{1}, A.data, A.rows(), B.data, B.rows(),
-                real_t{0}, C.data, C.rows(),
+                A.rows(), real_t{1}, A.data, A.outer_stride(), B.data,
+                B.outer_stride(), real_t{0}, C.data, C.outer_stride(),
                 vector_format_mkl<real_t, Abi>::format, A.ceil_depth());
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b))
             return linalg::xgemm_batch_strided(
                 CblasColMajor, CblasTrans, CblasNoTrans, A.cols(), B.cols(),
-                A.rows(), real_t{1}, A.data, A.rows(), A.rows() * A.cols(),
-                B.data, B.rows(), B.rows() * B.cols(), real_t{0}, C.data,
-                C.rows(), C.rows() * C.cols(), A.depth());
+                A.rows(), real_t{1}, A.data, A.outer_stride(), A.layer_stride(),
+                B.data, B.outer_stride(), B.layer_stride(), real_t{0}, C.data,
+                C.outer_stride(), C.layer_stride(), A.depth());
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < A.num_batches(); ++i)
         xgemm_TN_ref(A.batch(i), B.batch(i), C.batch(i));

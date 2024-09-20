@@ -155,10 +155,11 @@ void CompactBLAS<Abi>::xsyrk_T(batch_view A, mut_batch_view C,
     assert(A.ceil_depth() == C.ceil_depth());
     if constexpr (std::same_as<Abi, scalar_abi>) {
         if (use_mkl_batched(b)) {
-            linalg::xsyrk_batch_strided(
-                CblasColMajor, CblasLower, CblasTrans, C.rows(), A.rows(),
-                real_t{1}, A.data, A.rows(), A.rows() * A.cols(), real_t{0},
-                C.data, C.rows(), C.rows() * C.cols(), A.depth());
+            linalg::xsyrk_batch_strided(CblasColMajor, CblasLower, CblasTrans,
+                                        C.rows(), A.rows(), real_t{1}, A.data,
+                                        A.outer_stride(), A.layer_stride(),
+                                        real_t{0}, C.data, C.outer_stride(),
+                                        C.layer_stride(), A.depth());
             return;
         }
     }
@@ -200,10 +201,11 @@ void CompactBLAS<Abi>::xsyrk(batch_view A, mut_batch_view C,
     assert(A.ceil_depth() == C.ceil_depth());
     if constexpr (std::same_as<Abi, scalar_abi>) {
         if (use_mkl_batched(b)) {
-            linalg::xsyrk_batch_strided(
-                CblasColMajor, CblasLower, CblasNoTrans, C.rows(), A.cols(),
-                real_t{1}, A.data, A.rows(), A.rows() * A.cols(), real_t{0},
-                C.data, C.rows(), C.rows() * C.cols(), A.depth());
+            linalg::xsyrk_batch_strided(CblasColMajor, CblasLower, CblasNoTrans,
+                                        C.rows(), A.cols(), real_t{1}, A.data,
+                                        A.outer_stride(), A.layer_stride(),
+                                        real_t{0}, C.data, C.outer_stride(),
+                                        C.layer_stride(), A.depth());
             return;
         }
     }
@@ -218,10 +220,11 @@ void CompactBLAS<Abi>::xsyrk_sub(batch_view A, mut_batch_view C,
     assert(A.ceil_depth() == C.ceil_depth());
     if constexpr (std::same_as<Abi, scalar_abi>) {
         if (use_mkl_batched(b)) {
-            linalg::xsyrk_batch_strided(
-                CblasColMajor, CblasLower, CblasNoTrans, C.rows(), A.cols(),
-                real_t{-1}, A.data, A.rows(), A.rows() * A.cols(), real_t{1},
-                C.data, C.rows(), C.rows() * C.cols(), A.depth());
+            linalg::xsyrk_batch_strided(CblasColMajor, CblasLower, CblasNoTrans,
+                                        C.rows(), A.cols(), real_t{-1}, A.data,
+                                        A.outer_stride(), A.layer_stride(),
+                                        real_t{1}, C.data, C.outer_stride(),
+                                        C.layer_stride(), A.depth());
             return;
         }
     }
