@@ -40,7 +40,7 @@ template <class T, class I>
 void xscal(I N, T alpha, T *X, I incX);
 
 template <class T, class I>
-void xpotrf(const char *uplo, const I *n, T *a, const I *lda, I *info);
+void xpotrf(const char *uplo, I n, T *a, I lda, I *info);
 
 template <class T, class I>
 void xtrtri(const char *uplo, const char *diag, const I *n, T *a, const I *lda,

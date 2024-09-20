@@ -67,7 +67,7 @@ struct CholeskyFixture : benchmark::Fixture {
         mat.L          = mat.K;
         const auto ldL = static_cast<index_t>(mat.L.outerStride());
         index_t info   = 0;
-        koqkatoo::linalg::xpotrf<real_t, index_t>("L", &n, mat.L.data(), &ldL,
+        koqkatoo::linalg::xpotrf<real_t, index_t>("L", n, mat.L.data(), ldL,
                                                   &info);
         mat.L.triangularView<Eigen::StrictlyUpper>().setZero();
         mat.K̃.triangularView<Eigen::StrictlyUpper>() =
@@ -163,8 +163,7 @@ BENCHMARK_DEFINE_F(CholeskyFixture, blas)(benchmark::State &state) {
             CblasColMajor, CblasLower, CblasNoTrans, n, m, -1,
             matrices->second.A.data(), ldA, 1, L̃.data(), ldL);
         index_t info = 0;
-        koqkatoo::linalg::xpotrf<real_t, index_t>("L", &n, L̃.data(), &ldL,
-                                                  &info);
+        koqkatoo::linalg::xpotrf<real_t, index_t>("L", n, L̃.data(), ldL, &info);
         benchmark::ClobberMemory();
     }
 }

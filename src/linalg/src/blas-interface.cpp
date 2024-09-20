@@ -149,15 +149,14 @@ xscal<real_t, index_t>(index_t N, real_t alpha, real_t *X, index_t incX);
 #endif
 
 template <>
-void KOQKATOO_LINALG_EXPORT xpotrf(const char *uplo, const index_t *n,
-                                   double *a, const index_t *lda,
-                                   index_t *info) {
-    dpotrf(uplo, n, a, lda, info);
+void KOQKATOO_LINALG_EXPORT xpotrf(const char *uplo, index_t n, double *a,
+                                   index_t lda, index_t *info) {
+    dpotrf(uplo, &n, a, &lda, info);
 }
 template <>
-void KOQKATOO_LINALG_EXPORT xpotrf(const char *uplo, const index_t *n, float *a,
-                                   const index_t *lda, index_t *info) {
-    spotrf(uplo, n, a, lda, info);
+void KOQKATOO_LINALG_EXPORT xpotrf(const char *uplo, index_t n, float *a,
+                                   index_t lda, index_t *info) {
+    spotrf(uplo, &n, a, &lda, info);
 }
 #if DO_INSTANTIATE
 template void KOQKATOO_LINALG_EXPORT xpotrf<real_t, index_t>(const char *uplo,
@@ -363,7 +362,7 @@ void xpotrf_batch_strided(const char *Uplo, I N, T *A, I lda, I stridea,
     for (I i = 0; i < batch_size; ++i) {
         I info   = 0;
         I offset = i * stridea;
-        xpotrf(Uplo, &N, A + offset, &lda, &info);
+        xpotrf(Uplo, N, A + offset, lda, &info);
         if (info > 0)
             info = 0; // Ignore factorization failure
         info_all += info;

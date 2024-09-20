@@ -45,7 +45,7 @@ ProblemMatrices generate_problem(index_t m, index_t n) {
     mat.L          = mat.K;
     const auto ldL = static_cast<index_t>(mat.L.outerStride());
     index_t info   = 0;
-    linalg::xpotrf<real_t, index_t>("L", &n, mat.L.data(), &ldL, &info);
+    linalg::xpotrf<real_t, index_t>("L", n, mat.L.data(), ldL, &info);
     mat.L.triangularView<Eigen::StrictlyUpper>().setZero();
     mat.K̃.triangularView<Eigen::StrictlyUpper>() =
         mat.K̃.triangularView<Eigen::StrictlyLower>().transpose();
