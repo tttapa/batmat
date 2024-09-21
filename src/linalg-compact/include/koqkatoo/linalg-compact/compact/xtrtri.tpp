@@ -27,8 +27,7 @@ void CompactBLAS<Abi>::xtrtri_ref(mut_single_batch_view L) {
     foreach_chunked(
         0, n, R,
         [&](index_t j) {
-            trtri::xtrtri_trmm_microkernel<Abi, R>(
-                L_.block(j, j), L_.block(j + R, j), m - j - R);
+            trtri::xtrtri_trmm_microkernel<Abi, R>(L_.block(j, j), m - j);
             foreach_chunked(
                 j + R, n, R,
                 [&](index_t k) {
@@ -42,8 +41,7 @@ void CompactBLAS<Abi>::xtrtri_ref(mut_single_batch_view L) {
                 LoopDir::Backward);
         },
         [&](index_t j, index_t nj) {
-            trtri::microkernel_lut<Abi>[nj - 1](
-                L_.block(j, j), L_.block(j + nj, j), m - j - nj);
+            trtri::microkernel_lut<Abi>[nj - 1](L_.block(j, j), m - j);
         },
         LoopDir::Backward);
 }

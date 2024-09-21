@@ -7,8 +7,7 @@ namespace koqkatoo::linalg::compact::micro_kernels::trtri {
 
 template <class Abi, index_t RowsReg>
 void xtrtri_trmm_microkernel(mut_single_batch_matrix_accessor<Abi> A,
-                             mut_single_batch_matrix_accessor<Abi> B,
-                             index_t rows_B) noexcept;
+                             index_t rows) noexcept;
 
 template <class Abi, index_t RowsReg, index_t ColsReg>
 void xtrmm_microkernel(mut_single_batch_matrix_accessor<Abi> A,
