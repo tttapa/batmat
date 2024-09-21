@@ -52,12 +52,9 @@ void Solver<Abi>::prepare_Ψi(index_t i, single_mut_real_view W,
     auto [N, nx, nu, ny, ny_N] = storage.dim;
     auto LHi                   = LH().batch(i);
     // Solve W = LH⁻¹ [I 0]ᵀ
-    auto W1 = W.top_rows(nx), W2 = W.bottom_rows(nu);
-    compact_blas::xcopy(LHi.top_left(nx, nx), W1);
-    compact_blas::xtrtri(W1, settings.preferred_backend);
-    compact_blas::xgemm_neg(LHi.bottom_left(nu, nx), W1, W2,
-                            settings.preferred_backend);
-    compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), W2,
+    compact_blas::xcopy(LHi.top_left(nx + nu, nx), W);
+    compact_blas::xtrtri(W, settings.preferred_backend);
+    compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), W.bottom_rows(nu),
                              settings.preferred_backend);
     compact_blas::xsyrk_T(W, LΨd().batch(i), settings.preferred_backend);
     if (i < AB().num_batches()) {

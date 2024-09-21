@@ -52,6 +52,29 @@ template KOQKATOO_LINALG_EXPORT void xgemm<real_t, index_t>(
 #endif
 
 template <>
+KOQKATOO_LINALG_EXPORT void
+xtrmm(CBLAS_LAYOUT Layout, CBLAS_SIDE Side, CBLAS_UPLO Uplo,
+      CBLAS_TRANSPOSE TransA, CBLAS_DIAG Diag, index_t M, index_t N,
+      double alpha, const double *A, index_t lda, double *B, index_t ldb) {
+    cblas_dtrmm(Layout, Side, Uplo, TransA, Diag, M, N, alpha, A, lda, B, ldb);
+}
+template <>
+KOQKATOO_LINALG_EXPORT void
+xtrmm(CBLAS_LAYOUT Layout, CBLAS_SIDE Side, CBLAS_UPLO Uplo,
+      CBLAS_TRANSPOSE TransA, CBLAS_DIAG Diag, index_t M, index_t N,
+      float alpha, const float *A, index_t lda, float *B, index_t ldb) {
+    cblas_strmm(Layout, Side, Uplo, TransA, Diag, M, N, alpha, A, lda, B, ldb);
+}
+
+#if DO_INSTANTIATE
+template KOQKATOO_LINALG_EXPORT void
+xtrmm<real_t, index_t>(CBLAS_LAYOUT Layout, CBLAS_SIDE Side, CBLAS_UPLO Uplo,
+                       CBLAS_TRANSPOSE TransA, CBLAS_DIAG Diag, index_t M,
+                       index_t N, real_t alpha, const real_t *A, index_t lda,
+                       real_t *B, index_t ldb);
+#endif
+
+template <>
 KOQKATOO_LINALG_EXPORT void xsyrk(CBLAS_LAYOUT Layout, CBLAS_UPLO Uplo,
                                   CBLAS_TRANSPOSE Trans, index_t N, index_t K,
                                   double alpha, const double *A, index_t lda,

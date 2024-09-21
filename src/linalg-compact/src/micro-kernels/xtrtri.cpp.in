@@ -11,6 +11,4 @@ using Abi = stdx::simd_abi::@simd_abi@;
 template const constinit decltype(microkernel_lut<Abi>) microkernel_lut<Abi>;
 template const constinit decltype(microkernel_trmm_lut<Abi>) microkernel_trmm_lut<Abi>;
 
-template void xtrtri_trmm_microkernel<Abi, RowsReg>(mut_single_batch_matrix_accessor<Abi> A, mut_single_batch_matrix_accessor<Abi> B, index_t rows_B) noexcept;
-
 }

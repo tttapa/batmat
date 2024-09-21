@@ -6,9 +6,6 @@
 namespace koqkatoo::linalg::compact::micro_kernels::trtri {
 
 template <class Abi, index_t RowsReg>
-void xtrtri_microkernel(mut_single_batch_matrix_accessor<Abi> A) noexcept;
-
-template <class Abi, index_t RowsReg>
 void xtrtri_trmm_microkernel(mut_single_batch_matrix_accessor<Abi> A,
                              mut_single_batch_matrix_accessor<Abi> B,
                              index_t rows_B) noexcept;
@@ -32,7 +29,7 @@ static constexpr index_t RowsReg = 4;
 template <class Abi>
 inline const constinit auto microkernel_lut =
     make_1d_lut<RowsReg>([]<index_t Row>(index_constant<Row>) {
-        return xtrtri_microkernel<Abi, Row + 1>;
+        return xtrtri_trmm_microkernel<Abi, Row + 1>;
     });
 
 template <class Abi>
