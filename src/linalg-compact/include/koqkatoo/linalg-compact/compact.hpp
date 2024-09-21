@@ -118,9 +118,9 @@ struct CompactBLAS {
     static void xtrmv(batch_view L, mut_batch_view x, PreferredBackend b);
 
     /// L ← L⁻¹
-    static void xtrti_ref(mut_single_batch_view L);
-    static void xtrti(mut_single_batch_view L, PreferredBackend b);
-    static void xtrti(mut_batch_view L, PreferredBackend b);
+    static void xtrtri_ref(mut_single_batch_view L);
+    static void xtrtri(mut_single_batch_view L, PreferredBackend b);
+    static void xtrtri(mut_batch_view L, PreferredBackend b);
 
     /// C ← AB
     static void xgemm(single_batch_view A, single_batch_view B,
@@ -182,6 +182,10 @@ struct CompactBLAS {
     static void xcopy(single_batch_view A, mut_single_batch_view B);
     static void xcopy(batch_view A, mut_batch_view B);
 
+    /// B ← Aᵀ
+    static void xcopy_T(single_batch_view A, mut_single_batch_view B);
+    static void xcopy_T(batch_view A, mut_batch_view B);
+
     /// B ← A
     static void xfill(real_t A, mut_single_batch_view B);
     static void xfill(real_t A, mut_batch_view B);
@@ -222,8 +226,24 @@ struct CompactBLAS {
     static real_t xnrm2sq(batch_view x);
     static real_t xnrm2sq(size_last_t size_last, batch_view x);
     /// Infinity/max norm
+    static real_t xnrminf(single_batch_view x);
     static real_t xnrminf(batch_view x);
     static real_t xnrminf(size_last_t size_last, batch_view x);
+
+    template <class T0, class F, class R, class... Args>
+    static auto xreduce(T0 init, F fun, R reduce, single_batch_view x0,
+                        const Args &...xs) {
+        const index_t m = x0.rows(), n = x0.cols();
+        assert(((x0.rows() == xs.rows()) && ...));
+        assert(((x0.cols() == xs.cols()) && ...));
+        assert(((x0.depth() == xs.depth()) && ...));
+        assert(((x0.batch_size() == xs.batch_size()) && ...));
+        for (index_t c = 0; c < n; ++c)
+            for (index_t r = 0; r < m; ++r)
+                init = fun(init, aligned_load(&x0(0, r, c)),
+                           aligned_load(&xs(0, r, c))...);
+        return reduce(init);
+    }
 
     template <class T0, class F, class R, class... Args>
     static auto xreduce(T0 init, F fun, R reduce, batch_view x0,

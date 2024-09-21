@@ -68,7 +68,7 @@ class TrsmTest : public ::testing::Test {
         I.view.add_to_diagonal(1);
 
         Mat A_inv = A;
-        CompactBLAS_t::xtrti(A_inv, backend);
+        CompactBLAS_t::xtrtri(A_inv, backend);
 
         // Perform the reference operation for comparison
         CompactBLAS_t::xtrsm_LLNN(A, I, backend);

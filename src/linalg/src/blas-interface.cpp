@@ -168,15 +168,15 @@ template void KOQKATOO_LINALG_EXPORT xpotrf<real_t, index_t>(const char *uplo,
 
 template <>
 void KOQKATOO_LINALG_EXPORT xtrtri(const char *uplo, const char *diag,
-                                   const index_t *n, double *a,
-                                   const index_t *lda, index_t *info) {
-    dtrtri(uplo, diag, n, a, lda, info);
+                                   index_t n, double *a, index_t lda,
+                                   index_t *info) {
+    dtrtri(uplo, diag, &n, a, &lda, info);
 }
 template <>
 void KOQKATOO_LINALG_EXPORT xtrtri(const char *uplo, const char *diag,
-                                   const index_t *n, float *a,
-                                   const index_t *lda, index_t *info) {
-    strtri(uplo, diag, n, a, lda, info);
+                                   index_t n, float *a, index_t lda,
+                                   index_t *info) {
+    strtri(uplo, diag, &n, a, &lda, info);
 }
 #if DO_INSTANTIATE
 template void KOQKATOO_LINALG_EXPORT

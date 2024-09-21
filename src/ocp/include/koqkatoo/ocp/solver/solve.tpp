@@ -54,7 +54,7 @@ void Solver<Abi>::prepare_Ψi(index_t i, single_mut_real_view W,
     // Solve W = LH⁻¹ [I 0]ᵀ
     auto W1 = W.top_rows(nx), W2 = W.bottom_rows(nu);
     compact_blas::xcopy(LHi.top_left(nx, nx), W1);
-    compact_blas::xtrti(W1, settings.preferred_backend);
+    compact_blas::xtrtri(W1, settings.preferred_backend);
     compact_blas::xgemm_neg(LHi.bottom_left(nu, nx), W1, W2,
                             settings.preferred_backend);
     compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), W2,

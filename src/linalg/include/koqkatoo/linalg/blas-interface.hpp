@@ -43,8 +43,7 @@ template <class T, class I>
 void xpotrf(const char *uplo, I n, T *a, I lda, I *info);
 
 template <class T, class I>
-void xtrtri(const char *uplo, const char *diag, const I *n, T *a, const I *lda,
-            I *info);
+void xtrtri(const char *uplo, const char *diag, I n, T *a, I lda, I *info);
 
 template <class T, class I>
 void xgemv_batch_strided(CBLAS_LAYOUT layout, CBLAS_TRANSPOSE trans, I m, I n,

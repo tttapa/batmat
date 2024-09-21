@@ -12,6 +12,7 @@
 #include "compact/xpotrf.tpp"
 #include "compact/xsyrk.tpp"
 #include "compact/xtrsm.tpp"
+#include "compact/xtrtri.tpp"
 
 #include <array>
 
@@ -49,37 +50,6 @@ void CompactBLAS<Abi>::xtrmv(single_batch_view L, mut_single_batch_view x,
 }
 
 template <class Abi>
-void CompactBLAS<Abi>::xtrti_ref(mut_single_batch_view L) {
-    assert(L.rows() == L.cols());
-    const index_t n = L.rows();
-    for (index_t j = n; j-- > 0;) {
-        auto Ljj = simd{1} / aligned_load(&L(0, j, j));
-        aligned_store(&L(0, j, j), Ljj);
-        Ljj = -Ljj;
-        if (j + 1 < n) {
-            xtrmv_ref(L.bottom_right(n - j - 1, n - j - 1),
-                      L.bottom_rows(n - j - 1).middle_cols(j, 1));
-            KOQKATOO_UNROLLED_IVDEP_FOR (4, index_t i = j + 1; i < n; ++i)
-                aligned_store(&L(0, i, j), aligned_load(&L(0, i, j)) * Ljj);
-        }
-    }
-}
-
-template <class Abi>
-void CompactBLAS<Abi>::xtrti(mut_batch_view L, PreferredBackend b) {
-    std::ignore = b; // TODO
-    KOQKATOO_OMP(parallel for)
-    for (index_t i = 0; i < L.num_batches(); ++i)
-        xtrti_ref(L.batch(i));
-}
-
-template <class Abi>
-void CompactBLAS<Abi>::xtrti(mut_single_batch_view L, PreferredBackend b) {
-    std::ignore = b; // TODO
-    xtrti_ref(L);
-}
-
-template <class Abi>
 void CompactBLAS<Abi>::xsymv_add_ref(single_batch_view L, single_batch_view x,
                                      mut_single_batch_view y) {
     assert(L.cols() == L.rows());
@@ -92,14 +62,14 @@ void CompactBLAS<Abi>::xsymv_add_ref(single_batch_view L, single_batch_view x,
         auto xj = aligned_load(&x(0, j, 0));
         simd t{0};
         auto Ljj = aligned_load(&L(0, j, j));
-        aligned_store(&y(0, j, 0), fma(xj, Ljj, aligned_load(&y(0, j, 0))));
+        auto yj  = fma(xj, Ljj, aligned_load(&y(0, j, 0)));
         KOQKATOO_UNROLLED_IVDEP_FOR (4, index_t i = j + 1; i < n; ++i) {
             auto Lij = aligned_load(&L(0, i, j));
             auto xi  = aligned_load(&x(0, i, 0));
             aligned_store(&y(0, i, 0), fma(xj, Lij, aligned_load(&y(0, i, 0))));
             t = fma(Lij, xi, t);
         }
-        aligned_store(&y(0, j, 0), aligned_load(&y(0, j, 0)) + t);
+        aligned_store(&y(0, j, 0), yj + t);
     }
 }
 
@@ -137,6 +107,24 @@ void CompactBLAS<Abi>::xcopy(batch_view A, mut_batch_view B) {
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < A.num_batches(); ++i)
         xcopy(A.batch(i), B.batch(i));
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xcopy_T(single_batch_view A, mut_single_batch_view B) {
+    assert(A.rows() == B.cols());
+    assert(A.cols() == B.rows());
+    const index_t n = A.rows(), m = A.cols();
+    for (index_t j = 0; j < m; ++j)
+        KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t i = 0; i < n; ++i)
+            aligned_store(&B(0, j, i), aligned_load(&A(0, i, j)));
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xcopy_T(batch_view A, mut_batch_view B) {
+    assert(A.ceil_depth() == B.ceil_depth());
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < A.num_batches(); ++i)
+        xcopy_T(A.batch(i), B.batch(i));
 }
 
 template <class Abi>
@@ -323,6 +311,22 @@ real_t CompactBLAS<Abi>::xnrm2sq(size_last_t size_last, batch_view x) {
 }
 
 template <class Abi>
+real_t CompactBLAS<Abi>::xnrminf(single_batch_view x) {
+    using std::abs;
+    using std::fma;
+    using std::isfinite;
+    using std::max;
+    auto [inf_nrm, l1_norm] = xreduce(
+        std::array<simd, 2>{0, 0},
+        [](auto accum, auto xi) {
+            return std::array{max(abs(xi), accum[0]), abs(xi) + accum[1]};
+        },
+        [](auto accum) { return std::array{hmax(accum[0]), reduce(accum[1])}; },
+        x);
+    return isfinite(l1_norm) ? inf_nrm : l1_norm;
+}
+
+template <class Abi>
 real_t CompactBLAS<Abi>::xnrminf(batch_view x) {
     using std::abs;
     using std::fma;
@@ -372,17 +376,6 @@ void CompactBLAS<Abi>::proj_diff(single_batch_view x, single_batch_view l,
             aligned_store(&y(0, i, j), xij - max(lij, min(xij, uij)));
         }
     }
-}
-
-template <>
-void CompactBLAS<stdx::simd_abi::scalar>::xtrti(mut_single_batch_view H,
-                                                PreferredBackend b) {
-    std::ignore = b; // TODO
-    assert(H.rows() == H.cols());
-    index_t info = 0;
-    index_t n = H.rows(), ldh = H.outer_stride();
-    linalg::xtrtri("L", "N", &n, H.data, &ldh, &info);
-    lapack_throw_on_err("xtrtri", info);
 }
 
 } // namespace koqkatoo::linalg::compact
