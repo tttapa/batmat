@@ -75,7 +75,9 @@ void dgemm_blasfeo(benchmark::State &state) {
 
 #define BM_RANGES()                                                            \
     DenseRange(1, 63, 1)                                                       \
-        ->DenseRange(64, 255, 4)                                               \
-        ->DenseRange(256, 511, 8)                                              \
-        ->MeasureProcessCPUTime()
+        ->DenseRange(64, 127, 4)                                               \
+        ->DenseRange(128, 255, 16)                                             \
+        ->DenseRange(256, 512, 32)                                             \
+        ->MeasureProcessCPUTime()                                              \
+        ->UseRealTime()
 BENCHMARK(dgemm_blasfeo)->BM_RANGES();
