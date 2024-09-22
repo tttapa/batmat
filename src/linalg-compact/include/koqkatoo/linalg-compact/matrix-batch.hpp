@@ -789,7 +789,7 @@ struct BatchedMatrix {
     operator view_type() { return view; }
     operator const_view_type() const { return view; }
     operator BatchedMatrixView<T, I, S, D, I>() { return view; }
-    operator BatchedMatrixView<const T, I, S, D, I>() { return view; }
+    operator BatchedMatrixView<const T, I, S, D, I>() const { return view; }
 
     [[nodiscard]] guanaqo::MatrixView<T, I, S> operator()(index_type l) {
         return view(l);
