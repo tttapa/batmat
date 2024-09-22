@@ -58,6 +58,15 @@ void dgemm_blasfeo(benchmark::State &state) {
         blasfeo_allocate_dmat(n, n, mat.get());
     }
     auto batch_dgemm_blasfeo = [&] {
+#if KOQKATOO_WITH_OPENMP
+        if (omp_get_max_threads() == 1) {
+            for (index_t i = 0; i < depth; ++i)
+                blasfeo_dgemm_nn(n, n, n, 1.0, batch_A[i].get(), 0, 0,
+                                 batch_B[i].get(), 0, 0, 1.0, batch_C[i].get(),
+                                 0, 0, batch_D[i].get(), 0, 0);
+            return;
+        }
+#endif
         KOQKATOO_OMP(parallel for)
         for (index_t i = 0; i < depth; ++i)
             blasfeo_dgemm_nn(n, n, n, 1.0, batch_A[i].get(), 0, 0,

@@ -55,6 +55,14 @@ void dpotrf_blasfeo(benchmark::State &state) {
                          0, 0, 0.0, batch_A[i].get(), 0, 0, batch_B[i].get(), 0,
                          0);
     auto batch_dpotrf_blasfeo = [&] {
+#if KOQKATOO_WITH_OPENMP
+        if (omp_get_max_threads() == 1) {
+            for (index_t i = 0; i < depth; ++i)
+                blasfeo_dpotrf_l(n, batch_B[i].get(), 0, 0, batch_D[i].get(), 0,
+                                 0);
+            return;
+        }
+#endif
         KOQKATOO_OMP(parallel for)
         for (index_t i = 0; i < depth; ++i)
             blasfeo_dpotrf_l(n, batch_B[i].get(), 0, 0, batch_D[i].get(), 0, 0);
