@@ -112,8 +112,9 @@ using enum PreferredBackend;
 #define BM_RANGES()                                                            \
     DenseRange(1, 63, 1)                                                       \
         ->DenseRange(64, 255, 4)                                               \
-        ->DenseRange(256, 511, 8)                                              \
-        ->MeasureProcessCPUTime()
+        ->DenseRange(256, 512, 8)                                              \
+        ->MeasureProcessCPUTime()                                              \
+        ->UseRealTime()
 BENCHMARK(dpotrf<deduce_t<real_t, 8>, Reference>)->BM_RANGES();
 BENCHMARK(dpotrf<deduce_t<real_t, 4>, Reference>)->BM_RANGES();
 BENCHMARK(dpotrf<deduce_t<real_t, 2>, Reference>)->BM_RANGES();
@@ -122,6 +123,8 @@ BENCHMARK(dpotrf<scalar, Reference>)->BM_RANGES();
 BENCHMARK(dpotrf<deduce_t<real_t, 8>, MKLAll>)->BM_RANGES();
 #ifndef __AVX512F__
 BENCHMARK(dpotrf<deduce_t<real_t, 4>, MKLAll>)->BM_RANGES();
+#endif
+#ifndef __AVX2__
 BENCHMARK(dpotrf<deduce_t<real_t, 2>, MKLAll>)->BM_RANGES();
 #endif
 BENCHMARK(dpotrf<scalar, MKLAll>)->BM_RANGES();

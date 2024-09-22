@@ -7,7 +7,7 @@ using koqkatoo::index_t;
 using koqkatoo::real_t;
 
 template <class Abi, PreferredBackend Backend>
-void dtrsm(benchmark::State &state) {
+void dtrtri(benchmark::State &state) {
     std::mt19937 rng{12345};
     std::normal_distribution<real_t> nrml{0, 1};
 
@@ -18,16 +18,13 @@ void dtrsm(benchmark::State &state) {
         .rows  = n,
         .cols  = n,
     }};
-    Mat C{{
-        .depth = 64,
-        .rows  = n,
-        .cols  = n,
-    }};
     std::ranges::generate(L, [&] { return nrml(rng); });
-    std::ranges::generate(C, [&] { return nrml(rng); });
+    L.view.add_to_diagonal(5);
     for (auto _ : state)
-        CompactBLAS<Abi>::xtrsm_RLTN(L, C, Backend);
-    auto flop_cnt = 64e-9 * std::pow(static_cast<double>(n), 3) / 2;
+        CompactBLAS<Abi>::xtrtri(L, Backend);
+    auto nd = static_cast<double>(n);
+    // TODO: double check FLOP count
+    auto flop_cnt = 64e-9 * (nd + nd * (nd - 1) + nd * (nd - 1) * (nd - 2) / 6);
     state.counters["GFLOP count"] = {flop_cnt};
     state.counters["GFLOPS"]      = {flop_cnt,
                                      benchmark::Counter::kIsIterationInvariantRate};
@@ -43,16 +40,8 @@ using enum PreferredBackend;
         ->DenseRange(256, 512, 8)                                              \
         ->MeasureProcessCPUTime()                                              \
         ->UseRealTime()
-BENCHMARK(dtrsm<deduce_t<real_t, 8>, Reference>)->BM_RANGES();
-BENCHMARK(dtrsm<deduce_t<real_t, 4>, Reference>)->BM_RANGES();
-BENCHMARK(dtrsm<deduce_t<real_t, 2>, Reference>)->BM_RANGES();
-BENCHMARK(dtrsm<scalar, Reference>)->BM_RANGES();
-
-BENCHMARK(dtrsm<deduce_t<real_t, 8>, MKLAll>)->BM_RANGES();
-#ifndef __AVX512F__
-BENCHMARK(dtrsm<deduce_t<real_t, 4>, MKLAll>)->BM_RANGES();
-#endif
-#ifndef __AVX2__
-BENCHMARK(dtrsm<deduce_t<real_t, 2>, MKLAll>)->BM_RANGES();
-#endif
-BENCHMARK(dtrsm<scalar, MKLAll>)->BM_RANGES();
+BENCHMARK(dtrtri<deduce_t<real_t, 8>, Reference>)->BM_RANGES();
+BENCHMARK(dtrtri<deduce_t<real_t, 4>, Reference>)->BM_RANGES();
+BENCHMARK(dtrtri<deduce_t<real_t, 2>, Reference>)->BM_RANGES();
+BENCHMARK(dtrtri<scalar, Reference>)->BM_RANGES();
+BENCHMARK(dtrtri<scalar, MKLAll>)->BM_RANGES();

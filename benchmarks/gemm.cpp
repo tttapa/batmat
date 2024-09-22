@@ -46,8 +46,9 @@ using enum PreferredBackend;
 #define BM_RANGES()                                                            \
     DenseRange(1, 63, 1)                                                       \
         ->DenseRange(64, 255, 4)                                               \
-        ->DenseRange(256, 511, 8)                                              \
-        ->MeasureProcessCPUTime()
+        ->DenseRange(256, 512, 8)                                              \
+        ->MeasureProcessCPUTime()                                              \
+        ->UseRealTime()
 BENCHMARK(dgemm<deduce_t<real_t, 8>, Reference>)->BM_RANGES();
 BENCHMARK(dgemm<deduce_t<real_t, 4>, Reference>)->BM_RANGES();
 BENCHMARK(dgemm<deduce_t<real_t, 2>, Reference>)->BM_RANGES();
@@ -56,6 +57,8 @@ BENCHMARK(dgemm<scalar, Reference>)->BM_RANGES();
 BENCHMARK(dgemm<deduce_t<real_t, 8>, MKLAll>)->BM_RANGES();
 #ifndef __AVX512F__
 BENCHMARK(dgemm<deduce_t<real_t, 4>, MKLAll>)->BM_RANGES();
+#endif
+#ifndef __AVX2__
 BENCHMARK(dgemm<deduce_t<real_t, 2>, MKLAll>)->BM_RANGES();
 #endif
 BENCHMARK(dgemm<scalar, MKLAll>)->BM_RANGES();
