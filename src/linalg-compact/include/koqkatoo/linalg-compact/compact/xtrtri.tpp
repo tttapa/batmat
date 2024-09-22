@@ -50,18 +50,18 @@ void CompactBLAS<Abi>::xtrtri_ref(mut_single_batch_view L) {
 // -----------------------------------------------------------------------------
 
 template <class Abi>
-void CompactBLAS<Abi>::xtrtri(mut_batch_view L, PreferredBackend) {
+void CompactBLAS<Abi>::xtrtri(mut_batch_view L, PreferredBackend b) {
     assert(L.rows() >= L.cols());
 #if KOQKATOO_WITH_OPENMP
     if (omp_get_max_threads() == 1) {
         for (index_t i = 0; i < L.num_batches(); ++i)
-            xtrtri_ref(L.batch(i));
+            xtrtri(L.batch(i), b);
         return;
     }
 #endif
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < L.num_batches(); ++i)
-        xtrtri_ref(L.batch(i));
+        xtrtri(L.batch(i), b);
 }
 
 // BLAS specializations (scalar)
