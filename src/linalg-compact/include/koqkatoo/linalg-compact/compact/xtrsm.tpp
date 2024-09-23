@@ -72,6 +72,13 @@ void CompactBLAS<Abi>::xtrsm_RLTN(batch_view L, mut_batch_view H,
                 H.rows(), H.cols(), real_t{1}, L.data, L.outer_stride(),
                 L.layer_stride(), H.data, H.outer_stride(), H.layer_stride(),
                 L.depth());
+#if KOQKATOO_WITH_OPENMP
+    if (omp_get_max_threads() == 1) {
+        for (index_t i = 0; i < L.num_batches(); ++i)
+            xtrsm_RLTN_ref(L.batch(i), H.batch(i));
+        return;
+    }
+#endif
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < L.num_batches(); ++i)
         xtrsm_RLTN_ref(L.batch(i), H.batch(i));
@@ -99,6 +106,13 @@ void CompactBLAS<Abi>::xtrsm_LLNN(batch_view L, mut_batch_view H,
                 CblasNonUnit, H.rows(), H.cols(), real_t{1}, L.data,
                 L.outer_stride(), L.layer_stride(), H.data, H.outer_stride(),
                 H.layer_stride(), L.depth());
+#if KOQKATOO_WITH_OPENMP
+    if (omp_get_max_threads() == 1) {
+        for (index_t i = 0; i < L.num_batches(); ++i)
+            xtrsm_LLNN_ref(L.batch(i), H.batch(i));
+        return;
+    }
+#endif
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < L.num_batches(); ++i)
         xtrsm_LLNN_ref(L.batch(i), H.batch(i));
@@ -126,6 +140,13 @@ void CompactBLAS<Abi>::xtrsm_LLTN(batch_view L, mut_batch_view H,
                 H.rows(), H.cols(), real_t{1}, L.data, L.outer_stride(),
                 L.layer_stride(), H.data, H.outer_stride(), H.layer_stride(),
                 L.depth());
+#if KOQKATOO_WITH_OPENMP
+    if (omp_get_max_threads() == 1) {
+        for (index_t i = 0; i < L.num_batches(); ++i)
+            xtrsm_LLTN_ref(L.batch(i), H.batch(i));
+        return;
+    }
+#endif
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < L.num_batches(); ++i)
         xtrsm_LLTN_ref(L.batch(i), H.batch(i));

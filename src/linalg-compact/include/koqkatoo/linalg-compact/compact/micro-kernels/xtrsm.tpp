@@ -46,7 +46,7 @@ xtrsm_microkernel(const single_batch_matrix_accessor<Abi> A,
         }
     // Triangular solve
     KOQKATOO_FULLY_UNROLLED_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
-        simd Aii = simd{1} / A.load(ii, ii);
+        simd Aii = 1 / A.load(ii, ii);
         KOQKATOO_FULLY_UNROLLED_FOR (index_t jj = 0; jj < ColsReg; ++jj) {
             simd &Xij = B_reg[ii][jj];
             KOQKATOO_FULLY_UNROLLED_FOR (index_t kk = 0; kk < ii; ++kk) {
