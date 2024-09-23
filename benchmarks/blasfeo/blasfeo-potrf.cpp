@@ -39,15 +39,11 @@ void dpotrf_blasfeo(benchmark::State &state) {
     std::ranges::generate(A, [&] { return nrml(rng); });
 
     std::vector<raii_blasfeo_dmat> batch_A(depth), batch_B(depth);
-    std::vector<raii_blasfeo_dmat> batch_D(depth); // result
     for (auto &&[i, mat] : std::views::enumerate(batch_A)) {
         blasfeo_allocate_dmat(n, n, mat.get());
         blasfeo_pack_dmat(n, n, &A[i * n * n], n, mat.get(), 0, 0);
     }
     for (auto &&[i, mat] : std::views::enumerate(batch_B)) {
-        blasfeo_allocate_dmat(n, n, mat.get());
-    }
-    for (auto &&[i, mat] : std::views::enumerate(batch_D)) {
         blasfeo_allocate_dmat(n, n, mat.get());
     }
     for (index_t i = 0; i < depth; ++i)
@@ -58,16 +54,20 @@ void dpotrf_blasfeo(benchmark::State &state) {
 #if KOQKATOO_WITH_OPENMP
         if (omp_get_max_threads() == 1) {
             for (index_t i = 0; i < depth; ++i)
-                blasfeo_dpotrf_l(n, batch_B[i].get(), 0, 0, batch_D[i].get(), 0,
+                blasfeo_dpotrf_l(n, batch_A[i].get(), 0, 0, batch_A[i].get(), 0,
                                  0);
             return;
         }
 #endif
         KOQKATOO_OMP(parallel for)
         for (index_t i = 0; i < depth; ++i)
-            blasfeo_dpotrf_l(n, batch_B[i].get(), 0, 0, batch_D[i].get(), 0, 0);
+            blasfeo_dpotrf_l(n, batch_A[i].get(), 0, 0, batch_A[i].get(), 0, 0);
     };
     for (auto _ : state) {
+        state.PauseTiming();
+        for (index_t i = 0; i < depth; ++i)
+            blasfeo_dgecp(n, n, batch_B[i].get(), 0, 0, batch_A[i].get(), 0, 0);
+        state.ResumeTiming();
         batch_dpotrf_blasfeo();
     }
     auto flop_cnt = 64e-9 * std::pow(static_cast<double>(n), 3) / 6;

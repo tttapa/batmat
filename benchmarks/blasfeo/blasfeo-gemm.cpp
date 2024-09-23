@@ -41,7 +41,6 @@ void dgemm_blasfeo(benchmark::State &state) {
 
     std::vector<raii_blasfeo_dmat> batch_A(depth), batch_B(depth),
         batch_C(depth);
-    std::vector<raii_blasfeo_dmat> batch_D(depth); // result
     for (auto &&[i, mat] : std::views::enumerate(batch_A)) {
         blasfeo_allocate_dmat(n, n, mat.get());
         blasfeo_pack_dmat(n, n, &A[i * n * n], n, mat.get(), 0, 0);
@@ -54,16 +53,13 @@ void dgemm_blasfeo(benchmark::State &state) {
         blasfeo_allocate_dmat(n, n, mat.get());
         blasfeo_pack_dmat(n, n, &C[i * n * n], n, mat.get(), 0, 0);
     }
-    for (auto &&[i, mat] : std::views::enumerate(batch_D)) {
-        blasfeo_allocate_dmat(n, n, mat.get());
-    }
     auto batch_dgemm_blasfeo = [&] {
 #if KOQKATOO_WITH_OPENMP
         if (omp_get_max_threads() == 1) {
             for (index_t i = 0; i < depth; ++i)
                 blasfeo_dgemm_nn(n, n, n, 1.0, batch_A[i].get(), 0, 0,
                                  batch_B[i].get(), 0, 0, 1.0, batch_C[i].get(),
-                                 0, 0, batch_D[i].get(), 0, 0);
+                                 0, 0, batch_C[i].get(), 0, 0);
             return;
         }
 #endif
@@ -71,7 +67,7 @@ void dgemm_blasfeo(benchmark::State &state) {
         for (index_t i = 0; i < depth; ++i)
             blasfeo_dgemm_nn(n, n, n, 1.0, batch_A[i].get(), 0, 0,
                              batch_B[i].get(), 0, 0, 1.0, batch_C[i].get(), 0,
-                             0, batch_D[i].get(), 0, 0);
+                             0, batch_C[i].get(), 0, 0);
     };
     for (auto _ : state) {
         batch_dgemm_blasfeo();
