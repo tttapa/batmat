@@ -34,16 +34,14 @@ stdx::simd<T, Abi> rsqrt_0(stdx::simd<T, Abi> x) {
 template <class T, class Abi>
 stdx::simd<T, Abi> rsqrt_1(stdx::simd<T, Abi> x) {
     auto y = rsqrt_0(x);
-    y += (y - x * y * y * y) / 2;
-    return y;
+    return y * (T(1.5) - (x / 2 * y * y));
 }
 
 /// rsqrt_0 with two Newton iterations of refinement.
 template <class T, class Abi>
 stdx::simd<T, Abi> rsqrt_2(stdx::simd<T, Abi> x) {
     auto y = rsqrt_1(x);
-    y += (y - x * y * y * y) / 2;
-    return y;
+    return y * (T(1.5) - (x / 2 * y * y));
 }
 } // namespace detail
 
@@ -65,17 +63,17 @@ rsqrt(stdx::simd<double, stdx::simd_abi::deduce_t<double, 2>> x) {
 template <>
 inline stdx::simd<float, stdx::simd_abi::deduce_t<float, 16>>
 rsqrt(stdx::simd<float, stdx::simd_abi::deduce_t<float, 16>> x) {
-    return detail::rsqrt_2(x);
+    return detail::rsqrt_1(x);
 }
 template <>
 inline stdx::simd<float, stdx::simd_abi::deduce_t<float, 8>>
 rsqrt(stdx::simd<float, stdx::simd_abi::deduce_t<float, 8>> x) {
-    return detail::rsqrt_2(x);
+    return detail::rsqrt_1(x);
 }
 template <>
 inline stdx::simd<float, stdx::simd_abi::deduce_t<float, 4>>
 rsqrt(stdx::simd<float, stdx::simd_abi::deduce_t<float, 4>> x) {
-    return detail::rsqrt_2(x);
+    return detail::rsqrt_1(x);
 }
 #else
 #pragma message("Fast inverse square roots not supported")
