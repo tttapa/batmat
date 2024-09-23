@@ -26,7 +26,7 @@ void dtrsm(benchmark::State &state) {
     std::ranges::generate(L, [&] { return nrml(rng); });
     std::ranges::generate(C, [&] { return nrml(rng); });
     for (auto _ : state)
-        CompactBLAS<Abi>::xtrsm_RLTN(L, C, Backend);
+        CompactBLAS<Abi>::xtrsm_LLNN(L, C, Backend);
     auto flop_cnt = 64e-9 * std::pow(static_cast<double>(n), 3) / 2;
     state.counters["GFLOP count"] = {flop_cnt};
     state.counters["GFLOPS"]      = {flop_cnt,
