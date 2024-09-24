@@ -77,6 +77,12 @@ struct CompactBLAS {
                       PreferredBackend b);
     static void xsyrk(batch_view A, mut_batch_view C, PreferredBackend b);
 
+    /// C += AAᵀ
+    static void xsyrk_add_ref(single_batch_view A, mut_single_batch_view C);
+    static void xsyrk_add(single_batch_view A, mut_single_batch_view C,
+                          PreferredBackend b);
+    static void xsyrk_add(batch_view A, mut_batch_view C, PreferredBackend b);
+
     /// C -= AAᵀ
     static void xsyrk_sub_ref(single_batch_view A, mut_single_batch_view C);
     static void xsyrk_sub(single_batch_view A, mut_single_batch_view C,
@@ -169,6 +175,12 @@ struct CompactBLAS {
                              PreferredBackend b);
     static void xgemm_TN_sub_ref(single_batch_view A, single_batch_view B,
                                  mut_single_batch_view C);
+
+    /// Cholesky downdate
+    static void xshh(mut_single_batch_view L, mut_single_batch_view A,
+                     PreferredBackend b);
+    static void xshh(mut_batch_view L, mut_batch_view A, PreferredBackend b);
+    static void xshh_ref(mut_single_batch_view L, mut_single_batch_view A);
 
     /// y += Lx
     static void xsymv_add(single_batch_view L, single_batch_view x,

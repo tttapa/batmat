@@ -4,11 +4,25 @@
 
 namespace koqkatoo::cholundate::householder {
 
+#ifdef __AVX512F__
+// AVX512 has 32 vector registers, TODO:
+static constexpr index_t DefaultSizeR = 8;
+static constexpr index_t DefaultSizeS = 24;
+#elif defined(__ARM_NEON)
+// NEON has 32 vector registers, TODO:
+static constexpr index_t DefaultSizeR = 8;
+static constexpr index_t DefaultSizeS = 24;
+#else
+// AVX2 has 16 vector registers, TODO:
+static constexpr index_t DefaultSizeR = 4;
+static constexpr index_t DefaultSizeS = 12;
+#endif
+
 struct Config {
     /// Block size of the block column of L to process in the micro-kernels.
-    index_t block_size_r;
+    index_t block_size_r = DefaultSizeR;
     /// Block size of the block row of L to process in the micro-kernels.
-    index_t block_size_s;
+    index_t block_size_s = DefaultSizeS;
     /// Number of block columns per cache block.
     index_t num_blocks_r = 1;
     /// Number of block rows per cache block.

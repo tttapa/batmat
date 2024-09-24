@@ -35,10 +35,13 @@ struct DefaultStride {
 template <class I = ptrdiff_t, class S = std::integral_constant<I, 1>,
           class D = I, class L = DefaultStride>
 struct BatchedMatrixLayout {
-    using index_type        = I;
-    using batch_size_type   = S;
-    using depth_type        = D;
-    using layer_stride_type = L;
+    using index_type           = I;
+    using batch_size_type      = S;
+    using depth_type           = D;
+    using layer_stride_type    = L;
+    using standard_stride_type = std::conditional_t<requires {
+        S::value;
+    }, std::integral_constant<index_t, S::value>, index_t>;
 
     [[no_unique_address]] depth_type depth;
     index_type rows;
@@ -107,13 +110,20 @@ struct BatchedMatrixLayout {
           outer_stride{p.outer_stride}, batch_size{p.batch_size},
           layer_stride{p.layer_stride} {}
 
+    static standard_stride_type convert_to_standard_stride(auto s) {
+        if constexpr (requires { standard_stride_type::value; })
+            return {};
+        else
+            return static_cast<standard_stride_type>(s);
+    }
+
     template <class T>
-    [[nodiscard]] guanaqo::MatrixView<T, I, S> operator()(T *data,
-                                                          index_type l) const {
+    [[nodiscard]] guanaqo::MatrixView<T, I, standard_stride_type>
+    operator()(T *data, index_type l) const {
         return {{.data         = data + layer_index(l),
                  .rows         = rows,
                  .cols         = cols,
-                 .inner_stride = batch_size,
+                 .inner_stride = convert_to_standard_stride(batch_size),
                  .outer_stride = outer_stride * static_cast<I>(batch_size)}};
     }
     template <class T>
@@ -261,12 +271,13 @@ struct BatchedMatrixViewShorterLastColumn {
 template <class T, class I = ptrdiff_t, class S = std::integral_constant<I, 1>,
           class D = I, class L = DefaultStride>
 struct BatchedMatrixView {
-    using layout_type       = BatchedMatrixLayout<I, S, D, L>;
-    using value_type        = T;
-    using index_type        = typename layout_type::index_type;
-    using batch_size_type   = typename layout_type::batch_size_type;
-    using depth_type        = typename layout_type::depth_type;
-    using layer_stride_type = typename layout_type::layer_stride_type;
+    using layout_type          = BatchedMatrixLayout<I, S, D, L>;
+    using value_type           = T;
+    using index_type           = typename layout_type::index_type;
+    using batch_size_type      = typename layout_type::batch_size_type;
+    using depth_type           = typename layout_type::depth_type;
+    using layer_stride_type    = typename layout_type::layer_stride_type;
+    using standard_stride_type = typename layout_type::standard_stride_type;
     static constexpr bool has_single_batch = requires {
         S::value;
         D::value;
@@ -314,7 +325,8 @@ struct BatchedMatrixView {
 
     BatchedMatrixView<const T, I, S, D, L> as_const() const { return *this; }
 
-    [[nodiscard]] guanaqo::MatrixView<T, I, S> operator()(index_type l) const {
+    [[nodiscard]] guanaqo::MatrixView<T, I, standard_stride_type>
+    operator()(index_type l) const {
         return layout(data, l);
     }
     [[nodiscard]] value_type &operator()(index_type l, index_type r,
@@ -713,15 +725,16 @@ template <class T, class I = ptrdiff_t, class S = std::integral_constant<I, 1>,
           class D = I, class A = detail::default_alignment_t<T, I, S>>
 struct BatchedMatrix {
     static_assert(!std::is_const_v<T>);
-    using view_type         = BatchedMatrixView<T, I, S, D>;
-    using const_view_type   = BatchedMatrixView<const T, I, S, D>;
-    using layout_type       = typename view_type::layout_type;
-    using plain_layout_type = typename layout_type::PlainBatchedMatrixLayout;
-    using value_type        = T;
-    using index_type        = typename layout_type::index_type;
-    using batch_size_type   = typename layout_type::batch_size_type;
-    using depth_type        = typename layout_type::depth_type;
-    using alignment_type    = A;
+    using view_type            = BatchedMatrixView<T, I, S, D>;
+    using const_view_type      = BatchedMatrixView<const T, I, S, D>;
+    using layout_type          = typename view_type::layout_type;
+    using plain_layout_type    = typename layout_type::PlainBatchedMatrixLayout;
+    using value_type           = T;
+    using index_type           = typename layout_type::index_type;
+    using batch_size_type      = typename layout_type::batch_size_type;
+    using depth_type           = typename layout_type::depth_type;
+    using standard_stride_type = typename layout_type::standard_stride_type;
+    using alignment_type       = A;
 
     view_type view;
 
@@ -791,14 +804,15 @@ struct BatchedMatrix {
     operator BatchedMatrixView<T, I, S, D, I>() { return view; }
     operator BatchedMatrixView<const T, I, S, D, I>() const { return view; }
 
-    [[nodiscard]] guanaqo::MatrixView<T, I, S> operator()(index_type l) {
+    [[nodiscard]] guanaqo::MatrixView<T, I, standard_stride_type>
+    operator()(index_type l) {
         return view(l);
     }
     [[nodiscard]] value_type &operator()(index_type l, index_type r,
                                          index_type c) {
         return view(l, r, c);
     }
-    [[nodiscard]] guanaqo::MatrixView<const T, I, S>
+    [[nodiscard]] guanaqo::MatrixView<const T, I, standard_stride_type>
     operator()(index_type l) const {
         return view.as_const()(l);
     }

@@ -63,6 +63,15 @@ void CompactBLAS<Abi>::xsyrk_ref(single_batch_view A, mut_single_batch_view C) {
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xsyrk_add_ref(single_batch_view A,
+                                     mut_single_batch_view C) {
+    assert(C.rows() == C.cols());
+    assert(C.rows() == A.rows());
+    // TODO: cache blocking
+    micro_kernels::gemm::xgemmt_register<Abi, {.trans_B = true}>(A, A, C);
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xsyrk_sub_ref(single_batch_view A,
                                      mut_single_batch_view C) {
     namespace uk = micro_kernels;
@@ -215,6 +224,25 @@ void CompactBLAS<Abi>::xsyrk(batch_view A, mut_batch_view C,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xsyrk_add(batch_view A, mut_batch_view C,
+                                 PreferredBackend b) {
+    assert(A.ceil_depth() == C.ceil_depth());
+    if constexpr (std::same_as<Abi, scalar_abi>) {
+        if (use_mkl_batched(b)) {
+            linalg::xsyrk_batch_strided(CblasColMajor, CblasLower, CblasNoTrans,
+                                        C.rows(), A.cols(), real_t{1}, A.data,
+                                        A.outer_stride(), A.layer_stride(),
+                                        real_t{1}, C.data, C.outer_stride(),
+                                        C.layer_stride(), A.depth());
+            return;
+        }
+    }
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < A.num_batches(); ++i)
+        xsyrk_add_ref(A.batch(i), C.batch(i));
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xsyrk_sub(batch_view A, mut_batch_view C,
                                  PreferredBackend b) {
     assert(A.ceil_depth() == C.ceil_depth());
@@ -266,6 +294,22 @@ void CompactBLAS<Abi>::xsyrk(single_batch_view A, mut_single_batch_view C,
         }
     }
     xsyrk_ref(A, C);
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xsyrk_add(single_batch_view A, mut_single_batch_view C,
+                                 PreferredBackend b) {
+    assert(C.rows() == C.cols());
+    assert(C.rows() == A.rows());
+    if constexpr (std::same_as<Abi, scalar_abi>) {
+        if (use_blas_scalar(b)) {
+            linalg::xsyrk(CblasColMajor, CblasLower, CblasNoTrans, C.rows(),
+                          A.cols(), real_t{1}, A.data, A.outer_stride(),
+                          real_t{1}, C.data, C.outer_stride());
+            return;
+        }
+    }
+    xsyrk_add_ref(A, C);
 }
 
 template <class Abi>

@@ -10,6 +10,7 @@
 
 #include "compact/xgemm.tpp"
 #include "compact/xpotrf.tpp"
+#include "compact/xshh.tpp"
 #include "compact/xsyrk.tpp"
 #include "compact/xtrsm.tpp"
 #include "compact/xtrtri.tpp"

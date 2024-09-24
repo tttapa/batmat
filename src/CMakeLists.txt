@@ -108,7 +108,7 @@ target_sources(linalg-compact-headers INTERFACE FILE_SET headers TYPE HEADERS
           "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xpotrf.tpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xgemmt-diag.tpp"
 )
-target_link_libraries(linalg-compact-headers INTERFACE koqkatoo::linalg)
+target_link_libraries(linalg-compact-headers INTERFACE koqkatoo::linalg koqkatoo::cholundate)
 target_compile_features(linalg-compact-headers INTERFACE cxx_std_20)
 
 include("linalg-compact/src/micro-kernels/Codegen.cmake")
