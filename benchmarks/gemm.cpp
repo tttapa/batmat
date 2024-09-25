@@ -2,6 +2,10 @@
 #include <benchmark/benchmark.h>
 #include <random>
 
+#ifndef KQT_BENCHMARK_DEPTH
+#define KQT_BENCHMARK_DEPTH 64
+#endif
+
 using namespace koqkatoo::linalg::compact;
 using koqkatoo::index_t;
 using koqkatoo::real_t;
@@ -11,20 +15,21 @@ void dgemm(benchmark::State &state) {
     std::mt19937 rng{12345};
     std::normal_distribution<real_t> nrml{0, 1};
 
-    auto n    = static_cast<index_t>(state.range(0));
+    const index_t d = KQT_BENCHMARK_DEPTH;
+    const auto n    = static_cast<index_t>(state.range(0));
     using Mat = BatchedMatrix<real_t, index_t, stdx::simd_size<real_t, Abi>>;
     Mat A{{
-        .depth = 64,
+        .depth = d,
         .rows  = n,
         .cols  = n,
     }};
     Mat B{{
-        .depth = 64,
+        .depth = d,
         .rows  = n,
         .cols  = n,
     }};
     Mat C{{
-        .depth = 64,
+        .depth = d,
         .rows  = n,
         .cols  = n,
     }};
@@ -33,10 +38,12 @@ void dgemm(benchmark::State &state) {
     std::ranges::generate(C, [&] { return nrml(rng); });
     for (auto _ : state)
         CompactBLAS<Abi>::xgemm_add(A, B, C, Backend);
-    auto flop_cnt                 = 64e-9 * std::pow(static_cast<double>(n), 3);
-    state.counters["GFLOP count"] = {flop_cnt};
-    state.counters["GFLOPS"]      = {flop_cnt,
+    const auto nd = static_cast<double>(n), dd = static_cast<double>(d);
+    auto flop_cnt                 = dd * std::pow(nd, 3);
+    state.counters["GFLOP count"] = {1e-9 * flop_cnt};
+    state.counters["GFLOPS"]      = {1e-9 * flop_cnt,
                                      benchmark::Counter::kIsIterationInvariantRate};
+    state.counters["depth"]       = {dd};
 }
 
 using stdx::simd_abi::deduce_t;

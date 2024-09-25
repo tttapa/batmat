@@ -1,6 +1,8 @@
 find_package(benchmark REQUIRED)
 find_package(Eigen3)
 
+add_compile_definitions(KQT_BENCHMARK_DEPTH=64)
+
 add_executable(benchmark-gemm gemm.cpp benchmark-main.cpp)
 target_link_libraries(benchmark-gemm PRIVATE
     benchmark::benchmark koqkatoo::linalg-compact koqkatoo::warnings)
@@ -35,5 +37,9 @@ if (TARGET blasfeo)
 
     add_executable(benchmark-potrf-blasfeo blasfeo/blasfeo-potrf.cpp benchmark-main.cpp)
     target_link_libraries(benchmark-potrf-blasfeo PRIVATE
+        benchmark::benchmark blasfeo koqkatoo::koqkatoo koqkatoo::warnings)
+
+    add_executable(benchmark-trsm-blasfeo blasfeo/blasfeo-trsm.cpp benchmark-main.cpp)
+    target_link_libraries(benchmark-trsm-blasfeo PRIVATE
         benchmark::benchmark blasfeo koqkatoo::koqkatoo koqkatoo::warnings)
 endif()
