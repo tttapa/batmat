@@ -574,6 +574,20 @@ struct BatchedMatrixView {
         }
     }
 
+    void negate() {
+        const auto bs = static_cast<I>(batch_size());
+        for (index_type b = 0; b < num_batches(); ++b) {
+            auto *dst = this->batch(b).data;
+            for (index_type c = 0; c < this->cols(); ++c) {
+                auto *dst_         = dst;
+                const index_type n = rows() * bs;
+                for (index_type r = 0; r < n; ++r, ++dst_)
+                    *dst_ = -*dst_;
+                dst += bs * this->outer_stride();
+            }
+        }
+    }
+
     void copy_values(auto &other) const {
         assert(other.rows() == this->rows());
         assert(other.cols() == this->cols());
@@ -629,8 +643,8 @@ struct BatchedMatrixView {
                 src += bs * other.outer_stride();
                 dst += bs * this->outer_stride();
             }
-            return *this;
         }
+        return *this;
     }
 
     BatchedMatrixView &reassign(BatchedMatrixView other) {
