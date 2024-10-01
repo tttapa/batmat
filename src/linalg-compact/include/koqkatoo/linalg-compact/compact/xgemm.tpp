@@ -3,8 +3,10 @@
 #include <koqkatoo/kib.hpp>
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
+#include <koqkatoo/loop.hpp>
 
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xgemm.hpp>
+#include <koqkatoo/linalg-compact/compact/micro-kernels/xtrmm.hpp>
 #include "util.hpp"
 
 #include <concepts>
@@ -56,6 +58,58 @@ void CompactBLAS<Abi>::xgemm_neg_ref(single_batch_view A, single_batch_view B,
                 C.middle_rows(i, ni));
         }
     }
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xtrmm_RLNN_neg_ref(single_batch_view A,
+                                          single_batch_view B,
+                                          mut_single_batch_view C) {
+    assert(A.rows() == C.rows());
+    assert(A.cols() == B.rows());
+    assert(B.cols() == C.cols());
+    assert(B.rows() >= B.cols());
+    for (index_t j = 0; j < C.cols(); ++j)
+        for (index_t i = 0; i < C.rows(); ++i)
+            simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned);
+    static constexpr index_t R = micro_kernels::gemm::RowsReg;
+    static_assert(R == micro_kernels::gemm::ColsReg);
+    micro_kernels::single_batch_matrix_accessor<Abi> A_ = A, B_ = B;
+    micro_kernels::mut_single_batch_matrix_accessor<Abi> C_ = C;
+    foreach_chunked(
+        0, C.cols(), R,
+        [&](index_t c) {
+            foreach_chunked(
+                0, C.rows(), R,
+                [&](index_t r) {
+                    micro_kernels::trmm::xtrmm_rlnn_microkernel<
+                        Abi, {.negate = true}, R, R>(
+                        A_.block(r, c), B_.block(c, c), C_.block(r, c),
+                        B.rows() - c);
+                },
+                [&](index_t r, index_t nr) {
+                    micro_kernels::trmm::microkernel_rlnn_lut<
+                        Abi, {.negate = true}>[nr - 1][R - 1](
+                        A_.block(r, c), B_.block(c, c), C_.block(r, c),
+                        B.rows() - c);
+                });
+        },
+        [&](index_t c, index_t nc) {
+            foreach_chunked(
+                0, C.rows(), R,
+                [&](index_t r) {
+                    micro_kernels::trmm::microkernel_rlnn_lut<
+                        Abi, {.negate = true}>[R - 1][nc - 1](
+                        A_.block(r, c), B_.block(c, c), C_.block(r, c),
+                        B.rows() - c);
+                },
+                [&](index_t r, index_t nr) {
+                    micro_kernels::trmm::microkernel_rlnn_lut<
+                        Abi, {.negate = true}>[nr - 1][nc - 1](
+                        A_.block(r, c), B_.block(c, c), C_.block(r, c),
+                        B.rows() - c);
+                });
+        });
+    // TODO: cache blocking
 }
 
 template <class Abi>
@@ -273,6 +327,19 @@ void CompactBLAS<Abi>::xgemm_neg(batch_view A, batch_view B, mut_batch_view C,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xtrmm_RLNN_neg(batch_view A, batch_view B,
+                                      mut_batch_view C, PreferredBackend b) {
+    assert(A.depth() == B.depth());
+    assert(B.depth() == C.depth());
+    assert(A.rows() == C.rows());
+    assert(A.cols() == B.rows());
+    assert(B.cols() == C.cols());
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < A.num_batches(); ++i)
+        xtrmm_RLNN_neg(A.batch(i), B.batch(i), C.batch(i), b);
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xgemm_add(batch_view A, batch_view B, mut_batch_view C,
                                  PreferredBackend b) {
     assert(A.depth() == B.depth());
@@ -428,6 +495,35 @@ void CompactBLAS<Abi>::xgemm_neg(single_batch_view A, single_batch_view B,
                 A.cols(), real_t{-1}, A.data, A.outer_stride(), B.data,
                 B.outer_stride(), real_t{0}, C.data, C.outer_stride());
     xgemm_neg_ref(A, B, C);
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xtrmm_RLNN_neg(single_batch_view A, single_batch_view B,
+                                      mut_single_batch_view C,
+                                      PreferredBackend b) {
+    assert(A.rows() == C.rows());
+    assert(A.cols() == B.rows());
+    assert(B.cols() == C.cols());
+    assert(B.rows() >= B.cols());
+    if constexpr (std::same_as<Abi, scalar_abi>)
+        if (use_blas_scalar(b)) {
+            auto A1 = A.left_cols(B.cols()), B1 = B.top_rows(B.cols());
+            C = A1;
+            linalg::xtrmm(CblasColMajor, CblasRight, CblasLower, CblasNoTrans,
+                          CblasNonUnit, C.rows(), C.cols(), real_t{-1}, B1.data,
+                          B1.outer_stride(), C.data, C.outer_stride());
+            if (B.rows() > B.cols()) { // lower trapezoidal
+                auto A2 = A.right_cols(A.cols() - B.cols()),
+                     B2 = B.bottom_rows(B.rows() - B.cols());
+                linalg::xgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
+                              A2.rows(), B2.cols(), A2.cols(), real_t{-1},
+                              A2.data, A2.outer_stride(), B2.data,
+                              B2.outer_stride(), real_t{1}, C.data,
+                              C.outer_stride());
+            }
+            return;
+        }
+    xtrmm_RLNN_neg_ref(A, B, C);
 }
 
 template <class Abi>

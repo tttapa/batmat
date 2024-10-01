@@ -60,6 +60,37 @@ class GemmTest : public ::testing::Test {
                         << k << ")";
     }
 
+    void RunTestTrmm(PreferredBackend backend, index_t n, func_t func,
+                     naive_func_t naive_func) {
+        Mat A{{.depth = 15, .rows = n, .cols = n + 13}};
+        Mat B{{.depth = 15, .rows = n + 13, .cols = n + 3}};
+        Mat C{{.depth = 15, .rows = n, .cols = n + 3}};
+        std::ranges::generate(A, [&] { return nrml(rng); });
+        std::ranges::generate(B, [&] { return nrml(rng); });
+        std::ranges::generate(C, [&] { return nrml(rng); });
+        Mat Bl = B;
+        for (index_t c = 1; c < Bl.cols(); ++c) // Make Bl lower trapezoidal
+            Bl.view.block(0, c, c, 1).set_constant(0);
+
+        // Save the original C matrix for comparison
+        Mat C_reference = C;
+
+        // Perform the operation
+        func(A, B, C, backend);
+
+        // Perform the reference operation for comparison
+        naive_func(A, Bl, C_reference);
+
+        // Verify that the results match the reference implementation
+        for (index_t i = 0; i < C.depth(); ++i)
+            for (index_t j = 0; j < C.rows(); ++j)
+                for (index_t k = 0; k < C.cols(); ++k)
+                    ASSERT_NEAR(C(i, j, k), C_reference(i, j, k), ε)
+                        << enum_name(backend) << "[" << n
+                        << "]: TRMM mismatch at (" << i << ", " << j << ", "
+                        << k << ")";
+    }
+
     static void naive_gemm(bool transA, bool transB, real_t α, real_t β, View A,
                            View B, MutView C) {
         auto M = transA ? A.cols() : A.rows();
@@ -125,4 +156,11 @@ TYPED_TEST(GemmTest, GemmTNSub) {
             this->RunTest(
                 backend, i, TestFixture::CompactBLAS_t::xgemm_TN_sub,
                 std::bind_front(TestFixture::naive_gemm, true, false, -1, 1));
+}
+TYPED_TEST(GemmTest, TrmmNeg) {
+    for (auto backend : koqkatoo::tests::backends)
+        for (index_t i : koqkatoo::tests::sizes)
+            this->RunTestTrmm(
+                backend, i, TestFixture::CompactBLAS_t::xtrmm_RLNN_neg,
+                std::bind_front(TestFixture::naive_gemm, false, false, -1, 0));
 }
