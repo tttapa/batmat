@@ -230,20 +230,22 @@ void CompactBLAS<Abi>::xadd_copy_impl(mut_batch_view out, batch_view x1,
     assert(x1.rows() == out.rows());
     assert(((x1.cols() == xs.cols()) && ...));
     assert(x1.cols() == out.cols());
-    assert(x1.cols() == 1);
     index_t i;
     const auto Bs   = static_cast<index_t>(x1.batch_size());
-    const index_t n = x1.rows();
+    const index_t n = x1.rows(), m = x1.cols();
     KOQKATOO_OMP(parallel for lastprivate(i))
     for (i = 0; i <= x1.depth() - Bs; i += Bs) {
-        KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t r = 0; r < n; ++r) {
-            aligned_store(&out(i, r, 0), (aligned_load(&x1(i, r, 0)) + ... +
-                                          aligned_load(&xs(i, r, 0))));
+        for (index_t c = 0; c < m; ++c) {
+            KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t r = 0; r < n; ++r) {
+                aligned_store(&out(i, r, c), (aligned_load(&x1(i, r, c)) + ... +
+                                              aligned_load(&xs(i, r, c))));
+            }
         }
     }
     for (; i < x1.depth(); ++i)
-        for (index_t r = 0; r < n; ++r)
-            out(i, r, 0) = (x1(i, r, 0) + ... + xs(i, r, 0));
+        for (index_t c = 0; c < m; ++c)
+            for (index_t r = 0; r < n; ++r)
+                out(i, r, c) = (x1(i, r, c) + ... + xs(i, r, c));
 }
 
 template <class Abi>
@@ -260,21 +262,23 @@ void CompactBLAS<Abi>::xsub_copy_impl(mut_batch_view out, batch_view x1,
     assert(x1.rows() == out.rows());
     assert(((x1.cols() == xs.cols()) && ...));
     assert(x1.cols() == out.cols());
-    assert(x1.cols() == 1);
     index_t i;
     const auto Bs   = static_cast<index_t>(x1.batch_size());
-    const index_t n = x1.rows();
+    const index_t n = x1.rows(), m = x1.cols();
     KOQKATOO_OMP(parallel for lastprivate(i))
     for (i = 0; i <= x1.depth() - Bs; i += Bs) {
-        KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t r = 0; r < n; ++r) {
-            aligned_store(&out(i, r, 0),
-                          aligned_load(&x1(i, r, 0)) -
-                              (... + aligned_load(&xs(i, r, 0))));
+        for (index_t c = 0; c < m; ++c) {
+            KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t r = 0; r < n; ++r) {
+                aligned_store(&out(i, r, c),
+                              aligned_load(&x1(i, r, c)) -
+                                  (... + aligned_load(&xs(i, r, c))));
+            }
         }
     }
     for (; i < x1.depth(); ++i)
-        for (index_t r = 0; r < n; ++r)
-            out(i, r, 0) = x1(i, r, 0) - (... + xs(i, r, 0));
+        for (index_t c = 0; c < m; ++c)
+            for (index_t r = 0; r < n; ++r)
+                out(i, r, c) = x1(i, r, c) - (... + xs(i, r, c));
 }
 
 template <class Abi>
