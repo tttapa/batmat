@@ -56,6 +56,8 @@ void CompactBLAS<Abi>::xtrsm_RLTN(batch_view L, mut_batch_view H,
     assert(L.depth() == H.depth());
     assert(L.rows() == L.cols());
     assert(H.cols() == L.rows());
+    if (H.rows() == 0 || H.cols() == 0)
+        return;
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && L.has_full_layer_stride() &&
             H.has_full_layer_stride())
@@ -90,6 +92,8 @@ void CompactBLAS<Abi>::xtrsm_LLNN(batch_view L, mut_batch_view H,
     assert(L.depth() == H.depth());
     assert(L.rows() == L.cols());
     assert(H.rows() == L.rows());
+    if (H.rows() == 0 || H.cols() == 0)
+        return;
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && L.has_full_layer_stride() &&
             H.has_full_layer_stride())
@@ -124,6 +128,8 @@ void CompactBLAS<Abi>::xtrsm_LLTN(batch_view L, mut_batch_view H,
     assert(L.depth() == H.depth());
     assert(L.rows() == L.cols());
     assert(H.rows() == L.rows());
+    if (H.rows() == 0 || H.cols() == 0)
+        return;
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && L.has_full_layer_stride() &&
             H.has_full_layer_stride())
@@ -160,6 +166,8 @@ void CompactBLAS<Abi>::xtrsm_RLTN(single_batch_view L, mut_single_batch_view H,
                                   PreferredBackend b) {
     assert(L.rows() == L.cols());
     assert(H.cols() == L.rows());
+    if (H.rows() == 0 || H.cols() == 0)
+        return;
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b))
             return linalg::xtrsm(CblasColMajor, CblasRight, CblasLower,
@@ -174,6 +182,8 @@ void CompactBLAS<Abi>::xtrsm_LLNN(single_batch_view L, mut_single_batch_view H,
                                   PreferredBackend b) {
     assert(L.rows() == L.cols());
     assert(H.rows() == L.rows());
+    if (H.rows() == 0 || H.cols() == 0)
+        return;
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b))
             return linalg::xtrsm(CblasColMajor, CblasLeft, CblasLower,
@@ -188,6 +198,8 @@ void CompactBLAS<Abi>::xtrsm_LLTN(single_batch_view L, mut_single_batch_view H,
                                   PreferredBackend b) {
     assert(L.rows() == L.cols());
     assert(H.rows() == L.rows());
+    if (H.rows() == 0 || H.cols() == 0)
+        return;
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b))
             return linalg::xtrsm(CblasColMajor, CblasLeft, CblasLower,
