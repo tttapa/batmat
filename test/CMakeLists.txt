@@ -18,6 +18,7 @@ add_executable(tests
     "linalg-compact/test-syrk.cpp"
     "linalg-compact/test-potrf.cpp"
     "linalg-compact/test-shh.cpp"
+    "linalg-compact/test-pntrf.cpp"
     "cholundate/test-shh-downdate.cpp"
 )
 target_compile_definitions(tests PRIVATE

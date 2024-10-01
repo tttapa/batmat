@@ -9,6 +9,7 @@
 #include <koqkatoo/openmp.h>
 
 #include "compact/xgemm.tpp"
+#include "compact/xpntrf.tpp"
 #include "compact/xpotrf.tpp"
 #include "compact/xshh.tpp"
 #include "compact/xsyrk.tpp"

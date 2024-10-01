@@ -117,6 +117,12 @@ struct CompactBLAS {
     static void xpotrf_recursive_ref(mut_single_batch_view H);
     static void xpotrf_base_ref(mut_single_batch_view H, index_t n = -1);
 
+    /// Quasidefinite LDLᵀ factorization where Dᵢᵢ = ±1. The @p signs argument
+    /// should contain only the sign bit, i.e. ±0.0.
+    static void xpntrf(mut_single_batch_view H, single_batch_view signs);
+    static void xpntrf(mut_batch_view H, batch_view signs);
+    static void xpntrf_ref(mut_single_batch_view H, single_batch_view signs);
+
     /// x ← L x
     static void xtrmv_ref(single_batch_view L, mut_single_batch_view x);
     static void xtrmv(single_batch_view L, mut_single_batch_view x,
