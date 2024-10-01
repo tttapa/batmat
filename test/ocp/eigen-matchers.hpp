@@ -21,50 +21,53 @@ void print(std::ostream &os, const T &arg) {
 } // namespace guanaqo_test
 
 MATCHER_P(EigenEqual, expect, "") {
-    auto diffnorm = (arg - expect).template lpNorm<Eigen::Infinity>();
+    auto diff     = arg - expect;
+    auto diffnorm = diff.template lpNorm<Eigen::Infinity>();
     if (auto *os = result_listener->stream()) {
         *os << "\nactual = ...\n";
         guanaqo_test::print(*os, arg);
         *os << "and expected = ...\n";
         guanaqo_test::print(*os, expect);
         *os << "with difference = ...\n";
-        guanaqo_test::print(*os, arg - expect);
+        guanaqo_test::print(*os, diff);
         *os << "which has infinity norm " << guanaqo::float_to_str(diffnorm);
     }
-    return diffnorm == 0;
+    return diffnorm == 0 && diff.allFinite();
 }
 
 MATCHER_P2(EigenAlmostEqual, expect, atol, "") {
-    auto diffnorm = (arg - expect).template lpNorm<Eigen::Infinity>();
+    auto diff     = arg - expect;
+    auto diffnorm = diff.template lpNorm<Eigen::Infinity>();
     if (auto *os = result_listener->stream()) {
         *os << "\nactual = ...\n";
         guanaqo_test::print(*os, arg);
         *os << "and expected = ...\n";
         guanaqo_test::print(*os, expect);
         *os << "with difference = ...\n";
-        guanaqo_test::print(*os, arg - expect);
+        guanaqo_test::print(*os, diff);
         *os << "which has infinity norm                      "
             << guanaqo::float_to_str(diffnorm);
         *os << ",\nwhich is greater than the absolute tolerance "
             << guanaqo::float_to_str(atol);
     }
-    return diffnorm <= atol;
+    return diffnorm <= atol && diff.allFinite();
 }
 
 MATCHER_P2(EigenAlmostEqualRel, expect, rtol, "") {
+    auto diff = arg - expect;
     auto diffnorm =
-        (arg - expect).cwiseQuotient(expect).template lpNorm<Eigen::Infinity>();
+        diff.cwiseQuotient(expect).template lpNorm<Eigen::Infinity>();
     if (auto *os = result_listener->stream()) {
         *os << "\nactual = ...\n";
         guanaqo_test::print(*os, arg);
         *os << "and expected = ...\n";
         guanaqo_test::print(*os, expect);
         *os << "with difference = ...\n";
-        guanaqo_test::print(*os, arg - expect);
+        guanaqo_test::print(*os, diff);
         *os << "which has relative infinity norm             "
             << guanaqo::float_to_str(diffnorm);
         *os << ",\nwhich is greater than the relative tolerance "
             << guanaqo::float_to_str(rtol);
     }
-    return diffnorm <= rtol;
+    return diffnorm <= rtol && diff.allFinite();
 }
