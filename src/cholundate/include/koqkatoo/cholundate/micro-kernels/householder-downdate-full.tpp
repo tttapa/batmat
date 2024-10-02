@@ -33,8 +33,8 @@ template <index_t R>
         }
         // Energy condition and Householder coefficients
         const real_t α2 = bb[k / N][k % N], Lkk = L(k, k);
-        const real_t L̃kk = copysign(sqrt(Lkk * Lkk - α2), -Lkk), β = L̃kk - Lkk;
-        const real_t γoβ = 2 * β / (α2 - β * β), γ = β * γoβ, inv_β = 1 / β;
+        const real_t L̃kk = copysign(sqrt(Lkk * Lkk - α2), Lkk), β = L̃kk + Lkk;
+        const real_t γoβ = 2 * β / (β * β - α2), γ = β * γoβ, inv_β = 1 / β;
         L(k, k) = L̃kk;
         // Scale Householder vector products
         UNROLL_FOR (index_t i = (k + 1) / N; i < R / N; ++i)
@@ -42,14 +42,16 @@ template <index_t R>
         // Compute L̃
         real_t v0[N - 1]{};
         const index_t kp1N = (k + 1 + N - 1) / N;
-        UNROLL_FOR (index_t i = k + 1; i < kp1N * N; ++i) // scalar part
-            L(i, k) += v0[i - (k + 1)] = bb[i / N][i % N] + γ * L(i, k);
-        simd v[R / N];
+        UNROLL_FOR (index_t i = k + 1; i < kp1N * N; ++i) { // scalar part
+            auto Lik        = L(i, k);
+            v0[i - (k + 1)] = γ * L(i, k) - bb[i / N][i % N];
+            L(i, k)         = v0[i - (k + 1)] - Lik;
+        }
         UNROLL_FOR (index_t i = kp1N; i < R / N; ++i) { // vectorized
-            index_t ii  = i * N;
-            auto Lik    = L.load<simd>(ii, k);
-            Lik += v[i] = bb[i] + γ * Lik;
-            L.store(Lik, ii, k);
+            index_t ii = i * N;
+            auto Lik   = L.load<simd>(ii, k);
+            bb[i]      = γ * Lik - bb[i];
+            L.store(bb[i] - Lik, ii, k);
         }
         // Update A
         UNROLL_FOR_A_COLS (index_t j = 0; j < colsA; ++j) {
@@ -59,7 +61,7 @@ template <index_t R>
             UNROLL_FOR (index_t i = kp1N; i < R / N; ++i) { // vectorized
                 index_t ii = i * N;
                 auto Aij   = A.load<simd>(ii, j);
-                Aij -= v[i] * Akj;
+                Aij -= bb[i] * Akj;
                 A.store(Aij, ii, j);
             }
         }

@@ -46,12 +46,12 @@ downdate_tail(index_t colsA, mut_W_accessor<Conf.block_size_r> W,
         UNROLL_FOR (index_t l = 0; l < k; l += NL)
             Wk[l / NL] = W.template load<simdL>(l, k, stdx::vector_aligned);
         UNROLL_FOR (index_t i = 0; i < S; i += NA) {
-            auto Lik = L.load<simdA>(i, k);
-            V[i / NA][k] += Lik;
+            auto Lik     = L.load<simdA>(i, k);
+            V[i / NA][k] = Lik - V[i / NA][k];
             UNROLL_FOR (index_t l = 0; l < k; ++l)
-                V[i / NA][k] -= V[i / NA][l] * Wk[l / NL][l % NL];
+                V[i / NA][k] += V[i / NA][l] * Wk[l / NL][l % NL];
             V[i / NA][k] *= W(k, k); // diagonal already inverted
-            Lik += V[i / NA][k];
+            Lik = V[i / NA][k] - Lik;
             L.store(Lik, i, k);
         }
     }

@@ -31,15 +31,14 @@ xshh_diag_microkernel(index_t colsA, triangular_accessor<Abi, real_t, R> W,
         }
         // Energy condition and Householder coefficients
         const simd α2 = bb[k], Lkk = L_cached.load(k, k);
-        const simd L̃kk = copysign(sqrt(Lkk * Lkk - α2), -Lkk), β = L̃kk - Lkk;
-        simd γoβ = 2 * β / (α2 - β * β), γ = β * γoβ, inv_β = 1 / β;
+        const simd L̃kk = copysign(sqrt(Lkk * Lkk - α2), Lkk), β = L̃kk + Lkk;
+        simd γoβ = 2 * β / (β * β - α2), γ = β * γoβ, inv_β = 1 / β;
         L_cached.store(L̃kk, k, k);
         // Compute L̃
         KOQKATOO_FULLY_UNROLLED_FOR (index_t i = k + 1; i < R; ++i) {
             simd Lik = L_cached.load(i, k);
-            bb[i] *= γoβ;
-            bb[i] += γ * Lik;
-            L_cached.store(Lik + bb[i], i, k);
+            bb[i]    = γ * Lik - bb[i] * γoβ;
+            L_cached.store(bb[i] - Lik, i, k);
         }
         // Update A
         for (index_t j = 0; j < colsA; ++j) {
@@ -82,15 +81,14 @@ xshh_full_microkernel(index_t colsA, mut_single_batch_matrix_accessor<Abi> L,
         }
         // Energy condition and Householder coefficients
         const simd α2 = bb[k], Lkk = L_cached.load(k, k);
-        const simd L̃kk = copysign(sqrt(Lkk * Lkk - α2), -Lkk), β = L̃kk - Lkk;
-        simd γoβ = 2 * β / (α2 - β * β), γ = β * γoβ, inv_β = 1 / β;
+        const simd L̃kk = copysign(sqrt(Lkk * Lkk - α2), Lkk), β = L̃kk + Lkk;
+        simd γoβ = 2 * β / (β * β - α2), γ = β * γoβ, inv_β = 1 / β;
         L_cached.store(L̃kk, k, k);
         // Compute L̃
         KOQKATOO_FULLY_UNROLLED_FOR (index_t i = k + 1; i < R; ++i) {
             simd Lik = L_cached.load(i, k);
-            bb[i] *= γoβ;
-            bb[i] += γ * Lik;
-            L_cached.store(Lik + bb[i], i, k);
+            bb[i]    = γ * Lik - bb[i] * γoβ;
+            L_cached.store(bb[i] - Lik, i, k);
         }
         // Update A
         for (index_t j = 0; j < colsA; ++j) {
@@ -133,11 +131,11 @@ xshh_tail_microkernel(index_t colsA,
             Wk[l] = W.load(l, k);
         KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
             simd Lik = L.load(i, k);
-            V[i][k] += Lik;
+            V[i][k]  = Lik - V[i][k];
             KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < k; ++l)
-                V[i][k] -= V[i][l] * Wk[l];
+                V[i][k] += V[i][l] * Wk[l];
             V[i][k] *= W.load(k, k); // diagonal already inverted
-            Lik += V[i][k];
+            Lik = V[i][k] - Lik;
             L.store(Lik, i, k);
         }
     }

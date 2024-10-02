@@ -35,22 +35,21 @@ template <index_t R>
         }
         // Energy condition and Householder coefficients
         const real_t α2 = bb[k / N][k % N], Lkk = L(k, k);
-        const real_t L̃kk = copysign(sqrt(Lkk * Lkk - α2), -Lkk), β = L̃kk - Lkk;
-        const real_t γoβ = 2 * β / (α2 - β * β), γ = β * γoβ, inv_β = 1 / β;
+        const real_t L̃kk = copysign(sqrt(Lkk * Lkk - α2), Lkk), β = L̃kk + Lkk;
+        const real_t γoβ = 2 * β / (β * β - α2), γ = β * γoβ, inv_β = 1 / β;
         L(k, k) = L̃kk;
         // Compute L̃
         const index_t kp1N = (k + 1 + N - 1) / N;
         UNROLL_FOR (index_t i = k + 1; i < kp1N * N; ++i) { // scalar part
-            bb[i / N][i % N] *= γoβ;
-            bb[i / N][i % N] += γ * L(i, k);
-            L(i, k) += bb[i / N][i % N];
+            auto Lik         = L(i, k);
+            bb[i / N][i % N] = γ * Lik - bb[i / N][i % N] * γoβ;
+            L(i, k)          = bb[i / N][i % N] - Lik;
         }
         UNROLL_FOR (index_t i = kp1N; i < R / N; ++i) { // vectorized
             index_t ii = i * N;
             auto Lik   = L.load<simd>(ii, k);
-            bb[i] *= γoβ;
-            bb[i] += γ * Lik;
-            Lik += bb[i];
+            bb[i]      = γ * Lik - bb[i] * γoβ;
+            Lik        = bb[i] - Lik;
             L.store(Lik, ii, k);
         }
         // Update A
