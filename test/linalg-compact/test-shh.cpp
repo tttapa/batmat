@@ -70,6 +70,13 @@ class ShhTest : public ::testing::Test {
         // Perform the operation
         func(L, A, backend);
 
+        // Flip signs if necessary
+        for (index_t i = 0; i < L.depth(); ++i)
+            for (index_t k = 0; k < L.cols(); ++k)
+                if (L(i, k, k) < 0)
+                    for (index_t j = k; j < L.rows(); ++j)
+                        L(i, j, k) *= -1;
+
         // Verify that the results match the reference implementation
         for (index_t i = 0; i < L.depth(); ++i)
             for (index_t j = 0; j < L.rows(); ++j)

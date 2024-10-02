@@ -14,6 +14,7 @@ template <index_t R>
 [[gnu::hot]] void downdate_full(index_t colsA, real_t *__restrict Ld,
                                 index_t ldL, real_t *__restrict Ad,
                                 index_t ldA) noexcept {
+    using std::copysign;
     using std::sqrt;
     using simd = diag_simd_t<R>;
     const mut_matrix_accessor L{Ld, ldL}, A{Ad, ldA};
@@ -32,7 +33,7 @@ template <index_t R>
         }
         // Energy condition and Householder coefficients
         const real_t α2 = bb[k / N][k % N], Lkk = L(k, k);
-        const real_t L̃kk = sqrt(Lkk * Lkk - α2), β = L̃kk - Lkk;
+        const real_t L̃kk = copysign(sqrt(Lkk * Lkk - α2), -Lkk), β = L̃kk - Lkk;
         const real_t γoβ = 2 * β / (α2 - β * β), γ = β * γoβ, inv_β = 1 / β;
         L(k, k) = L̃kk;
         // Scale Householder vector products

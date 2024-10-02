@@ -14,6 +14,7 @@ template <class Abi, index_t R>
 xshh_diag_microkernel(index_t colsA, triangular_accessor<Abi, real_t, R> W,
                       mut_single_batch_matrix_accessor<Abi> L,
                       mut_single_batch_matrix_accessor<Abi> A) noexcept {
+    using std::copysign;
     using std::sqrt;
     using simd = stdx::simd<real_t, Abi>;
     // Pre-compute the offsets of the columns of L
@@ -30,8 +31,8 @@ xshh_diag_microkernel(index_t colsA, triangular_accessor<Abi, real_t, R> W,
         }
         // Energy condition and Householder coefficients
         const simd α2 = bb[k], Lkk = L_cached.load(k, k);
-        const simd L̃kk = sqrt(Lkk * Lkk - α2), β = L̃kk - Lkk;
-        const simd γoβ = 2 * β / (α2 - β * β), γ = β * γoβ, inv_β = 1 / β;
+        const simd L̃kk = copysign(sqrt(Lkk * Lkk - α2), -Lkk), β = L̃kk - Lkk;
+        simd γoβ = 2 * β / (α2 - β * β), γ = β * γoβ, inv_β = 1 / β;
         L_cached.store(L̃kk, k, k);
         // Compute L̃
         KOQKATOO_FULLY_UNROLLED_FOR (index_t i = k + 1; i < R; ++i) {
@@ -64,6 +65,7 @@ template <class Abi, index_t R>
 [[gnu::hot]] void
 xshh_full_microkernel(index_t colsA, mut_single_batch_matrix_accessor<Abi> L,
                       mut_single_batch_matrix_accessor<Abi> A) noexcept {
+    using std::copysign;
     using std::sqrt;
     using simd = stdx::simd<real_t, Abi>;
     // Pre-compute the offsets of the columns of L
@@ -80,8 +82,8 @@ xshh_full_microkernel(index_t colsA, mut_single_batch_matrix_accessor<Abi> L,
         }
         // Energy condition and Householder coefficients
         const simd α2 = bb[k], Lkk = L_cached.load(k, k);
-        const simd L̃kk = sqrt(Lkk * Lkk - α2), β = L̃kk - Lkk;
-        const simd γoβ = 2 * β / (α2 - β * β), γ = β * γoβ, inv_β = 1 / β;
+        const simd L̃kk = copysign(sqrt(Lkk * Lkk - α2), -Lkk), β = L̃kk - Lkk;
+        simd γoβ = 2 * β / (α2 - β * β), γ = β * γoβ, inv_β = 1 / β;
         L_cached.store(L̃kk, k, k);
         // Compute L̃
         KOQKATOO_FULLY_UNROLLED_FOR (index_t i = k + 1; i < R; ++i) {
