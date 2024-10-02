@@ -142,19 +142,21 @@ TEST(OCP, update) {
     Mat Σ{{.depth = N + 1, .rows = ny, .cols = 1}};
     Mat S{{.depth = N + 1, .rows = ny, .cols = 1}};
     std::ranges::generate(J, [&] { return brnl(rng); });
-    std::ranges::fill(J, true); // TODO ::::::::::::::::::::::::::::::::::::::::
     std::ranges::generate(Σ, [&] { return exp2(uni(rng)); });
     S.set_constant(+real_t(0)); // only entering constraints
     // Copy entering constraints to Ge (and transpose them)
     Mat Geᵀ{{.depth = N + 1, .rows = nx + nu, .cols = ny}};
     Mat Σe{{.depth = N + 1, .rows = ny, .cols = 1}};
+    Mat Se{{.depth = N + 1, .rows = ny, .cols = 1}};
     Σe.set_constant(1);
+    Se.set_constant(+real_t(0));
     index_t rj_max = 0;
     for (index_t k = 0; k <= N; ++k) {
         index_t rj = 0;
         for (index_t r = 0; r < ny; ++r) {
             if (J(k, r, 0)) {
                 Σe(k, rj, 0) = Σ(k, r, 0);
+                Se(k, rj, 0) = S(k, r, 0);
                 for (index_t c = 0; c < nx + nu; ++c)
                     Geᵀ(k, c, rj) = CD(k, r, c);
                 ++rj;
@@ -163,8 +165,8 @@ TEST(OCP, update) {
         rj_max = std::max(rj_max, rj);
     }
     auto Gejᵀ = Geᵀ.view.left_cols(rj_max);
-    auto Σj   = Σ.view.top_rows(rj_max);
-    auto Sj   = S.view.top_rows(rj_max);
+    auto Σj   = Σe.view.top_rows(rj_max);
+    auto Sj   = Se.view.top_rows(rj_max);
     Mat Z{{.depth = N + 1, .rows = nx + nu, .cols = ny}};
     auto Zj = Z.view.left_cols(rj_max);
     Zj      = Gejᵀ;
@@ -203,17 +205,7 @@ TEST(OCP, update) {
     H̃e_full(0).bottom_right(nx, nx) = H̃e(N).top_left(nx, nx);
     SMat LH̃e_full                   = H̃e_full;
     scalar_blas::xpotrf(LH̃e_full, be);
-    // SMat Σ_full{{.depth = 1, .rows = (N + 1) * ny, .cols = 1}};
-    // SBMat J_full{{.depth = 1, .rows = (N + 1) * ny, .cols = 1}};
-    // for (index_t k = 0; k <= N; ++k)
-    //     Σ_full(0).middle_rows(k * ny, ny) = Σ(k);
-    // for (index_t k = 0; k <= N; ++k)
-    //     J_full(0).middle_rows(k * ny, ny) = J(k);
-    // SMat Ψ̃e_full{{.depth = 1, .rows = (N + 1) * nx, .cols = (N + 1) * nx}};
-    // scalar_blas::xsyrk_schur(G_full, Σ_full, J_full, Ψ_full, Ψ̃e_full,
-    //                                 be);
-    // SMat LΨ̃e_full = Ψ_full;
-    // scalar_blas::xpotrf(LΨ_full, be);
+
     SMat MLH̃e_full = M_full;
     scalar_blas::xtrsm_RLTN(LH̃e_full, MLH̃e_full, be);
     SMat Ψ̃e_full{{.depth = 1, .rows = (N + 1) * nx, .cols = (N + 1) * nx}};
@@ -233,7 +225,11 @@ TEST(OCP, update) {
 
     guanaqo::print_python(std::cout << "LΨ ref:\n", LΨ̃e_full(0));
     guanaqo::print_python(std::cout << "LΨ rec:\n", LΨ̃e_rec(0));
-    SMat LΨ̃e_err{{.depth = 1, .rows = (N + 1) * nx, .cols = (N + 1) * nx}};
-    scalar_blas::xsub_copy(LΨ̃e_err, LΨ̃e_rec, LΨ̃e_full);
-    EXPECT_LE(scalar_blas::xnrminf(LΨ̃e_err), ε);
+    SMat LLΨ̃e_full{{.depth = 1, .rows = (N + 1) * nx, .cols = (N + 1) * nx}};
+    SMat LLΨ̃e_rec{{.depth = 1, .rows = (N + 1) * nx, .cols = (N + 1) * nx}};
+    scalar_blas::xsyrk(LΨ̃e_full, LLΨ̃e_full, be);
+    scalar_blas::xsyrk(LΨ̃e_rec, LLΨ̃e_rec, be);
+    SMat LLΨ̃e_err{{.depth = 1, .rows = (N + 1) * nx, .cols = (N + 1) * nx}};
+    scalar_blas::xsub_copy(LLΨ̃e_err, LLΨ̃e_rec, LLΨ̃e_full);
+    EXPECT_LE(scalar_blas::xnrminf(LLΨ̃e_err), ε);
 }
