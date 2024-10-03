@@ -38,7 +38,7 @@ TEST(OCP, update) {
     using SBMat [[maybe_unused]] =
         linalg::compact::BatchedMatrix<bool, index_t,
                                        scalar_blas::simd_stride_t>;
-    constexpr index_t N = 5, nx = 7, nu = 1, ny = 11;
+    constexpr index_t N = 19, nx = 11, nu = 3, ny = 17;
     Mat AB{{.depth = N, .rows = nx, .cols = nx + nu}};
     Mat CD{{.depth = N + 1, .rows = ny, .cols = nx + nu}};
     Mat H{{.depth = N + 1, .rows = nx + nu, .cols = nx + nu}};
@@ -243,105 +243,93 @@ TEST(OCP, update) {
     EXPECT_LE(scalar_blas::xnrminf(LLΨ̃e_err), ε);
 
     // Block-wise downdate
-    SMat LΨ̃D      = LΨD;
-    SMat LΨ̃S      = LΨS;
+    SMat LΨ̃D = LΨD;
+    SMat LΨ̃S = LΨS;
+    // Each block of V generates fill-in in A in the block row below it, and
+    // W adds new columns to A, but we only ever need two block rows of A at any
+    // given time, thanks to the block-tridiagonal structure of Ψ, so we use a
+    // sliding window of depth 2, and use the stage index modulo 2.
     index_t colsA = 0;
     SMat A{{.depth = 2, .rows = nx, .cols = (N + 1) * ny}};
-    for (index_t k = 0; k < N; ++k) {
-        using namespace linalg::compact::micro_kernels;
-        static constexpr index_t R = shh::SizeR, S = shh::SizeS;
-        colsA += rjs[k];
-        auto Ad = A.batch(k % 2).left_cols(colsA),
-             As = A.batch((k + 1) % 2).left_cols(colsA);
-        auto Ld = LΨ̃D.batch(k), Ls = LΨ̃S.batch(k);
-        Ad(0).right_cols(rjs[k]) = W̃j(k).left_cols(rjs[k]);
-        As(0).right_cols(rjs[k]) = Ṽj(k).left_cols(rjs[k]);
-
-        guanaqo::print_python(std::cout << "A(" << k << "):\n", Ad(0));
-
-        // Process all diagonal blocks (in multiples of R, except the last).
-        using abi = scalar_abi;
-        foreach_chunked(
-            0, Ld.cols(), R,
-            [&](index_t k) {
-                // Part of A corresponding to this diagonal block
-                auto Add = Ad.middle_rows(k, R);
-                auto Ldd = Ld.block(k, k, R, R);
-                // Process the diagonal block itself
-                using W_t = shh::triangular_accessor<abi, real_t, R>;
-                alignas(W_t::alignment()) real_t W[W_t::size()];
-                shh::xshh_diag_microkernel<abi, R>(colsA, W, Ldd, Add);
-                // Process all rows below the diagonal block (in multiples of S).
-                foreach_chunked_merged(
-                    k + R, Ld.rows(), S, [&](index_t i, auto rem_i) {
-                        auto Ads = Ad.middle_rows(i, rem_i);
-                        auto Lds = Ld.block(i, k, rem_i, R);
-                        shh::microkernel_tail_lut<abi>[rem_i - 1](colsA, W, Lds,
-                                                                  Ads, Add);
-                    }); // TODO: decide on order
-                // Process all rows below the diagonal block (in multiples of S).
-                foreach_chunked_merged(
-                    0, Ls.rows(), S, [&](index_t i, auto rem_i) {
-                        auto Ass = As.middle_rows(i, rem_i);
-                        auto Lss = Ls.block(i, k, rem_i, R);
-                        shh::microkernel_tail_lut<abi>[rem_i - 1](colsA, W, Lss,
-                                                                  Ass, Add);
-                    }); // TODO: decide on order
-            },
-            [&](index_t k, index_t rem_k) {
-                auto Add = Ad.middle_rows(k, rem_k);
-                auto Ldd = Ld.block(k, k, rem_k, rem_k);
-                // Process the diagonal block itself
-                using W_t = shh::triangular_accessor<abi, real_t, R>;
-                alignas(W_t::alignment()) real_t W[W_t::size()];
-                shh::microkernel_diag_lut<abi>[rem_k - 1](colsA, W, Ldd, Add);
-                // Process all rows below the diagonal block (in multiples of S).
-                foreach_chunked_merged(
-                    0, Ls.rows(), S, [&](index_t i, auto rem_i) {
-                        auto Ass = As.middle_rows(i, rem_i);
-                        auto Lss = Ls.block(i, k, rem_i, rem_k);
-                        shh::microkernel_tail_lut_2<abi>[rem_k - 1][rem_i - 1](
-                            colsA, W, Lss, Ass, Add);
-                    }); // TODO: decide on order
-            });
-        guanaqo::print_python(std::cout << "HH(" << k << "):\n", Ad(0));
-        Ad(0).set_constant(0);
-    }
     {
-        using namespace linalg::compact::micro_kernels;
-        static constexpr index_t R = shh::SizeR, S = shh::SizeS;
-        colsA += rjs[N];
-        auto Ad                  = A.batch(N % 2).left_cols(colsA);
-        auto Ld                  = LΨ̃D.batch(N);
-        Ad(0).right_cols(rjs[N]) = W̃j(N).left_cols(rjs[N]);
-
-        // Process all diagonal blocks (in multiples of R, except the last).
         using abi = scalar_abi;
-        foreach_chunked(
-            0, Ld.cols(), R,
-            [&](index_t k) {
-                // Part of A corresponding to this diagonal block
-                auto Add = Ad.middle_rows(k, R);
-                auto Ldd = Ld.block(k, k, R, R);
-                // Process the diagonal block itself
-                using W_t = shh::triangular_accessor<abi, real_t, R>;
-                alignas(W_t::alignment()) real_t W[W_t::size()];
-                shh::xshh_diag_microkernel<abi, R>(colsA, W, Ldd, Add);
-                // Process all rows below the diagonal block (in multiples of S).
-                foreach_chunked_merged(
-                    k + R, Ld.rows(), S, [&](index_t i, auto rem_i) {
-                        auto Ads = Ad.middle_rows(i, rem_i);
-                        auto Lds = Ld.block(i, k, rem_i, R);
-                        shh::microkernel_tail_lut<abi>[rem_i - 1](colsA, W, Lds,
-                                                                  Ads, Add);
-                    }); // TODO: decide on order
-            },
-            [&](index_t k, index_t rem_k) {
-                auto Add = Ad.middle_rows(k, rem_k);
-                auto Ldd = Ld.block(k, k, rem_k, rem_k);
-                // Process the diagonal block itself
-                shh::microkernel_full_lut<abi>[rem_k - 1](colsA, Ldd, Add);
+        using namespace linalg::compact::micro_kernels;
+        static constexpr index_constant<shh::SizeR> R;
+        static constexpr index_constant<shh::SizeS> S;
+        using W_t = shh::triangular_accessor<abi, real_t, R>;
+
+        auto process_diagonal_block = [&](index_t k, auto rem_k, auto Ad,
+                                          auto Ld, real_t *W) {
+            auto Add = Ad.middle_rows(k, rem_k);
+            auto Ldd = Ld.block(k, k, rem_k, rem_k);
+            shh::microkernel_diag_lut<abi>[rem_k - 1](colsA, W, Ldd, Add);
+        };
+        auto process_subdiagonal_block_W = [&](index_t k, auto Ad, auto Ld,
+                                               real_t *W) {
+            auto Add = Ad.middle_rows(k, R);
+            foreach_chunked_merged(
+                k + R, Ld.rows(), S, [&](index_t i, auto rem_i) {
+                    auto Ads = Ad.middle_rows(i, rem_i);
+                    auto Lds = Ld.block(i, k, rem_i, R);
+                    shh::microkernel_tail_lut<abi>[rem_i - 1](colsA, W, Lds,
+                                                              Ads, Add);
+                });
+        };
+        auto process_subdiagonal_block_V = [&](index_t k, index_t rem_k,
+                                               auto As, auto Ls, auto Ad,
+                                               real_t *W) {
+            auto Add = Ad.middle_rows(k, rem_k);
+            foreach_chunked_merged(0, Ls.rows(), S, [&](index_t i, auto rem_i) {
+                auto Ass = As.middle_rows(i, rem_i);
+                auto Lss = Ls.block(i, k, rem_i, rem_k);
+                shh::microkernel_tail_lut_2<abi>[rem_k - 1][rem_i - 1](
+                    colsA, W, Lss, Ass, Add);
             });
+        };
+
+        for (index_t k = 0; k < N; ++k) {
+            colsA += rjs[k];
+            auto Ad = A.batch(k % 2).left_cols(colsA), Ld = LΨ̃D.batch(k);
+            auto As = A.batch((k + 1) % 2).left_cols(colsA), Ls = LΨ̃S.batch(k);
+            Ad(0).right_cols(rjs[k]) = W̃j(k).left_cols(rjs[k]);
+            As(0).right_cols(rjs[k]) = Ṽj(k).left_cols(rjs[k]);
+            alignas(W_t::alignment()) real_t W[W_t::size()];
+
+            // Process all diagonal blocks (in multiples of R, except the last).
+            foreach_chunked(
+                0, Ld.cols(), R,
+                [&](index_t k) {
+                    process_diagonal_block(k, R, Ad, Ld, W);
+                    process_subdiagonal_block_W(k, Ad, Ld, W);
+                    process_subdiagonal_block_V(k, R, As, Ls, Ad, W);
+                },
+                [&](index_t k, index_t rem_k) {
+                    process_diagonal_block(k, rem_k, Ad, Ld, W);
+                    process_subdiagonal_block_V(k, rem_k, As, Ls, Ad, W);
+                });
+            if (k < N - 1)
+                Ad(0).set_constant(0);
+        }
+        // Final stage has no subdiagonal block (V)
+        {
+            colsA += rjs[N];
+            auto Ad = A.batch(N % 2).left_cols(colsA), Ld = LΨ̃D.batch(N);
+            Ad(0).right_cols(rjs[N]) = W̃j(N).left_cols(rjs[N]);
+            alignas(W_t::alignment()) real_t W[W_t::size()];
+
+            // Process all diagonal blocks (in multiples of R, except the last).
+            foreach_chunked(
+                0, Ld.cols(), R,
+                [&](index_t k) {
+                    process_diagonal_block(k, R, Ad, Ld, W);
+                    process_subdiagonal_block_W(k, Ad, Ld, W);
+                },
+                [&](index_t k, index_t rem_k) {
+                    auto Add = Ad.middle_rows(k, rem_k);
+                    auto Ldd = Ld.block(k, k, rem_k, rem_k);
+                    shh::microkernel_full_lut<abi>[rem_k - 1](colsA, Ldd, Add);
+                });
+        }
     }
 
     // Reconstruct solution
