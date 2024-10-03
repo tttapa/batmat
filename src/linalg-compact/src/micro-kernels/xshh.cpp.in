@@ -8,12 +8,9 @@ namespace koqkatoo::linalg::compact::micro_kernels::shh {
 
 using Abi = stdx::simd_abi::@simd_abi@;
 
-template void xshh_diag_microkernel<Abi, SizeR>(
-    index_t colsA, triangular_accessor<Abi, real_t, SizeR> W,
-    mut_single_batch_matrix_accessor<Abi> L,
-    mut_single_batch_matrix_accessor<Abi> A) noexcept;
-
+template const constinit decltype(microkernel_diag_lut<Abi>) microkernel_diag_lut<Abi>;
 template const constinit decltype(microkernel_full_lut<Abi>) microkernel_full_lut<Abi>;
 template const constinit decltype(microkernel_tail_lut<Abi>) microkernel_tail_lut<Abi>;
+template const constinit decltype(microkernel_tail_lut_2<Abi>) microkernel_tail_lut_2<Abi>;
 
 }

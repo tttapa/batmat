@@ -11,7 +11,7 @@ namespace koqkatoo::linalg::compact::micro_kernels::shh {
 
 template <class Abi, index_t R>
 [[gnu::hot]] void
-xshh_diag_microkernel(index_t colsA, triangular_accessor<Abi, real_t, R> W,
+xshh_diag_microkernel(index_t colsA, triangular_accessor<Abi, real_t, SizeR> W,
                       mut_single_batch_matrix_accessor<Abi> L,
                       mut_single_batch_matrix_accessor<Abi> A) noexcept {
     using std::copysign;
@@ -106,7 +106,7 @@ xshh_full_microkernel(index_t colsA, mut_single_batch_matrix_accessor<Abi> L,
 template <class Abi, index_t R, index_t S>
 [[gnu::hot]] void
 xshh_tail_microkernel(index_t colsA,
-                      triangular_accessor<Abi, const real_t, R> W,
+                      triangular_accessor<Abi, const real_t, SizeR> W,
                       mut_single_batch_matrix_accessor<Abi> L,
                       mut_single_batch_matrix_accessor<Abi> A,
                       single_batch_matrix_accessor<Abi> B) noexcept {
