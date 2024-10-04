@@ -21,7 +21,7 @@ foreach_chunked(index_t i_begin, index_t i_end, auto chunk_size,
         if (rem_i > 0)
             func_rem(i, rem_i);
     } else {
-        index_t rem_i = i_end % chunk_size;
+        index_t rem_i = (i_end - i_begin) % chunk_size;
         index_t i     = i_end - rem_i;
         if (rem_i > 0)
             func_rem(i, rem_i);
@@ -41,7 +41,7 @@ foreach_chunked_merged(index_t i_begin, index_t i_end, auto chunk_size,
         if (rem_i > 0)
             func_chunk(i, rem_i);
     } else {
-        index_t rem_i = i_end % chunk_size;
+        index_t rem_i = (i_end - i_begin) % chunk_size;
         index_t i     = i_end - rem_i;
         if (rem_i > 0)
             func_chunk(i, rem_i);
