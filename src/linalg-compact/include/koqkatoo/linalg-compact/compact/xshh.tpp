@@ -22,7 +22,8 @@ template <class Abi>
 void CompactBLAS<Abi>::xshh_ref(mut_single_batch_view L,
                                 mut_single_batch_view A) {
     using namespace micro_kernels;
-    static constexpr index_t R = shh::SizeR, S = shh::SizeS;
+    static constexpr index_constant<shh::SizeR> R;
+    static constexpr index_constant<shh::SizeS> S;
 
     // Process all diagonal blocks (in multiples of R, except the last).
     foreach_chunked(
@@ -37,15 +38,9 @@ void CompactBLAS<Abi>::xshh_ref(mut_single_batch_view L,
             alignas(W_t::alignment()) real_t W[W_t::size()];
             shh::xshh_diag_microkernel<Abi, R>(A.cols(), W, Ld, Ad);
             // Process all rows below the diagonal block (in multiples of S).
-            foreach_chunked(
+            foreach_chunked_merged(
                 k + R, L.rows(), S,
-                [&](index_t i) {
-                    auto As = A.middle_rows(i, S);
-                    auto Ls = L.block(i, k, S, R);
-                    shh::xshh_tail_microkernel<Abi, R, S>(A.cols(), W, Ls, As,
-                                                          Ad);
-                },
-                [&](index_t i, index_t rem_i) {
+                [&](index_t i, auto rem_i) {
                     auto As = A.middle_rows(i, rem_i);
                     auto Ls = L.block(i, k, rem_i, R);
                     shh::microkernel_tail_lut<Abi>[rem_i - 1](A.cols(), W, Ls,
