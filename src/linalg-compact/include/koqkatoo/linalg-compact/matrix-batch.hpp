@@ -335,7 +335,7 @@ struct BatchedMatrixView {
     }
 
     [[nodiscard]] batch_view_type batch(index_type b) const {
-        const auto layer = b * batch_size();
+        const auto layer = b * static_cast<index_t>(batch_size());
         return {{.data         = data + layout.layer_index(layer),
                  .depth        = batch_size(),
                  .rows         = rows(),
@@ -346,7 +346,7 @@ struct BatchedMatrixView {
 
     [[nodiscard]] BatchedMatrixView batch_dyn(index_type b) const {
         const auto d     = static_cast<I>(depth());
-        const auto layer = b * batch_size();
+        const auto layer = b * static_cast<index_t>(batch_size());
         const auto last  = b == d / batch_size();
         return {{.data         = data + layout.layer_index(layer),
                  .depth        = last ? d - layout.floor_depth() : batch_size(),
