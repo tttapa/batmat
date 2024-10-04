@@ -3,6 +3,7 @@
 #include <koqkatoo/assume.hpp>
 #include <experimental/simd>
 #include <bit>
+#include <cmath>
 #include <cstdint>
 #include <limits>
 #include <type_traits>
@@ -32,9 +33,21 @@ using floating_point_to_int_t = typename floating_point_to_int<T>::type;
 /// Conditionally negates the sign bit of @p x, depending on @p signs, which
 /// should contain only ±0 (i.e. only the sign bit of an IEEE-754 floating point
 /// number).
+template <class T>
+T cneg(T x, T signs) {
+    using std::copysign;
+    return x * copysign(T{1}, signs);
+}
+
 template <class T, class Abi>
-stdx::simd<T, Abi> cneg(stdx::simd<T, Abi> x, stdx::simd<T, Abi> signs) {
-    return x * copysign(stdx::simd<T, Abi>{1}, signs);
+    requires(requires {
+        typename floating_point_to_int_t<T>;
+    } && std::numeric_limits<T>::is_iec559 && std::is_trivially_copyable_v<T>)
+[[gnu::always_inline]] T cneg(T x, T signs) {
+    KOQKATOO_ASSUME(signs == 0);
+    using int_type = floating_point_to_int_t<T>;
+    auto r = std::bit_cast<int_type>(x) ^ std::bit_cast<int_type>(signs);
+    return std::bit_cast<T>(r);
 }
 
 template <class T, class Abi>
