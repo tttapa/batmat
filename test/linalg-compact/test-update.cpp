@@ -10,6 +10,7 @@
 #include <random>
 #include <vector>
 
+#include <koqkatoo/linalg-compact/compact/micro-kernels/cneg.hpp>   // TODO
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xshhud.hpp> // TODO
 
 namespace stdx = std::experimental;
@@ -38,7 +39,7 @@ TEST(OCP, update) {
     using SBMat [[maybe_unused]] =
         linalg::compact::BatchedMatrix<bool, index_t,
                                        scalar_blas::simd_stride_t>;
-    constexpr index_t N = 3, nx = 2, nu = 1, ny = 3;
+    constexpr index_t N = 5, nx = 3, nu = 1, ny = 5;
     Mat AB{{.depth = N, .rows = nx, .cols = nx + nu}};
     Mat CD{{.depth = N + 1, .rows = ny, .cols = nx + nu}};
     Mat H{{.depth = N + 1, .rows = nx + nu, .cols = nx + nu}};
@@ -142,13 +143,14 @@ TEST(OCP, update) {
     EXPECT_LE(scalar_blas::xnrminf(LΨ_err), ε);
 
     // Prepare factorization update
+    using linalg::compact::micro_kernels::cneg;
     BMat J{{.depth = N + 1, .rows = ny, .cols = 1}};
     Mat Σ{{.depth = N + 1, .rows = ny, .cols = 1}};
     Mat S{{.depth = N + 1, .rows = ny, .cols = 1}};
     std::ranges::generate(J, [&] { return brnl(rng); });
     std::ranges::generate(Σ, [&] { return exp2(uni(rng)); });
-    S.set_constant(+real_t(0)); // entering constraints
-    S(1, 1, 0) = -real_t(0);    // one leaving constraint
+    std::ranges::generate(S,
+                          [&] { return brnl(rng) ? +real_t(0) : -real_t(0); });
     // Copy entering constraints to Ge (and transpose them)
     Mat Geᵀ{{.depth = N + 1, .rows = nx + nu, .cols = ny}};
     Mat Σe{{.depth = N + 1, .rows = ny, .cols = 1}};
@@ -184,7 +186,7 @@ TEST(OCP, update) {
     compact_blas::xsyrk_T(Zj, ΣjZ, be);
     for (index_t k = 0; k <= N; ++k)
         for (index_t r = 0; r < rj_max; ++r)
-            ΣjZ(k, r, r) += copysign(1 / Σj(k, r, 0), Sj(k, r, 0));
+            ΣjZ(k, r, r) += cneg(1 / Σj(k, r, 0), Sj(k, r, 0));
     compact_blas::xpntrf(ΣjZ, Sj);
     Mat Ye{{.depth = N + 1, .rows = nx + nu, .cols = ny}};
     auto Yj = Ye.view.left_cols(rj_max);
@@ -202,7 +204,7 @@ TEST(OCP, update) {
     Mat ΣS = Σ;
     for (index_t k = 0; k <= N; ++k)
         for (index_t r = 0; r < ny; ++r)
-            ΣS(k, r, 0) = copysign(ΣS(k, r, 0), S(k, r, 0));
+            ΣS(k, r, 0) = cneg(ΣS(k, r, 0), S(k, r, 0));
     compact_blas::xsyrk_T_schur_copy(CD, ΣS, J, H, H̃e, be);
 
     SMat H̃e_full{{
@@ -225,7 +227,7 @@ TEST(OCP, update) {
     SMat LΨ̃e_full = Ψ̃e_full;
     scalar_blas::xpotrf(LΨ̃e_full, be);
 
-    // TODO
+#if 0 // TODO: this block only supports entering constraints
     SMat LΨ̃e_rec = LΨ_rec;
     SMat W̃_rec{{.depth = 1, .rows = (N + 1) * nx, .cols = (N + 1) * ny}};
     W̃_rec(0).top_left(nx, ny) = W̃e(0);
@@ -246,6 +248,7 @@ TEST(OCP, update) {
     SMat LLΨ̃e_err{{.depth = 1, .rows = (N + 1) * nx, .cols = (N + 1) * nx}};
     scalar_blas::xsub_copy(LLΨ̃e_err, LLΨ̃e_rec, LLΨ̃e_full);
     EXPECT_LE(scalar_blas::xnrminf(LLΨ̃e_err), ε);
+#endif
 
     // Block-wise downdate
     SMat LΨ̃D = LΨD;
