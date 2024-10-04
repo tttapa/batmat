@@ -75,20 +75,20 @@ void xshh_tail_microkernel(index_t colsA,
 
 template <class Abi>
 inline const constinit auto microkernel_diag_lut =
-    make_1d_lut<SizeR>([]<index_t Row>(index_constant<Row>) {
-        return xshh_diag_microkernel<Abi, Row + 1>;
+    make_1d_lut<SizeR>([]<index_t NR>(index_constant<NR>) {
+        return xshh_diag_microkernel<Abi, NR + 1>;
     });
 
 template <class Abi>
 inline const constinit auto microkernel_full_lut =
-    make_1d_lut<SizeR>([]<index_t Row>(index_constant<Row>) {
-        return xshh_full_microkernel<Abi, Row + 1>;
+    make_1d_lut<SizeR>([]<index_t NR>(index_constant<NR>) {
+        return xshh_full_microkernel<Abi, NR + 1>;
     });
 
 template <class Abi>
 inline const constinit auto microkernel_tail_lut =
-    make_1d_lut<SizeS>([]<index_t Row>(index_constant<Row>) {
-        return xshh_tail_microkernel<Abi, SizeR, Row + 1>;
+    make_1d_lut<SizeS>([]<index_t NS>(index_constant<NS>) {
+        return xshh_tail_microkernel<Abi, SizeR, NS + 1>;
     });
 
 template <class Abi>

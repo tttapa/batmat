@@ -41,7 +41,7 @@ void CompactBLAS<Abi>::xshh_ref(mut_single_batch_view L,
                 k + R, L.rows(), S,
                 [&](index_t i) {
                     auto As = A.middle_rows(i, S);
-                    auto Ls = L.block(i, k, R, S);
+                    auto Ls = L.block(i, k, S, R);
                     shh::xshh_tail_microkernel<Abi, R, S>(A.cols(), W, Ls, As,
                                                           Ad);
                 },
