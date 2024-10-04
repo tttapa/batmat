@@ -298,6 +298,8 @@ TEST(OCP, update) {
 
         for (index_t k = 0; k < N; ++k) {
             colsA += rjs[k];
+            if (colsA == 0)
+                continue;
             auto Ad = A.batch(k % 2).left_cols(colsA), Ld = LΨ̃D.batch(k);
             auto As = A.batch((k + 1) % 2).left_cols(colsA), Ls = LΨ̃S.batch(k);
             Ad(0).right_cols(rjs[k]) = W̃j(k).left_cols(rjs[k]);
@@ -323,8 +325,8 @@ TEST(OCP, update) {
                 Ad(0).set_constant(0);
         }
         // Final stage has no subdiagonal block (V)
-        {
-            colsA += rjs[N];
+        colsA += rjs[N];
+        if (colsA > 0) {
             auto Ad = A.batch(N % 2).left_cols(colsA), Ld = LΨ̃D.batch(N);
             Ad(0).right_cols(rjs[N]) = W̃j(N).left_cols(rjs[N]);
             alignas(W_t::alignment()) real_t W[W_t::size()];
