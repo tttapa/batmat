@@ -10,7 +10,7 @@
 #include <random>
 #include <vector>
 
-#include <koqkatoo/linalg-compact/compact/micro-kernels/xshh.hpp> // TODO
+#include <koqkatoo/linalg-compact/compact/micro-kernels/xshhud.hpp> // TODO
 
 namespace stdx = std::experimental;
 using namespace koqkatoo;
@@ -38,7 +38,7 @@ TEST(OCP, update) {
     using SBMat [[maybe_unused]] =
         linalg::compact::BatchedMatrix<bool, index_t,
                                        scalar_blas::simd_stride_t>;
-    constexpr index_t N = 19, nx = 11, nu = 3, ny = 17;
+    constexpr index_t N = 3, nx = 2, nu = 1, ny = 3;
     Mat AB{{.depth = N, .rows = nx, .cols = nx + nu}};
     Mat CD{{.depth = N + 1, .rows = ny, .cols = nx + nu}};
     Mat H{{.depth = N + 1, .rows = nx + nu, .cols = nx + nu}};
@@ -147,7 +147,8 @@ TEST(OCP, update) {
     Mat S{{.depth = N + 1, .rows = ny, .cols = 1}};
     std::ranges::generate(J, [&] { return brnl(rng); });
     std::ranges::generate(Σ, [&] { return exp2(uni(rng)); });
-    S.set_constant(+real_t(0)); // only entering constraints
+    S.set_constant(+real_t(0)); // entering constraints
+    S(1, 1, 0) = -real_t(0);    // one leaving constraint
     // Copy entering constraints to Ge (and transpose them)
     Mat Geᵀ{{.depth = N + 1, .rows = nx + nu, .cols = ny}};
     Mat Σe{{.depth = N + 1, .rows = ny, .cols = 1}};
@@ -183,7 +184,7 @@ TEST(OCP, update) {
     compact_blas::xsyrk_T(Zj, ΣjZ, be);
     for (index_t k = 0; k <= N; ++k)
         for (index_t r = 0; r < rj_max; ++r)
-            ΣjZ(k, r, r) += 1 / Σj(k, r, 0); // TODO: negate leaving
+            ΣjZ(k, r, r) += copysign(1 / Σj(k, r, 0), Sj(k, r, 0));
     compact_blas::xpntrf(ΣjZ, Sj);
     Mat Ye{{.depth = N + 1, .rows = nx + nu, .cols = ny}};
     auto Yj = Ye.view.left_cols(rj_max);
@@ -198,7 +199,11 @@ TEST(OCP, update) {
 
     // Check low-rank downdate of Ψ
     Mat H̃e{{.depth = N + 1, .rows = nx + nu, .cols = nx + nu}};
-    compact_blas::xsyrk_T_schur_copy(CD, Σ, J, H, H̃e, be);
+    Mat ΣS = Σ;
+    for (index_t k = 0; k <= N; ++k)
+        for (index_t r = 0; r < ny; ++r)
+            ΣS(k, r, 0) = copysign(ΣS(k, r, 0), S(k, r, 0));
+    compact_blas::xsyrk_T_schur_copy(CD, ΣS, J, H, H̃e, be);
 
     SMat H̃e_full{{
         .depth = 1,
@@ -251,39 +256,40 @@ TEST(OCP, update) {
     // sliding window of depth 2, and use the stage index modulo 2.
     index_t colsA = 0;
     SMat A{{.depth = 2, .rows = nx, .cols = (N + 1) * ny}};
+    SMat D{{.depth = 1, .rows = (N + 1) * ny, .cols = 1}};
     {
         using abi = scalar_abi;
         using namespace linalg::compact::micro_kernels;
-        static constexpr index_constant<shh::SizeR> R;
-        static constexpr index_constant<shh::SizeS> S;
-        using W_t = shh::triangular_accessor<abi, real_t, R>;
+        static constexpr index_constant<shhud::SizeR> R;
+        static constexpr index_constant<shhud::SizeS> S;
+        using W_t = shhud::triangular_accessor<abi, real_t, R>;
 
         auto process_diagonal_block = [&](index_t k, auto rem_k, auto Ad,
-                                          auto Ld, real_t *W) {
+                                          auto Dd, auto Ld, real_t *W) {
             auto Add = Ad.middle_rows(k, rem_k);
             auto Ldd = Ld.block(k, k, rem_k, rem_k);
-            shh::microkernel_diag_lut<abi>[rem_k - 1](colsA, W, Ldd, Add);
+            shhud::microkernel_diag_lut<abi>[rem_k - 1](colsA, W, Ldd, Add, Dd);
         };
-        auto process_subdiagonal_block_W = [&](index_t k, auto Ad, auto Ld,
-                                               real_t *W) {
+        auto process_subdiagonal_block_W = [&](index_t k, auto Ad, auto Dd,
+                                               auto Ld, real_t *W) {
             auto Add = Ad.middle_rows(k, R);
             foreach_chunked_merged(
                 k + R, Ld.rows(), S, [&](index_t i, auto rem_i) {
                     auto Ads = Ad.middle_rows(i, rem_i);
                     auto Lds = Ld.block(i, k, rem_i, R);
-                    shh::microkernel_tail_lut<abi>[rem_i - 1](colsA, W, Lds,
-                                                              Ads, Add);
+                    shhud::microkernel_tail_lut<abi>[rem_i - 1](colsA, W, Lds,
+                                                                Ads, Add, Dd);
                 });
         };
         auto process_subdiagonal_block_V = [&](index_t k, index_t rem_k,
                                                auto As, auto Ls, auto Ad,
-                                               real_t *W) {
+                                               auto Dd, real_t *W) {
             auto Add = Ad.middle_rows(k, rem_k);
             foreach_chunked_merged(0, Ls.rows(), S, [&](index_t i, auto rem_i) {
                 auto Ass = As.middle_rows(i, rem_i);
                 auto Lss = Ls.block(i, k, rem_i, rem_k);
-                shh::microkernel_tail_lut_2<abi>[rem_k - 1][rem_i - 1](
-                    colsA, W, Lss, Ass, Add);
+                shhud::microkernel_tail_lut_2<abi>[rem_k - 1][rem_i - 1](
+                    colsA, W, Lss, Ass, Add, Dd);
             });
         };
 
@@ -294,18 +300,21 @@ TEST(OCP, update) {
             Ad(0).right_cols(rjs[k]) = W̃j(k).left_cols(rjs[k]);
             As(0).right_cols(rjs[k]) = Ṽj(k).left_cols(rjs[k]);
             alignas(W_t::alignment()) real_t W[W_t::size()];
+            auto Dd                   = D.batch(0).top_rows(colsA);
+            Dd(0).bottom_rows(rjs[k]) = Sj(k).top_rows(rjs[k]);
+            Dd.bottom_rows(rjs[k]).negate(); // TODO
 
             // Process all diagonal blocks (in multiples of R, except the last).
             foreach_chunked(
                 0, Ld.cols(), R,
                 [&](index_t k) {
-                    process_diagonal_block(k, R, Ad, Ld, W);
-                    process_subdiagonal_block_W(k, Ad, Ld, W);
-                    process_subdiagonal_block_V(k, R, As, Ls, Ad, W);
+                    process_diagonal_block(k, R, Ad, Dd, Ld, W);
+                    process_subdiagonal_block_W(k, Ad, Dd, Ld, W);
+                    process_subdiagonal_block_V(k, R, As, Ls, Ad, Dd, W);
                 },
                 [&](index_t k, index_t rem_k) {
-                    process_diagonal_block(k, rem_k, Ad, Ld, W);
-                    process_subdiagonal_block_V(k, rem_k, As, Ls, Ad, W);
+                    process_diagonal_block(k, rem_k, Ad, Dd, Ld, W);
+                    process_subdiagonal_block_V(k, rem_k, As, Ls, Ad, Dd, W);
                 });
             if (k < N - 1)
                 Ad(0).set_constant(0);
@@ -316,18 +325,22 @@ TEST(OCP, update) {
             auto Ad = A.batch(N % 2).left_cols(colsA), Ld = LΨ̃D.batch(N);
             Ad(0).right_cols(rjs[N]) = W̃j(N).left_cols(rjs[N]);
             alignas(W_t::alignment()) real_t W[W_t::size()];
+            auto Dd                   = D.batch(0).top_rows(colsA);
+            Dd(0).bottom_rows(rjs[N]) = Sj(N).top_rows(rjs[N]);
+            Dd.bottom_rows(rjs[N]).negate(); // TODO
 
             // Process all diagonal blocks (in multiples of R, except the last).
             foreach_chunked(
                 0, Ld.cols(), R,
                 [&](index_t k) {
-                    process_diagonal_block(k, R, Ad, Ld, W);
-                    process_subdiagonal_block_W(k, Ad, Ld, W);
+                    process_diagonal_block(k, R, Ad, Dd, Ld, W);
+                    process_subdiagonal_block_W(k, Ad, Dd, Ld, W);
                 },
                 [&](index_t k, index_t rem_k) {
                     auto Add = Ad.middle_rows(k, rem_k);
                     auto Ldd = Ld.block(k, k, rem_k, rem_k);
-                    shh::microkernel_full_lut<abi>[rem_k - 1](colsA, Ldd, Add);
+                    shhud::microkernel_full_lut<abi>[rem_k - 1](colsA, Ldd, Add,
+                                                                Dd);
                 });
         }
     }
