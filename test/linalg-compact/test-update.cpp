@@ -1,3 +1,4 @@
+#include <koqkatoo/cneg.hpp>
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg-compact/matrix-batch.hpp>
 #include <koqkatoo/linalg-compact/preferred-backend.hpp>
@@ -10,7 +11,6 @@
 #include <random>
 #include <vector>
 
-#include <koqkatoo/linalg-compact/compact/micro-kernels/cneg.hpp>   // TODO
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xshhud.hpp> // TODO
 
 namespace stdx = std::experimental;
@@ -143,7 +143,6 @@ TEST(OCP, update) {
     EXPECT_LE(scalar_blas::xnrminf(LΨ_err), ε);
 
     // Prepare factorization update
-    using linalg::compact::micro_kernels::cneg;
     BMat J{{.depth = N + 1, .rows = ny, .cols = 1}};
     Mat Σ{{.depth = N + 1, .rows = ny, .cols = 1}};
     Mat S{{.depth = N + 1, .rows = ny, .cols = 1}};

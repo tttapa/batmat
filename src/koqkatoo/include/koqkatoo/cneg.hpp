@@ -8,7 +8,7 @@
 #include <limits>
 #include <type_traits>
 
-namespace koqkatoo::linalg::compact::micro_kernels {
+namespace koqkatoo {
 namespace detail {
 namespace stdx = std::experimental;
 
@@ -70,4 +70,4 @@ template <class T, class Abi>
 
 using detail::cneg;
 
-} // namespace koqkatoo::linalg::compact::micro_kernels
+} // namespace koqkatoo

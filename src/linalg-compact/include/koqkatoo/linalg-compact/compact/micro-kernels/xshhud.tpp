@@ -1,9 +1,9 @@
 #pragma once
 
-#include "cneg.hpp"
 #include "xshhud.hpp"
 
 #include <koqkatoo/assume.hpp>
+#include <koqkatoo/cneg.hpp>
 #include <koqkatoo/config.hpp>
 #include <koqkatoo/linalg-compact/matrix-batch.hpp>
 #include <koqkatoo/unroll.h>
