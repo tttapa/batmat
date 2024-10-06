@@ -7,8 +7,8 @@
 #include <thread>
 #include <vector>
 
-#include <koqkatoo/cholundate/householder-downdate-common.tpp>
-#include <koqkatoo/cholundate/householder-downdate.hpp>
+#include <koqkatoo/cholundate/householder-updowndate-common.tpp>
+#include <koqkatoo/cholundate/householder-updowndate.hpp>
 
 namespace koqkatoo::cholundate::householder::parallel_static {
 
@@ -38,13 +38,16 @@ struct PackedBlockRowMatrix {
 
 using uConfig = micro_kernels::householder::Config;
 
-template <uConfig uConf>
-constinit static auto full_microkernel_lut = make_1d_lut<uConf.block_size_r>(
-    []<index_t N>(index_constant<N>) { return downdate_full<N + 1>; });
+template <uConfig uConf, class UpDown>
+constinit static auto full_microkernel_lut =
+    make_1d_lut<uConf.block_size_r>([]<index_t NR>(index_constant<NR>) {
+        return updowndate_full<NR + 1, UpDown>;
+    });
 
-template <Config Conf>
+template <Config Conf, class UpDown>
 struct Context {
     MutableRealMatrixView L, A;
+    UpDown signs;
     const index_t p                       = 8;
     const index_t max_concurrent_columns  = 2 * p; // TODO: check OBOE!
     static constexpr index_t R            = Conf.block_size_r;
@@ -106,10 +109,11 @@ struct Context {
         }();
         auto Ld = L.block(i1, i1, r, r);
         if (r == Conf.block_size_r) [[likely]] // Most diagonal blocks
-            downdate_diag<Conf.block_size_r>(A.cols, Ws[work_id], Ld,
-                                             packed_Ad);
+            updowndate_diag<Conf.block_size_r, UpDown>(A.cols, Ws[work_id], Ld,
+                                                       packed_Ad, signs);
         else // Last diagonal block
-            full_microkernel_lut<uConf>[r - 1](A.cols, Ld, packed_Ad);
+            full_microkernel_lut<uConf, UpDown>[r - 1](A.cols, Ld, packed_Ad,
+                                                       signs);
         return s > 0;
     }
 
@@ -135,8 +139,8 @@ struct Context {
         }();
         if (s > 0) { // TODO: could be handled without forking
             auto Ls = L.block(i2, i1, s, r);
-            downdate_tile_tail<uConf>(s, A.cols, Ws[work_id], Ls, packed_Ad,
-                                      packed_At);
+            updowndate_tile_tail<uConf, UpDown>(s, A.cols, Ws[work_id], Ls,
+                                                packed_Ad, packed_At, signs);
         }
     }
 
@@ -190,10 +194,11 @@ struct Context {
         }();
         auto Ls = L.block(i4, i1, s, r);
         if (s == Conf.block_size_s) [[likely]] // Most block rows
-            downdate_tail<uConf>(A.cols, Ws[work_id], Ls, packed_Ad, packed_At);
+            updowndate_tail<uConf, UpDown>(A.cols, Ws[work_id], Ls, packed_Ad,
+                                           packed_At, signs);
         else // Last block row
-            downdate_tile_tail<uConf>(s, A.cols, Ws[work_id], Ls, packed_Ad,
-                                      packed_At);
+            updowndate_tile_tail<uConf, UpDown>(s, A.cols, Ws[work_id], Ls,
+                                                packed_Ad, packed_At, signs);
     }
 };
 
@@ -322,13 +327,16 @@ inline auto create_schedule(const index_t n, const index_t p,
 
 } // namespace detail
 
-template <Config Conf>
-void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A) {
+template <Config Conf, class UpDown>
+void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
+                        UpDown signs) {
     assert(L.rows == L.cols);
     assert(L.rows == A.rows);
+    if constexpr (requires { signs.signs; })
+        assert(A.cols == static_cast<index_t>(signs.signs));
 
-    using Context = detail::Context<Conf>;
-    Context context{.L = L, .A = A, .p = 8};
+    using Context = detail::Context<Conf, UpDown>;
+    Context context{.L = L, .A = A, .signs = signs, .p = 8};
     std::barrier barrier(context.p);
 
     static constexpr auto process_block = [](Context &ctx, index_t r,
@@ -360,7 +368,7 @@ void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A) {
     static auto schedule = detail::create_schedule(context.ns, context.p, true);
     std::vector<std::jthread> threads;
     threads.reserve(context.p);
-
+    // TODO: threadpool
     auto run_thread = [&](index_t tid) {
         for (auto [r, c] : schedule[tid]) {
             if (r != 0 || c != 0)

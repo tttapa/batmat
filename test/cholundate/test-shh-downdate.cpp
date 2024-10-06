@@ -7,7 +7,7 @@
 #include <limits>
 #include <random>
 
-#include <koqkatoo/cholundate/householder-downdate.hpp>
+#include <koqkatoo/cholundate/householder-updowndate.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
 #include <guanaqo/eigen/view.hpp>
 
@@ -94,9 +94,10 @@ TEST_P(SHHDown, VariousSizes) {
         auto matrices     = koqkatoo::generate_problem(m, n);
         Eigen::MatrixXd L̃ = matrices.L;
         Eigen::MatrixXd Ã = matrices.A;
-        koqkatoo::cholundate::householder::downdate_blocked<{8, 24}>(
+        koqkatoo::cholundate::householder::updowndate_blocked<{8, 24}>(
             as_view(L̃, guanaqo::with_index_type<index_t>),
-            as_view(Ã, guanaqo::with_index_type<index_t>));
+            as_view(Ã, guanaqo::with_index_type<index_t>),
+            koqkatoo::cholundate::Downdate());
         real_t residual = koqkatoo::calculate_error(matrices, L̃);
         EXPECT_LE(residual, ε) << "m=" << m;
     }
@@ -109,9 +110,10 @@ TEST_P(SHHDown, VariousSizesLibFork) {
         auto matrices     = koqkatoo::generate_problem(m, n);
         Eigen::MatrixXd L̃ = matrices.L;
         Eigen::MatrixXd Ã = matrices.A;
-        koqkatoo::cholundate::householder::parallel::downdate_blocked<{8, 24}>(
-            as_view(L̃, guanaqo::with_index_type<index_t>),
-            as_view(Ã, guanaqo::with_index_type<index_t>));
+        koqkatoo::cholundate::householder::parallel::updowndate_blocked<{
+            8, 24}>(as_view(L̃, guanaqo::with_index_type<index_t>),
+                    as_view(Ã, guanaqo::with_index_type<index_t>),
+                    koqkatoo::cholundate::Downdate());
         Eigen::LLT<Eigen::MatrixXd> llt(matrices.K̃);
         real_t residual = koqkatoo::calculate_error(matrices, L̃);
         EXPECT_LE(residual, ε) << "m=" << m;

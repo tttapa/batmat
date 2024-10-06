@@ -1,6 +1,6 @@
 #pragma once
 
-#include <koqkatoo/cholundate/householder-downdate.hpp>
+#include <koqkatoo/cholundate/householder-updowndate.hpp>
 #include <koqkatoo/kib.hpp>
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
@@ -81,7 +81,8 @@ void CompactBLAS<Abi>::xshh(mut_single_batch_view L, mut_single_batch_view A,
                             PreferredBackend b) {
     if constexpr (std::same_as<Abi, scalar_abi>) {
         if (use_blas_scalar(b)) {
-            cholundate::householder::downdate_blocked<{}>(L(0), A(0));
+            cholundate::householder::updowndate_blocked<{}>(
+                L(0), A(0), cholundate::Downdate());
             return;
         }
     }

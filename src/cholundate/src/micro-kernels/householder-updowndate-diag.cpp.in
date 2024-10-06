@@ -6,7 +6,13 @@
 
 namespace koqkatoo::cholundate::micro_kernels::householder {
 
-template void updowndate_diag<@R@>(
-    index_t colsA, mut_W_accessor<@R@> W, real_t *Ld, index_t ldL, real_t *Ad, index_t ldA, const real_t *Sp) noexcept;
+template void updowndate_diag<@R@, Update>(
+    index_t colsA, mut_W_accessor<@R@> W, real_t *Ld, index_t ldL, real_t *Ad, index_t ldA, UpDownArg<Update> signs) noexcept;
+template void updowndate_diag<@R@, Downdate>(
+    index_t colsA, mut_W_accessor<@R@> W, real_t *Ld, index_t ldL, real_t *Ad, index_t ldA, UpDownArg<Downdate> signs) noexcept;
+template void updowndate_diag<@R@, UpDowndate>(
+    index_t colsA, mut_W_accessor<@R@> W, real_t *Ld, index_t ldL, real_t *Ad, index_t ldA, UpDownArg<UpDowndate> signs) noexcept;
+template void updowndate_diag<@R@, DownUpdate>(
+    index_t colsA, mut_W_accessor<@R@> W, real_t *Ld, index_t ldL, real_t *Ad, index_t ldA, UpDownArg<DownUpdate> signs) noexcept;
 
 }

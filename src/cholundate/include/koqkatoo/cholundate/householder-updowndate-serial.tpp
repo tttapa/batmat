@@ -1,7 +1,7 @@
 #pragma once
 
-#include <koqkatoo/cholundate/householder-downdate-common.tpp>
-#include <koqkatoo/cholundate/householder-downdate.hpp>
+#include <koqkatoo/cholundate/householder-updowndate-common.tpp>
+#include <koqkatoo/cholundate/householder-updowndate.hpp>
 #include <koqkatoo/loop.hpp>
 #include <koqkatoo/lut.hpp>
 #include <type_traits>
@@ -182,8 +182,9 @@ void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A) {
     }
 }
 #else
-template <Config Conf>
-void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A) {
+template <Config Conf, class UpDown>
+void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
+                        UpDown signs) {
     constexpr index_t R = Conf.block_size_r, S = Conf.block_size_s;
     constexpr index_t N       = Conf.num_blocks_r;
     constexpr bool do_packing = Conf.enable_packing;
@@ -198,8 +199,10 @@ void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A) {
     static_assert(Conf.num_blocks_s == 1, "NYI");
     assert(L.rows == L.cols);
     assert(L.rows == A.rows);
-    constinit static auto full_microkernel_lut = make_1d_lut<R>(
-        []<index_t N>(index_constant<N>) { return downdate_full<N + 1>; });
+    constinit static auto full_microkernel_lut =
+        make_1d_lut<R>([]<index_t NR>(index_constant<NR>) {
+            return updowndate_full<NR + 1, UpDown>;
+        });
 
     // Leaner accessors (without unnecessary dimensions and strides).
     micro_kernels::mut_matrix_accessor L_{L}, A_{A};
@@ -241,11 +244,12 @@ void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A) {
             // Process blocks left of the diagonal
             for (index_t cc = 0; cc < kk; cc += R) {
                 auto Ls = L_.block(k + kk, k + cc);
-                downdate_tail<uConfR>(A.cols, W[cc / R], Ls, Adk[cc / R], Ad);
+                updowndate_tail<uConfR, UpDown>(A.cols, W[cc / R], Ls,
+                                                Adk[cc / R], Ad, signs);
             }
             auto Ld = L_.block(k + kk, k + kk);
             // Process the diagonal block itself
-            downdate_diag<R>(A.cols, W[kk / R], Ld, Ad);
+            updowndate_diag<R, UpDown>(A.cols, W[kk / R], Ld, Ad, signs);
         }
         // Process all rows below the diagonal block (in multiples of S).
         foreach_chunked(
@@ -257,8 +261,8 @@ void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A) {
                     auto Ls = L_.block(i, k + cc);
                     for (index_t c = 0; c < R; ++c)
                         _mm_prefetch(&Ls(0, c), _MM_HINT_NTA);
-                    downdate_tail<uConf>(A.cols, W[cc / R], Ls, Adk[cc / R],
-                                         As);
+                    updowndate_tail<uConf, UpDown>(A.cols, W[cc / R], Ls,
+                                                   Adk[cc / R], As, signs);
                 }
             },
             [&](index_t i, index_t rem_i) {
@@ -268,8 +272,8 @@ void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A) {
                     auto Ls = L_.block(i, k + cc);
                     for (index_t c = 0; c < R; ++c)
                         _mm_prefetch(&Ls(0, c), _MM_HINT_NTA);
-                    downdate_tile_tail<uConf>(rem_i, A.cols, W[cc / R], Ls,
-                                              Adk[cc / R], As);
+                    updowndate_tile_tail<uConf, UpDown>(
+                        rem_i, A.cols, W[cc / R], Ls, Adk[cc / R], As, signs);
                 }
             },
             LoopDir::Forward);
@@ -281,7 +285,7 @@ void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A) {
             throw std::logic_error("Not yet implemented");
         auto Ad = A_.middle_rows(k); // TODO: pack?
         auto Ld = L_.block(k, k);
-        full_microkernel_lut[rem_k - 1](A.cols, Ld, Ad);
+        full_microkernel_lut[rem_k - 1](A.cols, Ld, Ad, signs);
     }
 }
 #endif

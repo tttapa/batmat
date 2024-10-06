@@ -1,5 +1,6 @@
 #pragma once
 
+#include <koqkatoo/cholundate/updown.hpp>
 #include <koqkatoo/matrix-view.hpp>
 
 namespace koqkatoo::cholundate::householder {
@@ -35,23 +36,29 @@ struct Config {
 };
 
 inline namespace serial {
-template <Config Conf>
-void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A);
-template <Config Conf>
+template <Config Conf, class UpDown>
 void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
-                        RealMatrixView signs);
+                        UpDown signs);
 } // namespace serial
+
+namespace naive {
+template <Config Conf, class UpDown>
+void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
+                        UpDown signs);
+} // namespace naive
 
 #if KOQKATOO_WITH_LIBFORK
 namespace parallel {
-template <Config Conf>
-void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A);
+template <Config Conf, class UpDown>
+void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
+                        UpDown signs);
 }
 #endif
 
 namespace parallel_static {
-template <Config Conf>
-void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A);
+template <Config Conf, class UpDown>
+void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
+                        UpDown signs);
 }
 
 } // namespace koqkatoo::cholundate::householder

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <koqkatoo/assume.hpp>
+#include <koqkatoo/cholundate/updown.hpp>
+#include <koqkatoo/cneg.hpp>
 #include <koqkatoo/config.hpp>
 #include <koqkatoo/matrix-view.hpp>
 #include <koqkatoo/unroll.h>
@@ -105,6 +108,41 @@ struct matrix_accessor : mat_access_impl<const real_t> {
 
 struct mut_matrix_accessor : mat_access_impl<real_t> {
     using mat_access_impl<real_t>::mat_access_impl;
+};
+
+template <class UpDown>
+struct UpDownArg;
+
+template <>
+struct UpDownArg<Update> {
+    UpDownArg(Update) {}
+    static auto cneg(auto x, index_t) { return x; }
+};
+
+template <>
+struct UpDownArg<Downdate> {
+    UpDownArg(Downdate) {}
+    static auto cneg(auto x, index_t) { return -x; }
+};
+
+template <>
+struct UpDownArg<UpDowndate> {
+    UpDownArg(UpDowndate ud) : signs{ud.signs.data()} {}
+    const real_t *__restrict signs;
+    template <class T>
+    auto cneg(T x, index_t j) const {
+        return koqkatoo::cneg(x, T{signs[j]});
+    }
+};
+
+template <>
+struct UpDownArg<DownUpdate> {
+    UpDownArg(DownUpdate du) : signs{du.signs.data()} {}
+    const real_t *__restrict signs;
+    template <class T>
+    auto cneg(T x, index_t j) const {
+        return -koqkatoo::cneg(x, T{signs[j]});
+    }
 };
 
 } // namespace koqkatoo::cholundate::micro_kernels

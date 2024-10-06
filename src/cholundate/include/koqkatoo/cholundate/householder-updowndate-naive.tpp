@@ -1,15 +1,15 @@
 #pragma once
 
-#include <koqkatoo/cholundate/householder-downdate-common.tpp>
-#include <koqkatoo/cholundate/householder-downdate.hpp>
+#include <koqkatoo/cholundate/householder-updowndate-common.tpp>
+#include <koqkatoo/cholundate/householder-updowndate.hpp>
 #include <koqkatoo/loop.hpp>
 #include <koqkatoo/lut.hpp>
 
-namespace koqkatoo::cholundate::householder::inline serial {
+namespace koqkatoo::cholundate::householder::naive {
 
-template <Config Conf>
+template <Config Conf, class UpDown>
 void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
-                        RealMatrixView signs) {
+                        UpDown signs) {
     assert(signs.rows == A.cols);
     assert(L.rows == L.cols);
     assert(L.rows == A.rows);
@@ -34,22 +34,22 @@ void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
             auto Ld = L.block(k, k, R, R);
             // Process the diagonal block itself
             micro_kernels::householder::matrix_W_storage<R> W;
-            updowndate_diag<R>(A.cols, W, Ld, Ad, signs);
+            updowndate_diag<R, UpDown>(A.cols, W, Ld, Ad, signs);
             // Process all rows below the diagonal block (in multiples of S).
             foreach_chunked_merged(
                 k + R, L.rows, S,
                 [&](index_t i, auto rem_i) {
                     auto As = A.middle_rows(i, rem_i);
                     auto Ls = L.block(i, k, rem_i, R);
-                    updowndate_tile_tail<uConf>(rem_i, As.cols, W, Ls, Ad, As,
-                                                signs);
+                    updowndate_tile_tail<uConf, UpDown>(rem_i, As.cols, W, Ls,
+                                                        Ad, As, signs);
                 },
                 LoopDir::Backward); // TODO: decide on order
         },
         [&](index_t k, index_t rem_k) {
             auto updowndate_full_lut =
                 make_1d_lut<R>([]<index_t NR>(index_constant<NR>) {
-                    return updowndate_full<NR + 1>;
+                    return updowndate_full<NR + 1, UpDown>;
                 });
             auto Ad = A.middle_rows(k, rem_k);
             auto Ld = L.block(k, k, rem_k, rem_k);
@@ -57,4 +57,4 @@ void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
         });
 }
 
-} // namespace koqkatoo::cholundate::householder::inline serial
+} // namespace koqkatoo::cholundate::householder::naive

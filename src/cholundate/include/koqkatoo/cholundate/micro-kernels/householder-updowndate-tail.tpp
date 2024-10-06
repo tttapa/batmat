@@ -1,9 +1,5 @@
 #pragma once
 
-#include <koqkatoo/assume.hpp>
-#include <koqkatoo/cneg.hpp>
-#include <koqkatoo/unroll.h>
-
 #include "householder-updowndate.hpp"
 
 #define UNROLL_FOR(...) KOQKATOO_FULLY_UNROLLED_IVDEP_FOR (__VA_ARGS__)
@@ -11,12 +7,12 @@
 
 namespace koqkatoo::cholundate::micro_kernels::householder {
 
-template <Config Conf>
+template <Config Conf, class UpDown>
 [[gnu::hot]] void
 updowndate_tail(index_t colsA, mut_W_accessor<Conf.block_size_r> W,
                 real_t *__restrict Lp, index_t ldL, const real_t *__restrict Bp,
                 index_t ldB, real_t *__restrict Ap, index_t ldA,
-                const real_t *__restrict Sp) noexcept {
+                UpDownArg<UpDown> signs) noexcept {
     using simdA = tail_simd_A_t<Conf>;
     using simdL = tail_simd_L_t<Conf>;
     const mut_matrix_accessor L{Lp, ldL}, A{Ap, ldA};
@@ -36,7 +32,7 @@ updowndate_tail(index_t colsA, mut_W_accessor<Conf.block_size_r> W,
         if (Conf.prefetch_dist_col_a > 0)
             _mm_prefetch(&A(0, j + Conf.prefetch_dist_col_a), _MM_HINT_T0);
         UNROLL_FOR (index_t kk = 0; kk < R; kk += NL) {
-            auto Akj = cneg(B.load<simdL>(kk, j), simdL{Sp[j]});
+            auto Akj = signs.cneg(B.load<simdL>(kk, j), j);
             UNROLL_FOR (index_t k = 0; k < NL; ++k)
                 UNROLL_FOR (index_t i = 0; i < S; i += NA)
                     V[i / NA][kk + k] += A.load<simdA>(i, j) * Akj[k];
@@ -48,7 +44,7 @@ updowndate_tail(index_t colsA, mut_W_accessor<Conf.block_size_r> W,
         UNROLL_FOR (index_t l = 0; l < k; l += NL)
             Wk[l / NL] = W.template load<simdL>(l, k, stdx::vector_aligned);
         UNROLL_FOR (index_t i = 0; i < S; i += NA) {
-            auto Lik     = L.load<simdA>(i, k);
+            auto Lik = L.load<simdA>(i, k);
             V[i / NA][k] += Lik;
             UNROLL_FOR (index_t l = 0; l < k; ++l)
                 V[i / NA][k] -= V[i / NA][l] * Wk[l / NL][l % NL];

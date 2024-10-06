@@ -1,9 +1,5 @@
 #pragma once
 
-#include <koqkatoo/assume.hpp>
-#include <koqkatoo/cneg.hpp>
-#include <koqkatoo/unroll.h>
-
 #include "householder-updowndate.hpp"
 
 #define UNROLL_FOR(...) KOQKATOO_FULLY_UNROLLED_IVDEP_FOR (__VA_ARGS__)
@@ -11,11 +7,11 @@
 
 namespace koqkatoo::cholundate::micro_kernels::householder {
 
-template <index_t R>
+template <index_t R, class UpDown>
 [[gnu::hot]] void updowndate_full(index_t colsA, real_t *__restrict Ld,
                                   index_t ldL, real_t *__restrict Ad,
                                   index_t ldA,
-                                  const real_t *__restrict Sp) noexcept {
+                                  UpDownArg<UpDown> signs) noexcept {
     using std::copysign;
     using std::sqrt;
     using simd = diag_simd_t<R>;
@@ -29,7 +25,7 @@ template <index_t R>
         // Compute some inner products between A and a
         simd bb[R / N]{};
         UNROLL_FOR_A_COLS (index_t j = 0; j < colsA; ++j) {
-            real_t Akj = cneg(A(k, j), Sp[j]);
+            real_t Akj = signs.cneg(A(k, j), j);
             UNROLL_FOR (index_t i = k / N * N; i < R; i += N)
                 bb[i / N] += A.load<simd>(i, j) * Akj;
         }
