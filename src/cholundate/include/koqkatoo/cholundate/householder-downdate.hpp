@@ -37,7 +37,10 @@ struct Config {
 inline namespace serial {
 template <Config Conf>
 void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A);
-}
+template <Config Conf>
+void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
+                        RealMatrixView signs);
+} // namespace serial
 
 #if KOQKATOO_WITH_LIBFORK
 namespace parallel {

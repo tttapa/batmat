@@ -208,7 +208,8 @@ struct Context {
         }();
         if (s > 0) { // TODO: could be handled without forking
             auto Ls = L.block(i2, i1, s, r);
-            tile_tail<uConf>(s, A.cols, Ws[work_id], Ls, packed_Ad, packed_At);
+            downdate_tile_tail<uConf>(s, A.cols, Ws[work_id], Ls, packed_Ad,
+                                      packed_At);
         }
     }
 
@@ -262,7 +263,8 @@ struct Context {
         if (s == Conf.block_size_s) [[likely]] // Most block rows
             downdate_tail<uConf>(A.cols, Ws[work_id], Ls, packed_Ad, packed_At);
         else // Last block row
-            tile_tail<uConf>(s, A.cols, Ws[work_id], Ls, packed_Ad, packed_At);
+            downdate_tile_tail<uConf>(s, A.cols, Ws[work_id], Ls, packed_Ad,
+                                      packed_At);
     }
 };
 

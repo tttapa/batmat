@@ -65,14 +65,14 @@ void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A) {
         if (rem_i > 0) {
             auto Ls = L_.block(i, k);
             auto As = A_.middle_rows(i);
-            tile_tail<uConf>(rem_i, A.cols, W, Ls, Ad, As);
+            downdate_tile_tail<uConf>(rem_i, A.cols, W, Ls, Ad, As);
         }
 #else
         for (index_t i = k + R; i < L.rows; i += S) {
             index_t ni = std::min<index_t>(L.rows, i + S) - i;
             auto Ls    = L_.block(i, k);
             auto As    = A_.middle_rows(i);
-            tile_tail<uConf>(ni, A.cols, W, Ls, Ad, As);
+            downdate_tile_tail<uConf>(ni, A.cols, W, Ls, Ad, As);
         }
 #endif
         // TODO: Could it be beneficial to traverse all even columns from top to
@@ -166,7 +166,8 @@ void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A) {
                 auto Ls = L_.block(i, k + cc);
                 for (index_t c = 0; c < R; ++c)
                     _mm_prefetch(&Ls(0, c), _MM_HINT_NTA);
-                tile_tail<uConf>(rem_i, A.cols, W[cc / R], Ls, Adk[cc / R], As);
+                downdate_tile_tail<uConf>(rem_i, A.cols, W[cc / R], Ls,
+                                          Adk[cc / R], As);
             }
         }
     }
@@ -267,8 +268,8 @@ void downdate_blocked(MutableRealMatrixView L, MutableRealMatrixView A) {
                     auto Ls = L_.block(i, k + cc);
                     for (index_t c = 0; c < R; ++c)
                         _mm_prefetch(&Ls(0, c), _MM_HINT_NTA);
-                    tile_tail<uConf>(rem_i, A.cols, W[cc / R], Ls, Adk[cc / R],
-                                     As);
+                    downdate_tile_tail<uConf>(rem_i, A.cols, W[cc / R], Ls,
+                                              Adk[cc / R], As);
                 }
             },
             LoopDir::Forward);

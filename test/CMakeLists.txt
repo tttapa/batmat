@@ -21,6 +21,7 @@ add_executable(tests
     "linalg-compact/test-pntrf.cpp"
     "linalg-compact/test-update.cpp"
     "cholundate/test-shh-downdate.cpp"
+    "cholundate/test-shh-updowndate.cpp"
 )
 target_compile_definitions(tests PRIVATE
     $<$<BOOL:${KOQKATOO_EXTENSIVE_TESTS}>:KOQKATOO_EXTENSIVE_TESTS>)
