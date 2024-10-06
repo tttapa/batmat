@@ -72,10 +72,10 @@ target_link_libraries(cholundate-headers INTERFACE koqkatoo::koqkatoo)
 target_compile_features(cholundate-headers INTERFACE cxx_std_20)
 
 include("cholundate/src/micro-kernels/Codegen.cmake")
-codegen_cholundate_microkernels(cholundate-headers)
+codegen_cholundate_microkernels(cholundate cholundate-headers)
 
 add_library(cholundate "cholundate/src/cholundate.cpp")
-target_link_libraries(cholundate PRIVATE cholundate-headers-microkernels)
+target_link_libraries(cholundate PRIVATE cholundate-microkernels)
 target_link_libraries(cholundate PUBLIC cholundate-headers)
 koqkatoo_configure_library(cholundate EXPORT_PREFIX koqkatoo)
 
@@ -112,10 +112,10 @@ target_link_libraries(linalg-compact-headers INTERFACE koqkatoo::linalg koqkatoo
 target_compile_features(linalg-compact-headers INTERFACE cxx_std_20)
 
 include("linalg-compact/src/micro-kernels/Codegen.cmake")
-codegen_compact_microkernels(linalg-compact-headers)
+codegen_compact_microkernels(linalg-compact linalg-compact-headers)
 
 add_library(linalg-compact "linalg-compact/src/compact.cpp")
-target_link_libraries(linalg-compact PRIVATE linalg-compact-headers-microkernels)
+target_link_libraries(linalg-compact PRIVATE linalg-compact-microkernels)
 target_link_libraries(linalg-compact PUBLIC linalg-compact-headers)
 koqkatoo_configure_library(linalg-compact EXPORT_PREFIX koqkatoo)
 
