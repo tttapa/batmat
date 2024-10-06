@@ -35,7 +35,10 @@ updowndate_tail(index_t colsA, mut_W_accessor<Conf.block_size_r> W,
             auto Akj = signs.cneg(B.load<simdL>(kk, j), j);
             UNROLL_FOR (index_t k = 0; k < NL; ++k)
                 UNROLL_FOR (index_t i = 0; i < S; i += NA)
-                    V[i / NA][kk + k] += A.load<simdA>(i, j) * Akj[k];
+                    if constexpr (signs.negate)
+                        V[i / NA][kk + k] -= A.load<simdA>(i, j) * Akj[k];
+                    else
+                        V[i / NA][kk + k] += A.load<simdA>(i, j) * Akj[k];
         }
     }
     // Solve system V = (L+U)W⁻¹ (in-place)

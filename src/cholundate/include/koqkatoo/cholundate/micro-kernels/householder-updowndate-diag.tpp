@@ -29,7 +29,10 @@ template <index_t R, class UpDown>
         UNROLL_FOR_A_COLS (index_t j = 0; j < colsA; ++j) {
             real_t Akj = signs.cneg(A(k, j), j);
             UNROLL_FOR (index_t i = 0; i < R; i += N)
-                bb[i / N] += A.load<simd>(i, j) * Akj;
+                if constexpr (signs.negate)
+                    bb[i / N] -= A.load<simd>(i, j) * Akj;
+                else
+                    bb[i / N] += A.load<simd>(i, j) * Akj;
         }
         // Energy condition and Householder coefficients
         const real_t α2 = bb[k / N][k % N], Lkk = L(k, k);

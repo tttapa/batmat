@@ -117,12 +117,14 @@ template <>
 struct UpDownArg<Update> {
     UpDownArg(Update) {}
     static auto cneg(auto x, index_t) { return x; }
+    static constexpr bool negate = false;
 };
 
 template <>
 struct UpDownArg<Downdate> {
     UpDownArg(Downdate) {}
-    static auto cneg(auto x, index_t) { return -x; }
+    static auto cneg(auto x, index_t) { return x; }
+    static constexpr bool negate = true;
 };
 
 template <>
@@ -133,6 +135,7 @@ struct UpDownArg<UpDowndate> {
     auto cneg(T x, index_t j) const {
         return koqkatoo::cneg(x, T{signs[j]});
     }
+    static constexpr bool negate = false;
 };
 
 template <>
@@ -141,8 +144,9 @@ struct UpDownArg<DownUpdate> {
     const real_t *__restrict signs;
     template <class T>
     auto cneg(T x, index_t j) const {
-        return -koqkatoo::cneg(x, T{signs[j]});
+        return koqkatoo::cneg(x, T{signs[j]});
     }
+    static constexpr bool negate = true;
 };
 
 } // namespace koqkatoo::cholundate::micro_kernels
