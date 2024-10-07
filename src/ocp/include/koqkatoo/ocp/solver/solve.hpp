@@ -29,6 +29,7 @@ struct Solver {
     using single_mut_real_view = typename types::single_mut_real_view;
     using scalar_mut_real_view = typename types::scalar_mut_real_view;
     using scalar_layout        = typename types::scalar_layout;
+    using scalar_real_matrix   = typename types::scalar_real_matrix;
     using real_matrix          = typename types::real_matrix;
     using mask_matrix          = typename types::mask_matrix;
     static constexpr index_t simd_stride = typename types::simd_stride_t();
@@ -41,13 +42,21 @@ struct Solver {
 
     SolverOptions settings{};
 
-    mut_real_view H() { return storage.H.view; }
-    mut_real_view LH() { return storage.LH; }
+    mut_real_view H() { return storage.H; }
+    mut_real_view LHV() { return storage.LHV; }
+    mut_real_view LH() {
+        auto [N, nx, nu, ny, ny_N] = storage.dim;
+        return LHV().top_rows(nx + nu);
+    }
+    mut_real_view V() { return LHV().bottom_rows(storage.dim.nx); }
     mut_real_view CD() { return storage.CD; }
     mut_real_view LΨd() { return storage.LΨd; }
     mut_real_view LΨs() { return storage.LΨs; }
+    scalar_mut_real_view LΨd_scalar() { return storage.LΨd_scalar(); }
+    scalar_mut_real_view LΨs_scalar() { return storage.LΨs_scalar(); }
     mut_real_view VV() { return storage.VV; }
     mut_real_view AB() { return storage.AB; }
+    mut_real_view Wᵀ() { return storage.Wᵀ; }
 
     /// Overwrites the Cholesky factors of H (LH) with H + CDᵀ Σ CD.
     void schur_complement_H(real_view Σ, bool_view J);
@@ -59,7 +68,7 @@ struct Solver {
     void solve_H(mut_real_view x);
 
     void prepare_Ψ();
-    void prepare_Ψi(index_t i, single_mut_real_view W, single_mut_real_view V);
+    void prepare_Ψi(index_t i);
     void prepare_all(real_t S, real_view Σ, bool_view J);
 
     void cholesky_Ψ();
@@ -86,6 +95,9 @@ struct Solver {
     void cost_gradient_remove_regularization(real_t S, real_view x,
                                              real_view x0,
                                              mut_real_view grad_f);
+
+    void updowndate(real_view Σ, bool_view J_old, bool_view J_new);
+    void updowndate_ψ();
 
     [[nodiscard]] index_t num_variables() const {
         auto [N, nx, nu, ny, ny_N] = storage.dim;

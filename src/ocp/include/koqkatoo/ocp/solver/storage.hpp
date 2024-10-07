@@ -27,6 +27,9 @@ struct SolverTypes {
     using simd_stride_t = stdx::simd_size<real_t, Abi>;
     using simd_align_t  = stdx::memory_alignment<simd>;
     using mask_align_t  = stdx::memory_alignment<mask>;
+    using index_simd =
+        stdx::simd<index_t, stdx::simd_abi::deduce_t<index_t, simd_stride_t{}>>;
+    using index_align_t = stdx::memory_alignment<index_simd>;
     static_assert(simd_align_t() <= simd_stride_t() * sizeof(real_t));
     using scalar_abi           = stdx::simd_abi::scalar;
     using scalar_simd          = stdx::simd<real_t, scalar_abi>;
@@ -49,9 +52,15 @@ struct SolverTypes {
     /// Type that owns an arbitrary number of batches of matrices.
     using real_matrix =
         BatchedMatrix<real_t, index_t, simd_stride_t, index_t, simd_align_t>;
+
+    /// Type that owns an arbitrary number of matrices.
+    using scalar_real_matrix = BatchedMatrix<real_t, index_t>;
     /// Type that owns an arbitrary number of batches of boolean matrices.
     using mask_matrix =
         BatchedMatrix<bool, index_t, simd_stride_t, index_t, mask_align_t>;
+    /// Type that owns an arbitrary number of batches of integer matrices.
+    using index_matrix =
+        BatchedMatrix<index_t, index_t, simd_stride_t, index_t, index_align_t>;
 
     /// View of a scalar, non-interleaved batch of matrices.
     using scalar_mut_real_view =
@@ -75,6 +84,7 @@ struct SolverStorage {
     using scalar_layout        = typename types::scalar_layout;
     using real_matrix          = typename types::real_matrix;
     using mask_matrix          = typename types::mask_matrix;
+    using index_matrix         = typename types::index_matrix;
     static constexpr index_t simd_stride = typename types::simd_stride_t();
 
     const OCPDim dim;
@@ -84,9 +94,9 @@ struct SolverStorage {
                             .rows  = dim.nx + dim.nu,
                             .cols  = dim.nx + dim.nu}};
     }();
-    real_matrix LH = [this] {
+    real_matrix LHV = [this] {
         return real_matrix{{.depth = dim.N_horiz + 1, //
-                            .rows  = dim.nx + dim.nu,
+                            .rows  = dim.nx + dim.nu + dim.nx,
                             .cols  = dim.nx + dim.nu}};
     }();
     real_matrix CD = [this] {
@@ -114,6 +124,46 @@ struct SolverStorage {
                               .rows  = dim.nx,
                               .cols  = dim.nx}};
     }();
+    real_matrix Wᵀ = [this] {
+        return real_matrix{{.depth = dim.N_horiz + 1, //
+                            .rows  = dim.nx + dim.nu,
+                            .cols  = dim.nx}};
+    }();
+    real_matrix Z = [this] {
+        return real_matrix{{.depth = dim.N_horiz + 1, //
+                            .rows  = dim.nx + dim.nu,
+                            .cols  = dim.ny}}; // assuming ny >= ny_N
+    }();
+    real_matrix Z1 = [this] {
+        return real_matrix{{.depth = dim.N_horiz + 1, //
+                            .rows  = dim.nx + dim.nu,
+                            .cols  = dim.ny}}; // assuming ny >= ny_N
+    }();
+    real_matrix Σ_sgn = [this] {
+        return real_matrix{{.depth = dim.N_horiz + 1, //
+                            .rows  = dim.ny,          // assuming ny >= ny_N
+                            .cols  = 1}};
+    }();
+    real_matrix Σ_ud = [this] {
+        return real_matrix{{.depth = dim.N_horiz + 1, //
+                            .rows  = dim.ny,          // assuming ny >= ny_N
+                            .cols  = 1}};
+    }();
+    real_matrix Lupd = [this] {
+        return real_matrix{{.depth = dim.N_horiz + 1, //
+                            .rows  = dim.ny,          // assuming ny >= ny_N
+                            .cols  = dim.ny}};
+    }();
+    real_matrix Wupd = [this] {
+        return real_matrix{{.depth = dim.N_horiz + 1, //
+                            .rows  = dim.nx,          // assuming ny >= ny_N
+                            .cols  = dim.ny}};
+    }();
+    real_matrix Vupd = [this] {
+        return real_matrix{{.depth = dim.N_horiz, //
+                            .rows  = dim.nx,      // assuming ny >= ny_N
+                            .cols  = dim.ny}};
+    }();
     real_matrix VV = [this] {
         return real_matrix{{.depth = dim.N_horiz + 1, //
                             .rows  = dim.nx,
@@ -134,8 +184,9 @@ struct SolverStorage {
                             .rows  = dim.nx,
                             .cols  = 1}};
     }();
-    real_matrix work_W{{.depth = 0}};
-    real_matrix work_V{{.depth = 0}};
+    index_matrix stagewise_update_counts = [this] {
+        return index_matrix{{.depth = dim.N_horiz + 1, .rows = 1, .cols = 1}};
+    }();
 
     std::vector<real_t> work_chol_Ψ =
         std::vector<real_t>(2 * simd_stride * dim.nx * dim.nx);
@@ -162,22 +213,6 @@ struct SolverStorage {
 
     [[nodiscard]] scalar_mut_real_view LΨs_scalar() {
         return {LΨs.data(), scalar_layout_LΨs};
-    }
-
-    void allocate_work_prepare_Ψ(int num_threads) {
-        auto n = static_cast<index_t>(work_W.batch_size()) *
-                 static_cast<index_t>(num_threads);
-        auto [N, nx, nu, ny, ny_N] = dim;
-        if (work_W.depth() < n)
-            work_W.resize({{.depth = n, .rows = nx + nu, .cols = nx}});
-        if (work_V.depth() < n)
-            work_V.resize({{.depth = n, .rows = nx, .cols = nx + nu}});
-    }
-
-    auto get_work_prepare_ψ(int thread_id)
-        -> std::tuple<single_mut_real_view, single_mut_real_view> {
-        auto tid = static_cast<index_t>(thread_id);
-        return {work_W.batch(tid), work_V.batch(tid)};
     }
 
     void copy_active_set(std::span<const bool> in, view_type<bool> out) const;

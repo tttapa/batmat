@@ -18,16 +18,18 @@ template <simd_abi_tag Abi>
 void Solver<Abi>::schur_complement_Hi(index_t i, real_view Σ, bool_view J) {
     compact_blas::xsyrk_T_schur_copy(CD().batch(i), Σ.batch(i), J.batch(i),
                                      H().batch(i), LH().batch(i));
+    if (i < AB().num_batches())
+        compact_blas::xcopy(AB().batch(i), V().batch(i));
 }
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::cholesky_H() {
-    compact_blas::xpotrf(LH(), settings.preferred_backend);
+    compact_blas::xpotrf(LHV(), settings.preferred_backend);
 }
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::cholesky_Hi(index_t i) {
-    compact_blas::xpotrf(LH().batch(i), settings.preferred_backend);
+    compact_blas::xpotrf(LHV().batch(i), settings.preferred_backend);
 }
 
 template <simd_abi_tag Abi>
@@ -47,57 +49,41 @@ void Solver<Abi>::solve_H(mut_real_view x) {
 }
 
 template <simd_abi_tag Abi>
-void Solver<Abi>::prepare_Ψi(index_t i, single_mut_real_view W,
-                             single_mut_real_view V) {
+void Solver<Abi>::prepare_Ψi(index_t i) {
     auto [N, nx, nu, ny, ny_N] = storage.dim;
-    auto LHi                   = LH().batch(i);
+    auto LHi = LH().batch(i), Wi = Wᵀ().batch(i), Vi = V().batch(i);
     // Solve W = LH⁻¹ [I 0]ᵀ
-    compact_blas::xcopy(LHi.top_left(nx + nu, nx), W);
-    compact_blas::xtrtri(W, settings.preferred_backend);
-    compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), W.bottom_rows(nu),
+    compact_blas::xcopy(LHi.top_left(nx + nu, nx), Wi);
+    compact_blas::xtrtri(Wi, settings.preferred_backend);
+    compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), Wi.bottom_rows(nu),
                              settings.preferred_backend);
-    compact_blas::xsyrk_T(W, LΨd().batch(i), settings.preferred_backend);
+    compact_blas::xsyrk_T(Wi, LΨd().batch(i), settings.preferred_backend);
     if (i < AB().num_batches()) {
-        // Solve V = [A B] LH⁻ᵀ
-        compact_blas::xcopy(AB().batch(i), V);
-        compact_blas::xtrsm_RLTN(LHi, V, settings.preferred_backend);
         // Store V(i) = VVᵀ
-        compact_blas::xsyrk(V, VV().batch(i), settings.preferred_backend);
+        compact_blas::xsyrk(Vi, VV().batch(i), settings.preferred_backend);
         // Store LΨ(i+1,i) = -VW
-        compact_blas::xgemm_neg(V, W, LΨs().batch(i),
+        compact_blas::xgemm_neg(Vi, Wi, LΨs().batch(i),
                                 settings.preferred_backend);
     }
 }
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::prepare_Ψ() {
-    const int num_threads = KOQKATOO_OMP_IF_ELSE(omp_get_max_threads(), 1);
-    storage.allocate_work_prepare_Ψ(num_threads);
-    KOQKATOO_OMP(parallel) {
-        const int thread_id = KOQKATOO_OMP_IF_ELSE(omp_get_thread_num(), 0);
-        auto [W, V]         = storage.get_work_prepare_ψ(thread_id);
-        KOQKATOO_OMP(for)
-        for (index_t i = 0; i < LH().num_batches(); ++i)
-            prepare_Ψi(i, W, V);
-    }
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < LH().num_batches(); ++i)
+        prepare_Ψi(i);
 }
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::prepare_all(real_t S, real_view Σ, bool_view J) {
     using std::isfinite;
-    const int num_threads = KOQKATOO_OMP_IF_ELSE(omp_get_max_threads(), 1);
-    storage.allocate_work_prepare_Ψ(num_threads);
-    KOQKATOO_OMP(parallel) {
-        const int thread_id = KOQKATOO_OMP_IF_ELSE(omp_get_thread_num(), 0);
-        auto [W, V]         = storage.get_work_prepare_ψ(thread_id);
-        KOQKATOO_OMP(for)
-        for (index_t i = 0; i < LH().num_batches(); ++i) {
-            schur_complement_Hi(i, Σ, J);
-            if (isfinite(S))
-                LH().batch(i).add_to_diagonal(1 / S);
-            cholesky_Hi(i);
-            prepare_Ψi(i, W, V);
-        }
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < LH().num_batches(); ++i) {
+        schur_complement_Hi(i, Σ, J);
+        if (isfinite(S))
+            LH().batch(i).add_to_diagonal(1 / S);
+        cholesky_Hi(i);
+        prepare_Ψi(i);
     }
 }
 

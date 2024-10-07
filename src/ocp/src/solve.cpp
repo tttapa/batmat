@@ -3,6 +3,7 @@
 #include <koqkatoo/ocp/solver/mat-vec.tpp>
 #include <koqkatoo/ocp/solver/solve.tpp>
 #include <koqkatoo/ocp/solver/storage.tpp>
+#include <koqkatoo/ocp/solver/updowndate.tpp>
 
 namespace koqkatoo::ocp {
 
