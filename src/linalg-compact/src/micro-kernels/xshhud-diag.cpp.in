@@ -1,0 +1,16 @@
+#ifdef __clang__
+#pragma clang fp contract(fast)
+#endif
+
+#include <koqkatoo/linalg-compact/compact/micro-kernels/xshhud-diag.tpp>
+
+namespace koqkatoo::linalg::compact::micro_kernels::shhud_diag {
+
+using Abi = stdx::simd_abi::@simd_abi@;
+
+template const constinit decltype(microkernel_diag_lut<Abi>) microkernel_diag_lut<Abi>;
+template const constinit decltype(microkernel_full_lut<Abi>) microkernel_full_lut<Abi>;
+template const constinit decltype(microkernel_tail_lut<Abi>) microkernel_tail_lut<Abi>;
+template const constinit decltype(microkernel_tail_lut_2<Abi>) microkernel_tail_lut_2<Abi>;
+
+}

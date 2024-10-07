@@ -12,6 +12,7 @@
 #include "compact/xpntrf.tpp"
 #include "compact/xpotrf.tpp"
 #include "compact/xshh.tpp"
+#include "compact/xshhud-diag.tpp"
 #include "compact/xsyrk.tpp"
 #include "compact/xtrsm.tpp"
 #include "compact/xtrtri.tpp"

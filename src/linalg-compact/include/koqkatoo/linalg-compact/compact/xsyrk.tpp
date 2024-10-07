@@ -27,6 +27,17 @@ void CompactBLAS<Abi>::xsyrk_schur(single_batch_view A, single_batch_view d,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xsyrk_schur_add(single_batch_view A, single_batch_view d,
+                                       mut_single_batch_view C) {
+    assert(C.rows() == C.cols());
+    assert(C.rows() == A.rows());
+    assert(d.rows() == A.cols());
+    constexpr micro_kernels::gemm::KernelConfig conf{.trans_B = true};
+    // TODO: cache blocking
+    micro_kernels::gemm::xgemmt_diag_register<Abi, conf>(A, A, C, d);
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xsyrk_T_schur_copy(single_batch_view C,
                                           single_batch_view Σ,
                                           bool_single_batch_view mask,
@@ -186,6 +197,17 @@ void CompactBLAS<Abi>::xsyrk_schur(batch_view A, batch_view d, mut_batch_view C,
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < A.num_batches(); ++i)
         xsyrk_schur(A.batch(i), d.batch(i), C.batch(i));
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xsyrk_schur_add(batch_view A, batch_view d,
+                                       mut_batch_view C, PreferredBackend b) {
+    assert(A.ceil_depth() == C.ceil_depth());
+    assert(A.ceil_depth() == d.ceil_depth());
+    std::ignore = b; // not supported by BLAS
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < A.num_batches(); ++i)
+        xsyrk_schur_add(A.batch(i), d.batch(i), C.batch(i));
 }
 
 template <class Abi>

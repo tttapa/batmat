@@ -55,6 +55,11 @@ struct CompactBLAS {
                             mut_single_batch_view C);
     static void xsyrk_schur(batch_view A, batch_view d, mut_batch_view C,
                             PreferredBackend b);
+    /// C += A D Aᵀ
+    static void xsyrk_schur_add(single_batch_view A, single_batch_view d,
+                                mut_single_batch_view C);
+    static void xsyrk_schur_add(batch_view A, batch_view d, mut_batch_view C,
+                                PreferredBackend b);
     /// H_out ← H_in + Cᵀ Σ C
     /// where Σ[!mask] = 0
     static void xsyrk_T_schur_copy(single_batch_view C, single_batch_view Σ,
@@ -195,6 +200,14 @@ struct CompactBLAS {
                      PreferredBackend b);
     static void xshh(mut_batch_view L, mut_batch_view A, PreferredBackend b);
     static void xshh_ref(mut_single_batch_view L, mut_single_batch_view A);
+
+    /// Cholesky up/downdate
+    static void xshhud_diag(mut_single_batch_view L, mut_single_batch_view A,
+                            single_batch_view D, PreferredBackend b);
+    static void xshhud_diag(mut_batch_view L, mut_batch_view A, batch_view D,
+                            PreferredBackend b);
+    static void xshhud_diag_ref(mut_single_batch_view L,
+                                mut_single_batch_view A, single_batch_view D);
 
     /// y += Lx
     static void xsymv_add(single_batch_view L, single_batch_view x,
