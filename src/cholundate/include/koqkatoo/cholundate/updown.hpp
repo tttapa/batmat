@@ -18,6 +18,9 @@ struct Downdate {};
 /// @p signs[j] is `-0.0`. Other values for @p signs are not allowed.
 struct UpDowndate {
     std::span<const real_t> signs;
+    [[nodiscard]] index_t size() const {
+        return static_cast<index_t>(signs.size());
+    }
 };
 /// Perform a factorization downdate or update, depending on the given signs,
 /// i.e. given the factorization of @f$ K @f$, compute the factorization of
@@ -26,6 +29,18 @@ struct UpDowndate {
 /// @p signs[j] is `-0.0`. Other values for @p signs are not allowed.
 struct DownUpdate {
     std::span<const real_t> signs;
+    [[nodiscard]] index_t size() const {
+        return static_cast<index_t>(signs.size());
+    }
+};
+/// Perform a factorization update or downdate with a general diagonal matrix,
+/// i.e. given the factorization of @f$ K @f$, compute the factorization of
+/// @f$ K + A D A^\top @f$.
+struct DiagonalUpDowndate {
+    std::span<const real_t> diag;
+    [[nodiscard]] index_t size() const {
+        return static_cast<index_t>(diag.size());
+    }
 };
 
 } // namespace koqkatoo::cholundate

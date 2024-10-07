@@ -10,5 +10,7 @@ template void updowndate_blocked<{.block_size_r = @R@, .block_size_s = @S@}, UpD
     MutableRealMatrixView L, MutableRealMatrixView A, UpDowndate signs);
 template void updowndate_blocked<{.block_size_r = @R@, .block_size_s = @S@}, DownUpdate>(
     MutableRealMatrixView L, MutableRealMatrixView A, DownUpdate signs);
+template void updowndate_blocked<{.block_size_r = @R@, .block_size_s = @S@}, DiagonalUpDowndate>(
+    MutableRealMatrixView L, MutableRealMatrixView A, DiagonalUpDowndate signs);
 
 } // namespace koqkatoo::cholundate::householder::parallel_static

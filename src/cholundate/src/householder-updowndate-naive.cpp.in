@@ -42,4 +42,14 @@ template void updowndate_blocked<{.block_size_r = @R@, .block_size_s = @S@, .pre
 template void updowndate_blocked<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 7, .enable_packing = false}, DownUpdate>(MutableRealMatrixView L, MutableRealMatrixView A, DownUpdate signs);
 template void updowndate_blocked<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 8, .enable_packing = false}, DownUpdate>(MutableRealMatrixView L, MutableRealMatrixView A, DownUpdate signs);
 
+template void updowndate_blocked<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 0, .enable_packing = false}, DiagonalUpDowndate>(MutableRealMatrixView L, MutableRealMatrixView A, DiagonalUpDowndate signs);
+template void updowndate_blocked<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 1, .enable_packing = false}, DiagonalUpDowndate>(MutableRealMatrixView L, MutableRealMatrixView A, DiagonalUpDowndate signs);
+template void updowndate_blocked<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 2, .enable_packing = false}, DiagonalUpDowndate>(MutableRealMatrixView L, MutableRealMatrixView A, DiagonalUpDowndate signs);
+template void updowndate_blocked<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 3, .enable_packing = false}, DiagonalUpDowndate>(MutableRealMatrixView L, MutableRealMatrixView A, DiagonalUpDowndate signs);
+template void updowndate_blocked<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 4, .enable_packing = false}, DiagonalUpDowndate>(MutableRealMatrixView L, MutableRealMatrixView A, DiagonalUpDowndate signs);
+template void updowndate_blocked<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 5, .enable_packing = false}, DiagonalUpDowndate>(MutableRealMatrixView L, MutableRealMatrixView A, DiagonalUpDowndate signs);
+template void updowndate_blocked<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 6, .enable_packing = false}, DiagonalUpDowndate>(MutableRealMatrixView L, MutableRealMatrixView A, DiagonalUpDowndate signs);
+template void updowndate_blocked<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 7, .enable_packing = false}, DiagonalUpDowndate>(MutableRealMatrixView L, MutableRealMatrixView A, DiagonalUpDowndate signs);
+template void updowndate_blocked<{.block_size_r = @R@, .block_size_s = @S@, .prefetch_dist_col_a = 8, .enable_packing = false}, DiagonalUpDowndate>(MutableRealMatrixView L, MutableRealMatrixView A, DiagonalUpDowndate signs);
+
 } // namespace koqkatoo::cholundate::householder::naive

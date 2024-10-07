@@ -10,7 +10,8 @@ namespace koqkatoo::cholundate::householder::naive {
 template <Config Conf, class UpDown>
 void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
                         UpDown signs) {
-    assert(signs.rows == A.cols);
+    if constexpr (requires { signs.size(); })
+        assert(A.cols == signs.size());
     assert(L.rows == L.cols);
     assert(L.rows == A.rows);
     using namespace micro_kernels;
@@ -33,7 +34,7 @@ void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
             auto Ad = A.middle_rows(k, R);
             auto Ld = L.block(k, k, R, R);
             // Process the diagonal block itself
-            micro_kernels::householder::matrix_W_storage<R> W;
+            micro_kernels::householder::matrix_W_storage<> W;
             updowndate_diag<R, UpDown>(A.cols, W, Ld, Ad, signs);
             // Process all rows below the diagonal block (in multiples of S).
             foreach_chunked_merged(

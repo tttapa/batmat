@@ -143,7 +143,7 @@ struct Context {
     }
 
     // Workspace storage for T (upper triangular Householder representation)
-    micro_kernels::householder::matrix_W_storage<R> Ws[MaxConcurrentCols]{};
+    micro_kernels::householder::matrix_W_storage<> Ws[MaxConcurrentCols]{};
 
     bool compute_diag(index_t bc) {
         /*

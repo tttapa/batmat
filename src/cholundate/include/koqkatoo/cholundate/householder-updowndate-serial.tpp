@@ -207,7 +207,7 @@ void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
     // Leaner accessors (without unnecessary dimensions and strides).
     micro_kernels::mut_matrix_accessor L_{L}, A_{A};
     // Workspace storage for W (upper triangular Householder representation)
-    micro_kernels::householder::matrix_W_storage<R> W[N];
+    micro_kernels::householder::matrix_W_storage<> W[N];
 
     // Optional packing of one block row of A.
     auto A_pack_storage = [&] {

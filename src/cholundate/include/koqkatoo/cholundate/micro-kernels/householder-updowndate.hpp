@@ -13,6 +13,8 @@ struct Config {
     index_t prefetch_dist_col_a = 4;
 };
 
+constexpr index_t MaxSizeR = 32;
+
 // Since we're dealing with triangular matrices, it pays off to use a smaller
 // vector length, because that means we're doing less work: for example, for an
 // 8×8 triangular matrix with vector length 8, all 64 elements need to be
@@ -41,40 +43,39 @@ template <Config Conf>
 using tail_simd_A_t = optimal_simd_type_t<Conf.block_size_s>;
 
 /// Ensures that the matrix W is aligned for SIMD.
-template <index_t R>
+template <index_t R = MaxSizeR>
 constexpr size_t W_align = stdx::memory_alignment_v<diag_simd_t<R>>;
 
 /// Ensures that the first element of every column of W is aligned for SIMD.
-template <index_t R>
+template <index_t R = MaxSizeR>
 constexpr size_t W_stride = (R * sizeof(real_t) + W_align<R> - 1) / W_align<R> *
                             W_align<R> / sizeof(real_t);
 /// Size of the matrix W.
-template <index_t R>
+template <index_t R = MaxSizeR>
 constexpr size_t W_size = (W_stride<R> * R * sizeof(real_t) + W_align<R> - 1) /
                           W_align<R> * W_align<R> / sizeof(real_t);
 
-template <index_t R>
+template <index_t R = MaxSizeR>
 using mut_W_accessor =
     mat_access_impl<real_t, std::integral_constant<index_t, W_stride<R>>>;
 
-template <index_t R>
+template <index_t R = MaxSizeR>
 struct matrix_W_storage {
     alignas(W_align<R>) real_t W[W_stride<R> * R]{};
     constexpr operator mut_W_accessor<R>() { return {W}; }
 };
 
 template <index_t R, class UpDown>
-void updowndate_diag(index_t colsA, mut_W_accessor<R> W, real_t *Ld,
-                     index_t ldL, real_t *Ad, index_t ldA,
-                     UpDownArg<UpDown> signs) noexcept;
+void updowndate_diag(index_t colsA, mut_W_accessor<> W, real_t *Ld, index_t ldL,
+                     real_t *Ad, index_t ldA, UpDownArg<UpDown> signs) noexcept;
 
 template <index_t R, class UpDown>
 void updowndate_full(index_t colsA, real_t *Ld, index_t ldL, real_t *Ad,
                      index_t ldA, UpDownArg<UpDown> signs) noexcept;
 
 template <Config Conf, class UpDown>
-void updowndate_tail(index_t colsA, mut_W_accessor<Conf.block_size_r> W,
-                     real_t *Lp, index_t ldL, const real_t *Bp, index_t ldB,
-                     real_t *Ap, index_t ldA, UpDownArg<UpDown> signs) noexcept;
+void updowndate_tail(index_t colsA, mut_W_accessor<> W, real_t *Lp, index_t ldL,
+                     const real_t *Bp, index_t ldB, real_t *Ap, index_t ldA,
+                     UpDownArg<UpDown> signs) noexcept;
 
 } // namespace koqkatoo::cholundate::micro_kernels::householder

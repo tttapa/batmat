@@ -66,8 +66,8 @@ struct Context {
     PackedBlockRowMatrix<S> packed_A{Conf.enable_packing ? n : 0, A.cols, &mbr};
 
     // Workspace storage for T (upper triangular Householder representation)
-    std::vector<micro_kernels::householder::matrix_W_storage<R>> Ws =
-        std::vector<micro_kernels::householder::matrix_W_storage<R>>(
+    std::vector<micro_kernels::householder::matrix_W_storage<>> Ws =
+        std::vector<micro_kernels::householder::matrix_W_storage<>>(
             max_concurrent_columns);
 
     bool compute_diag(index_t bc) {
@@ -332,8 +332,8 @@ void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
                         UpDown signs) {
     assert(L.rows == L.cols);
     assert(L.rows == A.rows);
-    if constexpr (requires { signs.signs; })
-        assert(A.cols == static_cast<index_t>(signs.signs));
+    if constexpr (requires { signs.size(); })
+        assert(A.cols == signs.size());
 
     using Context = detail::Context<Conf, UpDown>;
     Context context{.L = L, .A = A, .signs = signs, .p = 8};

@@ -8,7 +8,7 @@
 namespace koqkatoo::cholundate::micro_kernels::householder {
 
 template <index_t R, class UpDown>
-[[gnu::hot]] void updowndate_diag(index_t colsA, mut_W_accessor<R> W,
+[[gnu::hot]] void updowndate_diag(index_t colsA, mut_W_accessor<> W,
                                   real_t *__restrict Ld, index_t ldL,
                                   real_t *__restrict Ad, index_t ldA,
                                   UpDownArg<UpDown> signs) noexcept {
@@ -19,6 +19,7 @@ template <index_t R, class UpDown>
     static constexpr index_t N = simd::size();
     static_assert(R % N == 0);
     static_assert(R > 0);
+    static_assert(W.outer_stride >= R);
     KOQKATOO_ASSUME(colsA > 0);
     [[maybe_unused]] const auto W_addr = reinterpret_cast<uintptr_t>(W.data);
     KOQKATOO_ASSUME(W_addr % W_align<R> == 0);
@@ -27,7 +28,7 @@ template <index_t R, class UpDown>
         // Compute all inner products between A and a
         simd bb[R / N]{};
         UNROLL_FOR_A_COLS (index_t j = 0; j < colsA; ++j) {
-            real_t Akj = signs.cneg(A(k, j), j);
+            real_t Akj = signs(A(k, j), j);
             UNROLL_FOR (index_t i = 0; i < R; i += N)
                 if constexpr (signs.negate)
                     bb[i / N] -= A.load<simd>(i, j) * Akj;

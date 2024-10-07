@@ -8,11 +8,11 @@
 namespace koqkatoo::cholundate::micro_kernels::householder {
 
 template <Config Conf, class UpDown>
-[[gnu::hot]] void
-updowndate_tail(index_t colsA, mut_W_accessor<Conf.block_size_r> W,
-                real_t *__restrict Lp, index_t ldL, const real_t *__restrict Bp,
-                index_t ldB, real_t *__restrict Ap, index_t ldA,
-                UpDownArg<UpDown> signs) noexcept {
+[[gnu::hot]] void updowndate_tail(index_t colsA, mut_W_accessor<> W,
+                                  real_t *__restrict Lp, index_t ldL,
+                                  const real_t *__restrict Bp, index_t ldB,
+                                  real_t *__restrict Ap, index_t ldA,
+                                  UpDownArg<UpDown> signs) noexcept {
     using simdA = tail_simd_A_t<Conf>;
     using simdL = tail_simd_L_t<Conf>;
     const mut_matrix_accessor L{Lp, ldL}, A{Ap, ldA};
@@ -22,6 +22,7 @@ updowndate_tail(index_t colsA, mut_W_accessor<Conf.block_size_r> W,
     static_assert(S % NA == 0);
     static_assert(R % NL == 0);
     static_assert(R > 0);
+    static_assert(W.outer_stride >= R);
     KOQKATOO_ASSUME(colsA > 0);
     [[maybe_unused]] const auto W_addr = reinterpret_cast<uintptr_t>(W.data);
     KOQKATOO_ASSUME(W_addr % W_align<Conf.block_size_r> == 0);
@@ -32,7 +33,7 @@ updowndate_tail(index_t colsA, mut_W_accessor<Conf.block_size_r> W,
         if (Conf.prefetch_dist_col_a > 0)
             _mm_prefetch(&A(0, j + Conf.prefetch_dist_col_a), _MM_HINT_T0);
         UNROLL_FOR (index_t kk = 0; kk < R; kk += NL) {
-            auto Akj = signs.cneg(B.load<simdL>(kk, j), j);
+            auto Akj = signs(B.load<simdL>(kk, j), j);
             UNROLL_FOR (index_t k = 0; k < NL; ++k)
                 UNROLL_FOR (index_t i = 0; i < S; i += NA)
                     if constexpr (signs.negate)

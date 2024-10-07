@@ -25,7 +25,7 @@ template <index_t R, class UpDown>
         // Compute some inner products between A and a
         simd bb[R / N]{};
         UNROLL_FOR_A_COLS (index_t j = 0; j < colsA; ++j) {
-            real_t Akj = signs.cneg(A(k, j), j);
+            real_t Akj = signs(A(k, j), j);
             UNROLL_FOR (index_t i = k / N * N; i < R; i += N)
                 if constexpr (signs.negate)
                     bb[i / N] -= A.load<simd>(i, j) * Akj;

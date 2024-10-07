@@ -116,14 +116,14 @@ struct UpDownArg;
 template <>
 struct UpDownArg<Update> {
     UpDownArg(Update) {}
-    static auto cneg(auto x, index_t) { return x; }
+    auto operator()(auto x, index_t) const { return x; }
     static constexpr bool negate = false;
 };
 
 template <>
 struct UpDownArg<Downdate> {
     UpDownArg(Downdate) {}
-    static auto cneg(auto x, index_t) { return x; }
+    auto operator()(auto x, index_t) const { return x; }
     static constexpr bool negate = true;
 };
 
@@ -132,7 +132,7 @@ struct UpDownArg<UpDowndate> {
     UpDownArg(UpDowndate ud) : signs{ud.signs.data()} {}
     const real_t *__restrict signs;
     template <class T>
-    auto cneg(T x, index_t j) const {
+    auto operator()(T x, index_t j) const {
         return koqkatoo::cneg(x, T{signs[j]});
     }
     static constexpr bool negate = false;
@@ -143,10 +143,21 @@ struct UpDownArg<DownUpdate> {
     UpDownArg(DownUpdate du) : signs{du.signs.data()} {}
     const real_t *__restrict signs;
     template <class T>
-    auto cneg(T x, index_t j) const {
+    auto operator()(T x, index_t j) const {
         return koqkatoo::cneg(x, T{signs[j]});
     }
     static constexpr bool negate = true;
+};
+
+template <>
+struct UpDownArg<DiagonalUpDowndate> {
+    UpDownArg(DiagonalUpDowndate dg) : diag{dg.diag.data()} {}
+    const real_t *__restrict diag;
+    template <class T>
+    auto operator()(T x, index_t j) const {
+        return x * T{diag[j]};
+    }
+    static constexpr bool negate = false;
 };
 
 } // namespace koqkatoo::cholundate::micro_kernels
