@@ -69,7 +69,7 @@ void CompactBLAS<Abi>::xshhud_diag_ref(mut_single_batch_view L,
                 k + rem_k, L.rows(), S,
                 [&](index_t i, auto rem_i) {
                     auto As = A.middle_rows(i, rem_i);
-                    auto Ls = L.block(i, k, rem_i, R);
+                    auto Ls = L.block(i, k, rem_i, rem_k);
                     microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
                         A.cols(), W, Ls, As, Ad, D);
                 },
