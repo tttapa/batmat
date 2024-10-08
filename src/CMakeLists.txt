@@ -29,12 +29,15 @@ add_library(koqkatoo
 )
 target_sources(koqkatoo PUBLIC FILE_SET headers TYPE HEADERS
     BASE_DIRS "koqkatoo/include"
-    FILES "koqkatoo/include/koqkatoo/koqkatoo.hpp"
-          "koqkatoo/include/koqkatoo/assume.hpp"
-          "koqkatoo/include/koqkatoo/kib.hpp"
+    FILES "koqkatoo/include/koqkatoo/kib.hpp"
+          "koqkatoo/include/koqkatoo/koqkatoo.hpp"
+          "koqkatoo/include/koqkatoo/cneg.hpp"
           "koqkatoo/include/koqkatoo/lut.hpp"
           "koqkatoo/include/koqkatoo/matrix-view.hpp"
+          "koqkatoo/include/koqkatoo/assume.hpp"
+          "koqkatoo/include/koqkatoo/loop.hpp"
           "koqkatoo/include/koqkatoo/openmp.h"
+          "koqkatoo/include/koqkatoo/preprocessor.h"
           "koqkatoo/include/koqkatoo/stringify.h"
           "koqkatoo/include/koqkatoo/unroll.h"
 )
@@ -62,11 +65,19 @@ koqkatoo_configure_library(linalg EXPORT_PREFIX koqkatoo)
 add_library(cholundate-headers INTERFACE)
 target_sources(cholundate-headers INTERFACE FILE_SET headers TYPE HEADERS
     BASE_DIRS "cholundate/include"
-    FILES "cholundate/include/koqkatoo/cholundate/cholundate.hpp"
-          "cholundate/include/koqkatoo/cholundate/householder-downdate.hpp"
-          "cholundate/include/koqkatoo/cholundate/micro-kernels/common.hpp"
-          "cholundate/include/koqkatoo/cholundate/micro-kernels/householder-downdate-diag.tpp"
-          "cholundate/include/koqkatoo/cholundate/micro-kernels/householder-downdate-tail.tpp"
+    FILES "cholundate/include/koqkatoo/cholundate/micro-kernels/common.hpp"
+          "cholundate/include/koqkatoo/cholundate/micro-kernels/householder-updowndate.hpp"
+          "cholundate/include/koqkatoo/cholundate/updown.hpp"
+          "cholundate/include/koqkatoo/cholundate/cholundate.hpp"
+          "cholundate/include/koqkatoo/cholundate/householder-updowndate.hpp"
+          "cholundate/include/koqkatoo/cholundate/householder-updowndate-static.tpp"
+          "cholundate/include/koqkatoo/cholundate/householder-updowndate-naive.tpp"
+          "cholundate/include/koqkatoo/cholundate/micro-kernels/householder-updowndate-diag.tpp"
+          "cholundate/include/koqkatoo/cholundate/micro-kernels/householder-updowndate-tail.tpp"
+          "cholundate/include/koqkatoo/cholundate/micro-kernels/householder-updowndate-full.tpp"
+          "cholundate/include/koqkatoo/cholundate/householder-updowndate-libfork.tpp"
+          "cholundate/include/koqkatoo/cholundate/householder-updowndate-serial.tpp"
+          "cholundate/include/koqkatoo/cholundate/householder-updowndate-common.tpp"
 )
 target_link_libraries(cholundate-headers INTERFACE koqkatoo::koqkatoo)
 target_compile_features(cholundate-headers INTERFACE cxx_std_20)
@@ -84,29 +95,46 @@ koqkatoo_configure_library(cholundate EXPORT_PREFIX koqkatoo)
 add_library(linalg-compact-headers INTERFACE)
 target_sources(linalg-compact-headers INTERFACE FILE_SET headers TYPE HEADERS
     BASE_DIRS "linalg-compact/include"
-    FILES "linalg-compact/include/koqkatoo/linalg-compact/compact.hpp"
-          "linalg-compact/include/koqkatoo/linalg-compact/aligned-storage.hpp"
+    FILES "linalg-compact/include/koqkatoo/linalg-compact/aligned-storage.hpp"
           "linalg-compact/include/koqkatoo/linalg-compact/preferred-backend.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact.hpp"
           "linalg-compact/include/koqkatoo/linalg-compact/mkl.hpp"
           "linalg-compact/include/koqkatoo/linalg-compact/matrix-batch.hpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/util.hpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/common.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xshhud.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xtrmm.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xshh.hpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xpotrf.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xtrtri.hpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xgemm.hpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xtrsm.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xshhud-diag.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xpntrf.hpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/rsqrt.hpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact.tpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/xtrsm.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/xtrtri.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/xshhud-diag.tpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/xsyrk.tpp"
-          "linalg-compact/include/koqkatoo/linalg-compact/compact/xgemm.tpp"
-          "linalg-compact/include/koqkatoo/linalg-compact/compact/xpotrf.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xshhud.tpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xgemm-diag-mask.tpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xtrsm.tpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xgemm-diag.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xtrtri.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xshhud-diag.tpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xgemmt-diag-mask.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xtrmm.tpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xgemmt.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xshh.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xpntrf.tpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xgemm.tpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xpotrf.tpp"
           "linalg-compact/include/koqkatoo/linalg-compact/compact/micro-kernels/xgemmt-diag.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/xshh.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/xpntrf.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/xgemm.tpp"
+          "linalg-compact/include/koqkatoo/linalg-compact/compact/xpotrf.tpp"
 )
 target_link_libraries(linalg-compact-headers INTERFACE koqkatoo::linalg koqkatoo::cholundate)
 target_compile_features(linalg-compact-headers INTERFACE cxx_std_20)
@@ -127,14 +155,15 @@ add_library(ocp
 )
 target_sources(ocp PUBLIC FILE_SET headers TYPE HEADERS
     BASE_DIRS "ocp/include"
-    FILES "ocp/include/koqkatoo/ocp/ocp.hpp"
-          "ocp/include/koqkatoo/ocp/solver/solve.hpp"
+    FILES "ocp/include/koqkatoo/ocp/solver/solve.hpp"
           "ocp/include/koqkatoo/ocp/solver/storage.hpp"
           "ocp/include/koqkatoo/ocp/conversion.hpp"
+          "ocp/include/koqkatoo/ocp/ocp.hpp"
           "ocp/include/koqkatoo/ocp/random-ocp.hpp"
           "ocp/include/koqkatoo/ocp/solver/storage.tpp"
           "ocp/include/koqkatoo/ocp/solver/mat-vec.tpp"
           "ocp/include/koqkatoo/ocp/solver/solve.tpp"
+          "ocp/include/koqkatoo/ocp/solver/updowndate.tpp"
 )
 target_link_libraries(ocp PUBLIC koqkatoo::linalg-compact)
 target_compile_features(ocp PRIVATE cxx_std_23)
