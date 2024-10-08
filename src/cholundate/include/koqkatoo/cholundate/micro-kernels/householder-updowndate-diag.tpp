@@ -23,6 +23,8 @@ template <index_t R, class UpDown>
     KOQKATOO_ASSUME(colsA > 0);
     [[maybe_unused]] const auto W_addr = reinterpret_cast<uintptr_t>(W.data);
     KOQKATOO_ASSUME(W_addr % W_align<R> == 0);
+    static_assert(W_align<> % W_align<R> == 0);
+    static_assert(R <= MaxSizeR);
 
     UNROLL_FOR (index_t k = 0; k < R; ++k) {
         // Compute all inner products between A and a

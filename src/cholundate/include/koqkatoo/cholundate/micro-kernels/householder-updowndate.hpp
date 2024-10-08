@@ -44,7 +44,10 @@ using tail_simd_A_t = optimal_simd_type_t<Conf.block_size_s>;
 
 /// Ensures that the matrix W is aligned for SIMD.
 template <index_t R = MaxSizeR>
-constexpr size_t W_align = stdx::memory_alignment_v<diag_simd_t<R>>;
+constexpr size_t W_align = stdx::memory_alignment_v<
+    stdx::simd<real_t, stdx::simd_abi::deduce_t<real_t, R>>>;
+// TODO: overly restrictive,
+// reduce once https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117016 is fixed.
 
 /// Ensures that the first element of every column of W is aligned for SIMD.
 template <index_t R = MaxSizeR>
