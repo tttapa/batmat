@@ -170,7 +170,7 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new) {
         auto Luj   = storage.Lupd.batch(batch_idx).top_left(rj_batch, rj_batch);
         auto Wuj   = storage.Wupd.batch(batch_idx).left_cols(rj_batch);
         using simd = typename types::simd;
-#ifdef _GLIBCXX_EXPERIMENTAL_SIMD // TODO
+#ifdef _GLIBCXX_EXPERIMENTAL_SIMD // TODO: need general way to convert masks
         using index_simd = typename types::index_simd;
         index_simd rjks{ranksj.data, stdx::vector_aligned};
         for (index_t rj = rj_min; rj < rj_batch; ++rj) {
@@ -218,8 +218,12 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new) {
         }
         // Update LH and V
         compact_blas::xshhud_diag(LHV().batch(batch_idx), Z1j, Σj, be);
-        // TODO: update Wᵀ
-        // TODO: should we always eagerly update V?
+        auto LHi = LH().batch(batch_idx), Wi = Wᵀ().batch(batch_idx);
+        compact_blas::xcopy(LHi.top_left(nx + nu, nx), Wi);
+        compact_blas::xtrtri(Wi, be);
+        compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), Wi.bottom_rows(nu),
+                                 be);
+        // TODO: should we always eagerly update V and W?
     });
     updowndate_ψ();
 }
