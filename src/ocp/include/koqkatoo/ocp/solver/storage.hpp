@@ -136,7 +136,7 @@ struct SolverStorage {
     }();
     real_matrix Z1 = [this] {
         return real_matrix{{.depth = dim.N_horiz + 1, //
-                            .rows  = dim.nx + dim.nu,
+                            .rows  = dim.nx + dim.nu + dim.nx,
                             .cols  = dim.ny}}; // assuming ny >= ny_N
     }();
     real_matrix Σ_sgn = [this] {

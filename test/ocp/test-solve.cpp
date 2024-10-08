@@ -51,7 +51,8 @@ TEST(OCP, solve) {
             n_dyn_constr = ocp.num_dynamics_constraints();
 
     // Generate some random optimization solver data.
-    Eigen::VectorX<bool> J(n_constr);  // Active set.
+    Eigen::VectorX<bool> J(n_constr),  // Active set.
+        J0(n_constr);                  // Active set for initialization.
     VectorXreal Σ(n_constr),           // ALM penalty factors
         ŷ(n_constr);                   //  & corresponding Lagrange multipliers.
     VectorXreal x(n_var), grad(n_var); // Current iterate and cost gradient.
@@ -60,6 +61,7 @@ TEST(OCP, solve) {
 
     real_t S = std::exp2(nrml(rng)); // primal regularization
     std::ranges::generate(J, [&] { return bernoulli(rng); });
+    std::ranges::generate(J0, [&] { return bernoulli(rng); });
     std::ranges::generate(Σ, [&] { return std::exp2(nrml(rng)); });
     std::ranges::generate(ŷ, [&] { return nrml(rng); });
     std::ranges::generate(x, [&] { return nrml(rng); });
@@ -72,6 +74,7 @@ TEST(OCP, solve) {
     //  optimization solver, only converting back at the very end to return a
     //  solution to the user.)
     auto J_strided    = s.storage.initialize_active_set(as_span(J));
+    auto J0_strided   = s.storage.initialize_active_set(as_span(J0));
     auto Σ_strided    = s.storage.initialize_constraints(as_span(Σ));
     auto ŷ_strided    = s.storage.initialize_constraints(as_span(ŷ));
     auto x_strided    = s.storage.initialize_variables(as_span(x));
@@ -94,8 +97,10 @@ TEST(OCP, solve) {
     s.mat_vec_transpose_dynamics_constr(λ_strided, Mᵀλ_strided);
     s.mat_vec_transpose_constr(ŷ_strided, Gᵀŷ_strided);
     s.residual_dynamics_constr(x_strided, b_strided, Mxb_strided);
-    // Perform the factorization of the KKT system.
-    s.factor(S, Σ_strided, J_strided);
+    // Perform the factorization of the KKT system (with wrong active set).
+    s.factor(S, Σ_strided, J0_strided);
+    // Update factorization to correct active set.
+    s.updowndate(Σ_strided, J0_strided, J_strided);
     // Solve the KKT system.
     s.solve(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided, //
             d_strided, Δλ_strided, MᵀΔλ_strided);
