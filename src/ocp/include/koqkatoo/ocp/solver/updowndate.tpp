@@ -175,7 +175,7 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new) {
         index_simd rjks{ranksj.data, stdx::vector_aligned};
         for (index_t rj = rj_min; rj < rj_batch; ++rj) {
             index_simd rjs{rj};
-            auto z0_mask = rjs > rjks;
+            auto z0_mask = rjs >= rjks;
             simd zero{0};
             constexpr auto vec_align = stdx::vector_aligned;
             for (index_t r = 0; r < nx + nu; ++r)
