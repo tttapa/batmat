@@ -62,6 +62,10 @@ struct SolverTypes {
     using index_matrix =
         BatchedMatrix<index_t, index_t, simd_stride_t, index_t, index_align_t>;
 
+    /// View of a single scalar matrix.
+    using single_scalar_mut_real_view =
+        BatchedMatrixView<real_t, index_t, scalar_simd_stride_t,
+                          scalar_simd_stride_t>;
     /// View of a scalar, non-interleaved batch of matrices.
     using scalar_mut_real_view =
         BatchedMatrixView<real_t, index_t, scalar_simd_stride_t>;
@@ -80,11 +84,13 @@ struct SolverStorage {
     using bool_view            = typename types::bool_view;
     using mut_real_view        = typename types::mut_real_view;
     using single_mut_real_view = typename types::single_mut_real_view;
-    using scalar_mut_real_view = typename types::scalar_mut_real_view;
-    using scalar_layout        = typename types::scalar_layout;
-    using real_matrix          = typename types::real_matrix;
-    using mask_matrix          = typename types::mask_matrix;
-    using index_matrix         = typename types::index_matrix;
+    using single_scalar_mut_real_view =
+        typename types::single_scalar_mut_real_view;
+    using scalar_mut_real_view           = typename types::scalar_mut_real_view;
+    using scalar_layout                  = typename types::scalar_layout;
+    using real_matrix                    = typename types::real_matrix;
+    using mask_matrix                    = typename types::mask_matrix;
+    using index_matrix                   = typename types::index_matrix;
     static constexpr index_t simd_stride = typename types::simd_stride_t();
 
     const OCPDim dim;
@@ -193,14 +199,14 @@ struct SolverStorage {
     std::vector<real_t> Δλ_scalar =
         std::vector<real_t>((dim.N_horiz + 1) * dim.nx);
 
-    auto work_LΨd(index_t i) -> scalar_mut_real_view {
+    auto work_LΨd(index_t i) -> single_scalar_mut_real_view {
         auto [N, nx, nu, ny, ny_N] = dim;
         assert(i < simd_stride);
         auto offset = i * 2 * nx * nx;
         return {{.data = &work_chol_Ψ[offset], .rows = nx, .cols = nx}};
     }
 
-    auto work_LΨs(index_t i) -> scalar_mut_real_view {
+    auto work_LΨs(index_t i) -> single_scalar_mut_real_view {
         auto [N, nx, nu, ny, ny_N] = dim;
         assert(i < simd_stride);
         auto offset = (i * 2 + 1) * nx * nx;
