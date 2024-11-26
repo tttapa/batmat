@@ -68,6 +68,7 @@ plt.xlabel("Size")
 plt.ylabel("Time (ns)")
 plt.legend()
 plt.tight_layout()
+plt.savefig(filename.with_suffix(".abs.pdf"))
 
 plt.figure()
 
@@ -94,6 +95,7 @@ plt.xlabel("Size")
 plt.ylabel("Time relative to <scalar, MKLAll>")
 plt.legend()
 plt.tight_layout()
+plt.savefig(filename.with_suffix(".rel.pdf"))
 
 
 def plot_gflops(log=False, x_lim_max=None):
@@ -126,6 +128,8 @@ def plot_gflops(log=False, x_lim_max=None):
 
 
 plot_gflops(True)
+plt.savefig(filename.with_suffix(".gflops.pdf"))
 plot_gflops(False, 64)
+plt.savefig(filename.with_suffix(".gflops64.pdf"))
 
 plt.show()
