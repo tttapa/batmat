@@ -53,18 +53,18 @@ class KoqkatooRecipe(ConanFile):
     generators = ("CMakeDeps",)
 
     def requirements(self):
-        self.requires("guanaqo/1.0.0-alpha.1", transitive_headers=True)
+        self.requires("guanaqo/1.0.0-alpha.4", transitive_headers=True)
         if self.options.with_openblas:
             self.requires("openblas/0.3.27", transitive_headers=True)
         if self.options.with_benchmarks:
             self.requires("benchmark/1.8.4")
         if self.options.with_python:
-            self.requires("eigen/3.4.0")
+            self.requires("eigen/tttapa.20240516")
         else:
-            self.test_requires("eigen/3.4.0")
-        self.test_requires("gtest/1.14.0")
+            self.test_requires("eigen/tttapa.20240516")
+        self.test_requires("gtest/1.15.0")
         if self.options.with_python:
-            self.requires("pybind11/2.12.0")
+            self.requires("pybind11/2.13.6")
         if self.options.with_libfork:
             self.requires("libfork/3.8.0", transitive_headers=True)
 
