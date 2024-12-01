@@ -21,9 +21,17 @@ set(KOQKATOO_DENSE_REAL_TYPE "double" CACHE STRING
     "The main floating point type for representing real numbers")
 set(KOQKATOO_DENSE_INDEX_TYPE "long long" CACHE STRING
     "The main integer type for indices and sizes")
+option(KOQKATOO_WITH_NAIVE_PARALLEL
+    "Enable the 'naive' parallel implementation of SHH" Off)
+option(KOQKATOO_WITH_STATIC_PARALLEL
+    "Enable the 'static' parallel implementation of SHH" Off)
 # Target options
 option(KOQKATOO_HAVE_TWO_512_FMA_UNITS
     "Does the CPU have 0.5 CPI 512-bit FMA" Off)
+set(KOQKATOO_MAX_SHH_KERNEL_WIDTH "8" CACHE STRING
+    "Kernel size limit for the 'diagonal' kernels")
+set(KOQKATOO_MAX_SHH_KERNEL_HEIGHT "32" CACHE STRING
+    "Kernel size limit for the 'below-diagonal' kernels")
 # Enable/disable optional components
 option(KOQKATOO_WITH_TESTS
     "Build the tests" ${BUILD_TESTING})
