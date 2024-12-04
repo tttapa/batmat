@@ -7,4 +7,6 @@ compiler.cppstd=gnu23
 MKLROOT={{ os.path.join(os.getenv("HOME"), "intel/oneapi/mkl/latest")}}
 
 [conf]
-tools.cmake.cmaketoolchain:generator=Ninja
+tools.cmake.cmaketoolchain:generator=Ninja Multi-Config
+tools.build:exelinkflags+=["-flto=auto"]
+tools.build:sharedlinkflags+=["-flto=auto"]
