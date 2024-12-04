@@ -26,11 +26,10 @@ if (TARGET Eigen3::Eigen)
         koqkatoo::warnings)
 endif()
 
-set(KOQKATOO_BLASFEO_TARGET "X64_INTEL_HASWELL" CACHE STRING
-    "Target architecture for the BLASFEO library")
-find_package(blasfeo
-    PATHS "${PROJECT_SOURCE_DIR}/third-party/staging/blasfeo-${KOQKATOO_BLASFEO_TARGET}")
-if (TARGET blasfeo)
+option(KOQKATOO_WITH_BLASFEO
+    "Enable the benchmarks that depend on BLASFEO" Off)
+if (KOQKATOO_WITH_BLASFEO)
+    find_package(blasfeo REQUIRED)
     add_executable(benchmark-gemm-blasfeo blasfeo/blasfeo-gemm.cpp benchmark-main.cpp)
     target_link_libraries(benchmark-gemm-blasfeo PRIVATE
         benchmark::benchmark blasfeo koqkatoo::koqkatoo koqkatoo::warnings)

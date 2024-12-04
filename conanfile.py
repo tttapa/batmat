@@ -26,6 +26,7 @@ class KoqkatooRecipe(ConanFile):
         "with_benchmarks": False,
         "with_python": False,
         "with_libfork": True,
+        "with_blasfeo": False,
     }
     options = {
         "shared": [True, False],
@@ -67,6 +68,8 @@ class KoqkatooRecipe(ConanFile):
             self.requires("pybind11/2.13.6")
         if self.options.with_libfork:
             self.requires("libfork/3.8.0", transitive_headers=True)
+        if self.options.with_blasfeo:
+            self.requires("blasfeo/0.1.4.1")
 
     def config_options(self):
         if self.settings.get_safe("os") == "Windows":
