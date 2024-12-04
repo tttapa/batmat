@@ -10,3 +10,4 @@ tools.build.cross_building:can_run=true
 
 [options]
 openblas/*:target=SKYLAKEX
+blasfeo/*:target=X64_INTEL_SKYLAKE_X
