@@ -3,6 +3,7 @@
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg-compact/preferred-backend.hpp>
 #include <koqkatoo/ocp/solver/storage.hpp>
+#include <guanaqo/timed-cpu.hpp>
 
 namespace koqkatoo::ocp {
 
@@ -42,6 +43,13 @@ struct Solver {
 
     SolverOptions settings{};
 
+    struct Timings {
+        guanaqo::TimingsCPU prepare_all, cholesky_Ψ, solve_add_rhs_1, solve_H_1,
+            solve_mat_vec, solve_unshuffle, solve_Ψ, solve_shuffle,
+            solve_mat_vec_tp, solve_add_rhs_2, solve_H_2, updowndate,
+            updowndate_stages, updowndate_Ψ;
+    };
+
     mut_real_view H() { return storage.H; }
     mut_real_view LHV() { return storage.LHV; }
     mut_real_view LH() {
@@ -75,8 +83,12 @@ struct Solver {
     void solve_Ψ_scalar(std::span<real_t> λ);
 
     void factor(real_t S, real_view Σ, bool_view J);
+    void factor(real_t S, real_view Σ, bool_view J, Timings &t);
     void solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
                mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ);
+    void solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
+               mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ,
+               Timings &t);
 
     /// Mᵀλ
     void mat_vec_transpose_dynamics_constr(real_view λ, mut_real_view Mᵀλ);
@@ -96,7 +108,7 @@ struct Solver {
                                              real_view x0,
                                              mut_real_view grad_f);
 
-    void updowndate(real_view Σ, bool_view J_old, bool_view J_new);
+    void updowndate(real_view Σ, bool_view J_old, bool_view J_new, Timings *t);
     void updowndate_ψ();
 
     [[nodiscard]] index_t num_variables() const {

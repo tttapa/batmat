@@ -161,6 +161,12 @@ void Solver<Abi>::factor(real_t S, real_view Σ, bool_view J) {
 }
 
 template <simd_abi_tag Abi>
+void Solver<Abi>::factor(real_t S, real_view Σ, bool_view J, Timings &t) {
+    timed(t.prepare_all, &Solver::prepare_all, this, S, Σ, J);
+    timed(t.cholesky_Ψ, &Solver::cholesky_Ψ, this);
+}
+
+template <simd_abi_tag Abi>
 void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
                         real_view Mxb, mut_real_view d, mut_real_view Δλ,
                         mut_real_view MᵀΔλ) {
@@ -180,6 +186,33 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     compact_blas::xsub_copy(d, MᵀΔλ, Mᵀλ, grad, Aᵀŷ);
     // d ← H⁻¹ d
     solve_H(d);
+}
+
+template <simd_abi_tag Abi>
+void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
+                        real_view Mxb, mut_real_view d, mut_real_view Δλ,
+                        mut_real_view MᵀΔλ, Timings &t) {
+    // d ← ∇f̃(x) + Mᵀλ + Aᵀŷ (= v)
+    timed(t.solve_add_rhs_1,
+          [&] { compact_blas::xadd_copy(d, grad, Mᵀλ, Aᵀŷ); });
+    // d ← H⁻¹ d
+    timed(t.solve_H_1, &Solver::solve_H, this, d);
+    // Δλ ← Md - (Mx - b)
+    timed(t.solve_mat_vec, &Solver::residual_dynamics_constr, this, d, Mxb, Δλ);
+    // Δλ ← (M H⁻¹ Mᵀ)⁻¹ Δλ
+    timed(t.solve_unshuffle, &storage_t::restore_dynamics_constraints, storage,
+          Δλ, storage.Δλ_scalar);
+    timed(t.solve_Ψ, &Solver::solve_Ψ_scalar, this, storage.Δλ_scalar);
+    timed(t.solve_shuffle, &storage_t::copy_dynamics_constraints, storage,
+          storage.Δλ_scalar, Δλ);
+    // MᵀΔλ ← Mᵀ Δλ
+    timed(t.solve_mat_vec_tp, &Solver::mat_vec_transpose_dynamics_constr, this,
+          Δλ, MᵀΔλ);
+    // d ← MᵀΔλ - ∇f̃(x) - Mᵀλ - Aᵀŷ
+    timed(t.solve_add_rhs_2,
+          [&] { compact_blas::xsub_copy(d, MᵀΔλ, Mᵀλ, grad, Aᵀŷ); });
+    // d ← H⁻¹ d
+    timed(t.solve_H_2, &Solver::solve_H, this, d);
 }
 
 template <simd_abi_tag Abi>

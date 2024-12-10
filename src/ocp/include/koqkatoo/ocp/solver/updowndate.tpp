@@ -6,6 +6,7 @@
 #include <koqkatoo/openmp.h>
 
 #include <algorithm>
+#include <optional>
 
 #include <koqkatoo/cholundate/householder-updowndate-common.tpp>
 #include <koqkatoo/cholundate/householder-updowndate.hpp>
@@ -130,7 +131,11 @@ void Solver<Abi>::updowndate_ψ() {
 }
 
 template <simd_abi_tag Abi>
-void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new) {
+void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new,
+                             Timings *t) {
+    std::optional<guanaqo::Timed<guanaqo::TimingsCPU>> t_total;
+    if (t)
+        t_total.emplace(t->updowndate);
     auto [N, nx, nu, ny, ny_N] = storage.dim;
     auto &ranks                = storage.stagewise_update_counts;
     index_t rj_max             = 0;
@@ -155,8 +160,7 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new) {
     if (rj_max == 0)
         return;
 
-    // TODO: OpenMP
-    foreach_chunked_merged(0, N + 1, simd_stride, [&](index_t k, auto nk) {
+    const auto updowndate_stage = [&](index_t k, auto nk) {
         index_t batch_idx = k / simd_stride;
         auto ranksj       = ranks.batch(batch_idx);
         auto rjmm         = std::minmax_element(ranksj.data, ranksj.data + nk);
@@ -224,8 +228,21 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new) {
         compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), Wi.bottom_rows(nu),
                                  be);
         // TODO: should we always eagerly update V and W?
-    });
-    updowndate_ψ();
+    };
+
+    {
+        std::optional<guanaqo::Timed<guanaqo::TimingsCPU>> t_w;
+        if (t)
+            t_w.emplace(t->updowndate_stages);
+        foreach_chunked_merged_parallel(0, N + 1, simd_stride,
+                                        updowndate_stage);
+    }
+    {
+        std::optional<guanaqo::Timed<guanaqo::TimingsCPU>> t_w;
+        if (t)
+            t_w.emplace(t->updowndate_Ψ);
+        updowndate_ψ();
+    }
 }
 
 } // namespace koqkatoo::ocp
