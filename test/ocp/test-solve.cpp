@@ -102,8 +102,8 @@ TEST(OCP, solve) {
     // Perform the factorization of the KKT system (with wrong active set).
     s.factor(S, Σ_strided, J0_strided);
     // Update factorization to correct active set.
-    s.updowndate(Σ_strided, J0_strided, J1_strided);
-    s.updowndate(Σ_strided, J1_strided, J_strided);
+    s.updowndate(Σ_strided, J0_strided, J1_strided, nullptr);
+    s.updowndate(Σ_strided, J1_strided, J_strided, nullptr);
     // Solve the KKT system.
     s.solve(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided, //
             d_strided, Δλ_strided, MᵀΔλ_strided);
