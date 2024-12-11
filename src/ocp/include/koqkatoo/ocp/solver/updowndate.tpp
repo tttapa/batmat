@@ -160,13 +160,8 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new,
     if (rj_max == 0)
         return;
 
-    const auto updowndate_stage = [&](index_t k, auto nk) {
-        index_t batch_idx = k / simd_stride;
-        auto ranksj       = ranks.batch(batch_idx);
-        auto rjmm         = std::minmax_element(ranksj.data, ranksj.data + nk);
-        index_t rj_min = *rjmm.first, rj_batch = *rjmm.second;
-        if (rj_batch == 0)
-            return;
+    const auto updowndate_stage = [&](index_t batch_idx, index_t rj_min,
+                                      index_t rj_batch, auto ranksj) {
         auto Σj    = storage.Σ_ud.batch(batch_idx).top_rows(rj_batch);
         auto Sj    = storage.Σ_sgn.batch(batch_idx).top_rows(rj_batch);
         auto Zj    = storage.Z.batch(batch_idx).left_cols(rj_batch);
@@ -234,8 +229,19 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new,
         std::optional<guanaqo::Timed<guanaqo::TimingsCPU>> t_w;
         if (t)
             t_w.emplace(t->updowndate_stages);
-        foreach_chunked_merged_parallel(0, N + 1, simd_stride,
-                                        updowndate_stage);
+        KOQKATOO_OMP(parallel)
+        KOQKATOO_OMP(single)
+        for (index_t k = 0; k < N + simd_stride; k += simd_stride) {
+            auto nk           = std::min<index_t>(simd_stride, N + 1 - k);
+            index_t batch_idx = k / simd_stride;
+            auto ranksj       = ranks.batch(batch_idx);
+            auto rjmm      = std::minmax_element(ranksj.data, ranksj.data + nk);
+            index_t rj_min = *rjmm.first, rj_batch = *rjmm.second;
+            if (rj_batch != 0)
+                KOQKATOO_OMP(task) {
+                    updowndate_stage(batch_idx, rj_min, rj_batch, ranksj);
+                }
+        }
     }
     {
         std::optional<guanaqo::Timed<guanaqo::TimingsCPU>> t_w;
