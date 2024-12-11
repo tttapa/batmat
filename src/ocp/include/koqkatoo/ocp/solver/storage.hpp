@@ -195,7 +195,7 @@ struct SolverStorage {
     }();
 
     std::vector<real_t> work_chol_Ψ =
-        std::vector<real_t>(2 * simd_stride * dim.nx * dim.nx);
+        std::vector<real_t>(3 * simd_stride * dim.nx * dim.nx);
     std::vector<real_t> Δλ_scalar =
         std::vector<real_t>((dim.N_horiz + 1) * dim.nx);
 
@@ -211,6 +211,30 @@ struct SolverStorage {
         assert(i < simd_stride);
         auto offset = (i * 2 + 1) * nx * nx;
         return {{.data = &work_chol_Ψ[offset], .rows = nx, .cols = nx}};
+    }
+    auto work_LΨd() -> scalar_mut_real_view {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        auto offset                = 0;
+        return {{.data  = &work_chol_Ψ[offset],
+                 .depth = simd_stride,
+                 .rows  = nx,
+                 .cols  = nx}};
+    }
+    auto work_LΨs() -> scalar_mut_real_view {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        auto offset                = nx * nx * simd_stride;
+        return {{.data  = &work_chol_Ψ[offset],
+                 .depth = simd_stride,
+                 .rows  = nx,
+                 .cols  = nx}};
+    }
+    auto work_VV() -> scalar_mut_real_view {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        auto offset                = 2 * nx * nx * simd_stride;
+        return {{.data  = &work_chol_Ψ[offset],
+                 .depth = simd_stride,
+                 .rows  = nx,
+                 .cols  = nx}};
     }
 
     [[nodiscard]] scalar_mut_real_view LΨd_scalar() {

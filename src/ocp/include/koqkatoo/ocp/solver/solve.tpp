@@ -1,5 +1,6 @@
 #pragma once
 
+#include <koqkatoo/loop.hpp>
 #include <koqkatoo/ocp/solver/solve.hpp>
 #include <koqkatoo/openmp.h>
 #include <optional>
@@ -90,41 +91,46 @@ void Solver<Abi>::prepare_all(real_t S, real_view Σ, bool_view J) {
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::cholesky_Ψ() {
-    auto [N, nx, nu, ny, ny_N] = storage.dim;
-
-    // First diagonal block
-    storage.work_LΨd(0)(0) = LΨd()(0);
-    scalar_blas::xpotrf(storage.work_LΨd(0), settings.preferred_backend);
-    for (index_t i = 0; i < N; ++i) {
-        const index_t j = i % simd_stride, j_next = (i + 1) % simd_stride;
-        // Sub-diagonal block
-        storage.work_LΨs(j)(0) = LΨs()(i);
-        scalar_blas::xtrsm_RLTN(storage.work_LΨd(j), storage.work_LΨs(j),
-                                settings.preferred_backend);
-        // if we have read all matrices in this block
-        if (j_next == 0) {
-            // overwrite them with our scalar versions
-            for (index_t k = 0; k < simd_stride; ++k) {
-                storage.LΨd_scalar().batch(i + 1 - simd_stride + k) =
-                    storage.work_LΨd(k);
-                storage.LΨs_scalar().batch(i + 1 - simd_stride + k) =
-                    storage.work_LΨs(k);
-            }
+    const auto N = storage.dim.N_horiz;
+    auto wLΨd = storage.work_LΨd(), wLΨs = storage.work_LΨs(),
+         wVV = storage.work_VV();
+    foreach_chunked_merged(0, N, simd_stride, [&](index_t i, auto ni) {
+        // If the last batch is an incomplete one, already add Ld(N)
+        for (index_t j = 0; j < std::min(ni + 1, simd_stride); ++j)
+            wLΨd(j) = LΨd()(i + j);
+        if (i > 0)
+            wLΨd(0) += wVV(simd_stride - 1);
+        for (index_t j = 0; j < ni; ++j)
+            wLΨs(j) = LΨs()(i + j);
+        for (index_t j = 0; j < ni; ++j)
+            wVV(j) = VV()(i + j);
+        for (index_t j = 0; j < ni; ++j) {
+            scalar_blas::xpotrf(wLΨd.batch(j), settings.preferred_backend);
+            scalar_blas::xtrsm_RLTN(wLΨd.batch(j), wLΨs.batch(j),
+                                    settings.preferred_backend);
+            scalar_blas::xsyrk_sub(wLΨs.batch(j), wVV.batch(j),
+                                   settings.preferred_backend);
+            if (j + 1 < simd_stride)
+                wLΨd(j + 1) += wVV(j);
         }
-        // Next diagonal block
-        storage.work_LΨd(j_next)(0) = LΨd()(i + 1);
-        storage.work_LΨd(j_next)(0) += VV()(i);
-        scalar_blas::xsyrk_sub(storage.work_LΨs(j), storage.work_LΨd(j_next),
-                               settings.preferred_backend);
-        scalar_blas::xpotrf(storage.work_LΨd(j_next),
+        for (index_t j = 0; j < ni; ++j)
+            storage.LΨd_scalar()(i + j) = wLΨd(j);
+        for (index_t j = 0; j < ni; ++j)
+            storage.LΨs_scalar()(i + j) = wLΨs(j);
+    });
+    index_t last_j = N % simd_stride;
+    if (last_j == 0) {
+        // If the previous batch was complete, the term VV - LsLs is in VV.
+        // We load and add WW to it, factor it and store it.
+        wVV(simd_stride - 1) += LΨd()(N);
+        scalar_blas::xpotrf(wVV.batch(simd_stride - 1),
                             settings.preferred_backend);
-    }
-    // Store leftover blocks
-    const index_t j = N % simd_stride;
-    for (index_t k = 0; k < j + 1; ++k) {
-        storage.LΨd_scalar().batch(N - j + k) = storage.work_LΨd(k);
-        if (k < j)
-            storage.LΨs_scalar().batch(N - j + k) = storage.work_LΨs(k);
+        storage.LΨd_scalar()(N) = wVV(simd_stride - 1);
+    } else {
+        // If the previous batch was not complete, Ld has already been loaded
+        // and updated by VV - LsLs.
+        scalar_blas::xpotrf(wLΨd.batch(last_j), settings.preferred_backend);
+        storage.LΨd_scalar()(N) = wLΨd(last_j);
     }
 }
 
