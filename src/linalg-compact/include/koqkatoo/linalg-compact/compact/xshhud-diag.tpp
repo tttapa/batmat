@@ -106,7 +106,8 @@ void CompactBLAS<Abi>::xshhud_diag(mut_single_batch_view L,
                                    mut_single_batch_view A, single_batch_view D,
                                    PreferredBackend b) {
     if constexpr (std::same_as<Abi, scalar_abi>) {
-        if (use_blas_scalar(b)) {
+        if (use_blas_scalar(b) && L.rows() == L.cols()) {
+            // TODO: implement non-square case efficiently
             std::span D_span{D.data, static_cast<size_t>(D.rows())};
             cholundate::householder::updowndate_blocked<{}>(
                 L(0), A(0), cholundate::DiagonalUpDowndate(D_span));
