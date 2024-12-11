@@ -77,10 +77,10 @@ void CompactBLAS<Abi>::xtrtri(mut_single_batch_view L, PreferredBackend b) {
             linalg::xtrtri("L", "N", n, L.data, L.outer_stride(), &info);
             lapack_throw_on_err("xtrtri", info);
             if (m > n)
-                linalg::xtrmm(CblasColMajor, CblasRight, CblasLower, CblasTrans,
-                              CblasNonUnit, m - n, n, real_t(-1),
-                              L.bottom_rows(m - n).data, L.outer_stride(),
-                              L.top_rows(n).data, L.outer_stride());
+                linalg::xtrmm(CblasColMajor, CblasRight, CblasLower,
+                              CblasNoTrans, CblasNonUnit, m - n, n, real_t(-1),
+                              L.top_rows(n).data, L.outer_stride(),
+                              L.bottom_rows(m - n).data, L.outer_stride());
             return;
         }
     }
