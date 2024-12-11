@@ -2,6 +2,7 @@
 
 #include <koqkatoo/ocp/solver/solve.hpp>
 #include <koqkatoo/openmp.h>
+#include <optional>
 
 namespace koqkatoo::ocp {
 
@@ -128,6 +129,56 @@ void Solver<Abi>::cholesky_Ψ() {
 }
 
 template <simd_abi_tag Abi>
+void Solver<Abi>::cholesky_Ψ(Timings &t) {
+    auto [N, nx, nu, ny, ny_N] = storage.dim;
+
+    // First diagonal block
+    std::optional<guanaqo::Timed<typename Timings::type>> timer;
+    timer.emplace(t.chol_Ψ_copy_1);
+    storage.work_LΨd(0)(0) = LΨd()(0);
+    timer.emplace(t.chol_Ψ_potrf);
+    scalar_blas::xpotrf(storage.work_LΨd(0), settings.preferred_backend);
+    for (index_t i = 0; i < N; ++i) {
+        const index_t j = i % simd_stride, j_next = (i + 1) % simd_stride;
+        // Sub-diagonal block
+        timer.emplace(t.chol_Ψ_copy_1);
+        storage.work_LΨs(j)(0) = LΨs()(i);
+        timer.emplace(t.chol_Ψ_trsm);
+        scalar_blas::xtrsm_RLTN(storage.work_LΨd(j), storage.work_LΨs(j),
+                                settings.preferred_backend);
+        // if we have read all matrices in this block
+        if (j_next == 0) {
+            timer.emplace(t.chol_Ψ_copy_2);
+            // overwrite them with our scalar versions
+            for (index_t k = 0; k < simd_stride; ++k) {
+                storage.LΨd_scalar().batch(i + 1 - simd_stride + k) =
+                    storage.work_LΨd(k);
+                storage.LΨs_scalar().batch(i + 1 - simd_stride + k) =
+                    storage.work_LΨs(k);
+            }
+        }
+        // Next diagonal block
+        timer.emplace(t.chol_Ψ_copy_1);
+        storage.work_LΨd(j_next)(0) = LΨd()(i + 1);
+        storage.work_LΨd(j_next)(0) += VV()(i);
+        timer.emplace(t.chol_Ψ_syrk);
+        scalar_blas::xsyrk_sub(storage.work_LΨs(j), storage.work_LΨd(j_next),
+                               settings.preferred_backend);
+        timer.emplace(t.chol_Ψ_potrf);
+        scalar_blas::xpotrf(storage.work_LΨd(j_next),
+                            settings.preferred_backend);
+    }
+    // Store leftover blocks
+    const index_t j = N % simd_stride;
+    timer.emplace(t.chol_Ψ_copy_2);
+    for (index_t k = 0; k < j + 1; ++k) {
+        storage.LΨd_scalar().batch(N - j + k) = storage.work_LΨd(k);
+        if (k < j)
+            storage.LΨs_scalar().batch(N - j + k) = storage.work_LΨs(k);
+    }
+}
+
+template <simd_abi_tag Abi>
 void Solver<Abi>::solve_Ψ_scalar(std::span<real_t> λ) {
     auto [N, nx, nu, ny, ny_N] = storage.dim;
     scalar_mut_real_view λ_{{.data = λ.data(), .depth = N + 1, .rows = nx}};
@@ -155,6 +206,38 @@ void Solver<Abi>::solve_Ψ_scalar(std::span<real_t> λ) {
 }
 
 template <simd_abi_tag Abi>
+void Solver<Abi>::solve_Ψ_scalar(std::span<real_t> λ, Timings &t) {
+    auto [N, nx, nu, ny, ny_N] = storage.dim;
+    scalar_mut_real_view λ_{{.data = λ.data(), .depth = N + 1, .rows = nx}};
+    std::optional<guanaqo::Timed<typename Timings::type>> timer;
+    for (index_t i = 0; i < N + 1; ++i) {
+        timer.emplace(t.solve_Ψ_solve);
+        // λ[i] = L[i,i]⁻¹ b[i]
+        scalar_blas::xtrsm_LLNN(storage.LΨd_scalar().batch(i), λ_.batch(i),
+                                settings.preferred_backend);
+        if (i < N) {
+            timer.emplace(t.solve_Ψ_gemm);
+            // b[i+1] -= L[i+1,i] λ[i]
+            scalar_blas::xgemm_sub(storage.LΨs_scalar().batch(i), λ_.batch(i),
+                                   λ_.batch(i + 1), settings.preferred_backend);
+        }
+    }
+    for (index_t i = N + 1; i-- > 0;) {
+        timer.emplace(t.solve_Ψ_solve_tp);
+        // λ[i] = L[i,i]⁻ᵀ b[i]
+        scalar_blas::xtrsm_LLTN(storage.LΨd_scalar().batch(i), λ_.batch(i),
+                                settings.preferred_backend);
+        if (i > 0) {
+            timer.emplace(t.solve_Ψ_gemm_tp);
+            // b[i-1] -= L[i,i-1]ᵀ λ[i]
+            scalar_blas::xgemm_TN_sub(storage.LΨs_scalar().batch(i - 1),
+                                      λ_.batch(i), λ_.batch(i - 1),
+                                      settings.preferred_backend);
+        }
+    }
+}
+
+template <simd_abi_tag Abi>
 void Solver<Abi>::factor(real_t S, real_view Σ, bool_view J) {
     prepare_all(S, Σ, J);
     cholesky_Ψ();
@@ -162,8 +245,8 @@ void Solver<Abi>::factor(real_t S, real_view Σ, bool_view J) {
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::factor(real_t S, real_view Σ, bool_view J, Timings &t) {
-    timed(t.prepare_all, &Solver::prepare_all, this, S, Σ, J);
-    timed(t.cholesky_Ψ, &Solver::cholesky_Ψ, this);
+    timed(t.prepare_all, [&] { prepare_all(S, Σ, J); });
+    timed(t.cholesky_Ψ, [&] { cholesky_Ψ(t); });
 }
 
 template <simd_abi_tag Abi>
@@ -202,7 +285,7 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     // Δλ ← (M H⁻¹ Mᵀ)⁻¹ Δλ
     timed(t.solve_unshuffle, &storage_t::restore_dynamics_constraints, storage,
           Δλ, storage.Δλ_scalar);
-    timed(t.solve_Ψ, &Solver::solve_Ψ_scalar, this, storage.Δλ_scalar);
+    timed(t.solve_Ψ, [&] { solve_Ψ_scalar(storage.Δλ_scalar, t); });
     timed(t.solve_shuffle, &storage_t::copy_dynamics_constraints, storage,
           storage.Δλ_scalar, Δλ);
     // MᵀΔλ ← Mᵀ Δλ

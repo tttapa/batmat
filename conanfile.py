@@ -27,6 +27,7 @@ class KoqkatooRecipe(ConanFile):
         "with_python": False,
         "with_libfork": True,
         "with_blasfeo": False,
+        "with_cpu_time": False,
     }
     options = {
         "shared": [True, False],

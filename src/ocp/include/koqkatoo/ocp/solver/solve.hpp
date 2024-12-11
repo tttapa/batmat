@@ -3,7 +3,7 @@
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg-compact/preferred-backend.hpp>
 #include <koqkatoo/ocp/solver/storage.hpp>
-#include <guanaqo/timed-cpu.hpp>
+#include <koqkatoo/timing.hpp>
 
 namespace koqkatoo::ocp {
 
@@ -44,10 +44,13 @@ struct Solver {
     SolverOptions settings{};
 
     struct Timings {
-        guanaqo::TimingsCPU prepare_all, cholesky_Ψ, solve_add_rhs_1, solve_H_1,
-            solve_mat_vec, solve_unshuffle, solve_Ψ, solve_shuffle,
-            solve_mat_vec_tp, solve_add_rhs_2, solve_H_2, updowndate,
-            updowndate_stages, updowndate_Ψ;
+        using type = koqkatoo::DefaultTimings;
+        type prepare_all, cholesky_Ψ, solve_add_rhs_1, solve_H_1, solve_mat_vec,
+            solve_unshuffle, solve_Ψ, solve_shuffle, solve_mat_vec_tp,
+            solve_add_rhs_2, solve_H_2, updowndate, updowndate_stages,
+            updowndate_Ψ, chol_Ψ_copy_1, chol_Ψ_potrf, chol_Ψ_trsm,
+            chol_Ψ_copy_2, chol_Ψ_syrk, solve_Ψ_solve, solve_Ψ_gemm,
+            solve_Ψ_solve_tp, solve_Ψ_gemm_tp;
     };
 
     mut_real_view H() { return storage.H; }
@@ -80,7 +83,9 @@ struct Solver {
     void prepare_all(real_t S, real_view Σ, bool_view J);
 
     void cholesky_Ψ();
+    void cholesky_Ψ(Timings &t);
     void solve_Ψ_scalar(std::span<real_t> λ);
+    void solve_Ψ_scalar(std::span<real_t> λ, Timings &t);
 
     void factor(real_t S, real_view Σ, bool_view J);
     void factor(real_t S, real_view Σ, bool_view J, Timings &t);

@@ -133,7 +133,7 @@ void Solver<Abi>::updowndate_ψ() {
 template <simd_abi_tag Abi>
 void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new,
                              Timings *t) {
-    std::optional<guanaqo::Timed<guanaqo::TimingsCPU>> t_total;
+    std::optional<guanaqo::Timed<typename Timings::type>> t_total;
     if (t)
         t_total.emplace(t->updowndate);
     auto [N, nx, nu, ny, ny_N] = storage.dim;
@@ -226,12 +226,12 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new,
     };
 
     {
-        std::optional<guanaqo::Timed<guanaqo::TimingsCPU>> t_w;
+        std::optional<guanaqo::Timed<typename Timings::type>> t_w;
         if (t)
             t_w.emplace(t->updowndate_stages);
         KOQKATOO_OMP(parallel)
         KOQKATOO_OMP(single)
-        for (index_t k = 0; k < N + simd_stride; k += simd_stride) {
+        for (index_t k = 0; k < N + 1; k += simd_stride) {
             auto nk           = std::min<index_t>(simd_stride, N + 1 - k);
             index_t batch_idx = k / simd_stride;
             auto ranksj       = ranks.batch(batch_idx);
@@ -244,7 +244,7 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new,
         }
     }
     {
-        std::optional<guanaqo::Timed<guanaqo::TimingsCPU>> t_w;
+        std::optional<guanaqo::Timed<typename Timings::type>> t_w;
         if (t)
             t_w.emplace(t->updowndate_Ψ);
         updowndate_ψ();
