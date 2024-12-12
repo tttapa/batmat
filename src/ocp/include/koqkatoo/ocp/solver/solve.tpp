@@ -5,6 +5,10 @@
 #include <koqkatoo/openmp.h>
 #include <optional>
 
+#if KOQKATOO_WITH_MKL
+#include <koqkatoo/linalg/blas.hpp>
+#endif
+
 namespace koqkatoo::ocp {
 
 template <simd_abi_tag Abi>
@@ -95,6 +99,84 @@ void Solver<Abi>::cholesky_Ψ() {
     auto wLΨd = storage.work_LΨd(), wLΨs = storage.work_LΨs(),
          wVV = storage.work_VV();
     foreach_chunked_merged(0, N, simd_stride, [&](index_t i, auto ni) {
+#if 1
+        auto do_copy_L = [](auto &&A, auto &&B) {
+            assert(A.rows() == B.rows());
+            assert(A.cols() == B.cols());
+            assert(A.depth() == simd_stride);
+            assert(B.depth() == simd_stride);
+            for (index_t c = 0; c < A.cols(); ++c)
+                for (index_t r = c; r < A.rows(); ++r)
+                    for (index_t d = 0; d < simd_stride; ++d)
+                        B(d, r, c) = A(d, r, c);
+        };
+        auto do_copy = [](auto &&A, auto &&B) {
+            assert(A.rows() == B.rows());
+            assert(A.cols() == B.cols());
+            assert(A.depth() == simd_stride);
+            assert(B.depth() == simd_stride);
+            for (index_t c = 0; c < A.cols(); ++c)
+                for (index_t r = 0; r < A.rows(); ++r)
+                    for (index_t d = 0; d < simd_stride; ++d)
+                        B(d, r, c) = A(d, r, c);
+        };
+        do_copy_L(LΨd().batch(i / simd_stride), wLΨd);
+        if (i > 0)
+            wLΨd(0) += wVV(simd_stride - 1);
+        do_copy(LΨs().batch(i / simd_stride), wLΨs);
+        do_copy_L(VV().batch(i / simd_stride), wVV);
+#elif KOQKATOO_WITH_MKL
+        auto LΨdi = LΨd().batch(i / simd_stride);
+        assert(LΨdi.depth() == simd_stride);
+        assert(wLΨd.depth() == simd_stride);
+        assert(wLΨd.rows() == LΨdi.rows());
+        mkl_domatcopy_batch_strided(                     //
+            'C', 'T', (size_t)simd_stride,               // rows A
+            (size_t)LΨdi.rows(),                         // cols A
+            real_t{1},                                   // alpha
+            LΨdi.data,                                   // A
+            (size_t)simd_stride,                         // ldA
+            (size_t)(simd_stride * LΨdi.outer_stride()), // stride A
+            wLΨd.data,                                   // B
+            (size_t)(wLΨd.cols() * wLΨd.outer_stride()), // ldB
+            (size_t)wLΨd.outer_stride(),                 // stride B
+            (size_t)wLΨd.cols()                          // batch_size
+        );
+        if (i > 0)
+            wLΨd(0) += wVV(simd_stride - 1);
+        auto LΨsi = LΨs().batch(i / simd_stride);
+        assert(LΨsi.depth() == simd_stride);
+        assert(wLΨs.depth() == simd_stride);
+        assert(wLΨs.rows() == LΨsi.rows());
+        mkl_domatcopy_batch_strided(                     //
+            'C', 'T', (size_t)simd_stride,               // rows A
+            (size_t)LΨsi.rows(),                         // cols A
+            real_t{1},                                   // alpha
+            LΨsi.data,                                   // A
+            (size_t)simd_stride,                         // ldA
+            (size_t)(simd_stride * LΨsi.outer_stride()), // stride A
+            wLΨs.data,                                   // B
+            (size_t)(wLΨs.cols() * wLΨs.outer_stride()), // ldB
+            (size_t)wLΨs.outer_stride(),                 // stride B
+            (size_t)wLΨs.cols()                          // batch_size
+        );
+        auto VVi = VV().batch(i / simd_stride);
+        assert(VVi.depth() == simd_stride);
+        assert(wVV.depth() == simd_stride);
+        assert(wVV.rows() == VVi.rows());
+        mkl_domatcopy_batch_strided(                    //
+            'C', 'T', (size_t)simd_stride,              // rows A
+            (size_t)VVi.rows(),                         // cols A
+            real_t{1},                                  // alpha
+            VVi.data,                                   // A
+            (size_t)simd_stride,                        // ldA
+            (size_t)(simd_stride * VVi.outer_stride()), // stride A
+            wVV.data,                                   // B
+            (size_t)(wVV.cols() * wVV.outer_stride()),  // ldB
+            (size_t)wVV.outer_stride(),                 // stride B
+            (size_t)wVV.cols()                          // batch_size
+        );
+#else
         // If the last batch is an incomplete one, already add Ld(N)
         for (index_t j = 0; j < std::min(ni + 1, simd_stride); ++j)
             wLΨd(j) = LΨd()(i + j);
@@ -104,6 +186,7 @@ void Solver<Abi>::cholesky_Ψ() {
             wLΨs(j) = LΨs()(i + j);
         for (index_t j = 0; j < ni; ++j)
             wVV(j) = VV()(i + j);
+#endif
         for (index_t j = 0; j < ni; ++j) {
             scalar_blas::xpotrf(wLΨd.batch(j), settings.preferred_backend);
             scalar_blas::xtrsm_RLTN(wLΨd.batch(j), wLΨs.batch(j),
@@ -141,6 +224,86 @@ void Solver<Abi>::cholesky_Ψ(Timings &t) {
     auto wLΨd = storage.work_LΨd(), wLΨs = storage.work_LΨs(),
          wVV = storage.work_VV();
     foreach_chunked_merged(0, N, simd_stride, [&](index_t i, auto ni) {
+#if 1
+        timer.emplace(t.chol_Ψ_copy_1);
+        auto do_copy_L = [](auto &&A, auto &&B) {
+            assert(A.rows() == B.rows());
+            assert(A.cols() == B.cols());
+            assert(A.depth() == simd_stride);
+            assert(B.depth() == simd_stride);
+            for (index_t c = 0; c < A.cols(); ++c)
+                for (index_t r = c; r < A.rows(); ++r)
+                    for (index_t d = 0; d < simd_stride; ++d)
+                        B(d, r, c) = A(d, r, c);
+        };
+        auto do_copy = [](auto &&A, auto &&B) {
+            assert(A.rows() == B.rows());
+            assert(A.cols() == B.cols());
+            assert(A.depth() == simd_stride);
+            assert(B.depth() == simd_stride);
+            for (index_t c = 0; c < A.cols(); ++c)
+                for (index_t r = 0; r < A.rows(); ++r)
+                    for (index_t d = 0; d < simd_stride; ++d)
+                        B(d, r, c) = A(d, r, c);
+        };
+        do_copy_L(LΨd().batch(i / simd_stride), wLΨd);
+        if (i > 0)
+            wLΨd(0) += wVV(simd_stride - 1);
+        do_copy(LΨs().batch(i / simd_stride), wLΨs);
+        do_copy_L(VV().batch(i / simd_stride), wVV);
+#elif KOQKATOO_WITH_MKL
+        timer.emplace(t.chol_Ψ_copy_1);
+        auto LΨdi = LΨd().batch(i / simd_stride);
+        assert(LΨdi.depth() == simd_stride);
+        assert(wLΨd.depth() == simd_stride);
+        assert(wLΨd.rows() == LΨdi.rows());
+        mkl_domatcopy_batch_strided(                     //
+            'C', 'T', (size_t)simd_stride,               // rows A
+            (size_t)LΨdi.rows(),                         // cols A
+            real_t{1},                                   // alpha
+            LΨdi.data,                                   // A
+            (size_t)simd_stride,                         // ldA
+            (size_t)(simd_stride * LΨdi.outer_stride()), // stride A
+            wLΨd.data,                                   // B
+            (size_t)(wLΨd.cols() * wLΨd.outer_stride()), // ldB
+            (size_t)wLΨd.outer_stride(),                 // stride B
+            (size_t)wLΨd.cols()                          // batch_size
+        );
+        if (i > 0)
+            wLΨd(0) += wVV(simd_stride - 1);
+        auto LΨsi = LΨs().batch(i / simd_stride);
+        assert(LΨsi.depth() == simd_stride);
+        assert(wLΨs.depth() == simd_stride);
+        assert(wLΨs.rows() == LΨsi.rows());
+        mkl_domatcopy_batch_strided(                     //
+            'C', 'T', (size_t)simd_stride,               // rows A
+            (size_t)LΨsi.rows(),                         // cols A
+            real_t{1},                                   // alpha
+            LΨsi.data,                                   // A
+            (size_t)simd_stride,                         // ldA
+            (size_t)(simd_stride * LΨsi.outer_stride()), // stride A
+            wLΨs.data,                                   // B
+            (size_t)(wLΨs.cols() * wLΨs.outer_stride()), // ldB
+            (size_t)wLΨs.outer_stride(),                 // stride B
+            (size_t)wLΨs.cols()                          // batch_size
+        );
+        auto VVi = VV().batch(i / simd_stride);
+        assert(VVi.depth() == simd_stride);
+        assert(wVV.depth() == simd_stride);
+        assert(wVV.rows() == VVi.rows());
+        mkl_domatcopy_batch_strided(                    //
+            'C', 'T', (size_t)simd_stride,              // rows A
+            (size_t)VVi.rows(),                         // cols A
+            real_t{1},                                  // alpha
+            VVi.data,                                   // A
+            (size_t)simd_stride,                        // ldA
+            (size_t)(simd_stride * VVi.outer_stride()), // stride A
+            wVV.data,                                   // B
+            (size_t)(wVV.cols() * wVV.outer_stride()),  // ldB
+            (size_t)wVV.outer_stride(),                 // stride B
+            (size_t)wVV.cols()                          // batch_size
+        );
+#else
         // If the last batch is an incomplete one, already add Ld(N)
         timer.emplace(t.chol_Ψ_copy_1);
         for (index_t j = 0; j < std::min(ni + 1, simd_stride); ++j)
@@ -151,6 +314,7 @@ void Solver<Abi>::cholesky_Ψ(Timings &t) {
             wLΨs(j) = LΨs()(i + j);
         for (index_t j = 0; j < ni; ++j)
             wVV(j) = VV()(i + j);
+#endif
         for (index_t j = 0; j < ni; ++j) {
             timer.emplace(t.chol_Ψ_potrf);
             scalar_blas::xpotrf(wLΨd.batch(j), settings.preferred_backend);
