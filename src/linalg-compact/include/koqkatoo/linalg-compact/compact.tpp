@@ -2,10 +2,12 @@
 
 #include <koqkatoo/linalg-compact/compact.hpp>
 
+#include <koqkatoo/assume.hpp>
 #include <koqkatoo/config.hpp>
 #include <koqkatoo/linalg-compact/mkl.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
 #include <koqkatoo/linalg/lapack.hpp>
+#include <koqkatoo/lut.hpp>
 #include <koqkatoo/openmp.h>
 
 #include "compact/xgemm.tpp"
@@ -20,6 +22,209 @@
 #include <array>
 
 namespace koqkatoo::linalg::compact {
+
+template <index_t R, index_t C, class T>
+[[gnu::always_inline]]
+inline void transpose(const T *pa, index_t lda, T *pb, index_t ldb, index_t d) {
+    KOQKATOO_ASSUME(d <= R);
+    T r[C][R];
+    for (int i = 0; i < C; ++i)
+        for (int j = 0; j < R; ++j)
+            r[i][j] = pa[i * lda + j];
+    for (int i = 0; i < d; ++i)
+        for (int j = 0; j < C; ++j)
+            pb[i * ldb + j] = r[j][i];
+}
+
+#ifdef __AVX2__ // TODO
+template <>
+[[gnu::always_inline]]
+inline void transpose<4, 4>(const double *pa, index_t lda, double *pb,
+                            index_t ldb, index_t d) {
+    using simd = stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>>;
+    simd cols[4], shuf[4];
+    for (int i = 0; i < 4; ++i)
+        cols[i].copy_from(pa + i * lda, stdx::vector_aligned);
+    // clang-format off
+    shuf[0] = simd{_mm256_shuffle_pd((__m256d)cols[0], (__m256d)cols[1], 0b0000)};
+    shuf[1] = simd{_mm256_shuffle_pd((__m256d)cols[0], (__m256d)cols[1], 0b1111)};
+    shuf[2] = simd{_mm256_shuffle_pd((__m256d)cols[2], (__m256d)cols[3], 0b0000)};
+    shuf[3] = simd{_mm256_shuffle_pd((__m256d)cols[2], (__m256d)cols[3], 0b1111)};
+    cols[0] = simd{_mm256_permute2f128_pd((__m256d)shuf[0], (__m256d)shuf[2], 0b00100000)};
+    cols[0].copy_to(pb + 0 * ldb, stdx::element_aligned);
+    if (d < 2) [[unlikely]] return;
+    cols[1] = simd{_mm256_permute2f128_pd((__m256d)shuf[1], (__m256d)shuf[3], 0b00100000)};
+    cols[1].copy_to(pb + 1 * ldb, stdx::element_aligned);
+    if (d < 3) [[unlikely]] return;
+    cols[2] = simd{_mm256_permute2f128_pd((__m256d)shuf[0], (__m256d)shuf[2], 0b00110001)};
+    cols[2].copy_to(pb + 2 * ldb, stdx::element_aligned);
+    if (d < 4) [[unlikely]] return;
+    cols[3] = simd{_mm256_permute2f128_pd((__m256d)shuf[1], (__m256d)shuf[3], 0b00110001)};
+    cols[3].copy_to(pb + 3 * ldb, stdx::element_aligned);
+    // clang-format on
+}
+#endif
+#ifdef __AVX512F__
+// TODO
+#endif
+
+template <class Abi>
+void CompactBLAS<Abi>::unpack(single_batch_view A,
+                              mut_single_batch_view_scalar B) {
+    constexpr auto lut =
+        make_1d_lut<simd_stride>([]<index_t R>(index_constant<R>) {
+            return transpose<simd_stride, R + 1, real_t>;
+        });
+    for (index_t c = 0; c < A.cols(); ++c)
+        foreach_chunked(
+            0, A.rows(), simd_stride,
+            [&](index_t r) {
+                transpose<simd_stride, simd_stride>(
+                    &A(0, r, c), simd_stride, &B(0, r, c), B.layer_stride(),
+                    simd_stride);
+            },
+            [&](index_t r, index_t nr) {
+                lut[nr - 1](A.block(r, c, nr, 1).data, simd_stride,
+                            B.block(r, c, nr, 1).data, B.layer_stride(),
+                            simd_stride);
+            });
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::unpack(single_batch_view A, mut_batch_view_scalar B) {
+    constexpr auto lut =
+        make_1d_lut<simd_stride>([]<index_t R>(index_constant<R>) {
+            return transpose<simd_stride, R + 1, real_t>;
+        });
+    for (index_t c = 0; c < A.cols(); ++c)
+        foreach_chunked(
+            0, A.rows(), simd_stride,
+            [&](index_t r) {
+                transpose<simd_stride, simd_stride>(
+                    &A(0, r, c), simd_stride, &B(0, r, c), B.layer_stride(),
+                    B.depth());
+            },
+            [&](index_t r, index_t nr) {
+                lut[nr - 1](A.block(r, c, nr, 1).data, simd_stride,
+                            B.block(r, c, nr, 1).data, B.layer_stride(),
+                            B.depth());
+            });
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::unpack(batch_view A, mut_batch_view_scalar B) {
+    assert(A.depth() == B.depth());
+    foreach_chunked(
+        0, B.depth(), simd_stride,
+        [&](index_t l) {
+            unpack(A.batch(l / simd_stride), B.middle_layers(l, simd_stride));
+        },
+        [&](index_t l, index_t nl) {
+            unpack(A.batch(l / simd_stride), B.middle_layers(l, nl));
+        });
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::unpack_L(single_batch_view A,
+                                mut_single_batch_view_scalar B) {
+    constexpr auto lut =
+        make_1d_lut<simd_stride>([]<index_t R>(index_constant<R>) {
+            return transpose<simd_stride, R + 1, real_t>;
+        });
+    for (index_t c = 0; c < A.cols(); ++c)
+        foreach_chunked(
+            c, A.rows(), simd_stride,
+            [&](index_t r) {
+                transpose<simd_stride, simd_stride>(
+                    &A(0, r, c), simd_stride, &B(0, r, c), B.layer_stride(),
+                    simd_stride);
+            },
+            [&](index_t r, index_t nr) {
+                lut[nr - 1](A.block(r, c, nr, 1).data, simd_stride,
+                            B.block(r, c, nr, 1).data, B.layer_stride(),
+                            simd_stride);
+            });
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::unpack_L(single_batch_view A, mut_batch_view_scalar B) {
+    constexpr auto S   = simd_stride;
+    constexpr auto lut = make_1d_lut<S>([]<index_t R>(index_constant<R>) {
+        return transpose<S, R + 1, real_t>;
+    });
+#if 1
+    const auto colstrA = A.outer_stride() * S;
+    const auto colstrB = B.outer_stride();
+    const auto laystrB = B.layer_stride();
+    const auto d       = B.depth();
+    auto pA            = A.data;
+    const auto pAend   = pA + A.cols() * colstrA;
+    real_t *pB         = B.data;
+    auto rowcnt        = A.rows();
+    while (pA < pAend) {
+        const real_t *pA_ = pA;
+        real_t *pB_       = pB;
+        index_t r;
+        for (r = 0; r + S <= rowcnt; r += S) {
+            transpose<S, S>(pA_, S, pB_, laystrB, d);
+            pA_ += S * S;
+            pB_ += S;
+        }
+        index_t nr = rowcnt - r;
+        if (nr > 0) [[unlikely]]
+            lut[nr - 1](pA_, S, pB_, laystrB, d);
+        pA += colstrA + S;
+        pB += colstrB + 1;
+        --rowcnt;
+    }
+#else
+    for (index_t c = 0; c < A.cols(); ++c) {
+        index_t r;
+        for (r = c; r + S <= A.rows(); r += S)
+            transpose<S, S>(&A(0, r, c), S, &B(0, r, c), B.layer_stride(),
+                            B.depth());
+        index_t nr = A.rows() - r;
+        if (nr > 0) [[unlikely]]
+            lut[nr - 1](&A(0, r, c), S, &B(0, r, c), B.layer_stride(),
+                        B.depth());
+    }
+#endif
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::unpack_L(batch_view A, mut_batch_view_scalar B) {
+    assert(A.depth() >= B.depth());
+    foreach_chunked(
+        0, B.depth(), simd_stride,
+        [&](index_t l) {
+            unpack_L(A.batch(l / simd_stride), B.middle_layers(l, simd_stride));
+        },
+        [&](index_t l, index_t nl) {
+            unpack_L(A.batch(l / simd_stride), B.middle_layers(l, nl));
+        });
+}
+
+template <>
+void CompactBLAS<stdx::simd_abi::scalar>::unpack(batch_view A,
+                                                 mut_batch_view_scalar B) {
+    assert(A.depth() >= B.depth());
+    if (A.rows() == A.outer_stride() && B.rows() == B.outer_stride())
+        for (index_t l = 0; l < B.depth(); ++l)
+            std::copy_n(A(l).data, A.rows() * A.cols(), B(l).data);
+    else
+        for (index_t l = 0; l < B.depth(); ++l)
+            for (index_t c = 0; c < B.cols(); ++c)
+                std::copy_n(&A(l, 0, c), A.rows(), &B(l, 0, c));
+}
+
+template <>
+void CompactBLAS<stdx::simd_abi::scalar>::unpack_L(batch_view A,
+                                                   mut_batch_view_scalar B) {
+    assert(A.depth() >= B.depth());
+    for (index_t l = 0; l < B.depth(); ++l)
+        for (index_t c = 0; c < B.cols(); ++c)
+            std::copy_n(&A(l, c, c), A.rows() - c, &B(l, c, c));
+}
 
 template <class Abi>
 void CompactBLAS<Abi>::xtrmv_ref(single_batch_view L, mut_single_batch_view x) {

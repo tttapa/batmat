@@ -368,6 +368,19 @@ struct BatchedMatrixView {
                  .layer_stride = layout.layer_stride}};
     }
 
+    template <class N>
+    [[nodiscard]] BatchedMatrixView<T, I, S, N, L> middle_layers(index_type l,
+                                                                 N n) const {
+        assert(l + n < depth());
+        return {{.data         = data + layout.layer_index(l),
+                 .depth        = n,
+                 .rows         = rows(),
+                 .cols         = cols(),
+                 .outer_stride = outer_stride(),
+                 .batch_size   = batch_size(),
+                 .layer_stride = layout.layer_stride}};
+    }
+
     struct linear_iterator {
         using value_type      = T;
         using reference       = T &;

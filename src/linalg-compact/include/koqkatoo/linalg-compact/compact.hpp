@@ -27,6 +27,14 @@ struct CompactBLAS {
     static constexpr auto mask_align = stdx::memory_alignment_v<mask>;
     static_assert(simd_align <= simd_stride_t() * sizeof(real_t));
     static constexpr auto simd_stride = static_cast<index_t>(simd_stride_t());
+    using scalar_abi                  = stdx::simd_abi::scalar;
+    using scalar_simd_stride_t        = stdx::simd_size<real_t, scalar_abi>;
+    using mut_batch_view_scalar =
+        BatchedMatrixView<real_t, index_t, scalar_simd_stride_t, index_t,
+                          index_t>;
+    using mut_single_batch_view_scalar =
+        BatchedMatrixView<real_t, index_t, scalar_simd_stride_t, simd_stride_t,
+                          index_t>;
     using mut_single_batch_view =
         BatchedMatrixView<real_t, index_t, simd_stride_t, simd_stride_t>;
     using single_batch_view =
@@ -49,6 +57,14 @@ struct CompactBLAS {
     static simd::mask_type aligned_mask_load(const bool *p) {
         return {p, stdx::vector_aligned};
     }
+
+    static void unpack(single_batch_view A, mut_single_batch_view_scalar B);
+    static void unpack(single_batch_view A, mut_batch_view_scalar B);
+    static void unpack(batch_view A, mut_batch_view_scalar B);
+
+    static void unpack_L(single_batch_view A, mut_single_batch_view_scalar B);
+    static void unpack_L(single_batch_view A, mut_batch_view_scalar B);
+    static void unpack_L(batch_view A, mut_batch_view_scalar B);
 
     /// C ← A D Aᵀ
     static void xsyrk_schur(single_batch_view A, single_batch_view d,

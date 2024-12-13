@@ -100,6 +100,13 @@ void Solver<Abi>::cholesky_Ψ() {
          wVV = storage.work_VV();
     foreach_chunked_merged(0, N, simd_stride, [&](index_t i, auto ni) {
 #if 1
+        index_t b = i / simd_stride, nd = std::min(ni + 1, simd_stride);
+        compact_blas::unpack_L(LΨd().batch(b), wLΨd.first_layers(nd));
+        if (i > 0)
+            wLΨd(0) += wVV(simd_stride - 1);
+        compact_blas::unpack(LΨs().batch(b), wLΨs.first_layers(ni));
+        compact_blas::unpack_L(VV().batch(b), wVV.first_layers(ni));
+#elif 1
         auto do_copy_L = [](auto &&A, auto &&B) {
             assert(A.rows() == B.rows());
             assert(A.cols() == B.cols());
