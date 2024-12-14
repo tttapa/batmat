@@ -94,6 +94,42 @@ void Solver<Abi>::prepare_all(real_t S, real_view Σ, bool_view J) {
 }
 
 template <simd_abi_tag Abi>
+void Solver<Abi>::prepare_all(real_t S, real_view Σ, bool_view J, Timings &t) {
+    using std::isfinite;
+    constexpr auto now = [] {
+        return std::chrono::steady_clock::now().time_since_epoch();
+    };
+    int64_t timer_schur_complement{0}, timer_cholesky_H{0}, timer_prepare_Ψ{0};
+    using timer_t = decltype(Timings::type::wall_time);
+    KOQKATOO_OMP(parallel) {
+        KOQKATOO_OMP(for reduction(+:timer_schur_complement,timer_cholesky_H,timer_prepare_Ψ))
+        for (index_t i = 0; i < LH().num_batches(); ++i) {
+            const auto t0 = now();
+            schur_complement_Hi(i, Σ, J);
+            if (isfinite(S))
+                LH().batch(i).add_to_diagonal(1 / S);
+            const auto t1 = now();
+            timer_schur_complement += duration_cast<timer_t>(t1 - t0).count();
+            cholesky_Hi(i);
+            const auto t2 = now();
+            timer_cholesky_H += duration_cast<timer_t>(t2 - t1).count();
+            prepare_Ψi(i);
+            const auto t3 = now();
+            timer_prepare_Ψ += duration_cast<timer_t>(t3 - t2).count();
+        }
+        KOQKATOO_OMP(single) {
+            const int n = KOQKATOO_OMP_IF_ELSE(omp_get_num_threads(), 1);
+            timer_schur_complement /= n;
+            timer_cholesky_H /= n;
+            timer_prepare_Ψ /= n;
+        }
+    }
+    t.schur_complement.wall_time += timer_t{timer_schur_complement};
+    t.cholesky_H.wall_time += timer_t{timer_cholesky_H};
+    t.prepare_Ψ.wall_time += timer_t{timer_prepare_Ψ};
+}
+
+template <simd_abi_tag Abi>
 void Solver<Abi>::cholesky_Ψ() {
     const auto N = storage.dim.N_horiz;
     auto wLΨd = storage.work_LΨd(), wLΨs = storage.work_LΨs(),
@@ -232,6 +268,14 @@ void Solver<Abi>::cholesky_Ψ(Timings &t) {
          wVV = storage.work_VV();
     foreach_chunked_merged(0, N, simd_stride, [&](index_t i, auto ni) {
 #if 1
+        timer.emplace(t.chol_Ψ_copy_1);
+        index_t b = i / simd_stride, nd = std::min(ni + 1, simd_stride);
+        compact_blas::unpack_L(LΨd().batch(b), wLΨd.first_layers(nd));
+        if (i > 0)
+            wLΨd(0) += wVV(simd_stride - 1);
+        compact_blas::unpack(LΨs().batch(b), wLΨs.first_layers(ni));
+        compact_blas::unpack_L(VV().batch(b), wVV.first_layers(ni));
+#elif 1
         timer.emplace(t.chol_Ψ_copy_1);
         auto do_copy_L = [](auto &&A, auto &&B) {
             assert(A.rows() == B.rows());
@@ -427,7 +471,7 @@ void Solver<Abi>::factor(real_t S, real_view Σ, bool_view J) {
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::factor(real_t S, real_view Σ, bool_view J, Timings &t) {
-    timed(t.prepare_all, [&] { prepare_all(S, Σ, J); });
+    timed(t.prepare_all, [&] { prepare_all(S, Σ, J, t); });
     timed(t.cholesky_Ψ, [&] { cholesky_Ψ(t); });
 }
 

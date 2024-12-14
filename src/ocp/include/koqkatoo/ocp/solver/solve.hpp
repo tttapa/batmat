@@ -50,7 +50,8 @@ struct Solver {
             solve_add_rhs_2, solve_H_2, updowndate, updowndate_stages,
             updowndate_Ψ, chol_Ψ_copy_1, chol_Ψ_potrf, chol_Ψ_trsm,
             chol_Ψ_copy_2, chol_Ψ_syrk, solve_Ψ_solve, solve_Ψ_gemm,
-            solve_Ψ_solve_tp, solve_Ψ_gemm_tp;
+            solve_Ψ_solve_tp, solve_Ψ_gemm_tp, schur_complement, cholesky_H,
+            prepare_Ψ;
     };
 
     mut_real_view H() { return storage.H; }
@@ -81,6 +82,7 @@ struct Solver {
     void prepare_Ψ();
     void prepare_Ψi(index_t i);
     void prepare_all(real_t S, real_view Σ, bool_view J);
+    void prepare_all(real_t S, real_view Σ, bool_view J, Timings &t);
 
     void cholesky_Ψ();
     void cholesky_Ψ(Timings &t);
