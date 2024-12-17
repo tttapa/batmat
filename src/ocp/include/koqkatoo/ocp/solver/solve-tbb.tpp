@@ -3,16 +3,14 @@
 #include <koqkatoo/loop.hpp>
 #include <koqkatoo/ocp/solver/solve.hpp>
 #include <oneapi/tbb/flow_graph.h>
-#include <optional>
-
-#include <guanaqo/print.hpp>
-#include <iostream>
+#include <oneapi/tbb/global_control.h>
 
 namespace koqkatoo::ocp {
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::factor_tbb(real_t S, real_view Σ, bool_view J) {
-    std::optional<guanaqo::Timed<typename Timings::type>> timer;
+    oneapi::tbb::global_control c(
+        oneapi::tbb::global_control::max_allowed_parallelism, 8);
 
     using std::isfinite;
     namespace fl = oneapi::tbb::flow;
@@ -38,7 +36,6 @@ void Solver<Abi>::factor_tbb(real_t S, real_view Σ, bool_view J) {
     func_node schur_H(
         g, fl::unlimited,
         [this, S, &Σ, &J](stage_block_index_t k) {
-            std::printf("schur H(%d)\n", (int)k);
             schur_complement_Hi(k, Σ, J);
             if (isfinite(S))
                 LH().batch(k).add_to_diagonal(1 / S);
@@ -49,7 +46,6 @@ void Solver<Abi>::factor_tbb(real_t S, real_view Σ, bool_view J) {
     func_node chol_H(
         g, fl::unlimited,
         [this](stage_block_index_t k) {
-            std::printf("chol H(%d)\n", (int)k);
             cholesky_Hi(k);
             return k;
         },
@@ -58,7 +54,6 @@ void Solver<Abi>::factor_tbb(real_t S, real_view Σ, bool_view J) {
     func_node solve_W(
         g, fl::unlimited,
         [this](stage_block_index_t k) {
-            std::printf("solve W(%d)\n", (int)k);
             auto [N, nx, nu, ny, ny_N] = storage.dim;
             auto LHi = LH().batch(k), Wi = Wᵀ().batch(k);
             compact_blas::xcopy(LHi.top_left(nx + nu, nx), Wi);
@@ -73,7 +68,6 @@ void Solver<Abi>::factor_tbb(real_t S, real_view Σ, bool_view J) {
     func_node syrk_WW(
         g, fl::unlimited,
         [this](stage_block_index_t k) {
-            std::printf("syrk W(%d)\n", (int)k);
             compact_blas::xsyrk_T(Wᵀ().batch(k), LΨd().batch(k),
                                   settings.preferred_backend);
             return k;
@@ -83,7 +77,6 @@ void Solver<Abi>::factor_tbb(real_t S, real_view Σ, bool_view J) {
     func_node gemm_VW(
         g, fl::unlimited,
         [this](stage_block_index_t k) {
-            std::printf("gemm VW(%d)\n", (int)k);
             if (k < AB().num_batches())
                 compact_blas::xgemm_neg(V().batch(k), Wᵀ().batch(k),
                                         LΨs().batch(k),
@@ -95,7 +88,6 @@ void Solver<Abi>::factor_tbb(real_t S, real_view Σ, bool_view J) {
     func_node syrk_VV(
         g, fl::unlimited,
         [this](stage_block_index_t k) {
-            std::printf("syrk V(%d)\n", (int)k);
             if (k < AB().num_batches())
                 compact_blas::xsyrk(V().batch(k), VV().batch(k),
                                     settings.preferred_backend);
@@ -109,13 +101,11 @@ void Solver<Abi>::factor_tbb(real_t S, real_view Σ, bool_view J) {
             const auto N = storage.dim.N_horiz;
             auto [k, k_] = in;
             assert(k == k_);
-            auto nd = std::min(simd_stride, N + 1 - k * simd_stride);
-            std::printf("copy WW(%d, %d)\n", (int)k, (int)nd);
+            auto nd   = std::min(simd_stride, N + 1 - k * simd_stride);
             auto wLΨd = storage.work_LΨd(), wVV = storage.work_VV();
             compact_blas::unpack_L(LΨd().batch(k), wLΨd.first_layers(nd));
             if (k > 0)
                 wLΨd(0) += wVV(simd_stride - 1);
-            guanaqo::print_python(std::cout << "ΨD(" << k << ")\n", wLΨd(0));
             return k;
         },
         {}, fl::node_priority_t{999});
@@ -127,7 +117,6 @@ void Solver<Abi>::factor_tbb(real_t S, real_view Σ, bool_view J) {
             auto [k, k_] = in;
             assert(k == k_);
             auto ni = std::min(simd_stride, N - k * simd_stride);
-            std::printf("copy VW(%d, %d)\n", (int)k, (int)ni);
             if (ni > 0) {
                 auto wLΨs = storage.work_LΨs();
                 compact_blas::unpack(LΨs().batch(k), wLΨs.first_layers(ni));
@@ -142,13 +131,12 @@ void Solver<Abi>::factor_tbb(real_t S, real_view Σ, bool_view J) {
             const auto N = storage.dim.N_horiz;
             auto [k, k_] = in;
             assert(k == k_);
-            auto ni = std::min(simd_stride, N - k * simd_stride);
-            std::printf("factor Ψ(%d, %d)\n", (int)k, (int)ni);
+            auto ni   = std::min(simd_stride, N - k * simd_stride);
             auto wLΨd = storage.work_LΨd(), wLΨs = storage.work_LΨs(),
                  wVV = storage.work_VV();
             // Copy VVᵀ
             if (ni > 0)
-                compact_blas::unpack(VV().batch(k), wVV.first_layers(ni));
+                compact_blas::unpack_L(VV().batch(k), wVV.first_layers(ni));
             // Factor
             for (index_t j = 0; j < ni; ++j) {
                 scalar_blas::xpotrf(wLΨd.batch(j), settings.preferred_backend);
@@ -164,7 +152,7 @@ void Solver<Abi>::factor_tbb(real_t S, real_view Σ, bool_view J) {
             for (index_t j = 0; j < ni; ++j)
                 storage.LΨs_scalar()(k * simd_stride + j) = wLΨs(j);
             // If this was the last batch, factor Θ
-            if ((k + 1) * simd_stride > N) { // TODO: >= or >?
+            if ((k + 1) * simd_stride > N) {
                 index_t last_j = N % simd_stride;
                 if (last_j == 0) {
                     assert(ni <= 0);
