@@ -27,6 +27,8 @@ option(KOQKATOO_WITH_STATIC_PARALLEL
     "Enable the 'static' parallel implementation of SHH" Off)
 option(KOQKATOO_WITH_CPU_TIME
     "Measure CPU time in addition to wall time" Off)
+option(KOQKATOO_WITH_TBB
+    "Use the oneTBB library for parallel implementation" Off)
 # Target options
 option(KOQKATOO_HAVE_TWO_512_FMA_UNITS
     "Does the CPU have 0.5 CPI 512-bit FMA" Off)

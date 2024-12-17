@@ -26,6 +26,7 @@ class KoqkatooRecipe(ConanFile):
         "with_benchmarks": False,
         "with_python": False,
         "with_libfork": True,
+        "with_tbb": True,
         "with_blasfeo": False,
         "with_cpu_time": False,
     }
@@ -58,6 +59,8 @@ class KoqkatooRecipe(ConanFile):
         self.requires("guanaqo/1.0.0-alpha.4", transitive_headers=True)
         if self.options.with_openblas:
             self.requires("openblas/0.3.27", transitive_headers=True)
+        if self.options.with_tbb:
+            self.requires("onetbb/2021.12.0")
         if self.options.with_benchmarks:
             self.requires("benchmark/1.8.4")
         if self.options.with_python:

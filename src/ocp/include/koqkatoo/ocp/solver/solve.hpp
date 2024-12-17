@@ -91,6 +91,7 @@ struct Solver {
 
     void factor(real_t S, real_view Σ, bool_view J);
     void factor(real_t S, real_view Σ, bool_view J, Timings &t);
+    void factor_tbb(real_t S, real_view Σ, bool_view J);
     void solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
                mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ);
     void solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,

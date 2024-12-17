@@ -165,11 +165,16 @@ target_sources(ocp PUBLIC FILE_SET headers TYPE HEADERS
           "ocp/include/koqkatoo/ocp/solver/storage.tpp"
           "ocp/include/koqkatoo/ocp/solver/mat-vec.tpp"
           "ocp/include/koqkatoo/ocp/solver/solve.tpp"
+          "ocp/include/koqkatoo/ocp/solver/solve-tbb.tpp"
           "ocp/include/koqkatoo/ocp/solver/updowndate.tpp"
 )
 target_link_libraries(ocp PUBLIC koqkatoo::linalg-compact)
 target_compile_features(ocp PRIVATE cxx_std_23)
 koqkatoo_configure_library(ocp EXPORT_PREFIX koqkatoo)
+if (KOQKATOO_WITH_TBB)
+    find_package(TBB REQUIRED)
+    target_link_libraries(ocp PUBLIC onetbb::onetbb)
+endif()
 
 # ==============================================================================
 
