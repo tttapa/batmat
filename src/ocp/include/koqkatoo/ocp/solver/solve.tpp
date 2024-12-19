@@ -36,6 +36,15 @@ void Solver<Abi>::cholesky_H() {
 template <simd_abi_tag Abi>
 void Solver<Abi>::cholesky_Hi(index_t i) {
     compact_blas::xpotrf(LHV().batch(i), settings.preferred_backend);
+#if !defined(NDEBUG)
+    auto [N, nx, nu, ny, ny_N] = storage.dim;
+    index_t j0                 = i * simd_stride;
+    using std::isfinite;
+    for (index_t j = j0; j < std::min(j0 + simd_stride, N + 1); ++j)
+        if (!isfinite(LHV()(j, nx - 1, nx - 1)))
+            throw std::runtime_error("Factorization of H(" + std::to_string(j) +
+                                     ") failed");
+#endif
 }
 
 template <simd_abi_tag Abi>
