@@ -175,6 +175,11 @@ if (KOQKATOO_WITH_TBB)
     find_package(TBB REQUIRED)
     target_link_libraries(ocp PUBLIC onetbb::onetbb)
 endif()
+if (KOQKATOO_WITH_LIBFORK)
+    find_package(libfork CONFIG REQUIRED)
+    target_link_libraries(ocp PUBLIC libfork::libfork)
+    koqkatoo_coroutine_flags("ocp/src/solve.cpp")
+endif()
 
 # ==============================================================================
 

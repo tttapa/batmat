@@ -4,6 +4,14 @@
 #include <koqkatoo/ocp/solver/solve.tpp>
 #include <koqkatoo/ocp/solver/storage.tpp>
 #include <koqkatoo/ocp/solver/updowndate.tpp>
+#if KOQKATOO_WITH_TBB
+#include <koqkatoo/ocp/solver/solve-tbb-coarse.tpp>
+// #include <koqkatoo/ocp/solver/solve-tbb.tpp>
+#endif
+#if KOQKATOO_WITH_LIBFORK
+#include <koqkatoo/ocp/solver/solve-fork.tpp>
+#endif
+#include <koqkatoo/ocp/solver/solve-omp.tpp>
 
 namespace koqkatoo::ocp {
 
