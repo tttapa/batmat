@@ -32,7 +32,7 @@ const auto ε = std::pow(std::numeric_limits<real_t>::epsilon(), real_t(0.9));
 
 TEST(OCP, solve) {
     using VectorXreal = Eigen::VectorX<real_t>;
-    using simd_abi    = stdx::simd_abi::deduce_t<real_t, 8>;
+    using simd_abi    = stdx::simd_abi::deduce_t<real_t, 4>;
     std::mt19937 rng{54321};
     std::normal_distribution<real_t> nrml{0, 1};
     std::bernoulli_distribution bernoulli{0.5};
@@ -47,6 +47,8 @@ TEST(OCP, solve) {
 
     // Instantiate the OCP KKT solver.
     ko::Solver<simd_abi> s = ocp;
+    s.settings.preferred_backend =
+        koqkatoo::linalg::compact::PreferredBackend::MKLScalarBatched;
     index_t n_var = ocp.num_variables(), n_constr = ocp.num_constraints(),
             n_dyn_constr = ocp.num_dynamics_constraints();
 
