@@ -488,6 +488,7 @@ template <simd_abi_tag Abi>
 void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
                         real_view Mxb, mut_real_view d, mut_real_view Δλ,
                         mut_real_view MᵀΔλ) {
+#if 0
     // d ← ∇f̃(x) + Mᵀλ + Aᵀŷ (= v)
     compact_blas::xadd_copy(d, grad, Mᵀλ, Aᵀŷ);
     // d ← H⁻¹ d
@@ -504,6 +505,69 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     compact_blas::xsub_copy(d, MᵀΔλ, Mᵀλ, grad, Aᵀŷ);
     // d ← H⁻¹ d
     solve_H(d);
+#else
+
+    auto [N, nx, nu, ny, ny_N] = storage.dim;
+    const auto be              = settings.preferred_backend;
+    scalar_mut_real_view Δλ_scal{{
+        .data  = storage.Δλ_scalar.data(),
+        .depth = N + 1,
+        .rows  = nx,
+        .cols  = 1,
+    }};
+    assert(storage.Δλ_scalar.size() == static_cast<size_t>(Δλ_scal.size()));
+    auto &Δλ1 = storage.λ1;
+    auto LΨd = storage.LΨd_scalar(), LΨs = storage.LΨs_scalar();
+
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < LH().num_batches(); ++i) {
+        for (index_t j = 0; j < nx + nu; ++j)
+            for (index_t ii = i * simd_stride; ii < (i + 1) * simd_stride; ++ii)
+                d(ii, j, 0) = grad(ii, j, 0) + Mᵀλ(ii, j, 0) + Aᵀŷ(ii, j, 0);
+        compact_blas::xtrsm_LLNN(LH().batch(i), d.batch(i), be);
+        compact_blas::xtrsm_LLTN(LH().batch(i), d.batch(i), be);
+        if (i < AB().num_batches())
+            compact_blas::xgemm(AB().batch(i), d.batch(i), Δλ.batch(i), be);
+    }
+    for (index_t j = 0; j < nx; ++j)
+        Δλ_scal(0, j, 0) = Mxb(0, j, 0) - d(0, j, 0);
+    scalar_blas::xtrsm_LLNN(LΨd.batch(0), Δλ_scal.batch(0), be);
+    for (index_t i = 1; i <= N; ++i) {
+        for (index_t j = 0; j < nx; ++j)
+            Δλ_scal(i, j, 0) = Mxb(i, j, 0) - d(i, j, 0) + Δλ(i - 1, j, 0);
+        scalar_blas::xgemm_sub(LΨs.batch(i - 1), Δλ_scal.batch(i - 1),
+                               Δλ_scal.batch(i), be);
+        scalar_blas::xtrsm_LLNN(LΨd.batch(i), Δλ_scal.batch(i), be);
+    }
+    scalar_blas::xtrsm_LLTN(LΨd.batch(N), Δλ_scal.batch(N), be);
+    for (index_t j = 0; j < nx; ++j)
+        Δλ1(N - 1, j, 0) = Δλ(N, j, 0) = Δλ_scal(N, j, 0);
+    for (index_t i = N; i-- > 0;) {
+        scalar_blas::xgemm_TN_sub(LΨs.batch(i), Δλ_scal.batch(i + 1),
+                                  Δλ_scal.batch(i), be);
+        scalar_blas::xtrsm_LLTN(LΨd.batch(i), Δλ_scal.batch(i), be);
+        if (i > 0)
+            for (index_t j = 0; j < nx; ++j)
+                Δλ1(i - 1, j, 0) = Δλ(i, j, 0) = Δλ_scal(i, j, 0);
+    }
+    for (index_t j = 0; j < nx; ++j)
+        Δλ(0, j, 0) = Δλ_scal(0, j, 0);
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < LH().num_batches(); ++i) {
+        MᵀΔλ.batch(i).top_rows(nx) = Δλ.batch(i);
+        MᵀΔλ.batch(i).bottom_rows(nu).set_constant(0);
+        if (i < AB().num_batches())
+            compact_blas::xgemm_TN_sub(AB().batch(i), Δλ1.batch(i),
+                                       MᵀΔλ.batch(i), be);
+        for (index_t j = 0; j < nx + nu; ++j)
+            for (index_t ii = i * simd_stride; ii < (i + 1) * simd_stride; ++ii)
+                d(ii, j, 0) = -grad(ii, j, 0) - Mᵀλ(ii, j, 0) - Aᵀŷ(ii, j, 0) -
+                              MᵀΔλ(ii, j, 0);
+        compact_blas::xtrsm_LLNN(LH().batch(i), d.batch(i), be);
+        compact_blas::xtrsm_LLTN(LH().batch(i), d.batch(i), be);
+    }
+
+#endif
 }
 
 template <simd_abi_tag Abi>
