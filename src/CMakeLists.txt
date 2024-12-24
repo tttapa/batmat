@@ -41,12 +41,16 @@ target_sources(koqkatoo PUBLIC FILE_SET headers TYPE HEADERS
           "koqkatoo/include/koqkatoo/preprocessor.h"
           "koqkatoo/include/koqkatoo/stringify.h"
           "koqkatoo/include/koqkatoo/timing.hpp"
+          "koqkatoo/include/koqkatoo/trace.hpp"
           "koqkatoo/include/koqkatoo/unroll.h"
 )
 target_link_libraries(koqkatoo PUBLIC koqkatoo::config guanaqo::guanaqo)
 koqkatoo_configure_library(koqkatoo)
 if (KOQKATOO_WITH_OPENMP)
     target_link_libraries(koqkatoo PUBLIC OpenMP::OpenMP_CXX)
+endif()
+if (KOQKATOO_WITH_TRACING)
+    target_sources(koqkatoo PRIVATE "koqkatoo/src/trace.cpp")
 endif()
 
 # Linear algebra routines and BLAS interface

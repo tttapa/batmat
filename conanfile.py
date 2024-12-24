@@ -29,6 +29,7 @@ class KoqkatooRecipe(ConanFile):
         "with_tbb": True,
         "with_blasfeo": False,
         "with_cpu_time": False,
+        "with_tracing": False,
     }
     options = {
         "shared": [True, False],

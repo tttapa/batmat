@@ -35,6 +35,9 @@ using index_t = @KOQKATOO_DENSE_INDEX_TYPE@;
 #ifndef KOQKATOO_WITH_CPU_TIME
 #cmakedefine01 KOQKATOO_WITH_CPU_TIME
 #endif
+#ifndef KOQKATOO_WITH_TRACING
+#cmakedefine01 KOQKATOO_WITH_TRACING
+#endif
 
 #ifdef __clangd__
 #undef KOQKATOO_WITH_OPENMP // clangd sometimes crashes on OpenMP constructs

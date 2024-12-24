@@ -1,4 +1,6 @@
 #pragma once
 
+#define KOQKATOO_CAT(a, b) KOQKATOO_CAT_IMPL(a, b)
+#define KOQKATOO_CAT_IMPL(a, b) a##b
 #define KOQKATOO_STRINGIFY(s) KOQKATOO_STRINGIFY_IMPL(s)
 #define KOQKATOO_STRINGIFY_IMPL(s) #s
