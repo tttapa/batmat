@@ -21,6 +21,9 @@ endif()
 if (@KOQKATOO_WITH_LIBFORK@)
     find_dependency(libfork)
 endif()
+if (@KOQKATOO_WITH_TBB@)
+    find_dependency(TBB)
+endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/koqkatooCoreTargets.cmake")
 
