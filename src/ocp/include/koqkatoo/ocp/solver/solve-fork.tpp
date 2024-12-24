@@ -1,16 +1,16 @@
 #pragma once
 
 #include <koqkatoo/ocp/solver/solve.hpp>
+#include <koqkatoo/trace.hpp>
 #include <libfork/core.hpp>
 #include <libfork/schedule.hpp>
-#include <cstdio>
-#include <new>
+#include <atomic>
 
 namespace koqkatoo::ocp {
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::factor_fork(real_t S, real_view Σ, bool_view J) {
-    static lf::lazy_pool pool{4}; // TODO: make configurable/argument
+    static lf::lazy_pool pool{8}; // TODO: make configurable/argument
 
     using std::isfinite;
     struct join_counter_t {
@@ -20,6 +20,7 @@ void Solver<Abi>::factor_fork(real_t S, real_view Σ, bool_view J) {
     const auto N = storage.dim.N_horiz;
 
     const auto prepare = [this, S, &Σ, &J](index_t k) {
+        KOQKATOO_TRACE("factor prep", k);
         auto [N, nx, nu, ny, ny_N] = storage.dim;
         schur_complement_Hi(k, Σ, J);
         if (isfinite(S))
@@ -44,6 +45,7 @@ void Solver<Abi>::factor_fork(real_t S, real_view Σ, bool_view J) {
                                 settings.preferred_backend);
     };
     const auto factor_Ψ = [this](index_t k) {
+        KOQKATOO_TRACE("factor psi", k);
         const auto N = storage.dim.N_horiz;
         auto nd      = std::min(simd_stride, N + 1 - k * simd_stride);
         auto wLΨd = storage.work_LΨd(), wVV = storage.work_VV();
