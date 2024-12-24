@@ -519,26 +519,43 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     auto &Δλ1 = storage.λ1;
     auto LΨd = storage.LΨd_scalar(), LΨs = storage.LΨs_scalar();
 
+    // Parallel solve Hv = g
+    // ---------------------
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < LH().num_batches(); ++i) {
+        // Initialize rhs: g = ∇ϕ + Mᵀλ = ∇f̃ + Aᵀŷ + Mᵀλ                 (d ← g)
         for (index_t j = 0; j < nx + nu; ++j)
             for (index_t ii = i * simd_stride; ii < (i + 1) * simd_stride; ++ii)
                 d(ii, j, 0) = grad(ii, j, 0) + Mᵀλ(ii, j, 0) + Aᵀŷ(ii, j, 0);
+        // Solve Lᴴ vʹ = g                                              (d ← vʹ)
         compact_blas::xtrsm_LLNN(LH().batch(i), d.batch(i), be);
+        // Solve Lᴴ⁻ᵀ v = vʹ                                             (d ← v)
         compact_blas::xtrsm_LLTN(LH().batch(i), d.batch(i), be);
+        // Compute f = (A B) v                                          (Δλ ← f)
         if (i < AB().num_batches())
             compact_blas::xgemm(AB().batch(i), d.batch(i), Δλ.batch(i), be);
     }
+
+    // Forward substitution Ψ
+    // ----------------------
+    // Initialize rhs r - v = Mx - b - v                         (Δλ_scal ← ...)
     for (index_t j = 0; j < nx; ++j)
         Δλ_scal(0, j, 0) = Mxb(0, j, 0) - d(0, j, 0);
+    // Solve L(d) Δλʹ = r - v                                    (Δλ_scal ← Δλʹ)
     scalar_blas::xtrsm_LLNN(LΨd.batch(0), Δλ_scal.batch(0), be);
     for (index_t i = 1; i <= N; ++i) {
+        // Initialize rhs r + f - v = Mx - b + (A B) v - v       (Δλ_scal ← ...)
         for (index_t j = 0; j < nx; ++j)
             Δλ_scal(i, j, 0) = Mxb(i, j, 0) - d(i, j, 0) + Δλ(i - 1, j, 0);
+        // Subtract L(s) Δλʹ(i - 1)                              (Δλ_scal ← ...)
         scalar_blas::xgemm_sub(LΨs.batch(i - 1), Δλ_scal.batch(i - 1),
                                Δλ_scal.batch(i), be);
+        // Solve L(d) Δλʹ = r + f - v - L(s) Δλʹ(i - 1)          (Δλ_scal ← ...)
         scalar_blas::xtrsm_LLNN(LΨd.batch(i), Δλ_scal.batch(i), be);
     }
+
+    // Backward substitution Ψ
+    // -----------------------
     scalar_blas::xtrsm_LLTN(LΨd.batch(N), Δλ_scal.batch(N), be);
     for (index_t j = 0; j < nx; ++j)
         Δλ1(N - 1, j, 0) = Δλ(N, j, 0) = Δλ_scal(N, j, 0);
@@ -552,6 +569,9 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     }
     for (index_t j = 0; j < nx; ++j)
         Δλ(0, j, 0) = Δλ_scal(0, j, 0);
+
+    // Parallel solve Hd = -g - MᵀΔλ
+    // -----------------------------
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < LH().num_batches(); ++i) {
         MᵀΔλ.batch(i).top_rows(nx) = Δλ.batch(i);
