@@ -69,13 +69,20 @@ struct TraceLogger {
         log.thread_id  = hasher(std::this_thread::get_id());
         return ScopedLog{&log, t1};
     }
+
+    [[nodiscard]] std::span<const Log> get_logs() const {
+        auto n = std::min(logs.size(), count.load(std::memory_order_relaxed));
+        return std::span{logs}.first(n);
+    }
+
+    void reset() { count.store(0, std::memory_order_relaxed); }
 };
 
 #if KOQKATOO_WITH_TRACING
 extern TraceLogger trace_logger;
 #define KOQKATOO_TRACE(name, instance)                                         \
     const auto KOQKATOO_CAT(trace_log_, __COUNTER__) =                         \
-        trace_logger.trace(name, instance)
+        ::koqkatoo::trace_logger.trace(name, instance)
 #else
 #define KOQKATOO_TRACE(...)                                                    \
     do {                                                                       \

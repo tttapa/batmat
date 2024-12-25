@@ -95,6 +95,7 @@ void Solver<Abi>::prepare_all(real_t S, real_view Σ, bool_view J) {
     using std::isfinite;
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < LH().num_batches(); ++i) {
+        KOQKATOO_TRACE("factor prep", i);
         schur_complement_Hi(i, Σ, J);
         if (isfinite(S))
             LH().batch(i).add_to_diagonal(1 / S);
@@ -145,6 +146,7 @@ void Solver<Abi>::cholesky_Ψ() {
     auto wLΨd = storage.work_LΨd(), wLΨs = storage.work_LΨs(),
          wVV = storage.work_VV();
     foreach_chunked_merged(0, N, simd_stride, [&](index_t i, auto ni) {
+        KOQKATOO_TRACE("factor Ψ", i / simd_stride);
 #if 1
         index_t b = i / simd_stride, nd = std::min(ni + 1, simd_stride);
         compact_blas::unpack_L(LΨd().batch(b), wLΨd.first_layers(nd));
@@ -254,6 +256,7 @@ void Solver<Abi>::cholesky_Ψ() {
         for (index_t j = 0; j < ni; ++j)
             storage.LΨs_scalar()(i + j) = wLΨs(j);
     });
+    KOQKATOO_TRACE("factor Ψ", N);
     index_t last_j = N % simd_stride;
     if (last_j == 0) {
         // If the previous batch was complete, the term VV - LsLs is in VV.
