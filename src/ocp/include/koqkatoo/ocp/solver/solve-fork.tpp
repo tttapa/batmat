@@ -45,7 +45,7 @@ void Solver<Abi>::factor_fork(real_t S, real_view Σ, bool_view J) {
                                 settings.preferred_backend);
     };
     const auto factor_Ψ = [this](index_t k) {
-        KOQKATOO_TRACE("factor psi", k);
+        KOQKATOO_TRACE("factor Ψ", k);
         const auto N = storage.dim.N_horiz;
         auto nd      = std::min(simd_stride, N + 1 - k * simd_stride);
         auto wLΨd = storage.work_LΨd(), wVV = storage.work_VV();

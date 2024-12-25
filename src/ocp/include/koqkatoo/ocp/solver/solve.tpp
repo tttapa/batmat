@@ -3,6 +3,7 @@
 #include <koqkatoo/loop.hpp>
 #include <koqkatoo/ocp/solver/solve.hpp>
 #include <koqkatoo/openmp.h>
+#include <koqkatoo/trace.hpp>
 #include <optional>
 
 #if KOQKATOO_WITH_MKL
@@ -523,6 +524,7 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     // ---------------------
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < LH().num_batches(); ++i) {
+        KOQKATOO_TRACE("solve Hv=g", i);
         // Initialize rhs: g = ∇ϕ + Mᵀλ = ∇f̃ + Aᵀŷ + Mᵀλ                 (d ← g)
         for (index_t j = 0; j < nx + nu; ++j)
             for (index_t ii = i * simd_stride; ii < (i + 1) * simd_stride; ++ii)
@@ -538,12 +540,16 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
 
     // Forward substitution Ψ
     // ----------------------
-    // Initialize rhs r - v = Mx - b - v                         (Δλ_scal ← ...)
-    for (index_t j = 0; j < nx; ++j)
-        Δλ_scal(0, j, 0) = Mxb(0, j, 0) - d(0, j, 0);
-    // Solve L(d) Δλʹ = r - v                                    (Δλ_scal ← Δλʹ)
-    scalar_blas::xtrsm_LLNN(LΨd.batch(0), Δλ_scal.batch(0), be);
+    {
+        KOQKATOO_TRACE("solve ψ fwd", 0);
+        // Initialize rhs r - v = Mx - b - v                     (Δλ_scal ← ...)
+        for (index_t j = 0; j < nx; ++j)
+            Δλ_scal(0, j, 0) = Mxb(0, j, 0) - d(0, j, 0);
+        // Solve L(d) Δλʹ = r - v                                (Δλ_scal ← Δλʹ)
+        scalar_blas::xtrsm_LLNN(LΨd.batch(0), Δλ_scal.batch(0), be);
+    }
     for (index_t i = 1; i <= N; ++i) {
+        KOQKATOO_TRACE("solve ψ fwd", i);
         // Initialize rhs r + f - v = Mx - b + (A B) v - v       (Δλ_scal ← ...)
         for (index_t j = 0; j < nx; ++j)
             Δλ_scal(i, j, 0) = Mxb(i, j, 0) - d(i, j, 0) + Δλ(i - 1, j, 0);
@@ -556,10 +562,14 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
 
     // Backward substitution Ψ
     // -----------------------
-    scalar_blas::xtrsm_LLTN(LΨd.batch(N), Δλ_scal.batch(N), be);
-    for (index_t j = 0; j < nx; ++j)
-        Δλ1(N - 1, j, 0) = Δλ(N, j, 0) = Δλ_scal(N, j, 0);
+    {
+        KOQKATOO_TRACE("solve ψ rev", N);
+        scalar_blas::xtrsm_LLTN(LΨd.batch(N), Δλ_scal.batch(N), be);
+        for (index_t j = 0; j < nx; ++j)
+            Δλ1(N - 1, j, 0) = Δλ(N, j, 0) = Δλ_scal(N, j, 0);
+    }
     for (index_t i = N; i-- > 0;) {
+        KOQKATOO_TRACE("solve ψ rev", i);
         scalar_blas::xgemm_TN_sub(LΨs.batch(i), Δλ_scal.batch(i + 1),
                                   Δλ_scal.batch(i), be);
         scalar_blas::xtrsm_LLTN(LΨd.batch(i), Δλ_scal.batch(i), be);
@@ -574,6 +584,7 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     // -----------------------------
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < LH().num_batches(); ++i) {
+        KOQKATOO_TRACE("solve Hd=-g-MᵀΔλ", i);
         MᵀΔλ.batch(i).top_rows(nx) = Δλ.batch(i);
         MᵀΔλ.batch(i).bottom_rows(nu).set_constant(0);
         if (i < AB().num_batches())

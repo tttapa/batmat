@@ -4,6 +4,7 @@
 #include <koqkatoo/lut.hpp>
 #include <koqkatoo/ocp/solver/solve.hpp>
 #include <koqkatoo/openmp.h>
+#include <koqkatoo/trace.hpp>
 
 #include <algorithm>
 #include <optional>
@@ -75,6 +76,7 @@ void Solver<Abi>::updowndate_ψ() {
     };
 
     for (index_t k = 0; k < N; ++k) {
+        KOQKATOO_TRACE("updowndate Ψ", k);
         index_t rk = ranks(k, 0, 0);
         colsA += rk;
         if (colsA == 0)
@@ -104,6 +106,7 @@ void Solver<Abi>::updowndate_ψ() {
             Ad.set_constant(0);
     }
     // Final stage has no subdiagonal block (V)
+    KOQKATOO_TRACE("updowndate Ψ", N);
     index_t rN = ranks(N, 0, 0);
     colsA += rN;
     if (colsA > 0) {
@@ -162,6 +165,7 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new,
 
     const auto updowndate_stage = [&](index_t batch_idx, index_t rj_min,
                                       index_t rj_batch, auto ranksj) {
+        KOQKATOO_TRACE("updowndate", batch_idx);
         auto Σj    = storage.Σ_ud.batch(batch_idx).top_rows(rj_batch);
         auto Sj    = storage.Σ_sgn.batch(batch_idx).top_rows(rj_batch);
         auto Zj    = storage.Z.batch(batch_idx).left_cols(rj_batch);
