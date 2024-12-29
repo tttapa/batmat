@@ -127,7 +127,6 @@ void Solver<Abi>::factor_fork(real_t S, real_view Σ, bool_view J) {
             co_await lf::fork[do_invoke](process_stage, k);
         co_await lf::join;
     };
-    KOQKATOO_TRACE("factor wait", 0);
     lf::sync_wait(pool, process_all, process_stage, num_batch);
 }
 
@@ -250,7 +249,6 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
         }
         co_await lf::join;
     };
-    KOQKATOO_TRACE("solve wait", 0);
     lf::sync_wait(pool, process_all, process_fwd, solve_ψ_rev, solve_H2, N,
                   std::integral_constant<index_t, simd_stride>());
 }
