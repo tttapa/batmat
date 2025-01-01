@@ -42,3 +42,7 @@ if (KOQKATOO_WITH_BLASFEO)
     target_link_libraries(benchmark-trsm-blasfeo PRIVATE
         benchmark::benchmark blasfeo koqkatoo::koqkatoo koqkatoo::warnings)
 endif()
+
+add_executable(benchmark-solve solve.cpp benchmark-main.cpp)
+target_link_libraries(benchmark-solve PRIVATE
+    benchmark::benchmark koqkatoo::ocp koqkatoo::warnings Eigen3::Eigen)
