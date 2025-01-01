@@ -26,7 +26,7 @@ class KoqkatooRecipe(ConanFile):
         "with_benchmarks": False,
         "with_python": False,
         "with_libfork": True,
-        "with_tbb": True,
+        "with_tbb": False,
         "with_blasfeo": False,
         "with_cpu_time": False,
         "with_tracing": False,
