@@ -161,7 +161,7 @@ TEST(OCP, solve) {
     ASSERT_TRUE(luK.isInvertible());
     kkt_sol_ref          = luK.solve(kkt_rhs_ref);
     auto d_ref           = kkt_sol_ref.topRows(n_var);
-    auto Δλ_ref          = -kkt_sol_ref.bottomRows(n_dyn_constr);
+    auto Δλ_ref          = kkt_sol_ref.bottomRows(n_dyn_constr);
     VectorXreal MᵀΔλ_ref = M.transpose() * Δλ_ref;
 
     // Compare the koqkatoo OCP solution to the Eigen reference solution.
