@@ -7,7 +7,12 @@
 #include <koqkatoo/trace.hpp>
 
 #include <algorithm>
+#include <limits>
 #include <optional>
+#ifndef NDEBUG
+#include <format>
+#include <stdexcept>
+#endif
 
 #include <koqkatoo/cholundate/householder-updowndate-common.tpp>
 #include <koqkatoo/cholundate/householder-updowndate.hpp>
@@ -183,6 +188,11 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new,
             constexpr auto vec_align = stdx::vector_aligned;
             for (index_t r = 0; r < nx + nu; ++r)
                 where(z0_mask.__cvt(), zero).copy_to(&Zj(0, r, rj), vec_align);
+            using std::sqrt;
+            zero = simd{sqrt(std::numeric_limits<real_t>::min())}; // TODO
+            // TODO: why does zero sometimes result in NaN? At first sight, inf
+            //       arithmetic should also work (i.e. Σ⁻¹ = ∞), but apparently
+            //       I'm missing something.
             where(z0_mask.__cvt(), zero).copy_to(&Σj(0, rj, 0), vec_align);
         }
 #else
@@ -227,6 +237,20 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new,
         compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), Wi.bottom_rows(nu),
                                  be);
         // TODO: should we always eagerly update V and W?
+#ifndef NDEBUG
+        // Check finiteness of LH(i)
+        assert(N + 1 > batch_idx * simd_stride);
+        auto i_end =
+            std::min<index_t>(LHi.depth(), N + 1 - batch_idx * simd_stride);
+        for (index_t i = 0; i < i_end; ++i) {
+            for (index_t c = 0; c < LHi.rows(); ++c)
+                for (index_t r = c; r < LHi.rows(); ++r)
+                    if (!std::isfinite(LHi(i, r, c)))
+                        throw std::runtime_error(std::format(
+                            "inf value of LHi: {} at ({}, {}, {})",
+                            LHi(i, r, c), batch_idx * simd_stride + i, r, c));
+#endif
+        }
     };
 
     {
