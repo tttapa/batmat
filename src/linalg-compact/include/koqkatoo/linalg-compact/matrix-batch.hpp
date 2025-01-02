@@ -562,7 +562,7 @@ struct BatchedMatrixView {
 
     void add_to_diagonal(const value_type &t) {
         const auto bs = static_cast<I>(batch_size());
-        const auto n  = std::max(rows(), cols());
+        const auto n  = std::min(rows(), cols());
         for (index_type b = 0; b < num_batches(); ++b) {
             auto *p = batch(b).data;
             for (index_type i = 0; i < n; ++i) {
