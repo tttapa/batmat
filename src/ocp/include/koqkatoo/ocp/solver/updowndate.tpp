@@ -249,8 +249,8 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new,
                         throw std::runtime_error(std::format(
                             "inf value of LHi: {} at ({}, {}, {})",
                             LHi(i, r, c), batch_idx * simd_stride + i, r, c));
-#endif
         }
+#endif
     };
 
     {
