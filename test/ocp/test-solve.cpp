@@ -8,6 +8,7 @@
 
 #include <guanaqo/eigen/span.hpp>
 #include <guanaqo/eigen/view.hpp>
+#include <guanaqo/linalg/eigen/sparse.hpp>
 #include <guanaqo/linalg/sparsity-conversions.hpp>
 
 #include <algorithm>
@@ -30,7 +31,9 @@ namespace sp = guanaqo::linalg::sparsity;
 
 const auto ε = std::pow(std::numeric_limits<real_t>::epsilon(), real_t(0.9));
 
-TEST(OCP, solve) {
+struct OCP : testing::TestWithParam<index_t> {};
+
+TEST_P(OCP, solve) {
     using VectorXreal = Eigen::VectorX<real_t>;
     using simd_abi    = stdx::simd_abi::deduce_t<real_t, 4>;
     std::mt19937 rng{54321};
@@ -38,7 +41,7 @@ TEST(OCP, solve) {
     std::bernoulli_distribution bernoulli{0.5};
 
     // Generate some random OCP matrices
-    auto ocp = ko::generate_random_ocp({.N_horiz = 11, //
+    auto ocp = ko::generate_random_ocp({.N_horiz = GetParam(), //
                                         .nx      = 5,
                                         .nu      = 3,
                                         .ny      = 7,
@@ -172,3 +175,115 @@ TEST(OCP, solve) {
     EXPECT_THAT(Gᵀŷ, EigenAlmostEqual(Gᵀŷ_ref, ε / luK.rcond()));
     EXPECT_THAT(MᵀΔλ, EigenAlmostEqual(MᵀΔλ_ref, ε / luK.rcond()));
 }
+
+TEST_P(OCP, recompute) {
+    using VectorXreal = Eigen::VectorX<real_t>;
+    using simd_abi    = stdx::simd_abi::deduce_t<real_t, 4>;
+    std::mt19937 rng{654321};
+    std::normal_distribution<real_t> nrml{0, 1};
+    std::bernoulli_distribution bernoulli{0.5};
+
+    // Generate some random OCP matrices
+    auto ocp = ko::generate_random_ocp({.N_horiz = GetParam(), //
+                                        .nx      = 5,
+                                        .nu      = 3,
+                                        .ny      = 7,
+                                        .ny_N    = 4},
+                                       12345);
+
+    // Instantiate the OCP KKT solver.
+    ko::Solver<simd_abi> s = ocp;
+    s.settings.preferred_backend =
+        koqkatoo::linalg::compact::PreferredBackend::MKLScalarBatched;
+    index_t n_var = ocp.num_variables(), n_constr = ocp.num_constraints(),
+            n_dyn_constr = ocp.num_dynamics_constraints();
+
+    // Generate some random optimization solver data.
+    VectorXreal ŷ(n_constr), Ax(n_constr);
+    VectorXreal x0(n_var), x(n_var), q(n_var);
+    VectorXreal b(n_dyn_constr), // Dynamics constraints right-hand side
+        λ(n_dyn_constr),         //  & corresponding Lagrange multipliers.
+        Mx(n_dyn_constr);
+
+    real_t S = std::exp2(nrml(rng)); // primal regularization
+    std::ranges::generate(ŷ, [&] { return nrml(rng); });
+    std::ranges::generate(x, [&] { return nrml(rng); });
+    std::ranges::generate(x0, [&] { return nrml(rng); });
+    std::ranges::generate(q, [&] { return nrml(rng); });
+    std::ranges::generate(b, [&] { return nrml(rng); });
+    std::ranges::generate(λ, [&] { return nrml(rng); });
+
+    // Convert this data into the compact format used by the OCP solver.
+    // (Normally, you would only do this once, and re-use the format in the
+    //  optimization solver, only converting back at the very end to return a
+    //  solution to the user.)
+    auto ŷ_strided  = s.storage.initialize_constraints(as_span(ŷ));
+    auto x_strided  = s.storage.initialize_variables(as_span(x));
+    auto x0_strided = s.storage.initialize_variables(as_span(x0));
+    auto q_strided  = s.storage.initialize_variables(as_span(q));
+    auto b_strided  = s.storage.initialize_dynamics_constraints(as_span(b));
+    auto λ_strided  = s.storage.initialize_dynamics_constraints(as_span(λ));
+
+    // Prepare storage for some intermediate quantities.
+    auto grad_inner_strided = s.storage.initialize_variables();
+    auto Mᵀλ_inner_strided  = s.storage.initialize_variables();
+    auto grad_outer_strided = s.storage.initialize_variables();
+    auto Aᵀŷ_outer_strided  = s.storage.initialize_variables();
+    auto Mᵀλ_outer_strided  = s.storage.initialize_variables();
+    auto Mxb_strided        = s.storage.initialize_dynamics_constraints();
+    auto Ax_inner_strided   = s.storage.initialize_constraints();
+    auto Ax_outer_strided   = s.storage.initialize_constraints();
+
+    // Actually compute the matrix-vector products:
+    // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    // Compute the necessary matrix-vector products.
+    s.recompute_inner(S, x0_strided, x_strided, λ_strided, q_strided,
+                      grad_inner_strided, Ax_inner_strided, Mᵀλ_inner_strided);
+    real_t inf_nrm_al_grad = s.recompute_outer(
+        x_strided, ŷ_strided, λ_strided, q_strided, grad_outer_strided,
+        Ax_outer_strided, Aᵀŷ_outer_strided, Mᵀλ_outer_strided);
+    s.residual_dynamics_constr(x_strided, b_strided, Mxb_strided);
+
+    // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    // Restore the solution to normal vectors to verify them.
+    VectorXreal grad_inner(n_var), Mᵀλ_inner(n_var), Ax_inner(n_constr),
+        grad_outer(n_var), Mᵀλ_outer(n_var), Aᵀŷ_outer(n_var),
+        Mxb(n_dyn_constr);
+    s.storage.restore_variables(grad_inner_strided, as_span(grad_inner));
+    s.storage.restore_variables(Mᵀλ_inner_strided, as_span(Mᵀλ_inner));
+    s.storage.restore_variables(grad_outer_strided, as_span(grad_outer));
+    s.storage.restore_variables(Mᵀλ_outer_strided, as_span(Mᵀλ_outer));
+    s.storage.restore_variables(Aᵀŷ_outer_strided, as_span(Aᵀŷ_outer));
+    s.storage.restore_dynamics_constraints(Mxb_strided, as_span(Mxb));
+
+    // Build quadratic program and standard KKT system for the OCP.
+    auto qp = ko::LinearOCPSparseQP::build(ocp);
+    // Convert to dense matrices to compare using Eigen.
+    ASSERT_EQ(qp.Q_sparsity.symmetry, sp::Symmetry::Lower);
+    auto Q = as_eigen(qp.Q_sparsity, std::span{qp.Q_values})
+                 .selfadjointView<Eigen::Lower>();
+    auto A = as_eigen(qp.A_sparsity, std::span{qp.A_values});
+    auto G = A.bottomRows(n_constr);
+    auto M = A.topRows(n_dyn_constr);
+
+    // Compute matrix-vector products using Eigen
+    VectorXreal grad_inner_ref = Q * x + (x - x0) / S + q;
+    VectorXreal Gᵀŷ_ref        = G.transpose() * ŷ;
+    VectorXreal Mᵀλ_ref        = M.transpose() * λ;
+    VectorXreal Mxb_ref        = M * x - b;
+    VectorXreal grad_outer_ref = Q * x + q;
+    real_t inf_nrm_al_grad_ref =
+        (grad_outer_ref + Gᵀŷ_ref + Mᵀλ_ref).lpNorm<Eigen::Infinity>();
+
+    EXPECT_THAT(grad_inner, EigenAlmostEqual(grad_inner_ref, ε));
+    EXPECT_THAT(Mᵀλ_inner, EigenAlmostEqual(Mᵀλ_ref, ε));
+    EXPECT_THAT(grad_outer, EigenAlmostEqual(grad_outer_ref, ε));
+    EXPECT_THAT(Aᵀŷ_outer, EigenAlmostEqual(Gᵀŷ_ref, ε));
+    EXPECT_THAT(Mᵀλ_outer, EigenAlmostEqual(Mᵀλ_ref, ε));
+    EXPECT_THAT(Mxb, EigenAlmostEqual(Mxb_ref, ε));
+    EXPECT_NEAR(inf_nrm_al_grad, inf_nrm_al_grad_ref, 10 * ε);
+}
+
+INSTANTIATE_TEST_SUITE_P(OCP, OCP, testing::Range<index_t>(1, 20));
