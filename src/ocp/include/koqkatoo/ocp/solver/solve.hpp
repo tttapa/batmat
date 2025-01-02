@@ -101,6 +101,12 @@ struct Solver {
     void solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
                mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ,
                Timings &t);
+    void recompute_inner(real_t S, real_view x0, real_view x, real_view λ,
+                         real_view q, mut_real_view grad_f, mut_real_view Ax,
+                         mut_real_view Mᵀλ);
+    real_t recompute_outer(real_view x, real_view y, real_view λ, real_view q,
+                           mut_real_view grad_f, mut_real_view Ax,
+                           mut_real_view Aᵀy, mut_real_view Mᵀλ);
 
     /// Mᵀλ
     void mat_vec_transpose_dynamics_constr(real_view λ, mut_real_view Mᵀλ);

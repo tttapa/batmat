@@ -253,4 +253,140 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
                   std::integral_constant<index_t, simd_stride>());
 }
 
+template <simd_abi_tag Abi>
+void Solver<Abi>::recompute_inner(real_t S, real_view x0, real_view x,
+                                  real_view λ, real_view q,
+                                  mut_real_view grad_f, mut_real_view Ax,
+                                  mut_real_view Mᵀλ) {
+    KOQKATOO_TRACE("recompute_inner", 0);
+
+    auto [N, nx, nu, ny, ny_N] = storage.dim;
+    const auto be              = settings.preferred_backend;
+    using simd                 = types::simd;
+    static constexpr auto al   = stdx::vector_aligned;
+    simd invS{1 / S};
+    const auto process_stage = [&](index_t k) {
+        auto qi = q.batch(k), grad_fi = grad_f.batch(k), xi = x.batch(k),
+             x0i = x0.batch(k), Axi = Ax.batch(k);
+        for (index_t j = 0; j < x.rows(); ++j) {
+            simd qij{&qi(0, j, 0), al}, xij{&xi(0, j, 0), al},
+                x0ij{&x0i(0, j, 0), al};
+            simd grad_fij = invS * (xij - x0ij) + qij;
+            // q + S⁻¹(x - x0)
+            grad_fij.copy_to(&grad_fi(0, j, 0), al);
+        }
+        // Qx + q + S⁻¹(x - x0)
+        compact_blas::xsymv_add(H().batch(k), xi, grad_fi, be);
+        // Cx + Du
+        compact_blas::xgemm(CD().batch(k), xi, Axi, be);
+        // Mᵀλ(i) = [I 0]ᵀ λ(i)
+        Mᵀλ.batch(k).bottom_rows(nu).set_constant(0);
+        compact_blas::xcopy(λ.batch(k), Mᵀλ.batch(k).top_rows(nx));
+        if (k * simd_stride < N) {
+            // Shift λ by one time step
+            const auto i_end = std::min((k + 1) * simd_stride, N);
+            for (index_t r = 0; r < nx; ++r)
+                for (index_t i = k * simd_stride; i < i_end; ++i)
+                    storage.λ1(i, r, 0) = λ(i + 1, r, 0);
+            // Mᵀλ(i) = -[A B]ᵀ(i) λ(i+1) + [I 0]ᵀ λ(i)
+            compact_blas::xgemm_TN_sub(AB().batch(k), storage.λ1.batch(k),
+                                       Mᵀλ.batch(k), be);
+        }
+    };
+    const auto process_all = [](auto, auto process_stage, index_t N,
+                                auto simd_stride) -> lf::task<void> {
+        index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
+        for (index_t k = 0; k < num_batch; ++k)
+            co_await lf::fork[do_invoke](process_stage, k);
+        co_await lf::join;
+    };
+    lf::sync_wait(pool, process_all, process_stage, N,
+                  std::integral_constant<index_t, simd_stride>());
+}
+
+template <simd_abi_tag Abi>
+real_t Solver<Abi>::recompute_outer(real_view x, real_view y, real_view λ,
+                                    real_view q, mut_real_view grad_f,
+                                    mut_real_view Ax, mut_real_view Aᵀy,
+                                    mut_real_view Mᵀλ) {
+    using std::abs;
+    using std::isfinite;
+    using std::max;
+    KOQKATOO_TRACE("recompute_outer", 0);
+
+    auto [N, nx, nu, ny, ny_N] = storage.dim;
+    const auto be              = settings.preferred_backend;
+    using simd                 = types::simd;
+    static constexpr auto al   = stdx::vector_aligned;
+    const auto process_stage   = [&](index_t k) {
+        auto qi = q.batch(k), grad_fi = grad_f.batch(k), xi = x.batch(k),
+             Axi = Ax.batch(k), yi = y.batch(k), Aᵀyi = Aᵀy.batch(k),
+             Mᵀλi = Mᵀλ.batch(k);
+        // Qx + q
+        compact_blas::xcopy(qi, grad_fi);
+        compact_blas::xsymv_add(H().batch(k), xi, grad_fi, be);
+        // Cx + Du
+        compact_blas::xgemm(CD().batch(k), xi, Axi, be);
+        compact_blas::xgemm_TN(CD().batch(k), yi, Aᵀyi, be);
+        // Mᵀλ(i) = [I 0]ᵀ λ(i)
+        Mᵀλ.batch(k).bottom_rows(nu).set_constant(0);
+        compact_blas::xcopy(λ.batch(k), Mᵀλ.batch(k).top_rows(nx));
+        if (k * simd_stride < N) {
+            // Shift λ by one time step
+            const auto i_end = std::min((k + 1) * simd_stride, N);
+            for (index_t r = 0; r < nx; ++r)
+                for (index_t i = k * simd_stride; i < i_end; ++i)
+                    storage.λ1(i, r, 0) = λ(i + 1, r, 0);
+            // Mᵀλ(i) = -[A B]ᵀ(i) λ(i+1) + [I 0]ᵀ λ(i)
+            compact_blas::xgemm_TN_sub(AB().batch(k), storage.λ1.batch(k),
+                                         Mᵀλ.batch(k), be);
+        }
+        // Norm of augmented lagrangian gradient
+        if ((k + 1) * simd_stride <= N) {
+            // full batches excluding the last stage
+            simd inf_norm{0}, l1_norm{0};
+            for (index_t r = 0; r < nx + nu; ++r) {
+                auto al_gr = simd{&grad_fi(0, r, 0), al} +
+                             simd{&Aᵀyi(0, r, 0), al} +
+                             simd{&Mᵀλi(0, r, 0), al};
+                inf_norm = max(abs(al_gr), inf_norm);
+                l1_norm += abs(al_gr);
+            }
+            auto l1_norm_scalar = reduce(l1_norm);
+            return isfinite(l1_norm_scalar) ? hmax(inf_norm) : l1_norm_scalar;
+        } else {
+            // last batch (special case because final stage only has x, no u)
+            real_t inf_norm = 0, l1_norm = 0;
+            const auto i_end = N - k * simd_stride;
+            for (index_t r = 0; r < nx + nu; ++r) {
+                for (index_t i = 0; i <= i_end; ++i) {
+                    if (r >= nx && i == i_end)
+                        continue;
+                    auto gr = grad_fi(i, r, 0) + Aᵀyi(i, r, 0) + Mᵀλi(i, r, 0);
+                    inf_norm = max(abs(gr), inf_norm);
+                    l1_norm += abs(gr);
+                }
+            }
+            return isfinite(l1_norm) ? inf_norm : l1_norm;
+        }
+    };
+    const auto process_all = [](auto, auto process_stage, index_t N,
+                                auto simd_stride) -> lf::task<real_t> {
+        index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
+        std::vector<real_t> stage_norms(num_batch);
+        for (index_t k = 0; k < num_batch; ++k) {
+            co_await lf::fork[&stage_norms[k], do_invoke](process_stage, k);
+        }
+        co_await lf::join;
+        real_t inf_norm = 0, l1_norm = 0;
+        for (auto stage_norm : stage_norms) {
+            inf_norm = std::max(std::abs(stage_norm), inf_norm);
+            l1_norm += std::abs(stage_norm);
+        }
+        co_return isfinite(l1_norm) ? inf_norm : l1_norm;
+    };
+    return lf::sync_wait(pool, process_all, process_stage, N,
+                         std::integral_constant<index_t, simd_stride>());
+}
+
 } // namespace koqkatoo::ocp
