@@ -1,10 +1,26 @@
 #pragma once
 
+#include <koqkatoo/fork-pool.hpp>
 #include <koqkatoo/ocp/solver/solve.hpp>
 #include <koqkatoo/trace.hpp>
 #include <libfork/core.hpp>
 #include <libfork/schedule.hpp>
+#include <algorithm>
 #include <atomic>
+#include <barrier>
+#include <cstdint>
+#include <execution>
+#include <functional>
+#include <latch>
+#include <ranges>
+#include <semaphore>
+#include <stdexcept>
+#include <thread>
+
+/// libfork or custom thread pool
+#define KOQKATOO_SOLVE_USE_LIBFORK 0
+/// atomic wait (futex) or counting semaphore
+#define KOQKATOO_SOLVE_USE_ATOMIC_WAIT 0
 
 namespace koqkatoo::ocp {
 
@@ -15,11 +31,79 @@ inline constexpr auto do_invoke =
     co_return std::invoke(std::move(fun), std::move(args)...);
 };
 
-inline lf::lazy_pool pool{4}; // TODO: make configurable/argument
-
 struct join_counter_t {
     alignas(64) std::atomic<int> value{};
 };
+
+class thread_pool {
+  private:
+    std::vector<std::atomic_int_fast32_t> flags;
+    std::vector<std::function<void()>> funcs;
+    std::vector<std::jthread> threads; // must be destroyed first
+
+    enum State {
+        Done,
+        Busy,
+        Cancelled,
+    };
+
+    void work(std::stop_token stop, size_t i) {
+        std::stop_callback cb{
+            stop,
+            [this, i] {
+                flags[i].store(State::Cancelled);
+                flags[i].notify_one();
+            },
+        };
+        while (!stop.stop_requested()) {
+            flags[i].wait(State::Done, std::memory_order_relaxed);
+            auto flag = flags[i].load(std::memory_order_acquire);
+            if (flag == State::Cancelled) {
+                break;
+            } else if (flag == State::Busy) {
+                funcs[i]();
+                flags[i].store(State::Done, std::memory_order_release);
+                flags[i].notify_one();
+            }
+        }
+    }
+
+  public:
+    thread_pool(size_t num_threads) : flags(num_threads) {
+        threads.reserve(num_threads);
+        funcs.resize(num_threads);
+        for (size_t i = 0; i < num_threads; ++i) {
+            flags[i] = State::Done;
+            threads.emplace_back(&thread_pool::work, this, i);
+        }
+    }
+
+    thread_pool(const thread_pool &)            = delete;
+    thread_pool &operator=(const thread_pool &) = delete;
+    thread_pool(thread_pool &&)                 = default;
+    thread_pool &operator=(thread_pool &&)      = default;
+
+    void schedule(size_t i, std::function<void()> func) {
+        if (flags[i].load(std::memory_order_relaxed) != State::Done)
+            throw std::logic_error("Previous task not done yet");
+        funcs[i] = std::move(func);
+        flags[i].store(State::Busy, std::memory_order_release);
+        flags[i].notify_one();
+    }
+
+    void wait(size_t i) {
+        flags[i].wait(State::Busy, std::memory_order_acquire);
+    }
+
+    void wait_all() {
+        for (size_t i = 0; i < size(); ++i)
+            wait(i);
+    }
+
+    [[nodiscard]] size_t size() const { return flags.size(); }
+};
+
+thread_pool pool(4);
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::factor_fork(real_t S, real_view Σ, bool_view J) {
@@ -121,13 +205,34 @@ void Solver<Abi>::factor_fork(real_t S, real_view Σ, bool_view J) {
         }
     };
 
+#if KOQKATOO_SOLVE_USE_LIBFORK
     const auto process_all = [](auto, auto process_stage,
                                 index_t num_batch) -> lf::task<void> {
         for (index_t k = 0; k < num_batch; ++k)
             co_await lf::fork[do_invoke](process_stage, k);
         co_await lf::join;
     };
-    lf::sync_wait(pool, process_all, process_stage, num_batch);
+    lf::sync_wait(*fork_pool, process_all, process_stage, num_batch);
+#else
+    std::atomic<index_t> batch_counter{0};
+    auto thread_work = [&] {
+        while (true) {
+            index_t k = batch_counter.fetch_add(1, std::memory_order_relaxed);
+            if (k >= num_batch)
+                break;
+            process_stage(k);
+        }
+    };
+#if 0
+    std::vector<std::jthread> threads;
+    for (int i = 0; i < 4; ++i)
+        threads.emplace_back(thread_work);
+#else
+    for (size_t i = 0; i < pool.size(); ++i)
+        pool.schedule(i, thread_work);
+    pool.wait_all();
+#endif
+#endif
 }
 
 template <simd_abi_tag Abi>
@@ -231,6 +336,7 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
             ++k;
         }
     };
+#if KOQKATOO_SOLVE_USE_LIBFORK
     const auto process_all = [](auto process_all, auto process_fwd,
                                 auto solve_ψ_rev, auto solve_H2, index_t N,
                                 auto simd_stride) -> lf::task<void> {
@@ -249,8 +355,85 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
         }
         co_await lf::join;
     };
-    lf::sync_wait(pool, process_all, process_fwd, solve_ψ_rev, solve_H2, N,
-                  std::integral_constant<index_t, simd_stride>());
+    lf::sync_wait(*fork_pool, process_all, process_fwd, solve_ψ_rev, solve_H2,
+                  N, std::integral_constant<index_t, simd_stride>());
+#else
+#if USE_ATOMIC_WAIT
+    std::atomic<bool> main_thread_flag{false};
+    std::atomic<index_t> batch_counter_1{0}, stage_counter_2{num_batch - 1},
+        stage_ready{num_batch};
+    std::latch join_all{static_cast<ptrdiff_t>(pool.size())};
+    auto thread_work = [&] {
+        while (true) {
+            index_t k = batch_counter_1.fetch_add(1, std::memory_order_relaxed);
+            if (k >= num_batch)
+                break;
+            process_fwd(k);
+        }
+        join_all.arrive_and_wait();
+        bool main_thread =
+            !main_thread_flag.exchange(true, std::memory_order_relaxed);
+        if (main_thread) {
+            for (index_t i = N + 1; i-- > 0;) {
+                solve_ψ_rev(i);
+                if (i % simd_stride == 0) {
+                    KOQKATOO_TRACE("solve store-notify", i);
+                    stage_ready.store(i / simd_stride,
+                                      std::memory_order_release);
+                    stage_ready.notify_one();
+                }
+            }
+        }
+        while (true) {
+            index_t k = stage_counter_2.fetch_sub(1, std::memory_order_relaxed);
+            if (k < 0)
+                break;
+            index_t k_ready = stage_ready.load(std::memory_order_acquire);
+            while (k < k_ready) {
+                stage_ready.wait(k_ready, std::memory_order_relaxed);
+                k_ready = stage_ready.load(std::memory_order_acquire);
+            }
+            solve_H2(k);
+        }
+    };
+#else
+    std::atomic<bool> main_thread_flag{false};
+    std::atomic<index_t> batch_counter_1{0}, stage_counter_2{num_batch - 1};
+    std::counting_semaphore<> stage_ready{0};
+    std::latch join_all{static_cast<ptrdiff_t>(pool.size())};
+    auto thread_work = [&] {
+        while (true) {
+            index_t k = batch_counter_1.fetch_add(1, std::memory_order_relaxed);
+            if (k >= num_batch)
+                break;
+            process_fwd(k);
+        }
+        join_all.arrive_and_wait();
+        bool main_thread =
+            !main_thread_flag.exchange(true, std::memory_order_relaxed);
+        if (main_thread) {
+            for (index_t i = N + 1; i-- > 0;) {
+                solve_ψ_rev(i);
+                if (i % simd_stride == 0) {
+                    KOQKATOO_TRACE("solve store-notify", i);
+                    stage_ready.release(1);
+                }
+            }
+            stage_ready.release(static_cast<ptrdiff_t>(2 * pool.size()));
+        }
+        while (true) {
+            stage_ready.acquire();
+            index_t k = stage_counter_2.fetch_sub(1, std::memory_order_relaxed);
+            if (k < 0)
+                break;
+            solve_H2(k);
+        }
+    };
+#endif
+    for (size_t i = 0; i < pool.size(); ++i)
+        pool.schedule(i, thread_work);
+    pool.wait_all();
+#endif
 }
 
 template <simd_abi_tag Abi>
@@ -300,7 +483,7 @@ void Solver<Abi>::recompute_inner(real_t S, real_view x0, real_view x,
             co_await lf::fork[do_invoke](process_stage, k);
         co_await lf::join;
     };
-    lf::sync_wait(pool, process_all, process_stage, N,
+    lf::sync_wait(*fork_pool, process_all, process_stage, N,
                   std::integral_constant<index_t, simd_stride>());
 }
 
@@ -385,8 +568,155 @@ real_t Solver<Abi>::recompute_outer(real_view x, real_view y, real_view λ,
         }
         co_return isfinite(l1_norm) ? inf_norm : l1_norm;
     };
-    return lf::sync_wait(pool, process_all, process_stage, N,
+    return lf::sync_wait(*fork_pool, process_all, process_stage, N,
                          std::integral_constant<index_t, simd_stride>());
+}
+
+template <simd_abi_tag Abi>
+void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new,
+                                  Timings *t) {
+    KOQKATOO_TRACE("updowndate", 0);
+
+    std::optional<guanaqo::Timed<typename Timings::type>> t_total;
+    if (t)
+        t_total.emplace(t->updowndate);
+    auto [N, nx, nu, ny, ny_N] = storage.dim;
+    auto &ranks                = storage.stagewise_update_counts;
+    index_t rj_max             = 0;
+    for (index_t k = 0; k <= N; ++k) {
+        index_t rj  = 0;
+        index_t nyk = k == N ? ny_N : ny;
+        for (index_t r = 0; r < nyk; ++r) {
+            bool up   = J_new(k, r, 0) && !J_old(k, r, 0);
+            bool down = !J_new(k, r, 0) && J_old(k, r, 0);
+            if (up || down) {
+                storage.Σ_sgn(k, rj, 0) = up ? +real_t(0) : -real_t(0);
+                storage.Σ_ud(k, rj, 0)  = Σ(k, r, 0);
+                index_t nxuk            = k == N ? nx : nx + nu;
+                for (index_t c = 0; c < nxuk; ++c) // TODO: pre-transpose CD?
+                    storage.Z(k, c, rj) = CD()(k, r, c);
+                ++rj;
+            }
+        }
+        ranks(k, 0, 0) = rj;
+        rj_max         = std::max(rj_max, rj);
+    }
+    if (rj_max == 0)
+        return;
+
+    const auto updowndate_stage = [&](index_t batch_idx, index_t rj_min,
+                                      index_t rj_batch, auto ranksj) {
+        KOQKATOO_TRACE("updowndate", batch_idx);
+        auto Σj    = storage.Σ_ud.batch(batch_idx).top_rows(rj_batch);
+        auto Sj    = storage.Σ_sgn.batch(batch_idx).top_rows(rj_batch);
+        auto Zj    = storage.Z.batch(batch_idx).left_cols(rj_batch);
+        auto Z1j   = storage.Z1.batch(batch_idx).left_cols(rj_batch);
+        auto Luj   = storage.Lupd.batch(batch_idx).top_left(rj_batch, rj_batch);
+        auto Wuj   = storage.Wupd.batch(batch_idx).left_cols(rj_batch);
+        using simd = typename types::simd;
+#ifdef _GLIBCXX_EXPERIMENTAL_SIMD // TODO: need general way to convert masks
+        using index_simd = typename types::index_simd;
+        index_simd rjks{ranksj.data, stdx::vector_aligned};
+        for (index_t rj = rj_min; rj < rj_batch; ++rj) {
+            index_simd rjs{rj};
+            auto z0_mask = rjs >= rjks;
+            simd zero{0};
+            constexpr auto vec_align = stdx::vector_aligned;
+            for (index_t r = 0; r < nx + nu; ++r)
+                where(z0_mask.__cvt(), zero).copy_to(&Zj(0, r, rj), vec_align);
+            using std::sqrt;
+            zero = simd{sqrt(std::numeric_limits<real_t>::min())}; // TODO
+            // TODO: why does zero sometimes result in NaN? At first sight, inf
+            //       arithmetic should also work (i.e. Σ⁻¹ = ∞), but apparently
+            //       I'm missing something.
+            where(z0_mask.__cvt(), zero).copy_to(&Σj(0, rj, 0), vec_align);
+        }
+#else
+#error "Fallback not yet implemented"
+#endif
+        const auto be = settings.preferred_backend;
+        // Copy Z
+        compact_blas::xcopy(Zj, Z1j.top_rows(nx + nu));
+        compact_blas::xfill(real_t(0), Z1j.bottom_rows(nx));
+        // Z ← L⁻¹ Z
+        compact_blas::xtrsm_LLNN(LH().batch(batch_idx), Zj, be);
+        // Lu ← ZᵀZ ± Σ⁻¹
+        compact_blas::xsyrk_T(Zj, Luj, be);
+        for (index_t r = 0; r < rj_batch; ++r) {
+            simd Lujrr{&Luj(0, r, r), stdx::vector_aligned};
+            simd Σjr{&Σj(0, r, 0), stdx::vector_aligned};
+            simd Sjr{&Sj(0, r, 0), stdx::vector_aligned};
+            Lujrr += cneg(1 / Σjr, Sjr);
+            Lujrr.copy_to(&Luj(0, r, r), stdx::vector_aligned);
+        }
+        // Lu ← chol(ZᵀZ ± Σ⁻¹)
+        compact_blas::xpntrf(Luj, Sj);
+        // Z ← Z Lu⁻ᵀ
+        compact_blas::xtrsm_RLTN(Luj, Zj, be);
+        // Wu ← W Z
+        compact_blas::xgemm_TN(Wᵀ().batch(batch_idx), Zj, Wuj, be);
+        if (batch_idx < AB().num_batches()) {
+            // Vu ← -V Z
+            auto Vuj = storage.Vupd.batch(batch_idx).left_cols(rj_batch);
+            compact_blas::xgemm_neg(V().batch(batch_idx), Zj, Vuj, be);
+        }
+        for (index_t r = 0; r < rj_batch; ++r) {
+            simd s{&Sj(0, r, 0), stdx::vector_aligned};
+            simd σ{&Σj(0, r, 0), stdx::vector_aligned};
+            cneg(σ, s).copy_to(&Σj(0, r, 0), stdx::vector_aligned);
+        }
+        // Update LH and V
+        compact_blas::xshhud_diag(LHV().batch(batch_idx), Z1j, Σj, be);
+        auto LHi = LH().batch(batch_idx), Wi = Wᵀ().batch(batch_idx);
+        compact_blas::xcopy(LHi.top_left(nx + nu, nx), Wi);
+        compact_blas::xtrtri(Wi, be);
+        compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), Wi.bottom_rows(nu),
+                                 be);
+        // TODO: should we always eagerly update V and W?
+#ifndef NDEBUG
+        // Check finiteness of LH(i)
+        assert(N + 1 > batch_idx * simd_stride);
+        auto i_end =
+            std::min<index_t>(LHi.depth(), N + 1 - batch_idx * simd_stride);
+        for (index_t i = 0; i < i_end; ++i) {
+            for (index_t c = 0; c < LHi.rows(); ++c)
+                for (index_t r = c; r < LHi.rows(); ++r)
+                    if (!std::isfinite(LHi(i, r, c)))
+                        throw std::runtime_error(std::format(
+                            "inf value of LHi: {} at ({}, {}, {})",
+                            LHi(i, r, c), batch_idx * simd_stride + i, r, c));
+        }
+#endif
+    };
+    const auto process_all = [](auto, auto updowndate_stage, index_t N,
+                                auto simd_stride,
+                                auto &ranks) -> lf::task<void> {
+        for (index_t k = 0; k < N + 1; k += simd_stride) {
+            auto nk           = std::min<index_t>(simd_stride, N + 1 - k);
+            index_t batch_idx = k / simd_stride;
+            auto ranksj       = ranks.batch(batch_idx);
+            auto rjmm      = std::minmax_element(ranksj.data, ranksj.data + nk);
+            index_t rj_min = *rjmm.first, rj_batch = *rjmm.second;
+            if (rj_batch != 0)
+                co_await lf::fork[do_invoke](updowndate_stage, batch_idx,
+                                             rj_min, rj_batch, ranksj);
+        }
+        co_await lf::join;
+    };
+
+    {
+        std::optional<guanaqo::Timed<typename Timings::type>> t_w;
+        if (t)
+            t_w.emplace(t->updowndate_stages);
+        lf::sync_wait(*fork_pool, process_all, updowndate_stage, N,
+                      std::integral_constant<index_t, simd_stride>(), ranks);
+    }
+    {
+        std::optional<guanaqo::Timed<typename Timings::type>> t_w;
+        if (t)
+            t_w.emplace(t->updowndate_Ψ);
+        updowndate_ψ();
+    }
 }
 
 } // namespace koqkatoo::ocp

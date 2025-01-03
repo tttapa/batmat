@@ -127,6 +127,8 @@ struct Solver {
                                              mut_real_view grad_f);
 
     void updowndate(real_view Σ, bool_view J_old, bool_view J_new, Timings *t);
+    void updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new,
+                         Timings *t);
     void updowndate_ψ();
 
     [[nodiscard]] index_t num_variables() const {
