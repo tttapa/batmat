@@ -1,5 +1,6 @@
 #include <benchmark/benchmark.h>
 
+#include <koqkatoo/fork-pool.hpp>
 #include <koqkatoo/matrix-view.hpp>
 #include <koqkatoo/ocp/conversion.hpp>
 #include <koqkatoo/ocp/ocp.hpp>
@@ -25,8 +26,12 @@ using koqkatoo::real_t;
 using koqkatoo::RealMatrixView;
 namespace sp = guanaqo::linalg::sparsity;
 
+static bool init_done = false;
+
 template <class simd_abi>
 void benchmark_solve(benchmark::State &state) {
+    if (!std::exchange(init_done, true))
+        koqkatoo::fork_set_num_threads(4);
     using VectorXreal = Eigen::VectorX<real_t>;
     std::mt19937 rng{54321};
     std::normal_distribution<real_t> nrml{0, 1};
