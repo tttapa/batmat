@@ -503,6 +503,7 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     storage.restore_dynamics_constraints(Δλ, storage.Δλ_scalar);
     solve_Ψ_scalar(storage.Δλ_scalar);
     storage.copy_dynamics_constraints(storage.Δλ_scalar, Δλ);
+    compact_blas::xneg(Δλ);
     // MᵀΔλ ← Mᵀ Δλ
     mat_vec_transpose_dynamics_constr(Δλ, MᵀΔλ);
     // d ← MᵀΔλ - ∇f̃(x) - Mᵀλ - Aᵀŷ
@@ -621,6 +622,7 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     timed(t.solve_Ψ, [&] { solve_Ψ_scalar(storage.Δλ_scalar, t); });
     timed(t.solve_shuffle, &storage_t::copy_dynamics_constraints, storage,
           storage.Δλ_scalar, Δλ);
+    compact_blas::xneg(Δλ);
     // MᵀΔλ ← Mᵀ Δλ
     timed(t.solve_mat_vec_tp, &Solver::mat_vec_transpose_dynamics_constr, this,
           Δλ, MᵀΔλ);
