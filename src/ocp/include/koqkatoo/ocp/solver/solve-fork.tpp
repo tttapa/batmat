@@ -8,10 +8,13 @@
 #include <algorithm>
 #include <atomic>
 #include <barrier>
+#include <condition_variable>
 #include <cstdint>
 #include <execution>
 #include <functional>
+#include <iostream>
 #include <latch>
+#include <mutex>
 #include <ranges>
 #include <semaphore>
 #include <stdexcept>
@@ -37,45 +40,44 @@ struct join_counter_t {
 
 class thread_pool {
   private:
-    std::vector<std::atomic_int_fast32_t> flags;
+    struct Signals {
+        std::mutex mtx;
+        std::condition_variable cv;
+    };
+    std::vector<Signals> signals;
     std::vector<std::function<void()>> funcs;
     std::vector<std::jthread> threads; // must be destroyed first
 
-    enum State {
-        Done,
-        Busy,
-        Cancelled,
-    };
-
     void work(std::stop_token stop, size_t i) {
-        std::stop_callback cb{
-            stop,
-            [this, i] {
-                flags[i].store(State::Cancelled);
-                flags[i].notify_one();
-            },
-        };
-        while (!stop.stop_requested()) {
-            flags[i].wait(State::Done, std::memory_order_relaxed);
-            auto flag = flags[i].load(std::memory_order_acquire);
-            if (flag == State::Cancelled) {
+        auto &sig = signals[i];
+        std::stop_callback cb{stop, [&sig] {
+                                  sig.mtx.lock();
+                                  sig.mtx.lock();
+                                  sig.cv.notify_one();
+                              }};
+        while (true) {
+            std::unique_lock lck{sig.mtx};
+            sig.cv.wait(lck, [&] { return funcs[i] || stop.stop_requested(); });
+            if (stop.stop_requested()) {
                 break;
-            } else if (flag == State::Busy) {
-                funcs[i]();
-                flags[i].store(State::Done, std::memory_order_release);
-                flags[i].notify_one();
+            } else {
+                try {
+                    funcs[i]();
+                } catch (...) {
+                    std::cerr << "fail " << i << std::endl;
+                }
+                funcs[i] = nullptr;
+                lck.unlock();
+                sig.cv.notify_all();
             }
         }
     }
 
   public:
-    thread_pool(size_t num_threads) : flags(num_threads) {
+    thread_pool(size_t num_threads) : signals(num_threads), funcs(num_threads) {
         threads.reserve(num_threads);
-        funcs.resize(num_threads);
-        for (size_t i = 0; i < num_threads; ++i) {
-            flags[i] = State::Done;
+        for (size_t i = 0; i < num_threads; ++i)
             threads.emplace_back(&thread_pool::work, this, i);
-        }
     }
 
     thread_pool(const thread_pool &)            = delete;
@@ -84,15 +86,19 @@ class thread_pool {
     thread_pool &operator=(thread_pool &&)      = default;
 
     void schedule(size_t i, std::function<void()> func) {
-        if (flags[i].load(std::memory_order_relaxed) != State::Done)
+        auto &sig = signals[i];
+        std::unique_lock lck{sig.mtx, std::try_to_lock};
+        if (!lck.owns_lock())
             throw std::logic_error("Previous task not done yet");
         funcs[i] = std::move(func);
-        flags[i].store(State::Busy, std::memory_order_release);
-        flags[i].notify_one();
+        lck.unlock();
+        sig.cv.notify_all();
     }
 
     void wait(size_t i) {
-        flags[i].wait(State::Busy, std::memory_order_acquire);
+        auto &sig = signals[i];
+        std::unique_lock lck{sig.mtx};
+        sig.cv.wait(lck, [&] { return !funcs[i]; });
     }
 
     void wait_all() {
@@ -100,7 +106,7 @@ class thread_pool {
             wait(i);
     }
 
-    [[nodiscard]] size_t size() const { return flags.size(); }
+    [[nodiscard]] size_t size() const { return threads.size(); }
 };
 
 thread_pool pool(4);
