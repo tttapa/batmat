@@ -331,15 +331,18 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
 
     index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
     std::vector<join_counter_t> join_counters(num_batch - 1);
+    // process_fwd returns true if last batch was processed
     const auto process_fwd = [&](index_t k) {
         solve_H1(k);
-        while (k < num_batch) {
+        while (true) {
             if (k > 0 && join_counters[k - 1].value.fetch_add(1) != 1)
-                break;
+                return false;
             index_t i_end = std::min((k + 1) * simd_stride, N + 1);
             for (index_t i = k * simd_stride; i < i_end; ++i)
                 solve_ψ_fwd(i);
             ++k;
+            if (k == num_batch)
+                return true;
         }
     };
 #if KOQKATOO_SOLVE_USE_LIBFORK
@@ -403,20 +406,16 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
         }
     };
 #else
-    std::atomic<bool> main_thread_flag{false};
     std::atomic<index_t> batch_counter_1{0}, stage_counter_2{num_batch - 1};
     std::counting_semaphore<> stage_ready{0};
-    std::latch join_all{static_cast<ptrdiff_t>(pool.size())};
     auto thread_work = [&] {
+        bool main_thread = false;
         while (true) {
             index_t k = batch_counter_1.fetch_add(1, std::memory_order_relaxed);
             if (k >= num_batch)
                 break;
-            process_fwd(k);
+            main_thread = process_fwd(k);
         }
-        join_all.arrive_and_wait();
-        bool main_thread =
-            !main_thread_flag.exchange(true, std::memory_order_relaxed);
         if (main_thread) {
             for (index_t i = N + 1; i-- > 0;) {
                 solve_ψ_rev(i);
@@ -425,7 +424,7 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
                     stage_ready.release(1);
                 }
             }
-            stage_ready.release(static_cast<ptrdiff_t>(2 * pool.size()));
+            stage_ready.release(static_cast<ptrdiff_t>(pool.size()));
         }
         while (true) {
             stage_ready.acquire();
