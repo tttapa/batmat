@@ -33,6 +33,7 @@ target_sources(koqkatoo PUBLIC FILE_SET headers TYPE HEADERS
     FILES "koqkatoo/include/koqkatoo/kib.hpp"
           "koqkatoo/include/koqkatoo/koqkatoo.hpp"
           "koqkatoo/include/koqkatoo/cneg.hpp"
+          "koqkatoo/include/koqkatoo/fork-pool.hpp"
           "koqkatoo/include/koqkatoo/lut.hpp"
           "koqkatoo/include/koqkatoo/matrix-view.hpp"
           "koqkatoo/include/koqkatoo/assume.hpp"
@@ -51,6 +52,11 @@ if (KOQKATOO_WITH_OPENMP)
 endif()
 if (KOQKATOO_WITH_TRACING)
     target_sources(koqkatoo PRIVATE "koqkatoo/src/trace.cpp")
+endif()
+if (KOQKATOO_WITH_LIBFORK)
+    find_package(libfork CONFIG REQUIRED)
+    target_link_libraries(koqkatoo PUBLIC libfork::libfork)
+    target_sources(koqkatoo PRIVATE "koqkatoo/src/fork-pool.cpp")
 endif()
 
 # Linear algebra routines and BLAS interface
@@ -180,8 +186,6 @@ if (KOQKATOO_WITH_TBB)
     target_link_libraries(ocp PUBLIC onetbb::onetbb)
 endif()
 if (KOQKATOO_WITH_LIBFORK)
-    find_package(libfork CONFIG REQUIRED)
-    target_link_libraries(ocp PUBLIC libfork::libfork)
     koqkatoo_coroutine_flags("ocp/src/solve.cpp")
 endif()
 
