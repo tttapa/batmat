@@ -1,5 +1,6 @@
 #pragma once
 
+#include <koqkatoo/assume.hpp>
 #include <koqkatoo/fork-pool.hpp>
 #include <koqkatoo/ocp/solver/solve.hpp>
 #include <koqkatoo/trace.hpp>
@@ -7,16 +8,10 @@
 #include <libfork/schedule.hpp>
 #include <algorithm>
 #include <atomic>
-#include <barrier>
 #include <condition_variable>
-#include <cstdint>
-#include <execution>
 #include <functional>
 #include <iostream>
-#include <latch>
 #include <mutex>
-#include <ranges>
-#include <semaphore>
 #include <stdexcept>
 #include <thread>
 
@@ -407,7 +402,8 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     };
 #else
     std::atomic<index_t> batch_counter_1{0}, stage_counter_2{num_batch - 1};
-    std::counting_semaphore<> stage_ready{0};
+    KOQKATOO_ASSERT(std::in_range<int>(num_batch));
+    std::atomic<int> stage_ready{static_cast<int>(num_batch)};
     auto thread_work = [&] {
         bool main_thread = false;
         while (true) {
@@ -421,16 +417,21 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
                 solve_ψ_rev(i);
                 if (i % simd_stride == 0) {
                     KOQKATOO_TRACE("solve store-notify", i);
-                    stage_ready.release(1);
+                    stage_ready.fetch_sub(1, std::memory_order_release);
+                    stage_ready.notify_all();
                 }
             }
-            stage_ready.release(static_cast<ptrdiff_t>(pool.size()));
         }
         while (true) {
-            stage_ready.acquire();
             index_t k = stage_counter_2.fetch_sub(1, std::memory_order_relaxed);
             if (k < 0)
                 break;
+            while (true) {
+                auto k_ready = stage_ready.load(std::memory_order_acquire);
+                if (k >= static_cast<index_t>(k_ready))
+                    break;
+                stage_ready.wait(k_ready, std::memory_order_relaxed);
+            }
             solve_H2(k);
         }
     };
