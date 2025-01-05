@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <atomic>
 #include <condition_variable>
+#include <exception>
 #include <functional>
 #include <iostream>
 #include <mutex>
@@ -37,29 +38,25 @@ class thread_pool {
   private:
     struct Signals {
         std::mutex mtx;
-        std::condition_variable cv;
+        std::condition_variable_any cv;
     };
     std::vector<Signals> signals;
     std::vector<std::function<void()>> funcs;
+    std::vector<std::exception_ptr> exceptions;
     std::vector<std::jthread> threads; // must be destroyed first
 
     void work(std::stop_token stop, size_t i) {
         auto &sig = signals[i];
-        std::stop_callback cb{stop, [&sig] {
-                                  sig.mtx.lock();
-                                  sig.mtx.lock();
-                                  sig.cv.notify_one();
-                              }};
         while (true) {
             std::unique_lock lck{sig.mtx};
-            sig.cv.wait(lck, [&] { return funcs[i] || stop.stop_requested(); });
+            sig.cv.wait(lck, stop, [&] { return static_cast<bool>(funcs[i]); });
             if (stop.stop_requested()) {
                 break;
             } else {
                 try {
                     funcs[i]();
                 } catch (...) {
-                    std::cerr << "fail " << i << std::endl;
+                    exceptions[i] = std::current_exception();
                 }
                 funcs[i] = nullptr;
                 lck.unlock();
@@ -69,7 +66,8 @@ class thread_pool {
     }
 
   public:
-    thread_pool(size_t num_threads) : signals(num_threads), funcs(num_threads) {
+    thread_pool(size_t num_threads)
+        : signals(num_threads), funcs(num_threads), exceptions(num_threads) {
         threads.reserve(num_threads);
         for (size_t i = 0; i < num_threads; ++i)
             threads.emplace_back(&thread_pool::work, this, i);
@@ -92,6 +90,8 @@ class thread_pool {
         auto &sig = signals[i];
         std::unique_lock lck{sig.mtx};
         sig.cv.wait(lck, [&] { return !funcs[i]; });
+        if (auto &e = exceptions[i])
+            std::rethrow_exception(std::exchange(e, nullptr));
     }
 
     void wait_all() {
