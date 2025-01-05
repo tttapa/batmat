@@ -82,9 +82,7 @@ class thread_pool {
 
     void schedule(size_t i, std::function<void()> func) {
         auto &sig = signals[i];
-        std::unique_lock lck{sig.mtx, std::try_to_lock};
-        if (!lck.owns_lock())
-            throw std::logic_error("Previous task not done yet");
+        std::unique_lock lck{sig.mtx};
         funcs[i] = std::move(func);
         lck.unlock();
         sig.cv.notify_all();
