@@ -1,6 +1,8 @@
 #pragma once
 
 #include <koqkatoo/config.hpp>
+#include <koqkatoo/stringify.h>
+#include <stdexcept>
 
 /// @def KOQKATOO_ASSUME(x)
 /// Invokes undefined behavior if the expression @p x does not evaluate to true.
@@ -29,13 +31,13 @@
 #endif // __has_cpp_attribute(assume)
 #endif // defined(NDEBUG) && !KOQKATOO_VERIFY_ASSUMPTIONS
 
-#ifndef KOQKATOO_ASSUME
-#include <koqkatoo/stringify.h>
-#include <stdexcept>
-#define KOQKATOO_ASSUME(x)                                                     \
+#define KOQKATOO_ASSERT(x)                                                     \
     do {                                                                       \
         if (!(x))                                                              \
-            throw std::logic_error("Assumption " #x " failed (" __FILE__       \
+            throw std::logic_error("Assertion " #x " failed (" __FILE__        \
                                    ":" KOQKATOO_STRINGIFY(__LINE__) ")");      \
     } while (false)
+
+#ifndef KOQKATOO_ASSUME
+#define KOQKATOO_ASSUME(x) KOQKATOO_ASSERT(x)
 #endif
