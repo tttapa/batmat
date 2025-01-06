@@ -6,6 +6,8 @@
 #include <koqkatoo/ocp/ocp.hpp>
 #include <koqkatoo/ocp/random-ocp.hpp>
 #include <koqkatoo/ocp/solver/solve.hpp>
+#include <koqkatoo/openmp.h>
+#include <koqkatoo/thread-pool.hpp>
 #include <koqkatoo/trace.hpp>
 
 #include <guanaqo/eigen/span.hpp>
@@ -30,8 +32,11 @@ static bool init_done = false;
 
 template <class simd_abi>
 void benchmark_solve(benchmark::State &state) {
-    if (!std::exchange(init_done, true))
+    if (!std::exchange(init_done, true)) {
+        KOQKATOO_OMP_IF(omp_set_num_threads(4));
+        koqkatoo::pool_set_num_threads(4);
         koqkatoo::fork_set_num_threads(4);
+    }
     using VectorXreal = Eigen::VectorX<real_t>;
     std::mt19937 rng{54321};
     std::normal_distribution<real_t> nrml{0, 1};

@@ -26,6 +26,7 @@ koqkatoo_configure_interface_library(config EXPORT_PREFIX koqkatoo)
 # ------------------------------------------------------------------------------
 add_library(koqkatoo
     "koqkatoo/src/koqkatoo.cpp"
+    "koqkatoo/src/thread-pool.cpp"
     "koqkatoo/src/timing.cpp"
 )
 target_sources(koqkatoo PUBLIC FILE_SET headers TYPE HEADERS
@@ -41,6 +42,7 @@ target_sources(koqkatoo PUBLIC FILE_SET headers TYPE HEADERS
           "koqkatoo/include/koqkatoo/openmp.h"
           "koqkatoo/include/koqkatoo/preprocessor.h"
           "koqkatoo/include/koqkatoo/stringify.h"
+          "koqkatoo/include/koqkatoo/thread-pool.hpp"
           "koqkatoo/include/koqkatoo/timing.hpp"
           "koqkatoo/include/koqkatoo/trace.hpp"
           "koqkatoo/include/koqkatoo/unroll.h"

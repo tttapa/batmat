@@ -3,17 +3,14 @@
 #include <koqkatoo/assume.hpp>
 #include <koqkatoo/fork-pool.hpp>
 #include <koqkatoo/ocp/solver/solve.hpp>
+#include <koqkatoo/thread-pool.hpp>
 #include <koqkatoo/trace.hpp>
 #include <libfork/core.hpp>
 #include <libfork/schedule.hpp>
 #include <algorithm>
 #include <atomic>
-#include <condition_variable>
-#include <exception>
 #include <functional>
-#include <mutex>
 #include <stdexcept>
-#include <thread>
 
 /// libfork or custom thread pool
 #define KOQKATOO_SOLVE_USE_LIBFORK 0
@@ -32,76 +29,6 @@ inline constexpr auto do_invoke =
 struct join_counter_t {
     alignas(64) std::atomic<int> value{};
 };
-
-class thread_pool {
-  private:
-    struct Signals {
-        std::mutex mtx;
-        std::condition_variable_any cv;
-    };
-    std::vector<Signals> signals;
-    std::vector<std::function<void()>> funcs;
-    std::vector<std::exception_ptr> exceptions;
-    std::vector<std::jthread> threads; // must be destroyed first
-
-    void work(std::stop_token stop, size_t i) {
-        auto &sig = signals[i];
-        while (true) {
-            std::unique_lock lck{sig.mtx};
-            sig.cv.wait(lck, stop, [&] { return static_cast<bool>(funcs[i]); });
-            if (stop.stop_requested()) {
-                break;
-            } else {
-                try {
-                    funcs[i]();
-                } catch (...) {
-                    exceptions[i] = std::current_exception();
-                }
-                funcs[i] = nullptr;
-                lck.unlock();
-                sig.cv.notify_all();
-            }
-        }
-    }
-
-  public:
-    thread_pool(size_t num_threads)
-        : signals(num_threads), funcs(num_threads), exceptions(num_threads) {
-        threads.reserve(num_threads);
-        for (size_t i = 0; i < num_threads; ++i)
-            threads.emplace_back(&thread_pool::work, this, i);
-    }
-
-    thread_pool(const thread_pool &)            = delete;
-    thread_pool &operator=(const thread_pool &) = delete;
-    thread_pool(thread_pool &&)                 = default;
-    thread_pool &operator=(thread_pool &&)      = default;
-
-    void schedule(size_t i, std::function<void()> func) {
-        auto &sig = signals[i];
-        std::unique_lock lck{sig.mtx};
-        funcs[i] = std::move(func);
-        lck.unlock();
-        sig.cv.notify_all();
-    }
-
-    void wait(size_t i) {
-        auto &sig = signals[i];
-        std::unique_lock lck{sig.mtx};
-        sig.cv.wait(lck, [&] { return !funcs[i]; });
-        if (auto &e = exceptions[i])
-            std::rethrow_exception(std::exchange(e, nullptr));
-    }
-
-    void wait_all() {
-        for (size_t i = 0; i < size(); ++i)
-            wait(i);
-    }
-
-    [[nodiscard]] size_t size() const { return threads.size(); }
-};
-
-thread_pool pool(4);
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::factor_fork(real_t S, real_view Σ, bool_view J) {
@@ -221,15 +148,7 @@ void Solver<Abi>::factor_fork(real_t S, real_view Σ, bool_view J) {
             process_stage(k);
         }
     };
-#if 0
-    std::vector<std::jthread> threads;
-    for (int i = 0; i < 4; ++i)
-        threads.emplace_back(thread_work);
-#else
-    for (size_t i = 0; i < pool.size(); ++i)
-        pool.schedule(i, thread_work);
-    pool.wait_all();
-#endif
+    pool->sync_run_all(thread_work);
 #endif
 }
 
@@ -418,7 +337,7 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
                     stage_ready.notify_one();
                 }
             }
-            stage_ready.fetch_add(static_cast<int>(pool.size()),
+            stage_ready.fetch_add(static_cast<int>(pool->size()),
                                   std::memory_order_release);
             stage_ready.notify_all();
         }
@@ -438,9 +357,7 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
         }
     };
 #endif
-    for (size_t i = 0; i < pool.size(); ++i)
-        pool.schedule(i, thread_work);
-    pool.wait_all();
+    pool->sync_run_all(thread_work);
 #endif
 }
 
@@ -505,9 +422,7 @@ void Solver<Abi>::recompute_inner(real_t S, real_view x0, real_view x,
             process_stage(k);
         }
     };
-    for (size_t i = 0; i < pool.size(); ++i)
-        pool.schedule(i, thread_work);
-    pool.wait_all();
+    pool->sync_run_all(thread_work);
 #endif
 }
 
@@ -607,9 +522,7 @@ real_t Solver<Abi>::recompute_outer(real_view x, real_view y, real_view λ,
             stage_norms[k] = process_stage(k);
         }
     };
-    for (size_t i = 0; i < pool.size(); ++i)
-        pool.schedule(i, thread_work);
-    pool.wait_all();
+    pool->sync_run_all(thread_work);
 
     real_t inf_norm = 0, l1_norm = 0;
     for (auto stage_norm : stage_norms) {
@@ -779,9 +692,7 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
                 updowndate_stage(batch_idx, rj_min, rj_batch, ranksj);
         }
     };
-    for (size_t i = 0; i < pool.size(); ++i)
-        pool.schedule(i, thread_work);
-    pool.wait_all();
+    pool->sync_run_all(thread_work);
 #endif
 
     {
