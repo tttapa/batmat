@@ -11,7 +11,6 @@
 #include <condition_variable>
 #include <exception>
 #include <functional>
-#include <iostream>
 #include <mutex>
 #include <stdexcept>
 #include <thread>
@@ -485,6 +484,7 @@ void Solver<Abi>::recompute_inner(real_t S, real_view x0, real_view x,
                                        Mᵀλ.batch(k), be);
         }
     };
+#if KOQKATOO_SOLVE_USE_LIBFORK
     const auto process_all = [](auto, auto process_stage, index_t N,
                                 auto simd_stride) -> lf::task<void> {
         index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
@@ -494,6 +494,21 @@ void Solver<Abi>::recompute_inner(real_t S, real_view x0, real_view x,
     };
     lf::sync_wait(*fork_pool, process_all, process_stage, N,
                   std::integral_constant<index_t, simd_stride>());
+#else
+    std::atomic<index_t> batch_counter{0};
+    const index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
+    auto thread_work        = [&] {
+        while (true) {
+            index_t k = batch_counter.fetch_add(1, std::memory_order_relaxed);
+            if (k >= num_batch)
+                break;
+            process_stage(k);
+        }
+    };
+    for (size_t i = 0; i < pool.size(); ++i)
+        pool.schedule(i, thread_work);
+    pool.wait_all();
+#endif
 }
 
 template <simd_abi_tag Abi>
@@ -562,6 +577,7 @@ real_t Solver<Abi>::recompute_outer(real_view x, real_view y, real_view λ,
             return isfinite(l1_norm) ? inf_norm : l1_norm;
         }
     };
+#if KOQKATOO_SOLVE_USE_LIBFORK
     const auto process_all = [](auto, auto process_stage, index_t N,
                                 auto simd_stride) -> lf::task<real_t> {
         index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
@@ -579,6 +595,29 @@ real_t Solver<Abi>::recompute_outer(real_view x, real_view y, real_view λ,
     };
     return lf::sync_wait(*fork_pool, process_all, process_stage, N,
                          std::integral_constant<index_t, simd_stride>());
+#else
+    std::atomic<index_t> batch_counter{0};
+    const index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
+    std::vector<real_t> stage_norms(num_batch);
+    auto thread_work = [&] {
+        while (true) {
+            index_t k = batch_counter.fetch_add(1, std::memory_order_relaxed);
+            if (k >= num_batch)
+                break;
+            stage_norms[k] = process_stage(k);
+        }
+    };
+    for (size_t i = 0; i < pool.size(); ++i)
+        pool.schedule(i, thread_work);
+    pool.wait_all();
+
+    real_t inf_norm = 0, l1_norm = 0;
+    for (auto stage_norm : stage_norms) {
+        inf_norm = std::max(std::abs(stage_norm), inf_norm);
+        l1_norm += std::abs(stage_norm);
+    }
+    return isfinite(l1_norm) ? inf_norm : l1_norm;
+#endif
 }
 
 template <simd_abi_tag Abi>
@@ -697,6 +736,8 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
         }
 #endif
     };
+
+#if KOQKATOO_SOLVE_USE_LIBFORK
     const auto process_all = [](auto, auto updowndate_stage, index_t N,
                                 auto simd_stride,
                                 auto &ranks) -> lf::task<void> {
@@ -720,6 +761,29 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
         lf::sync_wait(*fork_pool, process_all, updowndate_stage, N,
                       std::integral_constant<index_t, simd_stride>(), ranks);
     }
+#else
+    std::atomic<index_t> batch_counter{0};
+    const index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
+    auto thread_work        = [&] {
+        while (true) {
+            index_t batch_idx =
+                batch_counter.fetch_add(1, std::memory_order_relaxed);
+            if (batch_idx >= num_batch)
+                break;
+            auto stage_idx = batch_idx * simd_stride;
+            auto nk        = std::min<index_t>(simd_stride, N + 1 - stage_idx);
+            auto ranksj    = ranks.batch(batch_idx);
+            auto rjmm      = std::minmax_element(ranksj.data, ranksj.data + nk);
+            index_t rj_min = *rjmm.first, rj_batch = *rjmm.second;
+            if (rj_batch != 0)
+                updowndate_stage(batch_idx, rj_min, rj_batch, ranksj);
+        }
+    };
+    for (size_t i = 0; i < pool.size(); ++i)
+        pool.schedule(i, thread_work);
+    pool.wait_all();
+#endif
+
     {
         std::optional<guanaqo::Timed<typename Timings::type>> t_w;
         if (t)
