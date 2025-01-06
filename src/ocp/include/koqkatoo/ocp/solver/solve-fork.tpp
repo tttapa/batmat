@@ -401,7 +401,7 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
 #else
     std::atomic<index_t> batch_counter_1{0}, stage_counter_2{num_batch - 1};
     KOQKATOO_ASSERT(std::in_range<int>(num_batch));
-    std::atomic<int> stage_ready{static_cast<int>(num_batch)};
+    std::atomic<int> stage_ready{0};
     auto thread_work = [&] {
         bool main_thread = false;
         while (true) {
@@ -415,21 +415,26 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
                 solve_ψ_rev(i);
                 if (i % simd_stride == 0) {
                     KOQKATOO_TRACE("solve store-notify", i);
-                    stage_ready.fetch_sub(1, std::memory_order_release);
-                    stage_ready.notify_all();
+                    stage_ready.fetch_add(1, std::memory_order_release);
+                    stage_ready.notify_one();
                 }
             }
+            stage_ready.fetch_add(static_cast<int>(pool.size()),
+                                  std::memory_order_release);
+            stage_ready.notify_all();
         }
         while (true) {
+            auto semaphore_val = stage_ready.load(std::memory_order_relaxed);
+            do {
+                while (semaphore_val == 0) {
+                    stage_ready.wait(semaphore_val, std::memory_order_relaxed);
+                    semaphore_val = stage_ready.load(std::memory_order_relaxed);
+                }
+            } while (!stage_ready.compare_exchange_strong(
+                semaphore_val, semaphore_val - 1, std::memory_order_acquire));
             index_t k = stage_counter_2.fetch_sub(1, std::memory_order_relaxed);
             if (k < 0)
                 break;
-            while (true) {
-                auto k_ready = stage_ready.load(std::memory_order_acquire);
-                if (k >= static_cast<index_t>(k_ready))
-                    break;
-                stage_ready.wait(k_ready, std::memory_order_relaxed);
-            }
             solve_H2(k);
         }
     };
