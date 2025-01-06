@@ -692,7 +692,12 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
                 updowndate_stage(batch_idx, rj_min, rj_batch, ranksj);
         }
     };
-    pool->sync_run_all(thread_work);
+    {
+        std::optional<guanaqo::Timed<typename Timings::type>> t_w;
+        if (t)
+            t_w.emplace(t->updowndate_stages);
+        pool->sync_run_all(thread_work);
+    }
 #endif
 
     {
