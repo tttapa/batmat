@@ -101,14 +101,15 @@ void Solver<Abi>::updowndate_ψ() {
         foreach_chunked(
             0, Ld.cols, R,
             [&](index_t k) {
+                auto c0 = k == 0 ? colsA0 : 0;
                 process_diag_block(k, R, Ad, Dd_spn, Ld, W);
                 process_subdiag_block_W(k, Ad, Dd_spn, Ld, W);
-                process_subdiag_block_V(k, R, colsA0, As, Ls, Ad, Dd_spn, W);
+                process_subdiag_block_V(k, R, c0, As, Ls, Ad, Dd_spn, W);
             },
             [&](index_t k, index_t rem_k) {
+                auto c0 = k == 0 ? colsA0 : 0;
                 process_diag_block(k, rem_k, Ad, Dd_spn, Ld, W);
-                process_subdiag_block_V(k, rem_k, colsA0, As, Ls, Ad, Dd_spn,
-                                        W);
+                process_subdiag_block_V(k, rem_k, c0, As, Ls, Ad, Dd_spn, W);
             });
     }
     // Final stage has no subdiagonal block (V)

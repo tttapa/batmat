@@ -23,7 +23,8 @@ updowndate_tail(index_t colsA0, index_t colsA, mut_W_accessor<> W,
     static_assert(R % NL == 0);
     static_assert(R > 0);
     static_assert(W.outer_stride >= R);
-    KOQKATOO_ASSUME(colsA > 0);
+    KOQKATOO_ASSUME(colsA0 >= 0);
+    KOQKATOO_ASSUME(colsA >= colsA0);
     [[maybe_unused]] const auto W_addr = reinterpret_cast<uintptr_t>(W.data);
     KOQKATOO_ASSUME(W_addr % W_align<Conf.block_size_r> == 0);
 
