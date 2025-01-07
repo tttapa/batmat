@@ -139,7 +139,7 @@ struct Context {
         }();
         if (s > 0) { // TODO: could be handled without forking
             auto Ls = L.block(i2, i1, s, r);
-            updowndate_tile_tail<uConf, UpDown>(s, A.cols, Ws[work_id], Ls,
+            updowndate_tile_tail<uConf, UpDown>(s, 0, A.cols, Ws[work_id], Ls,
                                                 packed_Ad, packed_At, signs);
         }
     }
@@ -194,10 +194,10 @@ struct Context {
         }();
         auto Ls = L.block(i4, i1, s, r);
         if (s == Conf.block_size_s) [[likely]] // Most block rows
-            updowndate_tail<uConf, UpDown>(A.cols, Ws[work_id], Ls, packed_Ad,
-                                           packed_At, signs);
+            updowndate_tail<uConf, UpDown>(0, A.cols, Ws[work_id], Ls,
+                                           packed_Ad, packed_At, signs);
         else // Last block row
-            updowndate_tile_tail<uConf, UpDown>(s, A.cols, Ws[work_id], Ls,
+            updowndate_tile_tail<uConf, UpDown>(s, 0, A.cols, Ws[work_id], Ls,
                                                 packed_Ad, packed_At, signs);
     }
 };

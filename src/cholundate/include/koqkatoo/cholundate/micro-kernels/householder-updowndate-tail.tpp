@@ -8,11 +8,11 @@
 namespace koqkatoo::cholundate::micro_kernels::householder {
 
 template <Config Conf, class UpDown>
-[[gnu::hot]] void updowndate_tail(index_t colsA, mut_W_accessor<> W,
-                                  real_t *__restrict Lp, index_t ldL,
-                                  const real_t *__restrict Bp, index_t ldB,
-                                  real_t *__restrict Ap, index_t ldA,
-                                  UpDownArg<UpDown> signs) noexcept {
+[[gnu::hot]] void
+updowndate_tail(index_t colsA0, index_t colsA, mut_W_accessor<> W,
+                real_t *__restrict Lp, index_t ldL, const real_t *__restrict Bp,
+                index_t ldB, real_t *__restrict Ap, index_t ldA,
+                UpDownArg<UpDown> signs) noexcept {
     using simdA = tail_simd_A_t<Conf>;
     using simdL = tail_simd_L_t<Conf>;
     const mut_matrix_accessor L{Lp, ldL}, A{Ap, ldA};
@@ -29,7 +29,7 @@ template <Config Conf, class UpDown>
 
     // Compute product U = A B
     simdA V[S / NA][R]{};
-    UNROLL_FOR_A_COLS (index_t j = 0; j < colsA; ++j) {
+    UNROLL_FOR_A_COLS (index_t j = colsA0; j < colsA; ++j) {
         if (Conf.prefetch_dist_col_a > 0)
             _mm_prefetch(&A(0, j + Conf.prefetch_dist_col_a), _MM_HINT_T0);
         UNROLL_FOR (index_t kk = 0; kk < R; kk += NL) {
@@ -70,8 +70,22 @@ template <Config Conf, class UpDown>
             A.store(Aij, i, j);
         }
 #else
+    // Update A = -V Bᵀ
+    UNROLL_FOR_A_COLS (index_t j = 0; j < colsA0; ++j) {
+        simdL Akj[R / NL];
+        UNROLL_FOR (index_t kk = 0; kk < R; kk += NL)
+            Akj[kk / NL] = B.load<simdL>(kk, j);
+        UNROLL_FOR (index_t i = 0; i < S; i += NA) {
+            simdA Aij{0};
+            UNROLL_FOR (index_t kk = 0; kk < R; kk += NL) {
+                UNROLL_FOR (index_t k = 0; k < NL; ++k)
+                    Aij -= V[i / NA][kk + k] * Akj[kk / NL][k];
+            }
+            A.store(Aij, i, j);
+        }
+    }
     // Update A -= V Bᵀ
-    UNROLL_FOR_A_COLS (index_t j = 0; j < colsA; ++j) {
+    UNROLL_FOR_A_COLS (index_t j = colsA0; j < colsA; ++j) {
         if (Conf.prefetch_dist_col_a > 0)
             _mm_prefetch(&A(0, j + Conf.prefetch_dist_col_a), _MM_HINT_T0);
         simdL Akj[R / NL];

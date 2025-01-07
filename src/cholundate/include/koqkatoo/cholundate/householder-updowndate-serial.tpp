@@ -244,7 +244,7 @@ void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
             // Process blocks left of the diagonal
             for (index_t cc = 0; cc < kk; cc += R) {
                 auto Ls = L_.block(k + kk, k + cc);
-                updowndate_tail<uConfR, UpDown>(A.cols, W[cc / R], Ls,
+                updowndate_tail<uConfR, UpDown>(0, A.cols, W[cc / R], Ls,
                                                 Adk[cc / R], Ad, signs);
             }
             auto Ld = L_.block(k + kk, k + kk);
@@ -261,7 +261,7 @@ void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
                     auto Ls = L_.block(i, k + cc);
                     for (index_t c = 0; c < R; ++c)
                         _mm_prefetch(&Ls(0, c), _MM_HINT_NTA);
-                    updowndate_tail<uConf, UpDown>(A.cols, W[cc / R], Ls,
+                    updowndate_tail<uConf, UpDown>(0, A.cols, W[cc / R], Ls,
                                                    Adk[cc / R], As, signs);
                 }
             },
@@ -272,8 +272,9 @@ void updowndate_blocked(MutableRealMatrixView L, MutableRealMatrixView A,
                     auto Ls = L_.block(i, k + cc);
                     for (index_t c = 0; c < R; ++c)
                         _mm_prefetch(&Ls(0, c), _MM_HINT_NTA);
-                    updowndate_tile_tail<uConf, UpDown>(
-                        rem_i, A.cols, W[cc / R], Ls, Adk[cc / R], As, signs);
+                    updowndate_tile_tail<uConf, UpDown>(rem_i, 0, A.cols,
+                                                        W[cc / R], Ls,
+                                                        Adk[cc / R], As, signs);
                 }
             },
             LoopDir::Forward);

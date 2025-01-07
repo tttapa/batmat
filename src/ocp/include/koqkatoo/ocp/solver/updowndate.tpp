@@ -65,24 +65,26 @@ void Solver<Abi>::updowndate_ψ() {
         foreach_chunked_merged(k + R, Ld.rows, S, [&](index_t i, auto rem_i) {
             auto Ads = Ad.middle_rows(i, rem_i);
             auto Lds = Ld.block(i, k, rem_i, R);
-            microkernel_tail_lut[R - 1](rem_i, colsA, W, Lds, Add, Ads,
+            microkernel_tail_lut[R - 1](rem_i, 0, colsA, W, Lds, Add, Ads,
                                         DownUpdate{Dd});
         });
     };
-    auto process_subdiag_block_V = [&](index_t k, index_t rem_k, auto As,
-                                       auto Ls, auto Ad, auto Dd, W_t &W) {
+    auto process_subdiag_block_V = [&](index_t k, index_t rem_k, index_t colsA0,
+                                       auto As, auto Ls, auto Ad, auto Dd,
+                                       W_t &W) {
         auto Add = Ad.middle_rows(k, rem_k);
         foreach_chunked_merged(0, Ls.rows, S, [&](index_t i, auto rem_i) {
             auto Ass = As.middle_rows(i, rem_i);
             auto Lss = Ls.block(i, k, rem_i, rem_k);
-            microkernel_tail_lut[rem_k - 1](rem_i, colsA, W, Lss, Add, Ass,
-                                            DownUpdate{Dd});
+            microkernel_tail_lut[rem_k - 1](rem_i, colsA0, colsA, W, Lss, Add,
+                                            Ass, DownUpdate{Dd});
         });
     };
 
     for (index_t k = 0; k < N; ++k) {
         KOQKATOO_TRACE("updowndate Ψ", k);
-        index_t rk = ranks(k, 0, 0);
+        index_t rk  = ranks(k, 0, 0);
+        auto colsA0 = colsA;
         colsA += rk;
         if (colsA == 0)
             continue;
@@ -101,14 +103,13 @@ void Solver<Abi>::updowndate_ψ() {
             [&](index_t k) {
                 process_diag_block(k, R, Ad, Dd_spn, Ld, W);
                 process_subdiag_block_W(k, Ad, Dd_spn, Ld, W);
-                process_subdiag_block_V(k, R, As, Ls, Ad, Dd_spn, W);
+                process_subdiag_block_V(k, R, colsA0, As, Ls, Ad, Dd_spn, W);
             },
             [&](index_t k, index_t rem_k) {
                 process_diag_block(k, rem_k, Ad, Dd_spn, Ld, W);
-                process_subdiag_block_V(k, rem_k, As, Ls, Ad, Dd_spn, W);
+                process_subdiag_block_V(k, rem_k, colsA0, As, Ls, Ad, Dd_spn,
+                                        W);
             });
-        if (k < N - 1)
-            Ad.set_constant(0);
     }
     // Final stage has no subdiagonal block (V)
     KOQKATOO_TRACE("updowndate Ψ", N);

@@ -77,8 +77,8 @@ void updowndate_full(index_t colsA, real_t *Ld, index_t ldL, real_t *Ad,
                      index_t ldA, UpDownArg<UpDown> signs) noexcept;
 
 template <Config Conf, class UpDown>
-void updowndate_tail(index_t colsA, mut_W_accessor<> W, real_t *Lp, index_t ldL,
-                     const real_t *Bp, index_t ldB, real_t *Ap, index_t ldA,
-                     UpDownArg<UpDown> signs) noexcept;
+void updowndate_tail(index_t colsA0, index_t colsA, mut_W_accessor<> W,
+                     real_t *Lp, index_t ldL, const real_t *Bp, index_t ldB,
+                     real_t *Ap, index_t ldA, UpDownArg<UpDown> signs) noexcept;
 
 } // namespace koqkatoo::cholundate::micro_kernels::householder
