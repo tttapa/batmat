@@ -38,6 +38,12 @@ using index_t = @KOQKATOO_DENSE_INDEX_TYPE@;
 #ifndef KOQKATOO_WITH_TRACING
 #cmakedefine01 KOQKATOO_WITH_TRACING
 #endif
+#ifndef KOQKATOO_WITH_NAIVE_PARALLEL
+#cmakedefine01 KOQKATOO_WITH_NAIVE_PARALLEL
+#endif
+#ifndef KOQKATOO_WITH_STATIC_PARALLEL
+#cmakedefine01 KOQKATOO_WITH_STATIC_PARALLEL
+#endif
 
 #ifdef __clangd__
 #undef KOQKATOO_WITH_OPENMP // clangd sometimes crashes on OpenMP constructs

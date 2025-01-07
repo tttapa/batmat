@@ -133,6 +133,26 @@ TEST_P(SHHUpDown, VariousSizes) {
     }
 }
 
+#if KOQKATOO_WITH_NAIVE_PARALLEL
+TEST_P(SHHUpDown, VariousSizesNaive) {
+    // TODO: test rectangular L
+    index_t n = GetParam();
+    for (index_t m : {1, 2, 3, 4, 5, 6, 7, 8, 11, 16, 17, 31, 32}) {
+        auto matrices     = koqkatoo::generate_problem(m, n);
+        Eigen::MatrixXd L̃ = matrices.L;
+        Eigen::MatrixXd Ã = matrices.A;
+        Eigen::VectorXd S̃ = matrices.S;
+        koqkatoo::cholundate::householder::naive::updowndate_blocked<{
+            .block_size_r = 8, .block_size_s = 24, .enable_packing = false}>(
+            as_view(L̃, guanaqo::with_index_type<index_t>),
+            as_view(Ã, guanaqo::with_index_type<index_t>),
+            koqkatoo::cholundate::UpDowndate{as_span(S̃)});
+        real_t residual = koqkatoo::calculate_error(matrices, L̃);
+        EXPECT_LE(residual, ε) << "m=" << m;
+    }
+}
+#endif
+
 #if KOQKATOO_WITH_LIBFORK
 TEST_P(SHHUpDown, VariousSizesLibFork) {
     index_t n = GetParam();
