@@ -148,7 +148,13 @@ void Solver<Abi>::factor_fork(real_t S, real_view Σ, bool_view J) {
             process_stage(k);
         }
     };
+#if KOQKATOO_WITH_OPENMP
+    KOQKATOO_OMP(parallel for schedule(static))
+    for (int i = 0; i < omp_get_num_threads(); ++i)
+        thread_work();
+#else
     pool->sync_run_all(thread_work);
+#endif
 #endif
 }
 
@@ -279,6 +285,7 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
                   N, std::integral_constant<index_t, simd_stride>());
 #else
 #if USE_ATOMIC_WAIT
+    static_assert(!KOQKATOO_WITH_OPENMP);
     std::atomic<bool> main_thread_flag{false};
     std::atomic<index_t> batch_counter_1{0}, stage_counter_2{num_batch - 1},
         stage_ready{num_batch};
@@ -320,7 +327,7 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     std::atomic<index_t> batch_counter_1{0}, stage_counter_2{num_batch - 1};
     KOQKATOO_ASSERT(std::in_range<int>(num_batch));
     std::atomic<int> stage_ready{0};
-    auto thread_work = [&] {
+    auto thread_work = [&](int num_threads) {
         bool main_thread = false;
         while (true) {
             index_t k = batch_counter_1.fetch_add(1, std::memory_order_relaxed);
@@ -337,8 +344,7 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
                     stage_ready.notify_one();
                 }
             }
-            stage_ready.fetch_add(static_cast<int>(pool->size()),
-                                  std::memory_order_release);
+            stage_ready.fetch_add(num_threads, std::memory_order_release);
             stage_ready.notify_all();
         }
         while (true) {
@@ -357,7 +363,16 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
         }
     };
 #endif
-    pool->sync_run_all(thread_work);
+#if KOQKATOO_WITH_OPENMP
+    KOQKATOO_OMP(parallel) {
+        int n_thr = omp_get_num_threads();
+        KOQKATOO_OMP(for schedule(static))
+        for (int i = 0; i < n_thr; ++i)
+            thread_work(n_thr);
+    }
+#else
+    pool->sync_run_all([&] { thread_work(static_cast<int>(pool->size())); });
+#endif
 #endif
 }
 
@@ -422,7 +437,13 @@ void Solver<Abi>::recompute_inner(real_t S, real_view x0, real_view x,
             process_stage(k);
         }
     };
+#if KOQKATOO_WITH_OPENMP
+    KOQKATOO_OMP(parallel for schedule(static))
+    for (int i = 0; i < omp_get_num_threads(); ++i)
+        thread_work();
+#else
     pool->sync_run_all(thread_work);
+#endif
 #endif
 }
 
@@ -522,7 +543,13 @@ real_t Solver<Abi>::recompute_outer(real_view x, real_view y, real_view λ,
             stage_norms[k] = process_stage(k);
         }
     };
+#if KOQKATOO_WITH_OPENMP
+    KOQKATOO_OMP(parallel for schedule(static))
+    for (int i = 0; i < omp_get_num_threads(); ++i)
+        thread_work();
+#else
     pool->sync_run_all(thread_work);
+#endif
 
     real_t inf_norm = 0, l1_norm = 0;
     for (auto stage_norm : stage_norms) {
@@ -696,7 +723,13 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
         std::optional<guanaqo::Timed<typename Timings::type>> t_w;
         if (t)
             t_w.emplace(t->updowndate_stages);
+#if KOQKATOO_WITH_OPENMP
+        KOQKATOO_OMP(parallel for schedule(static))
+        for (int i = 0; i < omp_get_num_threads(); ++i)
+            thread_work();
+#else
         pool->sync_run_all(thread_work);
+#endif
     }
 #endif
 
