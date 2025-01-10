@@ -13,6 +13,9 @@
 #include <functional>
 #include <stdexcept>
 
+#include <koqkatoo/cholundate/householder-updowndate-common.tpp>
+#include <koqkatoo/cholundate/householder-updowndate.hpp>
+#include <koqkatoo/cholundate/micro-kernels/householder-updowndate.hpp>
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xshhud-diag.hpp> // TODO
 
 /// libfork or custom thread pool
@@ -702,6 +705,13 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
                 compact_blas::xgemm_neg(V().batch(batch_idx), Zj, Vuj, be);
             }
         }
+    };
+
+    const auto updowndate_stage_H = [&](index_t batch_idx, index_t rj_batch) {
+        auto Σj    = storage.Σ_ud.batch(batch_idx).top_rows(rj_batch);
+        auto Sj    = storage.Σ_sgn.batch(batch_idx).top_rows(rj_batch);
+        auto Z1j   = storage.Z1.batch(batch_idx).left_cols(rj_batch);
+        using simd = typename types::simd;
         for (index_t r = 0; r < rj_batch; ++r) {
             simd s{&Sj(0, r, 0), stdx::vector_aligned};
             simd σ{&Σj(0, r, 0), stdx::vector_aligned};
@@ -714,9 +724,9 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
             updowndate_HVW(LHV().batch(batch_idx), Wᵀ().batch(batch_idx), Z1j,
                            Σj);
         }
-        auto LHi = LH().batch(batch_idx);
         // TODO: should we always eagerly update V and W?
 #ifndef NDEBUG
+        auto LHi = LH().batch(batch_idx);
         // Check finiteness of LH(i)
         assert(N + 1 > batch_idx * simd_stride);
         auto i_end =
@@ -732,69 +742,206 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
 #endif
     };
 
-#if KOQKATOO_SOLVE_USE_LIBFORK
-    const auto process_all = [](auto, auto updowndate_stage, index_t N,
-                                auto simd_stride,
-                                auto &ranks) -> lf::task<void> {
-        for (index_t k = 0; k < N + 1; k += simd_stride) {
-            auto nk           = std::min<index_t>(simd_stride, N + 1 - k);
-            index_t batch_idx = k / simd_stride;
-            auto ranksj       = ranks.batch(batch_idx);
-            auto rjmm      = std::minmax_element(ranksj.data, ranksj.data + nk);
-            index_t rj_min = *rjmm.first, rj_batch = *rjmm.second;
-            if (rj_batch != 0)
-                co_await lf::fork[do_invoke](updowndate_stage, batch_idx,
-                                             rj_min, rj_batch, ranksj);
-        }
-        co_await lf::join;
+    // Each block of V generates fill-in in A in the block row below it, and
+    // W adds new columns to A, but we only ever need two block rows of A at any
+    // given time, thanks to the block-tridiagonal structure of Ψ, so we use a
+    // sliding window of depth 2, and use the stage index modulo 2.
+    index_t colsA = 0;
+    auto &A = storage.A_ud, &D = storage.D_ud;
+    using namespace cholundate;
+    static constexpr index_constant<householder::DefaultSizeR> R;
+    static constexpr index_constant<householder::DefaultSizeS> S;
+    using W_t = micro_kernels::householder::matrix_W_storage<>;
+
+    constinit static const auto microkernel_diag_lut =
+        make_1d_lut<R>([]<index_t NR>(index_constant<NR>) {
+            return householder::updowndate_diag<NR + 1, DownUpdate>;
+        });
+    constinit static const auto microkernel_full_lut =
+        make_1d_lut<R>([]<index_t NR>(index_constant<NR>) {
+            return householder::updowndate_full<NR + 1, DownUpdate>;
+        });
+    constinit static const auto microkernel_tail_lut =
+        make_1d_lut<R>([]<index_t NR>(index_constant<NR>) {
+            constexpr micro_kernels::householder::Config uConf{
+                .block_size_r = NR + 1, .block_size_s = S};
+            return householder::updowndate_tile_tail<uConf, DownUpdate>;
+        });
+
+    auto process_diag_block = [&](index_t k, auto rem_k, auto Ad, auto Dd,
+                                  auto Ld, W_t &W) {
+        auto Add = Ad.middle_rows(k, rem_k);
+        auto Ldd = Ld.block(k, k, rem_k, rem_k);
+        microkernel_diag_lut[rem_k - 1](colsA, W, Ldd, Add, DownUpdate{Dd});
+    };
+    auto process_subdiag_block_W = [&](index_t k, auto Ad, auto Dd, auto Ld,
+                                       W_t &W) {
+        auto Add = Ad.middle_rows(k, R);
+        foreach_chunked_merged(k + R, Ld.rows, S, [&](index_t i, auto rem_i) {
+            auto Ads = Ad.middle_rows(i, rem_i);
+            auto Lds = Ld.block(i, k, rem_i, R);
+            microkernel_tail_lut[R - 1](rem_i, 0, colsA, W, Lds, Add, Ads,
+                                        DownUpdate{Dd});
+        });
+    };
+    auto process_subdiag_block_V = [&](index_t k, index_t rem_k, index_t colsA0,
+                                       auto As, auto Ls, auto Ad, auto Dd,
+                                       W_t &W) {
+        auto Add = Ad.middle_rows(k, rem_k);
+        foreach_chunked_merged(0, Ls.rows, S, [&](index_t i, auto rem_i) {
+            auto Ass = As.middle_rows(i, rem_i);
+            auto Lss = Ls.block(i, k, rem_i, rem_k);
+            microkernel_tail_lut[rem_k - 1](rem_i, colsA0, colsA, W, Lss, Add,
+                                            Ass, DownUpdate{Dd});
+        });
     };
 
-    {
-        std::optional<guanaqo::Timed<typename Timings::type>> t_w;
-        if (t)
-            t_w.emplace(t->updowndate_stages);
-        lf::sync_wait(*fork_pool, process_all, updowndate_stage, N,
-                      std::integral_constant<index_t, simd_stride>(), ranks);
-    }
-#else
-    std::atomic<index_t> batch_counter{0};
-    const index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
-    auto thread_work        = [&] {
-        while (true) {
-            index_t batch_idx =
-                batch_counter.fetch_add(1, std::memory_order_relaxed);
-            if (batch_idx >= num_batch)
-                break;
-            KOQKATOO_TRACE("updowndate", batch_idx);
-            auto stage_idx = batch_idx * simd_stride;
-            auto nk        = std::min<index_t>(simd_stride, N + 1 - stage_idx);
-            auto ranksj    = ranks.batch(batch_idx);
-            auto rjmm      = std::minmax_element(ranksj.data, ranksj.data + nk);
-            index_t rj_min = *rjmm.first, rj_batch = *rjmm.second;
-            if (rj_batch != 0)
-                updowndate_stage(batch_idx, rj_min, rj_batch, ranksj);
+    const auto updowndate_Ψ_stage_last = [&] {
+        // Final stage has no subdiagonal block (V)
+        index_t rN = ranks(N, 0, 0);
+        colsA += rN;
+        if (colsA > 0) {
+            auto Ad = A(N % 2).left_cols(colsA), Ld = LΨd_scalar()(N);
+            Ad.right_cols(rN) = storage.Wupd(N).left_cols(rN);
+            W_t W;
+            auto Dd            = D(0).top_rows(colsA);
+            Dd.bottom_rows(rN) = storage.Σ_sgn(N).top_rows(rN);
+            std::span<real_t> Dd_spn{Dd.data, static_cast<size_t>(Dd.rows)};
+
+            // Process all diagonal blocks (in multiples of R, except the last).
+            foreach_chunked(
+                0, Ld.cols, R,
+                [&](index_t k) {
+                    process_diag_block(k, R, Ad, Dd_spn, Ld, W);
+                    process_subdiag_block_W(k, Ad, Dd_spn, Ld, W);
+                },
+                [&](index_t k, index_t rem_k) {
+                    auto Add = Ad.middle_rows(k, rem_k);
+                    auto Ldd = Ld.block(k, k, rem_k, rem_k);
+                    microkernel_full_lut[rem_k - 1](colsA, Ldd, Add,
+                                                    DownUpdate{Dd_spn});
+                });
         }
     };
-    {
-        std::optional<guanaqo::Timed<typename Timings::type>> t_w;
-        if (t)
-            t_w.emplace(t->updowndate_stages);
+
+    const auto updowndate_Ψ_stage = [&](index_t k) {
+        if (k == N)
+            return updowndate_Ψ_stage_last();
+        index_t rk  = ranks(k, 0, 0);
+        auto colsA0 = colsA;
+        colsA += rk;
+        if (colsA == 0)
+            return;
+        auto Ad = A(k % 2).left_cols(colsA), Ld = LΨd_scalar()(k);
+        auto As = A((k + 1) % 2).left_cols(colsA), Ls = LΨs_scalar()(k);
+        Ad.right_cols(rk) = storage.Wupd(k).left_cols(rk);
+        As.right_cols(rk) = storage.Vupd(k).left_cols(rk);
+        W_t W;
+        auto Dd            = D(0).top_rows(colsA);
+        Dd.bottom_rows(rk) = storage.Σ_sgn(k).top_rows(rk);
+        std::span<real_t> Dd_spn{Dd.data, static_cast<size_t>(Dd.rows)};
+
+        // Process all diagonal blocks (in multiples of R, except the last).
+        foreach_chunked(
+            0, Ld.cols, R,
+            [&](index_t k) {
+                auto c0 = k == 0 ? colsA0 : 0;
+                process_diag_block(k, R, Ad, Dd_spn, Ld, W);
+                process_subdiag_block_W(k, Ad, Dd_spn, Ld, W);
+                process_subdiag_block_V(k, R, c0, As, Ls, Ad, Dd_spn, W);
+            },
+            [&](index_t k, index_t rem_k) {
+                auto c0 = k == 0 ? colsA0 : 0;
+                process_diag_block(k, rem_k, Ad, Dd_spn, Ld, W);
+                process_subdiag_block_V(k, rem_k, c0, As, Ls, Ad, Dd_spn, W);
+            });
+    };
+
+    const auto updowndate_Ψ_batch = [&](index_t batch_idx) {
+        KOQKATOO_TRACE("updowndate Ψ", batch_idx);
+        index_t k0 = batch_idx * simd_stride;
+        index_t k1 = std::min(k0 + simd_stride, N + 1);
+        for (index_t k = k0; k < k1; ++k)
+            updowndate_Ψ_stage(k);
+    };
+
+    const index_t num_batch  = (N + 1 + simd_stride - 1) / simd_stride;
+    auto &join_counters      = storage.reset_join_counters();
+    const auto process_stage = [&](index_t batch_idx, index_t rj_min,
+                                   index_t rj_batch, auto ranksj) {
+        if (rj_batch > 0) {
+            KOQKATOO_TRACE("updowndate", batch_idx);
+            updowndate_stage(batch_idx, rj_min, rj_batch, ranksj);
+        }
+        auto ready = join_counters[batch_idx].value.fetch_or(2);
+        join_counters[batch_idx].value.notify_one();
+        // Whoever sets join_counter to 3 wins the race and gets to handle
+        // the update of Ψ
+        if (ready == 1 || batch_idx == 0) {
+            auto bi = batch_idx;
+            while (true) {
+                updowndate_Ψ_batch(bi);
+                if (++bi == num_batch)
+                    break;
+                // Indicate that this block of Ψ is done
+                if (join_counters[bi].value.fetch_or(1) == 0)
+                    // If the corresponding preparation is not done yet,
+                    // we can't process the next block of Ψ yet.
+                    break;
+            };
+        }
+    };
+
+    const auto process_stage_H = [&](index_t batch_idx, index_t rj_batch) {
+        KOQKATOO_TRACE("updowndate H", batch_idx);
+        if (rj_batch <= 0)
+            return;
+        auto &join_counter = join_counters[batch_idx].value;
+        // Wait for the preparation to be finished (join_counter >= 2)
+        while (true) {
+            auto jc = join_counter.load();
+            if (jc >= 2)
+                break;
+            join_counter.wait(jc);
+        }
+        updowndate_stage_H(batch_idx, rj_batch);
+    };
+
+    std::atomic<index_t> batch_counter{0};
+    auto thread_work = [&] {
+        while (true) {
+            index_t b = batch_counter.fetch_add(1, std::memory_order_relaxed);
+            if (b < num_batch) {
+                auto batch_idx = b;
+                auto stage_idx = batch_idx * simd_stride;
+                auto nk     = std::min<index_t>(simd_stride, N + 1 - stage_idx);
+                auto ranksj = ranks.batch(batch_idx);
+                auto rjmm = std::minmax_element(ranksj.data, ranksj.data + nk);
+                index_t rj_min = *rjmm.first, rj_batch = *rjmm.second;
+                process_stage(batch_idx, rj_min, rj_batch, ranksj);
+            } else if (b < 2 * num_batch) {
+                auto batch_idx = b - num_batch;
+                auto stage_idx = batch_idx * simd_stride;
+                auto nk     = std::min<index_t>(simd_stride, N + 1 - stage_idx);
+                auto ranksj = ranks.batch(batch_idx);
+                auto rj_batch = std::max_element(ranksj.data, ranksj.data + nk);
+                process_stage_H(batch_idx, *rj_batch);
+            } else {
+                break;
+            }
+        }
+    };
+
+    std::optional<guanaqo::Timed<typename Timings::type>> t_w;
+    if (t)
+        t_w.emplace(t->updowndate_stages);
 #if KOQKATOO_WITH_OPENMP
         KOQKATOO_OMP(parallel for schedule(static))
         for (int i = 0; i < omp_get_num_threads(); ++i)
             thread_work();
 #else
-        pool->sync_run_all(thread_work);
+    pool->sync_run_all(thread_work);
 #endif
-    }
-#endif
-
-    {
-        std::optional<guanaqo::Timed<typename Timings::type>> t_w;
-        if (t)
-            t_w.emplace(t->updowndate_Ψ);
-        updowndate_ψ();
-    }
 }
 
 } // namespace koqkatoo::ocp
