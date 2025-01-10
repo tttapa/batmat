@@ -30,9 +30,7 @@ void Solver<Abi>::updowndate_ψ() {
     // given time, thanks to the block-tridiagonal structure of Ψ, so we use a
     // sliding window of depth 2, and use the stage index modulo 2.
     index_t colsA = 0;
-    // TODO: move to storage
-    scalar_real_matrix A{{.depth = 2, .rows = nx, .cols = (N + 1) * ny}};
-    scalar_real_matrix D{{.depth = 1, .rows = (N + 1) * ny, .cols = 1}};
+    auto &A = storage.A_ud, &D = storage.D_ud;
     using namespace cholundate;
     static constexpr index_constant<householder::DefaultSizeR> R;
     static constexpr index_constant<householder::DefaultSizeS> S;

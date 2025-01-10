@@ -26,10 +26,6 @@ inline constexpr auto do_invoke =
     co_return std::invoke(std::move(fun), std::move(args)...);
 };
 
-struct join_counter_t {
-    alignas(64) std::atomic<int> value{};
-};
-
 template <simd_abi_tag Abi>
 void Solver<Abi>::factor_fork(real_t S, real_view Σ, bool_view J) {
     KOQKATOO_TRACE("factor", 0);
@@ -119,8 +115,8 @@ void Solver<Abi>::factor_fork(real_t S, real_view Σ, bool_view J) {
             }
         }
     };
-    index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
-    std::vector<join_counter_t> join_counters(num_batch - 1);
+    index_t num_batch        = (N + 1 + simd_stride - 1) / simd_stride;
+    auto &join_counters      = storage.reset_join_counters();
     const auto process_stage = [&](index_t k) {
         prepare(k);
         while (k < num_batch) {
@@ -246,8 +242,8 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
         compact_blas::xtrsm_LLTN(LH().batch(i), d.batch(i), be);
     };
 
-    index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
-    std::vector<join_counter_t> join_counters(num_batch - 1);
+    index_t num_batch   = (N + 1 + simd_stride - 1) / simd_stride;
+    auto &join_counters = storage.reset_join_counters();
     // process_fwd returns true if last batch was processed
     const auto process_fwd = [&](index_t k) {
         solve_H1(k);
@@ -563,8 +559,6 @@ real_t Solver<Abi>::recompute_outer(real_view x, real_view y, real_view λ,
 template <simd_abi_tag Abi>
 void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new,
                                   Timings *t) {
-    KOQKATOO_TRACE("updowndate", 0);
-
     std::optional<guanaqo::Timed<typename Timings::type>> t_total;
     if (t)
         t_total.emplace(t->updowndate);
@@ -594,7 +588,6 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
 
     const auto updowndate_stage = [&](index_t batch_idx, index_t rj_min,
                                       index_t rj_batch, auto ranksj) {
-        KOQKATOO_TRACE("updowndate", batch_idx);
         auto Σj    = storage.Σ_ud.batch(batch_idx).top_rows(rj_batch);
         auto Sj    = storage.Σ_sgn.batch(batch_idx).top_rows(rj_batch);
         auto Zj    = storage.Z.batch(batch_idx).left_cols(rj_batch);
@@ -710,6 +703,7 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
                 batch_counter.fetch_add(1, std::memory_order_relaxed);
             if (batch_idx >= num_batch)
                 break;
+            KOQKATOO_TRACE("updowndate", batch_idx);
             auto stage_idx = batch_idx * simd_stride;
             auto nk        = std::min<index_t>(simd_stride, N + 1 - stage_idx);
             auto ranksj    = ranks.batch(batch_idx);

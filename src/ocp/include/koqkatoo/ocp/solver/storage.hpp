@@ -6,6 +6,7 @@
 #include <koqkatoo/ocp/ocp.hpp>
 
 #include <experimental/simd>
+#include <atomic>
 
 namespace koqkatoo::ocp {
 
@@ -88,6 +89,7 @@ struct SolverStorage {
         typename types::single_scalar_mut_real_view;
     using scalar_mut_real_view           = typename types::scalar_mut_real_view;
     using scalar_layout                  = typename types::scalar_layout;
+    using scalar_real_matrix             = typename types::scalar_real_matrix;
     using real_matrix                    = typename types::real_matrix;
     using mask_matrix                    = typename types::mask_matrix;
     using index_matrix                   = typename types::index_matrix;
@@ -170,6 +172,16 @@ struct SolverStorage {
                             .rows  = dim.nx,      // assuming ny >= ny_N
                             .cols  = dim.ny}};
     }();
+    scalar_real_matrix A_ud = [this] {
+        return scalar_real_matrix{{.depth = 2, //
+                                   .rows  = dim.nx,
+                                   .cols  = dim.N_horiz * dim.ny + dim.ny_N}};
+    }();
+    scalar_real_matrix D_ud = [this] {
+        return scalar_real_matrix{{.depth = 1, //
+                                   .rows  = dim.N_horiz * dim.ny + dim.ny_N,
+                                   .cols  = 1}};
+    }();
     real_matrix VV = [this] {
         return real_matrix{{.depth = dim.N_horiz + 1, //
                             .rows  = dim.nx,
@@ -193,6 +205,19 @@ struct SolverStorage {
     index_matrix stagewise_update_counts = [this] {
         return index_matrix{{.depth = dim.N_horiz + 1, .rows = 1, .cols = 1}};
     }();
+
+    struct join_counter_t {
+        alignas(64) std::atomic<int> value{};
+    };
+
+    std::vector<join_counter_t> join_counters = std::vector<join_counter_t>(
+        (dim.N_horiz + 1 + simd_stride - 1) / simd_stride);
+
+    std::vector<join_counter_t> &reset_join_counters() {
+        for (auto &jc : join_counters)
+            jc.value.store(0, std::memory_order_relaxed);
+        return join_counters;
+    }
 
     std::vector<real_t> work_chol_Ψ =
         std::vector<real_t>(3 * simd_stride * dim.nx * dim.nx);
