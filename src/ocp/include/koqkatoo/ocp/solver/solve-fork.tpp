@@ -2,6 +2,7 @@
 
 #include <koqkatoo/assume.hpp>
 #include <koqkatoo/fork-pool.hpp>
+#include <koqkatoo/loop.hpp>
 #include <koqkatoo/ocp/solver/solve.hpp>
 #include <koqkatoo/thread-pool.hpp>
 #include <koqkatoo/trace.hpp>
@@ -11,6 +12,8 @@
 #include <atomic>
 #include <functional>
 #include <stdexcept>
+
+#include <koqkatoo/linalg-compact/compact/micro-kernels/xshhud-diag.hpp> // TODO
 
 /// libfork or custom thread pool
 #define KOQKATOO_SOLVE_USE_LIBFORK 0
@@ -586,6 +589,45 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
     if (rj_max == 0)
         return;
 
+    const auto updowndate_HVW =
+        [&](single_mut_real_view HV, single_mut_real_view Wᵀ,
+            single_mut_real_view A, single_real_view D) {
+            using namespace linalg::compact::micro_kernels::shhud_diag;
+            static constexpr index_constant<SizeR> R;
+            static constexpr index_constant<SizeS> S;
+
+            using W_t = triangular_accessor<Abi, real_t, R>;
+            alignas(W_t::alignment()) real_t W[W_t::size()];
+
+            // Process all diagonal blocks (in multiples of R, except the last).
+            foreach_chunked_merged(0, HV.cols(), R, [&](index_t k, auto rem_k) {
+                // Part of A corresponding to this diagonal block
+                // TODO: packing
+                auto Ad = A.middle_rows(k, rem_k);
+                auto Ld = HV.block(k, k, rem_k, rem_k);
+                // Process the diagonal block itself
+                microkernel_diag_lut<Abi>[rem_k - 1](A.cols(), W, Ld, Ad, D);
+                // Process all rows below the diagonal block (in multiples of S).
+                foreach_chunked_merged(
+                    k + rem_k, HV.rows(), S,
+                    [&](index_t i, auto rem_i) {
+                        auto As = A.middle_rows(i, rem_i);
+                        auto Ls = HV.block(i, k, rem_i, rem_k);
+                        microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
+                            A.cols(), W, Ls, As, Ad, D, false);
+                    },
+                    LoopDir::Backward); // TODO: decide on order
+                foreach_chunked_merged(
+                    0, Wᵀ.cols(), S, [&](index_t iw, auto rem_i) {
+                        index_t i = HV.rows() + iw;
+                        auto As   = A.middle_rows(i, rem_i);
+                        auto Ls   = Wᵀ.block(k, iw, rem_k, rem_i);
+                        microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
+                            A.cols(), W, Ls, As, Ad, D, true);
+                    });
+            });
+        };
+
     const auto updowndate_stage = [&](index_t batch_idx, index_t rj_min,
                                       index_t rj_batch, auto ranksj) {
         auto Σj    = storage.Σ_ud.batch(batch_idx).top_rows(rj_batch);
@@ -596,50 +638,69 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
         auto Wuj   = storage.Wupd.batch(batch_idx).left_cols(rj_batch);
         using simd = typename types::simd;
 #ifdef _GLIBCXX_EXPERIMENTAL_SIMD // TODO: need general way to convert masks
-        using index_simd = typename types::index_simd;
-        index_simd rjks{ranksj.data, stdx::vector_aligned};
-        for (index_t rj = rj_min; rj < rj_batch; ++rj) {
-            index_simd rjs{rj};
-            auto z0_mask = rjs >= rjks;
-            simd zero{0};
-            constexpr auto vec_align = stdx::vector_aligned;
-            for (index_t r = 0; r < nx + nu; ++r)
-                where(z0_mask.__cvt(), zero).copy_to(&Zj(0, r, rj), vec_align);
-            using std::sqrt;
-            zero = simd{sqrt(std::numeric_limits<real_t>::min())}; // TODO
-            // TODO: why does zero sometimes result in NaN? At first sight, inf
-            //       arithmetic should also work (i.e. Σ⁻¹ = ∞), but apparently
-            //       I'm missing something.
-            where(z0_mask.__cvt(), zero).copy_to(&Σj(0, rj, 0), vec_align);
+        {
+            KOQKATOO_TRACE("uds mask", batch_idx);
+            using index_simd = typename types::index_simd;
+            index_simd rjks{ranksj.data, stdx::vector_aligned};
+            for (index_t rj = rj_min; rj < rj_batch; ++rj) {
+                index_simd rjs{rj};
+                auto z0_mask = rjs >= rjks;
+                simd zero{0};
+                constexpr auto vec_align = stdx::vector_aligned;
+                for (index_t r = 0; r < nx + nu; ++r)
+                    where(z0_mask.__cvt(), zero)
+                        .copy_to(&Zj(0, r, rj), vec_align);
+                using std::sqrt;
+                zero = simd{sqrt(std::numeric_limits<real_t>::min())}; // TODO
+                // TODO: why does zero sometimes result in NaN? At first sight, inf
+                //       arithmetic should also work (i.e. Σ⁻¹ = ∞), but apparently
+                //       I'm missing something.
+                where(z0_mask.__cvt(), zero).copy_to(&Σj(0, rj, 0), vec_align);
+            }
         }
 #else
 #error "Fallback not yet implemented"
 #endif
         const auto be = settings.preferred_backend;
         // Copy Z
-        compact_blas::xcopy(Zj, Z1j.top_rows(nx + nu));
-        compact_blas::xfill(real_t(0), Z1j.bottom_rows(nx));
-        // Z ← L⁻¹ Z
-        compact_blas::xtrsm_LLNN(LH().batch(batch_idx), Zj, be);
+        {
+            KOQKATOO_TRACE("uds z", batch_idx);
+            compact_blas::xcopy(Zj, Z1j.top_rows(nx + nu));
+            compact_blas::xfill(real_t(0), Z1j.bottom_rows(2 * nx)); // TODO
+            // Z ← L⁻¹ Z
+            compact_blas::xtrsm_LLNN(LH().batch(batch_idx), Zj, be);
+        }
         // Lu ← ZᵀZ ± Σ⁻¹
-        compact_blas::xsyrk_T(Zj, Luj, be);
-        for (index_t r = 0; r < rj_batch; ++r) {
-            simd Lujrr{&Luj(0, r, r), stdx::vector_aligned};
-            simd Σjr{&Σj(0, r, 0), stdx::vector_aligned};
-            simd Sjr{&Sj(0, r, 0), stdx::vector_aligned};
-            Lujrr += cneg(1 / Σjr, Sjr);
-            Lujrr.copy_to(&Luj(0, r, r), stdx::vector_aligned);
+        {
+            KOQKATOO_TRACE("uds zz", batch_idx);
+            compact_blas::xsyrk_T(Zj, Luj, be);
+            for (index_t r = 0; r < rj_batch; ++r) {
+                simd Lujrr{&Luj(0, r, r), stdx::vector_aligned};
+                simd Σjr{&Σj(0, r, 0), stdx::vector_aligned};
+                simd Sjr{&Sj(0, r, 0), stdx::vector_aligned};
+                Lujrr += cneg(1 / Σjr, Sjr);
+                Lujrr.copy_to(&Luj(0, r, r), stdx::vector_aligned);
+            }
         }
         // Lu ← chol(ZᵀZ ± Σ⁻¹)
-        compact_blas::xpntrf(Luj, Sj);
+        {
+            KOQKATOO_TRACE("uds chol", batch_idx);
+            compact_blas::xpntrf(Luj, Sj);
+        }
         // Z ← Z Lu⁻ᵀ
-        compact_blas::xtrsm_RLTN(Luj, Zj, be);
+        {
+            KOQKATOO_TRACE("uds y", batch_idx);
+            compact_blas::xtrsm_RLTN(Luj, Zj, be);
+        }
         // Wu ← W Z
-        compact_blas::xgemm_TN(Wᵀ().batch(batch_idx), Zj, Wuj, be);
-        if (batch_idx < AB().num_batches()) {
-            // Vu ← -V Z
-            auto Vuj = storage.Vupd.batch(batch_idx).left_cols(rj_batch);
-            compact_blas::xgemm_neg(V().batch(batch_idx), Zj, Vuj, be);
+        {
+            KOQKATOO_TRACE("uds w-hat", batch_idx);
+            compact_blas::xgemm_TN(Wᵀ().batch(batch_idx), Zj, Wuj, be);
+            if (batch_idx < AB().num_batches()) {
+                // Vu ← -V Z
+                auto Vuj = storage.Vupd.batch(batch_idx).left_cols(rj_batch);
+                compact_blas::xgemm_neg(V().batch(batch_idx), Zj, Vuj, be);
+            }
         }
         for (index_t r = 0; r < rj_batch; ++r) {
             simd s{&Sj(0, r, 0), stdx::vector_aligned};
@@ -647,12 +708,13 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
             cneg(σ, s).copy_to(&Σj(0, r, 0), stdx::vector_aligned);
         }
         // Update LH and V
-        compact_blas::xshhud_diag(LHV().batch(batch_idx), Z1j, Σj, be);
-        auto LHi = LH().batch(batch_idx), Wi = Wᵀ().batch(batch_idx);
-        compact_blas::xcopy(LHi.top_left(nx + nu, nx), Wi);
-        compact_blas::xtrtri(Wi, be);
-        compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), Wi.bottom_rows(nu),
-                                 be);
+        {
+            KOQKATOO_TRACE("uds hv", batch_idx);
+            // TODO: no need to update V in last stage.
+            updowndate_HVW(LHV().batch(batch_idx), Wᵀ().batch(batch_idx), Z1j,
+                           Σj);
+        }
+        auto LHi = LH().batch(batch_idx);
         // TODO: should we always eagerly update V and W?
 #ifndef NDEBUG
         // Check finiteness of LH(i)

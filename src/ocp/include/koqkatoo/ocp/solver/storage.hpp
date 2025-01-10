@@ -49,6 +49,8 @@ struct SolverTypes {
     /// Mutable view of a single batch of matrices.
     using single_mut_real_view =
         BatchedMatrixView<real_t, index_t, simd_stride_t, simd_stride_t>;
+    using single_real_view =
+        BatchedMatrixView<const real_t, index_t, simd_stride_t, simd_stride_t>;
 
     /// Type that owns an arbitrary number of batches of matrices.
     using real_matrix =
@@ -144,7 +146,7 @@ struct SolverStorage {
     }();
     real_matrix Z1 = [this] {
         return real_matrix{{.depth = dim.N_horiz + 1, //
-                            .rows  = dim.nx + dim.nu + dim.nx,
+                            .rows  = dim.nx + dim.nu + dim.nx + dim.nx,
                             .cols  = dim.ny}}; // assuming ny >= ny_N
     }();
     real_matrix Σ_sgn = [this] {

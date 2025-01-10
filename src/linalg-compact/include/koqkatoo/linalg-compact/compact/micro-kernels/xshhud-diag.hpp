@@ -73,8 +73,8 @@ void xshhud_diag_tail_microkernel(
     index_t colsA, triangular_accessor<Abi, const real_t, SizeR> W,
     mut_single_batch_matrix_accessor<Abi> L,
     mut_single_batch_matrix_accessor<Abi> A,
-    single_batch_matrix_accessor<Abi> B,
-    single_batch_vector_accessor<Abi> diag) noexcept;
+    single_batch_matrix_accessor<Abi> B, single_batch_vector_accessor<Abi> diag,
+    bool trans_L) noexcept;
 
 template <class Abi>
 inline const constinit auto microkernel_diag_lut =

@@ -135,13 +135,13 @@ xshhud_tail_microkernel(index_t colsA,
         KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < k; ++l)
             Wk[l] = W.load(l, k);
         KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
-            simd Lik = L.load(i, k);
+            simd Lik = L_cached.load(i, k);
             V[i][k] += Lik;
             KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < k; ++l)
                 V[i][k] -= V[i][l] * Wk[l];
             V[i][k] *= W.load(k, k); // diagonal already inverted
             Lik = V[i][k] - Lik;
-            L.store(Lik, i, k);
+            L_cached.store(Lik, i, k);
         }
     }
     // Update A -= V Bᵀ

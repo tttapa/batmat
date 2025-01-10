@@ -28,6 +28,7 @@ struct Solver {
     using bool_view            = typename types::bool_view;
     using mut_real_view        = typename types::mut_real_view;
     using single_mut_real_view = typename types::single_mut_real_view;
+    using single_real_view     = typename types::single_real_view;
     using scalar_mut_real_view = typename types::scalar_mut_real_view;
     using scalar_layout        = typename types::scalar_layout;
     using scalar_real_matrix   = typename types::scalar_real_matrix;
