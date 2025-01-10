@@ -17,23 +17,30 @@ inline LinearOCPStorage generate_random_ocp(OCPDim dim,
     // Dynamics and constraint matrices
     for (index_t i = 0; i < N; ++i) {
         auto Ai = ocp.A(i), Bi = ocp.B(i), Ci = ocp.C(i), Di = ocp.D(i);
-        auto Qi = ocp.Q(i), Ri = ocp.R(i);
+        auto Qi = ocp.Q(i), Ri = ocp.R(i), Si = ocp.S(i), Hi = ocp.H(i);
         Ai.generate([&] { return nrml(rng) / 2; });
         Bi.generate([&] { return nrml(rng); });
         Ci.generate([&] { return nrml(rng); });
         Di.generate([&] { return nrml(rng); });
         Qi.generate([&] { return nrml(rng); });
         Ri.generate([&] { return nrml(rng); });
+        Si.generate([&] { return nrml(rng); });
         for (index_t j = 0; j < nx; ++j)
             Qi(j, j) += 10;
         for (index_t j = 0; j < nu; ++j)
             Ri(j, j) += 10;
+        for (index_t c = 0; c < nx + nu; ++c)
+            for (index_t r = c + 1; r < nx + nu; ++r)
+                Hi(c, r) = Hi(r, c);
     }
     auto Ci = ocp.C(N), Qi = ocp.Q(N);
     Ci.generate([&] { return nrml(rng); });
     Qi.generate([&] { return nrml(rng); });
     for (index_t j = 0; j < nx; ++j)
         Qi(j, j) += 25;
+    for (index_t c = 0; c < nx; ++c)
+        for (index_t r = c + 1; r < nx; ++r)
+            Qi(c, r) = Qi(r, c);
     return ocp;
 }
 
