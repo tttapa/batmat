@@ -897,7 +897,8 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
                 index_t rj_min = *rjmm.first, rj_batch = *rjmm.second;
                 process_stage(batch_idx, rj_min, rj_batch, ranksj);
             } else if (b < 2 * num_batch) {
-                auto batch_idx = b - num_batch;
+                // Looping backwards may give slightly better cache locality
+                auto batch_idx = 2 * num_batch - 1 - b;
                 auto stage_idx = batch_idx * simd_stride;
                 auto nk     = std::min<index_t>(simd_stride, N + 1 - stage_idx);
                 auto ranksj = ranks.batch(batch_idx);
