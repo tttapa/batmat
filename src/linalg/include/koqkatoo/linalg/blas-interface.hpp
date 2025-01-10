@@ -19,6 +19,19 @@ void xgemm(CBLAS_LAYOUT Layout, CBLAS_TRANSPOSE TransA, CBLAS_TRANSPOSE TransB,
            T *C, I ldc);
 
 template <class T, class I>
+void xgemmt(CBLAS_LAYOUT Layout, CBLAS_UPLO uplo, CBLAS_TRANSPOSE TransA,
+            CBLAS_TRANSPOSE TransB, I N, I K, T alpha, const T *A, I lda,
+            const T *B, I ldb, T beta, T *C, I ldc);
+
+template <class T, class I>
+void xtrmv(CBLAS_LAYOUT Layout, CBLAS_UPLO Uplo, CBLAS_TRANSPOSE TransA,
+           CBLAS_DIAG Diag, I N, const T *A, I lda, T *X, I incX);
+
+template <class T, class I>
+void xtrsv(CBLAS_LAYOUT Layout, CBLAS_UPLO Uplo, CBLAS_TRANSPOSE TransA,
+           CBLAS_DIAG Diag, I N, const T *A, I lda, T *X, I incX);
+
+template <class T, class I>
 void xtrmm(CBLAS_LAYOUT Layout, CBLAS_SIDE Side, CBLAS_UPLO Uplo,
            CBLAS_TRANSPOSE TransA, CBLAS_DIAG Diag, I M, I N, T alpha,
            const T *A, I lda, T *B, I ldb);

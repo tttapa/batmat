@@ -44,12 +44,59 @@ xgemm(CBLAS_LAYOUT Layout, CBLAS_TRANSPOSE TransA, CBLAS_TRANSPOSE TransB,
                 ldc);
 }
 
+template <>
+KOQKATOO_LINALG_EXPORT void
+xgemmt(CBLAS_LAYOUT Layout, CBLAS_UPLO uplo, CBLAS_TRANSPOSE TransA,
+       CBLAS_TRANSPOSE TransB, index_t N, index_t K, double alpha,
+       const double *A, index_t lda, const double *B, index_t ldb, double beta,
+       double *C, index_t ldc) {
+    cblas_dgemmt(Layout, uplo, TransA, TransB, N, K, alpha, A, lda, B, ldb,
+                 beta, C, ldc);
+}
+template <>
+KOQKATOO_LINALG_EXPORT void
+xgemmt(CBLAS_LAYOUT Layout, CBLAS_UPLO uplo, CBLAS_TRANSPOSE TransA,
+       CBLAS_TRANSPOSE TransB, index_t N, index_t K, float alpha,
+       const float *A, index_t lda, const float *B, index_t ldb, float beta,
+       float *C, index_t ldc) {
+    cblas_sgemmt(Layout, uplo, TransA, TransB, N, K, alpha, A, lda, B, ldb,
+                 beta, C, ldc);
+}
+
 #if DO_INSTANTIATE
 template KOQKATOO_LINALG_EXPORT void xgemm<real_t, index_t>(
     CBLAS_LAYOUT Layout, CBLAS_TRANSPOSE TransA, CBLAS_TRANSPOSE TransB,
     index_t M, index_t N, index_t K, real_t alpha, const real_t *A, index_t lda,
     const real_t *B, index_t ldb, real_t beta, real_t *C, index_t ldc);
 #endif
+
+template <>
+void xtrmv(CBLAS_LAYOUT Layout, CBLAS_UPLO Uplo, CBLAS_TRANSPOSE TransA,
+           CBLAS_DIAG Diag, index_t N, const double *A, index_t lda, double *X,
+           index_t incX) {
+    cblas_dtrmv(Layout, Uplo, TransA, Diag, N, A, lda, X, incX);
+}
+
+template <>
+void xtrmv(CBLAS_LAYOUT Layout, CBLAS_UPLO Uplo, CBLAS_TRANSPOSE TransA,
+           CBLAS_DIAG Diag, index_t N, const float *A, index_t lda, float *X,
+           index_t incX) {
+    cblas_strmv(Layout, Uplo, TransA, Diag, N, A, lda, X, incX);
+}
+
+template <>
+void xtrsv(CBLAS_LAYOUT Layout, CBLAS_UPLO Uplo, CBLAS_TRANSPOSE TransA,
+           CBLAS_DIAG Diag, index_t N, const double *A, index_t lda, double *X,
+           index_t incX) {
+    cblas_dtrsv(Layout, Uplo, TransA, Diag, N, A, lda, X, incX);
+}
+
+template <>
+void xtrsv(CBLAS_LAYOUT Layout, CBLAS_UPLO Uplo, CBLAS_TRANSPOSE TransA,
+           CBLAS_DIAG Diag, index_t N, const float *A, index_t lda, float *X,
+           index_t incX) {
+    cblas_strsv(Layout, Uplo, TransA, Diag, N, A, lda, X, incX);
+}
 
 template <>
 KOQKATOO_LINALG_EXPORT void
