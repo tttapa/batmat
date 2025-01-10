@@ -30,8 +30,8 @@ constexpr int n_states  = 2;
 constexpr int n_inputs  = 2;
 #else
 constexpr int n_threads = 4;
-constexpr int n_horiz   = 40;
-constexpr int n_states  = 30;
+constexpr int n_horiz   = 63;
+constexpr int n_states  = 40;
 constexpr int n_inputs  = 30;
 #endif
 
@@ -75,43 +75,48 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
             RSQ(k).bottom_right(nx, nx) = ocp.Q(k);
         }
     }
-    auto PN = LP.batch(N).bottom_right(nx, nx);
+    {
+        KOQKATOO_TRACE("riccati factor", N);
+        auto PN = LP.batch(N).bottom_right(nx, nx);
 #if USE_GEMMT_INEQ_SCHUR
-    auto ocpCN = ocp.C(N);
-    index_t nJ = 0;
-    for (index_t c = 0; c < nx; ++c) {
-        nJ = 0;
-        for (index_t r = 0; r < ny_N; ++r)
-            if (J(N, r, 0)) {
-                ΣCN(0, nJ, c) = Σ(N, r, 0) * (CN(0, nJ, c) = ocpCN(r, c));
-                ++nJ;
-            }
-    }
-    PN(0) = ocp.Q(N);
-    koqkatoo::linalg::xgemmt(CblasColMajor, CblasLower, CblasTrans,
-                             CblasNoTrans, PN.rows(), nJ, real_t{1}, CN.data(),
-                             CN.outer_stride(), ΣCN.data(), ΣCN.outer_stride(),
-                             real_t{1}, PN.data, PN.outer_stride());
+        auto ocpCN = ocp.C(N);
+        index_t nJ = 0;
+        for (index_t c = 0; c < nx; ++c) {
+            nJ = 0;
+            for (index_t r = 0; r < ny_N; ++r)
+                if (J(N, r, 0)) {
+                    ΣCN(0, nJ, c) = Σ(N, r, 0) * (CN(0, nJ, c) = ocpCN(r, c));
+                    ++nJ;
+                }
+        }
+        PN(0) = ocp.Q(N);
+        koqkatoo::linalg::xgemmt(
+            CblasColMajor, CblasLower, CblasTrans, CblasNoTrans, PN.rows(), nJ,
+            real_t{1}, CN.data(), CN.outer_stride(), ΣCN.data(),
+            ΣCN.outer_stride(), real_t{1}, PN.data, PN.outer_stride());
 #else
-    scal_blas::mut_batch_view QN{{.data         = ocp.Q(N).data,
-                                  .rows         = ocp.Q(N).rows,
-                                  .cols         = ocp.Q(N).cols,
-                                  .outer_stride = ocp.Q(N).outer_stride}};
-    scal_blas::mut_batch_view CN{{.data         = ocp.C(N).data,
-                                  .rows         = ocp.C(N).rows,
-                                  .cols         = ocp.C(N).cols,
-                                  .outer_stride = ocp.C(N).outer_stride}};
-    scal_blas::xsyrk_T_schur_copy(CN.batch(0), Σ.batch(N).top_rows(ny_N),
-                                  J.batch(N).top_rows(ny_N), QN.batch(0),
-                                  PN.batch(0));
+        scal_blas::mut_batch_view QN{{.data         = ocp.Q(N).data,
+                                      .rows         = ocp.Q(N).rows,
+                                      .cols         = ocp.Q(N).cols,
+                                      .outer_stride = ocp.Q(N).outer_stride}};
+        scal_blas::mut_batch_view CN{{.data         = ocp.C(N).data,
+                                      .rows         = ocp.C(N).rows,
+                                      .cols         = ocp.C(N).cols,
+                                      .outer_stride = ocp.C(N).outer_stride}};
+        scal_blas::xsyrk_T_schur_copy(CN.batch(0), Σ.batch(N).top_rows(ny_N),
+                                      J.batch(N).top_rows(ny_N), QN.batch(0),
+                                      PN.batch(0));
 #endif
-    PN.add_to_diagonal(1 / S);
-    index_t info;
-    koqkatoo::linalg::xpotrf("L", PN.rows(), PN.data, PN.outer_stride(), &info);
-    if (info != 0)
-        throw std::runtime_error(
-            std::format("cholesky fail {} in stage {}", info, N));
+        PN.add_to_diagonal(1 / S);
+        index_t info;
+        koqkatoo::linalg::xpotrf("L", PN.rows(), PN.data, PN.outer_stride(),
+                                 &info);
+        if (info != 0)
+            throw std::runtime_error(
+                std::format("cholesky fail {} in stage {}", info, N));
+    }
     for (index_t k = N; k-- > 0;) {
+        KOQKATOO_TRACE("riccati factor", k);
         LF(0)    = BA(k);
         auto Lxx = LP(k + 1).bottom_right(nx, nx);
         koqkatoo::linalg::xtrmm(
@@ -155,6 +160,7 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
                                 LP.rows(), LF.rows(), real_t(1), LF.data(),
                                 LF.outer_stride(), real_t(1), LP(k).data,
                                 LP.outer_stride());
+        index_t info;
         koqkatoo::linalg::xpotrf("L", LP.rows(), LP(k).data, LP(k).outer_stride,
                                  &info);
         if (info != 0)
@@ -165,6 +171,7 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
         Pb{{.depth = N + 1, .rows = nx}};
     p(N) = q(N).top_rows(nx);
     for (index_t k = N; k-- > 0;) {
+        KOQKATOO_TRACE("riccati solve bwd", k);
         auto B = BA(k).left_cols(nu), A = BA(k).right_cols(nx);
         auto Lxx = LP(k + 1).bottom_right(nx, nx), Luu = LP(k).top_left(nu, nu),
              Lxu = LP(k).bottom_left(nx, nu);
@@ -208,6 +215,7 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
     }
     xu(0).top_rows(nx) = b(0);
     for (index_t k = 0; k < N; ++k) {
+        KOQKATOO_TRACE("riccati solve fwd", k);
         auto Luu = LP(k).top_left(nu, nu), Lxu = LP(k).bottom_left(nx, nu);
         auto u = xu(k).bottom_rows(nu), x = xu(k).top_rows(nx),
              x_next = xu(k + 1).top_rows(nx);
@@ -312,13 +320,25 @@ void benchmark_riccati(benchmark::State &state) {
     grad_strided.view += Gᵀŷ_strided.view;
     scal_blas::xneg(Mxb_strided);
 
-    for (auto _ : state)
+    for (auto _ : state) {
+#if KOQKATOO_WITH_TRACING
+        koqkatoo::trace_logger.reset();
+#endif
         solve_riccati(ocp, S, Σ_strided.view, J_strided.view, grad_strided.view,
                       Mxb_strided.view, xu_batched);
+    }
 
     static bool printed = false;
     if (!std::exchange(printed, true) && n_var < 100)
         guanaqo::print_python(std::cout, xu_mat(0));
+
+#if KOQKATOO_WITH_TRACING
+    std::cout << "\n" << __PRETTY_FUNCTION__ << "\n";
+    std::cout << "[";
+    for (const auto &log : koqkatoo::trace_logger.get_logs())
+        std::cout << log << ", ";
+    std::cout << "]" << std::endl;
+#endif
 }
 
 template <class simd_abi>
@@ -422,7 +442,7 @@ void benchmark_solve(benchmark::State &state) {
     if (!std::exchange(printed, true) && n_var < 100)
         guanaqo::print_python(std::cout, xu_mat);
 
-#if KOQKATOO_WITH_TRACING && 0
+#if KOQKATOO_WITH_TRACING
     std::cout << "\n" << __PRETTY_FUNCTION__ << "\n";
     std::cout << "[";
     for (const auto &log : koqkatoo::trace_logger.get_logs())
