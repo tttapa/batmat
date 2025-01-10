@@ -10,7 +10,7 @@ void xtrtri_trmm_microkernel(mut_single_batch_matrix_accessor<Abi> A,
                              index_t rows) noexcept;
 
 template <class Abi, index_t RowsReg, index_t ColsReg>
-void xtrmm_microkernel(mut_single_batch_matrix_accessor<Abi> A,
+void xtrmm_microkernel(single_batch_matrix_accessor<Abi> A,
                        mut_single_batch_matrix_accessor<Abi> B,
                        index_t rows) noexcept;
 

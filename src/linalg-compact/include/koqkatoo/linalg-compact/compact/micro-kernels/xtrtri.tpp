@@ -78,10 +78,13 @@ xtrtri_trmm_microkernel(const mut_single_batch_matrix_accessor<Abi> A,
     }
 }
 
-/// Multiplication of lower trapezoidal column A and by the top block of B.
+/// Multiplication of lower trapezoidal column A by the top block of B, store
+/// result in B.
+/// A: rows×RowsReg lower trapezoidal
+/// B: rows×ColsReg
 template <class Abi, index_t RowsReg, index_t ColsReg>
 [[gnu::hot]] void
-xtrmm_microkernel(const mut_single_batch_matrix_accessor<Abi> A,
+xtrmm_microkernel(const single_batch_matrix_accessor<Abi> A,
                   const mut_single_batch_matrix_accessor<Abi> B,
                   const index_t rows) noexcept {
     using simd = stdx::simd<real_t, Abi>;
