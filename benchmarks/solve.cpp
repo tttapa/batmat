@@ -49,7 +49,7 @@ namespace sp = guanaqo::linalg::sparsity;
 static bool init_done = false;
 
 void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
-                   auto J, auto q, auto b, auto xu) {
+                   auto J, auto q, auto b, auto xu, auto Δλ) {
     auto [N, nx, nu, ny, ny_N] = ocp.dim;
     using koqkatoo::linalg::compact::BatchedMatrix;
     using scal_blas =
@@ -173,8 +173,8 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
     for (index_t k = N; k-- > 0;) {
         KOQKATOO_TRACE("riccati solve bwd", k);
         auto B = BA(k).left_cols(nu), A = BA(k).right_cols(nx);
-        auto Lxx = LP(k + 1).bottom_right(nx, nx), Luu = LP(k).top_left(nu, nu),
-             Lxu = LP(k).bottom_left(nx, nu);
+        auto Luu = LP(k).top_left(nu, nu), Lxu = LP(k).bottom_left(nx, nu),
+             Lxx = LP(k + 1).bottom_right(nx, nx);
         auto u   = xu(k).bottom_rows(nu);
 
         // lₖ = Luu⁻¹ₖ (rₖ + Bₖᵀ (Pₖ₊₁ bₖ₊₁ + pₖ₊₁))
@@ -213,10 +213,24 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
                                 real_t{-1}, Lxu.data, Lxu.outer_stride, u.data,
                                 index_t{1}, real_t{1}, p(k).data, index_t{1});
     }
-    xu(0).top_rows(nx) = b(0);
+    {
+        KOQKATOO_TRACE("riccati solve fwd", -1);
+        auto Lxx = LP(0).bottom_right(nx, nx);
+        auto x0  = xu(0).top_rows(nx);
+        x0       = b(0);
+        Δλ(0)    = x0;
+        koqkatoo::linalg::xtrmv(CblasColMajor, CblasLower, CblasTrans,
+                                CblasNonUnit, Lxx.rows, Lxx.data,
+                                Lxx.outer_stride, Δλ(0).data, index_t{1});
+        koqkatoo::linalg::xtrmv(CblasColMajor, CblasLower, CblasNoTrans,
+                                CblasNonUnit, Lxx.rows, Lxx.data,
+                                Lxx.outer_stride, Δλ(0).data, index_t{1});
+        Δλ(0) += p(0);
+    }
     for (index_t k = 0; k < N; ++k) {
         KOQKATOO_TRACE("riccati solve fwd", k);
-        auto Luu = LP(k).top_left(nu, nu), Lxu = LP(k).bottom_left(nx, nu);
+        auto Luu = LP(k).top_left(nu, nu), Lxu = LP(k).bottom_left(nx, nu),
+             Lxx = LP(k + 1).bottom_right(nx, nx);
         auto u = xu(k).bottom_rows(nu), x = xu(k).top_rows(nx),
              x_next = xu(k + 1).top_rows(nx);
         koqkatoo::linalg::xgemv(CblasColMajor, CblasTrans, Lxu.rows, Lxu.cols,
@@ -230,6 +244,14 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
         koqkatoo::linalg::xgemv(CblasColMajor, CblasNoTrans, AB.rows, AB.cols,
                                 real_t{1}, AB.data, AB.outer_stride, xu(k).data,
                                 index_t{1}, real_t{1}, x_next.data, index_t{1});
+        Δλ(k + 1) = x_next;
+        koqkatoo::linalg::xtrmv(CblasColMajor, CblasLower, CblasTrans,
+                                CblasNonUnit, Lxx.rows, Lxx.data,
+                                Lxx.outer_stride, Δλ(k + 1).data, index_t{1});
+        koqkatoo::linalg::xtrmv(CblasColMajor, CblasLower, CblasNoTrans,
+                                CblasNonUnit, Lxx.rows, Lxx.data,
+                                Lxx.outer_stride, Δλ(k + 1).data, index_t{1});
+        Δλ(k + 1) += p(k + 1);
     }
 }
 
@@ -310,11 +332,13 @@ void benchmark_riccati(benchmark::State &state) {
 
     using scal_blas =
         koqkatoo::linalg::compact::CompactBLAS<stdx::simd_abi::scalar>;
-    std::vector<real_t> xu(n_var + nx);
+    std::vector<real_t> xu(n_var + nx), Δλ(n_dyn_constr);
     scal_blas::mut_batch_view xu_batched{
-        {.data = xu.data(), .depth = N + 1, .rows = nx + nu}};
+        {.data = xu.data(), .depth = N + 1, .rows = nx + nu}},
+        Δλ_batched{{.data = Δλ.data(), .depth = N + 1, .rows = nx}};
     scal_blas::mut_batch_view xu_mat{
-        {.data = xu.data(), .rows = nx + nu, .cols = N + 1}};
+        {.data = xu.data(), .rows = nx + nu, .cols = N + 1}},
+        Δλ_mat{{.data = Δλ.data(), .rows = nx, .cols = N + 1}};
 
     grad_strided.view += Mᵀλ_strided.view;
     grad_strided.view += Gᵀŷ_strided.view;
@@ -325,12 +349,14 @@ void benchmark_riccati(benchmark::State &state) {
         koqkatoo::trace_logger.reset();
 #endif
         solve_riccati(ocp, S, Σ_strided.view, J_strided.view, grad_strided.view,
-                      Mxb_strided.view, xu_batched);
+                      Mxb_strided.view, xu_batched, Δλ_batched);
     }
 
     static bool printed = false;
-    if (!std::exchange(printed, true) && n_var < 100)
+    if (!std::exchange(printed, true) && n_var < 100) {
         guanaqo::print_python(std::cout, xu_mat(0));
+        guanaqo::print_python(std::cout, Δλ_mat(0));
+    }
 
 #if KOQKATOO_WITH_TRACING
     std::cout << "\n" << __PRETTY_FUNCTION__ << "\n";
@@ -432,15 +458,19 @@ void benchmark_solve(benchmark::State &state) {
 
     auto [N, nx, nu, ny, ny_N] = ocp.dim;
 
-    VectorXreal d = VectorXreal::Zero(n_var + ocp.dim.nx);
+    VectorXreal d = VectorXreal::Zero(n_var + ocp.dim.nx), Δλ(n_dyn_constr);
     s.storage.restore_variables(d_strided, as_span(d).first(n_var));
+    s.storage.restore_dynamics_constraints(Δλ_strided, as_span(Δλ));
 
     koqkatoo::MutableRealMatrixView xu_mat{
-        {.data = d.data(), .rows = nx + nu, .cols = N + 1}};
+        {.data = d.data(), .rows = nx + nu, .cols = N + 1}},
+        Δλ_mat{{.data = Δλ.data(), .rows = nx, .cols = N + 1}};
 
     static bool printed = false;
-    if (!std::exchange(printed, true) && n_var < 100)
+    if (!std::exchange(printed, true) && n_var < 100) {
         guanaqo::print_python(std::cout, xu_mat);
+        guanaqo::print_python(std::cout, Δλ_mat);
+    }
 
 #if KOQKATOO_WITH_TRACING
     std::cout << "\n" << __PRETTY_FUNCTION__ << "\n";
