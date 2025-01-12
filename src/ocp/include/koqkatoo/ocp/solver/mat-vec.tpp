@@ -82,8 +82,8 @@ void Solver<Abi>::cost_gradient_regularized(real_t S, real_view x, real_view x0,
     simd invS{1 / S};
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < H().num_batches(); ++i) {
-        auto qi = q.batch(i), grad_fi = grad_f.batch(i), xi = x.batch(i),
-             x0i = x0.batch(i);
+        auto qi = q.batch(i), xi = x.batch(i), x0i = x0.batch(i);
+        auto grad_fi = grad_f.batch(i);
         for (index_t j = 0; j < x.rows(); ++j) {
             simd qij{&qi(0, j, 0), stdx::vector_aligned},
                 xij{&xi(0, j, 0), stdx::vector_aligned},
@@ -111,7 +111,8 @@ void Solver<Abi>::cost_gradient_remove_regularization(real_t S, real_view x,
     simd invS{1 / S};
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < x.num_batches(); ++i) {
-        auto grad_fi = grad_f.batch(i), xi = x.batch(i), x0i = x0.batch(i);
+        auto xi = x.batch(i), x0i = x0.batch(i);
+        auto grad_fi = grad_f.batch(i);
         for (index_t j = 0; j < x.rows(); ++j) {
             simd grad_fij{&grad_fi(0, j, 0), stdx::vector_aligned},
                 xij{&xi(0, j, 0), stdx::vector_aligned},

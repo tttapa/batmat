@@ -391,8 +391,8 @@ void Solver<Abi>::recompute_inner(real_t S, real_view x0, real_view x,
     static constexpr auto al   = stdx::vector_aligned;
     simd invS{1 / S};
     const auto process_stage = [&](index_t k) {
-        auto qi = q.batch(k), grad_fi = grad_f.batch(k), xi = x.batch(k),
-             x0i = x0.batch(k), Axi = Ax.batch(k);
+        auto qi = q.batch(k), xi = x.batch(k), x0i = x0.batch(k);
+        auto grad_fi = grad_f.batch(k), Axi = Ax.batch(k);
         for (index_t j = 0; j < x.rows(); ++j) {
             simd qij{&qi(0, j, 0), al}, xij{&xi(0, j, 0), al},
                 x0ij{&x0i(0, j, 0), al};
@@ -464,8 +464,8 @@ real_t Solver<Abi>::recompute_outer(real_view x, real_view y, real_view λ,
     using simd                 = types::simd;
     static constexpr auto al   = stdx::vector_aligned;
     const auto process_stage   = [&](index_t k) {
-        auto qi = q.batch(k), grad_fi = grad_f.batch(k), xi = x.batch(k),
-             Axi = Ax.batch(k), yi = y.batch(k), Aᵀyi = Aᵀy.batch(k),
+        auto qi = q.batch(k), xi = x.batch(k), yi = y.batch(k);
+        auto grad_fi = grad_f.batch(k), Axi = Ax.batch(k), Aᵀyi = Aᵀy.batch(k),
              Mᵀλi = Mᵀλ.batch(k);
         // Qx + q
         compact_blas::xcopy(qi, grad_fi);
