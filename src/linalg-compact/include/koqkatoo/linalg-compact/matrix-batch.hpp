@@ -666,7 +666,6 @@ struct BatchedMatrixView {
         return *this;
     }
 
-    template <class = void>
     operator BatchedMatrixView<T, I, S, integral_value_type_t<D>, L>() const
         requires(!std::same_as<integral_value_type_t<D>, D>)
     {
@@ -681,7 +680,6 @@ struct BatchedMatrixView {
             .layer_stride = layout.layer_stride,
         }};
     }
-    template <class = void>
     operator BatchedMatrixView<T, I, S, D, I>() const
         requires(!std::same_as<I, L>)
     {
@@ -695,7 +693,6 @@ struct BatchedMatrixView {
             .layer_stride = layer_stride(),
         }};
     }
-    template <class = void>
     operator BatchedMatrixView<const T, I, S, D, I>() const
         requires(!std::is_const_v<T> && !std::same_as<I, L>)
     {

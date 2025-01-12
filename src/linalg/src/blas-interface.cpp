@@ -292,12 +292,13 @@ void KOQKATOO_LINALG_EXPORT xgemv_batch_strided(
                               batch_size);
 }
 #endif
-
+#if !KOQKATOO_WITH_MKL || DO_INSTANTIATE
 template void KOQKATOO_LINALG_EXPORT xgemv_batch_strided<real_t, index_t>(
     CBLAS_LAYOUT layout, CBLAS_TRANSPOSE trans, index_t m, index_t n,
     real_t alpha, const real_t *a, index_t lda, index_t stridea,
     const real_t *x, index_t incx, index_t stridex, real_t beta, real_t *y,
     index_t incy, index_t stridey, index_t batch_size);
+#endif
 
 template <class T, class I>
 void xgemm_batch_strided(CBLAS_LAYOUT Layout, CBLAS_TRANSPOSE TransA,
@@ -338,12 +339,13 @@ void KOQKATOO_LINALG_EXPORT xgemm_batch_strided(
                               batch_size);
 }
 #endif
-
+#if !KOQKATOO_WITH_MKL || DO_INSTANTIATE
 template void KOQKATOO_LINALG_EXPORT xgemm_batch_strided<real_t, index_t>(
     CBLAS_LAYOUT Layout, CBLAS_TRANSPOSE TransA, CBLAS_TRANSPOSE TransB,
     index_t M, index_t N, index_t K, real_t alpha, const real_t *A, index_t lda,
     index_t stridea, const real_t *B, index_t ldb, index_t strideb, real_t beta,
     real_t *C, index_t ldc, index_t stridec, index_t batch_size);
+#endif
 
 template <class T, class I>
 void xsyrk_batch_strided(CBLAS_LAYOUT Layout, CBLAS_UPLO Uplo,
@@ -377,11 +379,12 @@ void KOQKATOO_LINALG_EXPORT xsyrk_batch_strided(
                               beta, C, ldc, stridec, batch_size);
 }
 #endif
-
+#if !KOQKATOO_WITH_MKL || DO_INSTANTIATE
 template void KOQKATOO_LINALG_EXPORT xsyrk_batch_strided<real_t, index_t>(
     CBLAS_LAYOUT Layout, CBLAS_UPLO Uplo, CBLAS_TRANSPOSE Trans, index_t N,
     index_t K, real_t alpha, const real_t *A, index_t lda, index_t stridea,
     real_t beta, real_t *C, index_t ldc, index_t stridec, index_t batch_size);
+#endif
 
 template <class T, class I>
 void xtrsm_batch_strided(CBLAS_LAYOUT Layout, CBLAS_SIDE Side, CBLAS_UPLO Uplo,
@@ -417,12 +420,13 @@ void KOQKATOO_LINALG_EXPORT xtrsm_batch_strided(
                               lda, stridea, B, ldb, strideb, batch_size);
 }
 #endif
-
+#if !KOQKATOO_WITH_MKL || DO_INSTANTIATE
 template void KOQKATOO_LINALG_EXPORT xtrsm_batch_strided<real_t, index_t>(
     CBLAS_LAYOUT Layout, CBLAS_SIDE Side, CBLAS_UPLO Uplo,
     CBLAS_TRANSPOSE TransA, CBLAS_DIAG Diag, index_t M, index_t N, real_t alpha,
     const real_t *A, index_t lda, index_t stridea, real_t *B, index_t ldb,
     index_t strideb, index_t batch_size);
+#endif
 
 template <class T, class I>
 void xpotrf_batch_strided(const char *Uplo, I N, T *A, I lda, I stridea,

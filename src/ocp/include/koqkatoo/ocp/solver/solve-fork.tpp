@@ -197,7 +197,7 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
 
     // Forward substitution Ψ
     // ----------------------
-    auto solve_ψ_fwd = [&, this](index_t i) {
+    auto solve_ψ_fwd = [&](index_t i) {
         KOQKATOO_TRACE("solve ψ fwd", i);
         if (i == 0) {
             // Initialize rhs r - v = Mx - b - v                 (Δλ_scal ← ...)
@@ -217,7 +217,7 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
 
     // Backward substitution Ψ
     // -----------------------
-    auto solve_ψ_rev = [&, this](index_t i) {
+    auto solve_ψ_rev = [&](index_t i) {
         KOQKATOO_TRACE("solve ψ rev", i);
         if (i < N)
             scalar_blas::xgemm_TN_sub(LΨs.batch(i), Δλ_scal.batch(i + 1),
@@ -233,7 +233,7 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
 
     // Parallel solve Hd = -g - MᵀΔλ
     // -----------------------------
-    auto solve_H2 = [&, this](index_t i) {
+    auto solve_H2 = [&](index_t i) {
         KOQKATOO_TRACE("solve Hd=-g-MᵀΔλ", i);
         MᵀΔλ.batch(i).top_rows(nx) = Δλ.batch(i);
         MᵀΔλ.batch(i).bottom_rows(nu).set_constant(0);
