@@ -1,5 +1,8 @@
 include({{ os.path.join(profile_dir, "gcc14") }})
 
+[settings]
+arch=x86_64
+
 [conf]
 tools.build:cflags=["-march=skylake"]
 tools.build:cxxflags=["-march=skylake"]

@@ -1,7 +1,7 @@
-include({{ os.path.join(os.getenv("HOME"), "opt/gcc14/x-tools/aarch64-rpi3-linux-gnu.profile.conan") }})
+include({{ os.path.join(profile_dir, "gcc14") }})
 
 [settings]
-compiler.cppstd=gnu23
+arch=armv8
 
 [conf]
 tools.build:cflags=["-mcpu=cortex-a53+crc+simd"]
