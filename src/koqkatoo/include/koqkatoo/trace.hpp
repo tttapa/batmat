@@ -1,5 +1,16 @@
 #pragma once
 
+#include <koqkatoo/config.hpp>
+#include <koqkatoo/stringify.h>
+
+#include <algorithm>
+#include <span>
+#include <utility>
+
+#if KOQKATOO_WITH_ITT
+#include <ittnotify.h>
+#include <iosfwd>
+#else
 #include <atomic>
 #include <chrono>
 #include <cstddef>
@@ -7,17 +18,88 @@
 #include <iomanip>
 #include <ostream>
 #include <thread>
-#include <utility>
-
-#include <koqkatoo/config.hpp>
-#include <koqkatoo/stringify.h>
+#endif
 
 namespace koqkatoo {
+
+#if KOQKATOO_WITH_ITT
+struct TraceLogger {
+    struct Log {
+        friend std::ostream &operator<<(std::ostream &os, Log) { return os; }
+    };
+
+    __itt_domain *domain                      = __itt_domain_create("koqkatoo");
+    static constexpr int64_t max_instance_num = 255;
+    TraceLogger(size_t = 0) {
+        for (int64_t i = 0; i <= max_instance_num; ++i)
+            __itt_id_create(
+                domain,
+                __itt_id_make(nullptr, static_cast<unsigned long long>(i)));
+    }
+
+    TraceLogger(const TraceLogger &)            = delete;
+    TraceLogger &operator=(const TraceLogger &) = delete;
+    TraceLogger(TraceLogger &&other) noexcept
+        : domain{std::exchange(other.domain, nullptr)} {}
+    TraceLogger &operator=(TraceLogger &&) = delete;
+    ~TraceLogger() {
+        if (!domain)
+            return;
+        for (int64_t i = 0; i <= max_instance_num; ++i)
+            __itt_id_destroy(
+                domain,
+                __itt_id_make(nullptr, static_cast<unsigned long long>(i)));
+    }
+
+    struct ScopedLog {
+        __itt_domain *domain;
+        ScopedLog(__itt_domain *domain, __itt_string_handle *name,
+                  int64_t instance)
+            : domain{domain} {
+            if (!domain)
+                return;
+            instance = std::clamp<int64_t>(instance, 0, max_instance_num);
+            auto id  = __itt_id_make(nullptr,
+                                     static_cast<unsigned long long>(instance));
+            __itt_task_begin(domain, id, __itt_null, name);
+        }
+        ScopedLog(const ScopedLog &)            = delete;
+        ScopedLog &operator=(const ScopedLog &) = delete;
+        ScopedLog(ScopedLog &&other) noexcept
+            : domain{std::exchange(other.domain, nullptr)} {}
+        ScopedLog &operator=(ScopedLog &&) = delete;
+        ~ScopedLog() {
+            if (!domain)
+                return;
+            __itt_task_end(domain);
+        }
+    };
+
+    [[nodiscard]] ScopedLog trace(__itt_string_handle *name,
+                                  int64_t instance) const {
+        return ScopedLog{domain, name, instance};
+    }
+
+    [[nodiscard]] std::span<const Log> get_logs() const { return {}; }
+
+    void reset() {}
+};
+
+extern TraceLogger trace_logger;
+#define KOQKATOO_TRACE_IMPL(var_name, name, instance)                          \
+    static auto KOQKATOO_CAT(var_name, _name) =                                \
+        __itt_string_handle_create(name);                                      \
+    const auto var_name = ::koqkatoo::trace_logger.trace(                      \
+        KOQKATOO_CAT(var_name, _name), instance)
+#define KOQKATOO_TRACE(name, instance)                                         \
+    KOQKATOO_TRACE_IMPL(KOQKATOO_CAT(trace_log_, __COUNTER__), name, instance)
+
+#else
 
 struct TraceLogger {
     struct Log {
         const char *name = "";
-        std::int64_t instance{0};
+        int64_t instance{0};
         std::chrono::nanoseconds start_time{0};
         std::chrono::nanoseconds duration{0};
         std::size_t thread_id{0};
@@ -56,7 +138,7 @@ struct TraceLogger {
 
     TraceLogger(size_t capacity) { logs.resize(capacity); }
 
-    ScopedLog trace(const char *name, std::int64_t instance) {
+    [[nodiscard]] ScopedLog trace(const char *name, int64_t instance) {
         size_t index = count.fetch_add(1, std::memory_order_relaxed);
         if (index >= logs.size())
             return ScopedLog{nullptr, {}};
@@ -83,10 +165,20 @@ extern TraceLogger trace_logger;
 #define KOQKATOO_TRACE(name, instance)                                         \
     const auto KOQKATOO_CAT(trace_log_, __COUNTER__) =                         \
         ::koqkatoo::trace_logger.trace(name, instance)
-#else
+#endif
+
+#endif
+
+#if !KOQKATOO_WITH_TRACING && !KOQKATOO_WITH_ITT
 #define KOQKATOO_TRACE(...)                                                    \
     do {                                                                       \
     } while (0)
+#endif
+
+#if KOQKATOO_WITH_ITT
+#define KOQKATOO_IF_ITT(...) __VA_ARGS__
+#else
+#define KOQKATOO_IF_ITT(...)
 #endif
 
 } // namespace koqkatoo

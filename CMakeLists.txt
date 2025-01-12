@@ -29,6 +29,8 @@ option(KOQKATOO_WITH_CPU_TIME
     "Measure CPU time in addition to wall time" Off)
 option(KOQKATOO_WITH_TBB
     "Use the oneTBB library for parallel implementation" Off)
+option(KOQKATOO_WITH_ITT
+    "Use the Intel ITT library for tracing" Off)
 option(KOQKATOO_WITH_TRACING
     "Enable tracing of hot functions (note: slows down the solver)" Off)
 # Target options
@@ -96,6 +98,9 @@ set(CMAKE_RELEASE_POSTFIX "")
 set(CMAKE_DEBUG_POSTFIX "_d")
 set(CMAKE_RELWITHDEBINFO_POSTFIX "_rd")
 set(CMAKE_MINSIZEREL_POSTFIX "_rs")
+
+# CMake search paths
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/find")
 
 # Coverage
 if (KOQKATOO_WITH_COVERAGE)
