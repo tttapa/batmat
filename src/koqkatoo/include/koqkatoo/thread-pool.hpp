@@ -77,10 +77,12 @@ class thread_pool {
             wait(i);
     }
 
-    template <class F>
+    template <class F, class I = size_t>
     void sync_run_all(F &&f) {
-        for (size_t i = 0; i < size(); ++i)
-            schedule(i, f);
+        const auto n = size();
+        for (size_t i = 0; i < n; ++i)
+            schedule(i,
+                     [&f, i, n] { f(static_cast<I>(i), static_cast<I>(n)); });
         wait_all();
     }
 

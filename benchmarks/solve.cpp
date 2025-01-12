@@ -450,10 +450,10 @@ void benchmark_solve(benchmark::State &state) {
 #if KOQKATOO_WITH_TRACING
         koqkatoo::trace_logger.reset();
 #endif
-        s.factor_fork(S, Σ_strided, J_strided);
-        s.solve_fork(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided,
-                     d_strided, Δλ_strided, MᵀΔλ_strided);
-        // s.updowndate_fork(Σ_strided, J_strided, J2_strided, nullptr);
+        s.factor_new(S, Σ_strided, J_strided);
+        s.solve_new(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided,
+                    d_strided, Δλ_strided, MᵀΔλ_strided);
+        // s.updowndate_new(Σ_strided, J_strided, J2_strided, nullptr);
     }
 
     auto [N, nx, nu, ny, ny_N] = ocp.dim;

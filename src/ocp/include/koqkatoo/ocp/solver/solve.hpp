@@ -92,22 +92,11 @@ struct Solver {
 
     void factor(real_t S, real_view Σ, bool_view J);
     void factor(real_t S, real_view Σ, bool_view J, Timings &t);
-    void factor_tbb(real_t S, real_view Σ, bool_view J);
-    void factor_fork(real_t S, real_view Σ, bool_view J);
-    void factor_omp(real_t S, real_view Σ, bool_view J);
     void solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
                mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ);
-    void solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
-                    mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ);
     void solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
                mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ,
                Timings &t);
-    void recompute_inner(real_t S, real_view x0, real_view x, real_view λ,
-                         real_view q, mut_real_view grad_f, mut_real_view Ax,
-                         mut_real_view Mᵀλ);
-    real_t recompute_outer(real_view x, real_view y, real_view λ, real_view q,
-                           mut_real_view grad_f, mut_real_view Ax,
-                           mut_real_view Aᵀy, mut_real_view Mᵀλ);
 
     /// Mᵀλ
     void mat_vec_transpose_dynamics_constr(real_view λ, mut_real_view Mᵀλ);
@@ -128,9 +117,18 @@ struct Solver {
                                              mut_real_view grad_f);
 
     void updowndate(real_view Σ, bool_view J_old, bool_view J_new, Timings *t);
-    void updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new,
-                         Timings *t);
     void updowndate_ψ();
+
+    void solve_new(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
+                   mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ);
+    void factor_new(real_t S, real_view Σ, bool_view J);
+    void recompute_inner(real_t S, real_view x0, real_view x, real_view λ,
+                         real_view q, mut_real_view grad_f, mut_real_view Ax,
+                         mut_real_view Mᵀλ);
+    real_t recompute_outer(real_view x, real_view y, real_view λ, real_view q,
+                           mut_real_view grad_f, mut_real_view Ax,
+                           mut_real_view Aᵀy, mut_real_view Mᵀλ);
+    void updowndate_new(real_view Σ, bool_view J_old, bool_view J_new);
 
     [[nodiscard]] index_t num_variables() const {
         auto [N, nx, nu, ny, ny_N] = storage.dim;
@@ -146,6 +144,10 @@ struct Solver {
     }
 
     Solver(const LinearOCPStorage &ocp);
+
+  private:
+    void prepare_factor(index_t k, real_t S, real_view Σ, bool_view J);
+    void tridiagonal_factor(index_t k);
 };
 
 } // namespace koqkatoo::ocp

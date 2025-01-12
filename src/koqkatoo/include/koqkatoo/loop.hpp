@@ -2,6 +2,7 @@
 
 #include <koqkatoo/config.hpp>
 #include <koqkatoo/openmp.h>
+#include <koqkatoo/thread-pool.hpp>
 
 namespace koqkatoo {
 
@@ -78,6 +79,23 @@ foreach_chunked_merged_parallel(index_t i_begin, index_t i_end, auto chunk_size,
                 func_chunk(i, chunk_size);
         }
     }
+}
+
+[[gnu::always_inline]] inline void foreach_thread(auto &&func) {
+#if KOQKATOO_WITH_OPENMP
+    if (omp_get_max_threads() == 1) {
+        func(index_t{0}, index_t{1});
+    } else {
+        KOQKATOO_OMP(parallel) {
+            auto ni = static_cast<index_t>(omp_get_num_threads());
+            KOQKATOO_OMP(for schedule(static))
+            for (index_t i = 0; i < ni; ++i)
+                func(i, ni);
+        }
+    }
+#else
+    pool->sync_run_all<index_t>(func);
+#endif
 }
 
 } // namespace koqkatoo

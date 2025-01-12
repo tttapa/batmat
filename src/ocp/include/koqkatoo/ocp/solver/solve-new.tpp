@@ -6,143 +6,125 @@
 #include <koqkatoo/ocp/solver/solve.hpp>
 #include <koqkatoo/thread-pool.hpp>
 #include <koqkatoo/trace.hpp>
-#include <libfork/core.hpp>
-#include <libfork/schedule.hpp>
 #include <algorithm>
 #include <atomic>
-#include <functional>
-#include <stdexcept>
 
 #include <koqkatoo/cholundate/householder-updowndate-common.tpp>
 #include <koqkatoo/cholundate/householder-updowndate.hpp>
 #include <koqkatoo/cholundate/micro-kernels/householder-updowndate.hpp>
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xshhud-diag.hpp> // TODO
 
-/// libfork or custom thread pool
-#define KOQKATOO_SOLVE_USE_LIBFORK 0
-/// atomic wait (futex) or counting semaphore
-#define KOQKATOO_SOLVE_USE_ATOMIC_WAIT 0
-
 namespace koqkatoo::ocp {
 
-inline constexpr auto do_invoke =
-    []<class F, class... Args>(
-        auto, F fun,
-        Args... args) -> lf::task<std::invoke_result_t<F, Args...>> {
-    co_return std::invoke(std::move(fun), std::move(args)...);
-};
+template <simd_abi_tag Abi>
+void Solver<Abi>::prepare_factor(index_t k, real_t S, real_view Σ,
+                                 bool_view J) {
+    using std::isfinite;
+    KOQKATOO_TRACE("factor prep", k);
+    auto [N, nx, nu, ny, ny_N] = storage.dim;
+    const auto be              = settings.preferred_backend;
+    auto LHi = LH().batch(k), Wi = Wᵀ().batch(k);
+    // Compute H = Hℓ + GᵀΣJ G + Γ⁻¹
+    compact_blas::xsyrk_T_schur_copy(CD().batch(k), Σ.batch(k), J.batch(k),
+                                     H().batch(k), LHi);
+    if (isfinite(S))
+        LHi.add_to_diagonal(1 / S);
+    // Initialize V = F, it is computed while factorizing H
+    if (k < AB().num_batches())
+        compact_blas::xcopy(AB().batch(k), V().batch(k));
+    // Factorize H (and solve V)
+    compact_blas::xpotrf(LHV().batch(k), be);
+    // Solve W = LH⁻¹ [I 0]ᵀ
+    compact_blas::xcopy(LHi.top_left(nx + nu, nx), Wi);
+    compact_blas::xtrtri(Wi, be);
+    compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), Wi.bottom_rows(nu), be);
+    // Compute WWᵀ
+    compact_blas::xsyrk_T(Wi, LΨd().batch(k), be);
+    // TODO: exploit trapezoidal shape of Wᵀ
+    if (k < AB().num_batches()) {
+        // Compute -VWᵀ
+        compact_blas::xgemm_neg(V().batch(k), Wi, LΨs().batch(k), be);
+        // TODO: exploit trapezoidal shape of Wᵀ
+        // Compute VVᵀ
+        compact_blas::xsyrk(V().batch(k), VV().batch(k), be);
+    }
+}
 
 template <simd_abi_tag Abi>
-void Solver<Abi>::factor_fork(real_t S, real_view Σ, bool_view J) {
-    KOQKATOO_TRACE("factor", 0);
-
-    using std::isfinite;
-
-    const auto N = storage.dim.N_horiz;
-
-    const auto prepare = [this, S, &Σ, &J](index_t k) {
-        KOQKATOO_TRACE("factor prep", k);
-        auto [N, nx, nu, ny, ny_N] = storage.dim;
-        schur_complement_Hi(k, Σ, J);
-        if (isfinite(S))
-            LH().batch(k).add_to_diagonal(1 / S);
-        cholesky_Hi(k);
-        // Solve W = LH⁻¹ [I 0]ᵀ
-        auto LHi = LH().batch(k), Wi = Wᵀ().batch(k);
-        compact_blas::xcopy(LHi.top_left(nx + nu, nx), Wi);
-        compact_blas::xtrtri(Wi, settings.preferred_backend);
-        compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), Wi.bottom_rows(nu),
-                                 settings.preferred_backend);
-        // Compute WWᵀ
-        compact_blas::xsyrk_T(Wᵀ().batch(k), LΨd().batch(k),
-                              settings.preferred_backend);
-        // Compute -VWᵀ
-        if (k < AB().num_batches())
-            compact_blas::xgemm_neg(V().batch(k), Wᵀ().batch(k), LΨs().batch(k),
-                                    settings.preferred_backend);
-        // Compute VVᵀ
-        if (k < AB().num_batches())
-            compact_blas::xsyrk(V().batch(k), VV().batch(k),
-                                settings.preferred_backend);
-    };
-    const auto factor_Ψ = [this](index_t k) {
-        KOQKATOO_TRACE("factor Ψ", k);
-        const auto N = storage.dim.N_horiz;
-        auto nd      = std::min(simd_stride, N + 1 - k * simd_stride);
-        auto wLΨd = storage.work_LΨd(), wVV = storage.work_VV();
-        // Copy WWᵀ, add to Θ
-        compact_blas::unpack_L(LΨd().batch(k), wLΨd.first_layers(nd));
-        if (k > 0)
-            wLΨd(0) += wVV(simd_stride - 1);
-        // Copy -VWᵀ
-        auto ni = std::min(simd_stride, N - k * simd_stride);
-        if (ni > 0) {
-            auto wLΨs = storage.work_LΨs();
-            compact_blas::unpack(LΨs().batch(k), wLΨs.first_layers(ni));
-        }
-        // Copy VVᵀ and then factor all batches of Ψ
+void Solver<Abi>::tridiagonal_factor(index_t k) {
+    KOQKATOO_TRACE("factor Ψ", k);
+    const auto N  = storage.dim.N_horiz;
+    const auto nd = std::min(simd_stride, N + 1 - k * simd_stride);
+    auto wLΨd = storage.work_LΨd(), wVV = storage.work_VV();
+    // Copy WWᵀ, add to Θ
+    compact_blas::unpack_L(LΨd().batch(k), wLΨd.first_layers(nd));
+    if (k > 0)
+        wLΨd(0) += wVV(simd_stride - 1);
+    // Copy -VWᵀ
+    auto ni = std::min(simd_stride, N - k * simd_stride);
+    if (ni > 0) {
         auto wLΨs = storage.work_LΨs();
-        // Copy VVᵀ
-        if (ni > 0)
-            compact_blas::unpack_L(VV().batch(k), wVV.first_layers(ni));
-        // Factor
-        for (index_t j = 0; j < ni; ++j) {
-            scalar_blas::xpotrf(wLΨd.batch(j), settings.preferred_backend);
-            scalar_blas::xtrsm_RLTN(wLΨd.batch(j), wLΨs.batch(j),
-                                    settings.preferred_backend);
-            scalar_blas::xsyrk_sub(wLΨs.batch(j), wVV.batch(j),
-                                   settings.preferred_backend);
-            if (j + 1 < simd_stride)
-                wLΨd(j + 1) += wVV(j);
+        compact_blas::unpack(LΨs().batch(k), wLΨs.first_layers(ni));
+    }
+    // Copy VVᵀ and then factor all batches of Ψ
+    auto wLΨs = storage.work_LΨs();
+    // Copy VVᵀ
+    if (ni > 0)
+        compact_blas::unpack_L(VV().batch(k), wVV.first_layers(ni));
+    // Factor
+    for (index_t j = 0; j < ni; ++j) {
+        scalar_blas::xpotrf(wLΨd.batch(j), settings.preferred_backend);
+        scalar_blas::xtrsm_RLTN(wLΨd.batch(j), wLΨs.batch(j),
+                                settings.preferred_backend);
+        scalar_blas::xsyrk_sub(wLΨs.batch(j), wVV.batch(j),
+                               settings.preferred_backend);
+        if (j + 1 < simd_stride)
+            wLΨd(j + 1) += wVV(j);
+    }
+    for (index_t j = 0; j < ni; ++j)
+        storage.LΨd_scalar()(k * simd_stride + j) = wLΨd(j);
+    for (index_t j = 0; j < ni; ++j)
+        storage.LΨs_scalar()(k * simd_stride + j) = wLΨs(j);
+    // If this was the last batch, factor Θ
+    if ((k + 1) * simd_stride > N) {
+        index_t last_j = N % simd_stride;
+        if (last_j == 0) {
+            assert(ni <= 0);
+            // If the previous batch was complete, the term VV - LsLs
+            // is in VV. We load and add WW to it, then factor it and
+            // store it.
+            wVV(simd_stride - 1) += LΨd()(N);
+            scalar_blas::xpotrf(wVV.batch(simd_stride - 1),
+                                settings.preferred_backend);
+            storage.LΨd_scalar()(N) = wVV(simd_stride - 1);
+        } else {
+            assert(last_j <= ni);
+            // If the previous batch was not complete, Ld has already
+            // been loaded and updated by VV - LsLs.
+            scalar_blas::xpotrf(wLΨd.batch(last_j), settings.preferred_backend);
+            storage.LΨd_scalar()(N) = wLΨd(last_j);
         }
-        for (index_t j = 0; j < ni; ++j)
-            storage.LΨd_scalar()(k * simd_stride + j) = wLΨd(j);
-        for (index_t j = 0; j < ni; ++j)
-            storage.LΨs_scalar()(k * simd_stride + j) = wLΨs(j);
-        // If this was the last batch, factor Θ
-        if ((k + 1) * simd_stride > N) {
-            index_t last_j = N % simd_stride;
-            if (last_j == 0) {
-                assert(ni <= 0);
-                // If the previous batch was complete, the term VV - LsLs
-                // is in VV. We load and add WW to it, then factor it and
-                // store it.
-                wVV(simd_stride - 1) += LΨd()(N);
-                scalar_blas::xpotrf(wVV.batch(simd_stride - 1),
-                                    settings.preferred_backend);
-                storage.LΨd_scalar()(N) = wVV(simd_stride - 1);
-            } else {
-                assert(last_j <= ni);
-                // If the previous batch was not complete, Ld has already
-                // been loaded and updated by VV - LsLs.
-                scalar_blas::xpotrf(wLΨd.batch(last_j),
-                                    settings.preferred_backend);
-                storage.LΨd_scalar()(N) = wLΨd(last_j);
-            }
-        }
-    };
-    index_t num_batch        = (N + 1 + simd_stride - 1) / simd_stride;
+    }
+}
+
+template <simd_abi_tag Abi>
+void Solver<Abi>::factor_new(real_t S, real_view Σ, bool_view J) {
+    KOQKATOO_TRACE("factor", 0);
+    const auto N         = storage.dim.N_horiz;
+    const auto num_batch = (N + 1 + simd_stride - 1) / simd_stride;
+
     auto &join_counters      = storage.reset_join_counters();
     const auto process_stage = [&](index_t k) {
-        prepare(k);
+        prepare_factor(k, S, Σ, J);
         while (k < num_batch) {
             if (k > 0 && join_counters[k - 1].value.fetch_add(1) != 1)
                 break;
-            factor_Ψ(k++);
+            tridiagonal_factor(k++);
         }
     };
 
-#if KOQKATOO_SOLVE_USE_LIBFORK
-    const auto process_all = [](auto, auto process_stage,
-                                index_t num_batch) -> lf::task<void> {
-        for (index_t k = 0; k < num_batch; ++k)
-            co_await lf::fork[do_invoke](process_stage, k);
-        co_await lf::join;
-    };
-    lf::sync_wait(*fork_pool, process_all, process_stage, num_batch);
-#else
     std::atomic<index_t> batch_counter{0};
-    auto thread_work = [&] {
+    auto thread_work = [&](index_t, index_t) {
         while (true) {
             index_t k = batch_counter.fetch_add(1, std::memory_order_relaxed);
             if (k >= num_batch)
@@ -150,20 +132,14 @@ void Solver<Abi>::factor_fork(real_t S, real_view Σ, bool_view J) {
             process_stage(k);
         }
     };
-#if KOQKATOO_WITH_OPENMP
-    KOQKATOO_OMP(parallel for schedule(static))
-    for (int i = 0; i < omp_get_num_threads(); ++i)
-        thread_work();
-#else
-    pool->sync_run_all(thread_work);
-#endif
-#endif
+
+    foreach_thread(thread_work);
 }
 
 template <simd_abi_tag Abi>
-void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
-                             real_view Mxb, mut_real_view d, mut_real_view Δλ,
-                             mut_real_view MᵀΔλ) {
+void Solver<Abi>::solve_new(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
+                            real_view Mxb, mut_real_view d, mut_real_view Δλ,
+                            mut_real_view MᵀΔλ) {
     KOQKATOO_TRACE("solve", 0);
 
     auto [N, nx, nu, ny, ny_N] = storage.dim;
@@ -180,7 +156,7 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
 
     // Parallel solve Hv = g
     // ---------------------
-    auto solve_H1 = [&, this](index_t i) {
+    auto solve_H1 = [&](index_t i) {
         KOQKATOO_TRACE("solve Hv=g", i);
         // Initialize rhs: g = ∇ϕ + Mᵀλ = ∇f̃ + Aᵀŷ + Mᵀλ                 (d ← g)
         for (index_t j = 0; j < nx + nu; ++j)
@@ -264,72 +240,12 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
                 return true;
         }
     };
-#if KOQKATOO_SOLVE_USE_LIBFORK
-    const auto process_all = [](auto process_all, auto process_fwd,
-                                auto solve_ψ_rev, auto solve_H2, index_t N,
-                                auto simd_stride) -> lf::task<void> {
-        index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
-        for (index_t k = 0; k < num_batch; ++k)
-            co_await lf::fork[do_invoke](process_fwd, k);
-        co_await lf::join;
-        for (index_t i = N + 1; i-- > 0;) {
-            try {
-                solve_ψ_rev(i);
-            } catch (...) {
-                process_all.stash_exception();
-            }
-            if (i % simd_stride == 0)
-                co_await lf::fork[do_invoke](solve_H2, i / simd_stride);
-        }
-        co_await lf::join;
-    };
-    lf::sync_wait(*fork_pool, process_all, process_fwd, solve_ψ_rev, solve_H2,
-                  N, std::integral_constant<index_t, simd_stride>());
-#else
-#if USE_ATOMIC_WAIT
-    static_assert(!KOQKATOO_WITH_OPENMP);
-    std::atomic<bool> main_thread_flag{false};
-    std::atomic<index_t> batch_counter_1{0}, stage_counter_2{num_batch - 1},
-        stage_ready{num_batch};
-    std::latch join_all{static_cast<ptrdiff_t>(pool.size())};
-    auto thread_work = [&] {
-        while (true) {
-            index_t k = batch_counter_1.fetch_add(1, std::memory_order_relaxed);
-            if (k >= num_batch)
-                break;
-            process_fwd(k);
-        }
-        join_all.arrive_and_wait();
-        bool main_thread =
-            !main_thread_flag.exchange(true, std::memory_order_relaxed);
-        if (main_thread) {
-            for (index_t i = N + 1; i-- > 0;) {
-                solve_ψ_rev(i);
-                if (i % simd_stride == 0) {
-                    KOQKATOO_TRACE("solve store-notify", i);
-                    stage_ready.store(i / simd_stride,
-                                      std::memory_order_release);
-                    stage_ready.notify_one();
-                }
-            }
-        }
-        while (true) {
-            index_t k = stage_counter_2.fetch_sub(1, std::memory_order_relaxed);
-            if (k < 0)
-                break;
-            index_t k_ready = stage_ready.load(std::memory_order_acquire);
-            while (k < k_ready) {
-                stage_ready.wait(k_ready, std::memory_order_relaxed);
-                k_ready = stage_ready.load(std::memory_order_acquire);
-            }
-            solve_H2(k);
-        }
-    };
-#else
+
     std::atomic<index_t> batch_counter_1{0}, stage_counter_2{num_batch - 1};
     KOQKATOO_ASSERT(std::in_range<int>(num_batch));
     std::atomic<int> stage_ready{0};
-    auto thread_work = [&](int num_threads) {
+    auto thread_work = [&](index_t, index_t num_threads) {
+        // Solve the first system Hv=g
         bool main_thread = false;
         while (true) {
             index_t k = batch_counter_1.fetch_add(1, std::memory_order_relaxed);
@@ -337,45 +253,47 @@ void Solver<Abi>::solve_fork(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
                 break;
             main_thread = process_fwd(k);
         }
+        // The thread that solves the last batch becomes the main thread that
+        // performs the serial solution of Ψ in the next step.
         if (main_thread) {
             for (index_t i = N + 1; i-- > 0;) {
                 solve_ψ_rev(i);
                 if (i % simd_stride == 0) {
                     KOQKATOO_TRACE("solve store-notify", i);
+                    // Once the block of Ψ is done, we can start the next block
+                    // of the solution of Hd=g-MᵀΔλ.
                     stage_ready.fetch_add(1, std::memory_order_release);
                     stage_ready.notify_one();
                 }
             }
-            stage_ready.fetch_add(num_threads, std::memory_order_release);
+            // Release all threads waiting for the next block of Ψ
+            stage_ready.fetch_add(static_cast<int>(num_threads),
+                                  std::memory_order_release);
             stage_ready.notify_all();
         }
+        // All threads wait for blocks of Ψ to be ready so they can start
+        // solving Hd=g-MᵀΔλ
         while (true) {
+            // Try to decrement stage_ready to "win" the next block of H
             auto semaphore_val = stage_ready.load(std::memory_order_relaxed);
             do {
+                // Wait for the semaphore value to become positive so we can
+                // acquire it
                 while (semaphore_val == 0) {
                     stage_ready.wait(semaphore_val, std::memory_order_relaxed);
                     semaphore_val = stage_ready.load(std::memory_order_relaxed);
                 }
             } while (!stage_ready.compare_exchange_strong(
                 semaphore_val, semaphore_val - 1, std::memory_order_acquire));
+            // If our thread won the race for the block of H, process it
             index_t k = stage_counter_2.fetch_sub(1, std::memory_order_relaxed);
             if (k < 0)
                 break;
             solve_H2(k);
         }
     };
-#endif
-#if KOQKATOO_WITH_OPENMP
-    KOQKATOO_OMP(parallel) {
-        int n_thr = omp_get_num_threads();
-        KOQKATOO_OMP(for schedule(static))
-        for (int i = 0; i < n_thr; ++i)
-            thread_work(n_thr);
-    }
-#else
-    pool->sync_run_all([&] { thread_work(static_cast<int>(pool->size())); });
-#endif
-#endif
+
+    foreach_thread(thread_work);
 }
 
 template <simd_abi_tag Abi>
@@ -389,10 +307,10 @@ void Solver<Abi>::recompute_inner(real_t S, real_view x0, real_view x,
     const auto be              = settings.preferred_backend;
     using simd                 = types::simd;
     static constexpr auto al   = stdx::vector_aligned;
-    simd invS{1 / S};
-    const auto process_stage = [&](index_t k) {
+    const auto process_stage   = [&](index_t k) {
         auto qi = q.batch(k), xi = x.batch(k), x0i = x0.batch(k);
         auto grad_fi = grad_f.batch(k), Axi = Ax.batch(k);
+        simd invS{1 / S};
         for (index_t j = 0; j < x.rows(); ++j) {
             simd qij{&qi(0, j, 0), al}, xij{&xi(0, j, 0), al},
                 x0ij{&x0i(0, j, 0), al};
@@ -415,23 +333,13 @@ void Solver<Abi>::recompute_inner(real_t S, real_view x0, real_view x,
                     storage.λ1(i, r, 0) = λ(i + 1, r, 0);
             // Mᵀλ(i) = -[A B]ᵀ(i) λ(i+1) + [I 0]ᵀ λ(i)
             compact_blas::xgemm_TN_sub(AB().batch(k), storage.λ1.batch(k),
-                                       Mᵀλ.batch(k), be);
+                                         Mᵀλ.batch(k), be);
         }
     };
-#if KOQKATOO_SOLVE_USE_LIBFORK
-    const auto process_all = [](auto, auto process_stage, index_t N,
-                                auto simd_stride) -> lf::task<void> {
-        index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
-        for (index_t k = 0; k < num_batch; ++k)
-            co_await lf::fork[do_invoke](process_stage, k);
-        co_await lf::join;
-    };
-    lf::sync_wait(*fork_pool, process_all, process_stage, N,
-                  std::integral_constant<index_t, simd_stride>());
-#else
+
     std::atomic<index_t> batch_counter{0};
     const index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
-    auto thread_work        = [&] {
+    auto thread_work        = [&](index_t, index_t) {
         while (true) {
             index_t k = batch_counter.fetch_add(1, std::memory_order_relaxed);
             if (k >= num_batch)
@@ -439,14 +347,8 @@ void Solver<Abi>::recompute_inner(real_t S, real_view x0, real_view x,
             process_stage(k);
         }
     };
-#if KOQKATOO_WITH_OPENMP
-    KOQKATOO_OMP(parallel for schedule(static))
-    for (int i = 0; i < omp_get_num_threads(); ++i)
-        thread_work();
-#else
-    pool->sync_run_all(thread_work);
-#endif
-#endif
+
+    foreach_thread(thread_work);
 }
 
 template <simd_abi_tag Abi>
@@ -515,29 +417,12 @@ real_t Solver<Abi>::recompute_outer(real_view x, real_view y, real_view λ,
             return isfinite(l1_norm) ? inf_norm : l1_norm;
         }
     };
-#if KOQKATOO_SOLVE_USE_LIBFORK
-    const auto process_all = [](auto, auto process_stage, index_t N,
-                                auto simd_stride) -> lf::task<real_t> {
-        index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
-        std::vector<real_t> stage_norms(num_batch);
-        for (index_t k = 0; k < num_batch; ++k) {
-            co_await lf::fork[&stage_norms[k], do_invoke](process_stage, k);
-        }
-        co_await lf::join;
-        real_t inf_norm = 0, l1_norm = 0;
-        for (auto stage_norm : stage_norms) {
-            inf_norm = std::max(std::abs(stage_norm), inf_norm);
-            l1_norm += std::abs(stage_norm);
-        }
-        co_return isfinite(l1_norm) ? inf_norm : l1_norm;
-    };
-    return lf::sync_wait(*fork_pool, process_all, process_stage, N,
-                         std::integral_constant<index_t, simd_stride>());
-#else
+
     std::atomic<index_t> batch_counter{0};
     const index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
-    std::vector<real_t> stage_norms(num_batch);
-    auto thread_work = [&] {
+    std::span stage_norms   = storage.work_batch;
+    assert(static_cast<index_t>(stage_norms.size()) >= num_batch);
+    auto thread_work = [&](index_t, index_t) {
         while (true) {
             index_t k = batch_counter.fetch_add(1, std::memory_order_relaxed);
             if (k >= num_batch)
@@ -545,33 +430,27 @@ real_t Solver<Abi>::recompute_outer(real_view x, real_view y, real_view λ,
             stage_norms[k] = process_stage(k);
         }
     };
-#if KOQKATOO_WITH_OPENMP
-    KOQKATOO_OMP(parallel for schedule(static))
-    for (int i = 0; i < omp_get_num_threads(); ++i)
-        thread_work();
-#else
-    pool->sync_run_all(thread_work);
-#endif
 
+    foreach_thread(thread_work);
+
+    // Final reduction of the values for all threads (not worth parallelizing)
     real_t inf_norm = 0, l1_norm = 0;
-    for (auto stage_norm : stage_norms) {
+    for (auto stage_norm : stage_norms.first(num_batch)) {
         inf_norm = std::max(std::abs(stage_norm), inf_norm);
         l1_norm += std::abs(stage_norm);
     }
     return isfinite(l1_norm) ? inf_norm : l1_norm;
-#endif
 }
 
 template <simd_abi_tag Abi>
-void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new,
-                                  Timings *t) {
-    std::optional<guanaqo::Timed<typename Timings::type>> t_total;
-    if (t)
-        t_total.emplace(t->updowndate);
+void Solver<Abi>::updowndate_new(real_view Σ, bool_view J_old,
+                                 bool_view J_new) {
     auto [N, nx, nu, ny, ny_N] = storage.dim;
-    auto &ranks                = storage.stagewise_update_counts;
-    index_t rj_max             = 0;
-    for (index_t k = 0; k <= N; ++k) {
+
+    // Count the number of changing constraints in each stage.
+    auto &ranks    = storage.stagewise_update_counts;
+    index_t rj_max = 0;
+    for (index_t k = 0; k <= N; ++k) { // TODO: worth parallelizing?
         index_t rj  = 0;
         index_t nyk = k == N ? ny_N : ny;
         for (index_t r = 0; r < nyk; ++r) {
@@ -592,6 +471,7 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
     if (rj_max == 0)
         return;
 
+    // Factorization updates of H, V and Wᵀ
     const auto updowndate_HVW =
         [&](single_mut_real_view HV, single_mut_real_view Wᵀ,
             single_mut_real_view A, single_real_view D) {
@@ -631,6 +511,7 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
             });
         };
 
+    // Prepare the updates of Ψ and H (Woodbury and computation of ̃W)
     const auto updowndate_stage = [&](index_t batch_idx, index_t rj_min,
                                       index_t rj_batch, auto ranksj) {
         auto Σj    = storage.Σ_ud.batch(batch_idx).top_rows(rj_batch);
@@ -688,6 +569,7 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
         }
     };
 
+    // Factorization updates of H, V and Wᵀ
     const auto updowndate_stage_H = [&](index_t batch_idx, index_t rj_batch) {
         auto Σj    = storage.Σ_ud.batch(batch_idx).top_rows(rj_batch);
         auto Sj    = storage.Σ_sgn.batch(batch_idx).top_rows(rj_batch);
@@ -701,22 +583,6 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
         // Update LH and V
         // TODO: no need to update V in last stage.
         updowndate_HVW(LHV().batch(batch_idx), Wᵀ().batch(batch_idx), Z1j, Σj);
-        // TODO: should we always eagerly update V and W?
-#ifndef NDEBUG
-        auto LHi = LH().batch(batch_idx);
-        // Check finiteness of LH(i)
-        assert(N + 1 > batch_idx * simd_stride);
-        auto i_end =
-            std::min<index_t>(LHi.depth(), N + 1 - batch_idx * simd_stride);
-        for (index_t i = 0; i < i_end; ++i) {
-            for (index_t c = 0; c < LHi.rows(); ++c)
-                for (index_t r = c; r < LHi.rows(); ++r)
-                    if (!std::isfinite(LHi(i, r, c)))
-                        throw std::runtime_error(std::format(
-                            "inf value of LHi: {} at ({}, {}, {})",
-                            LHi(i, r, c), batch_idx * simd_stride + i, r, c));
-        }
-#endif
     };
 
     // Each block of V generates fill-in in A in the block row below it, and
@@ -842,8 +708,12 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
             updowndate_Ψ_stage(k);
     };
 
-    const index_t num_batch  = (N + 1 + simd_stride - 1) / simd_stride;
-    auto &join_counters      = storage.reset_join_counters();
+    const index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
+    auto &join_counters     = storage.reset_join_counters();
+    // join_counters: A value of 2 means that the parallel preparation for this
+    //                batch was done, a value of 1 means that the previous block
+    //                of Ψ was done. Therefore, a value of 3 means that the
+    //                current block of Ψ can be updated.
     const auto process_stage = [&](index_t batch_idx, index_t rj_min,
                                    index_t rj_batch, auto ranksj) {
         if (rj_batch > 0) {
@@ -869,6 +739,7 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
         }
     };
 
+    // Perform the update of H (after the parallel preparation)
     const auto process_stage_H = [&](index_t batch_idx, index_t rj_batch) {
         KOQKATOO_TRACE("updowndate H", batch_idx);
         if (rj_batch <= 0)
@@ -885,9 +756,11 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
     };
 
     std::atomic<index_t> batch_counter{0};
-    auto thread_work = [&] {
+    auto thread_work = [&](index_t, index_t) {
         while (true) {
             index_t b = batch_counter.fetch_add(1, std::memory_order_relaxed);
+            // First perform the parallel preparation, eagerly processing blocks
+            // of Ψ as we go.
             if (b < num_batch) {
                 auto batch_idx = b;
                 auto stage_idx = batch_idx * simd_stride;
@@ -896,7 +769,10 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
                 auto rjmm = std::minmax_element(ranksj.data, ranksj.data + nk);
                 index_t rj_min = *rjmm.first, rj_batch = *rjmm.second;
                 process_stage(batch_idx, rj_min, rj_batch, ranksj);
-            } else if (b < 2 * num_batch) {
+            }
+            // Once all parallel preparation has been started, also start
+            // updating H.
+            else if (b < 2 * num_batch) {
                 // Looping backwards may give slightly better cache locality
                 auto batch_idx = 2 * num_batch - 1 - b;
                 auto stage_idx = batch_idx * simd_stride;
@@ -904,22 +780,15 @@ void Solver<Abi>::updowndate_fork(real_view Σ, bool_view J_old, bool_view J_new
                 auto ranksj = ranks.batch(batch_idx);
                 auto rj_batch = std::max_element(ranksj.data, ranksj.data + nk);
                 process_stage_H(batch_idx, *rj_batch);
-            } else {
+            }
+            // If all parallel preparation and updating of H is done, return.
+            else {
                 break;
             }
         }
     };
 
-    std::optional<guanaqo::Timed<typename Timings::type>> t_w;
-    if (t)
-        t_w.emplace(t->updowndate_stages);
-#if KOQKATOO_WITH_OPENMP
-        KOQKATOO_OMP(parallel for schedule(static))
-        for (int i = 0; i < omp_get_num_threads(); ++i)
-            thread_work();
-#else
-    pool->sync_run_all(thread_work);
-#endif
+    foreach_thread(thread_work);
 }
 
 } // namespace koqkatoo::ocp

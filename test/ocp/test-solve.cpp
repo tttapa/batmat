@@ -105,13 +105,13 @@ TEST_P(OCP, solve) {
     s.mat_vec_transpose_constr(ŷ_strided, Gᵀŷ_strided);
     s.residual_dynamics_constr(x_strided, b_strided, Mxb_strided);
     // Perform the factorization of the KKT system (with wrong active set).
-    s.factor(S, Σ_strided, J0_strided);
+    s.factor_new(S, Σ_strided, J0_strided);
     // Update factorization to correct active set.
-    s.updowndate(Σ_strided, J0_strided, J1_strided, nullptr);
-    s.updowndate(Σ_strided, J1_strided, J_strided, nullptr);
+    s.updowndate_new(Σ_strided, J0_strided, J1_strided);
+    s.updowndate_new(Σ_strided, J1_strided, J_strided);
     // Solve the KKT system.
-    s.solve(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided, //
-            d_strided, Δλ_strided, MᵀΔλ_strided);
+    s.solve_new(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided, //
+                d_strided, Δλ_strided, MᵀΔλ_strided);
     // d:    Newton step for x
     // Δλ:   negative Newton step for λ
     // MᵀΔλ: by-product that can be re-used to compute Mᵀ(λ - Δλ)
@@ -286,4 +286,4 @@ TEST_P(OCP, recompute) {
     EXPECT_NEAR(inf_nrm_al_grad, inf_nrm_al_grad_ref, 10 * ε);
 }
 
-INSTANTIATE_TEST_SUITE_P(OCP, OCP, testing::Range<index_t>(1, 20));
+INSTANTIATE_TEST_SUITE_P(OCP, OCP, testing::Range<index_t>(1, 21));

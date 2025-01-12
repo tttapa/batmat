@@ -170,14 +170,13 @@ add_library(ocp
 target_sources(ocp PUBLIC FILE_SET headers TYPE HEADERS
     BASE_DIRS "ocp/include"
     FILES "ocp/include/koqkatoo/ocp/solver/solve.hpp"
+          "ocp/include/koqkatoo/ocp/solver/solve-new.tpp"
           "ocp/include/koqkatoo/ocp/solver/storage.hpp"
           "ocp/include/koqkatoo/ocp/conversion.hpp"
           "ocp/include/koqkatoo/ocp/ocp.hpp"
           "ocp/include/koqkatoo/ocp/random-ocp.hpp"
           "ocp/include/koqkatoo/ocp/solver/storage.tpp"
           "ocp/include/koqkatoo/ocp/solver/mat-vec.tpp"
-          "ocp/include/koqkatoo/ocp/solver/solve.tpp"
-          "ocp/include/koqkatoo/ocp/solver/solve-tbb.tpp"
           "ocp/include/koqkatoo/ocp/solver/updowndate.tpp"
 )
 target_link_libraries(ocp PUBLIC koqkatoo::linalg-compact)

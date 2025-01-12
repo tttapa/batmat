@@ -215,6 +215,9 @@ struct SolverStorage {
     std::vector<join_counter_t> join_counters = std::vector<join_counter_t>(
         (dim.N_horiz + 1 + simd_stride - 1) / simd_stride);
 
+    std::vector<real_t> work_batch =
+        std::vector<real_t>((dim.N_horiz + 1 + simd_stride - 1) / simd_stride);
+
     std::vector<join_counter_t> &reset_join_counters() {
         for (auto &jc : join_counters)
             jc.value.store(0, std::memory_order_relaxed);
