@@ -21,6 +21,7 @@ add_executable(tests
     "linalg-compact/test-shhud-diag.cpp"
     "linalg-compact/test-pntrf.cpp"
     "linalg-compact/test-update.cpp"
+    "linalg-compact/test-trtri.cpp"
     "cholundate/test-shh-downdate.cpp"
     "cholundate/test-shh-updowndate.cpp"
 )
