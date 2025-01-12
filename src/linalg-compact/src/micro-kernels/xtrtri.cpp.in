@@ -8,6 +8,10 @@ namespace koqkatoo::linalg::compact::micro_kernels::trtri {
 
 using Abi = stdx::simd_abi::@simd_abi@;
 
+// For tests
+template void xtrtri_trmm_microkernel<Abi, 4>(mut_single_batch_matrix_accessor<Abi> A, index_t rows) noexcept;
+template void xtrmm_microkernel<Abi, 4, 4>(single_batch_matrix_accessor<Abi> A, mut_single_batch_matrix_accessor<Abi> B, index_t rows) noexcept;
+
 template const constinit decltype(microkernel_lut<Abi>) microkernel_lut<Abi>;
 template const constinit decltype(microkernel_trmm_lut<Abi>) microkernel_trmm_lut<Abi>;
 
