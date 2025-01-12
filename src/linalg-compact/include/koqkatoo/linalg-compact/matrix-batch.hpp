@@ -282,6 +282,8 @@ struct BatchedMatrixView {
         S::value;
         D::value;
     } && S{} == D{};
+    static constexpr bool has_single_layer_at_compile_time =
+        requires { D::value; } && D{} == 1;
     using batch_view_type = BatchedMatrixView<T, I, S, S>;
     using col_slice_view_type =
         std::conditional_t<has_single_batch, BatchedMatrixView,
@@ -321,6 +323,12 @@ struct BatchedMatrixView {
         requires(!std::is_const_v<T>)
     {
         return {data, layout};
+    }
+
+    operator guanaqo::MatrixView<T, I, standard_stride_type>() const
+        requires has_single_layer_at_compile_time
+    {
+        return operator()(0);
     }
 
     BatchedMatrixView<const T, I, S, D, L> as_const() const { return *this; }
