@@ -2,6 +2,7 @@
 
 #include <koqkatoo/fork-pool.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
+#include <koqkatoo/loop.hpp>
 #include <koqkatoo/matrix-view.hpp>
 #include <koqkatoo/ocp/conversion.hpp>
 #include <koqkatoo/ocp/ocp.hpp>
@@ -16,6 +17,7 @@
 #include <guanaqo/print.hpp>
 
 #include <algorithm>
+#include <format>
 #include <iostream>
 #include <random>
 #include <stdexcept>
@@ -24,12 +26,12 @@
 #include <Eigen/Eigen>
 
 #if 0
-constexpr int n_threads = 8;
-constexpr int n_horiz   = 3;
-constexpr int n_states  = 2;
-constexpr int n_inputs  = 2;
+constexpr int n_threads = 6;
+constexpr int n_horiz   = 23;
+constexpr int n_states  = 5;
+constexpr int n_inputs  = 5;
 #else
-constexpr int n_threads = 4;
+constexpr int n_threads = 8;
 constexpr int n_horiz   = 63;
 constexpr int n_states  = 40;
 constexpr int n_inputs  = 30;
@@ -367,12 +369,15 @@ void benchmark_riccati(benchmark::State &state) {
 #endif
 }
 
-template <class simd_abi>
+template <class simd_abi, bool New = true>
 void benchmark_solve(benchmark::State &state) {
     if (!std::exchange(init_done, true)) {
         KOQKATOO_OMP_IF(omp_set_num_threads(n_threads));
         koqkatoo::pool_set_num_threads(n_threads);
         koqkatoo::fork_set_num_threads(n_threads);
+        KOQKATOO_IF_ITT(koqkatoo::foreach_thread([](index_t i, index_t) {
+            __itt_thread_set_name(std::format("OMP({})", i).c_str());
+        }));
     }
     using VectorXreal = Eigen::VectorX<real_t>;
     std::mt19937 rng{54321};
@@ -402,7 +407,7 @@ void benchmark_solve(benchmark::State &state) {
     VectorXreal b(n_dyn_constr),       // Dynamics constraints right-hand side
         λ(n_dyn_constr);               //  & corresponding Lagrange multipliers.
 
-    real_t S = std::exp2(nrml(rng)) * 1e-1; // primal regularization
+    real_t S = std::exp2(nrml(rng)) * 1e-3; // primal regularization
     std::ranges::generate(J, [&] { return bernoulli(rng); });
     std::ranges::generate(Σ, [&] { return std::exp2(nrml(rng)); });
     std::ranges::generate(ŷ, [&] { return nrml(rng); });
@@ -447,13 +452,24 @@ void benchmark_solve(benchmark::State &state) {
     s.residual_dynamics_constr(x_strided, b_strided, Mxb_strided);
 
     for (auto _ : state) {
+        KOQKATOO_IF_ITT(
+            __itt_frame_begin_v3(koqkatoo::trace_logger.domain, nullptr));
 #if KOQKATOO_WITH_TRACING
         koqkatoo::trace_logger.reset();
 #endif
-        s.factor_new(S, Σ_strided, J_strided);
-        s.solve_new(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided,
+        if constexpr (New) {
+            s.factor_new(S, Σ_strided, J_strided);
+            s.solve_new(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided,
+                        d_strided, Δλ_strided, MᵀΔλ_strided);
+            // s.updowndate_new(Σ_strided, J_strided, J2_strided, nullptr);
+        } else {
+            s.factor(S, Σ_strided, J_strided);
+            s.solve(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided,
                     d_strided, Δλ_strided, MᵀΔλ_strided);
-        // s.updowndate_new(Σ_strided, J_strided, J2_strided, nullptr);
+            // s.updowndate(Σ_strided, J_strided, J2_strided, nullptr);
+        }
+        KOQKATOO_IF_ITT(
+            __itt_frame_end_v3(koqkatoo::trace_logger.domain, nullptr));
     }
 
     auto [N, nx, nu, ny, ny_N] = ocp.dim;
@@ -481,6 +497,10 @@ void benchmark_solve(benchmark::State &state) {
 #endif
 }
 
+BENCHMARK(benchmark_solve<stdx::simd_abi::deduce_t<real_t, 8>, false>);
+BENCHMARK(benchmark_solve<stdx::simd_abi::deduce_t<real_t, 4>, false>);
+BENCHMARK(benchmark_solve<stdx::simd_abi::deduce_t<real_t, 2>, false>);
+BENCHMARK(benchmark_solve<stdx::simd_abi::scalar, false>);
 BENCHMARK(benchmark_solve<stdx::simd_abi::deduce_t<real_t, 8>>);
 BENCHMARK(benchmark_solve<stdx::simd_abi::deduce_t<real_t, 4>>);
 BENCHMARK(benchmark_solve<stdx::simd_abi::deduce_t<real_t, 2>>);
