@@ -103,13 +103,19 @@ struct TraceLogger {
         std::chrono::nanoseconds start_time{0};
         std::chrono::nanoseconds duration{0};
         std::size_t thread_id{0};
+        int64_t flop_count{0};
 
         friend std::ostream &operator<<(std::ostream &os, const Log &log) {
-            return os << '(' << std::quoted(log.name) << ", " << log.instance
-                      << ", " << log.start_time.count() << ", "
-                      << log.duration.count() << ", " << log.thread_id << ')';
+            return os << std::quoted(log.name) << ',' << log.instance << ','
+                      << log.start_time.count() << ',' << log.duration.count()
+                      << ',' << log.thread_id << ',' << log.flop_count;
         }
     };
+
+    static std::ostream &write_column_headings(std::ostream &os) {
+        return os << "name" << ',' << "instance" << ',' << "start_time" << ','
+                  << "duration" << ',' << "thread_id" << ',' << "flop_count";
+    }
 
     using clock = std::chrono::steady_clock;
 
@@ -138,7 +144,8 @@ struct TraceLogger {
 
     TraceLogger(size_t capacity) { logs.resize(capacity); }
 
-    [[nodiscard]] ScopedLog trace(const char *name, int64_t instance) {
+    [[nodiscard]] ScopedLog trace(const char *name, int64_t instance,
+                                  int64_t flop_count = 0) {
         size_t index = count.fetch_add(1, std::memory_order_relaxed);
         if (index >= logs.size())
             return ScopedLog{nullptr, {}};
@@ -147,6 +154,7 @@ struct TraceLogger {
         auto t1        = clock::now();
         log.name       = name;
         log.instance   = instance;
+        log.flop_count = flop_count;
         log.start_time = t1 - t0;
         log.thread_id  = hasher(std::this_thread::get_id());
         return ScopedLog{&log, t1};
@@ -162,9 +170,9 @@ struct TraceLogger {
 
 #if KOQKATOO_WITH_TRACING
 extern TraceLogger trace_logger;
-#define KOQKATOO_TRACE(name, instance)                                         \
+#define KOQKATOO_TRACE(name, ...)                                              \
     const auto KOQKATOO_CAT(trace_log_, __COUNTER__) =                         \
-        ::koqkatoo::trace_logger.trace(name, instance)
+        ::koqkatoo::trace_logger.trace(name, __VA_ARGS__)
 #endif
 
 #endif
