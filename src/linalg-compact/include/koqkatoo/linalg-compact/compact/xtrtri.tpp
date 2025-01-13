@@ -22,6 +22,10 @@ void CompactBLAS<Abi>::xtrtri_ref(mut_single_batch_view L) {
     using namespace micro_kernels;
     assert(L.rows() >= L.cols());
     const index_t m = L.rows(), n = L.cols();
+    [[maybe_unused]] const auto //
+        op_cnt_trtri = n * (n - 1) * (n - 2) / 6 + n * (n - 1) + n,
+        op_cnt_trmm  = n * (n - 1) * (m - n) / 2 + n * (m - n);
+    KOQKATOO_TRACE("xtrtri", 0, (op_cnt_trtri + op_cnt_trmm) * L.depth());
     static constexpr index_t R               = micro_kernels::trtri::RowsReg;
     mut_single_batch_matrix_accessor<Abi> L_ = L;
     foreach_chunked(
@@ -74,6 +78,11 @@ void CompactBLAS<Abi>::xtrtri(mut_single_batch_view L, PreferredBackend b) {
         if (use_blas_scalar(b)) {
             index_t info;
             const auto m = L.rows(), n = L.cols();
+            [[maybe_unused]] const auto //
+                op_cnt_trtri = n * (n - 1) * (n - 2) / 6 + n * (n - 1) + n,
+                op_cnt_trmm  = n * (n - 1) * (m - n) / 2 + n * (m - n);
+            KOQKATOO_TRACE("xtrtri_blas", 0,
+                           (op_cnt_trtri + op_cnt_trmm) * L.depth());
             linalg::xtrtri("L", "N", n, L.data, L.outer_stride(), &info);
             lapack_throw_on_err("xtrtri", info);
             if (m > n)

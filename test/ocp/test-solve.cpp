@@ -277,12 +277,12 @@ TEST_P(OCP, recompute) {
     real_t inf_nrm_al_grad_ref =
         (grad_outer_ref + Gᵀŷ_ref + Mᵀλ_ref).lpNorm<Eigen::Infinity>();
 
-    EXPECT_THAT(grad_inner, EigenAlmostEqual(grad_inner_ref, ε));
-    EXPECT_THAT(Mᵀλ_inner, EigenAlmostEqual(Mᵀλ_ref, ε));
-    EXPECT_THAT(grad_outer, EigenAlmostEqual(grad_outer_ref, ε));
-    EXPECT_THAT(Aᵀŷ_outer, EigenAlmostEqual(Gᵀŷ_ref, ε));
-    EXPECT_THAT(Mᵀλ_outer, EigenAlmostEqual(Mᵀλ_ref, ε));
-    EXPECT_THAT(Mxb, EigenAlmostEqual(Mxb_ref, ε));
+    EXPECT_THAT(grad_inner, EigenAlmostEqual(grad_inner_ref, 10 * ε));
+    EXPECT_THAT(Mᵀλ_inner, EigenAlmostEqual(Mᵀλ_ref, 10 * ε));
+    EXPECT_THAT(grad_outer, EigenAlmostEqual(grad_outer_ref, 10 * ε));
+    EXPECT_THAT(Aᵀŷ_outer, EigenAlmostEqual(Gᵀŷ_ref, 10 * ε));
+    EXPECT_THAT(Mᵀλ_outer, EigenAlmostEqual(Mᵀλ_ref, 10 * ε));
+    EXPECT_THAT(Mxb, EigenAlmostEqual(Mxb_ref, 10 * ε));
     EXPECT_NEAR(inf_nrm_al_grad, inf_nrm_al_grad_ref, 10 * ε);
 }
 

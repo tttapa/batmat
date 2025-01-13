@@ -43,8 +43,26 @@ void CompactBLAS<Abi>::xpotrf_recursive_ref(mut_single_batch_view H) {
     xpotrf_recursive_ref(H22);
 }
 
+inline index_t xpotrf_op_cnt(auto H, index_t n) {
+    [[maybe_unused]] const index_t m = H.rows(), N = H.cols();
+    if (n < 0)
+        n = N;
+    // TODO: I should probably double-check these ...
+    [[maybe_unused]] const auto op_cnt_chol = (n + 1) * n * (n - 1) / 6 +
+                                              n * (n - 1) / 2 + 2 * n,
+                                op_cnt_trsm = n * (n + 1) * (m - n) / 2,
+                                op_cnt_syrk = (N - n) * (N - n + 1) * n / 2;
+    return (op_cnt_chol + op_cnt_trsm + op_cnt_syrk) * H.depth();
+}
+
 template <class Abi>
 void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H, index_t n) {
+    KOQKATOO_TRACE("xpotrf", 0, xpotrf_op_cnt(H, n));
+    xpotrf_ref_impl(H, n);
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xpotrf_ref_impl(mut_single_batch_view H, index_t n) {
     const index_t m = H.rows(), N = H.cols();
     if (n < 0)
         n = N;
@@ -57,14 +75,14 @@ void CompactBLAS<Abi>::xpotrf_ref(mut_single_batch_view H, index_t n) {
     auto H11 = H.top_left(n1, n1), H21 = H.bottom_left(m2, n1),
          H22 = H.bottom_right(m2, n2);
     // Factor H₁₁
-    xpotrf_ref(H11);
+    xpotrf_ref_impl(H11);
     // Compute L₂₁ = H₂₁ L₁₁⁻ᵀ
     xtrsm_RLTN_ref(H11, H21);
     // Update H₂₂ -= L₂₁ L₂₁ᵀ
     xsyrk_sub_ref(H21, H22);
     // Factor H₂₂
     if (n > n1)
-        xpotrf_ref(H22, n - n1);
+        xpotrf_ref_impl(H22, n - n1);
 }
 
 template <class Abi>
@@ -167,6 +185,7 @@ void CompactBLAS<Abi>::xpotrf(mut_batch_view H, PreferredBackend b, index_t n) {
         n = H.cols();
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && H.has_full_layer_stride() && n == H.cols()) {
+            KOQKATOO_TRACE("xpotrf_mkl_compact", 0, xpotrf_op_cnt(H, n));
             auto H11     = H.top_left(n, n);
             MKL_INT info = 0;
             xpotrf_compact(MKL_COL_MAJOR, MKL_LOWER, H11.rows(), H11.data,
@@ -187,6 +206,7 @@ void CompactBLAS<Abi>::xpotrf(mut_batch_view H, PreferredBackend b, index_t n) {
     })
     if constexpr (std::same_as<Abi, scalar_abi>) {
         if (use_mkl_batched(b)) {
+            KOQKATOO_TRACE("xpotrf_batched", 0, xpotrf_op_cnt(H, n));
             auto H11 = H.top_left(n, n);
             xpotrf_batch_strided("L", H11.rows(), H11.data, H11.outer_stride(),
                                  H11.layer_stride(), H11.depth());
@@ -224,6 +244,7 @@ void CompactBLAS<Abi>::xpotrf_base(mut_batch_view H, PreferredBackend b) {
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && H.rows() == H.cols() &&
             H.has_full_layer_stride()) {
+            KOQKATOO_TRACE("xpotrf_base_mkl_compact", 0, xpotrf_op_cnt(H, -1));
             MKL_INT info = 0;
             xpotrf_compact(
                 MKL_COL_MAJOR, MKL_LOWER, H.rows(), H.data, H.outer_stride(),
@@ -234,6 +255,7 @@ void CompactBLAS<Abi>::xpotrf_base(mut_batch_view H, PreferredBackend b) {
     })
     if constexpr (std::same_as<Abi, scalar_abi>) {
         if (use_mkl_batched(b) && H.rows() == H.cols()) {
+            KOQKATOO_TRACE("xpotrf_base_batched", 0, xpotrf_op_cnt(H, -1));
             xpotrf_batch_strided("L", H.rows(), H.data, H.outer_stride(),
                                  H.layer_stride(), H.depth());
             return;
@@ -250,6 +272,8 @@ void CompactBLAS<Abi>::xpotrf_recursive(mut_batch_view H, PreferredBackend b) {
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && H.rows() == H.cols() &&
             H.has_full_layer_stride()) {
+            KOQKATOO_TRACE("xpotrf_recursive_mkl_compact", 0,
+                           xpotrf_op_cnt(H, -1));
             MKL_INT info = 0;
             xpotrf_compact(
                 MKL_COL_MAJOR, MKL_LOWER, H.rows(), H.data, H.outer_stride(),
@@ -260,6 +284,7 @@ void CompactBLAS<Abi>::xpotrf_recursive(mut_batch_view H, PreferredBackend b) {
     })
     if constexpr (std::same_as<Abi, scalar_abi>) {
         if (use_mkl_batched(b) && H.rows() == H.cols()) {
+            KOQKATOO_TRACE("xpotrf_recursive_batched", 0, xpotrf_op_cnt(H, -1));
             xpotrf_batch_strided("L", H.rows(), H.data, H.rows(),
                                  H.rows() * H.cols(), H.depth());
             return;
@@ -281,6 +306,7 @@ void CompactBLAS<Abi>::xpotrf(mut_single_batch_view H, PreferredBackend b,
         n = H.cols();
     if constexpr (std::same_as<Abi, scalar_abi>) {
         if (use_blas_scalar(b)) {
+            KOQKATOO_TRACE("xpotrf_blas", 0, xpotrf_op_cnt(H, n));
             auto H11     = H.top_left(n, n);
             index_t info = 0;
             linalg::xpotrf("L", H11.rows(), H11.data, H11.outer_stride(),
@@ -295,7 +321,10 @@ void CompactBLAS<Abi>::xpotrf(mut_single_batch_view H, PreferredBackend b,
                 if (n < H.cols()) {
                     auto H22 = H.bottom_right(H.rows() - n, H.cols() - n);
                     assert(H22.rows() == H22.cols());
-                    xsyrk_sub(H21, H22, b);
+                    linalg::xsyrk(CblasColMajor, CblasLower, CblasNoTrans,
+                                  H22.rows(), H21.cols(), real_t{-1}, H21.data,
+                                  H21.outer_stride(), real_t{1}, H22.data,
+                                  H22.outer_stride());
                 }
             }
             return;

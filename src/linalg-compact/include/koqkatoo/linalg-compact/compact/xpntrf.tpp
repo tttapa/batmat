@@ -19,6 +19,10 @@ void CompactBLAS<Abi>::xpntrf_ref(mut_single_batch_view H,
     using namespace micro_kernels;
     constexpr index_t R = pntrf::RowsReg; // Block size
     const index_t m = H.rows(), n = H.cols();
+    [[maybe_unused]] const auto op_cnt_chol = (n + 1) * n * (n - 1) / 6 +
+                                              n * (n - 1) / 2 + 2 * n,
+                                op_cnt_trsm = n * (n + 1) * (m - n) / 2;
+    KOQKATOO_TRACE("xpntrf", 0, (op_cnt_chol + op_cnt_trsm) * H.depth());
     assert(m >= n);
     assert(n == signs.rows());
     mut_single_batch_matrix_accessor<Abi> H_ = H;

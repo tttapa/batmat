@@ -122,11 +122,23 @@ struct CompactBLAS {
     static void xtrsm_LLNN(batch_view L, mut_batch_view H, PreferredBackend b);
     static void xtrsm_LLNN_ref(single_batch_view L, mut_single_batch_view H);
 
+    /// h ← L⁻¹ h
+    static void xtrsv_LNN(single_batch_view L, mut_single_batch_view h,
+                          PreferredBackend b);
+    static void xtrsv_LNN(batch_view L, mut_batch_view h, PreferredBackend b);
+    static void xtrsv_LNN_ref(single_batch_view L, mut_single_batch_view h);
+
     /// H ← L⁻ᵀ H
     static void xtrsm_LLTN(single_batch_view L, mut_single_batch_view H,
                            PreferredBackend b);
     static void xtrsm_LLTN(batch_view L, mut_batch_view H, PreferredBackend b);
     static void xtrsm_LLTN_ref(single_batch_view L, mut_single_batch_view H);
+
+    /// h ← L⁻ᵀ h
+    static void xtrsv_LTN(single_batch_view L, mut_single_batch_view h,
+                          PreferredBackend b);
+    static void xtrsv_LTN(batch_view L, mut_batch_view h, PreferredBackend b);
+    static void xtrsv_LTN_ref(single_batch_view L, mut_single_batch_view h);
 
     /// H ← cholesky(H)
     static void xpotrf(mut_single_batch_view H, PreferredBackend b,
@@ -135,6 +147,7 @@ struct CompactBLAS {
     static void xpotrf_base(mut_batch_view H, PreferredBackend b);
     static void xpotrf_recursive(mut_batch_view H, PreferredBackend b);
     static void xpotrf_ref(mut_single_batch_view H, index_t n = -1);
+    static void xpotrf_ref_impl(mut_single_batch_view H, index_t n = -1);
     static void xpotrf_recursive_ref(mut_single_batch_view H);
     static void xpotrf_base_ref(mut_single_batch_view H, index_t n = -1);
 
@@ -161,6 +174,14 @@ struct CompactBLAS {
     static void xgemm(batch_view A, batch_view B, mut_batch_view C,
                       PreferredBackend b);
     static void xgemm_ref(single_batch_view A, single_batch_view B,
+                          mut_single_batch_view C);
+
+    /// C ← AB
+    static void xgemv(single_batch_view A, single_batch_view B,
+                      mut_single_batch_view C, PreferredBackend b);
+    static void xgemv(batch_view A, batch_view B, mut_batch_view C,
+                      PreferredBackend b);
+    static void xgemv_ref(single_batch_view A, single_batch_view B,
                           mut_single_batch_view C);
 
     /// C ← -AB
@@ -195,6 +216,14 @@ struct CompactBLAS {
     static void xgemm_sub_ref(single_batch_view A, single_batch_view B,
                               mut_single_batch_view C);
 
+    /// C -= AB
+    static void xgemv_sub(single_batch_view A, single_batch_view B,
+                          mut_single_batch_view C, PreferredBackend b);
+    static void xgemv_sub(batch_view A, batch_view B, mut_batch_view C,
+                          PreferredBackend b);
+    static void xgemv_sub_ref(single_batch_view A, single_batch_view B,
+                              mut_single_batch_view C);
+
     /// C = AᵀB
     static void xgemm_TN(single_batch_view A, single_batch_view B,
                          mut_single_batch_view C, PreferredBackend b);
@@ -203,6 +232,14 @@ struct CompactBLAS {
     static void xgemm_TN_ref(single_batch_view A, single_batch_view B,
                              mut_single_batch_view C);
 
+    /// C = AᵀB
+    static void xgemv_T(single_batch_view A, single_batch_view B,
+                        mut_single_batch_view C, PreferredBackend b);
+    static void xgemv_T(batch_view A, batch_view B, mut_batch_view C,
+                        PreferredBackend b);
+    static void xgemv_T_ref(single_batch_view A, single_batch_view B,
+                            mut_single_batch_view C);
+
     /// C -= AᵀB
     static void xgemm_TN_sub(single_batch_view A, single_batch_view B,
                              mut_single_batch_view C, PreferredBackend b);
@@ -210,6 +247,14 @@ struct CompactBLAS {
                              PreferredBackend b);
     static void xgemm_TN_sub_ref(single_batch_view A, single_batch_view B,
                                  mut_single_batch_view C);
+
+    /// C -= AᵀB
+    static void xgemv_T_sub(single_batch_view A, single_batch_view B,
+                            mut_single_batch_view C, PreferredBackend b);
+    static void xgemv_T_sub(batch_view A, batch_view B, mut_batch_view C,
+                            PreferredBackend b);
+    static void xgemv_T_sub_ref(single_batch_view A, single_batch_view B,
+                                mut_single_batch_view C);
 
     /// Cholesky downdate
     static void xshh(mut_single_batch_view L, mut_single_batch_view A,
