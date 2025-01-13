@@ -18,6 +18,7 @@
 
 #include <algorithm>
 #include <format>
+#include <fstream>
 #include <iostream>
 #include <random>
 #include <stdexcept>
@@ -31,7 +32,7 @@ constexpr int n_horiz   = 23;
 constexpr int n_states  = 5;
 constexpr int n_inputs  = 5;
 #else
-constexpr int n_threads = 8;
+constexpr int n_threads = 4;
 constexpr int n_horiz   = 63;
 constexpr int n_states  = 40;
 constexpr int n_inputs  = 30;
@@ -346,7 +347,9 @@ void benchmark_riccati(benchmark::State &state) {
     grad_strided.view += Gᵀŷ_strided.view;
     scal_blas::xneg(Mxb_strided);
 
+    static size_t num_invocations = 0;
     for (auto _ : state) {
+        ++num_invocations;
 #if KOQKATOO_WITH_TRACING
         koqkatoo::trace_logger.reset();
 #endif
@@ -361,11 +364,15 @@ void benchmark_riccati(benchmark::State &state) {
     }
 
 #if KOQKATOO_WITH_TRACING
-    std::cout << "\n" << __PRETTY_FUNCTION__ << "\n";
-    std::cout << "[";
-    for (const auto &log : koqkatoo::trace_logger.get_logs())
-        std::cout << log << ", ";
-    std::cout << "]" << std::endl;
+    static bool saved = false;
+    if (num_invocations >= 100 && !std::exchange(saved, true)) {
+        std::string name =
+            std::format("benchmark_solve_{}_{}.csv", "riccati", "new");
+        std::ofstream csv{name};
+        koqkatoo::TraceLogger::write_column_headings(csv) << '\n';
+        for (const auto &log : koqkatoo::trace_logger.get_logs())
+            csv << log << '\n';
+    }
 #endif
 }
 
@@ -451,7 +458,9 @@ void benchmark_solve(benchmark::State &state) {
     s.mat_vec_transpose_constr(ŷ_strided, Gᵀŷ_strided);
     s.residual_dynamics_constr(x_strided, b_strided, Mxb_strided);
 
+    [[maybe_unused]] static size_t num_invocations = 0;
     for (auto _ : state) {
+        ++num_invocations;
         KOQKATOO_IF_ITT(
             __itt_frame_begin_v3(koqkatoo::trace_logger.domain, nullptr));
 #if KOQKATOO_WITH_TRACING
@@ -489,11 +498,16 @@ void benchmark_solve(benchmark::State &state) {
     }
 
 #if KOQKATOO_WITH_TRACING
-    std::cout << "\n" << __PRETTY_FUNCTION__ << "\n";
-    std::cout << "[";
-    for (const auto &log : koqkatoo::trace_logger.get_logs())
-        std::cout << log << ", ";
-    std::cout << "]" << std::endl;
+    static bool saved = false;
+    if (num_invocations >= 100 && !std::exchange(saved, true)) {
+        std::string name = std::format("benchmark_solve_{}_{}.csv",
+                                       stdx::simd_size_v<real_t, simd_abi>,
+                                       New ? "new" : "old");
+        std::ofstream csv{name};
+        koqkatoo::TraceLogger::write_column_headings(csv) << '\n';
+        for (const auto &log : koqkatoo::trace_logger.get_logs())
+            csv << log << '\n';
+    }
 #endif
 }
 
