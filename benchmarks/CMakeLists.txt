@@ -11,6 +11,10 @@ add_executable(benchmark-trsm trsm.cpp benchmark-main.cpp)
 target_link_libraries(benchmark-trsm PRIVATE
     benchmark::benchmark koqkatoo::linalg-compact koqkatoo::warnings)
 
+add_executable(benchmark-syrk syrk.cpp benchmark-main.cpp)
+target_link_libraries(benchmark-syrk PRIVATE
+    benchmark::benchmark koqkatoo::linalg-compact koqkatoo::warnings)
+
 add_executable(benchmark-potrf potrf.cpp benchmark-main.cpp)
 target_link_libraries(benchmark-potrf PRIVATE
     benchmark::benchmark koqkatoo::linalg-compact koqkatoo::warnings)
@@ -40,6 +44,10 @@ if (KOQKATOO_WITH_BLASFEO)
 
     add_executable(benchmark-trsm-blasfeo blasfeo/blasfeo-trsm.cpp benchmark-main.cpp)
     target_link_libraries(benchmark-trsm-blasfeo PRIVATE
+        benchmark::benchmark blasfeo koqkatoo::koqkatoo koqkatoo::warnings)
+
+    add_executable(benchmark-syrk-blasfeo blasfeo/blasfeo-syrk.cpp benchmark-main.cpp)
+    target_link_libraries(benchmark-syrk-blasfeo PRIVATE
         benchmark::benchmark blasfeo koqkatoo::koqkatoo koqkatoo::warnings)
 endif()
 
