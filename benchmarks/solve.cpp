@@ -11,12 +11,14 @@
 #include <koqkatoo/openmp.h>
 #include <koqkatoo/thread-pool.hpp>
 #include <koqkatoo/trace.hpp>
+#include <koqkatoo-version.h>
 
 #include <guanaqo/eigen/span.hpp>
 #include <guanaqo/eigen/view.hpp>
 #include <guanaqo/print.hpp>
 
 #include <algorithm>
+#include <filesystem>
 #include <format>
 #include <fstream>
 #include <iostream>
@@ -368,7 +370,10 @@ void benchmark_riccati(benchmark::State &state) {
     if (num_invocations >= 100 && !std::exchange(saved, true)) {
         std::string name =
             std::format("benchmark_solve_{}_{}.csv", "riccati", "new");
-        std::ofstream csv{name};
+        std::filesystem::path out_dir{"traces"};
+        out_dir /= *koqkatoo_commit_hash ? koqkatoo_commit_hash : "unknown";
+        std::filesystem::create_directories(out_dir);
+        std::ofstream csv{out_dir / name};
         koqkatoo::TraceLogger::write_column_headings(csv) << '\n';
         for (const auto &log : koqkatoo::trace_logger.get_logs())
             csv << log << '\n';
@@ -503,7 +508,10 @@ void benchmark_solve(benchmark::State &state) {
         std::string name = std::format("benchmark_solve_{}_{}.csv",
                                        stdx::simd_size_v<real_t, simd_abi>,
                                        New ? "new" : "old");
-        std::ofstream csv{name};
+        std::filesystem::path out_dir{"traces"};
+        out_dir /= *koqkatoo_commit_hash ? koqkatoo_commit_hash : "unknown";
+        std::filesystem::create_directories(out_dir);
+        std::ofstream csv{out_dir / name};
         koqkatoo::TraceLogger::write_column_headings(csv) << '\n';
         for (const auto &log : koqkatoo::trace_logger.get_logs())
             csv << log << '\n';
