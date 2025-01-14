@@ -35,19 +35,18 @@ void Solver<Abi>::prepare_factor(index_t k, real_t S, real_view Σ,
     // Factorize H (and solve V)
     compact_blas::xpotrf(LHV().batch(k), be);
     // Solve W = LH⁻¹ [I 0]ᵀ
-    compact_blas::xcopy(LHi.top_left(nx + nu, nx), Wi);
-    compact_blas::xtrtri(Wi, be);
+    compact_blas::xtrtri_copy(LHi.top_left(nx + nu, nx), Wi, be);
+    // Compute VVᵀ
+    if (k < AB().num_batches())
+        compact_blas::xsyrk(V().batch(k), VV().batch(k), be);
     compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), Wi.bottom_rows(nu), be);
     // Compute WWᵀ
     compact_blas::xsyrk_T(Wi, LΨd().batch(k), be);
     // TODO: exploit trapezoidal shape of Wᵀ
-    if (k < AB().num_batches()) {
+    if (k < AB().num_batches())
         // Compute -VWᵀ
         compact_blas::xgemm_neg(V().batch(k), Wi, LΨs().batch(k), be);
-        // TODO: exploit trapezoidal shape of Wᵀ
-        // Compute VVᵀ
-        compact_blas::xsyrk(V().batch(k), VV().batch(k), be);
-    }
+    // TODO: exploit trapezoidal shape of Wᵀ
 }
 
 template <simd_abi_tag Abi>

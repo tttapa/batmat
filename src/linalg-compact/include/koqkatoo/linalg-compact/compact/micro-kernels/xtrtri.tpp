@@ -78,6 +78,77 @@ xtrtri_trmm_microkernel(const mut_single_batch_matrix_accessor<Abi> A,
     }
 }
 
+/// Triangular inverse, with multiplication of subdiagonal blocks. Writes A₁⁻¹
+/// to the top block, and right-multiplies the bottom block A₂ by -A⁻¹.
+template <class Abi, index_t RowsReg>
+[[gnu::hot]] void
+xtrtri_trmm_copy_microkernel(const single_batch_matrix_accessor<Abi> Ain,
+                             const mut_single_batch_matrix_accessor<Abi> Aout,
+                             const index_t rows) noexcept {
+    using simd = stdx::simd<real_t, Abi>;
+    // Pre-compute the offsets of the columns of A
+    auto Ain_cached = with_cached_access<RowsReg>(Ain);
+    // Load matrix A₁ into registers
+    simd A1_reg[RowsReg * (RowsReg + 1) / 2]; // NOLINT(*-c-arrays)
+    auto A1r = [&A1_reg](index_t r, index_t c) -> simd & {
+        return A1_reg[c * (2 * RowsReg - 1 - c) / 2 + r];
+    };
+    KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < RowsReg; ++i)
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t j = 0; j <= i; ++j)
+            A1r(i, j) = Ain_cached.load(i, j);
+
+    // Invert A₁.
+    // Recursively apply Fact 2.17.1 from Bernstein 2009 - Matrix mathematics
+    // theory, facts, and formulas.
+    // [ L₁₁  0   ]⁻¹  =  [  L₁₁⁻¹             0     ]
+    // [ L₂₁  L₂₂ ]       [ -L₂₂⁻¹ L₂₁ L₁₁⁻¹   L₂₂⁻¹ ]
+    // First apply it to the last column:
+    // [ l₁₁                  ]
+    // [ l₂₁  l₂₂             ]
+    // [ l₃₁  l₃₂  l₃₃        ]
+    // [ l₄₁  l₄₂  l₄₃  l₄₄⁻¹ ]
+    // Then to the bottom right 2×2 block:
+    // [ l₁₁                                ] = [ l₁₁                 ]
+    // [ l₂₁  l₂₂                           ]   [ l₂₁  l₂₂            ]
+    // [ l₃₁  l₃₂   l₃₃⁻¹                   ]   [ l₃₁  l₃₂  [       ] ]
+    // [ l₄₁  l₄₂  -l₄₄⁻¹ l₄₃ l₃₃⁻¹   l₄₄⁻¹ ]   [ l₄₁  l₄₂  [ L₃₃⁻¹ ] ]
+    // Then to the bottom right 3×3 block, and so on.
+    KOQKATOO_FULLY_UNROLLED_FOR (index_t j = RowsReg - 1; j >= 0; --j) {
+        // Invert diagonal element.
+        A1r(j, j) = 1 / A1r(j, j);
+        // Multiply current diagonal element with column j.
+        // -ℓ₂₁ ℓ₁₁⁻¹
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t i = RowsReg - 1; i > j; --i)
+            A1r(i, j) *= -A1r(j, j);
+        // Triangular matrix-vector product of bottom right block with column j.
+        // -L₂₂⁻¹ ℓ₂₁ ℓ₁₁⁻¹
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t c = RowsReg - 1; c > j; --c) {
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t i = RowsReg - 1; i > c; --i)
+                A1r(i, j) += A1r(i, c) * A1r(c, j);
+            A1r(c, j) *= A1r(c, c);
+        }
+    }
+
+    // Store matrix A₁ to memory again
+    auto Aout_cached = with_cached_access<RowsReg>(Aout);
+    KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < RowsReg; ++i)
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t j = 0; j <= i; ++j)
+            Aout_cached.store(A1r(i, j), i, j);
+
+    // Multiply A₂ by -A₁⁻¹
+    for (index_t k = RowsReg; k < rows; ++k) {
+        simd A2r[RowsReg]; // NOLINT(*-c-arrays)
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < RowsReg; ++i)
+            A2r[i] = Ain_cached.load(k, i);
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < RowsReg; ++i) {
+            A2r[i] *= -A1r(i, i);
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t j = i + 1; j < RowsReg; ++j)
+                A2r[i] -= A2r[j] * A1r(j, i);
+            Aout_cached.store(A2r[i], k, i);
+        }
+    }
+}
+
 /// Multiplication of lower trapezoidal column A by the top block of B, store
 /// result in B.
 /// A: rows×RowsReg lower trapezoidal

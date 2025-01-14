@@ -9,6 +9,11 @@ template <class Abi, index_t RowsReg>
 void xtrtri_trmm_microkernel(mut_single_batch_matrix_accessor<Abi> A,
                              index_t rows) noexcept;
 
+template <class Abi, index_t RowsReg>
+void xtrtri_trmm_copy_microkernel(single_batch_matrix_accessor<Abi> Ain,
+                                  mut_single_batch_matrix_accessor<Abi> Aout,
+                                  index_t rows) noexcept;
+
 template <class Abi, index_t RowsReg, index_t ColsReg>
 void xtrmm_microkernel(single_batch_matrix_accessor<Abi> A,
                        mut_single_batch_matrix_accessor<Abi> B,
@@ -29,6 +34,12 @@ template <class Abi>
 inline const constinit auto microkernel_lut =
     make_1d_lut<RowsReg>([]<index_t Row>(index_constant<Row>) {
         return xtrtri_trmm_microkernel<Abi, Row + 1>;
+    });
+
+template <class Abi>
+inline const constinit auto microkernel_copy_lut =
+    make_1d_lut<RowsReg>([]<index_t Row>(index_constant<Row>) {
+        return xtrtri_trmm_copy_microkernel<Abi, Row + 1>;
     });
 
 template <class Abi>

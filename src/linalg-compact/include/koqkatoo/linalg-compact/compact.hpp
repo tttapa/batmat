@@ -168,6 +168,13 @@ struct CompactBLAS {
     static void xtrtri(mut_single_batch_view L, PreferredBackend b);
     static void xtrtri(mut_batch_view L, PreferredBackend b);
 
+    /// L⁻¹
+    static void xtrtri_copy_ref(single_batch_view Lin, mut_single_batch_view L);
+    static void xtrtri_copy(single_batch_view Lin, mut_single_batch_view L,
+                            PreferredBackend b);
+    static void xtrtri_copy(batch_view Lin, mut_batch_view L,
+                            PreferredBackend b);
+
     /// C ← AB
     static void xgemm(single_batch_view A, single_batch_view B,
                       mut_single_batch_view C, PreferredBackend b);

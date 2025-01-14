@@ -99,6 +99,46 @@ TEST(xtrtri, xtrtriRect) {
     EXPECT_THAT(Linv, EigenAlmostEqual(L.leftCols(m), 1e-8));
 }
 
+TEST(xtrtri, xtrtriCopyRect) {
+    std::mt19937 rng{12345};
+    std::normal_distribution<real_t> nrml{0, 1};
+    using EMat = Eigen::MatrixX<real_t>;
+    index_t n = 13, m = 7;
+    EMat L(n, n);
+    EMat Linv(n, m);
+    std::ranges::generate(L.reshaped(), [&] { return nrml(rng); });
+    L.triangularView<Eigen::StrictlyUpper>().setZero();
+    EMat Linv_ref =
+        L.triangularView<Eigen::Lower>().solve(EMat::Identity(n, m));
+    linalg::compact::CompactBLAS<stdx::simd_abi::scalar>::xtrtri_copy_ref(
+        {{
+            .data         = L.data(),
+            .rows         = static_cast<index_t>(L.rows()),
+            .cols         = m,
+            .outer_stride = static_cast<index_t>(L.outerStride()),
+        }},
+        {{
+            .data         = Linv.data(),
+            .rows         = static_cast<index_t>(Linv.rows()),
+            .cols         = static_cast<index_t>(Linv.cols()),
+            .outer_stride = static_cast<index_t>(Linv.outerStride()),
+        }});
+    linalg::compact::CompactBLAS<stdx::simd_abi::scalar>::xtrsm_LLNN_ref(
+        {{
+            .data         = &L(m, m),
+            .rows         = n - m,
+            .cols         = n - m,
+            .outer_stride = static_cast<index_t>(L.outerStride()),
+        }},
+        {{
+            .data         = &Linv(m, 0),
+            .rows         = n - m,
+            .cols         = m,
+            .outer_stride = static_cast<index_t>(Linv.outerStride()),
+        }});
+    EXPECT_THAT(Linv_ref, EigenAlmostEqual(Linv.leftCols(m), 1e-8));
+}
+
 TEST(xtrtri, xtrtriRectBLAS) {
     std::mt19937 rng{12345};
     std::normal_distribution<real_t> nrml{0, 1};
