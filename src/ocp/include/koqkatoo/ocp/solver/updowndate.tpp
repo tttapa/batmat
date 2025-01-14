@@ -232,7 +232,7 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new,
         // Update LH and V
         compact_blas::xshhud_diag(LHV().batch(batch_idx), Z1j, Σj, be);
         auto LHi = LH().batch(batch_idx), Wi = Wᵀ().batch(batch_idx);
-        compact_blas::xcopy(LHi.top_left(nx + nu, nx), Wi);
+        compact_blas::xcopy_L(LHi.top_left(nx + nu, nx), Wi);
         compact_blas::xtrtri(Wi, be);
         compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), Wi.bottom_rows(nu),
                                  be);

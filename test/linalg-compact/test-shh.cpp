@@ -60,11 +60,11 @@ class ShhTest : public ::testing::Test {
         std::ranges::generate(A, [&] { return nrml(rng); });
         CompactBLAS_t::xsyrk(K, K̃, backend);
         K̃.view.add_to_diagonal(1);
-        CompactBLAS_t::xcopy(K̃, K);
+        CompactBLAS_t::xcopy_L(K̃, K);
         CompactBLAS_t::xsyrk_add(A, K, backend);
-        CompactBLAS_t::xcopy(K, L);
+        CompactBLAS_t::xcopy_L(K, L);
         CompactBLAS_t::xpotrf(L, backend);
-        CompactBLAS_t::xcopy(K̃, L̃);
+        CompactBLAS_t::xcopy_L(K̃, L̃);
         CompactBLAS_t::xpotrf(L̃, backend);
 
         // Perform the operation

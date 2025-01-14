@@ -67,11 +67,11 @@ class ShhUdDiagTest : public ::testing::Test {
         std::ranges::generate(D, [&] { return uni(rng); });
         CompactBLAS_t::xsyrk(K̃, K, backend);
         K.view.add_to_diagonal(10);
-        CompactBLAS_t::xcopy(K, K̃);
+        CompactBLAS_t::xcopy_L(K, K̃);
         CompactBLAS_t::xsyrk_schur_add(A, D, K̃, backend);
-        CompactBLAS_t::xcopy(K, L);
+        CompactBLAS_t::xcopy_L(K, L);
         CompactBLAS_t::xpotrf(L, backend);
-        CompactBLAS_t::xcopy(K̃, L̃);
+        CompactBLAS_t::xcopy_L(K̃, L̃);
         CompactBLAS_t::xpotrf(L̃, backend);
 
         // Perform the operation

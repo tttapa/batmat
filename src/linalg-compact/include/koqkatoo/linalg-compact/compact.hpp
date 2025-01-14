@@ -289,6 +289,10 @@ struct CompactBLAS {
     static void xcopy(single_batch_view A, mut_single_batch_view B);
     static void xcopy(batch_view A, mut_batch_view B);
 
+    /// B ← A (lower triangular part only)
+    static void xcopy_L(single_batch_view A, mut_single_batch_view B);
+    static void xcopy_L(batch_view A, mut_batch_view B);
+
     /// B ← Aᵀ
     static void xcopy_T(single_batch_view A, mut_single_batch_view B);
     static void xcopy_T(batch_view A, mut_batch_view B);

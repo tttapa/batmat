@@ -69,7 +69,7 @@ void Solver<Abi>::prepare_Ψi(index_t i) {
     auto [N, nx, nu, ny, ny_N] = storage.dim;
     auto LHi = LH().batch(i), Wi = Wᵀ().batch(i), Vi = V().batch(i);
     // Solve W = LH⁻¹ [I 0]ᵀ
-    compact_blas::xcopy(LHi.top_left(nx + nu, nx), Wi);
+    compact_blas::xcopy_L(LHi.top_left(nx + nu, nx), Wi);
     compact_blas::xtrtri(Wi, settings.preferred_backend);
     compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), Wi.bottom_rows(nu),
                              settings.preferred_backend);

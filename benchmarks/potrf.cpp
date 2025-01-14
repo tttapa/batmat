@@ -32,7 +32,7 @@ void dpotrf(benchmark::State &state) {
     CompactBLAS<Abi>::xgemm_TN(L, L, C, Backend);
     for (auto _ : state) {
         state.PauseTiming();
-        CompactBLAS<Abi>::xcopy(C, L);
+        CompactBLAS<Abi>::xcopy_L(C, L);
         state.ResumeTiming();
         benchmark::DoNotOptimize(L.data());
         CompactBLAS<Abi>::xpotrf(L, Backend);
@@ -43,7 +43,7 @@ void dpotrf(benchmark::State &state) {
     state.counters["GFLOP count"] = {1e-9 * flop_cnt};
     state.counters["GFLOPS"]      = {1e-9 * flop_cnt,
                                      benchmark::Counter::kIsIterationInvariantRate};
-    state.counters["depth"] = {dd};
+    state.counters["depth"]       = {dd};
 }
 
 template <class Abi, PreferredBackend Backend>
@@ -67,7 +67,7 @@ void dpotrf_recursive(benchmark::State &state) {
     CompactBLAS<Abi>::xgemm_TN(L, L, C, Backend);
     for (auto _ : state) {
         state.PauseTiming();
-        CompactBLAS<Abi>::xcopy(C, L);
+        CompactBLAS<Abi>::xcopy_L(C, L);
         state.ResumeTiming();
         benchmark::DoNotOptimize(L.data());
         CompactBLAS<Abi>::xpotrf_recursive(L, Backend);
@@ -100,7 +100,7 @@ void dpotrf_base(benchmark::State &state) {
     CompactBLAS<Abi>::xgemm_TN(L, L, C, Backend);
     for (auto _ : state) {
         state.PauseTiming();
-        CompactBLAS<Abi>::xcopy(C, L);
+        CompactBLAS<Abi>::xcopy_L(C, L);
         state.ResumeTiming();
         benchmark::DoNotOptimize(L.data());
         CompactBLAS<Abi>::xpotrf_base(L, Backend);
