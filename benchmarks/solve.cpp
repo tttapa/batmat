@@ -53,6 +53,10 @@ namespace sp = guanaqo::linalg::sparsity;
 
 static bool init_done = false;
 
+index_t potrf_op_count(index_t n) {
+    return (n + 1) * n * (n - 1) / 6 + n * (n - 1) / 2 + 2 * n;
+}
+
 void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
                    auto J, auto q, auto b, auto xu, auto Δλ) {
     auto [N, nx, nu, ny, ny_N] = ocp.dim;
@@ -84,21 +88,32 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
         KOQKATOO_TRACE("riccati factor", N);
         auto PN = LP.batch(N).bottom_right(nx, nx);
 #if USE_GEMMT_INEQ_SCHUR
-        auto ocpCN = ocp.C(N);
         index_t nJ = 0;
-        for (index_t c = 0; c < nx; ++c) {
-            nJ = 0;
-            for (index_t r = 0; r < ny_N; ++r)
-                if (J(N, r, 0)) {
-                    ΣCN(0, nJ, c) = Σ(N, r, 0) * (CN(0, nJ, c) = ocpCN(r, c));
-                    ++nJ;
-                }
+        {
+            KOQKATOO_TRACE("scale_penalty", N, nx * ny_N);
+            auto ocpCN = ocp.C(N);
+            for (index_t c = 0; c < nx; ++c) {
+                nJ = 0;
+                for (index_t r = 0; r < ny_N; ++r)
+                    if (J(N, r, 0)) {
+                        ΣCN(0, nJ, c) =
+                            Σ(N, r, 0) * (CN(0, nJ, c) = ocpCN(r, c));
+                        ++nJ;
+                    }
+            }
         }
-        PN(0) = ocp.Q(N);
-        koqkatoo::linalg::xgemmt(
-            CblasColMajor, CblasLower, CblasTrans, CblasNoTrans, PN.rows(), nJ,
-            real_t{1}, CN.data(), CN.outer_stride(), ΣCN.data(),
-            ΣCN.outer_stride(), real_t{1}, PN.data, PN.outer_stride());
+        {
+            KOQKATOO_TRACE("copy", N, PN.rows() * PN.rows());
+            PN(0) = ocp.Q(N);
+        }
+        {
+            KOQKATOO_TRACE("xgemmt_blas", N,
+                           PN.rows() * (PN.rows() + 1) * nJ / 2);
+            koqkatoo::linalg::xgemmt(
+                CblasColMajor, CblasLower, CblasTrans, CblasNoTrans, PN.rows(),
+                nJ, real_t{1}, CN.data(), CN.outer_stride(), ΣCN.data(),
+                ΣCN.outer_stride(), real_t{1}, PN.data, PN.outer_stride());
+        }
 #else
         scal_blas::mut_batch_view QN{{.data         = ocp.Q(N).data,
                                       .rows         = ocp.Q(N).rows,
@@ -113,47 +128,67 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
                                       PN.batch(0));
 #endif
         PN.add_to_diagonal(1 / S);
-        index_t info;
-        koqkatoo::linalg::xpotrf("L", PN.rows(), PN.data, PN.outer_stride(),
-                                 &info);
-        if (info != 0)
-            throw std::runtime_error(
-                std::format("cholesky fail {} in stage {}", info, N));
+        {
+            KOQKATOO_TRACE("xpotrf_blas", N, potrf_op_count(PN.rows()));
+            index_t info;
+            koqkatoo::linalg::xpotrf("L", PN.rows(), PN.data, PN.outer_stride(),
+                                     &info);
+            if (info != 0)
+                throw std::runtime_error(
+                    std::format("cholesky fail {} in stage {}", info, N));
+        }
     }
     for (index_t k = N; k-- > 0;) {
         KOQKATOO_TRACE("riccati factor", k);
-        LF(0)    = BA(k);
+        {
+            KOQKATOO_TRACE("copy", k, (nx + nu) * nu);
+            LF(0) = BA(k);
+        }
         auto Lxx = LP(k + 1).bottom_right(nx, nx);
-        koqkatoo::linalg::xtrmm(
-            CblasColMajor, CblasLeft, CblasLower, CblasTrans, CblasNonUnit,
-            LF(0).rows, LF(0).cols, real_t(1), Lxx.data, Lxx.outer_stride,
-            LF(0).data, LF(0).outer_stride);
+        {
+            KOQKATOO_TRACE("xtrmm_blas", k,
+                           LF.rows() * (LF.rows() + 1) * LF.cols() / 2);
+            koqkatoo::linalg::xtrmm(
+                CblasColMajor, CblasLeft, CblasLower, CblasTrans, CblasNonUnit,
+                LF(0).rows, LF(0).cols, real_t(1), Lxx.data, Lxx.outer_stride,
+                LF(0).data, LF(0).outer_stride);
+        }
         auto ocpCDk = ocp.CD(k);
 #if USE_GEMMT_INEQ_SCHUR
         index_t nJ = 0;
-        for (index_t c = 0; c < nx; ++c) {
-            nJ = 0;
-            for (index_t r = 0; r < ny; ++r)
-                if (J(k, r, 0)) {
-                    ΣDC(k, nJ, nu + c) =
-                        Σ(k, r, 0) * (DC(k, nJ, nu + c) = ocpCDk(r, c));
-                    ++nJ;
-                }
+        {
+            KOQKATOO_TRACE("scale_penalty", k, (nx + nu) * ny);
+            for (index_t c = 0; c < nx; ++c) {
+                nJ = 0;
+                for (index_t r = 0; r < ny; ++r)
+                    if (J(k, r, 0)) {
+                        ΣDC(k, nJ, nu + c) =
+                            Σ(k, r, 0) * (DC(k, nJ, nu + c) = ocpCDk(r, c));
+                        ++nJ;
+                    }
+            }
+            for (index_t c = 0; c < nu; ++c) {
+                nJ = 0;
+                for (index_t r = 0; r < ny; ++r)
+                    if (J(k, r, 0)) {
+                        ΣDC(k, nJ, c) =
+                            Σ(k, r, 0) * (DC(k, nJ, c) = ocpCDk(r, nx + c));
+                        ++nJ;
+                    }
+            }
         }
-        for (index_t c = 0; c < nu; ++c) {
-            nJ = 0;
-            for (index_t r = 0; r < ny; ++r)
-                if (J(k, r, 0)) {
-                    ΣDC(k, nJ, c) =
-                        Σ(k, r, 0) * (DC(k, nJ, c) = ocpCDk(r, nx + c));
-                    ++nJ;
-                }
+        {
+            KOQKATOO_TRACE("copy", k, LP.rows() * LP.cols());
+            LP(k) = RSQ(k);
         }
-        LP(k) = RSQ(k);
-        koqkatoo::linalg::xgemmt(
-            CblasColMajor, CblasLower, CblasTrans, CblasNoTrans, LP(k).rows, nJ,
-            real_t{1}, DC(k).data, DC(k).outer_stride, ΣDC(k).data,
-            ΣDC(k).outer_stride, real_t{1}, LP(k).data, LP(k).outer_stride);
+        {
+            KOQKATOO_TRACE("xgemmt_blas", k,
+                           LP.rows() * (LP.rows() + 1) * nJ / 2);
+            koqkatoo::linalg::xgemmt(
+                CblasColMajor, CblasLower, CblasTrans, CblasNoTrans, LP(k).rows,
+                nJ, real_t{1}, DC(k).data, DC(k).outer_stride, ΣDC(k).data,
+                ΣDC(k).outer_stride, real_t{1}, LP(k).data, LP(k).outer_stride);
+        }
 #else
         DC(k).left_cols(nu)  = ocpCDk.right_cols(nu);
         DC(k).right_cols(nx) = ocpCDk.left_cols(nx);
@@ -161,16 +196,23 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
                                       RSQ.batch(k), LP.batch(k));
 #endif
         LP(k).add_to_diagonal(1 / S);
-        koqkatoo::linalg::xsyrk(CblasColMajor, CblasLower, CblasTrans,
-                                LP.rows(), LF.rows(), real_t(1), LF.data(),
-                                LF.outer_stride(), real_t(1), LP(k).data,
-                                LP.outer_stride());
-        index_t info;
-        koqkatoo::linalg::xpotrf("L", LP.rows(), LP(k).data, LP(k).outer_stride,
-                                 &info);
-        if (info != 0)
-            throw std::runtime_error(
-                std::format("cholesky fail {} in stage {}", info, k));
+        {
+            KOQKATOO_TRACE("xsyrk_blas", k,
+                           LP.rows() * (LP.cols() + 1) * LF.rows() / 2);
+            koqkatoo::linalg::xsyrk(CblasColMajor, CblasLower, CblasTrans,
+                                    LP.rows(), LF.rows(), real_t(1), LF.data(),
+                                    LF.outer_stride(), real_t(1), LP(k).data,
+                                    LP.outer_stride());
+        }
+        {
+            KOQKATOO_TRACE("xpotrf_blas", k, potrf_op_count(LP.rows()));
+            index_t info;
+            koqkatoo::linalg::xpotrf("L", LP.rows(), LP(k).data,
+                                     LP(k).outer_stride, &info);
+            if (info != 0)
+                throw std::runtime_error(
+                    std::format("cholesky fail {} in stage {}", info, k));
+        }
     }
     static BatchedMatrix<real_t, index_t> p{{.depth = N + 1, .rows = nx}},
         Pb{{.depth = N + 1, .rows = nx}};
