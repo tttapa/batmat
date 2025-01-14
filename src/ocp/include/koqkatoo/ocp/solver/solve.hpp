@@ -73,6 +73,7 @@ struct Solver {
     mut_real_view AB() {
         return storage.AB().first_layers(storage.dim.N_horiz);
     }
+    scalar_mut_real_view LΨ_scalar() { return storage.LΨ_scalar(); }
     scalar_mut_real_view LΨd_scalar() { return storage.LΨd_scalar(); }
     scalar_mut_real_view LΨs_scalar() { return storage.LΨs_scalar(); }
     scalar_mut_real_view VVᵀ_scalar() { return storage.VVᵀ_scalar(); }

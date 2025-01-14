@@ -27,9 +27,9 @@ void Solver<Abi>::prepare_factor(index_t k, real_t S, real_view Σ,
     const auto stage_idx = k * simd_stride;
     const auto nd        = std::min(simd_stride, N + 1 - stage_idx),
                ni        = std::min(simd_stride, N - stage_idx);
-    auto wLΨd            = LΨd_scalar().middle_layers(stage_idx, nd),
-         wLΨs            = LΨs_scalar().middle_layers(stage_idx, ni),
-         wVV             = VVᵀ_scalar().middle_layers(stage_idx, ni);
+    auto LΨk             = LΨ_scalar().middle_layers(stage_idx, nd),
+         LΨdk            = LΨd_scalar().middle_layers(stage_idx, nd),
+         VVᵀk            = VVᵀ_scalar().middle_layers(stage_idx, ni);
     auto LHi = LH().batch(k), Wi = Wᵀ().batch(k);
     // Initialize V = F, it is computed while factorizing H
     if (k < AB().num_batches())
@@ -46,17 +46,17 @@ void Solver<Abi>::prepare_factor(index_t k, real_t S, real_view Σ,
     compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), Wi.bottom_rows(nu), be);
     // Compute WWᵀ
     compact_blas::xsyrk_T(Wi, WWᵀ().batch(k), be);
-    compact_blas::unpack_L(WWᵀ().batch(k), wLΨd);
     // TODO: exploit trapezoidal shape of Wᵀ
     // Compute VVᵀ
     if (k < AB().num_batches()) {
-        auto ni = std::min(simd_stride, N - stage_idx);
         // Compute -VWᵀ
         compact_blas::xgemm_neg(V().batch(k), Wi, VWᵀ().batch(k), be);
-        compact_blas::unpack(VWᵀ().batch(k), wLΨs);
+        compact_blas::unpack_L(storage.WWᵀVWᵀ().batch(k), LΨk);
         // TODO: exploit trapezoidal shape of Wᵀ
         compact_blas::xsyrk(V().batch(k), VVᵀ().batch(k), be);
-        compact_blas::unpack_L(VVᵀ().batch(k), wVV);
+        compact_blas::unpack_L(VVᵀ().batch(k), VVᵀk);
+    } else {
+        compact_blas::unpack_L(WWᵀ().batch(k), LΨdk);
     }
 }
 
@@ -67,17 +67,27 @@ void Solver<Abi>::tridiagonal_factor(index_t k) {
     const auto stage_idx = k * simd_stride;
     const auto nd        = std::min(simd_stride, N + 1 - stage_idx),
                ni        = std::min(simd_stride, N - stage_idx);
-    auto LΨdk            = LΨd_scalar().middle_layers(stage_idx, nd),
+    auto LΨk             = LΨ_scalar().middle_layers(stage_idx, nd),
+         LΨdk            = LΨd_scalar().middle_layers(stage_idx, ni),
          LΨsk            = LΨs_scalar().middle_layers(stage_idx, ni),
          VVᵀk            = VVᵀ_scalar().middle_layers(stage_idx, ni);
+    // TODO: Interestingly, the Reference backend without SIMD is quite fast,
+    //       but we should really be using BLASFEO instead ...
+    // const auto potrf_be  = linalg::compact::PreferredBackend::Reference;
+    const auto potrf_be              = settings.preferred_backend;
+    constexpr bool merged_potrf_trsm = true;
     // Add Θ to WWᵀ
     if (k > 0)
         LΨdk(0) += storage.VVᵀ_scalar()(stage_idx - 1);
     // Factor
     for (index_t j = 0; j < ni; ++j) {
-        scalar_blas::xpotrf(LΨdk.batch(j), settings.preferred_backend);
-        scalar_blas::xtrsm_RLTN(LΨdk.batch(j), LΨsk.batch(j),
-                                settings.preferred_backend);
+        if (merged_potrf_trsm) {
+            scalar_blas::xpotrf(LΨk.batch(j), potrf_be);
+        } else {
+            scalar_blas::xpotrf(LΨdk.batch(j), potrf_be);
+            scalar_blas::xtrsm_RLTN(LΨdk.batch(j), LΨsk.batch(j),
+                                    settings.preferred_backend);
+        }
         scalar_blas::xsyrk_sub(LΨsk.batch(j), VVᵀk.batch(j),
                                settings.preferred_backend);
         if (j + 1 < nd)
@@ -93,14 +103,14 @@ void Solver<Abi>::tridiagonal_factor(index_t k) {
             // store it.
             auto VVN = storage.VVᵀ_scalar();
             VVN(N - 1) += WWᵀ()(N);
-            scalar_blas::xpotrf(VVN.batch(N - 1), settings.preferred_backend);
+            scalar_blas::xpotrf(VVN.batch(N - 1), potrf_be);
             storage.LΨd_scalar()(N) = VVN(N - 1);
             // TODO: we could probably merge the copies/addition here
         } else {
             assert(last_j <= ni);
             // If the previous batch was not complete, Ld has already
             // been loaded and updated by VV - LsLs.
-            scalar_blas::xpotrf(LΨdk.batch(last_j), settings.preferred_backend);
+            scalar_blas::xpotrf(LΨdk.batch(last_j), potrf_be);
         }
     }
 }
@@ -475,7 +485,7 @@ void Solver<Abi>::updowndate_new(real_view Σ, bool_view J_old,
             single_mut_real_view A, single_real_view D) {
             using namespace linalg::compact::micro_kernels::shhud_diag;
             static constexpr index_constant<SizeR> R;
-            static constexpr index_constant<SizeS> S;
+            [[maybe_unused]] static constexpr index_constant<SizeS> S;
 
             using W_t = triangular_accessor<Abi, real_t, R>;
             alignas(W_t::alignment()) real_t W[W_t::size()];

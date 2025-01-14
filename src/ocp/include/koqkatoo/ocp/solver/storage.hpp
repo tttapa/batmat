@@ -107,7 +107,7 @@ struct SolverStorage {
         auto [N, nx, nu, ny, ny_N] = dim;
         return real_matrix{{
             .depth = N + 1,
-            .rows = 2*nx*ny + nx*(nu + nx) + nx*(nu + nx) + 2*nx*1 + 3*nx*nx + ny*(nu + nx) + ny*(nu + nx) + ny*(nu + 3*nx) + ny*ny + 2*ny*1 + (nu + nx)*(nu + 2*nx) + (nu + nx)*(nu + nx),
+            .rows = nx*(2*nx) + 2*nx*ny + nx*(nu + nx) + nx*(nu + nx) + nx*nx + 2*nx*1 + ny*(nu + nx) + ny*(nu + nx) + ny*(nu + 3*nx) + ny*ny + 2*ny*1 + (nu + nx)*(nu + 2*nx) + (nu + nx)*(nu + nx),
             .cols = 1,
         }};
     }();
@@ -125,8 +125,7 @@ struct SolverStorage {
     KQT_PRECOMPUTE_OFFSET(λ1, 6*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 4*(nx*nx));
     KQT_PRECOMPUTE_OFFSET(mFx, 6*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + nx + 4*(nx*nx));
     KQT_PRECOMPUTE_OFFSET(Wᵀ, 6*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 2*nx + 4*(nx*nx));
-    KQT_PRECOMPUTE_OFFSET(WWᵀ, 7*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 2*nx + 5*(nx*nx));
-    KQT_PRECOMPUTE_OFFSET(VWᵀ, 7*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 2*nx + 6*(nx*nx));
+    KQT_PRECOMPUTE_OFFSET(WWᵀVWᵀ, 7*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 2*nx + 5*(nx*nx));
     KQT_PRECOMPUTE_OFFSET(VVᵀ, 7*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 2*nx + 7*(nx*nx));
     KQT_PRECOMPUTE_OFFSET(Z, 7*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 2*nx + 8*(nx*nx));
     KQT_PRECOMPUTE_OFFSET(Z1, 7*nu*nx + 2*nu*ny + 2*(nu*nu) + 2*nx*ny + 2*nx + 8*(nx*nx));
@@ -171,14 +170,9 @@ struct SolverStorage {
         return stagewise_storage.view.middle_rows(Wᵀ_offset, nx*(nu + nx)).reshaped(nu + nx, nx);
     }
 
-    mut_real_view WWᵀ() {
+    mut_real_view WWᵀVWᵀ() {
         auto [N, nx, nu, ny, ny_N] = dim;
-        return stagewise_storage.view.middle_rows(WWᵀ_offset, nx*nx).reshaped(nx, nx);
-    }
-
-    mut_real_view VWᵀ() {
-        auto [N, nx, nu, ny, ny_N] = dim;
-        return stagewise_storage.view.middle_rows(VWᵀ_offset, nx*nx).reshaped(nx, nx);
+        return stagewise_storage.view.middle_rows(WWᵀVWᵀ_offset, nx*(2*nx)).reshaped(2*nx, nx);
     }
 
     mut_real_view VVᵀ() {
@@ -224,6 +218,9 @@ struct SolverStorage {
     #undef KQT_PRECOMPUTE_OFFSET
     // clang-format on
 
+    mut_real_view WWᵀ() { return WWᵀVWᵀ().top_rows(dim.nx); }
+    mut_real_view VWᵀ() { return WWᵀVWᵀ().bottom_rows(dim.nx); }
+
     scalar_real_matrix A_ud = [this] {
         return scalar_real_matrix{{.depth = 2, //
                                    .rows  = dim.nx,
@@ -258,21 +255,26 @@ struct SolverStorage {
         auto [N, nx, nu, ny, ny_N] = dim;
         return scalar_real_matrix{{
             .depth = N + 1,
-            .rows  = nx,
-            .cols  = 3 * nx,
+            .rows  = 3 * nx * nx,
+            .cols  = 1,
         }};
     }();
     std::vector<real_t> Δλ_scalar =
         std::vector<real_t>((dim.N_horiz + 1) * dim.nx);
 
+    [[nodiscard]] scalar_mut_real_view LΨ_scalar() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return work_chol_Ψ.view.top_rows(2 * nx * nx).reshaped(2 * nx, nx);
+    }
     [[nodiscard]] scalar_mut_real_view LΨd_scalar() {
-        return work_chol_Ψ.view.left_cols(dim.nx);
+        return LΨ_scalar().top_rows(dim.nx);
     }
     [[nodiscard]] scalar_mut_real_view LΨs_scalar() {
-        return work_chol_Ψ.view.middle_cols(dim.nx, dim.nx);
+        return LΨ_scalar().bottom_rows(dim.nx);
     }
     [[nodiscard]] scalar_mut_real_view VVᵀ_scalar() {
-        return work_chol_Ψ.view.middle_cols(2 * dim.nx, dim.nx);
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return work_chol_Ψ.view.bottom_rows(nx * nx).reshaped(nx, nx);
     }
 
     void copy_active_set(std::span<const bool> in, view_type<bool> out) const;

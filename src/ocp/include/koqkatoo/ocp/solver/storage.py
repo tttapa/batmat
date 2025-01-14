@@ -20,8 +20,7 @@ stage_matrices = {
     "λ1": (nx, 1),
     "mFx": (nx, 1),
     "Wᵀ": (nxu, nx),
-    "WWᵀ": (nx, nx),
-    "VWᵀ": (nx, nx),
+    "WWᵀVWᵀ": (2 * nx, nx),
     "VVᵀ": (nx, nx),
     "Z": (nxu, ny),  # assuming ny >= ny_N
     "Z1": (nxu + 2 * nx, ny),  # assuming ny >= ny_N
