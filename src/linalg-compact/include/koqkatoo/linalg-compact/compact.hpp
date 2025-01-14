@@ -314,6 +314,9 @@ struct CompactBLAS {
                        mut_single_batch_view y);
     static void xaxpby(real_t a, batch_view x, real_t b, mut_batch_view y);
 
+    /// L += A
+    static void xadd_L(single_batch_view A, mut_single_batch_view B);
+
     /// Sum
     template <class... Views>
     static void xadd_copy_impl(mut_batch_view out, batch_view x1, Views... xs)

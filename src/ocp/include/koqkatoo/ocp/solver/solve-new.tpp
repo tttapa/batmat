@@ -78,7 +78,7 @@ void Solver<Abi>::tridiagonal_factor(index_t k) {
     constexpr bool merged_potrf_trsm = true;
     // Add Θ to WWᵀ
     if (k > 0)
-        LΨdk(0) += storage.VVᵀ_scalar()(stage_idx - 1);
+        scalar_blas::xadd_L(VVᵀ_scalar().batch(stage_idx - 1), LΨdk.batch(0));
     // Factor
     for (index_t j = 0; j < ni; ++j) {
         if (merged_potrf_trsm) {
@@ -91,7 +91,7 @@ void Solver<Abi>::tridiagonal_factor(index_t k) {
         scalar_blas::xsyrk_sub(LΨsk.batch(j), VVᵀk.batch(j),
                                settings.preferred_backend);
         if (j + 1 < nd)
-            LΨdk(j + 1) += VVᵀk(j);
+            scalar_blas::xadd_L(VVᵀk.batch(j), LΨdk.batch(j + 1));
     }
     // If this was the last batch, factor Θ
     if ((k + 1) * simd_stride > N) {
@@ -102,9 +102,9 @@ void Solver<Abi>::tridiagonal_factor(index_t k) {
             // is in VV. We load and add WW to it, then factor it and
             // store it.
             auto VVN = storage.VVᵀ_scalar();
-            VVN(N - 1) += WWᵀ()(N);
+            VVN(N - 1) += WWᵀ()(N); // TODO: could be optimized
             scalar_blas::xpotrf(VVN.batch(N - 1), potrf_be);
-            storage.LΨd_scalar()(N) = VVN(N - 1);
+            scalar_blas::xcopy_L(VVN.batch(N - 1), LΨd_scalar().batch(N));
             // TODO: we could probably merge the copies/addition here
         } else {
             assert(last_j <= ni);
