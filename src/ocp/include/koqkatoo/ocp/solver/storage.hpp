@@ -58,7 +58,8 @@ struct SolverTypes {
         BatchedMatrix<real_t, index_t, simd_stride_t, index_t, simd_align_t>;
 
     /// Type that owns an arbitrary number of matrices.
-    using scalar_real_matrix = BatchedMatrix<real_t, index_t>;
+    using scalar_real_matrix =
+        BatchedMatrix<real_t, index_t, scalar_simd_stride_t>;
     /// Type that owns an arbitrary number of batches of boolean matrices.
     using mask_matrix =
         BatchedMatrix<bool, index_t, simd_stride_t, index_t, mask_align_t>;
@@ -72,7 +73,8 @@ struct SolverTypes {
                           scalar_simd_stride_t>;
     /// View of a scalar, non-interleaved batch of matrices.
     using scalar_mut_real_view =
-        BatchedMatrixView<real_t, index_t, scalar_simd_stride_t>;
+        BatchedMatrixView<real_t, index_t, scalar_simd_stride_t, index_t,
+                          index_t>;
     /// Layout of a scalar, non-interleaved batch of matrices.
     using scalar_layout = BatchedMatrixLayout<index_t, scalar_simd_stride_t>;
 };
@@ -100,76 +102,128 @@ struct SolverStorage {
 
     const OCPDim dim;
 
-    real_matrix H = [this] {
-        return real_matrix{{.depth = dim.N_horiz + 1, //
-                            .rows  = dim.nx + dim.nu,
-                            .cols  = dim.nx + dim.nu}};
+    // clang-format off
+    real_matrix stagewise_storage = [this] {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return real_matrix{{
+            .depth = N + 1,
+            .rows = 2*nx*ny + nx*(nu + nx) + nx*(nu + nx) + 2*nx*1 + 3*nx*nx + ny*(nu + nx) + ny*(nu + nx) + ny*(nu + 3*nx) + ny*ny + 2*ny*1 + (nu + nx)*(nu + 2*nx) + (nu + nx)*(nu + nx),
+            .cols = 1,
+        }};
     }();
-    real_matrix LHVW = [this] {
-        return real_matrix{{.depth = dim.N_horiz + 1, //
-                            .rows  = dim.nx + dim.nu + dim.nx,
-                            .cols  = dim.nx + dim.nu + dim.nx}};
-    }();
-    real_matrix CD = [this] {
-        return real_matrix{{.depth = dim.N_horiz + 1,
-                            .rows  = dim.ny, // assuming ny >= ny_N
-                            .cols  = dim.nx + dim.nu}};
-    }();
-    real_matrix LΨd = [this] {
-        return real_matrix{{.depth = dim.N_horiz + 1, //
-                            .rows  = dim.nx,
-                            .cols  = dim.nx}};
-    }();
-    scalar_layout scalar_layout_LΨd = [this] {
-        return scalar_layout{{.depth = dim.N_horiz + 1, //
-                              .rows  = dim.nx,
-                              .cols  = dim.nx}};
-    }();
-    real_matrix LΨs = [this] {
-        return real_matrix{{.depth = dim.N_horiz, //
-                            .rows  = dim.nx,
-                            .cols  = dim.nx}};
-    }();
-    scalar_layout scalar_layout_LΨs = [this] {
-        return scalar_layout{{.depth = dim.N_horiz, //
-                              .rows  = dim.nx,
-                              .cols  = dim.nx}};
-    }();
-    real_matrix Z = [this] {
-        return real_matrix{{.depth = dim.N_horiz + 1, //
-                            .rows  = dim.nx + dim.nu,
-                            .cols  = dim.ny}}; // assuming ny >= ny_N
-    }();
-    real_matrix Z1 = [this] {
-        return real_matrix{{.depth = dim.N_horiz + 1, //
-                            .rows  = dim.nx + dim.nu + dim.nx + dim.nx,
-                            .cols  = dim.ny}}; // assuming ny >= ny_N
-    }();
-    real_matrix Σ_sgn = [this] {
-        return real_matrix{{.depth = dim.N_horiz + 1, //
-                            .rows  = dim.ny,          // assuming ny >= ny_N
-                            .cols  = 1}};
-    }();
-    real_matrix Σ_ud = [this] {
-        return real_matrix{{.depth = dim.N_horiz + 1, //
-                            .rows  = dim.ny,          // assuming ny >= ny_N
-                            .cols  = 1}};
-    }();
-    real_matrix Lupd = [this] {
-        return real_matrix{{.depth = dim.N_horiz + 1, //
-                            .rows  = dim.ny,          // assuming ny >= ny_N
-                            .cols  = dim.ny}};
-    }();
-    real_matrix Wupd = [this] {
-        return real_matrix{{.depth = dim.N_horiz + 1, //
-                            .rows  = dim.nx,          // assuming ny >= ny_N
-                            .cols  = dim.ny}};
-    }();
-    real_matrix Vupd = [this] {
-        return real_matrix{{.depth = dim.N_horiz, //
-                            .rows  = dim.nx,      // assuming ny >= ny_N
-                            .cols  = dim.ny}};
-    }();
+
+    #define KQT_PRECOMPUTE_OFFSET(name, value)                                 \
+        const index_t name ## _offset = [this] {                               \
+            [[maybe_unused]] auto [N, nx, nu, ny, ny_N] = dim;                 \
+            return value;                                                      \
+        }()
+
+    static constexpr index_t CD_offset = 0;
+    KQT_PRECOMPUTE_OFFSET(H, nu*ny + nx*ny);
+    KQT_PRECOMPUTE_OFFSET(LHV, 2*nu*nx + nu*ny + nu*nu + nx*ny + nx*nx);
+    KQT_PRECOMPUTE_OFFSET(AB, 5*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 3*(nx*nx));
+    KQT_PRECOMPUTE_OFFSET(λ1, 6*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 4*(nx*nx));
+    KQT_PRECOMPUTE_OFFSET(mFx, 6*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + nx + 4*(nx*nx));
+    KQT_PRECOMPUTE_OFFSET(Wᵀ, 6*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 2*nx + 4*(nx*nx));
+    KQT_PRECOMPUTE_OFFSET(WWᵀ, 7*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 2*nx + 5*(nx*nx));
+    KQT_PRECOMPUTE_OFFSET(VWᵀ, 7*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 2*nx + 6*(nx*nx));
+    KQT_PRECOMPUTE_OFFSET(VVᵀ, 7*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 2*nx + 7*(nx*nx));
+    KQT_PRECOMPUTE_OFFSET(Z, 7*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 2*nx + 8*(nx*nx));
+    KQT_PRECOMPUTE_OFFSET(Z1, 7*nu*nx + 2*nu*ny + 2*(nu*nu) + 2*nx*ny + 2*nx + 8*(nx*nx));
+    KQT_PRECOMPUTE_OFFSET(Σ_sgn, 7*nu*nx + 3*nu*ny + 2*(nu*nu) + 5*nx*ny + 2*nx + 8*(nx*nx));
+    KQT_PRECOMPUTE_OFFSET(Σ_ud, 7*nu*nx + 3*nu*ny + 2*(nu*nu) + 5*nx*ny + 2*nx + 8*(nx*nx) + ny);
+    KQT_PRECOMPUTE_OFFSET(Lupd, 7*nu*nx + 3*nu*ny + 2*(nu*nu) + 5*nx*ny + 2*nx + 8*(nx*nx) + 2*ny);
+    KQT_PRECOMPUTE_OFFSET(Wupd, 7*nu*nx + 3*nu*ny + 2*(nu*nu) + 5*nx*ny + 2*nx + 8*(nx*nx) + ny*ny + 2*ny);
+    KQT_PRECOMPUTE_OFFSET(Vupd, 7*nu*nx + 3*nu*ny + 2*(nu*nu) + 6*nx*ny + 2*nx + 8*(nx*nx) + ny*ny + 2*ny);
+
+    mut_real_view CD() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(CD_offset, ny*(nu + nx)).reshaped(ny, nu + nx);
+    }
+
+    mut_real_view H() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(H_offset, (nu + nx)*(nu + nx)).reshaped(nu + nx, nu + nx);
+    }
+
+    mut_real_view LHV() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(LHV_offset, (nu + nx)*(nu + 2*nx)).reshaped(nu + 2*nx, nu + nx);
+    }
+
+    mut_real_view AB() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(AB_offset, nx*(nu + nx)).reshaped(nx, nu + nx);
+    }
+
+    mut_real_view λ1() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(λ1_offset, nx*1).reshaped(nx, 1);
+    }
+
+    mut_real_view mFx() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(mFx_offset, nx*1).reshaped(nx, 1);
+    }
+
+    mut_real_view Wᵀ() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(Wᵀ_offset, nx*(nu + nx)).reshaped(nu + nx, nx);
+    }
+
+    mut_real_view WWᵀ() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(WWᵀ_offset, nx*nx).reshaped(nx, nx);
+    }
+
+    mut_real_view VWᵀ() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(VWᵀ_offset, nx*nx).reshaped(nx, nx);
+    }
+
+    mut_real_view VVᵀ() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(VVᵀ_offset, nx*nx).reshaped(nx, nx);
+    }
+
+    mut_real_view Z() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(Z_offset, ny*(nu + nx)).reshaped(nu + nx, ny);
+    }
+
+    mut_real_view Z1() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(Z1_offset, ny*(nu + 3*nx)).reshaped(nu + 3*nx, ny);
+    }
+
+    mut_real_view Σ_sgn() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(Σ_sgn_offset, ny*1).reshaped(ny, 1);
+    }
+
+    mut_real_view Σ_ud() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(Σ_ud_offset, ny*1).reshaped(ny, 1);
+    }
+
+    mut_real_view Lupd() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(Lupd_offset, ny*ny).reshaped(ny, ny);
+    }
+
+    mut_real_view Wupd() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(Wupd_offset, nx*ny).reshaped(nx, ny);
+    }
+
+    mut_real_view Vupd() {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return stagewise_storage.view.middle_rows(Vupd_offset, nx*ny).reshaped(nx, ny);
+    }
+
+    #undef KQT_PRECOMPUTE_OFFSET
+    // clang-format on
+
     scalar_real_matrix A_ud = [this] {
         return scalar_real_matrix{{.depth = 2, //
                                    .rows  = dim.nx,
@@ -179,21 +233,6 @@ struct SolverStorage {
         return scalar_real_matrix{{.depth = 1, //
                                    .rows  = dim.N_horiz * dim.ny + dim.ny_N,
                                    .cols  = 1}};
-    }();
-    real_matrix AB = [this] {
-        return real_matrix{{.depth = dim.N_horiz, //
-                            .rows  = dim.nx,
-                            .cols  = dim.nx + dim.nu}};
-    }();
-    real_matrix λ1 = [this] {
-        return real_matrix{{.depth = dim.N_horiz, //
-                            .rows  = dim.nx,
-                            .cols  = 1}};
-    }();
-    real_matrix mFx = [this] {
-        return real_matrix{{.depth = dim.N_horiz, //
-                            .rows  = dim.nx,
-                            .cols  = 1}};
     }();
     index_matrix stagewise_update_counts = [this] {
         return index_matrix{{.depth = dim.N_horiz + 1, .rows = 1, .cols = 1}};
@@ -215,55 +254,25 @@ struct SolverStorage {
         return join_counters;
     }
 
-    std::vector<real_t> work_chol_Ψ =
-        std::vector<real_t>(3 * simd_stride * dim.nx * dim.nx);
+    scalar_real_matrix work_chol_Ψ = [this] {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        return scalar_real_matrix{{
+            .depth = N + 1,
+            .rows  = nx,
+            .cols  = 3 * nx,
+        }};
+    }();
     std::vector<real_t> Δλ_scalar =
         std::vector<real_t>((dim.N_horiz + 1) * dim.nx);
 
-    auto work_LΨd(index_t i) -> single_scalar_mut_real_view {
-        auto [N, nx, nu, ny, ny_N] = dim;
-        assert(i < simd_stride);
-        auto offset = i * 2 * nx * nx;
-        return {{.data = &work_chol_Ψ[offset], .rows = nx, .cols = nx}};
-    }
-
-    auto work_LΨs(index_t i) -> single_scalar_mut_real_view {
-        auto [N, nx, nu, ny, ny_N] = dim;
-        assert(i < simd_stride);
-        auto offset = (i * 2 + 1) * nx * nx;
-        return {{.data = &work_chol_Ψ[offset], .rows = nx, .cols = nx}};
-    }
-    auto work_LΨd() -> scalar_mut_real_view {
-        auto [N, nx, nu, ny, ny_N] = dim;
-        auto offset                = 0;
-        return {{.data  = &work_chol_Ψ[offset],
-                 .depth = simd_stride,
-                 .rows  = nx,
-                 .cols  = nx}};
-    }
-    auto work_LΨs() -> scalar_mut_real_view {
-        auto [N, nx, nu, ny, ny_N] = dim;
-        auto offset                = nx * nx * simd_stride;
-        return {{.data  = &work_chol_Ψ[offset],
-                 .depth = simd_stride,
-                 .rows  = nx,
-                 .cols  = nx}};
-    }
-    auto work_VV() -> scalar_mut_real_view {
-        auto [N, nx, nu, ny, ny_N] = dim;
-        auto offset                = 2 * nx * nx * simd_stride;
-        return {{.data  = &work_chol_Ψ[offset],
-                 .depth = simd_stride,
-                 .rows  = nx,
-                 .cols  = nx}};
-    }
-
     [[nodiscard]] scalar_mut_real_view LΨd_scalar() {
-        return {LΨd.data(), scalar_layout_LΨd};
+        return work_chol_Ψ.view.left_cols(dim.nx);
     }
-
     [[nodiscard]] scalar_mut_real_view LΨs_scalar() {
-        return {LΨs.data(), scalar_layout_LΨs};
+        return work_chol_Ψ.view.middle_cols(dim.nx, dim.nx);
+    }
+    [[nodiscard]] scalar_mut_real_view VVᵀ_scalar() {
+        return work_chol_Ψ.view.middle_cols(2 * dim.nx, dim.nx);
     }
 
     void copy_active_set(std::span<const bool> in, view_type<bool> out) const;

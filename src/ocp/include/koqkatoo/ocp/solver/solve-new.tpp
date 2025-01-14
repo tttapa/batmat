@@ -23,67 +23,66 @@ void Solver<Abi>::prepare_factor(index_t k, real_t S, real_view Σ,
     KOQKATOO_TRACE("factor prep", k);
     auto [N, nx, nu, ny, ny_N] = storage.dim;
     const auto be              = settings.preferred_backend;
+    // Get blocks of Ψ
+    const auto stage_idx = k * simd_stride;
+    const auto nd        = std::min(simd_stride, N + 1 - stage_idx),
+               ni        = std::min(simd_stride, N - stage_idx);
+    auto wLΨd            = LΨd_scalar().middle_layers(stage_idx, nd),
+         wLΨs            = LΨs_scalar().middle_layers(stage_idx, ni),
+         wVV             = VVᵀ_scalar().middle_layers(stage_idx, ni);
     auto LHi = LH().batch(k), Wi = Wᵀ().batch(k);
+    // Initialize V = F, it is computed while factorizing H
+    if (k < AB().num_batches())
+        compact_blas::xcopy(AB().batch(k), V().batch(k));
     // Compute H = Hℓ + GᵀΣJ G + Γ⁻¹
     compact_blas::xsyrk_T_schur_copy(CD().batch(k), Σ.batch(k), J.batch(k),
                                      H().batch(k), LHi);
     if (isfinite(S))
         LHi.add_to_diagonal(1 / S);
-    // Initialize V = F, it is computed while factorizing H
-    if (k < AB().num_batches())
-        compact_blas::xcopy(AB().batch(k), V().batch(k));
     // Factorize H (and solve V)
     compact_blas::xpotrf(LHV().batch(k), be);
     // Solve W = LH⁻¹ [I 0]ᵀ
     compact_blas::xtrtri_copy(LHi.top_left(nx + nu, nx), Wi, be);
     compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), Wi.bottom_rows(nu), be);
+    // Compute WWᵀ
+    compact_blas::xsyrk_T(Wi, WWᵀ().batch(k), be);
+    compact_blas::unpack_L(WWᵀ().batch(k), wLΨd);
+    // TODO: exploit trapezoidal shape of Wᵀ
     // Compute VVᵀ
     if (k < AB().num_batches()) {
-        compact_blas::xsyrk(V().batch(k), VV().batch(k), be);
+        auto ni = std::min(simd_stride, N - stage_idx);
         // Compute -VWᵀ
-        compact_blas::xgemm_neg(V().batch(k), Wi, LΨs().batch(k), be);
+        compact_blas::xgemm_neg(V().batch(k), Wi, VWᵀ().batch(k), be);
+        compact_blas::unpack(VWᵀ().batch(k), wLΨs);
         // TODO: exploit trapezoidal shape of Wᵀ
+        compact_blas::xsyrk(V().batch(k), VVᵀ().batch(k), be);
+        compact_blas::unpack_L(VVᵀ().batch(k), wVV);
     }
-    // Compute WWᵀ
-    compact_blas::xsyrk_T(Wi, LΨd().batch(k), be);
-    // TODO: exploit trapezoidal shape of Wᵀ
 }
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::tridiagonal_factor(index_t k) {
     KOQKATOO_TRACE("factor Ψ", k);
-    const auto N  = storage.dim.N_horiz;
-    const auto nd = std::min(simd_stride, N + 1 - k * simd_stride);
-    auto wLΨd = storage.work_LΨd(), wVV = storage.work_VV();
-    // Copy WWᵀ, add to Θ
-    compact_blas::unpack_L(LΨd().batch(k), wLΨd.first_layers(nd));
+    const auto N         = storage.dim.N_horiz;
+    const auto stage_idx = k * simd_stride;
+    const auto nd        = std::min(simd_stride, N + 1 - stage_idx),
+               ni        = std::min(simd_stride, N - stage_idx);
+    auto LΨdk            = LΨd_scalar().middle_layers(stage_idx, nd),
+         LΨsk            = LΨs_scalar().middle_layers(stage_idx, ni),
+         VVᵀk            = VVᵀ_scalar().middle_layers(stage_idx, ni);
+    // Add Θ to WWᵀ
     if (k > 0)
-        wLΨd(0) += wVV(simd_stride - 1);
-    // Copy -VWᵀ
-    auto ni = std::min(simd_stride, N - k * simd_stride);
-    if (ni > 0) {
-        auto wLΨs = storage.work_LΨs();
-        compact_blas::unpack(LΨs().batch(k), wLΨs.first_layers(ni));
-    }
-    // Copy VVᵀ and then factor all batches of Ψ
-    auto wLΨs = storage.work_LΨs();
-    // Copy VVᵀ
-    if (ni > 0)
-        compact_blas::unpack_L(VV().batch(k), wVV.first_layers(ni));
+        LΨdk(0) += storage.VVᵀ_scalar()(stage_idx - 1);
     // Factor
     for (index_t j = 0; j < ni; ++j) {
-        scalar_blas::xpotrf(wLΨd.batch(j), settings.preferred_backend);
-        scalar_blas::xtrsm_RLTN(wLΨd.batch(j), wLΨs.batch(j),
+        scalar_blas::xpotrf(LΨdk.batch(j), settings.preferred_backend);
+        scalar_blas::xtrsm_RLTN(LΨdk.batch(j), LΨsk.batch(j),
                                 settings.preferred_backend);
-        scalar_blas::xsyrk_sub(wLΨs.batch(j), wVV.batch(j),
+        scalar_blas::xsyrk_sub(LΨsk.batch(j), VVᵀk.batch(j),
                                settings.preferred_backend);
-        if (j + 1 < simd_stride)
-            wLΨd(j + 1) += wVV(j);
+        if (j + 1 < nd)
+            LΨdk(j + 1) += VVᵀk(j);
     }
-    for (index_t j = 0; j < ni; ++j)
-        storage.LΨd_scalar()(k * simd_stride + j) = wLΨd(j);
-    for (index_t j = 0; j < ni; ++j)
-        storage.LΨs_scalar()(k * simd_stride + j) = wLΨs(j);
     // If this was the last batch, factor Θ
     if ((k + 1) * simd_stride > N) {
         index_t last_j = N % simd_stride;
@@ -92,16 +91,16 @@ void Solver<Abi>::tridiagonal_factor(index_t k) {
             // If the previous batch was complete, the term VV - LsLs
             // is in VV. We load and add WW to it, then factor it and
             // store it.
-            wVV(simd_stride - 1) += LΨd()(N);
-            scalar_blas::xpotrf(wVV.batch(simd_stride - 1),
-                                settings.preferred_backend);
-            storage.LΨd_scalar()(N) = wVV(simd_stride - 1);
+            auto VVN = storage.VVᵀ_scalar();
+            VVN(N - 1) += WWᵀ()(N);
+            scalar_blas::xpotrf(VVN.batch(N - 1), settings.preferred_backend);
+            storage.LΨd_scalar()(N) = VVN(N - 1);
+            // TODO: we could probably merge the copies/addition here
         } else {
             assert(last_j <= ni);
             // If the previous batch was not complete, Ld has already
             // been loaded and updated by VV - LsLs.
-            scalar_blas::xpotrf(wLΨd.batch(last_j), settings.preferred_backend);
-            storage.LΨd_scalar()(N) = wLΨd(last_j);
+            scalar_blas::xpotrf(LΨdk.batch(last_j), settings.preferred_backend);
         }
     }
 }
@@ -150,7 +149,7 @@ void Solver<Abi>::solve_new(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
         .cols  = 1,
     }};
     assert(storage.Δλ_scalar.size() == static_cast<size_t>(Δλ_scal.size()));
-    auto &Δλ1 = storage.λ1;
+    auto Δλ1 = storage.λ1();
     auto LΨd = storage.LΨd_scalar(), LΨs = storage.LΨs_scalar();
 
     // Parallel solve Hv = g
@@ -329,9 +328,9 @@ void Solver<Abi>::recompute_inner(real_t S, real_view x0, real_view x,
             const auto i_end = std::min((k + 1) * simd_stride, N);
             for (index_t r = 0; r < nx; ++r)
                 for (index_t i = k * simd_stride; i < i_end; ++i)
-                    storage.λ1(i, r, 0) = λ(i + 1, r, 0);
+                    storage.λ1()(i, r, 0) = λ(i + 1, r, 0);
             // Mᵀλ(i) = -[A B]ᵀ(i) λ(i+1) + [I 0]ᵀ λ(i)
-            compact_blas::xgemv_T_sub(AB().batch(k), storage.λ1.batch(k),
+            compact_blas::xgemv_T_sub(AB().batch(k), storage.λ1().batch(k),
                                         Mᵀλ.batch(k), be);
         }
     };
@@ -382,9 +381,9 @@ real_t Solver<Abi>::recompute_outer(real_view x, real_view y, real_view λ,
             const auto i_end = std::min((k + 1) * simd_stride, N);
             for (index_t r = 0; r < nx; ++r)
                 for (index_t i = k * simd_stride; i < i_end; ++i)
-                    storage.λ1(i, r, 0) = λ(i + 1, r, 0);
+                    storage.λ1()(i, r, 0) = λ(i + 1, r, 0);
             // Mᵀλ(i) = -[A B]ᵀ(i) λ(i+1) + [I 0]ᵀ λ(i)
-            compact_blas::xgemv_T_sub(AB().batch(k), storage.λ1.batch(k),
+            compact_blas::xgemv_T_sub(AB().batch(k), storage.λ1().batch(k),
                                         Mᵀλ.batch(k), be);
         }
         // Norm of augmented lagrangian gradient
@@ -456,11 +455,11 @@ void Solver<Abi>::updowndate_new(real_view Σ, bool_view J_old,
             bool up   = J_new(k, r, 0) && !J_old(k, r, 0);
             bool down = !J_new(k, r, 0) && J_old(k, r, 0);
             if (up || down) {
-                storage.Σ_sgn(k, rj, 0) = up ? +real_t(0) : -real_t(0);
-                storage.Σ_ud(k, rj, 0)  = Σ(k, r, 0);
-                index_t nxuk            = k == N ? nx : nx + nu;
+                storage.Σ_sgn()(k, rj, 0) = up ? +real_t(0) : -real_t(0);
+                storage.Σ_ud()(k, rj, 0)  = Σ(k, r, 0);
+                index_t nxuk              = k == N ? nx : nx + nu;
                 for (index_t c = 0; c < nxuk; ++c) // TODO: pre-transpose CD?
-                    storage.Z(k, c, rj) = CD()(k, r, c);
+                    storage.Z()(k, c, rj) = CD()(k, r, c);
                 ++rj;
             }
         }
@@ -513,12 +512,12 @@ void Solver<Abi>::updowndate_new(real_view Σ, bool_view J_old,
     // Prepare the updates of Ψ and H (Woodbury and computation of ̃W)
     const auto updowndate_stage = [&](index_t batch_idx, index_t rj_min,
                                       index_t rj_batch, auto ranksj) {
-        auto Σj    = storage.Σ_ud.batch(batch_idx).top_rows(rj_batch);
-        auto Sj    = storage.Σ_sgn.batch(batch_idx).top_rows(rj_batch);
-        auto Zj    = storage.Z.batch(batch_idx).left_cols(rj_batch);
-        auto Z1j   = storage.Z1.batch(batch_idx).left_cols(rj_batch);
-        auto Luj   = storage.Lupd.batch(batch_idx).top_left(rj_batch, rj_batch);
-        auto Wuj   = storage.Wupd.batch(batch_idx).left_cols(rj_batch);
+        auto Σj  = storage.Σ_ud().batch(batch_idx).top_rows(rj_batch);
+        auto Sj  = storage.Σ_sgn().batch(batch_idx).top_rows(rj_batch);
+        auto Zj  = storage.Z().batch(batch_idx).left_cols(rj_batch);
+        auto Z1j = storage.Z1().batch(batch_idx).left_cols(rj_batch);
+        auto Luj = storage.Lupd().batch(batch_idx).top_left(rj_batch, rj_batch);
+        auto Wuj = storage.Wupd().batch(batch_idx).left_cols(rj_batch);
         using simd = typename types::simd;
 #ifdef _GLIBCXX_EXPERIMENTAL_SIMD // TODO: need general way to convert masks
         using index_simd = typename types::index_simd;
@@ -563,16 +562,16 @@ void Solver<Abi>::updowndate_new(real_view Σ, bool_view J_old,
         compact_blas::xgemm_TN(Wᵀ().batch(batch_idx), Zj, Wuj, be);
         if (batch_idx < AB().num_batches()) {
             // Vu ← -V Z
-            auto Vuj = storage.Vupd.batch(batch_idx).left_cols(rj_batch);
+            auto Vuj = storage.Vupd().batch(batch_idx).left_cols(rj_batch);
             compact_blas::xgemm_neg(V().batch(batch_idx), Zj, Vuj, be);
         }
     };
 
     // Factorization updates of H, V and Wᵀ
     const auto updowndate_stage_H = [&](index_t batch_idx, index_t rj_batch) {
-        auto Σj    = storage.Σ_ud.batch(batch_idx).top_rows(rj_batch);
-        auto Sj    = storage.Σ_sgn.batch(batch_idx).top_rows(rj_batch);
-        auto Z1j   = storage.Z1.batch(batch_idx).left_cols(rj_batch);
+        auto Σj    = storage.Σ_ud().batch(batch_idx).top_rows(rj_batch);
+        auto Sj    = storage.Σ_sgn().batch(batch_idx).top_rows(rj_batch);
+        auto Z1j   = storage.Z1().batch(batch_idx).left_cols(rj_batch);
         using simd = typename types::simd;
         for (index_t r = 0; r < rj_batch; ++r) {
             simd s{&Sj(0, r, 0), stdx::vector_aligned};
@@ -644,10 +643,10 @@ void Solver<Abi>::updowndate_new(real_view Σ, bool_view J_old,
         colsA += rN;
         if (colsA > 0) {
             auto Ad = A(N % 2).left_cols(colsA), Ld = LΨd_scalar()(N);
-            Ad.right_cols(rN) = storage.Wupd(N).left_cols(rN);
+            Ad.right_cols(rN) = storage.Wupd()(N).left_cols(rN);
             W_t W;
             auto Dd            = D(0).top_rows(colsA);
-            Dd.bottom_rows(rN) = storage.Σ_sgn(N).top_rows(rN);
+            Dd.bottom_rows(rN) = storage.Σ_sgn()(N).top_rows(rN);
             std::span<real_t> Dd_spn{Dd.data, static_cast<size_t>(Dd.rows)};
 
             // Process all diagonal blocks (in multiples of R, except the last).
@@ -676,11 +675,11 @@ void Solver<Abi>::updowndate_new(real_view Σ, bool_view J_old,
             return;
         auto Ad = A(k % 2).left_cols(colsA), Ld = LΨd_scalar()(k);
         auto As = A((k + 1) % 2).left_cols(colsA), Ls = LΨs_scalar()(k);
-        Ad.right_cols(rk) = storage.Wupd(k).left_cols(rk);
-        As.right_cols(rk) = storage.Vupd(k).left_cols(rk);
+        Ad.right_cols(rk) = storage.Wupd()(k).left_cols(rk);
+        As.right_cols(rk) = storage.Vupd()(k).left_cols(rk);
         W_t W;
         auto Dd            = D(0).top_rows(colsA);
-        Dd.bottom_rows(rk) = storage.Σ_sgn(k).top_rows(rk);
+        Dd.bottom_rows(rk) = storage.Σ_sgn()(k).top_rows(rk);
         std::span<real_t> Dd_spn{Dd.data, static_cast<size_t>(Dd.rows)};
 
         // Process all diagonal blocks (in multiples of R, except the last).

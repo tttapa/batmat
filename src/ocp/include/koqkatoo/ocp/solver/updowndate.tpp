@@ -20,6 +20,8 @@
 
 namespace koqkatoo::ocp {
 
+#if 0                             // TODO
+
 template <simd_abi_tag Abi>
 void Solver<Abi>::updowndate_ψ() {
     auto [N, nx, nu, ny, ny_N] = storage.dim;
@@ -278,5 +280,7 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new,
         updowndate_ψ();
     }
 }
+
+#endif
 
 } // namespace koqkatoo::ocp

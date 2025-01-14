@@ -85,7 +85,8 @@ TEST(OCP, reconstructRandom) {
         std::this_thread::sleep_for(10ms);
         guanaqo::timed(t_prep_Ψ, [&] { s.prepare_Ψ(); });
         std::this_thread::sleep_for(10ms);
-        guanaqo::timed(t_chol_Ψ, [&] { s.cholesky_Ψ(); });
+        guanaqo::timed(t_chol_Ψ, // TODO
+                       [&] { s.factor_new(1e100, Σ_strided, J_strided); });
         std::this_thread::sleep_for(10ms);
         λ = r;
         guanaqo::timed(t_solve_λ, [&] { s.solve_Ψ_scalar(as_span(λ)); });
@@ -228,7 +229,7 @@ TEST(OCP, reconstructRandom) {
     mat WᵀW_rec(nx, nx);
     for (index_t c = 0; c < nx; ++c)
         for (index_t r = c; r < nx; ++r)
-            WᵀW_rec(r, c) = s.LΨd()(0, r, c);
+            WᵀW_rec(r, c) = s.WWᵀ()(0, r, c);
     WᵀW_rec.triangularView<Eigen::Upper>() =
         WᵀW_rec.triangularView<Eigen::Lower>().transpose();
 
@@ -242,13 +243,13 @@ TEST(OCP, reconstructRandom) {
     for (index_t i = 0; i < N + 1; ++i) {
         for (index_t c = 0; c < nx; ++c) {
             for (index_t r = c; r < nx; ++r) {
-                Ψ_rec(i * nx + r, i * nx + c) = s.LΨd()(i, r, c);
+                Ψ_rec(i * nx + r, i * nx + c) = s.WWᵀ()(i, r, c);
                 if (i > 0)
-                    Ψ_rec(i * nx + r, i * nx + c) += s.VV()(i - 1, r, c);
+                    Ψ_rec(i * nx + r, i * nx + c) += s.VVᵀ()(i - 1, r, c);
             }
             for (index_t r = 0; r < nx; ++r) {
                 if (i < N)
-                    Ψ_rec(i * nx + r + nx, i * nx + c) = s.LΨs()(i, r, c);
+                    Ψ_rec(i * nx + r + nx, i * nx + c) = s.VWᵀ()(i, r, c);
             }
         }
     }

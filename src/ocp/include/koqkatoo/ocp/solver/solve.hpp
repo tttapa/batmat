@@ -55,33 +55,27 @@ struct Solver {
             prepare_Ψ;
     };
 
-    mut_real_view H() { return storage.H; }
-    mut_real_view LHV() {
-        auto [N, nx, nu, ny, ny_N] = storage.dim;
-        return storage.LHVW.view.left_cols(nx + nu);
-    }
+    mut_real_view H() { return storage.H(); }
+    mut_real_view LHV() { return storage.LHV(); }
     mut_real_view LH() {
-        auto [N, nx, nu, ny, ny_N] = storage.dim;
-        return storage.LHVW.view.top_left(nx + nu, nx + nu);
+        return LHV().top_rows(storage.dim.nx + storage.dim.nu);
     }
-    mut_real_view V() {
-        auto [N, nx, nu, ny, ny_N] = storage.dim;
-        return storage.LHVW.view.bottom_left(nx, nx + nu);
+    mut_real_view V() { return storage.LHV().bottom_rows(storage.dim.nx); }
+    mut_real_view Wᵀ() { return storage.Wᵀ(); }
+    mut_real_view VVᵀ() {
+        return storage.VVᵀ().first_layers(storage.dim.N_horiz);
     }
-    mut_real_view Wᵀ() {
-        auto [N, nx, nu, ny, ny_N] = storage.dim;
-        return storage.LHVW.view.top_right(nx + nu, nx);
+    mut_real_view VWᵀ() {
+        return storage.VWᵀ().first_layers(storage.dim.N_horiz);
     }
-    mut_real_view VV() {
-        auto [N, nx, nu, ny, ny_N] = storage.dim;
-        return storage.LHVW.view.bottom_right(nx, nx);
+    mut_real_view WWᵀ() { return storage.WWᵀ(); }
+    mut_real_view CD() { return storage.CD(); }
+    mut_real_view AB() {
+        return storage.AB().first_layers(storage.dim.N_horiz);
     }
-    mut_real_view CD() { return storage.CD; }
-    mut_real_view LΨd() { return storage.LΨd; }
-    mut_real_view LΨs() { return storage.LΨs; }
     scalar_mut_real_view LΨd_scalar() { return storage.LΨd_scalar(); }
     scalar_mut_real_view LΨs_scalar() { return storage.LΨs_scalar(); }
-    mut_real_view AB() { return storage.AB; }
+    scalar_mut_real_view VVᵀ_scalar() { return storage.VVᵀ_scalar(); }
 
     /// Overwrites the Cholesky factors of H (LH) with H + CDᵀ Σ CD.
     void schur_complement_H(real_view Σ, bool_view J);

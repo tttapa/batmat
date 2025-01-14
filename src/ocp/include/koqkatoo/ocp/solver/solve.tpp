@@ -73,12 +73,12 @@ void Solver<Abi>::prepare_Ψi(index_t i) {
     compact_blas::xtrtri(Wi, settings.preferred_backend);
     compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), Wi.bottom_rows(nu),
                              settings.preferred_backend);
-    compact_blas::xsyrk_T(Wi, LΨd().batch(i), settings.preferred_backend);
+    compact_blas::xsyrk_T(Wi, WWᵀ().batch(i), settings.preferred_backend);
     if (i < AB().num_batches()) {
         // Store V(i) = VVᵀ
-        compact_blas::xsyrk(Vi, VV().batch(i), settings.preferred_backend);
+        compact_blas::xsyrk(Vi, VVᵀ().batch(i), settings.preferred_backend);
         // Store LΨ(i+1,i) = -VW
-        compact_blas::xgemm_neg(Vi, Wi, LΨs().batch(i),
+        compact_blas::xgemm_neg(Vi, Wi, VWᵀ().batch(i),
                                 settings.preferred_backend);
     }
 }
@@ -139,6 +139,8 @@ void Solver<Abi>::prepare_all(real_t S, real_view Σ, bool_view J, Timings &t) {
     t.cholesky_H.wall_time += timer_t{timer_cholesky_H};
     t.prepare_Ψ.wall_time += timer_t{timer_prepare_Ψ};
 }
+
+#if 0
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::cholesky_Ψ() {
@@ -418,65 +420,6 @@ void Solver<Abi>::cholesky_Ψ(Timings &t) {
 }
 
 template <simd_abi_tag Abi>
-void Solver<Abi>::solve_Ψ_scalar(std::span<real_t> λ) {
-    auto [N, nx, nu, ny, ny_N] = storage.dim;
-    scalar_mut_real_view λ_{{.data = λ.data(), .depth = N + 1, .rows = nx}};
-    for (index_t i = 0; i < N + 1; ++i) {
-        // λ[i] = L[i,i]⁻¹ b[i]
-        scalar_blas::xtrsm_LLNN(storage.LΨd_scalar().batch(i), λ_.batch(i),
-                                settings.preferred_backend);
-        if (i < N) {
-            // b[i+1] -= L[i+1,i] λ[i]
-            scalar_blas::xgemm_sub(storage.LΨs_scalar().batch(i), λ_.batch(i),
-                                   λ_.batch(i + 1), settings.preferred_backend);
-        }
-    }
-    for (index_t i = N + 1; i-- > 0;) {
-        // λ[i] = L[i,i]⁻ᵀ b[i]
-        scalar_blas::xtrsm_LLTN(storage.LΨd_scalar().batch(i), λ_.batch(i),
-                                settings.preferred_backend);
-        if (i > 0) {
-            // b[i-1] -= L[i,i-1]ᵀ λ[i]
-            scalar_blas::xgemm_TN_sub(storage.LΨs_scalar().batch(i - 1),
-                                      λ_.batch(i), λ_.batch(i - 1),
-                                      settings.preferred_backend);
-        }
-    }
-}
-
-template <simd_abi_tag Abi>
-void Solver<Abi>::solve_Ψ_scalar(std::span<real_t> λ, Timings &t) {
-    auto [N, nx, nu, ny, ny_N] = storage.dim;
-    scalar_mut_real_view λ_{{.data = λ.data(), .depth = N + 1, .rows = nx}};
-    std::optional<guanaqo::Timed<typename Timings::type>> timer;
-    for (index_t i = 0; i < N + 1; ++i) {
-        timer.emplace(t.solve_Ψ_solve);
-        // λ[i] = L[i,i]⁻¹ b[i]
-        scalar_blas::xtrsm_LLNN(storage.LΨd_scalar().batch(i), λ_.batch(i),
-                                settings.preferred_backend);
-        if (i < N) {
-            timer.emplace(t.solve_Ψ_gemm);
-            // b[i+1] -= L[i+1,i] λ[i]
-            scalar_blas::xgemm_sub(storage.LΨs_scalar().batch(i), λ_.batch(i),
-                                   λ_.batch(i + 1), settings.preferred_backend);
-        }
-    }
-    for (index_t i = N + 1; i-- > 0;) {
-        timer.emplace(t.solve_Ψ_solve_tp);
-        // λ[i] = L[i,i]⁻ᵀ b[i]
-        scalar_blas::xtrsm_LLTN(storage.LΨd_scalar().batch(i), λ_.batch(i),
-                                settings.preferred_backend);
-        if (i > 0) {
-            timer.emplace(t.solve_Ψ_gemm_tp);
-            // b[i-1] -= L[i,i-1]ᵀ λ[i]
-            scalar_blas::xgemm_TN_sub(storage.LΨs_scalar().batch(i - 1),
-                                      λ_.batch(i), λ_.batch(i - 1),
-                                      settings.preferred_backend);
-        }
-    }
-}
-
-template <simd_abi_tag Abi>
 void Solver<Abi>::factor(real_t S, real_view Σ, bool_view J) {
     prepare_all(S, Σ, J);
     cholesky_Ψ();
@@ -631,6 +574,67 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
           [&] { compact_blas::xsub_copy(d, MᵀΔλ, Mᵀλ, grad, Aᵀŷ); });
     // d ← H⁻¹ d
     timed(t.solve_H_2, &Solver::solve_H, this, d);
+}
+
+#endif
+
+template <simd_abi_tag Abi>
+void Solver<Abi>::solve_Ψ_scalar(std::span<real_t> λ) {
+    auto [N, nx, nu, ny, ny_N] = storage.dim;
+    scalar_mut_real_view λ_{{.data = λ.data(), .depth = N + 1, .rows = nx}};
+    for (index_t i = 0; i < N + 1; ++i) {
+        // λ[i] = L[i,i]⁻¹ b[i]
+        scalar_blas::xtrsm_LLNN(storage.LΨd_scalar().batch(i), λ_.batch(i),
+                                settings.preferred_backend);
+        if (i < N) {
+            // b[i+1] -= L[i+1,i] λ[i]
+            scalar_blas::xgemm_sub(storage.LΨs_scalar().batch(i), λ_.batch(i),
+                                   λ_.batch(i + 1), settings.preferred_backend);
+        }
+    }
+    for (index_t i = N + 1; i-- > 0;) {
+        // λ[i] = L[i,i]⁻ᵀ b[i]
+        scalar_blas::xtrsm_LLTN(storage.LΨd_scalar().batch(i), λ_.batch(i),
+                                settings.preferred_backend);
+        if (i > 0) {
+            // b[i-1] -= L[i,i-1]ᵀ λ[i]
+            scalar_blas::xgemm_TN_sub(storage.LΨs_scalar().batch(i - 1),
+                                      λ_.batch(i), λ_.batch(i - 1),
+                                      settings.preferred_backend);
+        }
+    }
+}
+
+template <simd_abi_tag Abi>
+void Solver<Abi>::solve_Ψ_scalar(std::span<real_t> λ, Timings &t) {
+    auto [N, nx, nu, ny, ny_N] = storage.dim;
+    scalar_mut_real_view λ_{{.data = λ.data(), .depth = N + 1, .rows = nx}};
+    std::optional<guanaqo::Timed<typename Timings::type>> timer;
+    for (index_t i = 0; i < N + 1; ++i) {
+        timer.emplace(t.solve_Ψ_solve);
+        // λ[i] = L[i,i]⁻¹ b[i]
+        scalar_blas::xtrsm_LLNN(storage.LΨd_scalar().batch(i), λ_.batch(i),
+                                settings.preferred_backend);
+        if (i < N) {
+            timer.emplace(t.solve_Ψ_gemm);
+            // b[i+1] -= L[i+1,i] λ[i]
+            scalar_blas::xgemm_sub(storage.LΨs_scalar().batch(i), λ_.batch(i),
+                                   λ_.batch(i + 1), settings.preferred_backend);
+        }
+    }
+    for (index_t i = N + 1; i-- > 0;) {
+        timer.emplace(t.solve_Ψ_solve_tp);
+        // λ[i] = L[i,i]⁻ᵀ b[i]
+        scalar_blas::xtrsm_LLTN(storage.LΨd_scalar().batch(i), λ_.batch(i),
+                                settings.preferred_backend);
+        if (i > 0) {
+            timer.emplace(t.solve_Ψ_gemm_tp);
+            // b[i-1] -= L[i,i-1]ᵀ λ[i]
+            scalar_blas::xgemm_TN_sub(storage.LΨs_scalar().batch(i - 1),
+                                      λ_.batch(i), λ_.batch(i - 1),
+                                      settings.preferred_backend);
+        }
+    }
 }
 
 template <simd_abi_tag Abi>

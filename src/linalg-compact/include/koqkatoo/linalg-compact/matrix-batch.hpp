@@ -29,7 +29,7 @@ using integral_value_type_t = typename integral_value_type<T>::type;
 
 struct DefaultStride {
     DefaultStride() = default;
-    DefaultStride(index_t) {}
+    DefaultStride(index_t) {} // TODO: this is error prone
 };
 
 template <class I = ptrdiff_t, class S = std::integral_constant<I, 1>,
@@ -379,7 +379,7 @@ struct BatchedMatrixView {
     template <class N>
     [[nodiscard]] BatchedMatrixView<T, I, S, N, L> middle_layers(index_type l,
                                                                  N n) const {
-        assert(l + n < depth());
+        assert(l + n <= depth());
         return {{.data         = data + layout.layer_index(l),
                  .depth        = n,
                  .rows         = rows(),
@@ -480,6 +480,21 @@ struct BatchedMatrixView {
     }
     [[nodiscard, gnu::always_inline]] bool has_full_layer_stride() const {
         return layout.has_full_layer_stride();
+    }
+
+    [[nodiscard]] col_slice_view_type reshaped(index_type rows,
+                                               index_type cols) const {
+        assert(this->rows() == this->outer_stride() || this->cols() == 1);
+        assert(rows * cols == this->rows() * this->cols());
+        return col_slice_view_type{
+            typename col_slice_view_type::PlainBatchedMatrixView{
+                .data         = data,
+                .depth        = depth(),
+                .rows         = rows,
+                .cols         = cols,
+                .outer_stride = rows,
+                .batch_size   = batch_size(),
+                .layer_stride = layer_stride()}};
     }
 
     [[nodiscard]] BatchedMatrixView top_rows(index_type n) const {

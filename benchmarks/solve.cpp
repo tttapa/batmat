@@ -519,10 +519,6 @@ void benchmark_solve(benchmark::State &state) {
 #endif
 }
 
-BENCHMARK(benchmark_solve<stdx::simd_abi::deduce_t<real_t, 8>, false>);
-BENCHMARK(benchmark_solve<stdx::simd_abi::deduce_t<real_t, 4>, false>);
-BENCHMARK(benchmark_solve<stdx::simd_abi::deduce_t<real_t, 2>, false>);
-BENCHMARK(benchmark_solve<stdx::simd_abi::scalar, false>);
 BENCHMARK(benchmark_solve<stdx::simd_abi::deduce_t<real_t, 8>>);
 BENCHMARK(benchmark_solve<stdx::simd_abi::deduce_t<real_t, 4>>);
 BENCHMARK(benchmark_solve<stdx::simd_abi::deduce_t<real_t, 2>>);
