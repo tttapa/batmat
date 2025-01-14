@@ -129,8 +129,8 @@ void CompactBLAS<Abi>::xsyrk_sub_ref(single_batch_view A,
     const index_t A_cache_sto_size = A.ceil_depth() * M_cache * K_cache;
     const index_t B_size           = A.ceil_depth() * K * N;
     const index_t A_size           = A.ceil_depth() * M * K;
-    const bool pack_B = B_size >= 2 * B_cache_sto_size; // TODO: tune
-    const bool pack_A = A_size >= 2 * A_cache_sto_size; // TODO: tune
+    const bool pack_B = B_size >= 32 * B_cache_sto_size; // TODO: tune
+    const bool pack_A = A_size >= 32 * A_cache_sto_size; // TODO: tune
     sto_t B_cache_sto{static_cast<size_t>(B_cache_sto_size), uninitialized};
     sto_t A_cache_sto{static_cast<size_t>(A_cache_sto_size), uninitialized};
 
