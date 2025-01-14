@@ -39,7 +39,8 @@ struct SolverTypes {
 
     /// View of an arbitrary number of batches of matrices.
     template <class T>
-    using view_type = BatchedMatrixView<T, index_t, simd_stride_t>;
+    using view_type =
+        BatchedMatrixView<T, index_t, simd_stride_t, index_t, index_t>;
     /// View of an arbitrary number of batches of matrices.
     using real_view = view_type<const real_t>;
     /// View of an arbitrary number of batches of matrices.
@@ -104,10 +105,10 @@ struct SolverStorage {
                             .rows  = dim.nx + dim.nu,
                             .cols  = dim.nx + dim.nu}};
     }();
-    real_matrix LHV = [this] {
+    real_matrix LHVW = [this] {
         return real_matrix{{.depth = dim.N_horiz + 1, //
                             .rows  = dim.nx + dim.nu + dim.nx,
-                            .cols  = dim.nx + dim.nu}};
+                            .cols  = dim.nx + dim.nu + dim.nx}};
     }();
     real_matrix CD = [this] {
         return real_matrix{{.depth = dim.N_horiz + 1,
@@ -133,11 +134,6 @@ struct SolverStorage {
         return scalar_layout{{.depth = dim.N_horiz, //
                               .rows  = dim.nx,
                               .cols  = dim.nx}};
-    }();
-    real_matrix Wᵀ = [this] {
-        return real_matrix{{.depth = dim.N_horiz + 1, //
-                            .rows  = dim.nx + dim.nu,
-                            .cols  = dim.nx}};
     }();
     real_matrix Z = [this] {
         return real_matrix{{.depth = dim.N_horiz + 1, //
@@ -183,11 +179,6 @@ struct SolverStorage {
         return scalar_real_matrix{{.depth = 1, //
                                    .rows  = dim.N_horiz * dim.ny + dim.ny_N,
                                    .cols  = 1}};
-    }();
-    real_matrix VV = [this] {
-        return real_matrix{{.depth = dim.N_horiz + 1, //
-                            .rows  = dim.nx,
-                            .cols  = dim.nx}};
     }();
     real_matrix AB = [this] {
         return real_matrix{{.depth = dim.N_horiz, //
