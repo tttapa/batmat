@@ -276,6 +276,8 @@ void KOQKATOO_LINALG_EXPORT xgemv_batch_strided(
     double alpha, const double *a, index_t lda, index_t stridea,
     const double *x, index_t incx, index_t stridex, double beta, double *y,
     index_t incy, index_t stridey, index_t batch_size) {
+    if (m == 0 || n == 0)
+        return;
     cblas_dgemv_batch_strided(layout, trans, m, n, alpha, a, lda, stridea, x,
                               incx, stridex, beta, y, incy, stridey,
                               batch_size);
@@ -287,6 +289,8 @@ void KOQKATOO_LINALG_EXPORT xgemv_batch_strided(
     float alpha, const float *a, index_t lda, index_t stridea, const float *x,
     index_t incx, index_t stridex, float beta, float *y, index_t incy,
     index_t stridey, index_t batch_size) {
+    if (m == 0 || n == 0)
+        return;
     cblas_sgemv_batch_strided(layout, trans, m, n, alpha, a, lda, stridea, x,
                               incx, stridex, beta, y, incy, stridey,
                               batch_size);
@@ -323,6 +327,8 @@ void KOQKATOO_LINALG_EXPORT xgemm_batch_strided(
     index_t M, index_t N, index_t K, double alpha, const double *A, index_t lda,
     index_t stridea, const double *B, index_t ldb, index_t strideb, double beta,
     double *C, index_t ldc, index_t stridec, index_t batch_size) {
+    if (M == 0 || N == 0 || K == 0)
+        return;
     cblas_dgemm_batch_strided(Layout, TransA, TransB, M, N, K, alpha, A, lda,
                               stridea, B, ldb, strideb, beta, C, ldc, stridec,
                               batch_size);
@@ -334,6 +340,8 @@ void KOQKATOO_LINALG_EXPORT xgemm_batch_strided(
     index_t M, index_t N, index_t K, float alpha, const float *A, index_t lda,
     index_t stridea, const float *B, index_t ldb, index_t strideb, float beta,
     float *C, index_t ldc, index_t stridec, index_t batch_size) {
+    if (M == 0 || N == 0 || K == 0)
+        return;
     cblas_sgemm_batch_strided(Layout, TransA, TransB, M, N, K, alpha, A, lda,
                               stridea, B, ldb, strideb, beta, C, ldc, stridec,
                               batch_size);
