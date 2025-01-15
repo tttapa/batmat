@@ -65,12 +65,14 @@ void Solver<Abi>::tridiagonal_factor(index_t k) {
     KOQKATOO_TRACE("factor Ψ", k);
     const auto N         = storage.dim.N_horiz;
     const auto stage_idx = k * simd_stride;
-    const auto nd        = std::min(simd_stride, N + 1 - stage_idx),
-               ni        = std::min(simd_stride, N - stage_idx);
-    auto LΨk             = LΨ_scalar().middle_layers(stage_idx, nd),
-         LΨdk            = LΨd_scalar().middle_layers(stage_idx, ni),
-         LΨsk            = LΨs_scalar().middle_layers(stage_idx, ni),
-         VVᵀk            = VVᵀ_scalar().middle_layers(stage_idx, ni);
+    if (N == stage_idx)
+        return;
+    const auto nd = std::min(simd_stride, N + 1 - stage_idx),
+               ni = std::min(simd_stride, N - stage_idx);
+    auto LΨk      = LΨ_scalar().middle_layers(stage_idx, nd),
+         LΨdk     = LΨd_scalar().middle_layers(stage_idx, nd),
+         LΨsk     = LΨs_scalar().middle_layers(stage_idx, ni),
+         VVᵀk     = VVᵀ_scalar().middle_layers(stage_idx, ni);
     // TODO: Interestingly, the Reference backend without SIMD is quite fast,
     //       but we should really be using BLASFEO instead ...
     // const auto potrf_be  = linalg::compact::PreferredBackend::Reference;
