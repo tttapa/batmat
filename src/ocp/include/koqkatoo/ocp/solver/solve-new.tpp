@@ -65,8 +65,7 @@ void Solver<Abi>::tridiagonal_factor(index_t k) {
     KOQKATOO_TRACE("factor Ψ", k);
     const auto N         = storage.dim.N_horiz;
     const auto stage_idx = k * simd_stride;
-    if (N == stage_idx)
-        return;
+    KOQKATOO_ASSERT(stage_idx < N + 1);
     const auto nd = std::min(simd_stride, N + 1 - stage_idx),
                ni = std::min(simd_stride, N - stage_idx);
     auto LΨk      = LΨ_scalar().middle_layers(stage_idx, nd),
@@ -164,21 +163,21 @@ void Solver<Abi>::solve_new(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     auto Δλ1 = storage.λ1();
     auto LΨd = storage.LΨd_scalar(), LΨs = storage.LΨs_scalar();
 
-    // Parallel solve Hv = g
-    // ---------------------
+    // Parallel solve Hv = -g
+    // ----------------------
     auto solve_H1 = [&](index_t i) {
         KOQKATOO_TRACE("solve Hv=g", i);
         // Initialize rhs: g = ∇ϕ + Mᵀλ = ∇f̃ + Aᵀŷ + Mᵀλ                 (d ← g)
         for (index_t j = 0; j < nx + nu; ++j)
             for (index_t ii = i * simd_stride; ii < (i + 1) * simd_stride; ++ii)
-                d(ii, j, 0) = grad(ii, j, 0) + Mᵀλ(ii, j, 0) + Aᵀŷ(ii, j, 0);
+                d(ii, j, 0) = -grad(ii, j, 0) - Aᵀŷ(ii, j, 0);
         // Solve Lᴴ vʹ = g                                              (d ← vʹ)
         compact_blas::xtrsv_LNN(LH().batch(i), d.batch(i), be);
-        // Solve Lᴴ⁻ᵀ v = vʹ                                             (d ← v)
-        compact_blas::xtrsv_LTN(LH().batch(i), d.batch(i), be);
-        // Compute f = (A B) v                                          (Δλ ← f)
+        // Solve Lᴴ⁻ᵀ v = vʹ                                           (Δλ ← Ev)
+        compact_blas::xgemv_T(Wᵀ().batch(i), d.batch(i), Δλ.batch(i), be);
+        // Compute f = (A B) v                                         (Δλ1 ← f)
         if (i < AB().num_batches())
-            compact_blas::xgemv(AB().batch(i), d.batch(i), Δλ.batch(i), be);
+            compact_blas::xgemv(V().batch(i), d.batch(i), Δλ1.batch(i), be);
     };
 
     // Forward substitution Ψ
@@ -186,13 +185,14 @@ void Solver<Abi>::solve_new(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     auto solve_ψ_fwd = [&](index_t i) {
         KOQKATOO_TRACE("solve ψ fwd", i);
         if (i == 0) {
-            // Initialize rhs r - v = Mx - b - v                 (Δλ_scal ← ...)
+            // Initialize rhs r - v = Mx-b + (E0)v               (Δλ_scal ← ...)
             for (index_t j = 0; j < nx; ++j)
-                Δλ_scal(0, j, 0) = Mxb(0, j, 0) - d(0, j, 0);
+                Δλ_scal(0, j, 0) = Mxb(0, j, 0) + Δλ(0, j, 0);
         } else {
-            // Initialize rhs r + f - v = Mx - b + (A B) v - v   (Δλ_scal ← ...)
+            // Initialize rhs r + f - v = Mx-b - (AB) v + (E0)v  (Δλ_scal ← ...)
             for (index_t j = 0; j < nx; ++j)
-                Δλ_scal(i, j, 0) = Mxb(i, j, 0) - d(i, j, 0) + Δλ(i - 1, j, 0);
+                Δλ_scal(i, j, 0) =
+                    Mxb(i, j, 0) + Δλ(i, j, 0) - Δλ1(i - 1, j, 0);
             // Subtract L(s) Δλʹ(i - 1)                          (Δλ_scal ← ...)
             scalar_blas::xgemv_sub(LΨs.batch(i - 1), Δλ_scal.batch(i - 1),
                                    Δλ_scal.batch(i), be);
@@ -221,17 +221,16 @@ void Solver<Abi>::solve_new(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     // -----------------------------
     auto solve_H2 = [&](index_t i) {
         KOQKATOO_TRACE("solve Hd=-g-MᵀΔλ", i);
+        compact_blas::xgemv_sub(Wᵀ().batch(i), Δλ.batch(i), d.batch(i), be);
+        if (i < AB().num_batches())
+            compact_blas::xgemv_T_add(V().batch(i), Δλ1.batch(i), d.batch(i),
+                                      be);
+        compact_blas::xtrsv_LTN(LH().batch(i), d.batch(i), be);
         MᵀΔλ.batch(i).top_rows(nx) = Δλ.batch(i);
         MᵀΔλ.batch(i).bottom_rows(nu).set_constant(0);
         if (i < AB().num_batches())
             compact_blas::xgemv_T_sub(AB().batch(i), Δλ1.batch(i),
                                       MᵀΔλ.batch(i), be);
-        for (index_t j = 0; j < nx + nu; ++j)
-            for (index_t ii = i * simd_stride; ii < (i + 1) * simd_stride; ++ii)
-                d(ii, j, 0) = -grad(ii, j, 0) - Mᵀλ(ii, j, 0) - Aᵀŷ(ii, j, 0) -
-                              MᵀΔλ(ii, j, 0);
-        compact_blas::xtrsv_LNN(LH().batch(i), d.batch(i), be);
-        compact_blas::xtrsv_LTN(LH().batch(i), d.batch(i), be);
     };
 
     index_t num_batch   = (N + 1 + simd_stride - 1) / simd_stride;

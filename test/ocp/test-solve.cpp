@@ -156,24 +156,23 @@ TEST_P(OCP, solve) {
     // Solve the full KKT system using Eigen (LU because indefinite).
     VectorXreal kkt_rhs_ref    = VectorXreal::Zero(K.rows), kkt_sol_ref(K.rows);
     VectorXreal Gᵀŷ_ref        = G.transpose() * ŷ;
-    VectorXreal Mᵀλ_ref        = M.transpose() * λ;
     VectorXreal Mxb_ref        = M * x - b;
-    kkt_rhs_ref.topRows(n_var) = -(grad + Gᵀŷ_ref + Mᵀλ_ref);
+    kkt_rhs_ref.topRows(n_var) = -grad - Gᵀŷ_ref;
     kkt_rhs_ref.bottomRows(n_dyn_constr) = -Mxb_ref;
     auto luK                             = as_eigen(K).fullPivLu();
     ASSERT_TRUE(luK.isInvertible());
-    kkt_sol_ref          = luK.solve(kkt_rhs_ref);
-    auto d_ref           = kkt_sol_ref.topRows(n_var);
-    auto Δλ_ref          = kkt_sol_ref.bottomRows(n_dyn_constr);
-    VectorXreal MᵀΔλ_ref = M.transpose() * Δλ_ref;
+    kkt_sol_ref         = luK.solve(kkt_rhs_ref);
+    auto d_ref          = kkt_sol_ref.topRows(n_var);
+    auto λ_ref          = kkt_sol_ref.bottomRows(n_dyn_constr);
+    VectorXreal Mᵀλ_ref = M.transpose() * λ_ref;
 
     // Compare the koqkatoo OCP solution to the Eigen reference solution.
     std::cout << "ε κ(K) = " << guanaqo::float_to_str(ε / luK.rcond())
               << std::endl;
     EXPECT_THAT(d, EigenAlmostEqual(d_ref, ε / luK.rcond()));
-    EXPECT_THAT(Δλ, EigenAlmostEqual(Δλ_ref, ε / luK.rcond()));
+    EXPECT_THAT(Δλ, EigenAlmostEqual(λ_ref, ε / luK.rcond()));
     EXPECT_THAT(Gᵀŷ, EigenAlmostEqual(Gᵀŷ_ref, ε / luK.rcond()));
-    EXPECT_THAT(MᵀΔλ, EigenAlmostEqual(MᵀΔλ_ref, ε / luK.rcond()));
+    EXPECT_THAT(MᵀΔλ, EigenAlmostEqual(Mᵀλ_ref, ε / luK.rcond()));
 }
 
 TEST_P(OCP, recompute) {
