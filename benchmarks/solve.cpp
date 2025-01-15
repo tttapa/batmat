@@ -1,6 +1,7 @@
 #include <benchmark/benchmark.h>
 
 #include <koqkatoo/fork-pool.hpp>
+#include <koqkatoo/linalg-compact/mkl.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
 #include <koqkatoo/loop.hpp>
 #include <koqkatoo/matrix-view.hpp>
@@ -33,11 +34,13 @@ constexpr int n_threads = 6;
 constexpr int n_horiz   = 23;
 constexpr int n_states  = 5;
 constexpr int n_inputs  = 5;
+constexpr int n_constraints = 5;
 #else
-constexpr int n_threads = 4;
-constexpr int n_horiz   = 63;
-constexpr int n_states  = 40;
-constexpr int n_inputs  = 30;
+constexpr int n_threads     = 4;
+constexpr int n_horiz       = 39;
+constexpr int n_states      = 40;
+constexpr int n_inputs      = 30;
+constexpr int n_constraints = 10;
 #endif
 
 namespace ko   = koqkatoo::ocp;
@@ -106,7 +109,7 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
             KOQKATOO_TRACE("copy", N, PN.rows() * PN.rows());
             PN(0) = ocp.Q(N);
         }
-        {
+        if (nJ > 0) {
             KOQKATOO_TRACE("xgemmt_blas", N,
                            PN.rows() * (PN.rows() + 1) * nJ / 2);
             koqkatoo::linalg::xgemmt(
@@ -181,7 +184,7 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
             KOQKATOO_TRACE("copy", k, LP.rows() * LP.cols());
             LP(k) = RSQ(k);
         }
-        {
+        if (nJ > 0) {
             KOQKATOO_TRACE("xgemmt_blas", k,
                            LP.rows() * (LP.rows() + 1) * nJ / 2);
             koqkatoo::linalg::xgemmt(
@@ -214,6 +217,11 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
                     std::format("cholesky fail {} in stage {}", info, k));
         }
     }
+
+#if FACTOR_ONLY
+    return;
+#endif
+
     static BatchedMatrix<real_t, index_t> p{{.depth = N + 1, .rows = nx}},
         Pb{{.depth = N + 1, .rows = nx}};
     p(N) = q(N).top_rows(nx);
@@ -313,8 +321,8 @@ void benchmark_riccati(benchmark::State &state) {
     auto ocp = ko::generate_random_ocp({.N_horiz = n_horiz, //
                                         .nx      = n_states,
                                         .nu      = n_inputs,
-                                        .ny      = n_inputs,
-                                        .ny_N    = n_inputs},
+                                        .ny      = n_constraints,
+                                        .ny_N    = n_constraints},
                                        12345);
 
     auto [N, nx, nu, ny, ny_N] = ocp.dim;
@@ -343,7 +351,7 @@ void benchmark_riccati(benchmark::State &state) {
     std::ranges::generate(λ, [&] { return nrml(rng); });
     Eigen::VectorX<bool> J2 = J;
     std::uniform_int_distribution<index_t> uconstr(0, n_constr - 1);
-    for (index_t i = 0; i < 10; ++i) {
+    for (index_t i = 0; i < std::min<index_t>(10, n_constr); ++i) {
         auto j = uconstr(rng);
         J2(j)  = !J2(j);
     }
@@ -414,6 +422,9 @@ void benchmark_riccati(benchmark::State &state) {
             std::format("benchmark_solve_{}_{}.csv", "riccati", "new");
         std::filesystem::path out_dir{"traces"};
         out_dir /= *koqkatoo_commit_hash ? koqkatoo_commit_hash : "unknown";
+        out_dir /= KOQKATOO_MKL_IF_ELSE("mkl", "openblas");
+        out_dir /= std::format("nx={}-nu={}-ny={}-N={}-thr={}", nx, nu, ny, N,
+                               n_threads);
         std::filesystem::create_directories(out_dir);
         std::ofstream csv{out_dir / name};
         koqkatoo::TraceLogger::write_column_headings(csv) << '\n';
@@ -442,8 +453,8 @@ void benchmark_solve(benchmark::State &state) {
     auto ocp = ko::generate_random_ocp({.N_horiz = n_horiz, //
                                         .nx      = n_states,
                                         .nu      = n_inputs,
-                                        .ny      = n_inputs,
-                                        .ny_N    = n_inputs},
+                                        .ny      = n_constraints,
+                                        .ny_N    = n_constraints},
                                        12345);
 
     // Instantiate the OCP KKT solver.
@@ -471,7 +482,7 @@ void benchmark_solve(benchmark::State &state) {
     std::ranges::generate(λ, [&] { return nrml(rng); });
     Eigen::VectorX<bool> J2 = J;
     std::uniform_int_distribution<index_t> uconstr(0, n_constr - 1);
-    for (index_t i = 0; i < 10; ++i) {
+    for (index_t i = 0; i < std::min<index_t>(10, n_constr); ++i) {
         auto j = uconstr(rng);
         J2(j)  = !J2(j);
     }
@@ -515,13 +526,17 @@ void benchmark_solve(benchmark::State &state) {
 #endif
         if constexpr (New) {
             s.factor_new(S, Σ_strided, J_strided);
+#if !FACTOR_ONLY
             s.solve_new(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided,
                         d_strided, Δλ_strided, MᵀΔλ_strided);
+#endif
             // s.updowndate_new(Σ_strided, J_strided, J2_strided, nullptr);
         } else {
             s.factor(S, Σ_strided, J_strided);
+#if !FACTOR_ONLY
             s.solve(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided,
                     d_strided, Δλ_strided, MᵀΔλ_strided);
+#endif
             // s.updowndate(Σ_strided, J_strided, J2_strided, nullptr);
         }
         KOQKATOO_IF_ITT(
@@ -552,6 +567,9 @@ void benchmark_solve(benchmark::State &state) {
                                        New ? "new" : "old");
         std::filesystem::path out_dir{"traces"};
         out_dir /= *koqkatoo_commit_hash ? koqkatoo_commit_hash : "unknown";
+        out_dir /= KOQKATOO_MKL_IF_ELSE("mkl", "openblas");
+        out_dir /= std::format("nx={}-nu={}-ny={}-N={}-thr={}", nx, nu, ny, N,
+                               n_threads);
         std::filesystem::create_directories(out_dir);
         std::ofstream csv{out_dir / name};
         koqkatoo::TraceLogger::write_column_headings(csv) << '\n';
@@ -561,8 +579,12 @@ void benchmark_solve(benchmark::State &state) {
 #endif
 }
 
-BENCHMARK(benchmark_solve<stdx::simd_abi::deduce_t<real_t, 8>>);
-BENCHMARK(benchmark_solve<stdx::simd_abi::deduce_t<real_t, 4>>);
-BENCHMARK(benchmark_solve<stdx::simd_abi::deduce_t<real_t, 2>>);
-BENCHMARK(benchmark_solve<stdx::simd_abi::scalar>);
-BENCHMARK(benchmark_riccati);
+template <auto N>
+using compact = stdx::simd_abi::deduce_t<real_t, N>;
+using scalar  = stdx::simd_abi::scalar;
+
+BENCHMARK(benchmark_solve<compact<8>>)->MeasureProcessCPUTime()->UseRealTime();
+BENCHMARK(benchmark_solve<compact<4>>)->MeasureProcessCPUTime()->UseRealTime();
+BENCHMARK(benchmark_solve<compact<2>>)->MeasureProcessCPUTime()->UseRealTime();
+BENCHMARK(benchmark_solve<scalar>)->MeasureProcessCPUTime()->UseRealTime();
+BENCHMARK(benchmark_riccati)->MeasureProcessCPUTime()->UseRealTime();
