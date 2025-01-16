@@ -95,7 +95,7 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
         auto PN = LP.batch(N).bottom_right(nx, nx);
 #if USE_GEMMT_INEQ_SCHUR
         index_t nJ = 0;
-        {
+        if (n_constraints > 0) {
             KOQKATOO_TRACE("scale_penalty", N, nx * ny_N);
             auto ocpCN = ocp.C(N);
             for (index_t c = 0; c < nx; ++c) {
@@ -162,7 +162,7 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
         auto ocpCDk = ocp.CD(k);
 #if USE_GEMMT_INEQ_SCHUR
         index_t nJ = 0;
-        {
+        if (n_constraints > 0) {
             KOQKATOO_TRACE("scale_penalty", k, (nx + nu) * ny);
             for (index_t c = 0; c < nx; ++c) {
                 nJ = 0;
