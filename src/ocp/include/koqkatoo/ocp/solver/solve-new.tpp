@@ -181,7 +181,6 @@ void Solver<Abi>::solve_new(real_view grad, real_view Aᵀŷ, real_view Mxb,
     // Forward substitution Ψ
     // ----------------------
     auto solve_ψ_fwd = [&](index_t i) {
-        KOQKATOO_TRACE("solve ψ fwd", i);
         if (i == 0) {
             // Initialize rhs r - v = Mx-b + (E0)v                (λ_scal ← ...)
             for (index_t j = 0; j < nx; ++j)
@@ -201,7 +200,6 @@ void Solver<Abi>::solve_new(real_view grad, real_view Aᵀŷ, real_view Mxb,
     // Backward substitution Ψ
     // -----------------------
     auto solve_ψ_rev = [&](index_t i) {
-        KOQKATOO_TRACE("solve ψ rev", i);
         if (i < N)
             scalar_blas::xgemv_T_sub(LΨs.batch(i), λ_scal.batch(i + 1),
                                      λ_scal.batch(i), be);
@@ -238,6 +236,7 @@ void Solver<Abi>::solve_new(real_view grad, real_view Aᵀŷ, real_view Mxb,
         while (true) {
             if (k > 0 && join_counters[k - 1].value.fetch_add(1) != 1)
                 return false;
+            KOQKATOO_TRACE("solve ψ fwd", k);
             index_t i_end = std::min((k + 1) * simd_stride, N + 1);
             for (index_t i = k * simd_stride; i < i_end; ++i)
                 solve_ψ_fwd(i);
@@ -262,15 +261,19 @@ void Solver<Abi>::solve_new(real_view grad, real_view Aᵀŷ, real_view Mxb,
         // The thread that solves the last batch becomes the main thread that
         // performs the serial solution of Ψ in the next step.
         if (main_thread) {
-            for (index_t i = N + 1; i-- > 0;) {
-                solve_ψ_rev(i);
-                if (i % simd_stride == 0) {
-                    KOQKATOO_TRACE("solve store-notify", i);
-                    // Once the block of Ψ is done, we can start the next block
-                    // of the solution of Hd=g-MᵀΔλ.
-                    stage_ready.fetch_add(1, std::memory_order_release);
-                    stage_ready.notify_one();
+            for (index_t k = N / simd_stride + 1; k-- > 0;) {
+                const index_t ik   = k * simd_stride,
+                              ikp1 = std::min(N + 1, ik + simd_stride);
+                {
+                    KOQKATOO_TRACE("solve ψ rev", k);
+                    for (index_t i = ikp1; i-- > ik;)
+                        solve_ψ_rev(i);
                 }
+                KOQKATOO_TRACE("solve store-notify", k);
+                // Once the block of Ψ is done, we can start the next block
+                // of the solution of Hd=g-MᵀΔλ.
+                stage_ready.fetch_add(1, std::memory_order_release);
+                stage_ready.notify_one();
             }
             // Release all threads waiting for the next block of Ψ
             stage_ready.fetch_add(static_cast<int>(num_threads),
