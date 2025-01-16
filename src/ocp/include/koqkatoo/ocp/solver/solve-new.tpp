@@ -76,7 +76,7 @@ void Solver<Abi>::tridiagonal_factor(index_t k) {
     //       but we should really be using BLASFEO instead ...
     // const auto potrf_be  = linalg::compact::PreferredBackend::Reference;
     const auto potrf_be              = settings.preferred_backend;
-    constexpr bool merged_potrf_trsm = true;
+    constexpr bool merged_potrf_trsm = false;
     // Add Θ to WWᵀ
     if (k > 0)
         scalar_blas::xadd_L(VVᵀ_scalar().batch(stage_idx - 1), LΨdk.batch(0));
