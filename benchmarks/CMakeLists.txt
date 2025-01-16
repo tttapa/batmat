@@ -54,3 +54,7 @@ endif()
 add_executable(benchmark-solve solve.cpp benchmark-main.cpp)
 target_link_libraries(benchmark-solve PRIVATE
     benchmark::benchmark koqkatoo::ocp koqkatoo::warnings Eigen3::Eigen)
+
+add_executable(benchmark-custom-potrf custom-potrf.cpp custom-potrf-microkernel.cpp benchmark-main.cpp)
+target_link_libraries(benchmark-custom-potrf PRIVATE
+    benchmark::benchmark Eigen3::Eigen koqkatoo::linalg-compact koqkatoo::warnings)
