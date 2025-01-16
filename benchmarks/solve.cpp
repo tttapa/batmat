@@ -37,11 +37,14 @@ constexpr int n_inputs  = 5;
 constexpr int n_constraints = 5;
 #else
 constexpr int n_threads     = 4;
-constexpr int n_horiz       = 39;
+constexpr int n_horiz       = 31;
 constexpr int n_states      = 40;
 constexpr int n_inputs      = 30;
 constexpr int n_constraints = 10;
 #endif
+
+#define FACTOR_ONLY 0
+#define FACTUP 1
 
 namespace ko   = koqkatoo::ocp;
 namespace stdx = std::experimental;
@@ -530,7 +533,9 @@ void benchmark_solve(benchmark::State &state) {
             s.solve_new(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided,
                         d_strided, Δλ_strided, MᵀΔλ_strided);
 #endif
-            // s.updowndate_new(Σ_strided, J_strided, J2_strided, nullptr);
+#if FACTUP
+            s.updowndate_new(Σ_strided, J_strided, J2_strided);
+#endif
         } else {
             s.factor(S, Σ_strided, J_strided);
 #if !FACTOR_ONLY
