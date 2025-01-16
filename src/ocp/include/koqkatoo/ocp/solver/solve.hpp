@@ -92,18 +92,8 @@ struct Solver {
     void prepare_all(real_t S, real_view Σ, bool_view J);
     void prepare_all(real_t S, real_view Σ, bool_view J, Timings &t);
 
-    void cholesky_Ψ();
-    void cholesky_Ψ(Timings &t);
     void solve_Ψ_scalar(std::span<real_t> λ);
     void solve_Ψ_scalar(std::span<real_t> λ, Timings &t);
-
-    void factor(real_t S, real_view Σ, bool_view J);
-    void factor(real_t S, real_view Σ, bool_view J, Timings &t);
-    void solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
-               mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ);
-    void solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
-               mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ,
-               Timings &t);
 
     /// Mᵀλ
     void mat_vec_transpose_dynamics_constr(real_view λ, mut_real_view Mᵀλ);
@@ -123,10 +113,7 @@ struct Solver {
                                              real_view x0,
                                              mut_real_view grad_f);
 
-    void updowndate(real_view Σ, bool_view J_old, bool_view J_new, Timings *t);
-    void updowndate_ψ();
-
-    void solve_new(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
+    void solve_new(real_view grad, real_view Aᵀŷ, real_view Mxb,
                    mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ);
     void factor_new(real_t S, real_view Σ, bool_view J);
     void recompute_inner(real_t S, real_view x0, real_view x, real_view λ,

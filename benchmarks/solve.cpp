@@ -530,8 +530,8 @@ void benchmark_solve(benchmark::State &state) {
         if constexpr (New) {
             s.factor_new(S, Σ_strided, J_strided);
 #if !FACTOR_ONLY
-            s.solve_new(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided,
-                        d_strided, Δλ_strided, MᵀΔλ_strided);
+            s.solve_new(grad_strided, Gᵀŷ_strided, Mxb_strided, d_strided,
+                        Δλ_strided, MᵀΔλ_strided);
 #endif
 #if FACTUP
             s.updowndate_new(Σ_strided, J_strided, J2_strided);
@@ -539,8 +539,8 @@ void benchmark_solve(benchmark::State &state) {
         } else {
             s.factor(S, Σ_strided, J_strided);
 #if !FACTOR_ONLY
-            s.solve(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided,
-                    d_strided, Δλ_strided, MᵀΔλ_strided);
+            s.solve(grad_strided, Gᵀŷ_strided, Mxb_strided, d_strided,
+                    Δλ_strided, MᵀΔλ_strided);
 #endif
             // s.updowndate(Σ_strided, J_strided, J2_strided, nullptr);
         }

@@ -91,7 +91,6 @@ TEST_P(OCP, solve) {
 
     // Prepare storage for some intermediate quantities.
     auto Gᵀŷ_strided  = s.storage.initialize_variables();
-    auto Mᵀλ_strided  = s.storage.initialize_variables();
     auto MᵀΔλ_strided = s.storage.initialize_variables();
     auto d_strided    = s.storage.initialize_variables();
     auto Δλ_strided   = s.storage.initialize_dynamics_constraints();
@@ -101,7 +100,6 @@ TEST_P(OCP, solve) {
     // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
     // Compute the necessary matrix-vector products.
-    s.mat_vec_transpose_dynamics_constr(λ_strided, Mᵀλ_strided);
     s.mat_vec_transpose_constr(ŷ_strided, Gᵀŷ_strided);
     s.residual_dynamics_constr(x_strided, b_strided, Mxb_strided);
     // Perform the factorization of the KKT system (with wrong active set).
@@ -110,7 +108,7 @@ TEST_P(OCP, solve) {
     s.updowndate_new(Σ_strided, J0_strided, J1_strided);
     s.updowndate_new(Σ_strided, J1_strided, J_strided);
     // Solve the KKT system.
-    s.solve_new(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided, //
+    s.solve_new(grad_strided, Gᵀŷ_strided, Mxb_strided, //
                 d_strided, Δλ_strided, MᵀΔλ_strided);
     // d:    Newton step for x
     // Δλ:   negative Newton step for λ
