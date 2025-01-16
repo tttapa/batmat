@@ -69,8 +69,11 @@ void CompactBLAS<Abi>::xsyrk_T_schur_copy(single_batch_view C,
 template <class Abi>
 void CompactBLAS<Abi>::xsyrk_T_ref(single_batch_view A,
                                    mut_single_batch_view C) {
+    assert(C.rows() >= C.cols());
+    assert(A.cols() == C.rows());
     [[maybe_unused]] const auto op_cnt_syrk =
-        C.cols() * (C.cols() + 1) * C.rows() / 2;
+        C.cols() * (C.cols() + 1) * A.rows() / 2 +
+        (C.rows() - C.cols()) * C.cols() * A.rows();
     KOQKATOO_TRACE("xsyrk_T", 0, op_cnt_syrk * C.depth());
     for (index_t j = 0; j < C.cols(); ++j)
         for (index_t i = j; i < C.rows(); ++i)
@@ -81,8 +84,11 @@ void CompactBLAS<Abi>::xsyrk_T_ref(single_batch_view A,
 
 template <class Abi>
 void CompactBLAS<Abi>::xsyrk_ref(single_batch_view A, mut_single_batch_view C) {
+    assert(C.rows() >= C.cols());
+    assert(A.rows() == C.rows());
     [[maybe_unused]] const auto op_cnt_syrk =
-        C.rows() * (C.rows() + 1) * C.cols() / 2;
+        C.cols() * (C.cols() + 1) * A.cols() / 2 +
+        (C.rows() - C.cols()) * C.cols() * A.cols();
     KOQKATOO_TRACE("xsyrk", 0, op_cnt_syrk * C.depth());
     assert(C.rows() == C.cols());
     assert(C.rows() == A.rows());
@@ -96,9 +102,12 @@ void CompactBLAS<Abi>::xsyrk_ref(single_batch_view A, mut_single_batch_view C) {
 template <class Abi>
 void CompactBLAS<Abi>::xsyrk_add_ref(single_batch_view A,
                                      mut_single_batch_view C) {
+    assert(C.rows() >= C.cols());
+    assert(A.rows() == C.rows());
     [[maybe_unused]] const auto op_cnt_syrk =
-        C.rows() * (C.rows() + 1) * C.cols() / 2;
-    KOQKATOO_TRACE("xsyrk", 0, op_cnt_syrk * C.depth());
+        C.cols() * (C.cols() + 1) * A.cols() / 2 +
+        (C.rows() - C.cols()) * C.cols() * A.cols();
+    KOQKATOO_TRACE("xsyrk_add", 0, op_cnt_syrk * C.depth());
     assert(C.rows() == C.cols());
     assert(C.rows() == A.rows());
     // TODO: cache blocking
@@ -108,9 +117,12 @@ void CompactBLAS<Abi>::xsyrk_add_ref(single_batch_view A,
 template <class Abi>
 void CompactBLAS<Abi>::xsyrk_sub_ref(single_batch_view A,
                                      mut_single_batch_view C) {
+    assert(C.rows() >= C.cols());
+    assert(A.rows() == C.rows());
     [[maybe_unused]] const auto op_cnt_syrk =
-        C.rows() * (C.rows() + 1) * C.cols() / 2;
-    KOQKATOO_TRACE("xsyrk", 0, op_cnt_syrk * C.depth());
+        C.cols() * (C.cols() + 1) * A.cols() / 2 +
+        (C.rows() - C.cols()) * C.cols() * A.cols();
+    KOQKATOO_TRACE("xsyrk_sub", 0, op_cnt_syrk * C.depth());
     namespace uk = micro_kernels;
     assert(C.rows() >= C.cols());
     assert(C.rows() == A.rows());
@@ -198,11 +210,12 @@ void CompactBLAS<Abi>::xsyrk_sub_ref(single_batch_view A,
 template <class Abi>
 void CompactBLAS<Abi>::xsyrk_T(batch_view A, mut_batch_view C,
                                PreferredBackend b) {
+    assert(A.cols() == C.rows());
     assert(A.ceil_depth() == C.ceil_depth());
     if constexpr (std::same_as<Abi, scalar_abi>) {
-        if (use_mkl_batched(b)) {
+        if (use_mkl_batched(b) && C.rows() == C.cols()) {
             [[maybe_unused]] const auto op_cnt_syrk =
-                C.cols() * (C.cols() + 1) * C.rows() / 2;
+                C.cols() * (C.cols() + 1) * A.rows() / 2;
             KOQKATOO_TRACE("xsyrk_T_batched", 0, op_cnt_syrk * C.depth());
             linalg::xsyrk_batch_strided(CblasColMajor, CblasLower, CblasTrans,
                                         C.rows(), A.rows(), real_t{1}, A.data,
@@ -260,9 +273,9 @@ void CompactBLAS<Abi>::xsyrk(batch_view A, mut_batch_view C,
                              PreferredBackend b) {
     assert(A.ceil_depth() == C.ceil_depth());
     if constexpr (std::same_as<Abi, scalar_abi>) {
-        if (use_mkl_batched(b)) {
+        if (use_mkl_batched(b) && C.rows() == C.cols()) { // TODO
             [[maybe_unused]] const auto op_cnt_syrk =
-                C.rows() * (C.rows() + 1) * C.cols() / 2;
+                C.cols() * (C.cols() + 1) * A.cols() / 2;
             KOQKATOO_TRACE("xsyrk_batched", 0, op_cnt_syrk * C.depth());
             linalg::xsyrk_batch_strided(CblasColMajor, CblasLower, CblasNoTrans,
                                         C.rows(), A.cols(), real_t{1}, A.data,
@@ -282,9 +295,9 @@ void CompactBLAS<Abi>::xsyrk_add(batch_view A, mut_batch_view C,
                                  PreferredBackend b) {
     assert(A.ceil_depth() == C.ceil_depth());
     if constexpr (std::same_as<Abi, scalar_abi>) {
-        if (use_mkl_batched(b)) {
+        if (use_mkl_batched(b) && C.rows() == C.cols()) { // TODO
             [[maybe_unused]] const auto op_cnt_syrk =
-                C.rows() * (C.rows() + 1) * C.cols() / 2;
+                C.cols() * (C.cols() + 1) * A.cols() / 2;
             KOQKATOO_TRACE("xsyrk_add_batched", 0, op_cnt_syrk * C.depth());
             linalg::xsyrk_batch_strided(CblasColMajor, CblasLower, CblasNoTrans,
                                         C.rows(), A.cols(), real_t{1}, A.data,
@@ -304,9 +317,9 @@ void CompactBLAS<Abi>::xsyrk_sub(batch_view A, mut_batch_view C,
                                  PreferredBackend b) {
     assert(A.ceil_depth() == C.ceil_depth());
     if constexpr (std::same_as<Abi, scalar_abi>) {
-        if (use_mkl_batched(b)) {
+        if (use_mkl_batched(b) && C.rows() == C.cols()) { // TODO
             [[maybe_unused]] const auto op_cnt_syrk =
-                C.rows() * (C.rows() + 1) * C.cols() / 2;
+                C.cols() * (C.cols() + 1) * A.cols() / 2;
             KOQKATOO_TRACE("xsyrk_sub_batched", 0, op_cnt_syrk * C.depth());
             linalg::xsyrk_batch_strided(CblasColMajor, CblasLower, CblasNoTrans,
                                         C.rows(), A.cols(), real_t{-1}, A.data,
@@ -327,12 +340,12 @@ void CompactBLAS<Abi>::xsyrk_sub(batch_view A, mut_batch_view C,
 template <class Abi>
 void CompactBLAS<Abi>::xsyrk_T(single_batch_view A, mut_single_batch_view C,
                                PreferredBackend b) {
-    assert(C.rows() == C.cols());
+    assert(C.rows() >= C.cols());
     assert(C.rows() == A.cols());
     if constexpr (std::same_as<Abi, scalar_abi>) {
-        if (use_blas_scalar(b)) {
+        if (use_blas_scalar(b) && C.rows() == C.cols()) { // TODO
             [[maybe_unused]] const auto op_cnt_syrk =
-                C.cols() * (C.cols() + 1) * C.rows() / 2;
+                C.cols() * (C.cols() + 1) * A.rows() / 2;
             KOQKATOO_TRACE("xsyrk_T_blas", 0, op_cnt_syrk * C.depth());
             linalg::xsyrk(CblasColMajor, CblasLower, CblasTrans, C.rows(),
                           A.rows(), real_t{1}, A.data, A.outer_stride(),
@@ -346,12 +359,12 @@ void CompactBLAS<Abi>::xsyrk_T(single_batch_view A, mut_single_batch_view C,
 template <class Abi>
 void CompactBLAS<Abi>::xsyrk(single_batch_view A, mut_single_batch_view C,
                              PreferredBackend b) {
-    assert(C.rows() == C.cols());
+    assert(C.rows() >= C.cols());
     assert(C.rows() == A.rows());
     if constexpr (std::same_as<Abi, scalar_abi>) {
-        if (use_blas_scalar(b)) {
+        if (use_blas_scalar(b) && C.rows() == C.cols()) { // TODO
             [[maybe_unused]] const auto op_cnt_syrk =
-                C.rows() * (C.rows() + 1) * C.cols() / 2;
+                C.cols() * (C.cols() + 1) * A.cols() / 2;
             KOQKATOO_TRACE("xsyrk_blas", 0, op_cnt_syrk * C.depth());
             linalg::xsyrk(CblasColMajor, CblasLower, CblasNoTrans, C.rows(),
                           A.cols(), real_t{1}, A.data, A.outer_stride(),
@@ -365,12 +378,12 @@ void CompactBLAS<Abi>::xsyrk(single_batch_view A, mut_single_batch_view C,
 template <class Abi>
 void CompactBLAS<Abi>::xsyrk_add(single_batch_view A, mut_single_batch_view C,
                                  PreferredBackend b) {
-    assert(C.rows() == C.cols());
+    assert(C.rows() >= C.cols());
     assert(C.rows() == A.rows());
     if constexpr (std::same_as<Abi, scalar_abi>) {
-        if (use_blas_scalar(b)) {
+        if (use_blas_scalar(b) && C.rows() == C.cols()) { // TODO
             [[maybe_unused]] const auto op_cnt_syrk =
-                C.rows() * (C.rows() + 1) * C.cols() / 2;
+                C.cols() * (C.cols() + 1) * A.cols() / 2;
             KOQKATOO_TRACE("xsyrk_add_blas", 0, op_cnt_syrk * C.depth());
             linalg::xsyrk(CblasColMajor, CblasLower, CblasNoTrans, C.rows(),
                           A.cols(), real_t{1}, A.data, A.outer_stride(),
@@ -384,12 +397,12 @@ void CompactBLAS<Abi>::xsyrk_add(single_batch_view A, mut_single_batch_view C,
 template <class Abi>
 void CompactBLAS<Abi>::xsyrk_sub(single_batch_view A, mut_single_batch_view C,
                                  PreferredBackend b) {
-    assert(C.rows() == C.cols());
+    assert(C.rows() >= C.cols());
     assert(C.rows() == A.rows());
     if constexpr (std::same_as<Abi, scalar_abi>) {
-        if (use_blas_scalar(b)) {
+        if (use_blas_scalar(b) && C.rows() == C.cols()) { // TODO
             [[maybe_unused]] const auto op_cnt_syrk =
-                C.rows() * (C.rows() + 1) * C.cols() / 2;
+                C.cols() * (C.cols() + 1) * A.cols() / 2;
             KOQKATOO_TRACE("xsyrk_sub_blas", 0, op_cnt_syrk * C.depth());
             linalg::xsyrk(CblasColMajor, CblasLower, CblasNoTrans, C.rows(),
                           A.cols(), real_t{-1}, A.data, A.outer_stride(),
