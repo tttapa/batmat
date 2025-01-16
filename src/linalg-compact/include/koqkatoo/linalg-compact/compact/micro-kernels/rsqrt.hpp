@@ -12,6 +12,12 @@ stdx::simd<T, Abi> rsqrt(stdx::simd<T, Abi> x) {
     return 1 / sqrt(x);
 }
 
+template <std::floating_point T>
+T rsqrt(T x) {
+    using std::sqrt;
+    return 1 / sqrt(x);
+}
+
 #if __AVX512F__
 #ifdef _GLIBCXX_EXPERIMENTAL_SIMD // needed for stdx::__intrinsic_type_t
 namespace detail {
@@ -78,6 +84,40 @@ rsqrt(stdx::simd<float, stdx::simd_abi::deduce_t<float, 4>> x) {
 #else
 #pragma message("Fast inverse square roots not supported")
 #endif
+
+namespace detail {
+
+inline float rsqrt_0(float x) {
+    __m128 input  = _mm_set_ss(x);
+    __m128 result = _mm_rsqrt14_ss(input, input);
+    return _mm_cvtss_f32(result);
+}
+
+inline double rsqrt_0(double x) {
+    __m128d input  = _mm_set_sd(x);
+    __m128d result = _mm_rsqrt14_sd(input, input);
+    return _mm_cvtsd_f64(result);
+}
+
+/// rsqrt_0 with a single Newton iteration of refinement.
+template <std::floating_point T>
+T rsqrt_1(T x) {
+    auto y = rsqrt_0(x);
+    return y * (T(1.5) - (x / 2 * y * y));
+}
+
+/// rsqrt_0 with two Newton iterations of refinement.
+template <std::floating_point T>
+T rsqrt_2(T x) {
+    auto y = rsqrt_1(x);
+    return y * (T(1.5) - (x / 2 * y * y));
+}
+
+} // namespace detail
+
+// inline double rsqrt(double x) { return detail::rsqrt_2(x); }
+// inline float rsqrt(float x) { return detail::rsqrt_1(x); }
+
 #endif
 
 } // namespace koqkatoo::linalg::compact::micro_kernels
