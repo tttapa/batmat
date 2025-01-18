@@ -91,6 +91,7 @@ TEST_P(OCP, solve) {
 
     // Prepare storage for some intermediate quantities.
     auto Gᵀŷ_strided  = s.storage.initialize_variables();
+    auto Mᵀλ_strided  = s.storage.initialize_variables();
     auto MᵀΔλ_strided = s.storage.initialize_variables();
     auto d_strided    = s.storage.initialize_variables();
     auto Δλ_strided   = s.storage.initialize_dynamics_constraints();
@@ -101,6 +102,7 @@ TEST_P(OCP, solve) {
 
     // Compute the necessary matrix-vector products.
     s.mat_vec_transpose_constr(ŷ_strided, Gᵀŷ_strided);
+    s.mat_vec_transpose_dynamics_constr(λ_strided, Mᵀλ_strided);
     s.residual_dynamics_constr(x_strided, b_strided, Mxb_strided);
     // Perform the factorization of the KKT system (with wrong active set).
     s.factor_new(S, Σ_strided, J0_strided);
@@ -108,7 +110,7 @@ TEST_P(OCP, solve) {
     s.updowndate_new(Σ_strided, J0_strided, J1_strided);
     s.updowndate_new(Σ_strided, J1_strided, J_strided);
     // Solve the KKT system.
-    s.solve_new(grad_strided, Gᵀŷ_strided, Mxb_strided, //
+    s.solve_new(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided, //
                 d_strided, Δλ_strided, MᵀΔλ_strided);
     // d:    Newton step for x
     // Δλ:   negative Newton step for λ
@@ -154,23 +156,29 @@ TEST_P(OCP, solve) {
     // Solve the full KKT system using Eigen (LU because indefinite).
     VectorXreal kkt_rhs_ref    = VectorXreal::Zero(K.rows), kkt_sol_ref(K.rows);
     VectorXreal Gᵀŷ_ref        = G.transpose() * ŷ;
+    VectorXreal Mᵀλ_ref        = M.transpose() * λ;
     VectorXreal Mxb_ref        = M * x - b;
-    kkt_rhs_ref.topRows(n_var) = -grad - Gᵀŷ_ref;
+    kkt_rhs_ref.topRows(n_var) = -grad - Mᵀλ_ref - Gᵀŷ_ref;
     kkt_rhs_ref.bottomRows(n_dyn_constr) = -Mxb_ref;
     auto luK                             = as_eigen(K).fullPivLu();
     ASSERT_TRUE(luK.isInvertible());
-    kkt_sol_ref         = luK.solve(kkt_rhs_ref);
-    auto d_ref          = kkt_sol_ref.topRows(n_var);
-    auto λ_ref          = kkt_sol_ref.bottomRows(n_dyn_constr);
-    VectorXreal Mᵀλ_ref = M.transpose() * λ_ref;
+    kkt_sol_ref          = luK.solve(kkt_rhs_ref);
+    auto d_ref           = kkt_sol_ref.topRows(n_var);
+    auto Δλ_ref          = kkt_sol_ref.bottomRows(n_dyn_constr);
+    VectorXreal MᵀΔλ_ref = M.transpose() * Δλ_ref;
 
     // Compare the koqkatoo OCP solution to the Eigen reference solution.
     std::cout << "ε κ(K) = " << guanaqo::float_to_str(ε / luK.rcond())
               << std::endl;
     EXPECT_THAT(d, EigenAlmostEqual(d_ref, ε / luK.rcond()));
-    EXPECT_THAT(Δλ, EigenAlmostEqual(λ_ref, ε / luK.rcond()));
+    EXPECT_THAT(Δλ, EigenAlmostEqual(Δλ_ref, ε / luK.rcond()));
     EXPECT_THAT(Gᵀŷ, EigenAlmostEqual(Gᵀŷ_ref, ε / luK.rcond()));
-    EXPECT_THAT(MᵀΔλ, EigenAlmostEqual(Mᵀλ_ref, ε / luK.rcond()));
+    EXPECT_THAT(MᵀΔλ, EigenAlmostEqual(MᵀΔλ_ref, ε / luK.rcond()));
+    decltype(s)::compact_blas::xadd_copy(x_strided, x_strided, d_strided);
+    s.residual_dynamics_constr(x_strided, b_strided, Mxb_strided);
+    const auto nrm_Mxb = decltype(s)::compact_blas::xnrminf(Mxb_strided);
+    std::cout << "‖Mx-b‖ = " << guanaqo::float_to_str(nrm_Mxb) << std::endl;
+    EXPECT_LE(nrm_Mxb, ε / luK.rcond());
 }
 
 TEST_P(OCP, recompute) {

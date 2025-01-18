@@ -116,7 +116,7 @@ struct Solver {
                                              real_view x0,
                                              mut_real_view grad_f);
 
-    void solve_new(real_view grad, real_view Aᵀŷ, real_view Mxb,
+    void solve_new(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
                    mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ);
     void factor_new(real_t S, real_view Σ, bool_view J);
     void recompute_inner(real_t S, real_view x0, real_view x, real_view λ,

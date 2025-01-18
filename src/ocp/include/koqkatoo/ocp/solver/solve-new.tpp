@@ -166,19 +166,19 @@ void Solver<Abi>::factor_new(real_t S, real_view Σ, bool_view J) {
 }
 
 template <simd_abi_tag Abi>
-void Solver<Abi>::solve_new(real_view grad, real_view Aᵀŷ, real_view Mxb,
-                            mut_real_view d, mut_real_view λ,
-                            mut_real_view Mᵀλ) {
+void Solver<Abi>::solve_new(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
+                            real_view Mxb, mut_real_view d, mut_real_view Δλ,
+                            mut_real_view MᵀΔλ) {
     KOQKATOO_TRACE("solve", 0);
 
     auto [N, nx, nu, ny, ny_N] = storage.dim;
     const auto be              = settings.preferred_backend;
-    scalar_mut_real_view λ_scal{{.data  = storage.Δλ_scalar.data(),
-                                 .depth = N + 1,
-                                 .rows  = nx,
-                                 .cols  = 1}};
-    assert(storage.Δλ_scalar.size() == static_cast<size_t>(λ_scal.size()));
-    auto λ1  = storage.λ1();
+    scalar_mut_real_view Δλ_scal{{.data  = storage.Δλ_scalar.data(),
+                                  .depth = N + 1,
+                                  .rows  = nx,
+                                  .cols  = 1}};
+    assert(storage.Δλ_scalar.size() == static_cast<size_t>(Δλ_scal.size()));
+    auto Δλ1 = storage.λ1();
     auto LΨd = storage.LΨd_scalar(), LΨs = storage.LΨs_scalar();
 
     // Parallel solve Hv = -g
@@ -188,14 +188,14 @@ void Solver<Abi>::solve_new(real_view grad, real_view Aᵀŷ, real_view Mxb,
         // Initialize rhs: g = ∇ϕ + Mᵀλ = ∇f̃ + Aᵀŷ + Mᵀλ                 (d ← g)
         for (index_t j = 0; j < nx + nu; ++j)
             for (index_t ii = i * simd_stride; ii < (i + 1) * simd_stride; ++ii)
-                d(ii, j, 0) = -grad(ii, j, 0) - Aᵀŷ(ii, j, 0);
+                d(ii, j, 0) = -grad(ii, j, 0) - Mᵀλ(ii, j, 0) - Aᵀŷ(ii, j, 0);
         // Solve Lᴴ vʹ = g                                              (d ← vʹ)
         compact_blas::xtrsv_LNN(LH().batch(i), d.batch(i), be);
         // Solve Lᴴ⁻ᵀ v = vʹ                                            (λ ← Ev)
-        compact_blas::xgemv_T(Wᵀ().batch(i), d.batch(i), λ.batch(i), be);
+        compact_blas::xgemv_T(Wᵀ().batch(i), d.batch(i), Δλ.batch(i), be);
         // Compute f = (A B) v                                          (λ1 ← f)
         if (i < AB().num_batches())
-            compact_blas::xgemv(V().batch(i), d.batch(i), λ1.batch(i), be);
+            compact_blas::xgemv(V().batch(i), d.batch(i), Δλ1.batch(i), be);
     };
 
     // Forward substitution Ψ
@@ -204,48 +204,49 @@ void Solver<Abi>::solve_new(real_view grad, real_view Aᵀŷ, real_view Mxb,
         if (i == 0) {
             // Initialize rhs r - v = Mx-b + (E0)v                (λ_scal ← ...)
             for (index_t j = 0; j < nx; ++j)
-                λ_scal(0, j, 0) = Mxb(0, j, 0) + λ(0, j, 0);
+                Δλ_scal(0, j, 0) = Mxb(0, j, 0) + Δλ(0, j, 0);
         } else {
             // Initialize rhs r + f - v = Mx-b - (AB) v + (E0)v   (λ_scal ← ...)
             for (index_t j = 0; j < nx; ++j)
-                λ_scal(i, j, 0) = Mxb(i, j, 0) + λ(i, j, 0) - λ1(i - 1, j, 0);
+                Δλ_scal(i, j, 0) =
+                    Mxb(i, j, 0) + Δλ(i, j, 0) - Δλ1(i - 1, j, 0);
             // Subtract L(s) λʹ(i - 1)                            (λ_scal ← ...)
-            scalar_blas::xgemv_sub(LΨs.batch(i - 1), λ_scal.batch(i - 1),
-                                   λ_scal.batch(i), be);
+            scalar_blas::xgemv_sub(LΨs.batch(i - 1), Δλ_scal.batch(i - 1),
+                                   Δλ_scal.batch(i), be);
         }
         // Solve L(d) Δλʹ = r + f - v - L(s) λʹ(i - 1)            (λ_scal ← ...)
-        scalar_blas::xtrsv_LNN(LΨd.batch(i), λ_scal.batch(i), be);
+        scalar_blas::xtrsv_LNN(LΨd.batch(i), Δλ_scal.batch(i), be);
     };
 
     // Backward substitution Ψ
     // -----------------------
     auto solve_ψ_rev = [&](index_t i) {
         if (i < N)
-            scalar_blas::xgemv_T_sub(LΨs.batch(i), λ_scal.batch(i + 1),
-                                     λ_scal.batch(i), be);
-        scalar_blas::xtrsv_LTN(LΨd.batch(i), λ_scal.batch(i), be);
+            scalar_blas::xgemv_T_sub(LΨs.batch(i), Δλ_scal.batch(i + 1),
+                                     Δλ_scal.batch(i), be);
+        scalar_blas::xtrsv_LTN(LΨd.batch(i), Δλ_scal.batch(i), be);
         if (i > 0)
             for (index_t j = 0; j < nx; ++j)
-                λ1(i - 1, j, 0) = λ(i, j, 0) = λ_scal(i, j, 0);
+                Δλ1(i - 1, j, 0) = Δλ(i, j, 0) = Δλ_scal(i, j, 0);
         else
             for (index_t j = 0; j < nx; ++j)
-                λ(0, j, 0) = λ_scal(0, j, 0);
+                Δλ(0, j, 0) = Δλ_scal(0, j, 0);
     };
 
     // Parallel solve Hd = -g - Mᵀλ
     // -----------------------------
     auto solve_H2 = [&](index_t i) {
         KOQKATOO_TRACE("solve Hd=-g-MᵀΔλ", i);
-        compact_blas::xgemv_sub(Wᵀ().batch(i), λ.batch(i), d.batch(i), be);
+        compact_blas::xgemv_sub(Wᵀ().batch(i), Δλ.batch(i), d.batch(i), be);
         if (i < AB().num_batches())
-            compact_blas::xgemv_T_add(V().batch(i), λ1.batch(i), d.batch(i),
+            compact_blas::xgemv_T_add(V().batch(i), Δλ1.batch(i), d.batch(i),
                                       be);
         compact_blas::xtrsv_LTN(LH().batch(i), d.batch(i), be);
-        Mᵀλ.batch(i).top_rows(nx) = λ.batch(i);
-        Mᵀλ.batch(i).bottom_rows(nu).set_constant(0);
+        MᵀΔλ.batch(i).top_rows(nx) = Δλ.batch(i);
+        MᵀΔλ.batch(i).bottom_rows(nu).set_constant(0);
         if (i < AB().num_batches())
-            compact_blas::xgemv_T_sub(AB().batch(i), λ1.batch(i), Mᵀλ.batch(i),
-                                      be);
+            compact_blas::xgemv_T_sub(AB().batch(i), Δλ1.batch(i),
+                                      MᵀΔλ.batch(i), be);
     };
 
     index_t num_batch   = (N + 1 + simd_stride - 1) / simd_stride;
@@ -438,7 +439,7 @@ real_t Solver<Abi>::recompute_outer(real_view x, real_view y, real_view λ,
                 for (index_t i = 0; i <= i_end; ++i) {
                     if (r >= nx && i == i_end)
                         continue;
-                    auto gr = grad_fi(i, r, 0) + Aᵀyi(i, r, 0) + Mᵀλi(i, r, 0);
+                    auto gr  = grad_fi(i, r, 0) + Aᵀyi(i, r, 0) + Mᵀλi(i, r, 0);
                     inf_norm = max(abs(gr), inf_norm);
                     l1_norm += abs(gr);
                 }
