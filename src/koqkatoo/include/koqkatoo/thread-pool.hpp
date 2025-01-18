@@ -77,7 +77,7 @@ class thread_pool {
             wait(i);
     }
 
-    template <class F, class I = size_t>
+    template <class I = size_t, class F>
     void sync_run_all(F &&f) {
         const auto n = size();
         for (size_t i = 0; i < n; ++i)
