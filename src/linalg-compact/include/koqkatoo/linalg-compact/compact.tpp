@@ -334,13 +334,14 @@ void CompactBLAS<Abi>::xcopy(batch_view A, mut_batch_view B) {
 
 template <class Abi>
 void CompactBLAS<Abi>::xcopy_L(single_batch_view A, mut_single_batch_view B) {
-    KOQKATOO_TRACE("xcopy_L", 0, A.rows() * A.cols() * A.depth());
+    [[maybe_unused]] auto [m, M] = std::minmax({A.rows(), A.cols()});
+    KOQKATOO_TRACE("xcopy_L", 0, (m * (m + 1) / 2 + (M - m) * m) * A.depth());
     assert(A.rows() == B.rows());
     assert(A.cols() == B.cols());
     assert(A.rows() >= A.cols());
-    const index_t n = A.rows(), m = A.cols();
-    for (index_t j = 0; j < m; ++j)
-        KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t i = j; i < n; ++i)
+    const index_t rows = A.rows(), cols = A.cols();
+    for (index_t j = 0; j < cols; ++j)
+        KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t i = j; i < rows; ++i)
             aligned_store(&B(0, i, j), aligned_load(&A(0, i, j)));
 }
 
