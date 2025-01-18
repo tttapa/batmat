@@ -51,7 +51,7 @@ void CompactBLAS<Abi>::xsyrk_T_schur_copy(single_batch_view C,
     assert(H_out.rows() == H_in.rows());
     assert(H_out.cols() == H_in.cols());
     if (C.rows() == 0 || C.cols() == 0)
-        return;
+        return xcopy_L(H_in, H_out);
     [[maybe_unused]] const auto op_cnt_syrk =
                                     C.cols() * (C.cols() + 1) * C.rows() / 2,
                                 op_cnt_diag = C.cols() * C.rows();
