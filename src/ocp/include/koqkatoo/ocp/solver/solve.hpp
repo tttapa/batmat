@@ -16,6 +16,9 @@ struct SolverOptions {
     /// functions use the custom micro-kernels.
     linalg::compact::PreferredBackend preferred_backend =
         linalg::compact::PreferredBackend::Reference;
+    /// Use a custom Cholesky factorization implementation optimized for small
+    /// matrices instead of the default BLAS implementation.
+    bool use_serial_small_potrf = false;
 };
 
 template <simd_abi_tag Abi>

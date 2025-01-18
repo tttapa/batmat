@@ -78,7 +78,7 @@ void Solver<Abi>::tridiagonal_factor(index_t k) {
     // const auto potrf_be  = linalg::compact::PreferredBackend::Reference;
     const auto potrf_be              = settings.preferred_backend;
     constexpr bool merged_potrf_trsm = false;
-    constexpr bool use_small_potrf   = false;
+    const bool use_small_potrf       = settings.use_serial_small_potrf;
     // Add Θ to WWᵀ
     if (k > 0)
         scalar_blas::xadd_L(VVᵀ_scalar().batch(stage_idx - 1), LΨdk.batch(0));
