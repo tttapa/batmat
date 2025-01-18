@@ -90,10 +90,10 @@ void CompactBLAS<Abi>::xpotrf_base_ref(mut_single_batch_view H, index_t n) {
     using namespace micro_kernels;
     constexpr index_t R = potrf::RowsReg; // Block size
     const index_t m = H.rows(), N = H.cols();
-    assert(m >= N);
-    assert((n == m && m == N) || (n == N && m >= N) || (n < m && m == N));
     if (n < 0)
         n = N;
+    assert(m >= N);
+    assert((n == m && m == N) || (n == N && m >= N) || (n < m && m == N));
     mut_single_batch_matrix_accessor<Abi> H_ = H;
 
     // TODO: run benchmark to see if we need a special case for
