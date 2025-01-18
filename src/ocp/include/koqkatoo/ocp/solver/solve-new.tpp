@@ -13,6 +13,7 @@
 #include <koqkatoo/cholundate/householder-updowndate.hpp>
 #include <koqkatoo/cholundate/micro-kernels/householder-updowndate.hpp>
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xshhud-diag.hpp> // TODO
+#include <koqkatoo/linalg/small-potrf.hpp>
 
 namespace koqkatoo::ocp {
 
@@ -77,12 +78,17 @@ void Solver<Abi>::tridiagonal_factor(index_t k) {
     // const auto potrf_be  = linalg::compact::PreferredBackend::Reference;
     const auto potrf_be              = settings.preferred_backend;
     constexpr bool merged_potrf_trsm = false;
+    constexpr bool use_small_potrf   = false;
     // Add Θ to WWᵀ
     if (k > 0)
         scalar_blas::xadd_L(VVᵀ_scalar().batch(stage_idx - 1), LΨdk.batch(0));
     // Factor
     for (index_t j = 0; j < ni; ++j) {
-        if (merged_potrf_trsm) {
+        if (use_small_potrf) {
+            auto LΨkj = LΨk(j);
+            linalg::small_potrf(LΨkj.data, LΨkj.outer_stride, LΨkj.rows,
+                                LΨkj.cols);
+        } else if (merged_potrf_trsm) {
             scalar_blas::xpotrf(LΨk.batch(j), potrf_be);
         } else {
             scalar_blas::xpotrf(LΨdk.batch(j), potrf_be);

@@ -73,12 +73,16 @@ endif()
 
 # Linear algebra routines and BLAS interface
 # ------------------------------------------------------------------------------
-add_library(linalg "linalg/src/blas-interface.cpp")
+add_library(linalg
+    "linalg/src/blas-interface.cpp"
+    "linalg/src/small-potrf.cpp"
+)
 target_sources(linalg PUBLIC FILE_SET headers TYPE HEADERS
     BASE_DIRS "linalg/include"
     FILES "linalg/include/koqkatoo/linalg/lapack.hpp"
           "linalg/include/koqkatoo/linalg/blas-interface.hpp"
           "linalg/include/koqkatoo/linalg/blas.hpp"
+          "linalg/include/koqkatoo/linalg/small-potrf.hpp"
 )
 target_link_libraries(linalg PUBLIC koqkatoo::koqkatoo koqkatoo::blas-lapack-lib)
 target_compile_features(linalg PRIVATE cxx_std_20)
