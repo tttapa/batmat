@@ -109,15 +109,29 @@ void Solver<Abi>::tridiagonal_factor(index_t k) {
             // is in VV. We load and add WW to it, then factor it and
             // store it.
             auto VVN = storage.VVᵀ_scalar();
-            VVN(N - 1) += WWᵀ()(N); // TODO: could be optimized
-            scalar_blas::xpotrf(VVN.batch(N - 1), potrf_be);
+            {
+                KOQKATOO_TRACE("xadd", 0, VVN(N - 1).rows * VVN(N - 1).cols);
+                VVN(N - 1) += WWᵀ()(N); // TODO: could be optimized
+            }
+            if (use_small_potrf) {
+                linalg::small_potrf(VVN(N - 1).data, VVN(N - 1).outer_stride,
+                                    VVN(N - 1).rows, VVN(N - 1).cols);
+            } else {
+                scalar_blas::xpotrf(VVN.batch(N - 1), potrf_be);
+            }
             scalar_blas::xcopy_L(VVN.batch(N - 1), LΨd_scalar().batch(N));
             // TODO: we could probably merge the copies/addition here
         } else {
             assert(last_j <= ni);
             // If the previous batch was not complete, Ld has already
             // been loaded and updated by VV - LsLs.
-            scalar_blas::xpotrf(LΨdk.batch(last_j), potrf_be);
+            if (use_small_potrf) {
+                auto LΨdkj = LΨdk(last_j);
+                linalg::small_potrf(LΨdkj.data, LΨdkj.outer_stride, LΨdkj.rows,
+                                    LΨdkj.cols);
+            } else {
+                scalar_blas::xpotrf(LΨdk.batch(last_j), potrf_be);
+            }
         }
     }
 }
