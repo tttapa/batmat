@@ -263,6 +263,22 @@ struct CompactBLAS {
     static void xgemm_TN_sub_ref(single_batch_view A, single_batch_view B,
                                  mut_single_batch_view C);
 
+    /// C = -AᵀB
+    static void xgemm_TN_neg(single_batch_view A, single_batch_view B,
+                             mut_single_batch_view C, PreferredBackend b);
+    static void xgemm_TN_neg(batch_view A, batch_view B, mut_batch_view C,
+                             PreferredBackend b);
+    static void xgemm_TN_neg_ref(single_batch_view A, single_batch_view B,
+                                 mut_single_batch_view C);
+
+    /// C = -AᵀBᵀ
+    static void xgemm_TT_neg(single_batch_view A, single_batch_view B,
+                             mut_single_batch_view C, PreferredBackend b);
+    static void xgemm_TT_neg(batch_view A, batch_view B, mut_batch_view C,
+                             PreferredBackend b);
+    static void xgemm_TT_neg_ref(single_batch_view A, single_batch_view B,
+                                 mut_single_batch_view C);
+
     /// C += AᵀB
     static void xgemv_T_add(single_batch_view A, single_batch_view B,
                             mut_single_batch_view C, PreferredBackend b);

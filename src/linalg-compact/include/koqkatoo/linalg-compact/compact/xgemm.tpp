@@ -307,6 +307,56 @@ void CompactBLAS<Abi>::xgemm_TN_sub_ref(single_batch_view A,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xgemm_TN_neg_ref(single_batch_view A,
+                                        single_batch_view B,
+                                        mut_single_batch_view C) {
+    KOQKATOO_TRACE("xgemm_TN_neg", 0,
+                   A.cols() * A.rows() * B.cols() * A.depth());
+    assert(A.cols() == C.rows());
+    assert(A.rows() == B.rows());
+    assert(B.cols() == C.cols());
+    static constexpr micro_kernels::gemm::KernelConfig conf{.negate  = true,
+                                                            .trans_A = true};
+    for (index_t j = 0; j < C.cols(); ++j)
+        for (index_t i = 0; i < C.rows(); ++i)
+            simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned);
+    for (index_t l = 0; l < A.rows(); l += GemmBlockSizeCols) {
+        auto nl = std::min<index_t>(GemmBlockSizeCols, A.rows() - l);
+        for (index_t i = 0; i < A.cols(); i += GemmBlockSizeRows) {
+            auto ni = std::min<index_t>(GemmBlockSizeRows, A.cols() - i);
+            micro_kernels::gemm::xgemm_register<Abi, conf>(
+                A.block(l, i, nl, ni), B.middle_rows(l, nl),
+                C.middle_rows(i, ni));
+        }
+    }
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xgemm_TT_neg_ref(single_batch_view A,
+                                        single_batch_view B,
+                                        mut_single_batch_view C) {
+    KOQKATOO_TRACE("xgemm_TT_neg", 0,
+                   A.cols() * A.rows() * B.rows() * A.depth());
+    assert(A.cols() == C.rows());
+    assert(A.rows() == B.cols());
+    assert(B.rows() == C.cols());
+    static constexpr micro_kernels::gemm::KernelConfig conf{
+        .negate = true, .trans_A = true, .trans_B = true};
+    for (index_t j = 0; j < C.cols(); ++j)
+        for (index_t i = 0; i < C.rows(); ++i)
+            simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned);
+    for (index_t l = 0; l < A.rows(); l += GemmBlockSizeCols) {
+        auto nl = std::min<index_t>(GemmBlockSizeCols, A.rows() - l);
+        for (index_t i = 0; i < A.cols(); i += GemmBlockSizeRows) {
+            auto ni = std::min<index_t>(GemmBlockSizeRows, A.cols() - i);
+            micro_kernels::gemm::xgemm_register<Abi, conf>(
+                A.block(l, i, nl, ni), B.middle_cols(l, nl),
+                C.middle_rows(i, ni));
+        }
+    }
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xgemv_T_sub_ref(single_batch_view A, single_batch_view B,
                                        mut_single_batch_view C) {
     KOQKATOO_TRACE("xgemv_T_sub", 0,
@@ -724,6 +774,82 @@ void CompactBLAS<Abi>::xgemm_TN_sub(batch_view A, batch_view B,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xgemm_TN_neg(batch_view A, batch_view B,
+                                    mut_batch_view C, PreferredBackend b) {
+    assert(A.depth() == B.depth());
+    assert(B.depth() == C.depth());
+    assert(A.cols() == C.rows());
+    assert(A.rows() == B.rows());
+    assert(B.cols() == C.cols());
+    KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
+        if (use_mkl_compact(b) && A.has_full_layer_stride() &&
+            B.has_full_layer_stride() && C.has_full_layer_stride()) {
+            KOQKATOO_TRACE("xgemm_TN_neg_mkl_compact", 0,
+                           A.cols() * A.rows() * B.cols() * A.depth());
+            xgemm_compact(
+                MKL_COL_MAJOR, MKL_TRANS, MKL_NOTRANS, A.cols(), B.cols(),
+                A.rows(), real_t{-1}, A.data, A.outer_stride(), B.data,
+                B.outer_stride(), real_t{0}, C.data, C.outer_stride(),
+                vector_format_mkl<real_t, Abi>::format, A.ceil_depth());
+            return;
+        }
+    })
+    if constexpr (std::same_as<Abi, scalar_abi>)
+        if (use_mkl_batched(b)) {
+            KOQKATOO_TRACE("xgemm_TN_neg_batched", 0,
+                           A.cols() * A.rows() * B.cols() * A.depth());
+            linalg::xgemm_batch_strided(
+                CblasColMajor, CblasTrans, CblasNoTrans, A.cols(), B.cols(),
+                A.rows(), real_t{-1}, A.data, A.outer_stride(),
+                A.layer_stride(), B.data, B.outer_stride(), B.layer_stride(),
+                real_t{9}, C.data, C.outer_stride(), C.layer_stride(),
+                A.depth());
+            return;
+        }
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < A.num_batches(); ++i)
+        xgemm_TN_neg_ref(A.batch(i), B.batch(i), C.batch(i));
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xgemm_TT_neg(batch_view A, batch_view B,
+                                    mut_batch_view C, PreferredBackend b) {
+    assert(A.depth() == B.depth());
+    assert(B.depth() == C.depth());
+    assert(A.cols() == C.rows());
+    assert(A.rows() == B.cols());
+    assert(B.rows() == C.cols());
+    KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
+        if (use_mkl_compact(b) && A.has_full_layer_stride() &&
+            B.has_full_layer_stride() && C.has_full_layer_stride()) {
+            KOQKATOO_TRACE("xgemm_TT_neg_mkl_compact", 0,
+                           A.cols() * A.rows() * B.rows() * A.depth());
+            xgemm_compact(
+                MKL_COL_MAJOR, MKL_TRANS, MKL_TRANS, A.cols(), B.rows(),
+                A.rows(), real_t{-1}, A.data, A.outer_stride(), B.data,
+                B.outer_stride(), real_t{0}, C.data, C.outer_stride(),
+                vector_format_mkl<real_t, Abi>::format, A.ceil_depth());
+            return;
+        }
+    })
+    if constexpr (std::same_as<Abi, scalar_abi>)
+        if (use_mkl_batched(b)) {
+            KOQKATOO_TRACE("xgemm_TT_neg_batched", 0,
+                           A.cols() * A.rows() * B.rows() * A.depth());
+            linalg::xgemm_batch_strided(
+                CblasColMajor, CblasTrans, CblasTrans, A.cols(), B.rows(),
+                A.rows(), real_t{-1}, A.data, A.outer_stride(),
+                A.layer_stride(), B.data, B.outer_stride(), B.layer_stride(),
+                real_t{9}, C.data, C.outer_stride(), C.layer_stride(),
+                A.depth());
+            return;
+        }
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < A.num_batches(); ++i)
+        xgemm_TT_neg_ref(A.batch(i), B.batch(i), C.batch(i));
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xgemv_T(batch_view A, batch_view B, mut_batch_view C,
                                PreferredBackend b) {
     assert(A.depth() == B.depth());
@@ -1018,6 +1144,44 @@ void CompactBLAS<Abi>::xgemm_TN_sub(single_batch_view A, single_batch_view B,
                 B.outer_stride(), real_t{1}, C.data, C.outer_stride());
         }
     xgemm_TN_sub_ref(A, B, C);
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xgemm_TN_neg(single_batch_view A, single_batch_view B,
+                                    mut_single_batch_view C,
+                                    PreferredBackend b) {
+    assert(A.cols() == C.rows());
+    assert(A.rows() == B.rows());
+    assert(B.cols() == C.cols());
+    if constexpr (std::same_as<Abi, scalar_abi>)
+        if (use_blas_scalar(b)) {
+            KOQKATOO_TRACE("xgemm_TN_neg_blas", 0,
+                           A.cols() * A.rows() * B.cols() * A.depth());
+            return linalg::xgemm(
+                CblasColMajor, CblasTrans, CblasNoTrans, A.cols(), B.cols(),
+                A.rows(), real_t{-1}, A.data, A.outer_stride(), B.data,
+                B.outer_stride(), real_t{0}, C.data, C.outer_stride());
+        }
+    xgemm_TN_neg_ref(A, B, C);
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xgemm_TT_neg(single_batch_view A, single_batch_view B,
+                                    mut_single_batch_view C,
+                                    PreferredBackend b) {
+    assert(A.cols() == C.rows());
+    assert(A.rows() == B.cols());
+    assert(B.rows() == C.cols());
+    if constexpr (std::same_as<Abi, scalar_abi>)
+        if (use_blas_scalar(b)) {
+            KOQKATOO_TRACE("xgemm_TT_neg_blas", 0,
+                           A.cols() * A.rows() * B.rows() * A.depth());
+            return linalg::xgemm(
+                CblasColMajor, CblasTrans, CblasNoTrans, A.cols(), B.rows(),
+                A.rows(), real_t{-1}, A.data, A.outer_stride(), B.data,
+                B.outer_stride(), real_t{0}, C.data, C.outer_stride());
+        }
+    xgemm_TT_neg_ref(A, B, C);
 }
 
 template <class Abi>
