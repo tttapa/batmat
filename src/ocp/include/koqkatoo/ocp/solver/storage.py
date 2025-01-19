@@ -14,9 +14,8 @@ nxu = nx + nu
 nxux = nxu + nx
 stage_matrices = {
     "CD": (ny, nxu),
-    "H": (nxu, nxu),
+    "HAB": (nxu + nx, nxu),
     "LHV": (nxux, nxu),
-    "AB": (nx, nxu),
     "λ1": (nx, 1),
     "mFx": (nx, 1),
     "Wᵀ": (nxu, nx),

@@ -107,7 +107,7 @@ struct SolverStorage {
         auto [N, nx, nu, ny, ny_N] = dim;
         return real_matrix{{
             .depth = N + 1,
-            .rows = nx*(2*nx) + 2*nx*ny + nx*(nu + nx) + nx*(nu + nx) + nx*nx + 2*nx*1 + ny*(nu + nx) + ny*(nu + nx) + ny*(nu + 3*nx) + ny*ny + 2*ny*1 + (nu + nx)*(nu + 2*nx) + (nu + nx)*(nu + nx),
+            .rows = nx*(2*nx) + 2*nx*ny + nx*(nu + nx) + nx*nx + 2*nx*1 + ny*(nu + nx) + ny*(nu + nx) + ny*(nu + 3*nx) + ny*ny + 2*ny*1 + 2*(nu + nx)*(nu + 2*nx),
             .cols = 1,
         }};
     }();
@@ -119,9 +119,8 @@ struct SolverStorage {
         }()
 
     static constexpr index_t CD_offset = 0;
-    KQT_PRECOMPUTE_OFFSET(H, nu*ny + nx*ny);
-    KQT_PRECOMPUTE_OFFSET(LHV, 2*nu*nx + nu*ny + nu*nu + nx*ny + nx*nx);
-    KQT_PRECOMPUTE_OFFSET(AB, 5*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 3*(nx*nx));
+    KQT_PRECOMPUTE_OFFSET(HAB, nu*ny + nx*ny);
+    KQT_PRECOMPUTE_OFFSET(LHV, 3*nu*nx + nu*ny + nu*nu + nx*ny + 2*(nx*nx));
     KQT_PRECOMPUTE_OFFSET(λ1, 6*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 4*(nx*nx));
     KQT_PRECOMPUTE_OFFSET(mFx, 6*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + nx + 4*(nx*nx));
     KQT_PRECOMPUTE_OFFSET(Wᵀ, 6*nu*nx + nu*ny + 2*(nu*nu) + nx*ny + 2*nx + 4*(nx*nx));
@@ -140,19 +139,14 @@ struct SolverStorage {
         return stagewise_storage.view.middle_rows(CD_offset, ny*(nu + nx)).reshaped(ny, nu + nx);
     }
 
-    mut_real_view H() {
+    mut_real_view HAB() {
         auto [N, nx, nu, ny, ny_N] = dim;
-        return stagewise_storage.view.middle_rows(H_offset, (nu + nx)*(nu + nx)).reshaped(nu + nx, nu + nx);
+        return stagewise_storage.view.middle_rows(HAB_offset, (nu + nx)*(nu + 2*nx)).reshaped(nu + 2*nx, nu + nx);
     }
 
     mut_real_view LHV() {
         auto [N, nx, nu, ny, ny_N] = dim;
         return stagewise_storage.view.middle_rows(LHV_offset, (nu + nx)*(nu + 2*nx)).reshaped(nu + 2*nx, nu + nx);
-    }
-
-    mut_real_view AB() {
-        auto [N, nx, nu, ny, ny_N] = dim;
-        return stagewise_storage.view.middle_rows(AB_offset, nx*(nu + nx)).reshaped(nx, nu + nx);
     }
 
     mut_real_view λ1() {
@@ -218,6 +212,8 @@ struct SolverStorage {
     #undef KQT_PRECOMPUTE_OFFSET
     // clang-format on
 
+    mut_real_view H() { return HAB().top_rows(dim.nx + dim.nu); }
+    mut_real_view AB() { return HAB().bottom_rows(dim.nx); }
     mut_real_view WWᵀ() { return WWᵀVWᵀ().top_rows(dim.nx); }
     mut_real_view VWᵀ() { return WWᵀVWᵀ().bottom_rows(dim.nx); }
 
