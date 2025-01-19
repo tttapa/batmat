@@ -41,7 +41,10 @@ void Solver<Abi>::prepare_factor(index_t k, real_t S, real_view Σ,
     if (isfinite(S))
         LHi.add_to_diagonal(1 / S);
     // Factorize H (and solve V)
-    compact_blas::xpotrf(LHV().batch(k), be);
+    if (k < AB().num_batches())
+        compact_blas::xpotrf(LHV().batch(k), be);
+    else
+        compact_blas::xpotrf(LHV().batch(k).top_rows(nx + nu), be);
     // Solve W = LH⁻¹ [I 0]ᵀ
     compact_blas::xtrtri_copy(LHi.top_left(nx + nu, nx), Wi, be);
     compact_blas::xtrsm_LLNN(LHi.bottom_right(nu, nu), Wi.bottom_rows(nu), be);
