@@ -130,6 +130,7 @@ struct Solver {
     void solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
                    mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ);
     void factor_rev(real_t S, real_view Σ, bool_view J);
+    void updowndate_rev(real_view Σ, bool_view J_old, bool_view J_new);
 
     [[nodiscard]] index_t num_variables() const {
         auto [N, nx, nu, ny, ny_N] = storage.dim;

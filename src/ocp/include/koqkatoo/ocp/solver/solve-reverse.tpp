@@ -57,14 +57,12 @@ void Solver<Abi>::prepare_factor_rev(index_t k, real_t S, real_view Σ,
              VVᵀk = VVᵀ_scalar().middle_layers(stage_idx, ni);
         // Compute -WVᵀ
         compact_blas::xgemm_TT_neg(Wi, V().batch(k), VWᵀ().batch(k), be);
-        std::println("  storing WVᵀ({}) to {}", k, stage_idx + 1);
         compact_blas::unpack(storage.VWᵀ().batch(k), LΨsk);
         // TODO: exploit trapezoidal shape of Wᵀ
         compact_blas::xsyrk(V().batch(k), VVᵀ().batch(k), be);
         compact_blas::unpack_L(VVᵀ().batch(k), VVᵀk);
     }
     auto LΨdk = LΨd_scalar().middle_layers(stage_idx, nd);
-    std::println("  storing WWᵀ({}) to {}", k, stage_idx);
     compact_blas::unpack_L(WWᵀ().batch(k), LΨdk);
 }
 
@@ -84,7 +82,6 @@ void Solver<Abi>::tridiagonal_factor_rev(index_t k) {
     // Factor
     for (index_t i = std::min(N, stage_idx + simd_stride); i-- > stage_idx;) {
         // Add VVᵀ(i) to Θ(i+1)
-        std::println("  add VVᵀ({}) to Ψd({})", i, i + 1);
         scalar_blas::xadd_L(VVᵀ.batch(i), LΨd.batch(i + 1));
         // Factor LΨd(i+1) = chol(Θ(i+1)) and solve LΨs(i) = -WV(i) LΨd(k+1)⁻ᵀ
         if (use_small_potrf) {
@@ -139,6 +136,15 @@ void Solver<Abi>::factor_rev(real_t S, real_view Σ, bool_view J) {
     };
 
     foreach_thread(thread_work);
+}
+
+template <simd_abi_tag Abi>
+void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
+                            real_view Mxb, mut_real_view d, mut_real_view Δλ,
+                            mut_real_view MᵀΔλ) {
+    KOQKATOO_TRACE("solve", 0);
+
+    auto [N, nx, nu, ny, ny_N] = storage.dim;
 
     std::cout << "Wᵀ = [\n";
     for (index_t i = 0; i < N + 1; ++i)
@@ -156,20 +162,12 @@ void Solver<Abi>::factor_rev(real_t S, real_view Σ, bool_view J) {
     for (index_t i = 0; i < N; ++i)
         guanaqo::print_python(std::cout, LΨs_scalar()(i + 1), ",\n", false);
     std::cout << "]" << std::endl;
-    std::cout << "WVᵀ_check = [\n";
-    for (index_t i = 0; i < N; ++i)
-        guanaqo::print_python(std::cout, VWᵀ()(i), ",\n", false);
-    std::cout << "]" << std::endl;
-}
+    // std::cout << "WVᵀ_check = [\n";
+    // for (index_t i = 0; i < N; ++i)
+    //     guanaqo::print_python(std::cout, VWᵀ()(i), ",\n", false);
+    // std::cout << "]" << std::endl;
 
-template <simd_abi_tag Abi>
-void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
-                            real_view Mxb, mut_real_view d, mut_real_view Δλ,
-                            mut_real_view MᵀΔλ) {
-    KOQKATOO_TRACE("solve", 0);
-
-    auto [N, nx, nu, ny, ny_N] = storage.dim;
-    const auto be              = settings.preferred_backend;
+    const auto be = settings.preferred_backend;
     scalar_mut_real_view Δλ_scal{{.data  = storage.Δλ_scalar.data(),
                                   .depth = N + 1,
                                   .rows  = nx,
@@ -210,7 +208,6 @@ void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
             scalar_blas::xgemv_sub(LΨs.batch(i + 2), Δλ_scal.batch(i + 2),
                                    Δλ_scal.batch(i + 1), be);
         }
-        std::println("solve fwd st.{}", i + 1);
         // Solve L(d) Δλʹ = r + f - v - L(s) λʹ(i + 1)            (λ_scal ← ...)
         scalar_blas::xtrsv_LNN(LΨd.batch(i + 1), Δλ_scal.batch(i + 1), be);
         if (i == 0) {
@@ -220,7 +217,6 @@ void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
             // Subtract L(s) λʹ(i + 1)                            (λ_scal ← ...)
             scalar_blas::xgemv_sub(LΨs.batch(1), Δλ_scal.batch(1),
                                    Δλ_scal.batch(0), be);
-            std::println("solve fwd st.{}", 0);
             // Solve L(d) Δλʹ = r + f - v - L(s) λʹ(i + 1)        (λ_scal ← ...)
             scalar_blas::xtrsv_LNN(LΨd.batch(0), Δλ_scal.batch(0), be);
         }
@@ -232,7 +228,6 @@ void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
         if (i > 0)
             scalar_blas::xgemv_T_sub(LΨs.batch(i), Δλ_scal.batch(i - 1),
                                      Δλ_scal.batch(i), be);
-        std::println("solve rev st.{}", i);
         scalar_blas::xtrsv_LTN(LΨd.batch(i), Δλ_scal.batch(i), be);
         if (i > 0)
             for (index_t j = 0; j < nx; ++j)
@@ -302,12 +297,10 @@ void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
                 KOQKATOO_TRACE("solve store-notify", k);
                 // Once the block of Ψ is done, we can start the next block
                 // of the solution of Hd=g-MᵀΔλ.
-                std::println("release");
                 stage_ready.fetch_add(1, std::memory_order_release);
                 stage_ready.notify_one();
             }
             // Release all threads waiting for the next block of Ψ
-            std::println("release {}", num_threads);
             stage_ready.fetch_add(static_cast<int>(num_threads),
                                   std::memory_order_release);
             stage_ready.notify_all();
@@ -331,6 +324,352 @@ void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
             if (k < 0)
                 break;
             solve_H2(num_batch - 1 - k);
+        }
+    };
+
+    foreach_thread(thread_work);
+}
+
+template <simd_abi_tag Abi>
+void Solver<Abi>::updowndate_rev(real_view Σ, bool_view J_old,
+                                 bool_view J_new) {
+    auto [N, nx, nu, ny, ny_N] = storage.dim;
+
+    // Count the number of changing constraints in each stage.
+    auto &ranks    = storage.stagewise_update_counts;
+    index_t rj_max = 0;
+    for (index_t k = 0; k <= N; ++k) { // TODO: worth parallelizing?
+        index_t rj  = 0;
+        index_t nyk = k == N ? ny_N : ny;
+        for (index_t r = 0; r < nyk; ++r) {
+            bool up   = J_new(k, r, 0) && !J_old(k, r, 0);
+            bool down = !J_new(k, r, 0) && J_old(k, r, 0);
+            if (up || down) {
+                storage.Σ_sgn()(k, rj, 0) = up ? +real_t(0) : -real_t(0);
+                storage.Σ_ud()(k, rj, 0)  = Σ(k, r, 0);
+                index_t nxuk              = k == N ? nx : nx + nu;
+                for (index_t c = 0; c < nxuk; ++c) // TODO: pre-transpose CD?
+                    storage.Z()(k, c, rj) = CD()(k, r, c);
+                ++rj;
+            }
+        }
+        ranks(k, 0, 0) = rj;
+        rj_max         = std::max(rj_max, rj);
+    }
+    if (rj_max == 0)
+        return;
+
+    // Factorization updates of H, V and Wᵀ
+    const auto updowndate_HVW =
+        [&](single_mut_real_view HV, single_mut_real_view Wᵀ,
+            single_mut_real_view A, single_real_view D) {
+            using namespace linalg::compact::micro_kernels::shhud_diag;
+            static constexpr index_constant<SizeR> R;
+            [[maybe_unused]] static constexpr index_constant<SizeS> S;
+
+            using W_t = triangular_accessor<Abi, real_t, R>;
+            alignas(W_t::alignment()) real_t W[W_t::size()];
+
+            // Process all diagonal blocks (in multiples of R, except the last).
+            foreach_chunked_merged(0, HV.cols(), R, [&](index_t k, auto rem_k) {
+                // Part of A corresponding to this diagonal block
+                // TODO: packing
+                auto Ad = A.middle_rows(k, rem_k);
+                auto Ld = HV.block(k, k, rem_k, rem_k);
+                // Process the diagonal block itself
+                microkernel_diag_lut<Abi>[rem_k - 1](A.cols(), W, Ld, Ad, D);
+                // Process all rows below the diagonal block (in multiples of S).
+                foreach_chunked_merged(
+                    k + rem_k, HV.rows(), S,
+                    [&](index_t i, auto rem_i) {
+                        auto As = A.middle_rows(i, rem_i);
+                        auto Ls = HV.block(i, k, rem_i, rem_k);
+                        microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
+                            A.cols(), W, Ls, As, Ad, D, false);
+                    },
+                    LoopDir::Backward); // TODO: decide on order
+                foreach_chunked_merged(
+                    0, Wᵀ.cols(), S, [&](index_t iw, auto rem_i) {
+                        index_t i = HV.rows() + iw;
+                        auto As   = A.middle_rows(i, rem_i);
+                        auto Ls   = Wᵀ.block(k, iw, rem_k, rem_i);
+                        microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
+                            A.cols(), W, Ls, As, Ad, D, true);
+                    });
+            });
+        };
+
+    // Prepare the updates of Ψ and H (Woodbury and computation of ̃W)
+    const auto updowndate_stage = [&](index_t batch_idx, index_t rj_min,
+                                      index_t rj_batch, auto ranksj) {
+        auto Σj  = storage.Σ_ud().batch(batch_idx).top_rows(rj_batch);
+        auto Sj  = storage.Σ_sgn().batch(batch_idx).top_rows(rj_batch);
+        auto Zj  = storage.Z().batch(batch_idx).left_cols(rj_batch);
+        auto Z1j = storage.Z1().batch(batch_idx).left_cols(rj_batch);
+        auto Luj = storage.Lupd().batch(batch_idx).top_left(rj_batch, rj_batch);
+        auto Wuj = storage.Wupd().batch(batch_idx).left_cols(rj_batch);
+        using simd = typename types::simd;
+#ifdef _GLIBCXX_EXPERIMENTAL_SIMD // TODO: need general way to convert masks
+        using index_simd = typename types::index_simd;
+        index_simd rjks{ranksj.data, stdx::vector_aligned};
+        for (index_t rj = rj_min; rj < rj_batch; ++rj) {
+            index_simd rjs{rj};
+            auto z0_mask = rjs >= rjks;
+            simd zero{0};
+            constexpr auto vec_align = stdx::vector_aligned;
+            for (index_t r = 0; r < nx + nu; ++r)
+                where(z0_mask.__cvt(), zero).copy_to(&Zj(0, r, rj), vec_align);
+            using std::sqrt;
+            zero = simd{sqrt(std::numeric_limits<real_t>::min())}; // TODO
+            // TODO: why does zero sometimes result in NaN? At first sight, inf
+            //       arithmetic should also work (i.e. Σ⁻¹ = ∞), but apparently
+            //       I'm missing something.
+            where(z0_mask.__cvt(), zero).copy_to(&Σj(0, rj, 0), vec_align);
+        }
+#else
+#error "Fallback not yet implemented"
+#endif
+        const auto be = settings.preferred_backend;
+        // Copy Z
+        compact_blas::xcopy(Zj, Z1j.top_rows(nx + nu));
+        compact_blas::xfill(real_t(0), Z1j.bottom_rows(2 * nx)); // TODO
+        // Z ← L⁻¹ Z
+        compact_blas::xtrsm_LLNN(LH().batch(batch_idx), Zj, be);
+        // Lu ← ZᵀZ ± Σ⁻¹
+        compact_blas::xsyrk_T(Zj, Luj, be);
+        for (index_t r = 0; r < rj_batch; ++r) {
+            simd Lujrr{&Luj(0, r, r), stdx::vector_aligned};
+            simd Σjr{&Σj(0, r, 0), stdx::vector_aligned};
+            simd Sjr{&Sj(0, r, 0), stdx::vector_aligned};
+            Lujrr += cneg(1 / Σjr, Sjr);
+            Lujrr.copy_to(&Luj(0, r, r), stdx::vector_aligned);
+        }
+        // Lu ← chol(ZᵀZ ± Σ⁻¹)
+        compact_blas::xpntrf(Luj, Sj);
+        // Z ← Z Lu⁻ᵀ
+        compact_blas::xtrsm_RLTN(Luj, Zj, be);
+        // Wu ← W Z
+        compact_blas::xgemm_TN(Wᵀ().batch(batch_idx), Zj, Wuj, be);
+        if (batch_idx < AB().num_batches()) {
+            // Vu ← -V Z
+            auto Vuj = storage.Vupd().batch(batch_idx).left_cols(rj_batch);
+            compact_blas::xgemm_neg(V().batch(batch_idx), Zj, Vuj, be);
+        }
+    };
+
+    // Factorization updates of H, V and Wᵀ
+    const auto updowndate_stage_H = [&](index_t batch_idx, index_t rj_batch) {
+        auto Σj    = storage.Σ_ud().batch(batch_idx).top_rows(rj_batch);
+        auto Sj    = storage.Σ_sgn().batch(batch_idx).top_rows(rj_batch);
+        auto Z1j   = storage.Z1().batch(batch_idx).left_cols(rj_batch);
+        using simd = typename types::simd;
+        for (index_t r = 0; r < rj_batch; ++r) {
+            simd s{&Sj(0, r, 0), stdx::vector_aligned};
+            simd σ{&Σj(0, r, 0), stdx::vector_aligned};
+            cneg(σ, s).copy_to(&Σj(0, r, 0), stdx::vector_aligned);
+        }
+        // Update LH and V
+        // TODO: no need to update V in last stage.
+        updowndate_HVW(LHV().batch(batch_idx), Wᵀ().batch(batch_idx), Z1j, Σj);
+    };
+
+    // Each block of V generates fill-in in A in the block row below it, and
+    // W adds new columns to A, but we only ever need two block rows of A at any
+    // given time, thanks to the block-tridiagonal structure of Ψ, so we use a
+    // sliding window of depth 2, and use the stage index modulo 2.
+    index_t colsA = 0;
+    auto &A = storage.A_ud, &D = storage.D_ud;
+    using namespace cholundate;
+    static constexpr index_constant<householder::DefaultSizeR> R;
+    static constexpr index_constant<householder::DefaultSizeS> S;
+    using W_t = micro_kernels::householder::matrix_W_storage<>;
+
+    constinit static const auto microkernel_diag_lut =
+        make_1d_lut<R>([]<index_t NR>(index_constant<NR>) {
+            return householder::updowndate_diag<NR + 1, DownUpdate>;
+        });
+    constinit static const auto microkernel_full_lut =
+        make_1d_lut<R>([]<index_t NR>(index_constant<NR>) {
+            return householder::updowndate_full<NR + 1, DownUpdate>;
+        });
+    constinit static const auto microkernel_tail_lut =
+        make_1d_lut<R>([]<index_t NR>(index_constant<NR>) {
+            constexpr micro_kernels::householder::Config uConf{
+                .block_size_r = NR + 1, .block_size_s = S};
+            return householder::updowndate_tile_tail<uConf, DownUpdate>;
+        });
+
+    auto process_diag_block = [&](index_t k, auto rem_k, auto Ad, auto Dd,
+                                  auto Ld, W_t &W) {
+        auto Add = Ad.middle_rows(k, rem_k);
+        auto Ldd = Ld.block(k, k, rem_k, rem_k);
+        microkernel_diag_lut[rem_k - 1](colsA, W, Ldd, Add, DownUpdate{Dd});
+    };
+    auto process_subdiag_block_W = [&](index_t k, auto Ad, auto Dd, auto Ld,
+                                       W_t &W) {
+        auto Add = Ad.middle_rows(k, R);
+        foreach_chunked_merged(k + R, Ld.rows, S, [&](index_t i, auto rem_i) {
+            auto Ads = Ad.middle_rows(i, rem_i);
+            auto Lds = Ld.block(i, k, rem_i, R);
+            microkernel_tail_lut[R - 1](rem_i, 0, colsA, W, Lds, Add, Ads,
+                                        DownUpdate{Dd});
+        });
+    };
+    auto process_subdiag_block_V = [&](index_t k, index_t rem_k, index_t colsA0,
+                                       auto As, auto Ls, auto Ad, auto Dd,
+                                       W_t &W) {
+        auto Add = Ad.middle_rows(k, rem_k);
+        foreach_chunked_merged(0, Ls.rows, S, [&](index_t i, auto rem_i) {
+            auto Ass = As.middle_rows(i, rem_i);
+            auto Lss = Ls.block(i, k, rem_i, rem_k);
+            microkernel_tail_lut[rem_k - 1](rem_i, colsA0, colsA, W, Lss, Add,
+                                            Ass, DownUpdate{Dd});
+        });
+    };
+
+    const auto updowndate_Ψ_stage = [&](index_t k) {
+        index_t rk  = ranks(k, 0, 0);
+        auto colsA0 = colsA;
+        colsA += rk;
+        std::println("updowndate_Ψ_batch st.{}  :::: rk={}", k, rk);
+        if (colsA == 0)
+            return;
+        auto Dd            = D(0).top_rows(colsA);
+        Dd.bottom_rows(rk) = storage.Σ_sgn()(k).top_rows(rk);
+        auto As            = A(k % 2).left_cols(colsA);
+        As.right_cols(rk)  = storage.Wupd()(k).left_cols(rk);
+        if (k == N)
+            // In the final stage, we cannot donwdate anything while waiting for
+            // V(N-1), we can only copy W̃(N).
+            return;
+        auto Ad = A((k + 1) % 2).left_cols(colsA);
+        auto Ld = LΨd_scalar()(k + 1), Ls = LΨs_scalar()(k + 1);
+        Ad.right_cols(rk) = storage.Vupd()(k).left_cols(rk);
+        W_t W;
+        std::span<real_t> Dd_spn{Dd.data, static_cast<size_t>(Dd.rows)};
+
+        // Process all diagonal blocks (in multiples of R, except the last).
+        foreach_chunked(
+            0, Ld.cols, R,
+            [&](index_t k) {
+                auto c0 = k == 0 ? colsA0 : 0;
+                process_diag_block(k, R, Ad, Dd_spn, Ld, W);
+                process_subdiag_block_W(k, Ad, Dd_spn, Ld, W);
+                process_subdiag_block_V(k, R, c0, As, Ls, Ad, Dd_spn, W);
+            },
+            [&](index_t k, index_t rem_k) {
+                auto c0 = k == 0 ? colsA0 : 0;
+                process_diag_block(k, rem_k, Ad, Dd_spn, Ld, W);
+                process_subdiag_block_V(k, rem_k, c0, As, Ls, Ad, Dd_spn, W);
+            });
+
+        // In the final iteration, we still need to process W̃₀
+        if (k == 0) {
+            auto Ld = LΨd_scalar()(0);
+            auto Ad = As;
+            // Process all diagonal blocks (in multiples of R, except the last).
+            foreach_chunked(
+                0, Ld.cols, R,
+                [&](index_t k) {
+                    process_diag_block(k, R, Ad, Dd_spn, Ld, W);
+                    process_subdiag_block_W(k, Ad, Dd_spn, Ld, W);
+                },
+                [&](index_t k, index_t rem_k) {
+                    auto Add = Ad.middle_rows(k, rem_k);
+                    auto Ldd = Ld.block(k, k, rem_k, rem_k);
+                    microkernel_full_lut[rem_k - 1](colsA, Ldd, Add,
+                                                    DownUpdate{Dd_spn});
+                });
+        }
+    };
+
+    const auto updowndate_Ψ_batch = [&](index_t batch_idx) {
+        KOQKATOO_TRACE("updowndate Ψ", batch_idx);
+        std::println("updowndate_Ψ_batch ba.{}", batch_idx);
+        index_t k0 = batch_idx * simd_stride;
+        index_t k1 = std::min(k0 + simd_stride, N + 1);
+        for (index_t k = k1; k-- > k0;)
+            updowndate_Ψ_stage(k);
+    };
+
+    const index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
+    auto &join_counters     = storage.reset_join_counters();
+    // join_counters: A value of 2 means that the parallel preparation for this
+    //                batch was done, a value of 1 means that the previous block
+    //                of Ψ was done. Therefore, a value of 3 means that the
+    //                current block of Ψ can be updated.
+    const auto process_stage = [&](index_t batch_idx, index_t rj_min,
+                                   index_t rj_batch, auto ranksj) {
+        std::println("process_stage ba.{}", batch_idx);
+        if (rj_batch > 0) {
+            KOQKATOO_TRACE("updowndate", batch_idx);
+            updowndate_stage(batch_idx, rj_min, rj_batch, ranksj);
+        }
+        auto ready = join_counters[batch_idx].value.fetch_or(2);
+        join_counters[batch_idx].value.notify_one();
+        // Whoever sets join_counter to 3 wins the race and gets to handle
+        // the update of Ψ
+        if (ready == 1 || batch_idx == num_batch - 1) {
+            auto bi = batch_idx;
+            while (true) {
+                updowndate_Ψ_batch(bi);
+                if (bi-- == 0)
+                    break;
+                // Indicate that this block of Ψ is done
+                if (join_counters[bi].value.fetch_or(1) == 0)
+                    // If the corresponding preparation is not done yet,
+                    // we can't process the next block of Ψ yet.
+                    break;
+            };
+        }
+    };
+
+    // Perform the update of H (after the parallel preparation)
+    const auto process_stage_H = [&](index_t batch_idx, index_t rj_batch) {
+        KOQKATOO_TRACE("updowndate H", batch_idx);
+        if (rj_batch <= 0)
+            return;
+        auto &join_counter = join_counters[batch_idx].value;
+        // Wait for the preparation to be finished (join_counter >= 2)
+        while (true) {
+            auto jc = join_counter.load();
+            if (jc >= 2)
+                break;
+            join_counter.wait(jc);
+        }
+        updowndate_stage_H(batch_idx, rj_batch);
+    };
+
+    std::atomic<index_t> batch_counter{0};
+    auto thread_work = [&](index_t, index_t) {
+        while (true) {
+            index_t b = batch_counter.fetch_add(1, std::memory_order_relaxed);
+            // First perform the parallel preparation, eagerly processing blocks
+            // of Ψ as we go.
+            if (b < num_batch) {
+                auto batch_idx = num_batch - 1 - b;
+                auto stage_idx = batch_idx * simd_stride;
+                auto nk     = std::min<index_t>(simd_stride, N + 1 - stage_idx);
+                auto ranksj = ranks.batch(batch_idx);
+                auto rjmm = std::minmax_element(ranksj.data, ranksj.data + nk);
+                index_t rj_min = *rjmm.first, rj_batch = *rjmm.second;
+                process_stage(batch_idx, rj_min, rj_batch, ranksj);
+            }
+            // Once all parallel preparation has been started, also start
+            // updating H.
+            else if (b < 2 * num_batch) {
+                // Looping backwards may give slightly better cache locality
+                auto batch_idx = b - num_batch;
+                auto stage_idx = batch_idx * simd_stride;
+                auto nk     = std::min<index_t>(simd_stride, N + 1 - stage_idx);
+                auto ranksj = ranks.batch(batch_idx);
+                auto rj_batch = std::max_element(ranksj.data, ranksj.data + nk);
+                process_stage_H(batch_idx, *rj_batch);
+            }
+            // If all parallel preparation and updating of H is done, return.
+            else {
+                break;
+            }
         }
     };
 

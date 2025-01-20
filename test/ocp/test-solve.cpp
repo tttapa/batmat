@@ -113,8 +113,12 @@ TEST_P(OCP, solve) {
     // s.updowndate_new(Σ_strided, J0_strided, J1_strided);
     // s.updowndate_new(Σ_strided, J1_strided, J_strided);
     // Solve the KKT system.
-    s.factor_new(S, Σ_strided, J_strided);                          // TODO
-    s.factor_rev(S, Σ_strided, J_strided);                          // TODO
+    s.factor_rev(S, Σ_strided, J_strided);                           // TODO
+    s.solve_rev(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided, //
+                d_strided, Δλ_strided, MᵀΔλ_strided);
+    s.factor_rev(S, Σ_strided, J0_strided); // TODO
+    s.updowndate_rev(Σ_strided, J0_strided, J1_strided);
+    s.updowndate_rev(Σ_strided, J1_strided, J_strided);
     s.solve_rev(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided, //
                 d_strided, Δλ_strided, MᵀΔλ_strided);
     // d:    Newton step for x
