@@ -802,7 +802,7 @@ void CompactBLAS<Abi>::xgemm_TN_neg(batch_view A, batch_view B,
                 CblasColMajor, CblasTrans, CblasNoTrans, A.cols(), B.cols(),
                 A.rows(), real_t{-1}, A.data, A.outer_stride(),
                 A.layer_stride(), B.data, B.outer_stride(), B.layer_stride(),
-                real_t{9}, C.data, C.outer_stride(), C.layer_stride(),
+                real_t{0}, C.data, C.outer_stride(), C.layer_stride(),
                 A.depth());
             return;
         }
@@ -840,7 +840,7 @@ void CompactBLAS<Abi>::xgemm_TT_neg(batch_view A, batch_view B,
                 CblasColMajor, CblasTrans, CblasTrans, A.cols(), B.rows(),
                 A.rows(), real_t{-1}, A.data, A.outer_stride(),
                 A.layer_stride(), B.data, B.outer_stride(), B.layer_stride(),
-                real_t{9}, C.data, C.outer_stride(), C.layer_stride(),
+                real_t{0}, C.data, C.outer_stride(), C.layer_stride(),
                 A.depth());
             return;
         }
@@ -1177,7 +1177,7 @@ void CompactBLAS<Abi>::xgemm_TT_neg(single_batch_view A, single_batch_view B,
             KOQKATOO_TRACE("xgemm_TT_neg_blas", 0,
                            A.cols() * A.rows() * B.rows() * A.depth());
             return linalg::xgemm(
-                CblasColMajor, CblasTrans, CblasNoTrans, A.cols(), B.rows(),
+                CblasColMajor, CblasTrans, CblasTrans, A.cols(), B.rows(),
                 A.rows(), real_t{-1}, A.data, A.outer_stride(), B.data,
                 B.outer_stride(), real_t{0}, C.data, C.outer_stride());
         }

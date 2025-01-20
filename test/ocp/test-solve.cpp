@@ -5,6 +5,7 @@
 #include <koqkatoo/ocp/ocp.hpp>
 #include <koqkatoo/ocp/random-ocp.hpp>
 #include <koqkatoo/ocp/solver/solve.hpp>
+#include <koqkatoo/openmp.h>
 
 #include <guanaqo/eigen/span.hpp>
 #include <guanaqo/eigen/view.hpp>
@@ -34,24 +35,26 @@ const auto ε = std::pow(std::numeric_limits<real_t>::epsilon(), real_t(0.9));
 struct OCP : testing::TestWithParam<index_t> {};
 
 TEST_P(OCP, solve) {
+    KOQKATOO_OMP_IF(omp_set_num_threads(1));
     using VectorXreal = Eigen::VectorX<real_t>;
-    using simd_abi    = stdx::simd_abi::deduce_t<real_t, 4>;
+    using simd_abi    = stdx::simd_abi::scalar;
+    // using simd_abi    = stdx::simd_abi::deduce_t<real_t, 4>;
     std::mt19937 rng{54321};
     std::normal_distribution<real_t> nrml{0, 1};
     std::bernoulli_distribution bernoulli{0.5};
 
     // Generate some random OCP matrices
     auto ocp = ko::generate_random_ocp({.N_horiz = GetParam(), //
-                                        .nx      = 5,
-                                        .nu      = 3,
-                                        .ny      = 7,
+                                        .nx      = 1,
+                                        .nu      = 1,
+                                        .ny      = 5,
                                         .ny_N    = 4},
                                        12345);
 
     // Instantiate the OCP KKT solver.
     ko::Solver<simd_abi> s = ocp;
     s.settings.preferred_backend =
-        koqkatoo::linalg::compact::PreferredBackend::MKLScalarBatched;
+        koqkatoo::linalg::compact::PreferredBackend::Reference; // TODO
     index_t n_var = ocp.num_variables(), n_constr = ocp.num_constraints(),
             n_dyn_constr = ocp.num_dynamics_constraints();
 
@@ -105,12 +108,14 @@ TEST_P(OCP, solve) {
     s.mat_vec_transpose_dynamics_constr(λ_strided, Mᵀλ_strided);
     s.residual_dynamics_constr(x_strided, b_strided, Mxb_strided);
     // Perform the factorization of the KKT system (with wrong active set).
-    s.factor_new(S, Σ_strided, J0_strided);
-    // Update factorization to correct active set.
-    s.updowndate_new(Σ_strided, J0_strided, J1_strided);
-    s.updowndate_new(Σ_strided, J1_strided, J_strided);
+    // s.factor_new(S, Σ_strided, J0_strided);
+    // // Update factorization to correct active set.
+    // s.updowndate_new(Σ_strided, J0_strided, J1_strided);
+    // s.updowndate_new(Σ_strided, J1_strided, J_strided);
     // Solve the KKT system.
-    s.solve_new(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided, //
+    s.factor_new(S, Σ_strided, J_strided);                          // TODO
+    s.factor_rev(S, Σ_strided, J_strided);                          // TODO
+    s.solve_rev(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided, //
                 d_strided, Δλ_strided, MᵀΔλ_strided);
     // d:    Newton step for x
     // Δλ:   negative Newton step for λ

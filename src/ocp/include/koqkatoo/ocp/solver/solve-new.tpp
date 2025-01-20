@@ -8,12 +8,14 @@
 #include <koqkatoo/trace.hpp>
 #include <algorithm>
 #include <atomic>
+#include <iostream>
 
 #include <koqkatoo/cholundate/householder-updowndate-common.tpp>
 #include <koqkatoo/cholundate/householder-updowndate.hpp>
 #include <koqkatoo/cholundate/micro-kernels/householder-updowndate.hpp>
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xshhud-diag.hpp> // TODO
 #include <koqkatoo/linalg/small-potrf.hpp>
+#include <guanaqo/print.hpp>
 
 namespace koqkatoo::ocp {
 
@@ -166,6 +168,15 @@ void Solver<Abi>::factor_new(real_t S, real_view Σ, bool_view J) {
     };
 
     foreach_thread(thread_work);
+
+    std::cout << "Wᵀ_ref = [\n";
+    for (index_t i = 0; i < N + 1; ++i)
+        guanaqo::print_python(std::cout, Wᵀ()(i), ",\n");
+    std::cout << "]" << std::endl;
+    std::cout << "V_ref = [\n";
+    for (index_t i = 0; i < N; ++i)
+        guanaqo::print_python(std::cout, V()(i), ",\n");
+    std::cout << "]" << std::endl;
 }
 
 template <simd_abi_tag Abi>

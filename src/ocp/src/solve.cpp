@@ -2,6 +2,7 @@
 
 #include <koqkatoo/ocp/solver/mat-vec.tpp>
 #include <koqkatoo/ocp/solver/solve-new.tpp>
+#include <koqkatoo/ocp/solver/solve-reverse.tpp>
 #include <koqkatoo/ocp/solver/solve.tpp>
 #include <koqkatoo/ocp/solver/storage.tpp>
 #include <koqkatoo/ocp/solver/updowndate.tpp>

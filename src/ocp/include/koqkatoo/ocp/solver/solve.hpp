@@ -127,6 +127,10 @@ struct Solver {
                            mut_real_view Aᵀy, mut_real_view Mᵀλ);
     void updowndate_new(real_view Σ, bool_view J_old, bool_view J_new);
 
+    void solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
+                   mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ);
+    void factor_rev(real_t S, real_view Σ, bool_view J);
+
     [[nodiscard]] index_t num_variables() const {
         auto [N, nx, nu, ny, ny_N] = storage.dim;
         return N * (nx + nu) + nx;
@@ -144,7 +148,9 @@ struct Solver {
 
   private:
     void prepare_factor(index_t k, real_t S, real_view Σ, bool_view J);
+    void prepare_factor_rev(index_t k, real_t S, real_view Σ, bool_view J);
     void tridiagonal_factor(index_t k);
+    void tridiagonal_factor_rev(index_t k);
 };
 
 } // namespace koqkatoo::ocp
