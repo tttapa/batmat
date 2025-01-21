@@ -261,7 +261,7 @@ void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
         while (true) {
             if (k > 0 && join_counters[k - 1].value.fetch_add(1) != 1)
                 return false;
-            KOQKATOO_TRACE("solve ψ fwd", k);
+            KOQKATOO_TRACE("solve ψ fwd", num_batch - 1 - k);
             index_t i_end = std::min((k + 1) * simd_stride, N + 1);
             for (index_t i = k * simd_stride; i < i_end; ++i)
                 solve_ψ_fwd(N - i);
@@ -288,11 +288,16 @@ void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
         if (main_thread) {
             for (index_t k = 0; k < num_batch; ++k) {
                 const index_t ik   = k * simd_stride,
-                              ikp1 = std::min(N + 1, ik + simd_stride);
+                              ikp1 = std::min(N, ik + simd_stride);
+                // When going backwards, we need a delay of one to make sure
+                // that λ(i+1) is available. Concretely, we can only start batch
+                // k if Ψ((k + 1) * simd_stride) is done.
                 {
                     KOQKATOO_TRACE("solve ψ rev", k);
+                    if (k == 0)
+                        solve_ψ_rev(0);
                     for (index_t i = ik; i < ikp1; ++i)
-                        solve_ψ_rev(i);
+                        solve_ψ_rev(i + 1); // delay of one for λ(i+1)
                 }
                 KOQKATOO_TRACE("solve store-notify", k);
                 // Once the block of Ψ is done, we can start the next block
@@ -585,7 +590,6 @@ void Solver<Abi>::updowndate_rev(real_view Σ, bool_view J_old,
 
     const auto updowndate_Ψ_batch = [&](index_t batch_idx) {
         KOQKATOO_TRACE("updowndate Ψ", batch_idx);
-        std::println("updowndate_Ψ_batch ba.{}", batch_idx);
         index_t k0 = batch_idx * simd_stride;
         index_t k1 = std::min(k0 + simd_stride, N + 1);
         for (index_t k = k1; k-- > k0;)
