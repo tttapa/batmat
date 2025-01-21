@@ -32,23 +32,23 @@ namespace sp = guanaqo::linalg::sparsity;
 
 const auto ε = std::pow(std::numeric_limits<real_t>::epsilon(), real_t(0.9));
 
-struct OCP : testing::TestWithParam<index_t> {};
+struct OCP : testing::TestWithParam<std::tuple<index_t, index_t, bool>> {};
 
 TEST_P(OCP, solve) {
-    KOQKATOO_OMP_IF(omp_set_num_threads(1));
-    using VectorXreal = Eigen::VectorX<real_t>;
-    using simd_abi    = stdx::simd_abi::scalar;
-    // using simd_abi    = stdx::simd_abi::deduce_t<real_t, 4>;
+    auto [N_horiz, nx, reverse] = GetParam();
+    using VectorXreal           = Eigen::VectorX<real_t>;
+    // using simd_abi    = stdx::simd_abi::scalar;
+    using simd_abi = stdx::simd_abi::deduce_t<real_t, 4>;
     std::mt19937 rng{54321};
     std::normal_distribution<real_t> nrml{0, 1};
     std::bernoulli_distribution bernoulli{0.5};
 
     // Generate some random OCP matrices
-    auto ocp = ko::generate_random_ocp({.N_horiz = GetParam(), //
-                                        .nx      = 1,
-                                        .nu      = 1,
-                                        .ny      = 5,
-                                        .ny_N    = 4},
+    auto ocp = ko::generate_random_ocp({.N_horiz = N_horiz, //
+                                        .nx      = nx,
+                                        .nu      = 7,
+                                        .ny      = 13,
+                                        .ny_N    = 3},
                                        12345);
 
     // Instantiate the OCP KKT solver.
@@ -107,20 +107,25 @@ TEST_P(OCP, solve) {
     s.mat_vec_transpose_constr(ŷ_strided, Gᵀŷ_strided);
     s.mat_vec_transpose_dynamics_constr(λ_strided, Mᵀλ_strided);
     s.residual_dynamics_constr(x_strided, b_strided, Mxb_strided);
-    // Perform the factorization of the KKT system (with wrong active set).
-    // s.factor_new(S, Σ_strided, J0_strided);
-    // // Update factorization to correct active set.
-    // s.updowndate_new(Σ_strided, J0_strided, J1_strided);
-    // s.updowndate_new(Σ_strided, J1_strided, J_strided);
-    // Solve the KKT system.
-    s.factor_rev(S, Σ_strided, J_strided);                           // TODO
-    s.solve_rev(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided, //
-                d_strided, Δλ_strided, MᵀΔλ_strided);
-    s.factor_rev(S, Σ_strided, J0_strided); // TODO
-    s.updowndate_rev(Σ_strided, J0_strided, J1_strided);
-    s.updowndate_rev(Σ_strided, J1_strided, J_strided);
-    s.solve_rev(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided, //
-                d_strided, Δλ_strided, MᵀΔλ_strided);
+    if (reverse) {
+        // Perform the factorization of the KKT system (with wrong active set).
+        s.factor_rev(S, Σ_strided, J0_strided);
+        // Update factorization to correct active set.
+        s.updowndate_rev(Σ_strided, J0_strided, J1_strided);
+        s.updowndate_rev(Σ_strided, J1_strided, J_strided);
+        // Solve the KKT system.
+        s.solve_rev(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided, //
+                    d_strided, Δλ_strided, MᵀΔλ_strided);
+    } else {
+        // Perform the factorization of the KKT system (with wrong active set).
+        s.factor_new(S, Σ_strided, J0_strided);
+        // Update factorization to correct active set.
+        s.updowndate_new(Σ_strided, J0_strided, J1_strided);
+        s.updowndate_new(Σ_strided, J1_strided, J_strided);
+        // Solve the KKT system.
+        s.solve_new(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided, //
+                    d_strided, Δλ_strided, MᵀΔλ_strided);
+    }
     // d:    Newton step for x
     // Δλ:   negative Newton step for λ
     // MᵀΔλ: by-product that can be re-used to compute Mᵀ(λ - Δλ)
@@ -191,6 +196,8 @@ TEST_P(OCP, solve) {
 }
 
 TEST_P(OCP, recompute) {
+    auto [N_horiz, nx, _] = GetParam();
+
     using VectorXreal = Eigen::VectorX<real_t>;
     using simd_abi    = stdx::simd_abi::deduce_t<real_t, 4>;
     std::mt19937 rng{654321};
@@ -198,8 +205,8 @@ TEST_P(OCP, recompute) {
     std::bernoulli_distribution bernoulli{0.5};
 
     // Generate some random OCP matrices
-    auto ocp = ko::generate_random_ocp({.N_horiz = GetParam(), //
-                                        .nx      = 5,
+    auto ocp = ko::generate_random_ocp({.N_horiz = N_horiz, //
+                                        .nx      = nx,
                                         .nu      = 3,
                                         .ny      = 7,
                                         .ny_N    = 4},
@@ -300,4 +307,8 @@ TEST_P(OCP, recompute) {
     EXPECT_NEAR(inf_nrm_al_grad, inf_nrm_al_grad_ref, 10 * ε);
 }
 
-INSTANTIATE_TEST_SUITE_P(OCP, OCP, testing::Range<index_t>(1, 21));
+INSTANTIATE_TEST_SUITE_P(OCP, OCP,
+                         testing::Combine( //
+                             testing::Range<index_t>(1, 21),
+                             testing::Values<index_t>(3, 4, 5, 11),
+                             testing::Bool()));

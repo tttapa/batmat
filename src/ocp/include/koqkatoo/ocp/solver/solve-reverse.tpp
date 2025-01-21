@@ -8,15 +8,12 @@
 #include <koqkatoo/trace.hpp>
 #include <algorithm>
 #include <atomic>
-#include <iostream>
-#include <print>
 
 #include <koqkatoo/cholundate/householder-updowndate-common.tpp>
 #include <koqkatoo/cholundate/householder-updowndate.hpp>
 #include <koqkatoo/cholundate/micro-kernels/householder-updowndate.hpp>
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xshhud-diag.hpp> // TODO
 #include <koqkatoo/linalg/small-potrf.hpp>
-#include <guanaqo/print.hpp>
 
 namespace koqkatoo::ocp {
 
@@ -145,29 +142,7 @@ void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     KOQKATOO_TRACE("solve", 0);
 
     auto [N, nx, nu, ny, ny_N] = storage.dim;
-
-    std::cout << "Wᵀ = [\n";
-    for (index_t i = 0; i < N + 1; ++i)
-        guanaqo::print_python(std::cout, Wᵀ()(i), ",\n", false);
-    std::cout << "]" << std::endl;
-    std::cout << "V = [\n";
-    for (index_t i = 0; i < N; ++i)
-        guanaqo::print_python(std::cout, V()(i), ",\n", false);
-    std::cout << "]" << std::endl;
-    std::cout << "LΨd_check = [\n";
-    for (index_t i = 0; i < N + 1; ++i)
-        guanaqo::print_python(std::cout, LΨd_scalar()(i), ",\n", false);
-    std::cout << "]" << std::endl;
-    std::cout << "LΨs_check = [\n";
-    for (index_t i = 0; i < N; ++i)
-        guanaqo::print_python(std::cout, LΨs_scalar()(i + 1), ",\n", false);
-    std::cout << "]" << std::endl;
-    // std::cout << "WVᵀ_check = [\n";
-    // for (index_t i = 0; i < N; ++i)
-    //     guanaqo::print_python(std::cout, VWᵀ()(i), ",\n", false);
-    // std::cout << "]" << std::endl;
-
-    const auto be = settings.preferred_backend;
+    const auto be              = settings.preferred_backend;
     scalar_mut_real_view Δλ_scal{{.data  = storage.Δλ_scalar.data(),
                                   .depth = N + 1,
                                   .rows  = nx,
@@ -533,7 +508,6 @@ void Solver<Abi>::updowndate_rev(real_view Σ, bool_view J_old,
         index_t rk  = ranks(k, 0, 0);
         auto colsA0 = colsA;
         colsA += rk;
-        std::println("updowndate_Ψ_batch st.{}  :::: rk={}", k, rk);
         if (colsA == 0)
             return;
         auto Dd            = D(0).top_rows(colsA);
@@ -601,7 +575,6 @@ void Solver<Abi>::updowndate_rev(real_view Σ, bool_view J_old,
     //                current block of Ψ can be updated.
     const auto process_stage = [&](index_t batch_idx, index_t rj_min,
                                    index_t rj_batch, auto ranksj) {
-        std::println("process_stage ba.{}", batch_idx);
         if (rj_batch > 0) {
             KOQKATOO_TRACE("updowndate", batch_idx);
             updowndate_stage(batch_idx, rj_min, rj_batch, ranksj);

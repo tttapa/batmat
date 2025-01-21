@@ -8,14 +8,12 @@
 #include <koqkatoo/trace.hpp>
 #include <algorithm>
 #include <atomic>
-#include <iostream>
 
 #include <koqkatoo/cholundate/householder-updowndate-common.tpp>
 #include <koqkatoo/cholundate/householder-updowndate.hpp>
 #include <koqkatoo/cholundate/micro-kernels/householder-updowndate.hpp>
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xshhud-diag.hpp> // TODO
 #include <koqkatoo/linalg/small-potrf.hpp>
-#include <guanaqo/print.hpp>
 
 namespace koqkatoo::ocp {
 
@@ -30,9 +28,6 @@ void Solver<Abi>::prepare_factor(index_t k, real_t S, real_view Σ,
     const auto stage_idx = k * simd_stride;
     const auto nd        = std::min(simd_stride, N + 1 - stage_idx),
                ni        = std::min(simd_stride, N - stage_idx);
-    auto LΨk             = LΨ_scalar().middle_layers(stage_idx, nd),
-         LΨdk            = LΨd_scalar().middle_layers(stage_idx, nd),
-         VVᵀk            = VVᵀ_scalar().middle_layers(stage_idx, ni);
     auto LHi = LH().batch(k), Wi = Wᵀ().batch(k);
     // Initialize V = F, it is computed while factorizing H
     if (k < AB().num_batches())
@@ -55,6 +50,8 @@ void Solver<Abi>::prepare_factor(index_t k, real_t S, real_view Σ,
     // TODO: exploit trapezoidal shape of Wᵀ
     // Compute VVᵀ
     if (k < AB().num_batches()) {
+        auto LΨk  = LΨ_scalar().middle_layers(stage_idx, nd),
+             VVᵀk = VVᵀ_scalar().middle_layers(stage_idx, ni);
         // Compute -VWᵀ
         compact_blas::xgemm_neg(V().batch(k), Wi, VWᵀ().batch(k), be);
         compact_blas::unpack_L(storage.WWᵀVWᵀ().batch(k), LΨk);
@@ -62,6 +59,7 @@ void Solver<Abi>::prepare_factor(index_t k, real_t S, real_view Σ,
         compact_blas::xsyrk(V().batch(k), VVᵀ().batch(k), be);
         compact_blas::unpack_L(VVᵀ().batch(k), VVᵀk);
     } else {
+        auto LΨdk = LΨd_scalar().middle_layers(stage_idx, nd);
         compact_blas::unpack_L(WWᵀ().batch(k), LΨdk);
     }
 }
@@ -168,15 +166,6 @@ void Solver<Abi>::factor_new(real_t S, real_view Σ, bool_view J) {
     };
 
     foreach_thread(thread_work);
-
-    std::cout << "Wᵀ_ref = [\n";
-    for (index_t i = 0; i < N + 1; ++i)
-        guanaqo::print_python(std::cout, Wᵀ()(i), ",\n");
-    std::cout << "]" << std::endl;
-    std::cout << "V_ref = [\n";
-    for (index_t i = 0; i < N; ++i)
-        guanaqo::print_python(std::cout, V()(i), ",\n");
-    std::cout << "]" << std::endl;
 }
 
 template <simd_abi_tag Abi>
@@ -453,7 +442,7 @@ real_t Solver<Abi>::recompute_outer(real_view x, real_view y, real_view λ,
                 for (index_t i = 0; i <= i_end; ++i) {
                     if (r >= nx && i == i_end)
                         continue;
-                    auto gr  = grad_fi(i, r, 0) + Aᵀyi(i, r, 0) + Mᵀλi(i, r, 0);
+                    auto gr = grad_fi(i, r, 0) + Aᵀyi(i, r, 0) + Mᵀλi(i, r, 0);
                     inf_norm = max(abs(gr), inf_norm);
                     l1_norm += abs(gr);
                 }
