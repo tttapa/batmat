@@ -442,7 +442,7 @@ real_t Solver<Abi>::recompute_outer(real_view x, real_view y, real_view λ,
                 for (index_t i = 0; i <= i_end; ++i) {
                     if (r >= nx && i == i_end)
                         continue;
-                    auto gr = grad_fi(i, r, 0) + Aᵀyi(i, r, 0) + Mᵀλi(i, r, 0);
+                    auto gr  = grad_fi(i, r, 0) + Aᵀyi(i, r, 0) + Mᵀλi(i, r, 0);
                     inf_norm = max(abs(gr), inf_norm);
                     l1_norm += abs(gr);
                 }
@@ -774,7 +774,6 @@ void Solver<Abi>::updowndate_new(real_view Σ, bool_view J_old,
 
     // Perform the update of H (after the parallel preparation)
     const auto process_stage_H = [&](index_t batch_idx, index_t rj_batch) {
-        KOQKATOO_TRACE("updowndate H", batch_idx);
         if (rj_batch <= 0)
             return;
         auto &join_counter = join_counters[batch_idx].value;
@@ -785,6 +784,7 @@ void Solver<Abi>::updowndate_new(real_view Σ, bool_view J_old,
                 break;
             join_counter.wait(jc);
         }
+        KOQKATOO_TRACE("updowndate H", batch_idx);
         updowndate_stage_H(batch_idx, rj_batch);
     };
 

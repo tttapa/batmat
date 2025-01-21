@@ -600,7 +600,6 @@ void Solver<Abi>::updowndate_rev(real_view Σ, bool_view J_old,
 
     // Perform the update of H (after the parallel preparation)
     const auto process_stage_H = [&](index_t batch_idx, index_t rj_batch) {
-        KOQKATOO_TRACE("updowndate H", batch_idx);
         if (rj_batch <= 0)
             return;
         auto &join_counter = join_counters[batch_idx].value;
@@ -611,6 +610,7 @@ void Solver<Abi>::updowndate_rev(real_view Σ, bool_view J_old,
                 break;
             join_counter.wait(jc);
         }
+        KOQKATOO_TRACE("updowndate H", batch_idx);
         updowndate_stage_H(batch_idx, rj_batch);
     };
 
