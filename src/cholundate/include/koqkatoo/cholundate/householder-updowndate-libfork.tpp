@@ -185,9 +185,14 @@ struct Context {
         if (r == Conf.block_size_r) [[likely]] // Most diagonal blocks
             updowndate_diag<Conf.block_size_r, UpDown>(A.cols, Ws[work_id], Ld,
                                                        packed_Ad, signs);
-        else // Last diagonal block
+        else { // Last diagonal block
+            KOQKATOO_ASSERT(r - 1 < Conf.block_size_r);
+            KOQKATOO_ASSERT(r >= 1);
+            static_assert(full_microkernel_lut<uConf, UpDown>.size() ==
+                          Conf.block_size_r);
             full_microkernel_lut<uConf, UpDown>[r - 1](A.cols, Ld, packed_Ad,
                                                        signs);
+        }
         return s > 0;
     }
 
