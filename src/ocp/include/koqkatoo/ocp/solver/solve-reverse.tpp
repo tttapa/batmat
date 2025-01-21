@@ -196,30 +196,22 @@ void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     // Forward substitution Ψ
     // ----------------------
     auto solve_ψ_fwd = [&](index_t i) {
-        if (i == N)
-            return;
-        KOQKATOO_ASSERT(i < N);
+        KOQKATOO_ASSERT(i <= N);
         // Initialize rhs r + f - v = Mx-b - (AB) v + (E0)v   (λ_scal ← ...)
-        for (index_t j = 0; j < nx; ++j)
-            Δλ_scal(i + 1, j, 0) =
-                Mxb(i + 1, j, 0) + Δλ(i + 1, j, 0) - Δλ1(i, j, 0);
-        if (i + 1 < N) {
-            // Subtract L(s) λʹ(i + 1)                            (λ_scal ← ...)
-            scalar_blas::xgemv_sub(LΨs.batch(i + 2), Δλ_scal.batch(i + 2),
-                                   Δλ_scal.batch(i + 1), be);
-        }
-        // Solve L(d) Δλʹ = r + f - v - L(s) λʹ(i + 1)            (λ_scal ← ...)
-        scalar_blas::xtrsv_LNN(LΨd.batch(i + 1), Δλ_scal.batch(i + 1), be);
-        if (i == 0) {
-            // Initialize rhs r - v = Mx-b + (E0)v                (λ_scal ← ...)
+        if (i > 0)
+            for (index_t j = 0; j < nx; ++j)
+                Δλ_scal(i, j, 0) =
+                    Mxb(i, j, 0) + Δλ(i, j, 0) - Δλ1(i - 1, j, 0);
+        else
             for (index_t j = 0; j < nx; ++j)
                 Δλ_scal(0, j, 0) = Mxb(0, j, 0) + Δλ(0, j, 0);
-            // Subtract L(s) λʹ(i + 1)                            (λ_scal ← ...)
-            scalar_blas::xgemv_sub(LΨs.batch(1), Δλ_scal.batch(1),
-                                   Δλ_scal.batch(0), be);
-            // Solve L(d) Δλʹ = r + f - v - L(s) λʹ(i + 1)        (λ_scal ← ...)
-            scalar_blas::xtrsv_LNN(LΨd.batch(0), Δλ_scal.batch(0), be);
+        if (i < N) {
+            // Subtract L(s) λʹ(i)                            (λ_scal ← ...)
+            scalar_blas::xgemv_sub(LΨs.batch(i + 1), Δλ_scal.batch(i + 1),
+                                   Δλ_scal.batch(i), be);
         }
+        // Solve L(d) Δλʹ = r + f - v - L(s) λʹ(i)            (λ_scal ← ...)
+        scalar_blas::xtrsv_LNN(LΨd.batch(i), Δλ_scal.batch(i), be);
     };
 
     // Backward substitution Ψ
@@ -257,29 +249,34 @@ void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     auto &join_counters = storage.reset_join_counters();
     // process_fwd returns true if last batch was processed
     const auto process_fwd = [&](index_t k) {
-        solve_H1(num_batch - 1 - k);
+        solve_H1(k);
         while (true) {
-            if (k > 0 && join_counters[k - 1].value.fetch_add(1) != 1)
+            if (k + 1 < num_batch &&
+                join_counters[k + 1].value.fetch_add(1) != 1)
                 return false;
-            KOQKATOO_TRACE("solve ψ fwd", num_batch - 1 - k);
-            index_t i_end = std::min((k + 1) * simd_stride, N + 1);
-            for (index_t i = k * simd_stride; i < i_end; ++i)
-                solve_ψ_fwd(N - i);
-            ++k;
-            if (k == num_batch)
+            KOQKATOO_TRACE("solve ψ fwd", k);
+            // We introduce a delay of 1 when solving in reverse, because we
+            // the right-hand side depends on f(i-1) if i > 0.
+            const index_t i_start = std::min((k + 1) * simd_stride, N) + 1,
+                          i_end   = k * simd_stride + 1;
+            for (index_t i = i_start; i-- > i_end;)
+                solve_ψ_fwd(i);
+            if (k-- == 0) {
+                solve_ψ_fwd(0); // final stage (i=0) has no more dependencies
                 return true;
+            }
         }
     };
 
-    std::atomic<index_t> batch_counter_1{0}, stage_counter_2{num_batch - 1};
+    std::atomic<index_t> batch_counter_1{num_batch - 1}, stage_counter_2{0};
     KOQKATOO_ASSERT(std::in_range<int>(num_batch));
     std::atomic<int> stage_ready{0};
     auto thread_work = [&](index_t, index_t num_threads) {
         // Solve the first system Hv=g
         bool main_thread = false;
         while (true) {
-            index_t k = batch_counter_1.fetch_add(1, std::memory_order_relaxed);
-            if (k >= num_batch)
+            index_t k = batch_counter_1.fetch_sub(1, std::memory_order_relaxed);
+            if (k < 0)
                 break;
             main_thread = process_fwd(k);
         }
@@ -325,10 +322,10 @@ void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
             } while (!stage_ready.compare_exchange_strong(
                 semaphore_val, semaphore_val - 1, std::memory_order_acquire));
             // If our thread won the race for the block of H, process it
-            index_t k = stage_counter_2.fetch_sub(1, std::memory_order_relaxed);
-            if (k < 0)
+            index_t k = stage_counter_2.fetch_add(1, std::memory_order_relaxed);
+            if (k >= num_batch)
                 break;
-            solve_H2(num_batch - 1 - k);
+            solve_H2(k);
         }
     };
 
