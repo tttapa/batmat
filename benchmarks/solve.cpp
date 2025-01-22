@@ -437,7 +437,7 @@ void benchmark_riccati(benchmark::State &state) {
 #endif
 }
 
-template <class simd_abi, bool Reverse = false>
+template <class simd_abi, bool Reverse = false, bool SmallPotrf = false>
 void benchmark_solve(benchmark::State &state) {
     if (!std::exchange(init_done, true)) {
         KOQKATOO_OMP_IF(omp_set_num_threads(n_threads));
@@ -464,6 +464,7 @@ void benchmark_solve(benchmark::State &state) {
     ko::Solver<simd_abi> s = ocp;
     s.settings.preferred_backend =
         koqkatoo::linalg::compact::PreferredBackend::MKLScalarBatched;
+    s.settings.use_serial_small_potrf = SmallPotrf;
     index_t n_var = ocp.num_variables(), n_constr = ocp.num_constraints(),
             n_dyn_constr = ocp.num_dynamics_constraints();
 
@@ -559,9 +560,9 @@ void benchmark_solve(benchmark::State &state) {
 #if KOQKATOO_WITH_TRACING
     static bool saved = false;
     if (num_invocations >= 100 && !std::exchange(saved, true)) {
-        std::string name = std::format("benchmark_solve_{}_{}.csv",
-                                       stdx::simd_size_v<real_t, simd_abi>,
-                                       Reverse ? "rev" : "fwd");
+        std::string name = std::format(
+            "benchmark_solve_{}_{}{}.csv", stdx::simd_size_v<real_t, simd_abi>,
+            Reverse ? "rev" : "fwd", SmallPotrf ? "-small_potrf" : "");
         std::filesystem::path out_dir{"traces"};
         out_dir /= *koqkatoo_commit_hash ? koqkatoo_commit_hash : "unknown";
         out_dir /= KOQKATOO_MKL_IF_ELSE("mkl", "openblas");
@@ -589,5 +590,6 @@ BENCHMARK(benchmark_solve<compact<8>, true>)->MeasureProcessCPUTime()->UseRealTi
 BENCHMARK(benchmark_solve<compact<4>, true>)->MeasureProcessCPUTime()->UseRealTime();
 BENCHMARK(benchmark_solve<compact<2>, true>)->MeasureProcessCPUTime()->UseRealTime();
 BENCHMARK(benchmark_solve<scalar, true>)->MeasureProcessCPUTime()->UseRealTime();
+BENCHMARK(benchmark_solve<compact<4>, false, true>)->MeasureProcessCPUTime()->UseRealTime();
 BENCHMARK(benchmark_riccati)->MeasureProcessCPUTime()->UseRealTime();
 // clang-format on
