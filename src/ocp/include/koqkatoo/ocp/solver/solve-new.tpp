@@ -129,38 +129,14 @@ void Solver<Abi>::tridiagonal_factor_fwd(index_t k) {
     }
     // If this was the last batch, factor Θ
     if ((k + 1) * simd_stride > N) {
-        index_t last_j = N % simd_stride;
-        if (last_j == 0) {
-            assert(ni <= 0);
-            // If the previous batch was complete, the term VV - LsLs
-            // is in VV. We load and add WW to it, then factor it and
-            // store it.
-            auto VVN = storage.VVᵀ_scalar();
-            {
-                KOQKATOO_TRACE("xadd", 0, VVN(N - 1).rows * VVN(N - 1).cols);
-                VVN(N - 1) += WWᵀ()(N); // TODO: could be optimized
-            }
-            if (use_small_potrf) {
-                linalg::small_potrf(VVN(N - 1).data, VVN(N - 1).outer_stride,
-                                    VVN(N - 1).rows, VVN(N - 1).cols);
-            } else {
-                scalar_blas::xpotrf(VVN.batch(N - 1),
-                                    settings.preferred_backend);
-            }
-            scalar_blas::xcopy_L(VVN.batch(N - 1), LΨd_scalar().batch(N));
-            // TODO: we could probably merge the copies/addition here
+        // Ld should already have been loaded and updated by VV - LsLs.
+        if (use_small_potrf) {
+            auto LΨdN = LΨd_scalar()(N);
+            linalg::small_potrf(LΨdN.data, LΨdN.outer_stride, LΨdN.rows,
+                                LΨdN.cols);
         } else {
-            assert(last_j <= ni);
-            // If the previous batch was not complete, Ld has already
-            // been loaded and updated by VV - LsLs.
-            if (use_small_potrf) {
-                auto LΨdkj = LΨdk(last_j);
-                linalg::small_potrf(LΨdkj.data, LΨdkj.outer_stride, LΨdkj.rows,
-                                    LΨdkj.cols);
-            } else {
-                scalar_blas::xpotrf(LΨdk.batch(last_j),
-                                    settings.preferred_backend);
-            }
+            scalar_blas::xpotrf(LΨd_scalar().batch(N),
+                                settings.preferred_backend);
         }
     }
 }
