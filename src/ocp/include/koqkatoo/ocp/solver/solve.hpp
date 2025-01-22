@@ -116,16 +116,18 @@ struct Solver {
                                              real_view x0,
                                              mut_real_view grad_f);
 
-    void solve_new(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
-                   mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ);
-    void factor_new(real_t S, real_view Σ, bool_view J);
     void recompute_inner(real_t S, real_view x0, real_view x, real_view λ,
                          real_view q, mut_real_view grad_f, mut_real_view Ax,
                          mut_real_view Mᵀλ);
     real_t recompute_outer(real_view x, real_view y, real_view λ, real_view q,
                            mut_real_view grad_f, mut_real_view Ax,
                            mut_real_view Aᵀy, mut_real_view Mᵀλ);
-    void updowndate_new(real_view Σ, bool_view J_old, bool_view J_new);
+    void solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
+               mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ);
+    template <bool Reverse = false>
+    void factor(real_t S, real_view Σ, bool_view J);
+    template <bool Reverse = false>
+    void updowndate(real_view Σ, bool_view J_old, bool_view J_new);
 
     void solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
                    mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ);
@@ -148,9 +150,12 @@ struct Solver {
     Solver(const LinearOCPStorage &ocp);
 
   private:
+    template <bool Reverse>
     void prepare_factor(index_t k, real_t S, real_view Σ, bool_view J);
     void prepare_factor_rev(index_t k, real_t S, real_view Σ, bool_view J);
+    template <bool Reverse>
     void tridiagonal_factor(index_t k);
+    void tridiagonal_factor_fwd(index_t k);
     void tridiagonal_factor_rev(index_t k);
 };
 

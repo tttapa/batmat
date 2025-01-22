@@ -18,6 +18,7 @@
 namespace koqkatoo::ocp {
 
 template <simd_abi_tag Abi>
+template <bool Reverse>
 void Solver<Abi>::prepare_factor(index_t k, real_t S, real_view Σ,
                                  bool_view J) {
     using std::isfinite;
@@ -48,24 +49,50 @@ void Solver<Abi>::prepare_factor(index_t k, real_t S, real_view Σ,
     // Compute WWᵀ
     compact_blas::xsyrk_T(Wi, WWᵀ().batch(k), be);
     // TODO: exploit trapezoidal shape of Wᵀ
-    // Compute VVᵀ
-    if (k < AB().num_batches()) {
-        auto LΨk  = LΨ_scalar().middle_layers(stage_idx, nd),
-             VVᵀk = VVᵀ_scalar().middle_layers(stage_idx, ni);
-        // Compute -VWᵀ
-        compact_blas::xgemm_neg(V().batch(k), Wi, VWᵀ().batch(k), be);
-        compact_blas::unpack_L(storage.WWᵀVWᵀ().batch(k), LΨk);
-        // TODO: exploit trapezoidal shape of Wᵀ
-        compact_blas::xsyrk(V().batch(k), VVᵀ().batch(k), be);
-        compact_blas::unpack_L(VVᵀ().batch(k), VVᵀk);
+    if constexpr (!Reverse) {
+        if (k < AB().num_batches()) {
+            auto LΨk  = LΨ_scalar().middle_layers(stage_idx, nd),
+                 VVᵀk = VVᵀ_scalar().middle_layers(stage_idx, ni);
+            // Compute -VWᵀ
+            compact_blas::xgemm_neg(V().batch(k), Wi, VWᵀ().batch(k), be);
+            compact_blas::unpack_L(storage.WWᵀVWᵀ().batch(k), LΨk);
+            // TODO: exploit trapezoidal shape of Wᵀ
+            // Compute VVᵀ
+            compact_blas::xsyrk(V().batch(k), VVᵀ().batch(k), be);
+            compact_blas::unpack_L(VVᵀ().batch(k), VVᵀk);
+        } else {
+            auto LΨdk = LΨd_scalar().middle_layers(stage_idx, nd);
+            compact_blas::unpack_L(WWᵀ().batch(k), LΨdk);
+        }
     } else {
+        // When solving the permuted matrix Ψ, the subdiagonal blocks become
+        // -WVᵀ instead of -VWᵀ. We also shift these blocks over by one stage
+        // in the storage, to make sure that they are stored contiguously by
+        // block column of Ψ (for efficient merged potrf and trsm later).
+        if (k < AB().num_batches()) {
+            auto LΨsk = LΨs_scalar().middle_layers(stage_idx + 1, ni),
+                 VVᵀk = VVᵀ_scalar().middle_layers(stage_idx, ni);
+            // Compute -WVᵀ
+            compact_blas::xgemm_TT_neg(Wi, V().batch(k), VWᵀ().batch(k), be);
+            compact_blas::unpack(storage.VWᵀ().batch(k), LΨsk);
+            // TODO: exploit trapezoidal shape of Wᵀ
+            // Compute VVᵀ
+            compact_blas::xsyrk(V().batch(k), VVᵀ().batch(k), be);
+            compact_blas::unpack_L(VVᵀ().batch(k), VVᵀk);
+        }
         auto LΨdk = LΨd_scalar().middle_layers(stage_idx, nd);
         compact_blas::unpack_L(WWᵀ().batch(k), LΨdk);
     }
 }
 
 template <simd_abi_tag Abi>
+template <bool Reverse>
 void Solver<Abi>::tridiagonal_factor(index_t k) {
+    return Reverse ? tridiagonal_factor_rev(k) : tridiagonal_factor_fwd(k);
+}
+
+template <simd_abi_tag Abi>
+void Solver<Abi>::tridiagonal_factor_fwd(index_t k) {
     KOQKATOO_TRACE("factor Ψ", k);
     const auto N         = storage.dim.N_horiz;
     const auto stage_idx = k * simd_stride;
@@ -76,32 +103,29 @@ void Solver<Abi>::tridiagonal_factor(index_t k) {
          LΨdk     = LΨd_scalar().middle_layers(stage_idx, nd),
          LΨsk     = LΨs_scalar().middle_layers(stage_idx, ni),
          VVᵀk     = VVᵀ_scalar().middle_layers(stage_idx, ni);
-    // TODO: Interestingly, the Reference backend without SIMD is quite fast,
-    //       but we should really be using BLASFEO instead ...
-    // const auto potrf_be  = linalg::compact::PreferredBackend::Reference;
-    const auto potrf_be              = settings.preferred_backend;
+    // Default BLAS potrf is quite slow for small matrices ...
     constexpr bool merged_potrf_trsm = false;
     const bool use_small_potrf       = settings.use_serial_small_potrf;
     // Add Θ to WWᵀ
     if (k > 0)
         scalar_blas::xadd_L(VVᵀ_scalar().batch(stage_idx - 1), LΨdk.batch(0));
     // Factor
-    for (index_t j = 0; j < ni; ++j) {
+    for (index_t i = 0; i < ni; ++i) {
         if (use_small_potrf) {
-            auto LΨkj = LΨk(j);
-            linalg::small_potrf(LΨkj.data, LΨkj.outer_stride, LΨkj.rows,
-                                LΨkj.cols);
+            auto LΨki = LΨk(i);
+            linalg::small_potrf(LΨki.data, LΨki.outer_stride, LΨki.rows,
+                                LΨki.cols);
         } else if (merged_potrf_trsm) {
-            scalar_blas::xpotrf(LΨk.batch(j), potrf_be);
+            scalar_blas::xpotrf(LΨk.batch(i), settings.preferred_backend);
         } else {
-            scalar_blas::xpotrf(LΨdk.batch(j), potrf_be);
-            scalar_blas::xtrsm_RLTN(LΨdk.batch(j), LΨsk.batch(j),
+            scalar_blas::xpotrf(LΨdk.batch(i), settings.preferred_backend);
+            scalar_blas::xtrsm_RLTN(LΨdk.batch(i), LΨsk.batch(i),
                                     settings.preferred_backend);
         }
-        scalar_blas::xsyrk_sub(LΨsk.batch(j), VVᵀk.batch(j),
+        scalar_blas::xsyrk_sub(LΨsk.batch(i), VVᵀk.batch(i),
                                settings.preferred_backend);
-        if (j + 1 < nd)
-            scalar_blas::xadd_L(VVᵀk.batch(j), LΨdk.batch(j + 1));
+        if (i + 1 < nd)
+            scalar_blas::xadd_L(VVᵀk.batch(i), LΨdk.batch(i + 1));
     }
     // If this was the last batch, factor Θ
     if ((k + 1) * simd_stride > N) {
@@ -120,7 +144,8 @@ void Solver<Abi>::tridiagonal_factor(index_t k) {
                 linalg::small_potrf(VVN(N - 1).data, VVN(N - 1).outer_stride,
                                     VVN(N - 1).rows, VVN(N - 1).cols);
             } else {
-                scalar_blas::xpotrf(VVN.batch(N - 1), potrf_be);
+                scalar_blas::xpotrf(VVN.batch(N - 1),
+                                    settings.preferred_backend);
             }
             scalar_blas::xcopy_L(VVN.batch(N - 1), LΨd_scalar().batch(N));
             // TODO: we could probably merge the copies/addition here
@@ -133,25 +158,28 @@ void Solver<Abi>::tridiagonal_factor(index_t k) {
                 linalg::small_potrf(LΨdkj.data, LΨdkj.outer_stride, LΨdkj.rows,
                                     LΨdkj.cols);
             } else {
-                scalar_blas::xpotrf(LΨdk.batch(last_j), potrf_be);
+                scalar_blas::xpotrf(LΨdk.batch(last_j),
+                                    settings.preferred_backend);
             }
         }
     }
 }
 
 template <simd_abi_tag Abi>
-void Solver<Abi>::factor_new(real_t S, real_view Σ, bool_view J) {
+template <bool Reverse>
+void Solver<Abi>::factor(real_t S, real_view Σ, bool_view J) {
     KOQKATOO_TRACE("factor", 0);
     const auto N         = storage.dim.N_horiz;
     const auto num_batch = (N + 1 + simd_stride - 1) / simd_stride;
 
     auto &join_counters      = storage.reset_join_counters();
     const auto process_stage = [&](index_t k) {
-        prepare_factor(k, S, Σ, J);
+        prepare_factor<Reverse>(Reverse ? num_batch - 1 - k : k, S, Σ, J);
         while (k < num_batch) {
             if (k > 0 && join_counters[k - 1].value.fetch_add(1) != 1)
                 break;
-            tridiagonal_factor(k++);
+            tridiagonal_factor<Reverse>(Reverse ? num_batch - 1 - k : k);
+            ++k;
         }
     };
 
@@ -169,9 +197,9 @@ void Solver<Abi>::factor_new(real_t S, real_view Σ, bool_view J) {
 }
 
 template <simd_abi_tag Abi>
-void Solver<Abi>::solve_new(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
-                            real_view Mxb, mut_real_view d, mut_real_view Δλ,
-                            mut_real_view MᵀΔλ) {
+void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
+                        real_view Mxb, mut_real_view d, mut_real_view Δλ,
+                        mut_real_view MᵀΔλ) {
     KOQKATOO_TRACE("solve", 0);
 
     auto [N, nx, nu, ny, ny_N] = storage.dim;
@@ -264,8 +292,7 @@ void Solver<Abi>::solve_new(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
             index_t i_end = std::min((k + 1) * simd_stride, N + 1);
             for (index_t i = k * simd_stride; i < i_end; ++i)
                 solve_ψ_fwd(i);
-            ++k;
-            if (k == num_batch)
+            if (++k == num_batch)
                 return true;
         }
     };
@@ -476,8 +503,8 @@ real_t Solver<Abi>::recompute_outer(real_view x, real_view y, real_view λ,
 }
 
 template <simd_abi_tag Abi>
-void Solver<Abi>::updowndate_new(real_view Σ, bool_view J_old,
-                                 bool_view J_new) {
+template <bool Reverse>
+void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new) {
     auto [N, nx, nu, ny, ny_N] = storage.dim;
 
     // Count the number of changing constraints in each stage.
@@ -701,20 +728,29 @@ void Solver<Abi>::updowndate_new(real_view Σ, bool_view J_old,
     };
 
     const auto updowndate_Ψ_stage = [&](index_t k) {
-        if (k == N)
+        // Final stage has no subdiagonal block (V)
+        if (!Reverse && k == N)
             return updowndate_Ψ_stage_last();
         index_t rk  = ranks(k, 0, 0);
         auto colsA0 = colsA;
         colsA += rk;
         if (colsA == 0)
             return;
-        auto Ad = A(k % 2).left_cols(colsA), Ld = LΨd_scalar()(k);
-        auto As = A((k + 1) % 2).left_cols(colsA), Ls = LΨs_scalar()(k);
-        Ad.right_cols(rk) = storage.Wupd()(k).left_cols(rk);
-        As.right_cols(rk) = storage.Vupd()(k).left_cols(rk);
-        W_t W;
         auto Dd            = D(0).top_rows(colsA);
         Dd.bottom_rows(rk) = storage.Σ_sgn()(k).top_rows(rk);
+        auto As            = A((k + 1) % 2).left_cols(colsA);
+        As.right_cols(rk)  = Reverse ? storage.Wupd()(k).left_cols(rk)
+                                     : storage.Vupd()(k).left_cols(rk);
+        if (Reverse && k == N)
+            // In the final stage, we cannot donwdate anything while waiting for
+            // V(N-1), we can only copy W̃(N).
+            return;
+        auto Ad           = A(k % 2).left_cols(colsA);
+        Ad.right_cols(rk) = Reverse ? storage.Vupd()(k).left_cols(rk)
+                                    : storage.Wupd()(k).left_cols(rk);
+        auto Ld           = LΨd_scalar()(Reverse ? k + 1 : k),
+             Ls           = LΨs_scalar()(Reverse ? k + 1 : k);
+        W_t W;
         std::span<real_t> Dd_spn{Dd.data, static_cast<size_t>(Dd.rows)};
 
         // Process all diagonal blocks (in multiples of R, except the last).
@@ -731,18 +767,42 @@ void Solver<Abi>::updowndate_new(real_view Σ, bool_view J_old,
                 process_diag_block(k, rem_k, Ad, Dd_spn, Ld, W);
                 process_subdiag_block_V(k, rem_k, c0, As, Ls, Ad, Dd_spn, W);
             });
+
+        // In the final iteration, we still need to process W̃₀
+        if (Reverse && k == 0) {
+            auto Ld = LΨd_scalar()(0);
+            auto Ad = As;
+            // Process all diagonal blocks (in multiples of R, except the last).
+            foreach_chunked(
+                0, Ld.cols, R,
+                [&](index_t k) {
+                    process_diag_block(k, R, Ad, Dd_spn, Ld, W);
+                    process_subdiag_block_W(k, Ad, Dd_spn, Ld, W);
+                },
+                [&](index_t k, index_t rem_k) {
+                    auto Add = Ad.middle_rows(k, rem_k);
+                    auto Ldd = Ld.block(k, k, rem_k, rem_k);
+                    microkernel_full_lut[rem_k - 1](colsA, Ldd, Add,
+                                                    DownUpdate{Dd_spn});
+                });
+        }
     };
 
     const auto updowndate_Ψ_batch = [&](index_t batch_idx) {
         KOQKATOO_TRACE("updowndate Ψ", batch_idx);
         index_t k0 = batch_idx * simd_stride;
         index_t k1 = std::min(k0 + simd_stride, N + 1);
-        for (index_t k = k0; k < k1; ++k)
-            updowndate_Ψ_stage(k);
+        if constexpr (Reverse)
+            for (index_t k = k1; k-- > k0;)
+                updowndate_Ψ_stage(k);
+        else
+            for (index_t k = k0; k < k1; ++k)
+                updowndate_Ψ_stage(k);
     };
 
-    const index_t num_batch = (N + 1 + simd_stride - 1) / simd_stride;
-    auto &join_counters     = storage.reset_join_counters();
+    const index_t n_batch     = (N + 1 + simd_stride - 1) / simd_stride;
+    const index_t first_batch = Reverse ? n_batch - 1 : 0;
+    auto &join_counters       = storage.reset_join_counters();
     // join_counters: A value of 2 means that the parallel preparation for this
     //                batch was done, a value of 1 means that the previous block
     //                of Ψ was done. Therefore, a value of 3 means that the
@@ -757,11 +817,13 @@ void Solver<Abi>::updowndate_new(real_view Σ, bool_view J_old,
         join_counters[batch_idx].value.notify_one();
         // Whoever sets join_counter to 3 wins the race and gets to handle
         // the update of Ψ
-        if (ready == 1 || batch_idx == 0) {
+        if (ready == 1 || batch_idx == first_batch) {
             auto bi = batch_idx;
             while (true) {
                 updowndate_Ψ_batch(bi);
-                if (++bi == num_batch)
+                if (!Reverse && ++bi == n_batch)
+                    break;
+                if (Reverse && bi-- == 0)
                     break;
                 // Indicate that this block of Ψ is done
                 if (join_counters[bi].value.fetch_or(1) == 0)
@@ -794,8 +856,8 @@ void Solver<Abi>::updowndate_new(real_view Σ, bool_view J_old,
             index_t b = batch_counter.fetch_add(1, std::memory_order_relaxed);
             // First perform the parallel preparation, eagerly processing blocks
             // of Ψ as we go.
-            if (b < num_batch) {
-                auto batch_idx = b;
+            if (b < n_batch) {
+                auto batch_idx = Reverse ? n_batch - 1 - b : b;
                 auto stage_idx = batch_idx * simd_stride;
                 auto nk     = std::min<index_t>(simd_stride, N + 1 - stage_idx);
                 auto ranksj = ranks.batch(batch_idx);
@@ -805,9 +867,9 @@ void Solver<Abi>::updowndate_new(real_view Σ, bool_view J_old,
             }
             // Once all parallel preparation has been started, also start
             // updating H.
-            else if (b < 2 * num_batch) {
+            else if (b < 2 * n_batch) {
                 // Looping backwards may give slightly better cache locality
-                auto batch_idx = 2 * num_batch - 1 - b;
+                auto batch_idx = Reverse ? b - n_batch : 2 * n_batch - 1 - b;
                 auto stage_idx = batch_idx * simd_stride;
                 auto nk     = std::min<index_t>(simd_stride, N + 1 - stage_idx);
                 auto ranksj = ranks.batch(batch_idx);

@@ -86,7 +86,7 @@ TEST(OCP, reconstructRandom) {
         guanaqo::timed(t_prep_Ψ, [&] { s.prepare_Ψ(); });
         std::this_thread::sleep_for(10ms);
         guanaqo::timed(t_chol_Ψ, // TODO
-                       [&] { s.factor_new(1e100, Σ_strided, J_strided); });
+                       [&] { s.factor(1e100, Σ_strided, J_strided); });
         std::this_thread::sleep_for(10ms);
         λ = r;
         guanaqo::timed(t_solve_λ, [&] { s.solve_Ψ_scalar(as_span(λ)); });

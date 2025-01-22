@@ -11,7 +11,11 @@ namespace koqkatoo::ocp {
 
 #define INSTANTIATE(...)                                                       \
     template struct SolverStorage<__VA_ARGS__>;                                \
-    template struct Solver<__VA_ARGS__>
+    template struct Solver<__VA_ARGS__>;                                       \
+    template void Solver<__VA_ARGS__>::factor(real_t S, real_view Σ,           \
+                                              bool_view J);                    \
+    template void Solver<__VA_ARGS__>::updowndate(                             \
+        real_view Σ, bool_view J_old, bool_view J_new)
 
 INSTANTIATE(stdx::simd_abi::scalar);
 INSTANTIATE(stdx::simd_abi::deduce_t<real_t, 16>);

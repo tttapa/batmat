@@ -118,13 +118,13 @@ TEST_P(OCP, solve) {
                     d_strided, Δλ_strided, MᵀΔλ_strided);
     } else {
         // Perform the factorization of the KKT system (with wrong active set).
-        s.factor_new(S, Σ_strided, J0_strided);
+        s.factor(S, Σ_strided, J0_strided);
         // Update factorization to correct active set.
-        s.updowndate_new(Σ_strided, J0_strided, J1_strided);
-        s.updowndate_new(Σ_strided, J1_strided, J_strided);
+        s.updowndate(Σ_strided, J0_strided, J1_strided);
+        s.updowndate(Σ_strided, J1_strided, J_strided);
         // Solve the KKT system.
-        s.solve_new(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided, //
-                    d_strided, Δλ_strided, MᵀΔλ_strided);
+        s.solve(grad_strided, Mᵀλ_strided, Gᵀŷ_strided, Mxb_strided, //
+                d_strided, Δλ_strided, MᵀΔλ_strided);
     }
     // d:    Newton step for x
     // Δλ:   negative Newton step for λ
