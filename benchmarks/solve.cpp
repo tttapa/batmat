@@ -437,7 +437,7 @@ void benchmark_riccati(benchmark::State &state) {
 #endif
 }
 
-template <class simd_abi, bool New = true>
+template <class simd_abi, bool Reverse = false>
 void benchmark_solve(benchmark::State &state) {
     if (!std::exchange(init_done, true)) {
         KOQKATOO_OMP_IF(omp_set_num_threads(n_threads));
@@ -527,23 +527,15 @@ void benchmark_solve(benchmark::State &state) {
 #if KOQKATOO_WITH_TRACING
         koqkatoo::trace_logger.reset();
 #endif
-        if constexpr (New) {
-            s.factor_new(S, Σ_strided, J_strided);
+        s.template factor<Reverse>(S, Σ_strided, J_strided);
 #if !FACTOR_ONLY
-            s.solve_new(grad_strided, Gᵀŷ_strided, Mxb_strided, d_strided,
-                        Δλ_strided, MᵀΔλ_strided);
+        s.template solve<Reverse>(grad_strided, Mᵀλ_strided, Gᵀŷ_strided,
+                                  Mxb_strided, d_strided, Δλ_strided,
+                                  MᵀΔλ_strided);
 #endif
 #if FACTUP
-            s.updowndate_new(Σ_strided, J_strided, J2_strided);
+        s.template updowndate<Reverse>(Σ_strided, J_strided, J2_strided);
 #endif
-        } else {
-            s.factor(S, Σ_strided, J_strided);
-#if !FACTOR_ONLY
-            s.solve(grad_strided, Gᵀŷ_strided, Mxb_strided, d_strided,
-                    Δλ_strided, MᵀΔλ_strided);
-#endif
-            // s.updowndate(Σ_strided, J_strided, J2_strided, nullptr);
-        }
         KOQKATOO_IF_ITT(
             __itt_frame_end_v3(koqkatoo::trace_logger.domain, nullptr));
     }
@@ -569,7 +561,7 @@ void benchmark_solve(benchmark::State &state) {
     if (num_invocations >= 100 && !std::exchange(saved, true)) {
         std::string name = std::format("benchmark_solve_{}_{}.csv",
                                        stdx::simd_size_v<real_t, simd_abi>,
-                                       New ? "new" : "old");
+                                       Reverse ? "rev" : "fwd");
         std::filesystem::path out_dir{"traces"};
         out_dir /= *koqkatoo_commit_hash ? koqkatoo_commit_hash : "unknown";
         out_dir /= KOQKATOO_MKL_IF_ELSE("mkl", "openblas");
@@ -588,8 +580,14 @@ template <auto N>
 using compact = stdx::simd_abi::deduce_t<real_t, N>;
 using scalar  = stdx::simd_abi::scalar;
 
+// clang-format off
 BENCHMARK(benchmark_solve<compact<8>>)->MeasureProcessCPUTime()->UseRealTime();
 BENCHMARK(benchmark_solve<compact<4>>)->MeasureProcessCPUTime()->UseRealTime();
 BENCHMARK(benchmark_solve<compact<2>>)->MeasureProcessCPUTime()->UseRealTime();
 BENCHMARK(benchmark_solve<scalar>)->MeasureProcessCPUTime()->UseRealTime();
+BENCHMARK(benchmark_solve<compact<8>, true>)->MeasureProcessCPUTime()->UseRealTime();
+BENCHMARK(benchmark_solve<compact<4>, true>)->MeasureProcessCPUTime()->UseRealTime();
+BENCHMARK(benchmark_solve<compact<2>, true>)->MeasureProcessCPUTime()->UseRealTime();
+BENCHMARK(benchmark_solve<scalar, true>)->MeasureProcessCPUTime()->UseRealTime();
 BENCHMARK(benchmark_riccati)->MeasureProcessCPUTime()->UseRealTime();
+// clang-format on

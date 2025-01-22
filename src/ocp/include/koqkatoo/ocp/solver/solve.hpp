@@ -122,8 +122,14 @@ struct Solver {
     real_t recompute_outer(real_view x, real_view y, real_view λ, real_view q,
                            mut_real_view grad_f, mut_real_view Ax,
                            mut_real_view Aᵀy, mut_real_view Mᵀλ);
+    void solve_fwd(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
+                   mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ);
+    template <bool Reverse = false>
     void solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ, real_view Mxb,
-               mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ);
+               mut_real_view d, mut_real_view Δλ, mut_real_view MᵀΔλ) {
+        return Reverse ? solve_rev(grad, Mᵀλ, Aᵀŷ, Mxb, d, Δλ, MᵀΔλ)
+                       : solve_fwd(grad, Mᵀλ, Aᵀŷ, Mxb, d, Δλ, MᵀΔλ);
+    }
     template <bool Reverse = false>
     void factor(real_t S, real_view Σ, bool_view J);
     template <bool Reverse = false>
