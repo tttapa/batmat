@@ -23,8 +23,10 @@ struct CompactBLAS {
     using simd                       = stdx::simd<real_t, Abi>;
     using mask                       = typename simd::mask_type;
     using simd_stride_t              = stdx::simd_size<real_t, Abi>;
-    static constexpr auto simd_align = stdx::memory_alignment_v<simd>;
-    static constexpr auto mask_align = stdx::memory_alignment_v<mask>;
+    using simd_align_t               = stdx::memory_alignment<simd>;
+    using mask_align_t               = stdx::memory_alignment<mask>;
+    static constexpr auto simd_align = simd_align_t::value;
+    static constexpr auto mask_align = mask_align_t::value;
     static_assert(simd_align <= simd_stride_t() * sizeof(real_t));
     static constexpr auto simd_stride = static_cast<index_t>(simd_stride_t());
     using scalar_abi                  = stdx::simd_abi::scalar;
@@ -47,6 +49,10 @@ struct CompactBLAS {
                                          index_t, index_t>;
     using mut_batch_view =
         BatchedMatrixView<real_t, index_t, simd_stride_t, index_t, index_t>;
+    using matrix =
+        BatchedMatrix<real_t, index_t, simd_stride_t, index_t, simd_align_t>;
+    using bool_matrix =
+        BatchedMatrix<bool, index_t, simd_stride_t, index_t, mask_align_t>;
 
     static simd aligned_load(const real_t *p) {
         return {p, stdx::vector_aligned};
@@ -198,6 +204,14 @@ struct CompactBLAS {
                           PreferredBackend b);
     static void xgemm_neg_ref(single_batch_view A, single_batch_view B,
                               mut_single_batch_view C);
+
+    /// C ← -AB
+    static void xgemm_NT_neg(single_batch_view A, single_batch_view B,
+                             mut_single_batch_view C, PreferredBackend b);
+    static void xgemm_NT_neg(batch_view A, batch_view B, mut_batch_view C,
+                             PreferredBackend b);
+    static void xgemm_NT_neg_ref(single_batch_view A, single_batch_view B,
+                                 mut_single_batch_view C);
 
     /// C ← -AB
     static void xgemv_neg(single_batch_view A, single_batch_view B,
