@@ -783,7 +783,7 @@ struct BatchedMatrix {
     using standard_stride_type = typename layout_type::standard_stride_type;
     using alignment_type       = A;
 
-    view_type view;
+    view_type view; // TODO: should be private to avoid leaking mutability
 
     static constexpr alignment_type default_alignment(layout_type layout) {
         if constexpr (alignment_type{} == 0)
@@ -875,6 +875,73 @@ struct BatchedMatrix {
     [[nodiscard]] auto batch_dyn(index_type b) { return view.batch_dyn(b); }
     [[nodiscard]] auto batch_dyn(index_type b) const {
         return view.as_const().batch_dyn(b);
+    }
+
+    [[nodiscard]] auto reshaped(index_type rows, index_type cols) {
+        return view.reshaped(rows, cols);
+    }
+    [[nodiscard]] auto reshaped(index_type rows, index_type cols) const {
+        return view.as_const().reshaped(rows, cols);
+    }
+    [[nodiscard]] auto top_rows(index_type n) { return view.top_rows(n); }
+    [[nodiscard]] auto top_rows(index_type n) const {
+        return view.as_const().top_rows(n);
+    }
+    [[nodiscard]] auto left_cols(index_type n) { return view.left_cols(n); }
+    [[nodiscard]] auto left_cols(index_type n) const {
+        return view.as_const().left_cols(n);
+    }
+    [[nodiscard]] auto bottom_rows(index_type n) { return view.bottom_rows(n); }
+    [[nodiscard]] auto bottom_rows(index_type n) const {
+        return view.as_const().bottom_rows(n);
+    }
+    [[nodiscard]] auto right_cols(index_type n) { return view.right_cols(n); }
+    [[nodiscard]] auto right_cols(index_type n) const {
+        return view.as_const().right_cols(n);
+    }
+    [[nodiscard]] auto middle_rows(index_type r, index_type n) {
+        return view.middle_rows(r, n);
+    }
+    [[nodiscard]] auto middle_rows(index_type r, index_type n) const {
+        return view.as_const().middle_rows(r, n);
+    }
+    [[nodiscard]] auto middle_cols(index_type c, index_type n) {
+        return view.middle_cols(c, n);
+    }
+    [[nodiscard]] auto middle_cols(index_type c, index_type n) const {
+        return view.as_const().middle_cols(c, n);
+    }
+    [[nodiscard]] auto top_left(index_type nr, index_type nc) {
+        return view.top_left(nr, nc);
+    }
+    [[nodiscard]] auto top_left(index_type nr, index_type nc) const {
+        return view.as_const().top_left(nr, nc);
+    }
+    [[nodiscard]] auto top_right(index_type nr, index_type nc) {
+        return view.top_right(nr, nc);
+    }
+    [[nodiscard]] auto top_right(index_type nr, index_type nc) const {
+        return view.as_const().top_right(nr, nc);
+    }
+    [[nodiscard]] auto bottom_left(index_type nr, index_type nc) {
+        return view.bottom_left(nr, nc);
+    }
+    [[nodiscard]] auto bottom_left(index_type nr, index_type nc) const {
+        return view.as_const().bottom_left(nr, nc);
+    }
+    [[nodiscard]] auto bottom_right(index_type nr, index_type nc) {
+        return view.bottom_right(nr, nc);
+    }
+    [[nodiscard]] auto bottom_right(index_type nr, index_type nc) const {
+        return view.as_const().bottom_right(nr, nc);
+    }
+    [[nodiscard]] auto block(index_type r, index_type c, index_type nr,
+                             index_type nc) {
+        return view.block(r, c, nr, nc);
+    }
+    [[nodiscard]] auto block(index_type r, index_type c, index_type nr,
+                             index_type nc) const {
+        return view.as_const().block(r, c, nr, nc);
     }
 
     [[nodiscard]] auto as_const() const { return view.as_const(); }
