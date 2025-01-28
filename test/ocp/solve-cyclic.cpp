@@ -1,0 +1,595 @@
+// TODO: move to src
+
+#include <koqkatoo/linalg-compact/compact.hpp>
+#include <koqkatoo/matrix-view.hpp>
+#include <koqkatoo/ocp/ocp.hpp>
+#include <koqkatoo/openmp.h>
+#include <guanaqo/eigen/span.hpp>
+#include <guanaqo/eigen/view.hpp>
+#include <guanaqo/print.hpp>
+
+#include <bit>
+#include <cmath>
+#include <cstdlib>
+#include <iostream>
+#include <print>
+#include <type_traits>
+
+namespace ko   = koqkatoo::ocp;
+namespace stdx = std::experimental;
+using koqkatoo::index_t;
+using koqkatoo::real_t;
+using koqkatoo::RealMatrixView;
+
+index_t get_depth(index_t n) {
+    assert(n > 0);
+    auto un = static_cast<std::make_unsigned_t<index_t>>(n);
+    return static_cast<index_t>(std::bit_width(un - 1));
+}
+
+index_t get_layer(index_t i) {
+    assert(i > 0);
+    auto ui = static_cast<std::make_unsigned_t<index_t>>(i);
+    return static_cast<index_t>(std::countr_zero(ui));
+}
+
+index_t get_index_in_layer(index_t i) {
+    auto l = get_layer(i);
+    return i >> (l + 1);
+}
+
+index_t get_heap_index(index_t i, index_t n) {
+    assert(i < n);
+    if (i == 0)
+        return n - 1;
+    auto l  = get_layer(i);
+    auto il = get_index_in_layer(i);
+    auto d  = get_depth(n);
+    return il + (1 << d) - (1 << (d - l));
+}
+
+void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
+                  std::span<const real_t> Σ, std::span<const bool> J,
+                  std::span<const real_t> x, std::span<const real_t> grad,
+                  std::span<const real_t> λ, std::span<const real_t> b,
+                  std::span<real_t> Mxb, std::span<real_t> Mᵀλ,
+                  std::span<real_t> d, std::span<real_t> Δλ,
+                  std::span<real_t> MᵀΔλ) {
+    using std::isfinite;
+    using namespace koqkatoo;
+    using namespace koqkatoo::linalg;
+    using namespace koqkatoo::linalg::compact;
+    constexpr auto with_index_t = guanaqo::with_index_type<index_t>;
+    static constexpr index_t VL = 4;
+    using compact_blas = CompactBLAS<stdx::simd_abi::deduce_t<real_t, VL>>;
+    using scalar_blas  = CompactBLAS<stdx::simd_abi::scalar>;
+    using matrix       = compact_blas::matrix;
+    using bool_matrix  = compact_blas::bool_matrix;
+    const auto [N, nx, nu, ny, ny_N] = ocp.dim;
+    const auto nxu                   = nx + nu;
+    constexpr auto be                = PreferredBackend::MKLScalarBatched;
+
+    const index_t n    = (N + 1) / VL;
+    const index_t lgn  = get_depth(n);
+    const auto vstride = index_t{1} << lgn;
+    std::cout << lgn << std::endl;
+    for (index_t l = 0; l < lgn; ++l) {
+        for (index_t i = 1 << l; i < n; i += (1 << (l + 1))) {
+            for (index_t j = 0; j < VL; ++j) {
+                std::cout << std::setw(2) << (i + j * vstride) << " ";
+            }
+            std::cout << " ";
+        }
+        for (index_t i = 1 << l; i < n; i += (1 << (l + 1))) {
+            std::cout << " " << std::setw(2) << i << "->" << std::setw(2)
+                      << get_heap_index(i, n);
+        }
+        std::cout << "\n";
+    }
+
+    matrix AB{{.depth = N + 1, .rows = nx, .cols = nx + nu}},
+        CD{{.depth = N + 1, .rows = ny, .cols = nx + nu}},
+        H{{.depth = N + 1, .rows = nx + nu, .cols = nx + nu}},
+        Σb{{.depth = N + 1, .rows = ny, .cols = 1}},
+        xb{{.depth = N + 1, .rows = nx + nu, .cols = 1}},
+        bb{{.depth = N + 1, .rows = nx, .cols = 1}},
+        Mxbb{{.depth = N + 1, .rows = nx, .cols = 1}},
+        db{{.depth = N + 1, .rows = nx + nu, .cols = 1}},
+        Δλb{{.depth = N + 1, .rows = nx, .cols = 1}};
+    bool_matrix Jb{{.depth = N + 1, .rows = ny, .cols = 1}};
+    auto Σv    = as_view(guanaqo::as_eigen(Σ), with_index_t),
+         gradv = as_view(guanaqo::as_eigen(grad), with_index_t),
+         xv    = as_view(guanaqo::as_eigen(x), with_index_t),
+         λv    = as_view(guanaqo::as_eigen(λ), with_index_t),
+         bv    = as_view(guanaqo::as_eigen(b), with_index_t);
+    auto Mxbv  = as_view(guanaqo::as_eigen(Mxb), with_index_t),
+         Δλv   = as_view(guanaqo::as_eigen(Δλ), with_index_t);
+    auto Jv    = as_view(guanaqo::as_eigen(J), with_index_t);
+
+    for (index_t i = 0; i < n; ++i) {
+        auto hi = get_heap_index(i, n);
+        for (index_t vi = 0; vi < VL; ++vi) {
+            auto k = i + vi * vstride;
+            // std::println("  {} -> {}({})", k, hi, vi);
+            if (k < N) {
+                H.batch(hi)(vi)  = ocp.H(k);
+                CD.batch(hi)(vi) = ocp.CD(k);
+                AB.batch(hi)(vi) = ocp.AB(k);
+                Σb.batch(hi)(vi) = Σv.middle_rows(k * ny, ny);
+                Jb.batch(hi)(vi) = Jv.middle_rows(k * ny, ny);
+                xb.batch(hi)(vi) = xv.middle_rows(k * nxu, nx + nu);
+                bb.batch(hi)(vi) = bv.middle_rows(k * nx, nx);
+                db.batch(hi)(vi) = gradv.middle_rows(k * nxu, nxu);
+            } else if (k == N) {
+                H.batch(hi)(vi).bottom_left(nu, nx).set_constant(0);
+                H.batch(hi)(vi).right_cols(nu).set_constant(0);
+                H.batch(hi)(vi).bottom_right(nu, nu).set_diagonal(1);
+                H.batch(hi)(vi).top_left(nx, nx) = ocp.Q(k);
+                CD.batch(hi)(vi).right_cols(nu).set_constant(0);
+                CD.batch(hi)(vi).bottom_left(ny - ny_N, nx).set_constant(0);
+                CD.batch(hi)(vi).top_left(ny_N, nx) = ocp.C(k);
+                AB.batch(hi)(vi).set_constant(0);
+                Σb.batch(hi)(vi).top_rows(ny_N) = Σv.middle_rows(k * ny, ny_N);
+                Jb.batch(hi)(vi).top_rows(ny_N) = Jv.middle_rows(k * ny, ny_N);
+                xb.batch(hi)(vi).top_rows(nx)   = xv.middle_rows(k * nxu, nx);
+                bb.batch(hi)(vi)                = bv.middle_rows(k * nx, nx);
+                db.batch(hi)(vi).top_rows(nx) = gradv.middle_rows(k * nxu, nx);
+            } else {
+                H.batch(hi)(vi).set_constant(0);
+                H.batch(hi)(vi).set_diagonal(1);
+                CD.batch(hi)(vi).set_constant(0);
+                AB.batch(hi)(vi).set_constant(0);
+                Σb.batch(hi)(vi).set_constant(1e-99);
+                Jb.batch(hi)(vi).set_constant(false);
+            }
+        }
+    }
+
+    matrix LHV{{.depth = N + 1, .rows = nx + nu + nx, .cols = nx + nu}},
+        Wᵀ{{.depth = N + 1, .rows = nx + nu, .cols = nx}},
+        VVᵀ{{.depth = VL, .rows = nx, .cols = nx}},
+        LΨU{{.depth = N + 1, .rows = 3 * nx, .cols = nx}};
+    auto LH = LHV.top_rows(nxu), V = LHV.bottom_rows(nx),
+         LΨd = LΨU.top_rows(nx), U = LΨU.middle_rows(nx, nx),
+         LΨs = LΨU.bottom_rows(nx), UY = LΨU.bottom_rows(2 * nx);
+
+    // Compute Mx - b
+    compact_blas::xsub_copy(Mxbb, xb.top_rows(nx), bb);
+    for (index_t i = 0; i < n; ++i) {
+        auto hi = get_heap_index(i, n);
+        if (i + 1 < n) {
+            auto hi_next = get_heap_index(i + 1, n);
+            compact_blas::xgemv_sub(AB.batch(hi), xb.batch(hi),
+                                    Mxbb.batch(hi_next), be);
+        } else {
+            auto w       = VVᵀ.left_cols(1);
+            auto hi_next = get_heap_index(i - vstride + 1, n);
+            compact_blas::xgemv_neg(AB.batch(hi), xb.batch(hi), w.batch(0), be);
+            for (index_t j = 0; j < VL - 1; ++j)
+                Mxbb.batch(hi_next)(j + 1) += w(j);
+        }
+    }
+
+    compact_blas::xcopy(AB, V);
+    // Compute H = Hℓ + GᵀΣJ G + Γ⁻¹
+    compact_blas::xsyrk_T_schur_copy(CD, Σb, Jb, H, LH, be);
+    if (isfinite(S))
+        LH.add_to_diagonal(1 / S);
+    // Factorize H (and solve V)
+    compact_blas::xpotrf(LHV, be);
+    // Solve W = LH⁻¹ [I 0]ᵀ
+    compact_blas::xtrtri_copy(LH.top_left(nx + nu, nx), Wᵀ, be);
+    compact_blas::xtrsm_LLNN(LH.bottom_right(nu, nu), Wᵀ.bottom_rows(nu), be);
+    // Compute WWᵀ
+    // TODO: exploit trapezoidal shape of Wᵀ
+    compact_blas::xsyrk_T(Wᵀ, LΨd, be);
+    // Compute -VWᵀ
+    // TODO: exploit trapezoidal shape of Wᵀ
+    compact_blas::xgemm_neg(V, Wᵀ, LΨs, be);
+
+    // Compute Ψ
+    for (index_t i = 1; i < n; ++i) {
+        auto hiD = get_heap_index(i, n), hiS = get_heap_index(i - 1, n);
+        std::println("ΨD({}) -> {} - {}", i, hiD, hiS);
+        // Compute VVᵀ and subtract from Ψ
+        compact_blas::xsyrk_add(V.batch(hiS), LΨd.batch(hiD), be);
+    }
+    // First batch is special, we'll handle it manually for now
+    // TODO: write an optimized kernel that rotates the vector lanes
+    const auto hi0    = get_heap_index(0, n),
+               hi_neg = get_heap_index(vstride - 1, n);
+    std::println("hi_neg={}", hi_neg);
+    compact_blas::xsyrk(V.batch(hi_neg), VVᵀ.batch(0), be);
+    for (index_t j = 1; j < VL; ++j)
+        LΨd.batch(hi0)(j) += VVᵀ(j - 1);
+
+#if 1
+    // for (index_t k = N + 1; k-- > 0;) {
+    std::cout << "A = [\n";
+    for (index_t k = 0; k < N + 1; ++k) {
+        const auto [j, i] = std::div(k, vstride);
+        index_t hi        = get_heap_index(i, n);
+        guanaqo::print_python(std::cout, LΨd.batch(hi)(j), ",\n", false);
+    }
+    std::cout << "]\n";
+    std::cout << "B = [\n";
+    for (index_t k = 0; k < N; ++k) {
+        const auto [j, i] = std::div(k, vstride);
+        index_t hi        = get_heap_index(i, n);
+        guanaqo::print_python(std::cout, LΨs.batch(hi)(j), ",\n", false);
+    }
+    std::cout << "]\n";
+#endif
+
+    for (index_t l = 0; l < lgn; ++l) {
+        const auto offset = index_t{1} << l;
+        for (index_t i = offset; i < n; i += 2 * offset) {
+            const auto hi      = get_heap_index(i, n),
+                       hi_prev = get_heap_index(i - offset, n);
+            std::println("eliminating  L({}) -> [{}]", i, hi);
+            std::println("  updating   A({}) -> [{}]", i - offset, hi_prev);
+            auto B_prev = LΨs.batch(hi_prev), Y = LΨs.batch(hi);
+            // Copy previous Bᵀ to U and clear
+            compact_blas::xcopy_T(B_prev, U.batch(hi));
+            // L = chol(A), Y = B L⁻ᵀ, U = B L⁻ᵀ
+            compact_blas::xpotrf(LΨU.batch(hi), be);
+            // Update previous diagonal and subdiagonal blocks
+            // A -= UUᵀ, B = -YUᵀ
+            compact_blas::xsyrk_sub(U.batch(hi), LΨd.batch(hi_prev), be);
+            compact_blas::xgemm_NT_neg(Y, U.batch(hi), B_prev, be);
+            // TODO: is there a way to merge these operations?
+            // Update next diagonal block
+            if (i + offset < n) {
+                const auto hi_next = get_heap_index(i + offset, n);
+                std::println("  updating   A({}) -> [{}]", i + offset, hi_next);
+                compact_blas::xsyrk_sub(Y, LΨd.batch(hi_next), be);
+            } else {
+                // Last batch is special, we'll handle it manually for now
+                // TODO: write an optimized kernel that rotates the vector lanes
+                const auto hi_next = get_heap_index(i + offset - vstride, n);
+                std::println("  updating   A({}) -> [{}]Δ", i + offset,
+                             hi_next);
+                compact_blas::xsyrk(Y, VVᵀ.batch(0), be);
+                compact_blas::xneg(VVᵀ.batch(0)); // TODO
+                for (index_t j = 0; j < VL - 1; ++j)
+                    LΨd.batch(hi_next)(j + 1) += VVᵀ(j);
+            }
+        }
+        // for (index_t i = 1 << l; i < n; i += (1 << (l + 1))) {
+        //     std::cout << " " << std::setw(2) << i << "->" << std::setw(2)
+        //               << get_heap_index(i, n);
+        // }
+        std::cout << "\n";
+    }
+    std::cout << "\nscalar\n";
+    scalar_blas::matrix LΨU_scal{{.depth = VL, .rows = 3 * nx, .cols = nx}};
+
+    [[maybe_unused]] auto LΨd_scal = LΨU_scal.top_rows(nx),
+                          U_scal   = LΨU_scal.middle_rows(nx, nx),
+                          LΨs_scal = LΨU_scal.bottom_rows(nx),
+                          UY_scal  = LΨU_scal.bottom_rows(2 * nx);
+
+    compact_blas::unpack_L(LΨU.batch(n - 1), LΨU_scal);
+    const auto lgvl = get_depth(VL);
+    // TODO: use lgvl - 1 to stop once we're left with two diagonal blocks, then
+    // handle that case manually
+    for (index_t l = 0; l < lgvl; ++l) {
+        const auto offset = index_t{1} << l;
+        for (index_t i = offset; i < VL; i += 2 * offset) {
+            std::println("eliminating  L({}) -> [{}]", i, n - 1);
+            std::println("  updating   A({}) -> [{}]", i - offset, n - 1);
+            auto B_prev = LΨs_scal.batch(i - offset), Y = LΨs_scal.batch(i);
+            // Copy previous Bᵀ to U and clear
+            scalar_blas::xcopy_T(B_prev, U_scal.batch(i));
+            // L = chol(A), Y = B L⁻ᵀ, U = B L⁻ᵀ
+            scalar_blas::xpotrf(LΨU_scal.batch(i), be);
+            // Update previous diagonal and subdiagonal blocks
+            // A -= UUᵀ, B = -YUᵀ
+            scalar_blas::xsyrk_sub(U_scal.batch(i), LΨd_scal.batch(i - offset),
+                                   be);
+            scalar_blas::xgemm_NT_neg(Y, U_scal.batch(i), B_prev, be);
+            // TODO: is there a way to merge these operations?
+            // Update next diagonal block
+            if (i + offset < VL) {
+                std::println("  updating   A({}) -> [{}]", i + offset, n - 1);
+                scalar_blas::xsyrk_sub(Y, LΨd_scal.batch(i + offset), be);
+            }
+        }
+    }
+    scalar_blas::xpotrf(LΨd_scal.batch(0), be);
+
+    /*
+def solve_bcyclic_impl(A, B, UY, x, lev=0):
+    N, nx, _ = A.shape
+    T = build_block_tridiag(A @ np.transpose(A, axes=[0, 2, 1]), B[:N-1])
+    ref_sol = la.solve(T, x.ravel())
+
+    if N == 1:
+        print(f"{'    '*lev}solving 0")
+        scla.solve_triangular(A[0], x[0], trans="N", lower=True, overwrite_b=True)
+        scla.solve_triangular(A[0], x[0], trans="T", lower=True, overwrite_b=True)
+        return
+
+    N2 = N // 2
+    UY, UY_next = np.split(UY, [N2])
+
+    for i in range(N2):
+        print(f"{'    '*lev}solving equation {2 * i + 1} fwd")
+        scla.solve_triangular(A[2 * i + 1], x[2 * i + 1], trans="N", lower=True, overwrite_b=True)
+
+    for i in range((N + 1) // 2):
+        if i > 0:
+            W, V = np.split(UY[i - 1], [nx])
+            print(f"{'    '*lev}updating rhs {2 * i} from {2 * i - 1}")
+            x[2 * i] -= V @ x[2 * i - 1]
+        if i < N2:
+            print(f"{'    '*lev}updating rhs {2 * i} from {2 * i + 1}")
+            U, Y = np.split(UY[i], [nx])
+            x[2 * i] -= U @ x[2 * i + 1]
+
+    solve_bcyclic_impl(A[::2], B[::2], UY_next, x[::2], lev + 1)
+
+    for i in range(N2):
+        print(f"{'    '*lev}solving equation {2 * i + 1} rev")
+        U, Y = np.split(UY[i], [nx])
+        print('    '*lev, x[2 * i])
+        x[2 * i + 1] -= U.T @ x[2 * i]
+        if 2 * i + 2 < N:
+            x[2 * i + 1] -= Y.T @ x[2 * i + 2]
+        scla.solve_triangular(A[2 * i + 1], x[2 * i + 1], trans="T", lower=True, overwrite_b=True)
+*/
+
+    // Solve Hv = -g
+    compact_blas::xcopy(Mxbb, Δλb);
+    compact_blas::xneg(db); // TODO
+    for (index_t i = 0; i < n; ++i) {
+        auto hi = get_heap_index(i, n);
+        std::println("solve Hv({}) [{}]", i, hi);
+        // Solve Lᴴ vʹ = g                                              (d ← vʹ)
+        compact_blas::xtrsv_LNN(LH.batch(hi), db.batch(hi), be);
+        // Solve Lᴴ⁻ᵀ v = vʹ                                            (λ ← Ev)
+        std::println("  add Wv({}) [{}]", i, hi);
+        compact_blas::xgemv_T_add(Wᵀ.batch(hi), db.batch(hi), Δλb.batch(hi),
+                                  be);
+        if (i + 1 < n) {
+            auto hi_next = get_heap_index(i + 1, n);
+            std::println("  sub Vv({}) [{}]", i + 1, hi_next);
+            compact_blas::xgemv_sub(V.batch(hi), db.batch(hi),
+                                    Δλb.batch(hi_next), be);
+        } else {
+            auto w       = VVᵀ.left_cols(1);
+            auto hi_next = get_heap_index(i - vstride + 1, n);
+            std::println("  sub Vv({}) [{}]Δ", i + 1, hi_next);
+            compact_blas::xgemv_neg(V.batch(hi), db.batch(hi), w.batch(0), be);
+            for (index_t j = 0; j < VL - 1; ++j)
+                Δλb.batch(hi_next)(j + 1) += w(j);
+        }
+    }
+
+#if 1
+    for (index_t j = 0; j < VL; ++j)
+        LΨU.batch(n - 1)(j) = LΨU_scal(j);
+    // for (index_t k = N + 1; k-- > 0;) {
+    std::cout << "V = [\n";
+    for (index_t k = 0; k < N + 1; ++k) {
+        const auto [j, i] = std::div(k, vstride);
+        index_t hi        = get_heap_index(i, n);
+        guanaqo::print_python(std::cout, V.batch(hi)(j), ",\n", false);
+    }
+    std::cout << "]\n";
+    std::cout << "A_fac = [\n";
+    for (index_t k = 0; k < N + 1; ++k) {
+        const auto [j, i] = std::div(k, vstride);
+        index_t hi        = get_heap_index(i, n);
+        guanaqo::print_python(std::cout, LΨd.batch(hi)(j), ",\n", false);
+    }
+    std::cout << "]\n";
+    std::cout << "B_fac = [\n";
+    for (index_t k = 0; k < N; ++k) {
+        const auto [j, i] = std::div(k, vstride);
+        index_t hi        = get_heap_index(i, n);
+        guanaqo::print_python(std::cout, LΨs.batch(hi)(j), ",\n", false);
+    }
+    std::cout << "]\n";
+    std::cout << "U_fac = [\n";
+    for (index_t k = 0; k < N; ++k) {
+        const auto [j, i] = std::div(k, vstride);
+        index_t hi        = get_heap_index(i, n);
+        guanaqo::print_python(std::cout, U.batch(hi)(j), ",\n", false);
+    }
+    std::cout << "]\n";
+    std::cout << "v = [\n";
+    for (index_t k = 0; k < N + 1; ++k) {
+        const auto [j, i] = std::div(k, vstride);
+        index_t hi        = get_heap_index(i, n);
+        guanaqo::print_python(std::cout, db.batch(hi)(j), ",\n", true);
+    }
+    std::cout << "]\n";
+    std::cout << "rhs_psi = [\n";
+    for (index_t k = 0; k < N + 1; ++k) {
+        const auto [j, i] = std::div(k, vstride);
+        index_t hi        = get_heap_index(i, n);
+        guanaqo::print_python(std::cout, Δλb.batch(hi)(j), ",\n", true);
+    }
+    std::cout << "]\n";
+#endif
+
+    auto print_rhs = [&] {
+        std::cout << "rhs_psi = [\n";
+        for (index_t k = 0; k < N + 1; ++k) {
+            const auto [j, i] = std::div(k, vstride);
+            index_t hi        = get_heap_index(i, n);
+            guanaqo::print_python(std::cout, Δλb.batch(hi)(j), ",\n", true);
+        }
+        std::cout << "]\n";
+    };
+
+    // Forward pass Ψ (batched)
+    for (index_t l = 0; l < lgn; ++l) {
+        const auto offset = index_t{1} << l;
+        for (index_t i = offset; i < n; i += 2 * offset) {
+            const auto hi      = get_heap_index(i, n),
+                       hi_prev = get_heap_index(i - offset, n);
+            std::println("solve rhs fwd b(2i+1 = {}) -> [{}]", i, hi);
+            auto Y = LΨs.batch(hi);
+            // L⁻¹ b
+            compact_blas::xtrsv_LNN(LΨd.batch(hi), Δλb.batch(hi), be);
+            // Update previous even block
+            std::println("  update rhs fwd b(2i   = {}) -> [{}]", i - offset,
+                         hi_prev);
+            compact_blas::xgemv_sub(U.batch(hi), Δλb.batch(hi),
+                                    Δλb.batch(hi_prev), be);
+            // Update next even block
+            if (i + offset < n) {
+                const auto hi_next = get_heap_index(i + offset, n);
+                std::println("  update rhs fwd b(2i+2 = {}) -> [{}]",
+                             i + offset, hi_next);
+                compact_blas::xgemv_sub(Y, Δλb.batch(hi), Δλb.batch(hi_next),
+                                        be);
+            } else {
+                // Last batch is special, we'll handle it manually for now
+                // TODO: write an optimized kernel that rotates the vector lanes
+                const auto hi_next = get_heap_index(i + offset - vstride, n);
+                std::println("  update rhs fwd b(2i+2 = {}) -> [{}]Δ",
+                             i + offset, hi_next);
+                auto w = VVᵀ.left_cols(1);
+                compact_blas::xgemv_neg(Y, Δλb.batch(hi), w.batch(0), be);
+                for (index_t j = 0; j < VL - 1; ++j)
+                    Δλb.batch(hi_next)(j + 1) += w(j);
+            }
+        }
+        print_rhs();
+    }
+    std::cout << "\n";
+
+    // Forward pass Ψ (scalar)
+    scalar_blas::matrix Δλ_scal{{.depth = VL, .rows = nx, .cols = 1}};
+    compact_blas::unpack(Δλb.batch(n - 1), Δλ_scal);
+    // TODO: use lgvl - 1 to stop once we're left with two diagonal blocks, then
+    // handle that case manually
+    for (index_t l = 0; l < lgvl; ++l) {
+        const auto offset = index_t{1} << l;
+        for (index_t i = offset; i < VL; i += 2 * offset) {
+            std::println("solve rhs fwd b(2i+1 = {}) -> [{}]", i, n - 1);
+            auto Y = LΨs_scal.batch(i);
+            // L⁻¹ b
+            scalar_blas::xtrsv_LNN(LΨd_scal.batch(i), Δλ_scal.batch(i), be);
+            // Update previous even block
+            std::println("  update rhs fwd b(2i   = {}) -> [{}]", i - offset,
+                         n - 1);
+            scalar_blas::xgemv_sub(U_scal.batch(i), Δλ_scal.batch(i),
+                                   Δλ_scal.batch(i - offset), be);
+            // Update next even block
+            if (i + offset < VL) {
+                scalar_blas::xgemv_sub(Y, Δλ_scal.batch(i),
+                                       Δλ_scal.batch(i + offset), be);
+                std::println("  update rhs fwd b(2i+2 = {}) -> [{}]",
+                             i + offset, n - 1);
+            }
+        }
+        std::cout << "rhs_psi_scalar = [\n";
+        for (index_t j = 0; j < VL; ++j)
+            guanaqo::print_python(std::cout, Δλ_scal(j), ",\n", false);
+        std::cout << "]\n";
+    }
+    std::cout << "\n";
+
+    std::cout << "L_scal = [\n";
+    for (index_t j = 0; j < VL; ++j)
+        guanaqo::print_python(std::cout, LΨd_scal(j), ",\n", false);
+    std::cout << "]\n";
+
+    // L⁻¹ b
+    std::println("solve rhs fwd b({}) -> [{}]", 0, n - 1);
+    scalar_blas::xtrsv_LNN(LΨd_scal.batch(0), Δλ_scal.batch(0), be);
+
+    // Reverse pass Ψ (scalar)
+
+    // L⁻ᵀ b
+    std::println("solve rhs rev b({}) -> [{}]", 0, n - 1);
+    scalar_blas::xtrsv_LTN(LΨd_scal.batch(0), Δλ_scal.batch(0), be);
+
+    std::cout << "rhs_psi_scalar = [\n";
+    for (index_t j = 0; j < VL; ++j)
+        guanaqo::print_python(std::cout, Δλ_scal(j), ",\n", false);
+    std::cout << "]\n";
+
+    for (index_t l = lgvl; l-- > 0;) {
+        const auto offset = index_t{1} << l;
+        for (index_t i = offset; i < VL; i += 2 * offset) {
+            std::println("updating rhs rev i={}", i);
+            auto Y = LΨs_scal.batch(i);
+            // Substitute next even block
+            if (i + offset < VL)
+                scalar_blas::xgemv_T_sub(Y, Δλ_scal.batch(i + offset),
+                                         Δλ_scal.batch(i), be);
+            // Substitute previous even block
+            scalar_blas::xgemv_T_sub(U_scal.batch(i), Δλ_scal.batch(i - offset),
+                                     Δλ_scal.batch(i), be);
+            // L⁻ᵀ b
+            scalar_blas::xtrsv_LTN(LΨd_scal.batch(i), Δλ_scal.batch(i), be);
+        }
+        std::cout << "rhs_psi_scalar = [\n";
+        for (index_t j = 0; j < VL; ++j)
+            guanaqo::print_python(std::cout, Δλ_scal(j), ",\n", false);
+        std::cout << "]\n";
+    }
+    std::cout << "\n";
+
+    for (index_t j = 0; j < VL; ++j)
+        Δλb.batch(n - 1)(j) = Δλ_scal(j);
+
+    // Reverse pass Ψ (batched)
+    for (index_t l = lgn; l-- > 0;) {
+        const auto offset = index_t{1} << l;
+        for (index_t i = offset; i < n; i += 2 * offset) {
+            const auto hi      = get_heap_index(i, n),
+                       hi_prev = get_heap_index(i - offset, n);
+            std::println("solve rhs rev b(2i+1 = {}) -> [{}]", i, hi);
+            auto Y = LΨs.batch(hi);
+            // Substitute next even block
+            if (i + offset < n) {
+                const auto hi_next = get_heap_index(i + offset, n);
+                std::println("  update rhs rev b(2i+2 = {}) -> [{}]",
+                             i + offset, hi_next);
+                compact_blas::xgemv_T_sub(Y, Δλb.batch(hi_next), Δλb.batch(hi),
+                                          be);
+            } else {
+                // Last batch is special, we'll handle it manually for now
+                // TODO: write an optimized kernel that rotates the vector lanes
+                const auto hi_next = get_heap_index(i + offset - vstride, n);
+                std::println("  update rhs rev b(2i+2 = {}) -> [{}]Δ",
+                             i + offset, hi_next);
+                auto w = VVᵀ.left_cols(1);
+                w(VL - 1).set_constant(0);
+                for (index_t j = 0; j < VL - 1; ++j)
+                    w(j) = Δλb.batch(hi_next)(j + 1);
+                compact_blas::xgemv_T_sub(Y, w.batch(0), Δλb.batch(hi), be);
+            }
+            std::println("  update rhs rev b(2i = {}) -> [{}]", i + offset,
+                         hi_prev);
+            // Substitute previous even block
+            compact_blas::xgemv_T_sub(U.batch(hi), Δλb.batch(hi_prev),
+                                      Δλb.batch(hi), be);
+            // L⁻ᵀ b
+            compact_blas::xtrsv_LTN(LΨd.batch(hi), Δλb.batch(hi), be);
+        }
+        print_rhs();
+        std::cout << "\n";
+    }
+
+    // Unpack return values
+    for (index_t i = 0; i < n; ++i) {
+        auto hi = get_heap_index(i, n);
+        for (index_t vi = 0; vi < VL; ++vi) {
+            auto k = i + vi * vstride;
+            if (k < N) {
+                Mxbv.middle_rows(k * nx, nx) = Mxbb.batch(hi)(vi);
+                Δλv.middle_rows(k * nx, nx)  = Δλb.batch(hi)(vi);
+            } else if (k == N) {
+                Mxbv.middle_rows(k * nx, nx) = Mxbb.batch(hi)(vi);
+                Δλv.middle_rows(k * nx, nx)  = Δλb.batch(hi)(vi);
+            }
+        }
+    }
+}
