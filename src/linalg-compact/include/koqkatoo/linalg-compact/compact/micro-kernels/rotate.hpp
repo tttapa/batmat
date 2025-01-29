@@ -36,6 +36,36 @@ template <size_t S, class F, class Abi>
     }
 }
 
+template <size_t S, class F, class Abi>
+[[gnu::always_inline]] inline stdx::simd<F, Abi> shiftl(stdx::simd<F, Abi> x) {
+    if constexpr (S % x.size() == 0) {
+        return stdx::simd<F, Abi>{0};
+    } else {
+        static_assert(S < x.size());
+        stdx::simd<F, Abi> y;
+        for (size_t j = 0; j < x.size() - S; ++j)
+            y[j] = x[j + S];
+        for (size_t j = x.size() - S; j < x.size(); ++j)
+            y[j] = 0;
+        return y;
+    }
+}
+
+template <size_t S, class F, class Abi>
+[[gnu::always_inline]] inline stdx::simd<F, Abi> shiftr(stdx::simd<F, Abi> x) {
+    if constexpr (S % x.size() == 0) {
+        return stdx::simd<F, Abi>{0};
+    } else {
+        static_assert(S < x.size());
+        stdx::simd<F, Abi> y;
+        for (size_t j = x.size() - S; j < x.size(); ++j)
+            y[j + S - x.size()] = 0;
+        for (size_t j = 0; j < x.size() - S; ++j)
+            y[j + S] = x[j];
+        return y;
+    }
+}
+
 #if defined(__AVX512F__)
 
 template <size_t S>
