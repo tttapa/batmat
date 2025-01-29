@@ -50,6 +50,7 @@ index_t get_heap_index(index_t i, index_t n) {
     return il + (1 << d) - (1 << (d - l));
 }
 
+template <index_t VL>
 void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                   std::span<const real_t> Σ, std::span<const bool> J,
                   std::span<const real_t> x, std::span<const real_t> grad,
@@ -57,7 +58,6 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                   std::span<real_t> Mxb, std::span<real_t> Mᵀλ,
                   std::span<real_t> d, std::span<real_t> Δλ,
                   std::span<real_t> MᵀΔλ) {
-    static constexpr index_t VL = 4;
     using std::isfinite;
     using namespace koqkatoo;
     using namespace koqkatoo::linalg;
@@ -284,6 +284,8 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     }
 
     } // end parallel
+
+    return; // TODO
 
     // Compute Mx - b
     compact_blas::xsub_copy(Mxbb, xb.top_rows(nx), bb);
@@ -526,3 +528,22 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         }
     }
 }
+
+template void solve_cyclic<4>(const koqkatoo::ocp::LinearOCPStorage &ocp,
+                              real_t S, std::span<const real_t> Σ,
+                              std::span<const bool> J,
+                              std::span<const real_t> x,
+                              std::span<const real_t> grad,
+                              std::span<const real_t> λ,
+                              std::span<const real_t> b, std::span<real_t> Mxb,
+                              std::span<real_t> Mᵀλ, std::span<real_t> d,
+                              std::span<real_t> Δλ, std::span<real_t> MᵀΔλ);
+template void solve_cyclic<8>(const koqkatoo::ocp::LinearOCPStorage &ocp,
+                              real_t S, std::span<const real_t> Σ,
+                              std::span<const bool> J,
+                              std::span<const real_t> x,
+                              std::span<const real_t> grad,
+                              std::span<const real_t> λ,
+                              std::span<const real_t> b, std::span<real_t> Mxb,
+                              std::span<real_t> Mᵀλ, std::span<real_t> d,
+                              std::span<real_t> Δλ, std::span<real_t> MᵀΔλ);

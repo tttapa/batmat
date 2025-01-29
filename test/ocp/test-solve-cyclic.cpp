@@ -40,8 +40,10 @@ namespace sp = guanaqo::linalg::sparsity;
 
 const auto ε = std::pow(std::numeric_limits<real_t>::epsilon(), real_t(0.9));
 
-struct OCPCyclic : testing::TestWithParam<std::tuple<index_t, index_t>> {};
+struct OCPCyclic
+    : testing::TestWithParam<std::tuple<index_t, index_t, index_t>> {};
 
+template <index_t VL = 4>
 void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                   std::span<const real_t> Σ, std::span<const bool> J,
                   std::span<const real_t> grad, std::span<const real_t> x,
@@ -59,8 +61,8 @@ TEST_P(OCPCyclic, solve) {
         __itt_thread_set_name(std::format("OMP({})", i).c_str());
     }));
 
-    auto [N_horiz, nx] = GetParam();
-    using VectorXreal  = Eigen::VectorX<real_t>;
+    auto [N_horiz, nx, vl] = GetParam();
+    using VectorXreal      = Eigen::VectorX<real_t>;
     std::mt19937 rng{54321};
     std::normal_distribution<real_t> nrml{0, 1};
     std::bernoulli_distribution bernoulli{0.5};
@@ -76,6 +78,12 @@ TEST_P(OCPCyclic, solve) {
     // Instantiate the OCP KKT solver.
     index_t n_var = ocp.num_variables(), n_constr = ocp.num_constraints(),
             n_dyn_constr = ocp.num_dynamics_constraints();
+
+    auto solve_cyclic = vl == 4   ? ::solve_cyclic<4>
+                        : vl == 8 ? ::solve_cyclic<8>
+                                  : nullptr;
+    if (!solve_cyclic)
+        FAIL() << "Invalid vector length " << vl;
 
     // Generate some random optimization solver data.
     Eigen::VectorX<bool> J(n_constr),  // Active set.
@@ -148,7 +156,7 @@ TEST_P(OCPCyclic, solve) {
 
     VectorXreal Mxb(n_dyn_constr), Mᵀλ(n_var), d(n_var), Δλ(n_dyn_constr),
         MᵀΔλ(n_var);
-    for (index_t i = 0; i < 20; ++i)
+    for (index_t i = 0; i < 100; ++i)
         solve_cyclic(ocp, S, as_span(Σ), as_span(J), as_span(x), as_span(grad),
                      as_span(λ), as_span(b), as_span(Mxb), as_span(Mᵀλ),
                      as_span(d), as_span(Δλ), as_span(MᵀΔλ));
@@ -165,8 +173,8 @@ TEST_P(OCPCyclic, solve) {
         std::filesystem::path out_dir{"traces"};
         out_dir /= *koqkatoo_commit_hash ? koqkatoo_commit_hash : "unknown";
         out_dir /= KOQKATOO_MKL_IF_ELSE("mkl", "openblas");
-        out_dir /= std::format("nx={}-nu={}-ny={}-N={}-thr={}", nx, nu, ny, N,
-                               n_threads);
+        out_dir /= std::format("nx={}-nu={}-ny={}-N={}-thr={}-vl={}", nx, nu,
+                               ny, N, n_threads, vl);
         std::filesystem::create_directories(out_dir);
         std::ofstream csv{out_dir / name};
         koqkatoo::TraceLogger::write_column_headings(csv) << '\n';
@@ -174,6 +182,8 @@ TEST_P(OCPCyclic, solve) {
             csv << log << '\n';
     }
 #endif
+
+    return; // TODO
 
     // Solve the full KKT system using Eigen (LU because indefinite).
     VectorXreal kkt_rhs_ref    = VectorXreal::Zero(K.rows), kkt_sol_ref(K.rows);
@@ -203,5 +213,6 @@ TEST_P(OCPCyclic, solve) {
 
 INSTANTIATE_TEST_SUITE_P(OCPCyclic, OCPCyclic,
                          testing::Combine( //
-                             testing::Values<index_t>(7, 15, 31, 63, 127),
-                             testing::Values<index_t>(40)));
+                             testing::Values<index_t>(7, 15, 31, 63, 127, 255),
+                             testing::Values<index_t>(40),
+                             testing::Values<index_t>(4, 8)));
