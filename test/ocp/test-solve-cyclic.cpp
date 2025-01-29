@@ -46,9 +46,10 @@ struct OCPCyclic
 template <index_t VL = 4>
 void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                   std::span<const real_t> Σ, std::span<const bool> J,
-                  std::span<const real_t> grad, std::span<const real_t> x,
+                  std::span<const real_t> x, std::span<const real_t> grad,
                   std::span<const real_t> λ, std::span<const real_t> b,
-                  std::span<real_t> Mxb, std::span<real_t> Mᵀλ,
+                  std::span<const real_t> ŷ, std::span<real_t> Mxb,
+                  std::span<real_t> Mᵀλ, std::span<real_t> Aᵀŷ,
                   std::span<real_t> d, std::span<real_t> Δλ,
                   std::span<real_t> MᵀΔλ);
 
@@ -105,9 +106,6 @@ TEST_P(OCPCyclic, solve) {
     std::ranges::generate(b, [&] { return nrml(rng); });
     std::ranges::generate(λ, [&] { return nrml(rng); });
 
-    ŷ.setZero(); // TODO
-    λ.setZero(); // TODO
-
     // Build quadratic program and standard KKT system for the OCP.
     auto qp  = ko::LinearOCPSparseQP::build(ocp);
     auto kkt = qp.build_kkt(S, as_span(Σ), as_span(J));
@@ -155,17 +153,18 @@ TEST_P(OCPCyclic, solve) {
     }
 
     VectorXreal Mxb(n_dyn_constr), Mᵀλ(n_var), d(n_var), Δλ(n_dyn_constr),
-        MᵀΔλ(n_var);
+        MᵀΔλ(n_var), Aᵀŷ(n_var);
     for (index_t i = 0; i < 100; ++i)
         solve_cyclic(ocp, S, as_span(Σ), as_span(J), as_span(x), as_span(grad),
-                     as_span(λ), as_span(b), as_span(Mxb), as_span(Mᵀλ),
-                     as_span(d), as_span(Δλ), as_span(MᵀΔλ));
+                     as_span(λ), as_span(b), as_span(ŷ), as_span(Mxb),
+                     as_span(Mᵀλ), as_span(Aᵀŷ), as_span(d), as_span(Δλ),
+                     as_span(MᵀΔλ));
 #if KOQKATOO_WITH_TRACING
     koqkatoo::trace_logger.reset();
 #endif
     solve_cyclic(ocp, S, as_span(Σ), as_span(J), as_span(x), as_span(grad),
-                 as_span(λ), as_span(b), as_span(Mxb), as_span(Mᵀλ), as_span(d),
-                 as_span(Δλ), as_span(MᵀΔλ));
+                 as_span(λ), as_span(b), as_span(ŷ), as_span(Mxb), as_span(Mᵀλ),
+                 as_span(Aᵀŷ), as_span(d), as_span(Δλ), as_span(MᵀΔλ));
 #if KOQKATOO_WITH_TRACING
     {
         const auto [N, nx, nu, ny, ny_N] = ocp.dim;
@@ -183,8 +182,6 @@ TEST_P(OCPCyclic, solve) {
     }
 #endif
 
-    return; // TODO
-
     // Solve the full KKT system using Eigen (LU because indefinite).
     VectorXreal kkt_rhs_ref    = VectorXreal::Zero(K.rows), kkt_sol_ref(K.rows);
     VectorXreal Gᵀŷ_ref        = G.transpose() * ŷ;
@@ -192,7 +189,15 @@ TEST_P(OCPCyclic, solve) {
     VectorXreal Mxb_ref        = M * x - b;
     kkt_rhs_ref.topRows(n_var) = -grad - Mᵀλ_ref - Gᵀŷ_ref;
     kkt_rhs_ref.bottomRows(n_dyn_constr) = -Mxb_ref;
-    auto luK                             = as_eigen(K).fullPivLu();
+    EXPECT_THAT(Mxb, EigenAlmostEqual(Mxb_ref, 10 * ε));
+    EXPECT_THAT(Mᵀλ, EigenAlmostEqual(Mᵀλ_ref, 10 * ε));
+    EXPECT_THAT(Aᵀŷ, EigenAlmostEqual(Gᵀŷ_ref, 10 * ε));
+
+    if (N_horiz > 31) // Dense factorization is too slow for large problems
+        return;
+
+    // TODO: use sparse solver
+    auto luK = as_eigen(K).fullPivLu();
     ASSERT_TRUE(luK.isInvertible());
     kkt_sol_ref          = luK.solve(kkt_rhs_ref);
     auto d_ref           = kkt_sol_ref.topRows(n_var);
@@ -202,11 +207,7 @@ TEST_P(OCPCyclic, solve) {
     // Compare the koqkatoo OCP solution to the Eigen reference solution.
     std::cout << "ε κ(K) = " << guanaqo::float_to_str(ε / luK.rcond())
               << std::endl;
-    EXPECT_THAT(Mxb, EigenAlmostEqual(Mxb_ref, ε / luK.rcond()));
     EXPECT_THAT(Δλ, EigenAlmostEqual(Δλ_ref, ε / luK.rcond()));
-    SUCCEED(); // TODO
-    return;
-    EXPECT_THAT(Mᵀλ, EigenAlmostEqual(Mᵀλ_ref, ε / luK.rcond()));
     EXPECT_THAT(d, EigenAlmostEqual(d_ref, ε / luK.rcond()));
     EXPECT_THAT(MᵀΔλ, EigenAlmostEqual(MᵀΔλ_ref, ε / luK.rcond()));
 }
