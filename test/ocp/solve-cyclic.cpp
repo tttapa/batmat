@@ -188,17 +188,14 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     for (index_t i = 0; i < n; ++i) {
         KOQKATOO_TRACE("build Ψ", i);
         const auto hi = get_heap_index(i, n);
-        if (i == 0) {
-            // First batch is special, we'll handle it manually for now
-            // TODO: write an optimized kernel that rotates the vector lanes
-            const auto hi_neg = get_heap_index(vstride - 1, n);
-            compact_blas::xsyrk(V.batch(hi_neg), VVᵀ.batch(0), be);
-            for (index_t j = 1; j < VL; ++j)
-                LΨd.batch(hi)(j) += VVᵀ(j - 1);
+        if (i + 1 < n) {
+            const auto hi_next = get_heap_index(i + 1, n);
+            // Compute VVᵀ and add to Ψd
+            compact_blas::xsyrk_add(V.batch(hi), LΨd.batch(hi_next), be);
         } else {
-            const auto hi_prev = get_heap_index(i - 1, n);
-            // Compute VVᵀ and subtract from Ψ
-            compact_blas::xsyrk_add(V.batch(hi_prev), LΨd.batch(hi), be);
+            // Last batch is special since we cross batch boundaries
+            const auto hi_next = get_heap_index(i - vstride + 1, n);
+            compact_blas::xsyrk_add_shift(V.batch(hi), LΨd.batch(hi_next));
         }
     }
 
@@ -230,18 +227,16 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                 const auto hi_next = get_heap_index(i + offset, n);
                 compact_blas::xsyrk_sub(Y, LΨd.batch(hi_next), be);
             } else {
-                // Last batch is special, we'll handle it manually for now
-                // TODO: write an optimized kernel that rotates the vector lanes
+                // Last batch is special since we cross batch boundaries
                 const auto hi_next = get_heap_index(i + offset - vstride, n);
-                compact_blas::xsyrk(Y, VVᵀ.batch(0), be);
-                compact_blas::xneg(VVᵀ.batch(0)); // TODO
-                for (index_t j = 0; j < VL - 1; ++j)
-                    LΨd.batch(hi_next)(j + 1) += VVᵀ(j);
+                compact_blas::xsyrk_sub_shift(Y, LΨd.batch(hi_next));
             }
         }
     }
-    KOQKATOO_OMP(single)
-    compact_blas::unpack_L(LΨU.batch(n - 1), LΨU_scal);
+    KOQKATOO_OMP(single) {
+        KOQKATOO_TRACE("unpack Ψ", 0);
+        compact_blas::unpack_L(LΨU.batch(n - 1), LΨU_scal);
+    }
 
     // TODO: use lgvl - 1 to stop once we're left with two diagonal blocks, then
     // handle that case manually

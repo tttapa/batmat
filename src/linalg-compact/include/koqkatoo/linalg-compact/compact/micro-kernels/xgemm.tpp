@@ -1,5 +1,6 @@
 #pragma once
 
+#include "rotate.hpp"
 #include "xgemm.hpp"
 
 #include <koqkatoo/assume.hpp>
@@ -18,7 +19,8 @@ xgemm_microkernel(const single_batch_matrix_accessor<Abi, Conf.trans_A> A,
                   const single_batch_matrix_accessor<Abi, Conf.trans_B> B,
                   const mut_single_batch_matrix_accessor<Abi> C,
                   const index_t k) noexcept {
-    using simd = stdx::simd<real_t, Abi>;
+    static constexpr auto S = Conf.shift;
+    using simd              = stdx::simd<real_t, Abi>;
     // The following assumption ensures that there is no unnecessary branch
     // for k == 0 in between the loops. This is crucial for good code
     // generation, otherwise the compiler inserts jumps and labels between
@@ -32,7 +34,7 @@ xgemm_microkernel(const single_batch_matrix_accessor<Abi, Conf.trans_A> A,
     simd C_reg[RowsReg][ColsReg]; // NOLINT(*-c-arrays)
     KOQKATOO_FULLY_UNROLLED_FOR (index_t jj = 0; jj < ColsReg; ++jj)
         KOQKATOO_FULLY_UNROLLED_FOR (index_t ii = 0; ii < RowsReg; ++ii)
-            C_reg[ii][jj] = C_cached.load(ii, jj);
+            C_reg[ii][jj] = rotl<S>(C_cached.load(ii, jj));
 #else
     // Load accumulator into registers
     simd C_reg[RowsReg][ColsReg]; // NOLINT(*-c-arrays)
@@ -57,12 +59,12 @@ xgemm_microkernel(const single_batch_matrix_accessor<Abi, Conf.trans_A> A,
     // Store accumulator to memory again
     KOQKATOO_FULLY_UNROLLED_FOR (index_t jj = 0; jj < ColsReg; ++jj)
         KOQKATOO_FULLY_UNROLLED_FOR (index_t ii = 0; ii < RowsReg; ++ii)
-            C_cached.store(C_reg[ii][jj], ii, jj);
+            C_cached.template store<S>(rotr<S>(C_reg[ii][jj]), ii, jj);
 #else
     // Store accumulator to memory again
     KOQKATOO_FULLY_UNROLLED_FOR (index_t jj = 0; jj < ColsReg; ++jj)
         KOQKATOO_FULLY_UNROLLED_FOR (index_t ii = 0; ii < RowsReg; ++ii)
-            C.store(C_reg[ii][jj], ii, jj);
+            C.template store<S>(rotr<S>(C_reg[ii][jj]), ii, jj);
 #endif
 }
 

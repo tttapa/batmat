@@ -65,11 +65,19 @@ struct mat_access_impl {
     [[gnu::always_inline]] simd load(index_t r, index_t c) const noexcept {
         return simd{&operator()(r, c), stdx::vector_aligned};
     }
+    template <int MaskL = 0>
     [[gnu::always_inline]] void store(simd x, index_t r,
                                       index_t c) const noexcept
         requires(!Const)
     {
-        x.copy_to(&operator()(r, c), stdx::vector_aligned);
+        if constexpr (MaskL == 0) {
+            x.copy_to(&operator()(r, c), stdx::vector_aligned);
+        } else {
+            typename simd::mask_type m;
+            for (int i = 0; i < m.size(); ++i)
+                m[i] = i >= MaskL;
+            where(m, x).copy_to(&operator()(r, c), stdx::vector_aligned);
+        }
     }
     template <class Self>
     [[gnu::always_inline]] Self block(this const Self &self, index_t r,
@@ -125,11 +133,19 @@ struct cached_mat_access_impl {
     [[gnu::always_inline]] simd load(index_t r, index_t c) const noexcept {
         return simd{&operator()(r, c), stdx::vector_aligned};
     }
+    template <int MaskL = 0>
     [[gnu::always_inline]] void store(simd x, index_t r,
                                       index_t c) const noexcept
         requires(!Const)
     {
-        x.copy_to(&operator()(r, c), stdx::vector_aligned);
+        if constexpr (MaskL == 0) {
+            x.copy_to(&operator()(r, c), stdx::vector_aligned);
+        } else {
+            typename simd::mask_type m;
+            for (int i = 0; i < m.size(); ++i)
+                m[i] = i >= MaskL;
+            where(m, x).copy_to(&operator()(r, c), stdx::vector_aligned);
+        }
     }
 
     template <index_t... Is>

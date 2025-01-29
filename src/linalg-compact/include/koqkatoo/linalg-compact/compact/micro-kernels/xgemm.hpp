@@ -9,6 +9,7 @@ struct KernelConfig {
     bool negate  = false;
     bool trans_A = false;
     bool trans_B = false;
+    int shift    = 0;
 };
 
 template <class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg>

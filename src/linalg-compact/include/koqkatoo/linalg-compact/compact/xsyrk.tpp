@@ -115,6 +115,40 @@ void CompactBLAS<Abi>::xsyrk_add_ref(single_batch_view A,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xsyrk_add_shift(single_batch_view A,
+                                       mut_single_batch_view C) {
+    assert(C.rows() >= C.cols());
+    assert(A.rows() == C.rows());
+    [[maybe_unused]] const auto op_cnt_syrk =
+        C.cols() * (C.cols() + 1) * A.cols() / 2 +
+        (C.rows() - C.cols()) * C.cols() * A.cols();
+    KOQKATOO_TRACE("xsyrk_add_shift", 0, op_cnt_syrk * (C.depth() - 1));
+    assert(C.rows() == C.cols());
+    assert(C.rows() == A.rows());
+    // TODO: cache blocking
+    constexpr micro_kernels::gemm::KernelConfig conf{
+        .negate = false, .trans_B = true, .shift = 1};
+    micro_kernels::gemm::xgemmt_register<Abi, conf>(A, A, C);
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xsyrk_sub_shift(single_batch_view A,
+                                       mut_single_batch_view C) {
+    assert(C.rows() >= C.cols());
+    assert(A.rows() == C.rows());
+    [[maybe_unused]] const auto op_cnt_syrk =
+        C.cols() * (C.cols() + 1) * A.cols() / 2 +
+        (C.rows() - C.cols()) * C.cols() * A.cols();
+    KOQKATOO_TRACE("xsyrk_sub_shift", 0, op_cnt_syrk * (C.depth() - 1));
+    assert(C.rows() == C.cols());
+    assert(C.rows() == A.rows());
+    // TODO: cache blocking
+    constexpr micro_kernels::gemm::KernelConfig conf{
+        .negate = true, .trans_B = true, .shift = 1};
+    micro_kernels::gemm::xgemmt_register<Abi, conf>(A, A, C);
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xsyrk_sub_ref(single_batch_view A,
                                      mut_single_batch_view C) {
     assert(C.rows() >= C.cols());
