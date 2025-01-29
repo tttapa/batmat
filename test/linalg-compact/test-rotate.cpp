@@ -44,79 +44,119 @@ TEST(Rotate, rotr4) {
     EXPECT_TRUE(all_of(y == y_expected));
 }
 
-using TestVectorLengths =
-    ::testing::Types<stdx::simd_abi::scalar,              //
-                     stdx::simd_abi::deduce_t<real_t, 1>, //
-                     stdx::simd_abi::deduce_t<real_t, 2>, //
-                     stdx::simd_abi::deduce_t<real_t, 4>, //
-                     stdx::simd_abi::deduce_t<real_t, 8>, //
-                     stdx::simd_abi::deduce_t<real_t, 16> //
-                     >;
+using TestAbis = ::testing::Types<stdx::simd_abi::scalar,              //
+                                  stdx::simd_abi::deduce_t<real_t, 1>, //
+                                  stdx::simd_abi::deduce_t<real_t, 2>, //
+                                  stdx::simd_abi::deduce_t<real_t, 4>, //
+                                  stdx::simd_abi::deduce_t<real_t, 8>, //
+                                  stdx::simd_abi::deduce_t<real_t, 16> //
+                                  >;
 
-template <typename Abi>
+template <typename Abi, size_t Shift>
+struct TestParams {
+    using abi                     = Abi;
+    static constexpr size_t shift = Shift;
+};
+
+template <typename Abi, typename Indices>
+struct ExpandShiftCounts;
+template <typename Abi, size_t... Indices>
+struct ExpandShiftCounts<Abi, std::index_sequence<Indices...>> {
+    using type = ::testing::Types<TestParams<Abi, Indices>...>;
+};
+
+template <typename... Abis>
+struct ConcatTestTypes;
+template <typename... R, typename... L>
+struct ConcatTestTypes<::testing::Types<L...>, ::testing::Types<R...>> {
+    using type = ::testing::Types<L..., R...>;
+};
+
+template <typename... Abis>
+struct GenerateTestTypes;
+template <>
+struct GenerateTestTypes<::testing::Types<>> {
+    using type = ::testing::Types<>;
+};
+template <typename FirstAbi, typename... RestAbis>
+struct GenerateTestTypes<::testing::Types<FirstAbi, RestAbis...>> {
+    using _expanded = ExpandShiftCounts<
+        FirstAbi,
+        std::make_index_sequence<stdx::simd<real_t, FirstAbi>::size()>>;
+    using type = typename ConcatTestTypes<
+        typename _expanded::type,
+        typename GenerateTestTypes<::testing::Types<RestAbis...>>::type>::type;
+};
+
+// Instantiate all test cases with SIMD ABIs and shift values
+using TestCases = typename GenerateTestTypes<TestAbis>::type;
+
+// Define the test fixture with both ABI and shift count
+template <typename Param>
 class RotateTest : public ::testing::Test {};
-TYPED_TEST_SUITE(RotateTest, TestVectorLengths);
+
+TYPED_TEST_SUITE(RotateTest, TestCases);
 
 TYPED_TEST(RotateTest, rotl) {
-    using simd         = stdx::simd<real_t, TypeParam>;
+    using simd         = stdx::simd<real_t, typename TypeParam::abi>;
     constexpr size_t N = simd::size();
+    constexpr size_t S = TypeParam::shift;
     simd x;
     for (size_t i = 0; i < N; ++i)
         x[i] = static_cast<double>(i + 1);
 
-    simd y = rotl<1>(x);
+    simd y = rotl<S>(x);
     simd y_expected;
-    for (size_t i = 0; i < N - 1; ++i)
-        y_expected[i] = x[i + 1];
-    y_expected[N - 1] = x[0];
+    for (size_t i = 0; i < N; ++i)
+        y_expected[i] = x[(i + S) % N];
 
     EXPECT_TRUE(all_of(y == y_expected));
 }
 
 TYPED_TEST(RotateTest, rotr) {
-    using simd         = stdx::simd<real_t, TypeParam>;
+    using simd         = stdx::simd<real_t, typename TypeParam::abi>;
     constexpr size_t N = simd::size();
+    constexpr size_t S = TypeParam::shift;
     simd x;
     for (size_t i = 0; i < N; ++i)
         x[i] = static_cast<double>(i + 1);
 
-    simd y = rotr<1>(x);
+    simd y = rotr<S>(x);
     simd y_expected;
-    y_expected[0] = x[N - 1];
-    for (size_t i = 1; i < N; ++i)
-        y_expected[i] = x[i - 1];
+    for (size_t i = 0; i < N; ++i)
+        y_expected[i] = x[(i + N - S) % N];
 
     EXPECT_TRUE(all_of(y == y_expected));
 }
 
 TYPED_TEST(RotateTest, shiftl) {
-    using simd         = stdx::simd<real_t, TypeParam>;
+    using simd         = stdx::simd<real_t, typename TypeParam::abi>;
     constexpr size_t N = simd::size();
+    constexpr size_t S = TypeParam::shift;
     simd x;
     for (size_t i = 0; i < N; ++i)
         x[i] = static_cast<double>(i + 1);
 
-    simd y = shiftl<1>(x);
+    simd y = shiftl<S>(x);
     simd y_expected;
-    for (size_t i = 0; i < N - 1; ++i)
-        y_expected[i] = x[i + 1];
-    y_expected[N - 1] = 0.0;
+    for (size_t i = 0; i < N; ++i)
+        y_expected[i] = (i + S < N) ? x[i + S] : 0.0;
 
     EXPECT_TRUE(all_of(y == y_expected));
 }
 
 TYPED_TEST(RotateTest, shiftr) {
-    using simd         = stdx::simd<real_t, TypeParam>;
+    using simd         = stdx::simd<real_t, typename TypeParam::abi>;
     constexpr size_t N = simd::size();
+    constexpr size_t S = TypeParam::shift;
     simd x;
     for (size_t i = 0; i < N; ++i)
         x[i] = static_cast<double>(i + 1);
 
-    simd y = shiftr<1>(x);
+    simd y = shiftr<S>(x);
     simd y_expected;
-    y_expected[0] = 0.0;
-    for (size_t i = 1; i < N; ++i)
-        y_expected[i] = x[i - 1];
+    for (size_t i = 0; i < N; ++i)
+        y_expected[i] = (i >= S) ? x[i - S] : 0.0;
 
     EXPECT_TRUE(all_of(y == y_expected));
 }
