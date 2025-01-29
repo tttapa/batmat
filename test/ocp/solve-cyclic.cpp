@@ -1,6 +1,7 @@
 // TODO: move to src
 
 #include <koqkatoo/linalg-compact/compact.hpp>
+#include <koqkatoo/linalg/small-potrf.hpp>
 #include <koqkatoo/matrix-view.hpp>
 #include <koqkatoo/ocp/ocp.hpp>
 #include <koqkatoo/openmp.h>
@@ -249,7 +250,14 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
             // Copy previous Bᵀ to U and clear
             scalar_blas::xcopy_T(B_prev, U_scal.batch(i));
             // L = chol(A), Y = B L⁻ᵀ, U = B L⁻ᵀ
-            scalar_blas::xpotrf(LΨU_scal.batch(i), be);
+            // TODO: we don't need Y in the final stage
+            if ((0)) {
+                scalar_blas::xpotrf(LΨU_scal.batch(i), be);
+            } else {
+                auto LΨi = LΨU_scal(i);
+                linalg::small_potrf(LΨi.data, LΨi.outer_stride, LΨi.rows,
+                                    LΨi.cols);
+            }
             // Update previous diagonal and subdiagonal blocks
             // A -= UUᵀ, B = -YUᵀ
             scalar_blas::xsyrk_sub(U_scal.batch(i), LΨd_scal.batch(i - offset),
@@ -267,7 +275,12 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     }
     KOQKATOO_OMP(single) {
         KOQKATOO_TRACE("factor Ψ scalar", 0);
-        scalar_blas::xpotrf(LΨd_scal.batch(0), be);
+        if ((0)) {
+            scalar_blas::xpotrf(LΨd_scal.batch(0), be);
+        } else {
+            auto LΨi = LΨd_scal(0);
+            linalg::small_potrf(LΨi.data, LΨi.outer_stride, LΨi.rows, LΨi.cols);
+        }
     }
 
     } // end parallel
