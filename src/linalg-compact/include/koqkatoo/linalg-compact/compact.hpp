@@ -309,6 +309,9 @@ struct CompactBLAS {
     static void xgemv_T_add_ref(single_batch_view A, single_batch_view B,
                                 mut_single_batch_view C);
 
+    /// C(:-1) += A(:-1)ᵀB(1:)
+    static void xgemv_T_add_shift(single_batch_view A, single_batch_view B,
+                                  mut_single_batch_view C);
     /// C(:-1) -= A(:-1)ᵀB(1:)
     static void xgemv_T_sub_shift(single_batch_view A, single_batch_view B,
                                   mut_single_batch_view C);
