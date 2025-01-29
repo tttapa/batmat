@@ -285,8 +285,6 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
 
     } // end parallel
 
-    return; // TODO
-
     // Compute Mx - b
     compact_blas::xsub_copy(Mxbb, xb.top_rows(nx), bb);
     for (index_t i = 0; i < n; ++i) {
@@ -296,11 +294,10 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
             compact_blas::xgemv_sub(AB.batch(hi), xb.batch(hi),
                                     Mxbb.batch(hi_next), be);
         } else {
-            auto w       = VVᵀ.left_cols(1);
+            // Last batch is special since we cross batch boundaries
             auto hi_next = get_heap_index(i - vstride + 1, n);
-            compact_blas::xgemv_neg(AB.batch(hi), xb.batch(hi), w.batch(0), be);
-            for (index_t j = 0; j < VL - 1; ++j)
-                Mxbb.batch(hi_next)(j + 1) += w(j);
+            compact_blas::xgemv_sub_shift(AB.batch(hi), xb.batch(hi),
+                                          Mxbb.batch(hi_next));
         }
     }
 
@@ -322,12 +319,10 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
             compact_blas::xgemv_sub(V.batch(hi), db.batch(hi),
                                     Δλb.batch(hi_next), be);
         } else {
-            auto w       = VVᵀ.left_cols(1);
+            // Last batch is special since we cross batch boundaries
             auto hi_next = get_heap_index(i - vstride + 1, n);
-            std::println("  sub Vv({}) [{}]Δ", i + 1, hi_next);
-            compact_blas::xgemv_neg(V.batch(hi), db.batch(hi), w.batch(0), be);
-            for (index_t j = 0; j < VL - 1; ++j)
-                Δλb.batch(hi_next)(j + 1) += w(j);
+            compact_blas::xgemv_sub_shift(V.batch(hi), db.batch(hi),
+                                          Δλb.batch(hi_next));
         }
     }
 
@@ -402,15 +397,12 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                 compact_blas::xgemv_sub(Y, Δλb.batch(hi), Δλb.batch(hi_next),
                                         be);
             } else {
-                // Last batch is special, we'll handle it manually for now
-                // TODO: write an optimized kernel that rotates the vector lanes
+                // Last batch is special since we cross batch boundaries
                 const auto hi_next = get_heap_index(i + offset - vstride, n);
                 std::println("  update rhs fwd b(2i+2 = {}) -> [{}]Δ",
                              i + offset, hi_next);
-                auto w = VVᵀ.left_cols(1);
-                compact_blas::xgemv_neg(Y, Δλb.batch(hi), w.batch(0), be);
-                for (index_t j = 0; j < VL - 1; ++j)
-                    Δλb.batch(hi_next)(j + 1) += w(j);
+                compact_blas::xgemv_sub_shift(Y, Δλb.batch(hi),
+                                              Δλb.batch(hi_next));
             }
         }
     }
@@ -491,16 +483,12 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                 compact_blas::xgemv_T_sub(Y, Δλb.batch(hi_next), Δλb.batch(hi),
                                           be);
             } else {
-                // Last batch is special, we'll handle it manually for now
-                // TODO: write an optimized kernel that rotates the vector lanes
+                // Last batch is special since we cross batch boundaries
                 const auto hi_next = get_heap_index(i + offset - vstride, n);
                 std::println("  update rhs rev b(2i+2 = {}) -> [{}]Δ",
                              i + offset, hi_next);
-                auto w = VVᵀ.left_cols(1);
-                w(VL - 1).set_constant(0);
-                for (index_t j = 0; j < VL - 1; ++j)
-                    w(j) = Δλb.batch(hi_next)(j + 1);
-                compact_blas::xgemv_T_sub(Y, w.batch(0), Δλb.batch(hi), be);
+                compact_blas::xgemv_T_sub_shift(Y, Δλb.batch(hi_next),
+                                                Δλb.batch(hi));
             }
             std::println("  update rhs rev b(2i = {}) -> [{}]", i + offset,
                          hi_prev);
