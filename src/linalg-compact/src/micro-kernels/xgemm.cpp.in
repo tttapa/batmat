@@ -24,9 +24,13 @@ template void xgemm_register<Abi, {.negate = true, .trans_B = true}>(
     single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
 template void xgemm_register<Abi, {.negate = true, .trans_A = true, .trans_B = true}>(
     single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
+template void xgemm_register<Abi, {.negate = true, .shift = 1}>(
+    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
 template void xgemm_register<Abi, {.trans_B = true, .shift = 1}>(
     single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
 template void xgemm_register<Abi, {.negate = true, .trans_B = true, .shift = 1}>(
+    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
+template void xgemm_register<Abi, {.negate = true, .trans_A = true, .shift_B = 1}>(
     single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
 
 }

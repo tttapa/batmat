@@ -48,7 +48,7 @@ xgemm_microkernel(const single_batch_matrix_accessor<Abi, Conf.trans_A> A,
             simd Ail = A.load(ii, l);
             KOQKATOO_FULLY_UNROLLED_FOR (index_t jj = 0; jj < ColsReg; ++jj) {
                 simd &Cij = C_reg[ii][jj];
-                simd Blj  = B.load(l, jj);
+                simd Blj  = shiftl<Conf.shift_B>(B.load(l, jj));
                 if constexpr (Conf.negate)
                     Cij -= Ail * Blj;
                 else

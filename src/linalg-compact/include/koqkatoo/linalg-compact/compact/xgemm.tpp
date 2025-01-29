@@ -289,6 +289,28 @@ void CompactBLAS<Abi>::xgemm_sub_ref(single_batch_view A, single_batch_view B,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xgemv_sub_shift(single_batch_view A, single_batch_view B,
+                                       mut_single_batch_view C) {
+    KOQKATOO_TRACE("xgemv_sub_shift", 0,
+                   A.rows() * A.cols() * B.cols() * (A.depth() - 1));
+    assert(A.rows() == C.rows());
+    assert(A.cols() == B.rows());
+    assert(B.cols() == C.cols());
+    assert(B.cols() == 1);
+    static constexpr micro_kernels::gemm::KernelConfig conf{.negate = true,
+                                                            .shift  = 1};
+    for (index_t l = 0; l < A.cols(); l += GemmBlockSizeCols) {
+        auto nl = std::min<index_t>(GemmBlockSizeCols, A.cols() - l);
+        for (index_t i = 0; i < A.rows(); i += GemmBlockSizeRows) {
+            auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
+            micro_kernels::gemm::xgemm_register<Abi, conf>(
+                A.block(i, l, ni, nl), B.middle_rows(l, nl),
+                C.middle_rows(i, ni)); // TODO: optimized microkernel
+        }
+    }
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xgemv_sub_ref(single_batch_view A, single_batch_view B,
                                      mut_single_batch_view C) {
     KOQKATOO_TRACE("xgemv_sub", 0, A.rows() * A.cols() * B.cols() * A.depth());
@@ -391,6 +413,29 @@ void CompactBLAS<Abi>::xgemv_T_sub_ref(single_batch_view A, single_batch_view B,
     assert(B.cols() == 1);
     static constexpr micro_kernels::gemm::KernelConfig conf{.negate  = true,
                                                             .trans_A = true};
+    for (index_t l = 0; l < A.rows(); l += GemmBlockSizeCols) {
+        auto nl = std::min<index_t>(GemmBlockSizeCols, A.rows() - l);
+        for (index_t i = 0; i < A.cols(); i += GemmBlockSizeRows) {
+            auto ni = std::min<index_t>(GemmBlockSizeRows, A.cols() - i);
+            micro_kernels::gemm::xgemm_register<Abi, conf>(
+                A.block(l, i, nl, ni), B.middle_rows(l, nl),
+                C.middle_rows(i, ni)); // TODO: optimized microkernel
+        }
+    }
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xgemv_T_sub_shift(single_batch_view A,
+                                         single_batch_view B,
+                                         mut_single_batch_view C) {
+    KOQKATOO_TRACE("xgemv_T_sub_shift", 0,
+                   A.cols() * A.rows() * B.cols() * (A.depth() - 1));
+    assert(A.cols() == C.rows());
+    assert(A.rows() == B.rows());
+    assert(B.cols() == C.cols());
+    assert(B.cols() == 1);
+    static constexpr micro_kernels::gemm::KernelConfig conf{
+        .negate = true, .trans_A = true, .shift_B = 1};
     for (index_t l = 0; l < A.rows(); l += GemmBlockSizeCols) {
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.rows() - l);
         for (index_t i = 0; i < A.cols(); i += GemmBlockSizeRows) {

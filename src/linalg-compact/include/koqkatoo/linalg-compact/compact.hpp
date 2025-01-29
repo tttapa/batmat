@@ -110,9 +110,9 @@ struct CompactBLAS {
                           PreferredBackend b);
     static void xsyrk_add(batch_view A, mut_batch_view C, PreferredBackend b);
 
-    /// C(1:) += AAᵀ(:-1)
+    /// C(1:) += (AAᵀ)(:-1)
     static void xsyrk_add_shift(single_batch_view A, mut_single_batch_view C);
-    /// C(1:) -= AAᵀ(:-1)
+    /// C(1:) -= (AAᵀ)(:-1)
     static void xsyrk_sub_shift(single_batch_view A, mut_single_batch_view C);
 
     /// C -= AAᵀ
@@ -250,6 +250,9 @@ struct CompactBLAS {
     static void xgemm_sub_ref(single_batch_view A, single_batch_view B,
                               mut_single_batch_view C);
 
+    /// C(1:) -= (AB)(:-1)
+    static void xgemv_sub_shift(single_batch_view A, single_batch_view B,
+                                mut_single_batch_view C);
     /// C -= AB
     static void xgemv_sub(single_batch_view A, single_batch_view B,
                           mut_single_batch_view C, PreferredBackend b);
@@ -305,6 +308,10 @@ struct CompactBLAS {
                             PreferredBackend b);
     static void xgemv_T_add_ref(single_batch_view A, single_batch_view B,
                                 mut_single_batch_view C);
+
+    /// C(:-1) -= A(:-1)ᵀB(1:)
+    static void xgemv_T_sub_shift(single_batch_view A, single_batch_view B,
+                                  mut_single_batch_view C);
 
     /// C -= AᵀB
     static void xgemv_T_sub(single_batch_view A, single_batch_view B,
