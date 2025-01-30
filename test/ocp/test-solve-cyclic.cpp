@@ -80,7 +80,8 @@ TEST_P(OCPCyclic, solve) {
     index_t n_var = ocp.num_variables(), n_constr = ocp.num_constraints(),
             n_dyn_constr = ocp.num_dynamics_constraints();
 
-    auto solve_cyclic = vl == 4   ? ::solve_cyclic<4>
+    auto solve_cyclic = vl == 2   ? ::solve_cyclic<2>
+                        : vl == 4 ? ::solve_cyclic<4>
                         : vl == 8 ? ::solve_cyclic<8>
                                   : nullptr;
     if (!solve_cyclic)
@@ -216,4 +217,4 @@ INSTANTIATE_TEST_SUITE_P(OCPCyclic, OCPCyclic,
                          testing::Combine( //
                              testing::Values<index_t>(7, 15, 31, 63, 127, 255),
                              testing::Values<index_t>(40),
-                             testing::Values<index_t>(4, 8)));
+                             testing::Values<index_t>(2, 4, 8)));

@@ -661,6 +661,15 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
 }
 
 template void
+solve_cyclic<2>(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
+                std::span<const real_t> Σ, std::span<const bool> J,
+                std::span<const real_t> x, std::span<const real_t> grad,
+                std::span<const real_t> λ, std::span<const real_t> b,
+                std::span<const real_t> ŷ, std::span<real_t> Mxb,
+                std::span<real_t> Mᵀλ, std::span<real_t> Aᵀŷ,
+                std::span<real_t> d, std::span<real_t> Δλ,
+                std::span<real_t> MᵀΔλ);
+template void
 solve_cyclic<4>(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                 std::span<const real_t> Σ, std::span<const bool> J,
                 std::span<const real_t> x, std::span<const real_t> grad,
