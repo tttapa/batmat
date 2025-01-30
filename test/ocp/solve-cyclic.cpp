@@ -176,6 +176,69 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
 
     KOQKATOO_OMP(parallel) {
 
+        // Compute Aᵀŷ
+    KOQKATOO_OMP(for)
+    for (index_t i = 0; i < n; ++i) {
+        KOQKATOO_TRACE("mat_vec_transpose_constr", i);
+        auto hi = get_heap_index(i, n);
+        compact_blas::xgemv_T(CD.batch(hi), ŷb.batch(hi), Aᵀŷb.batch(hi), be);
+    }
+
+    // Compute Mx - b
+    KOQKATOO_OMP(single)
+    compact_blas::xsub_copy(Mxbb, xb.top_rows(nx), bb);
+    // TODO: move into loop
+    KOQKATOO_OMP(for)
+    for (index_t i = 0; i < n; ++i) {
+        KOQKATOO_TRACE("residual_dynamics_constr", i);
+        auto hi = get_heap_index(i, n);
+        if (i + 1 < n) {
+            auto hi_next = get_heap_index(i + 1, n);
+            compact_blas::xgemv_sub(AB.batch(hi), xb.batch(hi),
+                                    Mxbb.batch(hi_next), be);
+        } else {
+            // Last batch is special since we cross batch boundaries
+            auto hi_next = get_heap_index(i - vstride + 1, n);
+            compact_blas::xgemv_sub_shift(AB.batch(hi), xb.batch(hi),
+                                          Mxbb.batch(hi_next));
+        }
+    }
+
+    KOQKATOO_OMP(single)
+    compact_blas::xcopy(Mxbb, Δλb);
+
+    // Compute Mᵀλ and initialize right-hand side
+    KOQKATOO_OMP(for)
+    for (index_t i = 0; i < n; ++i) {
+        KOQKATOO_TRACE("mat_vec_transpose_dynamics_constr", i);
+        const auto hi               = get_heap_index(i, n);
+        Mᵀλb.batch(hi).top_rows(nx) = λb.batch(hi);
+        Mᵀλb.batch(hi).bottom_rows(nu).set_constant(0);
+        if (i + 1 < n) {
+            const auto hi_next = get_heap_index(i + 1, n);
+            compact_blas::xgemv_T_sub(AB.batch(hi), λb.batch(hi_next),
+                                      Mᵀλb.batch(hi), be);
+        } else {
+            const auto hi_next = get_heap_index(i - vstride + 1, n);
+            compact_blas::xgemv_T_sub_shift(AB.batch(hi), λb.batch(hi_next),
+                                            Mᵀλb.batch(hi));
+        }
+        // TODO: optimize
+        for (index_t k = 0; k < nxu; ++k)
+            for (index_t j = 0; j < VL; ++j)
+                db.batch(hi)(j, k, 0) = -db.batch(hi)(j, k, 0) -
+                                        Mᵀλb.batch(hi)(j, k, 0) -
+                                        Aᵀŷb.batch(hi)(j, k, 0);
+    }
+
+    } // end parallel
+
+#if KOQKATOO_WITH_TRACING
+    koqkatoo::trace_logger.reset();
+#endif
+
+    KOQKATOO_OMP(parallel) {
+
     KOQKATOO_OMP(for)
     for (index_t i = 0; i < n; ++i) {
         KOQKATOO_TRACE("factor prep", i);
@@ -305,62 +368,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
 
     KOQKATOO_OMP(parallel) {
 
-        // Compute Aᵀŷ
-    KOQKATOO_OMP(for)
-    for (index_t i = 0; i < n; ++i) {
-        KOQKATOO_TRACE("mat_vec_transpose_constr", i);
-        auto hi = get_heap_index(i, n);
-        compact_blas::xgemv_T(CD.batch(hi), ŷb.batch(hi), Aᵀŷb.batch(hi), be);
-    }
-
-    // Compute Mx - b
-    KOQKATOO_OMP(single)
-    compact_blas::xsub_copy(Mxbb, xb.top_rows(nx), bb);
-    // TODO: move into loop
-
-    KOQKATOO_OMP(for)
-    for (index_t i = 0; i < n; ++i) {
-        KOQKATOO_TRACE("residual_dynamics_constr", i);
-        auto hi = get_heap_index(i, n);
-        if (i + 1 < n) {
-            auto hi_next = get_heap_index(i + 1, n);
-            compact_blas::xgemv_sub(AB.batch(hi), xb.batch(hi),
-                                    Mxbb.batch(hi_next), be);
-        } else {
-            // Last batch is special since we cross batch boundaries
-            auto hi_next = get_heap_index(i - vstride + 1, n);
-            compact_blas::xgemv_sub_shift(AB.batch(hi), xb.batch(hi),
-                                          Mxbb.batch(hi_next));
-        }
-    }
-
-    // Compute Mᵀλ and initialize right-hand side
-    KOQKATOO_OMP(for)
-    for (index_t i = 0; i < n; ++i) {
-        KOQKATOO_TRACE("mat_vec_transpose_dynamics_constr", i);
-        const auto hi               = get_heap_index(i, n);
-        Mᵀλb.batch(hi).top_rows(nx) = λb.batch(hi);
-        Mᵀλb.batch(hi).bottom_rows(nu).set_constant(0);
-        if (i + 1 < n) {
-            const auto hi_next = get_heap_index(i + 1, n);
-            compact_blas::xgemv_T_sub(AB.batch(hi), λb.batch(hi_next),
-                                      Mᵀλb.batch(hi), be);
-        } else {
-            const auto hi_next = get_heap_index(i - vstride + 1, n);
-            compact_blas::xgemv_T_sub_shift(AB.batch(hi), λb.batch(hi_next),
-                                            Mᵀλb.batch(hi));
-        }
-        // TODO: optimize
-        for (index_t k = 0; k < nxu; ++k)
-            for (index_t j = 0; j < VL; ++j)
-                db.batch(hi)(j, k, 0) = -db.batch(hi)(j, k, 0) -
-                                        Mᵀλb.batch(hi)(j, k, 0) -
-                                        Aᵀŷb.batch(hi)(j, k, 0);
-    }
-
-    // Solve Hv = -g
-    KOQKATOO_OMP(single)
-    compact_blas::xcopy(Mxbb, Δλb);
+        // Solve Hv = -g
     KOQKATOO_OMP(for)
     for (index_t i = 0; i < n; ++i) {
         KOQKATOO_TRACE("solve Hv=g", i);
@@ -445,6 +453,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         const auto offset = index_t{1} << l;
         KOQKATOO_OMP(for)
         for (index_t i = offset; i < n; i += 2 * offset) {
+            KOQKATOO_TRACE("solve ψ fwd", i);
             const auto hi      = get_heap_index(i, n),
                        hi_prev = get_heap_index(i - offset, n);
             PRINTLN("solve rhs fwd b(2i+1 = {}) -> [{}]", i, hi);
@@ -458,6 +467,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         }
         KOQKATOO_OMP(for)
         for (index_t i = offset; i < n; i += 2 * offset) {
+            KOQKATOO_TRACE("solve ψ fwd 2", i);
             const auto hi = get_heap_index(i, n);
             auto Y        = LΨs.batch(hi);
             // Update next even block
@@ -479,14 +489,17 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     }
 
     // Forward pass Ψ (scalar)
-    KOQKATOO_OMP(single)
-    compact_blas::unpack(Δλb.batch(n - 1), Δλ_scal);
+    KOQKATOO_OMP(single) {
+        KOQKATOO_TRACE("unpack Δλ", 0);
+        compact_blas::unpack(Δλb.batch(n - 1), Δλ_scal);
+    }
     // TODO: use lgvl - 1 to stop once we're left with two diagonal blocks, then
     // handle that case manually
     for (index_t l = 0; l < lgvl; ++l) {
         const auto offset = index_t{1} << l;
         KOQKATOO_OMP(for)
         for (index_t i = offset; i < VL; i += 2 * offset) {
+            KOQKATOO_TRACE("solve ψ fwd scalar", i);
             PRINTLN("solve rhs fwd b(2i+1 = {}) -> [{}]", i, n - 1);
             // L⁻¹ b
             scalar_blas::xtrsv_LNN(LΨd_scal.batch(i), Δλ_scal.batch(i), be);
@@ -497,6 +510,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         }
         KOQKATOO_OMP(for)
         for (index_t i = offset; i < VL - offset; i += 2 * offset) {
+            KOQKATOO_TRACE("solve ψ fwd scalar 2", i);
             // Update next even block
             auto Y = LΨs_scal.batch(i);
             scalar_blas::xgemv_sub(Y, Δλ_scal.batch(i),
@@ -508,19 +522,26 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     KOQKATOO_OMP(single) {
         // L⁻¹ b
         PRINTLN("solve rhs fwd b({}) -> [{}]", 0, n - 1);
-        scalar_blas::xtrsv_LNN(LΨd_scal.batch(0), Δλ_scal.batch(0), be);
+        {
+            KOQKATOO_TRACE("solve ψ fwd scalar", 0);
+            scalar_blas::xtrsv_LNN(LΨd_scal.batch(0), Δλ_scal.batch(0), be);
+        }
 
         // Reverse pass Ψ (scalar)
 
         // L⁻ᵀ b
         PRINTLN("solve rhs rev b({}) -> [{}]", 0, n - 1);
-        scalar_blas::xtrsv_LTN(LΨd_scal.batch(0), Δλ_scal.batch(0), be);
+        {
+            KOQKATOO_TRACE("solve ψ rev scalar", 0);
+            scalar_blas::xtrsv_LTN(LΨd_scal.batch(0), Δλ_scal.batch(0), be);
+        }
     }
 
     for (index_t l = lgvl; l-- > 0;) {
         const auto offset = index_t{1} << l;
         KOQKATOO_OMP(for)
         for (index_t i = offset; i < VL - offset; i += 2 * offset) {
+            KOQKATOO_TRACE("solve ψ rev scalar 2", i);
             PRINTLN("updating rhs rev i={}", i);
             auto Y = LΨs_scal.batch(i);
             // Substitute next even block
@@ -529,6 +550,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         }
         KOQKATOO_OMP(for)
         for (index_t i = offset; i < VL; i += 2 * offset) {
+            KOQKATOO_TRACE("solve ψ rev scalar", i);
             PRINTLN("updating rhs rev i={}", i);
             // Substitute previous even block
             scalar_blas::xgemv_T_sub(U_scal.batch(i), Δλ_scal.batch(i - offset),
@@ -549,6 +571,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         const auto offset = index_t{1} << l;
         KOQKATOO_OMP(for)
         for (index_t i = offset; i < n; i += 2 * offset) {
+            KOQKATOO_TRACE("solve ψ rev 2", i);
             const auto hi = get_heap_index(i, n);
             PRINTLN("solve rhs rev b(2i+1 = {}) -> [{}]", i, hi);
             auto Y = LΨs.batch(hi);
@@ -570,6 +593,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         }
         KOQKATOO_OMP(for)
         for (index_t i = offset; i < n; i += 2 * offset) {
+            KOQKATOO_TRACE("solve ψ rev", i);
             const auto hi      = get_heap_index(i, n),
                        hi_prev = get_heap_index(i - offset, n);
             PRINTLN("  update rhs rev b(2i = {}) -> [{}]", i + offset, hi_prev);
