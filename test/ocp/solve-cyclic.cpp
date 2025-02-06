@@ -20,6 +20,7 @@
 
 #define PRINTLN(...)
 #define USE_PCG 1
+#define USE_JACOBI_PREC 1
 #define DO_PRINT 0
 
 namespace ko   = koqkatoo::ocp;
@@ -275,10 +276,15 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     };
     const auto mul_precond = [&](real_view r, mut_real_view z, mut_real_view w,
                                  real_view L, real_view B) {
-        static constexpr auto algn = stdx::vector_aligned;
         compact_blas::xcopy(r, z);
         compact_blas::xtrsv_LNN(L, z, be);
         compact_blas::xtrsv_LTN(L, z, be);
+#if USE_JACOBI_PREC
+        std::ignore = w;
+        std::ignore = B;
+        return compact_blas::xdot(r, z);
+#else
+        static constexpr auto algn = stdx::vector_aligned;
         for (index_t j = 0; j < B.cols(); ++j) {
             simd wj_accum{};
             simd zj{&z(0, j, 0), algn};
@@ -307,6 +313,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
             zi.copy_to(&z(0, i, 0), algn);
         }
         return reduce(rz_accum);
+#endif
     };
     matrix work_pcg{{.depth = VL, .rows = nx, .cols = 5}};
 #endif
