@@ -261,42 +261,22 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     const auto mul_precond = [&](real_view r, mut_real_view z, mut_real_view w,
                                  real_view L, real_view B) {
         compact_blas::xcopy(r, z);
-        compact_blas::xtrsv_LNN(L, z, be);
-        compact_blas::xtrsv_LTN(L, z, be);
 #if USE_JACOBI_PREC
         std::ignore = w;
         std::ignore = B;
+        compact_blas::xtrsv_LNN(L, z, be);
+        compact_blas::xtrsv_LTN(L, z, be);
         return compact_blas::xdot(r, z);
 #else
-        static constexpr auto algn = stdx::vector_aligned;
-        for (index_t j = 0; j < B.cols(); ++j) {
-            simd wj_accum{};
-            simd zj{&z(0, j, 0), algn};
-            zj = micro_kernels::shiftr<1>(zj);
-            for (index_t i = 0; i < B.rows(); ++i) {
-                simd zi{&z(0, i, 0), algn};
-                simd Bij{&B(0, i, j), algn};
-                wj_accum += Bij * micro_kernels::shiftl<1>(zi);
-                simd wi = j == 0 ? simd{} : simd{&w(0, i, 0), algn};
-                Bij     = micro_kernels::shiftr<1>(Bij); // TODO: rotr?
-                wi += Bij * zj;
-                wi.copy_to(&w(0, i, 0), algn);
-            }
-            simd wj{&w(0, j, 0), algn};
-            wj += wj_accum;
-            wj.copy_to(&w(0, j, 0), algn);
-        }
+        compact_blas::xcopy(r, z);
+        compact_blas::xcopy(r, w);
         compact_blas::xtrsv_LNN(L, w, be);
         compact_blas::xtrsv_LTN(L, w, be);
-        simd rz_accum{};
-        for (index_t i = 0; i < w.rows(); ++i) {
-            simd zi{&z(0, i, 0), algn}, wi{&w(0, i, 0), algn},
-                ri{&r(0, i, 0), algn};
-            zi -= wi;
-            rz_accum += zi * ri;
-            zi.copy_to(&z(0, i, 0), algn);
-        }
-        return reduce(rz_accum);
+        using abi = typename compact_blas::simd::abi_type;
+        micro_kernels::gemm::xsyomv_register<abi, true>(B, w.as_const(), z);
+        compact_blas::xtrsv_LNN(L, z, be);
+        compact_blas::xtrsv_LTN(L, z, be);
+        return compact_blas::xdot(r, z);
 #endif
     };
     matrix work_pcg{{.depth = VL, .rows = nx, .cols = 5}};
@@ -618,7 +598,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
             compact_blas::xaxpy(+α, p, x);
             compact_blas::xaxpy(-α, Ap, r);
             real_t r2 = compact_blas::xdot(r, r);
-            std::println("# {}: {}", it, std::sqrt(r2));
+            PRINTLN("# {}: {}", it, std::sqrt(r2));
             constexpr real_t ε = std::numeric_limits<real_t>::epsilon();
             if (r2 < ε * ε)
                 break;

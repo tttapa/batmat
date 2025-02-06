@@ -110,25 +110,30 @@ xsyomv_microkernel(const single_batch_matrix_accessor<Abi> A,
     auto A_cached = with_cached_access<RowsReg>(A);
     // Initialize accumulator
     simd accum[RowsReg]{}; // NOLINT(*-c-arrays)
+    // Column weights for non-transposed block
+    simd xl[RowsReg]{};
+    KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < RowsReg; ++l)
+        xl[l] = micro_kernels::shiftr<1>(x.load(l + l0, 0));
     // Actual multiplication kernel
-    for (index_t l = 0; l < RowsReg; ++l) {
-        simd xl = x.load(l + l0, 0);
-        xl      = micro_kernels::shiftr<1>(xl);
-        for (index_t i = 0; i < k; ++i) {
+    for (index_t i = 0; i < k; ++i) {
+        simd xi = x.load(i, 0);
+        simd vi = v.load(i, 0);
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < RowsReg; ++l) {
             // Dot product between first lane of A and second lane of x
-            simd xi  = x.load(i, 0);
             simd Ail = A_cached.load(i, l);
             accum[l] += Ail * micro_kernels::shiftl<1>(xi);
             // Linear combination of columns of first lane of A, weighted by
             // the rows of the first lane of x, added to the second lane of v
-            Ail     = micro_kernels::shiftr<1>(Ail); // TODO: rotr?
-            simd vi = v.load(i, 0);
+            Ail = micro_kernels::shiftr<1>(Ail); // TODO: rotr?
             if constexpr (Negate)
-                vi -= Ail * xl;
+                vi -= Ail * xl[l];
             else
-                vi += Ail * xl;
-            v.store(vi, i, 0);
+                vi += Ail * xl[l];
         }
+        v.store(vi, i, 0);
+    }
+    // Subtract dot products of transposed block
+    KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < RowsReg; ++l) {
         simd vl = v.load(l + l0, 0);
         if constexpr (Negate)
             vl -= accum[l];
