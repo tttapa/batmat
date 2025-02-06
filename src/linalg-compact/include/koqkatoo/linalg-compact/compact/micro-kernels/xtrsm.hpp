@@ -16,9 +16,27 @@ void xtrsm_microkernel(single_batch_matrix_accessor<Abi> A,
                        mut_single_batch_matrix_accessor<Abi, Conf.trans> X01,
                        index_t k) noexcept;
 
+template <class Abi, index_t RowsReg, index_t ColsReg>
+void xtrsm_llnn_microkernel(single_batch_matrix_accessor<Abi> A,
+                            mut_single_batch_matrix_accessor<Abi> B,
+                            index_t k) noexcept;
+
+template <class Abi, index_t RowsReg, index_t ColsReg>
+void xtrsm_lltn_microkernel(single_batch_matrix_accessor<Abi> A,
+                            mut_single_batch_matrix_accessor<Abi> B,
+                            index_t k) noexcept;
+
 template <class Abi, KernelConfig Conf>
 void xtrsm_register(single_batch_view<Abi> A,
                     mut_single_batch_view<Abi> B) noexcept;
+
+template <class Abi>
+void xtrsm_llnn_register(single_batch_view<Abi> A,
+                         mut_single_batch_view<Abi> B) noexcept;
+
+template <class Abi>
+void xtrsm_lltn_register(single_batch_view<Abi> A,
+                         mut_single_batch_view<Abi> B) noexcept;
 
 #ifdef __AVX512F__
 // AVX512 has 32 vector registers, we use 25 registers for a 5×5 accumulator
@@ -43,5 +61,19 @@ inline const constinit auto microkernel_lut = make_2d_lut<RowsReg, ColsReg>(
     []<index_t Row, index_t Col>(index_constant<Row>, index_constant<Col>) {
         return xtrsm_microkernel<Abi, Conf, Row + 1, Col + 1>;
     });
+
+template <class Abi>
+inline const constinit auto microkernel_llnn_lut =
+    make_2d_lut<RowsReg, ColsReg>(
+        []<index_t Row, index_t Col>(index_constant<Row>, index_constant<Col>) {
+            return xtrsm_llnn_microkernel<Abi, Row + 1, Col + 1>;
+        });
+
+template <class Abi>
+inline const constinit auto microkernel_lltn_lut =
+    make_2d_lut<RowsReg, ColsReg>(
+        []<index_t Row, index_t Col>(index_constant<Row>, index_constant<Col>) {
+            return xtrsm_lltn_microkernel<Abi, Row + 1, Col + 1>;
+        });
 
 } // namespace koqkatoo::linalg::compact::micro_kernels::trsm

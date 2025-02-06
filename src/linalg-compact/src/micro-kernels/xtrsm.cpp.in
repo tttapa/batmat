@@ -12,5 +12,9 @@ template void xtrsm_register<Abi, {}>(
     single_batch_view<Abi> A, mut_single_batch_view<Abi> B);
 template void xtrsm_register<Abi, {.trans = true}>(
     single_batch_view<Abi> A, mut_single_batch_view<Abi> B);
+template void xtrsm_llnn_register<Abi>(
+    single_batch_view<Abi> A, mut_single_batch_view<Abi> B);
+template void xtrsm_lltn_register<Abi>(
+    single_batch_view<Abi> A, mut_single_batch_view<Abi> B);
 
 }

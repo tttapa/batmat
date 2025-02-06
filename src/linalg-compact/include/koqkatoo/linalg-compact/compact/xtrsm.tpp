@@ -31,7 +31,7 @@ void CompactBLAS<Abi>::xtrsm_LLNN_ref(single_batch_view L,
     KOQKATOO_TRACE("xtrsm_LLNN", 0, op_cnt_trsm * L.depth());
     assert(L.rows() == L.cols());
     assert(L.rows() == H.rows());
-    micro_kernels::trsm::xtrsm_register<Abi, {.trans = false}>(L, H);
+    micro_kernels::trsm::xtrsm_llnn_register<Abi>(L, H);
 }
 
 template <class Abi>
@@ -43,7 +43,7 @@ void CompactBLAS<Abi>::xtrsv_LNN_ref(single_batch_view L,
     assert(L.rows() == L.cols());
     assert(L.rows() == H.rows());
     assert(H.cols() == 1);
-    micro_kernels::trsm::xtrsm_register<Abi, {.trans = false}>(L, H);
+    micro_kernels::trsm::xtrsm_llnn_register<Abi>(L, H);
 }
 
 template <class Abi>
@@ -54,19 +54,7 @@ void CompactBLAS<Abi>::xtrsm_LLTN_ref(single_batch_view L,
     KOQKATOO_TRACE("xtrsm_LLTN", 0, op_cnt_trsm * L.depth());
     assert(L.rows() == L.cols());
     assert(L.rows() == H.rows());
-    const auto n = L.rows(), m = H.cols();
-    for (index_t j = 0; j < m; ++j) {
-        for (index_t i = H.rows(); i-- > 0;) {
-            simd Hij = {&H(0, i, j), stdx::vector_aligned};
-            KOQKATOO_UNROLLED_IVDEP_FOR (4, index_t k = i + 1; k < n; ++k) {
-                simd Hkj = {&H(0, k, j), stdx::vector_aligned};
-                Hij -= Hkj * simd{&L(0, k, i), stdx::vector_aligned};
-            }
-            simd pivot = {&L(0, i, i), stdx::vector_aligned};
-            Hij /= pivot;
-            aligned_store(&H(0, i, j), Hij);
-        }
-    }
+    micro_kernels::trsm::xtrsm_lltn_register<Abi>(L, H);
 }
 
 template <class Abi>
@@ -79,16 +67,7 @@ void CompactBLAS<Abi>::xtrsv_LTN_ref(single_batch_view L,
     assert(L.rows() == H.rows());
     assert(H.cols() == 1);
     const auto n = L.rows();
-    for (index_t i = H.rows(); i-- > 0;) {
-        simd Hij = {&H(0, i, 0), stdx::vector_aligned};
-        KOQKATOO_UNROLLED_IVDEP_FOR (4, index_t k = i + 1; k < n; ++k) {
-            simd Hkj = {&H(0, k, 0), stdx::vector_aligned};
-            Hij -= Hkj * simd{&L(0, k, i), stdx::vector_aligned};
-        }
-        simd pivot = {&L(0, i, i), stdx::vector_aligned};
-        Hij /= pivot;
-        aligned_store(&H(0, i, 0), Hij);
-    }
+    micro_kernels::trsm::xtrsm_lltn_register<Abi>(L, H);
 }
 
 // Parallel batched implementations
