@@ -35,12 +35,18 @@ constexpr int n_horiz   = 23;
 constexpr int n_states  = 5;
 constexpr int n_inputs  = 5;
 constexpr int n_constraints = 5;
-#else
-constexpr int n_threads     = 4;
+#elif 1
+constexpr int n_threads     = 8;
 constexpr int n_horiz       = 31;
 constexpr int n_states      = 40;
 constexpr int n_inputs      = 30;
 constexpr int n_constraints = 10;
+#else
+constexpr int n_threads     = 8;
+constexpr int n_horiz       = 63;
+constexpr int n_states      = 10;
+constexpr int n_inputs      = 7;
+constexpr int n_constraints = 2;
 #endif
 
 #define FACTOR_ONLY 0
