@@ -343,8 +343,8 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         compact_blas::xtrsm_LLNN(LH.batch(hi).bottom_right(nu, nu),
                                  Wᵀ.batch(hi).bottom_rows(nu), be);
         // Compute -VWᵀ
-        // TODO: exploit trapezoidal shape of Wᵀ
-        compact_blas::xgemm_neg(V.batch(hi), Wᵀ.batch(hi), LΨs.batch(hi), be);
+        compact_blas::xtrmm_RLNN_neg(V.batch(hi), Wᵀ.batch(hi), LΨs.batch(hi),
+                                     be);
         // Compute WWᵀ
         // TODO: exploit trapezoidal shape of Wᵀ
         compact_blas::xsyrk_T(Wᵀ.batch(hi), LΨd.batch(hi), be);

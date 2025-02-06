@@ -54,7 +54,7 @@ void Solver<Abi>::prepare_factor(index_t k, real_t S, real_view Σ,
             auto LΨk  = LΨ_scalar().middle_layers(stage_idx, nd),
                  VVᵀk = VVᵀ_scalar().middle_layers(stage_idx, ni);
             // Compute -VWᵀ
-            compact_blas::xgemm_neg(V().batch(k), Wi, VWᵀ().batch(k), be);
+            compact_blas::xtrmm_RLNN_neg(V().batch(k), Wi, VWᵀ().batch(k), be);
             compact_blas::unpack_L(storage.WWᵀVWᵀ().batch(k), LΨk);
             // TODO: exploit trapezoidal shape of Wᵀ
             // Compute VVᵀ
