@@ -2,6 +2,7 @@
 
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg-compact/compact/micro-kernels/rotate.hpp>
+#include <koqkatoo/linalg-compact/compact/micro-kernels/xgemm.hpp>
 #include <koqkatoo/linalg/small-potrf.hpp>
 #include <koqkatoo/matrix-view.hpp>
 #include <koqkatoo/ocp/ocp.hpp>
@@ -20,7 +21,7 @@
 
 #define PRINTLN(...)
 #define USE_PCG 1
-#define USE_JACOBI_PREC 1
+#define USE_JACOBI_PREC 0
 #define DO_PRINT 0
 
 namespace ko   = koqkatoo::ocp;
@@ -247,28 +248,11 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         compact_blas::xcopy(p, Ap);
         compact_blas::xtrmv_T(L, Ap, be);
         compact_blas::xtrmv(L, Ap, be);
-        for (index_t j = 0; j < B.cols(); ++j) {
-            simd wj_accum{};
-            simd zj{&p(0, j, 0), algn};
-            zj = micro_kernels::shiftr<1>(zj);
-            for (index_t i = 0; i < B.rows(); ++i) {
-                simd zi{&p(0, i, 0), algn};
-                simd Bij{&B(0, i, j), algn};
-                wj_accum += Bij * micro_kernels::shiftl<1>(zi);
-                simd wi = j == 0 ? simd{} : simd{&w(0, i, 0), algn};
-                Bij     = micro_kernels::shiftr<1>(Bij); // TODO: rotr?
-                wi += Bij * zj;
-                wi.copy_to(&w(0, i, 0), algn);
-            }
-            simd wj{&w(0, j, 0), algn};
-            wj += wj_accum;
-            wj.copy_to(&w(0, j, 0), algn);
-        }
+        using abi = typename compact_blas::simd::abi_type;
+        micro_kernels::gemm::xsyomv_register<abi, false>(B, p, Ap);
         simd pAp_accum{};
         for (index_t i = 0; i < w.rows(); ++i) {
-            simd Api{&Ap(0, i, 0), algn}, wi{&w(0, i, 0), algn},
-                pi{&p(0, i, 0), algn};
-            Api += wi;
+            simd Api{&Ap(0, i, 0), algn}, pi{&p(0, i, 0), algn};
             pAp_accum += Api * pi;
             Api.copy_to(&Ap(0, i, 0), algn);
         }
@@ -634,7 +618,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
             compact_blas::xaxpy(+α, p, x);
             compact_blas::xaxpy(-α, Ap, r);
             real_t r2 = compact_blas::xdot(r, r);
-            PRINTLN("# {}: {}", it, std::sqrt(r2));
+            std::println("# {}: {}", it, std::sqrt(r2));
             constexpr real_t ε = std::numeric_limits<real_t>::epsilon();
             if (r2 < ε * ε)
                 break;

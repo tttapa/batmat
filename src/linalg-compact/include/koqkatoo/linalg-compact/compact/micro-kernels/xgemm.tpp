@@ -97,4 +97,69 @@ void xgemm_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
     }
 }
 
+/// Symmetric off-diagonal block multiply. Single register block.
+template <class Abi, index_t RowsReg, bool Negate>
+[[gnu::hot]] void
+xsyomv_microkernel(const single_batch_matrix_accessor<Abi> A,
+                   const single_batch_matrix_accessor<Abi> x,
+                   const mut_single_batch_matrix_accessor<Abi> v,
+                   const index_t l0, const index_t k) noexcept {
+    using simd = stdx::simd<real_t, Abi>;
+    KOQKATOO_ASSUME(k > 0);
+    // Pre-compute the offsets of the columns of A
+    auto A_cached = with_cached_access<RowsReg>(A);
+    // Initialize accumulator
+    simd accum[RowsReg]{}; // NOLINT(*-c-arrays)
+    // Actual multiplication kernel
+    for (index_t l = 0; l < RowsReg; ++l) {
+        simd xl = x.load(l + l0, 0);
+        xl      = micro_kernels::shiftr<1>(xl);
+        for (index_t i = 0; i < k; ++i) {
+            // Dot product between first lane of A and second lane of x
+            simd xi  = x.load(i, 0);
+            simd Ail = A_cached.load(i, l);
+            accum[l] += Ail * micro_kernels::shiftl<1>(xi);
+            // Linear combination of columns of first lane of A, weighted by
+            // the rows of the first lane of x, added to the second lane of v
+            Ail     = micro_kernels::shiftr<1>(Ail); // TODO: rotr?
+            simd vi = v.load(i, 0);
+            if constexpr (Negate)
+                vi -= Ail * xl;
+            else
+                vi += Ail * xl;
+            v.store(vi, i, 0);
+        }
+        simd vl = v.load(l + l0, 0);
+        if constexpr (Negate)
+            vl -= accum[l];
+        else
+            vl += accum[l];
+        v.store(vl, l + l0, 0);
+    }
+}
+
+/// Symmetric off-diagonal block multiply. Using register blocking.
+template <class Abi, bool Negate>
+void xsyomv_register(single_batch_view<Abi> A, single_batch_view<Abi> x,
+                     mut_single_batch_view<Abi> v) noexcept {
+    KOQKATOO_ASSUME(A.rows() == A.cols());
+    KOQKATOO_ASSUME(A.cols() == x.rows());
+    KOQKATOO_ASSUME(A.rows() == v.rows());
+    KOQKATOO_ASSUME(1 == x.cols());
+    KOQKATOO_ASSUME(1 == v.cols());
+    static const auto microkernel = microkernel_xsyomv_lut<Abi, Negate>;
+    const single_batch_matrix_accessor<Abi> A_     = A;
+    const single_batch_matrix_accessor<Abi> x_     = x;
+    const mut_single_batch_matrix_accessor<Abi> v_ = v;
+    // Optimization for very small matrices
+    if (A.cols() <= RowsReg)
+        return microkernel[A.cols() - 1](A_, x_, v_, 0, A.rows());
+    // Simply loop over all block columns in the matrix.
+    for (index_t l = 0; l < A.cols(); l += RowsReg) {
+        const auto nl = std::min<index_t>(RowsReg, A.cols() - l);
+        const auto Al = A_.middle_cols(l);
+        microkernel[nl - 1](Al, x_, v_, l, A.rows());
+    }
+}
+
 } // namespace koqkatoo::linalg::compact::micro_kernels::gemm
