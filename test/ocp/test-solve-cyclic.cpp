@@ -71,9 +71,9 @@ TEST_P(OCPCyclic, solve) {
     // Generate some random OCP matrices
     auto ocp = ko::generate_random_ocp({.N_horiz = N_horiz, //
                                         .nx      = nx,
-                                        .nu      = 30,
-                                        .ny      = 10,
-                                        .ny_N    = 10},
+                                        .nu      = 30 * nx / 40,
+                                        .ny      = 10 * nx / 40,
+                                        .ny_N    = 10 * nx / 40},
                                        12345);
 
     // Instantiate the OCP KKT solver.
