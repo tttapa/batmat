@@ -275,7 +275,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
 
     KOQKATOO_OMP(parallel) {
 
-    KOQKATOO_OMP(for)
+    KOQKATOO_OMP(for schedule(static, 1))
     for (index_t i = 0; i < n; ++i) {
         KOQKATOO_TRACE("factor prep", i);
         const auto hi = get_heap_index(i, n);
@@ -302,7 +302,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     }
 
     // Compute Ψ
-    KOQKATOO_OMP(for)
+    KOQKATOO_OMP(for schedule(static, 1))
     for (index_t i = 0; i < n; ++i) {
         KOQKATOO_TRACE("build Ψ", i);
         const auto hi = get_heap_index(i, n);
@@ -319,7 +319,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
 
     for (index_t l = 0; l < lgn; ++l) {
         const auto offset = index_t{1} << l;
-        KOQKATOO_OMP(for)
+        KOQKATOO_OMP(for schedule(static, 1))
         for (index_t i = offset; i < n; i += 2 * offset) {
             KOQKATOO_TRACE("factor Ψ", i);
             const auto hi      = get_heap_index(i, n),
@@ -335,7 +335,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
             compact_blas::xgemm_NT_neg(Y, U.batch(hi), B_prev, be);
             // TODO: is there a way to merge these operations?
         }
-        KOQKATOO_OMP(for)
+        KOQKATOO_OMP(for schedule(static, 1))
         for (index_t i = offset; i < n; i += 2 * offset) {
             {
                 KOQKATOO_TRACE("factor Ψ YY", i);
@@ -383,7 +383,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         // handle that case manually
         for (index_t l = 0; l < lgvl; ++l) {
             const auto offset = index_t{1} << l;
-            KOQKATOO_OMP(for)
+            KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < VL; i += 2 * offset) {
                 KOQKATOO_TRACE("factor Ψ scalar", i);
                 auto B_prev = LΨs_scal.batch(i - offset), Y = LΨs_scal.batch(i);
@@ -405,7 +405,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                 scalar_blas::xgemm_NT_neg(Y, U_scal.batch(i), B_prev, be);
                 // TODO: is there a way to merge these operations?
             }
-            KOQKATOO_OMP(for)
+            KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < VL - offset; i += 2 * offset) {
                 KOQKATOO_TRACE("factor Ψ YY scalar", i);
                 // Update next diagonal block
@@ -430,7 +430,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     KOQKATOO_OMP(parallel) {
 
         // Solve Hv = -g
-    KOQKATOO_OMP(for)
+    KOQKATOO_OMP(for schedule(static, 1))
     for (index_t i = 0; i < n; ++i) {
         KOQKATOO_TRACE("solve Hv=g", i);
         auto hi = get_heap_index(i, n);
@@ -442,7 +442,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         compact_blas::xgemv_T_add(Wᵀ.batch(hi), db.batch(hi), Δλb.batch(hi),
                                   be);
     }
-    KOQKATOO_OMP(for)
+    KOQKATOO_OMP(for schedule(static, 1))
     for (index_t i = 0; i < n; ++i) {
         KOQKATOO_TRACE("eval rhs Ψ", i);
         auto hi = get_heap_index(i, n);
@@ -512,7 +512,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     // Forward pass Ψ (batched)
     for (index_t l = 0; l < lgn; ++l) {
         const auto offset = index_t{1} << l;
-        KOQKATOO_OMP(for)
+        KOQKATOO_OMP(for schedule(static, 1))
         for (index_t i = offset; i < n; i += 2 * offset) {
             KOQKATOO_TRACE("solve ψ fwd", i);
             const auto hi      = get_heap_index(i, n),
@@ -526,7 +526,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
             compact_blas::xgemv_sub(U.batch(hi), Δλb.batch(hi),
                                     Δλb.batch(hi_prev), be);
         }
-        KOQKATOO_OMP(for)
+        KOQKATOO_OMP(for schedule(static, 1))
         for (index_t i = offset; i < n; i += 2 * offset) {
             KOQKATOO_TRACE("solve ψ fwd 2", i);
             const auto hi = get_heap_index(i, n);
@@ -611,7 +611,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         // handle that case manually
         for (index_t l = 0; l < lgvl; ++l) {
             const auto offset = index_t{1} << l;
-            KOQKATOO_OMP(for)
+            KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < VL; i += 2 * offset) {
                 KOQKATOO_TRACE("solve ψ fwd scalar", i);
                 PRINTLN("solve rhs fwd b(2i+1 = {}) -> [{}]", i, n - 1);
@@ -623,7 +623,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                 scalar_blas::xgemv_sub(U_scal.batch(i), Δλ_scal.batch(i),
                                        Δλ_scal.batch(i - offset), be);
             }
-            KOQKATOO_OMP(for)
+            KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < VL - offset; i += 2 * offset) {
                 KOQKATOO_TRACE("solve ψ fwd scalar 2", i);
                 // Update next even block
@@ -655,7 +655,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
 
         for (index_t l = lgvl; l-- > 0;) {
             const auto offset = index_t{1} << l;
-            KOQKATOO_OMP(for)
+            KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < VL - offset; i += 2 * offset) {
                 KOQKATOO_TRACE("solve ψ rev scalar 2", i);
                 PRINTLN("updating rhs rev i={}", i);
@@ -664,7 +664,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                 scalar_blas::xgemv_T_sub(Y, Δλ_scal.batch(i + offset),
                                          Δλ_scal.batch(i), be);
             }
-            KOQKATOO_OMP(for)
+            KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < VL; i += 2 * offset) {
                 KOQKATOO_TRACE("solve ψ rev scalar", i);
                 PRINTLN("updating rhs rev i={}", i);
@@ -697,7 +697,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     // Reverse pass Ψ (batched)
     for (index_t l = lgn; l-- > 0;) {
         const auto offset = index_t{1} << l;
-        KOQKATOO_OMP(for)
+        KOQKATOO_OMP(for schedule(static, 1))
         for (index_t i = offset; i < n; i += 2 * offset) {
             KOQKATOO_TRACE("solve ψ rev 2", i);
             const auto hi = get_heap_index(i, n);
@@ -719,7 +719,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                                                 Δλb.batch(hi));
             }
         }
-        KOQKATOO_OMP(for)
+        KOQKATOO_OMP(for schedule(static, 1))
         for (index_t i = offset; i < n; i += 2 * offset) {
             KOQKATOO_TRACE("solve ψ rev", i);
             const auto hi      = get_heap_index(i, n),
@@ -733,7 +733,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         }
     }
 
-    KOQKATOO_OMP(for)
+    KOQKATOO_OMP(for schedule(static, 1))
     for (index_t i = 0; i < n; ++i) {
         KOQKATOO_TRACE("solve Hd=-g-MᵀΔλ", i);
         const auto hi = get_heap_index(i, n);
