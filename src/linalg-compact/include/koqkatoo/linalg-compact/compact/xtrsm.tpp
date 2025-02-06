@@ -31,7 +31,7 @@ void CompactBLAS<Abi>::xtrsm_LLNN_ref(single_batch_view L,
     KOQKATOO_TRACE("xtrsm_LLNN", 0, op_cnt_trsm * L.depth());
     assert(L.rows() == L.cols());
     assert(L.rows() == H.rows());
-    micro_kernels::trsm::xtrsm_llnn_register<Abi>(L, H);
+    micro_kernels::trsm::xtrsm_register<Abi, {.trans = false}>(L, H);
 }
 
 template <class Abi>
