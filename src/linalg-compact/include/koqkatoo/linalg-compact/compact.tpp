@@ -240,7 +240,7 @@ void CompactBLAS<stdx::simd_abi::scalar>::unpack_L(batch_view A,
 
 template <class Abi>
 void CompactBLAS<Abi>::xtrmv_ref(single_batch_view L, mut_single_batch_view x) {
-    KOQKATOO_TRACE("xtrmv", 0, L.rows() * (L.rows() - 1) / 2);
+    KOQKATOO_TRACE("xtrmv", 0, (L.rows() * (L.rows() + 1) / 2) * L.depth());
     assert(L.rows() == L.cols());
     assert(x.rows() == L.cols());
     for (index_t j = L.cols(); j-- > 0;) {
@@ -256,7 +256,7 @@ void CompactBLAS<Abi>::xtrmv_ref(single_batch_view L, mut_single_batch_view x) {
 template <class Abi>
 void CompactBLAS<Abi>::xtrmv_T_ref(single_batch_view L,
                                    mut_single_batch_view x) {
-    KOQKATOO_TRACE("xtrmv_T", 0, L.rows() * (L.rows() - 1) / 2);
+    KOQKATOO_TRACE("xtrmv_T", 0, (L.rows() * (L.rows() + 1) / 2) * L.depth());
     assert(L.rows() == L.cols());
     assert(x.rows() == L.cols());
     for (index_t j = 0; j < L.cols(); ++j) {
