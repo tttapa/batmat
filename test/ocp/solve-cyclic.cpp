@@ -239,24 +239,16 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     } // end parallel
 
 #if USE_PCG
-    using simd          = typename compact_blas::simd;
     using real_view     = typename compact_blas::single_batch_view;
     using mut_real_view = typename compact_blas::mut_single_batch_view;
-    const auto mul_A    = [&](real_view p, mut_real_view Ap, mut_real_view w,
-                           real_view L, real_view B) {
-        static constexpr auto algn = stdx::vector_aligned;
+    const auto mul_A    = [&](real_view p, mut_real_view Ap, real_view L,
+                           real_view B) {
         compact_blas::xcopy(p, Ap);
         compact_blas::xtrmv_T(L, Ap, be);
         compact_blas::xtrmv(L, Ap, be);
         using abi = typename compact_blas::simd::abi_type;
         micro_kernels::gemm::xsyomv_register<abi, false>(B, p, Ap);
-        simd pAp_accum{};
-        for (index_t i = 0; i < w.rows(); ++i) {
-            simd Api{&Ap(0, i, 0), algn}, pi{&p(0, i, 0), algn};
-            pAp_accum += Api * pi;
-            Api.copy_to(&Ap(0, i, 0), algn);
-        }
-        return reduce(pAp_accum);
+        return compact_blas::xdot(p, Ap);
     };
     const auto mul_precond = [&](real_view r, mut_real_view z, mut_real_view w,
                                  real_view L, real_view B) {
@@ -264,22 +256,18 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
 #if USE_JACOBI_PREC
         std::ignore = w;
         std::ignore = B;
-        compact_blas::xtrsv_LNN(L, z, be);
-        compact_blas::xtrsv_LTN(L, z, be);
-        return compact_blas::xdot(r, z);
 #else
-        compact_blas::xcopy(r, z);
         compact_blas::xcopy(r, w);
         compact_blas::xtrsv_LNN(L, w, be);
         compact_blas::xtrsv_LTN(L, w, be);
         using abi = typename compact_blas::simd::abi_type;
         micro_kernels::gemm::xsyomv_register<abi, true>(B, w.as_const(), z);
+#endif
         compact_blas::xtrsv_LNN(L, z, be);
         compact_blas::xtrsv_LTN(L, z, be);
         return compact_blas::xdot(r, z);
-#endif
     };
-    matrix work_pcg{{.depth = VL, .rows = nx, .cols = 5}};
+    matrix work_pcg{{.depth = VL, .rows = nx, .cols = 4}};
 #endif
 
 #if KOQKATOO_WITH_TRACING
@@ -571,17 +559,20 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
 
 #if USE_PCG
     KOQKATOO_OMP(single) {
-        KOQKATOO_TRACE("solve Ψ pcg", 0);
         auto r  = work_pcg.batch(0).middle_cols(0, 1),
              z  = work_pcg.batch(0).middle_cols(1, 1),
              p  = work_pcg.batch(0).middle_cols(2, 1),
-             Ap = work_pcg.batch(0).middle_cols(3, 1),
-             w  = work_pcg.batch(0).middle_cols(4, 1);
+             Ap = work_pcg.batch(0).middle_cols(3, 1);
         auto x  = Δλb.batch(n - 1);
         auto A = LΨd.batch(n - 1), B = LΨs.batch(n - 1);
-        compact_blas::xcopy(x, r);
-        compact_blas::xfill(0, x);
-        real_t rᵀz = mul_precond(r, z, w, A, B);
+        real_t rᵀz = [&] {
+            KOQKATOO_TRACE("solve Ψ pcg", 0);
+            compact_blas::xcopy(x, r);
+            compact_blas::xfill(0, x);
+            real_t rᵀz = mul_precond(r, z, Ap, A, B);
+            compact_blas::xcopy(z, p);
+            return rᵀz;
+        }();
 
 #if DO_PRINT
         std::cout << "prec_rhs = [\n";
@@ -591,9 +582,9 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         std::cout << "]\n";
 #endif
 
-        compact_blas::xcopy(z, p);
         for (index_t it = 0; it < 10; ++it) {
-            real_t pᵀAp = mul_A(p, Ap, w, A, B);
+            KOQKATOO_TRACE("solve Ψ pcg", it + 1);
+            real_t pᵀAp = mul_A(p, Ap, A, B);
             real_t α    = rᵀz / pᵀAp;
             compact_blas::xaxpy(+α, p, x);
             compact_blas::xaxpy(-α, Ap, r);
@@ -602,7 +593,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
             constexpr real_t ε = std::numeric_limits<real_t>::epsilon();
             if (r2 < ε * ε)
                 break;
-            real_t rᵀz_new = mul_precond(r, z, w, A, B);
+            real_t rᵀz_new = mul_precond(r, z, Ap, A, B);
             real_t β       = rᵀz_new / rᵀz;
             compact_blas::xaxpby(1, z, β, p);
             rᵀz = rᵀz_new;
