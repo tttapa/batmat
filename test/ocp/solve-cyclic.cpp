@@ -337,17 +337,25 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         }
         KOQKATOO_OMP(for)
         for (index_t i = offset; i < n; i += 2 * offset) {
-            KOQKATOO_TRACE("factor Ψ YY", i);
-            const auto hi = get_heap_index(i, n);
-            auto Y        = LΨs.batch(hi);
-            // Update next diagonal block
-            if (i + offset < n) {
-                const auto hi_next = get_heap_index(i + offset, n);
-                compact_blas::xsyrk_sub(Y, LΨd.batch(hi_next), be);
-            } else {
-                // Last batch is special since we cross batch boundaries
-                const auto hi_next = get_heap_index(i + offset - vstride, n);
-                compact_blas::xsyrk_sub_shift(Y, LΨd.batch(hi_next));
+            {
+                KOQKATOO_TRACE("factor Ψ YY", i);
+                const auto hi = get_heap_index(i, n);
+                auto Y        = LΨs.batch(hi);
+                // Update next diagonal block
+                if (i + offset < n) {
+                    const auto hi_next = get_heap_index(i + offset, n);
+                    compact_blas::xsyrk_sub(Y, LΨd.batch(hi_next), be);
+                } else {
+                    // Last batch is special since we cross batch boundaries
+                    const auto hi_next =
+                        get_heap_index(i + offset - vstride, n);
+                    compact_blas::xsyrk_sub_shift(Y, LΨd.batch(hi_next));
+                }
+            }
+            if (l + 1 == lgn && use_pcg) {
+                // Factor diagonal blocks of preconditioner
+                KOQKATOO_TRACE("factor Ψ", 0);
+                compact_blas::xpotrf(LΨd.batch(n - 1), be);
             }
         }
     }
@@ -366,13 +374,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     }
 #endif
 
-    if (use_pcg) {
-        // Factor diagonal blocks of preconditioner
-        KOQKATOO_OMP(single) {
-            KOQKATOO_TRACE("factor Ψ", 0);
-            compact_blas::xpotrf(LΨd.batch(n - 1), be);
-        }
-    } else {
+    if (!use_pcg) {
         KOQKATOO_OMP(single) {
             KOQKATOO_TRACE("unpack Ψ", 0);
             compact_blas::unpack_L(LΨU.batch(n - 1), LΨU_scal);
