@@ -1,6 +1,7 @@
 // TODO: move to src
 
 #include <koqkatoo/linalg-compact/compact.hpp>
+#include <koqkatoo/linalg-compact/compact/micro-kernels/rotate.hpp>
 #include <koqkatoo/linalg/small-potrf.hpp>
 #include <koqkatoo/matrix-view.hpp>
 #include <koqkatoo/ocp/ocp.hpp>
@@ -18,6 +19,8 @@
 #include <type_traits>
 
 #define PRINTLN(...)
+#define USE_PCG 1
+#define DO_PRINT 0
 
 namespace ko   = koqkatoo::ocp;
 namespace stdx = std::experimental;
@@ -233,6 +236,81 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
 
     } // end parallel
 
+#if USE_PCG
+    using simd          = typename compact_blas::simd;
+    using real_view     = typename compact_blas::single_batch_view;
+    using mut_real_view = typename compact_blas::mut_single_batch_view;
+    const auto mul_A    = [&](real_view p, mut_real_view Ap, mut_real_view w,
+                           real_view L, real_view B) {
+        static constexpr auto algn = stdx::vector_aligned;
+        compact_blas::xcopy(p, Ap);
+        compact_blas::xtrmv_T(L, Ap, be);
+        compact_blas::xtrmv(L, Ap, be);
+        for (index_t j = 0; j < B.cols(); ++j) {
+            simd wj_accum{};
+            simd zj{&p(0, j, 0), algn};
+            zj = micro_kernels::shiftr<1>(zj);
+            for (index_t i = 0; i < B.rows(); ++i) {
+                simd zi{&p(0, i, 0), algn};
+                simd Bij{&B(0, i, j), algn};
+                wj_accum += Bij * micro_kernels::shiftl<1>(zi);
+                simd wi = j == 0 ? simd{} : simd{&w(0, i, 0), algn};
+                Bij     = micro_kernels::shiftr<1>(Bij); // TODO: rotr?
+                wi += Bij * zj;
+                wi.copy_to(&w(0, i, 0), algn);
+            }
+            simd wj{&w(0, j, 0), algn};
+            wj += wj_accum;
+            wj.copy_to(&w(0, j, 0), algn);
+        }
+        simd pAp_accum{};
+        for (index_t i = 0; i < w.rows(); ++i) {
+            simd Api{&Ap(0, i, 0), algn}, wi{&w(0, i, 0), algn},
+                pi{&p(0, i, 0), algn};
+            Api += wi;
+            pAp_accum += Api * pi;
+            Api.copy_to(&Ap(0, i, 0), algn);
+        }
+        return reduce(pAp_accum);
+    };
+    const auto mul_precond = [&](real_view r, mut_real_view z, mut_real_view w,
+                                 real_view L, real_view B) {
+        static constexpr auto algn = stdx::vector_aligned;
+        compact_blas::xcopy(r, z);
+        compact_blas::xtrsv_LNN(L, z, be);
+        compact_blas::xtrsv_LTN(L, z, be);
+        for (index_t j = 0; j < B.cols(); ++j) {
+            simd wj_accum{};
+            simd zj{&z(0, j, 0), algn};
+            zj = micro_kernels::shiftr<1>(zj);
+            for (index_t i = 0; i < B.rows(); ++i) {
+                simd zi{&z(0, i, 0), algn};
+                simd Bij{&B(0, i, j), algn};
+                wj_accum += Bij * micro_kernels::shiftl<1>(zi);
+                simd wi = j == 0 ? simd{} : simd{&w(0, i, 0), algn};
+                Bij     = micro_kernels::shiftr<1>(Bij); // TODO: rotr?
+                wi += Bij * zj;
+                wi.copy_to(&w(0, i, 0), algn);
+            }
+            simd wj{&w(0, j, 0), algn};
+            wj += wj_accum;
+            wj.copy_to(&w(0, j, 0), algn);
+        }
+        compact_blas::xtrsv_LNN(L, w, be);
+        compact_blas::xtrsv_LTN(L, w, be);
+        simd rz_accum{};
+        for (index_t i = 0; i < w.rows(); ++i) {
+            simd zi{&z(0, i, 0), algn}, wi{&w(0, i, 0), algn},
+                ri{&r(0, i, 0), algn};
+            zi -= wi;
+            rz_accum += zi * ri;
+            zi.copy_to(&z(0, i, 0), algn);
+        }
+        return reduce(rz_accum);
+    };
+    matrix work_pcg{{.depth = VL, .rows = nx, .cols = 5}};
+#endif
+
 #if KOQKATOO_WITH_TRACING
     koqkatoo::trace_logger.reset();
 #endif
@@ -315,11 +393,32 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
             }
         }
     }
+#if DO_PRINT
+    KOQKATOO_OMP(single) {
+        std::cout << "A_fac = [\n";
+        for (index_t j = 0; j < VL; ++j) {
+            guanaqo::print_python(std::cout, LΨd.batch(n - 1)(j), ",\n", false);
+        }
+        std::cout << "]\n";
+        std::cout << "B_fac = [\n";
+        for (index_t j = 0; j < VL - 1; ++j) {
+            guanaqo::print_python(std::cout, LΨs.batch(n - 1)(j), ",\n", false);
+        }
+        std::cout << "]\n";
+    }
+#endif
+
+#if USE_PCG
+    // Factor diagonal blocks of preconditioner
+    KOQKATOO_OMP(single) {
+        KOQKATOO_TRACE("factor Ψ", 0);
+        compact_blas::xpotrf(LΨd.batch(n - 1), be);
+    }
+#else
     KOQKATOO_OMP(single) {
         KOQKATOO_TRACE("unpack Ψ", 0);
         compact_blas::unpack_L(LΨU.batch(n - 1), LΨU_scal);
     }
-
     // TODO: use lgvl - 1 to stop once we're left with two diagonal blocks, then
     // handle that case manually
     for (index_t l = 0; l < lgvl; ++l) {
@@ -363,6 +462,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
             linalg::small_potrf(LΨi.data, LΨi.outer_stride, LΨi.rows, LΨi.cols);
         }
     }
+#endif
 
     } // end parallel
 
@@ -488,6 +588,56 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         }
     }
 
+#if DO_PRINT
+    KOQKATOO_OMP(single) {
+        std::cout << "λ_rhs = [\n";
+        for (index_t j = 0; j < VL; ++j) {
+            guanaqo::print_python(std::cout, Δλb.batch(n - 1)(j), ",\n", false);
+        }
+        std::cout << "]\n";
+    }
+#endif
+
+#if USE_PCG
+    KOQKATOO_OMP(single) {
+        KOQKATOO_TRACE("solve Ψ pcg", 0);
+        auto r  = work_pcg.batch(0).middle_cols(0, 1),
+             z  = work_pcg.batch(0).middle_cols(1, 1),
+             p  = work_pcg.batch(0).middle_cols(2, 1),
+             Ap = work_pcg.batch(0).middle_cols(3, 1),
+             w  = work_pcg.batch(0).middle_cols(4, 1);
+        auto x  = Δλb.batch(n - 1);
+        auto A = LΨd.batch(n - 1), B = LΨs.batch(n - 1);
+        compact_blas::xcopy(x, r);
+        compact_blas::xfill(0, x);
+        real_t rᵀz = mul_precond(r, z, w, A, B);
+
+#if DO_PRINT
+        std::cout << "prec_rhs = [\n";
+        for (index_t j = 0; j < VL; ++j) {
+            guanaqo::print_python(std::cout, z(j), ",\n", false);
+        }
+        std::cout << "]\n";
+#endif
+
+        compact_blas::xcopy(z, p);
+        for (index_t it = 0; it < 10; ++it) {
+            real_t pᵀAp = mul_A(p, Ap, w, A, B);
+            real_t α    = rᵀz / pᵀAp;
+            compact_blas::xaxpy(+α, p, x);
+            compact_blas::xaxpy(-α, Ap, r);
+            real_t r2 = compact_blas::xdot(r, r);
+            PRINTLN("# {}: {}", it, std::sqrt(r2));
+            constexpr real_t ε = std::numeric_limits<real_t>::epsilon();
+            if (r2 < ε * ε)
+                break;
+            real_t rᵀz_new = mul_precond(r, z, w, A, B);
+            real_t β       = rᵀz_new / rᵀz;
+            compact_blas::xaxpby(1, z, β, p);
+            rᵀz = rᵀz_new;
+        }
+    }
+#else
     // Forward pass Ψ (scalar)
     KOQKATOO_OMP(single) {
         KOQKATOO_TRACE("unpack Δλ", 0);
@@ -565,6 +715,17 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         for (index_t j = 0; j < VL; ++j)
             Δλb.batch(n - 1)(j) = Δλ_scal(j);
     }
+#endif
+
+#if DO_PRINT
+    KOQKATOO_OMP(single) {
+        std::cout << "λ_sol = [\n";
+        for (index_t j = 0; j < VL; ++j) {
+            guanaqo::print_python(std::cout, Δλb.batch(n - 1)(j), ",\n", false);
+        }
+        std::cout << "]\n";
+    }
+#endif
 
     // Reverse pass Ψ (batched)
     for (index_t l = lgn; l-- > 0;) {

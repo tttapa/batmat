@@ -180,6 +180,7 @@ TEST_P(OCPCyclic, solve) {
         koqkatoo::TraceLogger::write_column_headings(csv) << '\n';
         for (const auto &log : koqkatoo::trace_logger.get_logs())
             csv << log << '\n';
+        std::cout << out_dir << std::endl;
     }
 #endif
 
