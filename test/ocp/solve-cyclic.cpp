@@ -65,7 +65,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                   std::span<const real_t> ŷ, std::span<real_t> Mxb,
                   std::span<real_t> Mᵀλ, std::span<real_t> Aᵀŷ,
                   std::span<real_t> d, std::span<real_t> Δλ,
-                  std::span<real_t> MᵀΔλ) {
+                  std::span<real_t> MᵀΔλ, bool use_pcg) {
     using std::isfinite;
     using namespace koqkatoo;
     using namespace koqkatoo::linalg;
@@ -174,8 +174,9 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     auto LH = LHV.top_rows(nxu), V = LHV.bottom_rows(nx),
          LΨd = LΨU.top_rows(nx), U = LΨU.bottom_rows(nx),
          LΨs = LΨU.middle_rows(nx, nx);
-    scalar_blas::matrix LΨU_scal{{.depth = VL, .rows = 3 * nx, .cols = nx}},
-        Δλ_scal{{.depth = VL, .rows = nx, .cols = 1}};
+    scalar_blas::matrix LΨU_scal{
+        {.depth = use_pcg ? 0 : VL, .rows = 3 * nx, .cols = nx}},
+        Δλ_scal{{.depth = use_pcg ? 0 : VL, .rows = nx, .cols = 1}};
     auto LΨd_scal = LΨU_scal.top_rows(nx), U_scal = LΨU_scal.bottom_rows(nx),
          LΨs_scal = LΨU_scal.middle_rows(nx, nx);
 
@@ -238,7 +239,6 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
 
     } // end parallel
 
-#if USE_PCG
     using real_view     = typename compact_blas::single_batch_view;
     using mut_real_view = typename compact_blas::mut_single_batch_view;
     const auto mul_A    = [&](real_view p, mut_real_view Ap, real_view L,
@@ -267,8 +267,7 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
         compact_blas::xtrsv_LTN(L, z, be);
         return compact_blas::xdot(r, z);
     };
-    matrix work_pcg{{.depth = VL, .rows = nx, .cols = 4}};
-#endif
+    matrix work_pcg{{.depth = use_pcg ? VL : 0, .rows = nx, .cols = 4}};
 
 #if KOQKATOO_WITH_TRACING
     koqkatoo::trace_logger.reset();
@@ -367,61 +366,62 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     }
 #endif
 
-#if USE_PCG
-    // Factor diagonal blocks of preconditioner
-    KOQKATOO_OMP(single) {
-        KOQKATOO_TRACE("factor Ψ", 0);
-        compact_blas::xpotrf(LΨd.batch(n - 1), be);
-    }
-#else
-    KOQKATOO_OMP(single) {
-        KOQKATOO_TRACE("unpack Ψ", 0);
-        compact_blas::unpack_L(LΨU.batch(n - 1), LΨU_scal);
-    }
-    // TODO: use lgvl - 1 to stop once we're left with two diagonal blocks, then
-    // handle that case manually
-    for (index_t l = 0; l < lgvl; ++l) {
-        const auto offset = index_t{1} << l;
-        KOQKATOO_OMP(for)
-        for (index_t i = offset; i < VL; i += 2 * offset) {
-            KOQKATOO_TRACE("factor Ψ scalar", i);
-            auto B_prev = LΨs_scal.batch(i - offset), Y = LΨs_scal.batch(i);
-            // Copy previous Bᵀ to U and clear
-            scalar_blas::xcopy_T(B_prev, U_scal.batch(i));
-            // L = chol(A), Y = B L⁻ᵀ, U = B L⁻ᵀ
-            // TODO: we don't need Y in the final stage
+    if (use_pcg) {
+        // Factor diagonal blocks of preconditioner
+        KOQKATOO_OMP(single) {
+            KOQKATOO_TRACE("factor Ψ", 0);
+            compact_blas::xpotrf(LΨd.batch(n - 1), be);
+        }
+    } else {
+        KOQKATOO_OMP(single) {
+            KOQKATOO_TRACE("unpack Ψ", 0);
+            compact_blas::unpack_L(LΨU.batch(n - 1), LΨU_scal);
+        }
+        // TODO: use lgvl - 1 to stop once we're left with two diagonal blocks, then
+        // handle that case manually
+        for (index_t l = 0; l < lgvl; ++l) {
+            const auto offset = index_t{1} << l;
+            KOQKATOO_OMP(for)
+            for (index_t i = offset; i < VL; i += 2 * offset) {
+                KOQKATOO_TRACE("factor Ψ scalar", i);
+                auto B_prev = LΨs_scal.batch(i - offset), Y = LΨs_scal.batch(i);
+                // Copy previous Bᵀ to U and clear
+                scalar_blas::xcopy_T(B_prev, U_scal.batch(i));
+                // L = chol(A), Y = B L⁻ᵀ, U = B L⁻ᵀ
+                // TODO: we don't need Y in the final stage
+                if ((0)) {
+                    scalar_blas::xpotrf(LΨU_scal.batch(i), be);
+                } else {
+                    auto LΨi = LΨU_scal(i);
+                    linalg::small_potrf(LΨi.data, LΨi.outer_stride, LΨi.rows,
+                                        LΨi.cols);
+                }
+                // Update previous diagonal and subdiagonal blocks
+                // A -= UUᵀ, B = -YUᵀ
+                scalar_blas::xsyrk_sub(U_scal.batch(i),
+                                       LΨd_scal.batch(i - offset), be);
+                scalar_blas::xgemm_NT_neg(Y, U_scal.batch(i), B_prev, be);
+                // TODO: is there a way to merge these operations?
+            }
+            KOQKATOO_OMP(for)
+            for (index_t i = offset; i < VL - offset; i += 2 * offset) {
+                KOQKATOO_TRACE("factor Ψ YY scalar", i);
+                // Update next diagonal block
+                auto Y = LΨs_scal.batch(i);
+                scalar_blas::xsyrk_sub(Y, LΨd_scal.batch(i + offset), be);
+            }
+        }
+        KOQKATOO_OMP(single) {
+            KOQKATOO_TRACE("factor Ψ scalar", 0);
             if ((0)) {
-                scalar_blas::xpotrf(LΨU_scal.batch(i), be);
+                scalar_blas::xpotrf(LΨd_scal.batch(0), be);
             } else {
-                auto LΨi = LΨU_scal(i);
+                auto LΨi = LΨd_scal(0);
                 linalg::small_potrf(LΨi.data, LΨi.outer_stride, LΨi.rows,
                                     LΨi.cols);
             }
-            // Update previous diagonal and subdiagonal blocks
-            // A -= UUᵀ, B = -YUᵀ
-            scalar_blas::xsyrk_sub(U_scal.batch(i), LΨd_scal.batch(i - offset),
-                                   be);
-            scalar_blas::xgemm_NT_neg(Y, U_scal.batch(i), B_prev, be);
-            // TODO: is there a way to merge these operations?
-        }
-        KOQKATOO_OMP(for)
-        for (index_t i = offset; i < VL - offset; i += 2 * offset) {
-            KOQKATOO_TRACE("factor Ψ YY scalar", i);
-            // Update next diagonal block
-            auto Y = LΨs_scal.batch(i);
-            scalar_blas::xsyrk_sub(Y, LΨd_scal.batch(i + offset), be);
         }
     }
-    KOQKATOO_OMP(single) {
-        KOQKATOO_TRACE("factor Ψ scalar", 0);
-        if ((0)) {
-            scalar_blas::xpotrf(LΨd_scal.batch(0), be);
-        } else {
-            auto LΨi = LΨd_scal(0);
-            linalg::small_potrf(LΨi.data, LΨi.outer_stride, LΨi.rows, LΨi.cols);
-        }
-    }
-#endif
 
     } // end parallel
 
@@ -557,127 +557,130 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     }
 #endif
 
-#if USE_PCG
-    KOQKATOO_OMP(single) {
-        auto r  = work_pcg.batch(0).middle_cols(0, 1),
-             z  = work_pcg.batch(0).middle_cols(1, 1),
-             p  = work_pcg.batch(0).middle_cols(2, 1),
-             Ap = work_pcg.batch(0).middle_cols(3, 1);
-        auto x  = Δλb.batch(n - 1);
-        auto A = LΨd.batch(n - 1), B = LΨs.batch(n - 1);
-        real_t rᵀz = [&] {
-            KOQKATOO_TRACE("solve Ψ pcg", 0);
-            compact_blas::xcopy(x, r);
-            compact_blas::xfill(0, x);
-            real_t rᵀz = mul_precond(r, z, Ap, A, B);
-            compact_blas::xcopy(z, p);
-            return rᵀz;
-        }();
+    if (use_pcg) {
+        KOQKATOO_OMP(single) {
+            auto r  = work_pcg.batch(0).middle_cols(0, 1),
+                 z  = work_pcg.batch(0).middle_cols(1, 1),
+                 p  = work_pcg.batch(0).middle_cols(2, 1),
+                 Ap = work_pcg.batch(0).middle_cols(3, 1);
+            auto x  = Δλb.batch(n - 1);
+            auto A = LΨd.batch(n - 1), B = LΨs.batch(n - 1);
+            real_t rᵀz = [&] {
+                KOQKATOO_TRACE("solve Ψ pcg", 0);
+                compact_blas::xcopy(x, r);
+                compact_blas::xfill(0, x);
+                real_t rᵀz = mul_precond(r, z, Ap, A, B);
+                compact_blas::xcopy(z, p);
+                return rᵀz;
+            }();
 
 #if DO_PRINT
-        std::cout << "prec_rhs = [\n";
-        for (index_t j = 0; j < VL; ++j) {
-            guanaqo::print_python(std::cout, z(j), ",\n", false);
-        }
-        std::cout << "]\n";
+            std::cout << "prec_rhs = [\n";
+            for (index_t j = 0; j < VL; ++j) {
+                guanaqo::print_python(std::cout, z(j), ",\n", false);
+            }
+            std::cout << "]\n";
 #endif
 
-        for (index_t it = 0; it < 10; ++it) {
-            KOQKATOO_TRACE("solve Ψ pcg", it + 1);
-            real_t pᵀAp = mul_A(p, Ap, A, B);
-            real_t α    = rᵀz / pᵀAp;
-            compact_blas::xaxpy(+α, p, x);
-            compact_blas::xaxpy(-α, Ap, r);
-            real_t r2 = compact_blas::xdot(r, r);
-            PRINTLN("# {}: {}", it, std::sqrt(r2));
-            constexpr real_t ε = std::numeric_limits<real_t>::epsilon();
-            if (r2 < ε * ε)
-                break;
-            real_t rᵀz_new = mul_precond(r, z, Ap, A, B);
-            real_t β       = rᵀz_new / rᵀz;
-            compact_blas::xaxpby(1, z, β, p);
-            rᵀz = rᵀz_new;
+            for (index_t it = 0; it < 20; ++it) {
+                KOQKATOO_TRACE("solve Ψ pcg", it + 1);
+                real_t pᵀAp = mul_A(p, Ap, A, B);
+                real_t α    = rᵀz / pᵀAp;
+                compact_blas::xaxpy(+α, p, x);
+                compact_blas::xaxpy(-α, Ap, r);
+                real_t r2 = compact_blas::xdot(r, r);
+                PRINTLN("# {}: {}", it, std::sqrt(r2));
+                constexpr real_t ε = std::numeric_limits<real_t>::epsilon();
+                if (r2 < ε * ε)
+                    break;
+                real_t rᵀz_new = mul_precond(r, z, Ap, A, B);
+                real_t β       = rᵀz_new / rᵀz;
+                compact_blas::xaxpby(1, z, β, p);
+                rᵀz = rᵀz_new;
+            }
         }
-    }
-#else
-    // Forward pass Ψ (scalar)
-    KOQKATOO_OMP(single) {
-        KOQKATOO_TRACE("unpack Δλ", 0);
-        compact_blas::unpack(Δλb.batch(n - 1), Δλ_scal);
-    }
-    // TODO: use lgvl - 1 to stop once we're left with two diagonal blocks, then
-    // handle that case manually
-    for (index_t l = 0; l < lgvl; ++l) {
-        const auto offset = index_t{1} << l;
-        KOQKATOO_OMP(for)
-        for (index_t i = offset; i < VL; i += 2 * offset) {
-            KOQKATOO_TRACE("solve ψ fwd scalar", i);
-            PRINTLN("solve rhs fwd b(2i+1 = {}) -> [{}]", i, n - 1);
+    } else {
+        // Forward pass Ψ (scalar)
+        KOQKATOO_OMP(single) {
+            KOQKATOO_TRACE("unpack Δλ", 0);
+            compact_blas::unpack(Δλb.batch(n - 1), Δλ_scal);
+        }
+        // TODO: use lgvl - 1 to stop once we're left with two diagonal blocks, then
+        // handle that case manually
+        for (index_t l = 0; l < lgvl; ++l) {
+            const auto offset = index_t{1} << l;
+            KOQKATOO_OMP(for)
+            for (index_t i = offset; i < VL; i += 2 * offset) {
+                KOQKATOO_TRACE("solve ψ fwd scalar", i);
+                PRINTLN("solve rhs fwd b(2i+1 = {}) -> [{}]", i, n - 1);
+                // L⁻¹ b
+                scalar_blas::xtrsv_LNN(LΨd_scal.batch(i), Δλ_scal.batch(i), be);
+                // Update previous even block
+                PRINTLN("  update rhs fwd b(2i   = {}) -> [{}]", i - offset,
+                        n - 1);
+                scalar_blas::xgemv_sub(U_scal.batch(i), Δλ_scal.batch(i),
+                                       Δλ_scal.batch(i - offset), be);
+            }
+            KOQKATOO_OMP(for)
+            for (index_t i = offset; i < VL - offset; i += 2 * offset) {
+                KOQKATOO_TRACE("solve ψ fwd scalar 2", i);
+                // Update next even block
+                auto Y = LΨs_scal.batch(i);
+                scalar_blas::xgemv_sub(Y, Δλ_scal.batch(i),
+                                       Δλ_scal.batch(i + offset), be);
+                PRINTLN("  update rhs fwd b(2i+2 = {}) -> [{}]", i + offset,
+                        n - 1);
+            }
+        }
+
+        KOQKATOO_OMP(single) {
             // L⁻¹ b
-            scalar_blas::xtrsv_LNN(LΨd_scal.batch(i), Δλ_scal.batch(i), be);
-            // Update previous even block
-            PRINTLN("  update rhs fwd b(2i   = {}) -> [{}]", i - offset, n - 1);
-            scalar_blas::xgemv_sub(U_scal.batch(i), Δλ_scal.batch(i),
-                                   Δλ_scal.batch(i - offset), be);
-        }
-        KOQKATOO_OMP(for)
-        for (index_t i = offset; i < VL - offset; i += 2 * offset) {
-            KOQKATOO_TRACE("solve ψ fwd scalar 2", i);
-            // Update next even block
-            auto Y = LΨs_scal.batch(i);
-            scalar_blas::xgemv_sub(Y, Δλ_scal.batch(i),
-                                   Δλ_scal.batch(i + offset), be);
-            PRINTLN("  update rhs fwd b(2i+2 = {}) -> [{}]", i + offset, n - 1);
-        }
-    }
+            PRINTLN("solve rhs fwd b({}) -> [{}]", 0, n - 1);
+            {
+                KOQKATOO_TRACE("solve ψ fwd scalar", 0);
+                scalar_blas::xtrsv_LNN(LΨd_scal.batch(0), Δλ_scal.batch(0), be);
+            }
 
-    KOQKATOO_OMP(single) {
-        // L⁻¹ b
-        PRINTLN("solve rhs fwd b({}) -> [{}]", 0, n - 1);
-        {
-            KOQKATOO_TRACE("solve ψ fwd scalar", 0);
-            scalar_blas::xtrsv_LNN(LΨd_scal.batch(0), Δλ_scal.batch(0), be);
-        }
+            // Reverse pass Ψ (scalar)
 
-        // Reverse pass Ψ (scalar)
-
-        // L⁻ᵀ b
-        PRINTLN("solve rhs rev b({}) -> [{}]", 0, n - 1);
-        {
-            KOQKATOO_TRACE("solve ψ rev scalar", 0);
-            scalar_blas::xtrsv_LTN(LΨd_scal.batch(0), Δλ_scal.batch(0), be);
-        }
-    }
-
-    for (index_t l = lgvl; l-- > 0;) {
-        const auto offset = index_t{1} << l;
-        KOQKATOO_OMP(for)
-        for (index_t i = offset; i < VL - offset; i += 2 * offset) {
-            KOQKATOO_TRACE("solve ψ rev scalar 2", i);
-            PRINTLN("updating rhs rev i={}", i);
-            auto Y = LΨs_scal.batch(i);
-            // Substitute next even block
-            scalar_blas::xgemv_T_sub(Y, Δλ_scal.batch(i + offset),
-                                     Δλ_scal.batch(i), be);
-        }
-        KOQKATOO_OMP(for)
-        for (index_t i = offset; i < VL; i += 2 * offset) {
-            KOQKATOO_TRACE("solve ψ rev scalar", i);
-            PRINTLN("updating rhs rev i={}", i);
-            // Substitute previous even block
-            scalar_blas::xgemv_T_sub(U_scal.batch(i), Δλ_scal.batch(i - offset),
-                                     Δλ_scal.batch(i), be);
             // L⁻ᵀ b
-            scalar_blas::xtrsv_LTN(LΨd_scal.batch(i), Δλ_scal.batch(i), be);
+            PRINTLN("solve rhs rev b({}) -> [{}]", 0, n - 1);
+            {
+                KOQKATOO_TRACE("solve ψ rev scalar", 0);
+                scalar_blas::xtrsv_LTN(LΨd_scal.batch(0), Δλ_scal.batch(0), be);
+            }
+        }
+
+        for (index_t l = lgvl; l-- > 0;) {
+            const auto offset = index_t{1} << l;
+            KOQKATOO_OMP(for)
+            for (index_t i = offset; i < VL - offset; i += 2 * offset) {
+                KOQKATOO_TRACE("solve ψ rev scalar 2", i);
+                PRINTLN("updating rhs rev i={}", i);
+                auto Y = LΨs_scal.batch(i);
+                // Substitute next even block
+                scalar_blas::xgemv_T_sub(Y, Δλ_scal.batch(i + offset),
+                                         Δλ_scal.batch(i), be);
+            }
+            KOQKATOO_OMP(for)
+            for (index_t i = offset; i < VL; i += 2 * offset) {
+                KOQKATOO_TRACE("solve ψ rev scalar", i);
+                PRINTLN("updating rhs rev i={}", i);
+                // Substitute previous even block
+                scalar_blas::xgemv_T_sub(U_scal.batch(i),
+                                         Δλ_scal.batch(i - offset),
+                                         Δλ_scal.batch(i), be);
+                // L⁻ᵀ b
+                scalar_blas::xtrsv_LTN(LΨd_scal.batch(i), Δλ_scal.batch(i), be);
+            }
+        }
+
+        KOQKATOO_OMP(single) {
+            KOQKATOO_TRACE("pack Δλ", 0);
+            for (index_t j = 0; j < VL; ++j)
+                Δλb.batch(n - 1)(j) = Δλ_scal(j);
         }
     }
-
-    KOQKATOO_OMP(single) {
-        KOQKATOO_TRACE("pack Δλ", 0);
-        for (index_t j = 0; j < VL; ++j)
-            Δλb.batch(n - 1)(j) = Δλ_scal(j);
-    }
-#endif
 
 #if DO_PRINT
     KOQKATOO_OMP(single) {
@@ -791,7 +794,7 @@ solve_cyclic<2>(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                 std::span<const real_t> ŷ, std::span<real_t> Mxb,
                 std::span<real_t> Mᵀλ, std::span<real_t> Aᵀŷ,
                 std::span<real_t> d, std::span<real_t> Δλ,
-                std::span<real_t> MᵀΔλ);
+                std::span<real_t> MᵀΔλ, bool use_pcg);
 template void
 solve_cyclic<4>(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                 std::span<const real_t> Σ, std::span<const bool> J,
@@ -800,7 +803,7 @@ solve_cyclic<4>(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                 std::span<const real_t> ŷ, std::span<real_t> Mxb,
                 std::span<real_t> Mᵀλ, std::span<real_t> Aᵀŷ,
                 std::span<real_t> d, std::span<real_t> Δλ,
-                std::span<real_t> MᵀΔλ);
+                std::span<real_t> MᵀΔλ, bool use_pcg);
 template void
 solve_cyclic<8>(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                 std::span<const real_t> Σ, std::span<const bool> J,
@@ -809,4 +812,4 @@ solve_cyclic<8>(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                 std::span<const real_t> ŷ, std::span<real_t> Mxb,
                 std::span<real_t> Mᵀλ, std::span<real_t> Aᵀŷ,
                 std::span<real_t> d, std::span<real_t> Δλ,
-                std::span<real_t> MᵀΔλ);
+                std::span<real_t> MᵀΔλ, bool use_pcg);

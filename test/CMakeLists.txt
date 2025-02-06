@@ -13,6 +13,8 @@ endif()
 add_executable(tests
     "ocp/test-reconstruct.cpp"
     "ocp/test-solve.cpp"
+    "ocp/test-solve-cyclic.cpp"
+    "ocp/solve-cyclic.cpp"
     "linalg-compact/test-rotate.cpp"
     "linalg-compact/test-gemm.cpp"
     "linalg-compact/test-trsm.cpp"
