@@ -254,6 +254,23 @@ void CompactBLAS<Abi>::xtrmv_ref(single_batch_view L, mut_single_batch_view x) {
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xtrmv_T_ref(single_batch_view L,
+                                   mut_single_batch_view x) {
+    KOQKATOO_TRACE("xtrmv_T", 0, L.rows() * (L.rows() - 1) / 2);
+    assert(L.rows() == L.cols());
+    assert(x.rows() == L.cols());
+    for (index_t j = 0; j < L.cols(); ++j) {
+        simd accum{};
+        for (index_t i = j; i < L.rows(); ++i) {
+            auto Lij = aligned_load(&L(0, i, j));
+            auto xi  = aligned_load(&x(0, i, 0));
+            accum += Lij * xi;
+        }
+        aligned_store(&x(0, j, 0), accum);
+    }
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xtrmv(batch_view L, mut_batch_view x,
                              PreferredBackend b) {
     std::ignore = b; // TODO
@@ -264,10 +281,27 @@ void CompactBLAS<Abi>::xtrmv(batch_view L, mut_batch_view x,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xtrmv_T(batch_view L, mut_batch_view x,
+                               PreferredBackend b) {
+    std::ignore = b; // TODO
+    assert(L.ceil_depth() == x.ceil_depth());
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < L.num_batches(); ++i)
+        xtrmv_T_ref(L.batch(i), x.batch(i));
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xtrmv(single_batch_view L, mut_single_batch_view x,
                              PreferredBackend b) {
     std::ignore = b; // TODO
     xtrmv_ref(L, x);
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xtrmv_T(single_batch_view L, mut_single_batch_view x,
+                               PreferredBackend b) {
+    std::ignore = b; // TODO
+    xtrmv_T_ref(L, x);
 }
 
 template <class Abi>
@@ -542,6 +576,15 @@ void CompactBLAS<Abi>::xsub_copy_impl(mut_batch_view out, batch_view x1,
         for (index_t c = 0; c < m; ++c)
             for (index_t r = 0; r < n; ++r)
                 out(i, r, c) = x1(i, r, c) - (... + xs(i, r, c));
+}
+
+template <class Abi>
+real_t CompactBLAS<Abi>::xdot(single_batch_view x, single_batch_view y) {
+    using std::fma;
+    // TODO: why does fma(xi, yi, accum) give such terrible code gen?
+    return xreduce(
+        simd{0}, [](auto accum, auto xi, auto yi) { return xi * yi + accum; },
+        [](auto accum) { return reduce(accum); }, x, y);
 }
 
 template <class Abi>

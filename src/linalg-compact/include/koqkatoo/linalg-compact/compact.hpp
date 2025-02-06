@@ -174,6 +174,12 @@ struct CompactBLAS {
                       PreferredBackend b);
     static void xtrmv(batch_view L, mut_batch_view x, PreferredBackend b);
 
+    /// x ← Lᵀ x
+    static void xtrmv_T_ref(single_batch_view L, mut_single_batch_view x);
+    static void xtrmv_T(single_batch_view L, mut_single_batch_view x,
+                        PreferredBackend b);
+    static void xtrmv_T(batch_view L, mut_batch_view x, PreferredBackend b);
+
     /// L ← L⁻¹
     static void xtrtri_ref(mut_single_batch_view L);
     static void xtrtri(mut_single_batch_view L, PreferredBackend b);
@@ -395,6 +401,7 @@ struct CompactBLAS {
     }
 
     /// Dot product
+    static real_t xdot(single_batch_view x, single_batch_view y);
     static real_t xdot(batch_view x, batch_view y);
     static real_t xdot(size_last_t size_last, batch_view x, batch_view y);
     /// Square of the 2-norm
