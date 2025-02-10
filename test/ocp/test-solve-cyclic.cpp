@@ -24,7 +24,7 @@
 #include <random>
 
 #include <Eigen/Eigen>
-#include <Eigen/LU>
+#include <Eigen/SparseLU>
 
 #include "eigen-matchers.hpp"
 #include "koqkatoo/linalg-compact/mkl.hpp"
@@ -53,6 +53,41 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                   std::span<real_t> d, std::span<real_t> Δλ,
                   std::span<real_t> MᵀΔλ, bool use_pcg);
 
+auto reference_qp(const ko::LinearOCPStorage &ocp, real_t S,
+                  Eigen::Ref<const Eigen::VectorX<real_t>> Σ,
+                  Eigen::Ref<const Eigen::VectorX<bool>> J) {
+    using SpMat      = Eigen::SparseMatrix<real_t, 0, index_t>;
+    index_t n_constr = ocp.num_constraints(),
+            n_dyn    = ocp.num_dynamics_constraints();
+    // Build quadratic program and standard KKT system for the OCP.
+    auto qp   = ko::LinearOCPSparseQP::build(ocp);
+    auto kkt  = qp.build_kkt(S, as_span(Σ), as_span(J));
+    auto &qpA = qp.A_sparsity, &qpQ = qp.Q_sparsity, &qpK = kkt.sparsity;
+    SpMat Q = Eigen::Map<const SpMat>(
+        qpQ.rows, qpQ.cols, qpQ.nnz(), qpQ.outer_ptr.data(),
+        qpQ.inner_idx.data(), qp.Q_values.data(), nullptr);
+    SpMat G(n_constr, qpA.cols), M(n_dyn, qpA.cols), K(qpK.rows, qpK.cols);
+    std::vector<Eigen::Triplet<real_t>> triplets_G, triplets_M, triplets_K;
+    for (index_t c = 0; c < qpA.cols; ++c)
+        for (index_t i = qpA.outer_ptr[c]; i < qpA.outer_ptr[c + 1]; ++i)
+            if (index_t r = qpA.inner_idx[i]; r < n_dyn) // top rows
+                triplets_M.emplace_back(r, c, qp.A_values[i]);
+            else // bottom rows
+                triplets_G.emplace_back(r - n_dyn, c, qp.A_values[i]);
+    for (index_t c = 0; c < qpK.cols; ++c)
+        for (index_t i = qpK.outer_ptr[c]; i < qpK.outer_ptr[c + 1]; ++i) {
+            index_t r = qpK.inner_idx[i];
+            if (r >= c)
+                triplets_K.emplace_back(r, c, kkt.values[i]);
+            if (r > c)
+                triplets_K.emplace_back(c, r, kkt.values[i]);
+        }
+    G.setFromTriplets(triplets_G.begin(), triplets_G.end());
+    M.setFromTriplets(triplets_M.begin(), triplets_M.end());
+    K.setFromTriplets(triplets_K.begin(), triplets_K.end());
+    return std::tuple{std::move(Q), std::move(G), std::move(M), std::move(K)};
+}
+
 const int n_threads = 8;
 TEST_P(OCPCyclic, solve) {
     KOQKATOO_OMP_IF(omp_set_num_threads(n_threads));
@@ -63,7 +98,6 @@ TEST_P(OCPCyclic, solve) {
     }));
 
     auto [N_horiz, nx, vl, use_pcg] = GetParam();
-    using VectorXreal               = Eigen::VectorX<real_t>;
     std::mt19937 rng{54321};
     std::normal_distribution<real_t> nrml{0, 1};
     std::bernoulli_distribution bernoulli{0.5};
@@ -88,6 +122,7 @@ TEST_P(OCPCyclic, solve) {
         FAIL() << "Invalid vector length " << vl;
 
     // Generate some random optimization solver data.
+    using VectorXreal = Eigen::VectorX<real_t>;
     Eigen::VectorX<bool> J(n_constr),  // Active set.
         J0(n_constr), J1(n_constr);    // Active set for initialization.
     VectorXreal Σ(n_constr),           // ALM penalty factors
@@ -107,51 +142,7 @@ TEST_P(OCPCyclic, solve) {
     std::ranges::generate(b, [&] { return nrml(rng); });
     std::ranges::generate(λ, [&] { return nrml(rng); });
 
-    // Build quadratic program and standard KKT system for the OCP.
-    auto qp  = ko::LinearOCPSparseQP::build(ocp);
-    auto kkt = qp.build_kkt(S, as_span(Σ), as_span(J));
-    // Convert to dense matrices to compare using Eigen.
-    sp::SparsityConverter<sp::Sparsity, sp::Dense> conv_Q{qp.Q_sparsity}; //   Q
-    auto qp_Q_values = conv_Q.convert_values_copy(std::span{qp.Q_values});
-    RealMatrixView qp_Q{{
-        .data = qp_Q_values.data(),
-        .rows = static_cast<index_t>(conv_Q.get_sparsity().rows),
-        .cols = static_cast<index_t>(conv_Q.get_sparsity().cols),
-    }};
-    sp::SparsityConverter<sp::Sparsity, sp::Dense> conv_A{qp.A_sparsity}; //   A
-    auto qp_A_values = conv_A.convert_values_copy(std::span{qp.A_values});
-    RealMatrixView qp_A{{
-        .data = qp_A_values.data(),
-        .rows = static_cast<index_t>(conv_A.get_sparsity().rows),
-        .cols = static_cast<index_t>(conv_A.get_sparsity().cols),
-    }};
-    auto Q = as_eigen(qp_Q);
-    auto G = as_eigen(qp_A.bottom_rows(n_constr));
-    auto M = as_eigen(qp_A.top_rows(n_dyn_constr));
-    sp::SparsityConverter<sp::Sparsity, sp::Dense> conv_K{kkt.sparsity}; //    K
-    auto kkt_values = conv_K.convert_values_copy(std::span{kkt.values});
-    RealMatrixView K{{
-        .data = kkt_values.data(),
-        .rows = static_cast<index_t>(conv_K.get_sparsity().rows),
-        .cols = static_cast<index_t>(conv_K.get_sparsity().cols),
-    }};
-
-    if ((0)) {
-        auto [N, nx, nu, ny, ny_N] = ocp.dim;
-
-        Eigen::MatrixX<real_t> H = Q, GsqrtΣ(N * ny + ny_N, N * (nx + nu) + nx),
-                               Ψ((N + 1) * nx, (N + 1) * nx);
-        GsqrtΣ.noalias() = J.select(Σ.cwiseSqrt(), 0).asDiagonal() * G;
-        H.selfadjointView<Eigen::Lower>().rankUpdate(GsqrtΣ.transpose());
-        H.diagonal().array() += 1 / S;
-        auto LH                     = H.selfadjointView<Eigen::Lower>().llt();
-        Eigen::MatrixX<real_t> MLHT = M;
-        LH.matrixL().solveInPlace(MLHT.transpose());
-        Ψ.setZero();
-        Ψ.selfadjointView<Eigen::Lower>().rankUpdate(MLHT);
-        guanaqo::print_python(std::cout << "Eigen 1\n",
-                              guanaqo::as_view(Ψ.block(nx, nx, nx, nx)));
-    }
+    auto [Q, G, M, K] = reference_qp(ocp, S, Σ, J);
 
     VectorXreal Mxb(n_dyn_constr), Mᵀλ(n_var), d(n_var), Δλ(n_dyn_constr),
         MᵀΔλ(n_var), Aᵀŷ(n_var);
@@ -185,33 +176,29 @@ TEST_P(OCPCyclic, solve) {
 #endif
 
     // Solve the full KKT system using Eigen (LU because indefinite).
-    VectorXreal kkt_rhs_ref    = VectorXreal::Zero(K.rows), kkt_sol_ref(K.rows);
-    VectorXreal Gᵀŷ_ref        = G.transpose() * ŷ;
-    VectorXreal Mᵀλ_ref        = M.transpose() * λ;
-    VectorXreal Mxb_ref        = M * x - b;
-    kkt_rhs_ref.topRows(n_var) = -grad - Mᵀλ_ref - Gᵀŷ_ref;
+    VectorXreal kkt_rhs_ref = VectorXreal::Zero(K.rows()),
+                kkt_sol_ref(K.rows());
+    VectorXreal Gᵀŷ_ref                  = G.transpose() * ŷ;
+    VectorXreal Mᵀλ_ref                  = M.transpose() * λ;
+    VectorXreal Mxb_ref                  = M * x - b;
+    kkt_rhs_ref.topRows(n_var)           = -grad - Mᵀλ_ref - Gᵀŷ_ref;
     kkt_rhs_ref.bottomRows(n_dyn_constr) = -Mxb_ref;
     EXPECT_THAT(Mxb, EigenAlmostEqual(Mxb_ref, 10 * ε));
     EXPECT_THAT(Mᵀλ, EigenAlmostEqual(Mᵀλ_ref, 10 * ε));
     EXPECT_THAT(Aᵀŷ, EigenAlmostEqual(Gᵀŷ_ref, 10 * ε));
 
-    if (N_horiz > 31) // Dense factorization is too slow for large problems
-        return;
-
-    // TODO: use sparse solver
-    auto luK = as_eigen(K).fullPivLu();
-    ASSERT_TRUE(luK.isInvertible());
+    Eigen::SparseLU<decltype(K)> luK(K);
+    ASSERT_TRUE(luK.info() == Eigen::Success);
     kkt_sol_ref          = luK.solve(kkt_rhs_ref);
     auto d_ref           = kkt_sol_ref.topRows(n_var);
     auto Δλ_ref          = kkt_sol_ref.bottomRows(n_dyn_constr);
     VectorXreal MᵀΔλ_ref = M.transpose() * Δλ_ref;
 
     // Compare the koqkatoo OCP solution to the Eigen reference solution.
-    std::cout << "ε κ(K) = " << guanaqo::float_to_str(ε / luK.rcond())
-              << std::endl;
-    EXPECT_THAT(Δλ, EigenAlmostEqual(Δλ_ref, ε / luK.rcond()));
-    EXPECT_THAT(d, EigenAlmostEqual(d_ref, ε / luK.rcond()));
-    EXPECT_THAT(MᵀΔλ, EigenAlmostEqual(MᵀΔλ_ref, ε / luK.rcond()));
+    EXPECT_THAT(Δλ, EigenAlmostEqual(Δλ_ref, ε * 1e7));
+    EXPECT_THAT(d, EigenAlmostEqual(d_ref, ε * 1e6));
+    EXPECT_THAT(MᵀΔλ, EigenAlmostEqual(MᵀΔλ_ref, ε * 1e6));
+    // TODO: compute condition number instead of hard-coded tolernaces
 }
 
 INSTANTIATE_TEST_SUITE_P(OCPCyclic, OCPCyclic,
