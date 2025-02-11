@@ -31,24 +31,28 @@ struct CompactBLAS {
     static constexpr auto simd_stride = static_cast<index_t>(simd_stride_t());
     using scalar_abi                  = stdx::simd_abi::scalar;
     using scalar_simd_stride_t        = stdx::simd_size<real_t, scalar_abi>;
-    using mut_batch_view_scalar =
-        BatchedMatrixView<real_t, index_t, scalar_simd_stride_t, index_t,
+
+    template <class T>
+    using batch_view_scalar_t =
+        BatchedMatrixView<T, index_t, scalar_simd_stride_t, index_t, index_t>;
+    template <class T>
+    using single_batch_view_scalar_t =
+        BatchedMatrixView<T, index_t, scalar_simd_stride_t, simd_stride_t,
                           index_t>;
-    using mut_single_batch_view_scalar =
-        BatchedMatrixView<real_t, index_t, scalar_simd_stride_t, simd_stride_t,
-                          index_t>;
-    using mut_single_batch_view =
-        BatchedMatrixView<real_t, index_t, simd_stride_t, simd_stride_t>;
-    using single_batch_view =
-        BatchedMatrixView<const real_t, index_t, simd_stride_t, simd_stride_t>;
-    using bool_single_batch_view =
-        BatchedMatrixView<const bool, index_t, simd_stride_t, simd_stride_t>;
-    using bool_batch_view =
-        BatchedMatrixView<const bool, index_t, simd_stride_t, index_t>;
-    using batch_view = BatchedMatrixView<const real_t, index_t, simd_stride_t,
-                                         index_t, index_t>;
-    using mut_batch_view =
-        BatchedMatrixView<real_t, index_t, simd_stride_t, index_t, index_t>;
+    template <class T>
+    using single_batch_view_t =
+        BatchedMatrixView<T, index_t, simd_stride_t, simd_stride_t>;
+    template <class T>
+    using batch_view_t =
+        BatchedMatrixView<T, index_t, simd_stride_t, index_t, index_t>;
+    using mut_batch_view_scalar        = batch_view_scalar_t<real_t>;
+    using mut_single_batch_view_scalar = single_batch_view_scalar_t<real_t>;
+    using mut_single_batch_view        = single_batch_view_t<real_t>;
+    using single_batch_view            = single_batch_view_t<const real_t>;
+    using bool_single_batch_view       = single_batch_view_t<const bool>;
+    using mut_batch_view               = batch_view_t<real_t>;
+    using batch_view                   = batch_view_t<const real_t>;
+    using bool_batch_view              = batch_view_t<const bool>;
     using matrix =
         BatchedMatrix<real_t, index_t, simd_stride_t, index_t, simd_align_t>;
     using bool_matrix =
