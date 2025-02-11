@@ -335,7 +335,7 @@ void CyclicOCPSolver
             const auto offset     = index_t{1} << l; // first stage in level
             const bool last_level = l + 1 == ln;
             PRINTLN("Level {}\n  offset={:<2}, width={}", l, offset, width);
-            KOQKATOO_OMP(for)
+            KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < n; i += 2 * offset) {
                 KOQKATOO_TRACE("factor Ψ", i);
                 // Parity within the current level
@@ -353,12 +353,6 @@ void CyclicOCPSolver
                         even ? "even" : "odd");
                 // Factor
                 compact_blas::xpotrf(LΨU.batch(hi), be);
-                // Compute subdiagonal fill-in in next level
-                auto Ufi = l + 2 >= ln ? (even ? Ut : Ub) : (mod4_12 ? Ut : Ub);
-                compact_blas::xgemm_NT_neg(Ub.batch(hi), Ut.batch(hi),
-                                           Ufi.batch(hit), be);
-                PRINTLN("    subdiag block {:>2} -> {:>2}[{}]", hi, hit,
-                        Ufi.data == Ut.data ? 1 : 2);
                 // Update next diagonal block using our top subdiagonal block
                 if (even) {
                     PRINTLN("    diag block    {:>2}[1] -> {:>2}", hi, hit);
@@ -374,47 +368,56 @@ void CyclicOCPSolver
                     PRINTLN("    diag block*   {:>2}[2] -> {:>2}", hi, hib);
                     compact_blas::xsyrk_sub_shift(Ub.batch(hi), LΨd.batch(hib));
                 }
+                // Compute subdiagonal fill-in in next level
+                auto Ufi = l + 2 >= ln ? (even ? Ut : Ub) : (mod4_12 ? Ut : Ub);
+                compact_blas::xgemm_NT_neg(Ub.batch(hi), Ut.batch(hi),
+                                           Ufi.batch(hit), be);
+                PRINTLN("    subdiag block {:>2} -> {:>2}[{}]", hi, hit,
+                        Ufi.data == Ut.data ? 1 : 2);
             }
             KOQKATOO_OMP(single)
             PRINTLN("\n---\n");
-            KOQKATOO_OMP(for)
+            KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < n; i += 2 * offset) {
-                KOQKATOO_TRACE("factor Ψ YY", i);
-                // Parity within the current level
-                const auto odd = (get_index_in_level(i) & 1) != 0;
-                // Batch index of the current column
-                const auto hi = get_batch_index(i);
-                // Batch indices of top and bottom blocks of generated fill-in
-                const auto it = odd ? i - offset : i + offset;
-                const auto ib = odd ? i + offset : i - offset;
-                PRINTLN("  {:>2}:*:{:<2}({},{}) {}", hi, i, it, ib,
-                        !odd ? "even" : "odd");
-                // Update next diagonal block using our top subdiagonal block
-                if (odd) {
-                    const auto hit = get_batch_index(it);
-                    PRINTLN("    diag block    {:>2}[1] -> {:>2}", hi, hit);
-                    compact_blas::xsyrk_sub(Ut.batch(hi), LΨd.batch(hit), be);
+                {
+                    KOQKATOO_TRACE("factor Ψ YY", i);
+                    // Parity within the current level
+                    const auto odd = (get_index_in_level(i) & 1) != 0;
+                    // Batch index of the current column
+                    const auto hi = get_batch_index(i);
+                    // Batch indices of top and bottom blocks of generated fill-in
+                    const auto it = odd ? i - offset : i + offset;
+                    const auto ib = odd ? i + offset : i - offset;
+                    PRINTLN("  {:>2}:*:{:<2}({},{}) {}", hi, i, it, ib,
+                            !odd ? "even" : "odd");
+                    // Update next diagonal block using our top subdiagonal block
+                    if (odd) {
+                        const auto hit = get_batch_index(it);
+                        PRINTLN("    diag block    {:>2}[1] -> {:>2}", hi, hit);
+                        compact_blas::xsyrk_sub(Ut.batch(hi), LΨd.batch(hit),
+                                                be);
+                    }
+                    // Update next diagonal block using our bottom subdiagonal block
+                    else if (!last_level) {
+                        const auto hib = get_batch_index(ib);
+                        PRINTLN("    diag block    {:>2}[2] -> {:>2}", hi, hib);
+                        compact_blas::xsyrk_sub(Ub.batch(hi), LΨd.batch(hib),
+                                                be);
+                    } else {
+                        const auto hib = n - 1;
+                        PRINTLN("    diag block*   {:>2}[2] -> {:>2}", hi, hib);
+                        compact_blas::xsyrk_sub_shift(Ub.batch(hi),
+                                                      LΨd.batch(hib));
+                    }
                 }
-                // Update next diagonal block using our bottom subdiagonal block
-                else if (!last_level) {
-                    const auto hib = get_batch_index(ib);
-                    PRINTLN("    diag block    {:>2}[2] -> {:>2}", hi, hib);
-                    compact_blas::xsyrk_sub(Ub.batch(hi), LΨd.batch(hib), be);
-                } else {
-                    const auto hib = n - 1;
-                    PRINTLN("    diag block*   {:>2}[2] -> {:>2}", hi, hib);
-                    compact_blas::xsyrk_sub_shift(Ub.batch(hi), LΨd.batch(hib));
-                }
-            }
-            KOQKATOO_OMP(single)
-            PRINTLN("\n===\n");
-            if (last_level) {
-                KOQKATOO_OMP(single) {
+                if (last_level && i == offset) {
                     PRINTLN("Level {}\n\n===\n", ln);
                     KOQKATOO_TRACE("factor Ψ", 0);
                     compact_blas::xpotrf(LΨd.batch(n - 1), be);
                 }
             }
+            KOQKATOO_OMP(single)
+            PRINTLN("\n===\n");
         }
         if (ln == 0) {
             KOQKATOO_OMP(single) {
@@ -439,7 +442,7 @@ void CyclicOCPSolver
             const auto offset     = index_t{1} << l; // first stage in level
             const bool last_level = l + 1 == ln;
             PRINTLN("Level {}\n  offset={:<2}, width={}", l, offset, width);
-            KOQKATOO_OMP(for)
+            KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < n; i += 2 * offset) {
                 KOQKATOO_TRACE("solve ψ fwd", i);
                 // Parity within the current level
@@ -476,7 +479,7 @@ void CyclicOCPSolver
             }
             KOQKATOO_OMP(single)
             PRINTLN("\n---\n");
-            KOQKATOO_OMP(for)
+            KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < n; i += 2 * offset) {
                 KOQKATOO_TRACE("solve ψ fwd 2", i);
                 // Parity within the current level
@@ -560,7 +563,7 @@ void CyclicOCPSolver
             const auto offset     = index_t{1} << l; // first stage in level
             const bool last_level = l + 1 == ln;
             PRINTLN("Level {}\n  offset={:<2}, width={}", l, offset, width);
-            KOQKATOO_OMP(for)
+            KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < n; i += 2 * offset) {
                 KOQKATOO_TRACE("solve ψ rev 2", 0);
                 // Parity within the current level
@@ -595,7 +598,7 @@ void CyclicOCPSolver
             }
             KOQKATOO_OMP(single)
             PRINTLN("\n---\n");
-            KOQKATOO_OMP(for)
+            KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < n; i += 2 * offset) {
                 KOQKATOO_TRACE("solve ψ rev", i);
                 // Parity within the current level
