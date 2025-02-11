@@ -13,9 +13,8 @@ nx, nu, ny = sy.symbols("nx nu ny")
 nxu = nx + nu
 nxux = nxu + nx
 stage_matrices = {
-    "AB": (nx, nx + nu),
+    "HAB": (nx + nu + nx, nx + nu),
     "CD": (ny, nx + nu),
-    "H": (nx + nu, nx + nu),
     "LHV": (nx + nu + nx, nx + nu),
     "Wᵀ": (nx + nu, nx),
     "LΨU": (3 * nx, nx),

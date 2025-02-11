@@ -4,28 +4,22 @@
         auto [N, nx, nu, ny, ny_N] = dim;
         return real_matrix{{
             .depth = N + 1,
-            .rows = nx*(3*nx) + nx*(nu + nx) + nx*(nu + nx) + 4*nx*1 + ny*(nu + nx) + 2*ny*1 + (nu + nx)*(nu + 2*nx) + (nu + nx)*(nu + nx) + 5*(nu + nx)*1,
+            .rows = nx*(3*nx) + nx*(nu + nx) + 4*nx*1 + ny*(nu + nx) + 2*ny*1 + 2*(nu + nx)*(nu + 2*nx) + 5*(nu + nx)*1,
             .cols = 1,
         }};
     }();
 
 
   public:
-    const mut_real_view AB = [this]{
+    const mut_real_view HAB = [this]{
         auto [N, nx, nu, ny, ny_N] = dim;
-        return stagewise_storage.view.middle_rows(0, nx*(nu + nx)).reshaped(nx, nu + nx);
+        return stagewise_storage.view.middle_rows(0, (nu + nx)*(nu + 2*nx)).reshaped(nu + 2*nx, nu + nx);
     }();
 
   public:
     const mut_real_view CD = [this]{
         auto [N, nx, nu, ny, ny_N] = dim;
-        return stagewise_storage.view.middle_rows(nu*nx + nx*nx, ny*(nu + nx)).reshaped(ny, nu + nx);
-    }();
-
-  public:
-    const mut_real_view H = [this]{
-        auto [N, nx, nu, ny, ny_N] = dim;
-        return stagewise_storage.view.middle_rows(nu*nx + nu*ny + nx*ny + nx*nx, (nu + nx)*(nu + nx)).reshaped(nu + nx, nu + nx);
+        return stagewise_storage.view.middle_rows(3*nu*nx + nu*nu + 2*(nx*nx), ny*(nu + nx)).reshaped(ny, nu + nx);
     }();
 
   public:
