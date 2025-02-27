@@ -122,125 +122,85 @@ struct CyclicOCPSolver {
     }
 
     template <class Tin, class Tout>
-    void pack_dyn(std::span<Tin> in,
-                  typename compact_blas::template batch_view_t<Tout> out) {
+    void pack_vectors(std::span<Tin> in,
+                      typename compact_blas::template batch_view_t<Tout> out,
+                      index_t rows, index_t rows_N) {
         auto [N, nx, nu, ny, ny_N] = dim;
         using view = typename compact_blas::template batch_view_scalar_t<Tin>;
-        view vw{{.data = in.data(), .depth = N + 1, .rows = nx, .cols = 1}};
-        assert(static_cast<index_t>(in.size()) == vw.size());
+        view vw{{.data = in.data(), .depth = N + 1, .rows = rows, .cols = 1}};
+        assert(in.size() == static_cast<size_t>(N * rows + rows_N));
         for (index_t i = 0; i < n; ++i) {
             auto bi = get_batch_index(i);
             for (index_t vi = 0; vi < VL; ++vi) {
                 auto k = i + vi * vstride;
-                if (k <= N)
+                if (k < N) {
                     out.batch(bi)(vi) = vw(k);
-                else
+                } else if (k == N) {
+                    out.batch(bi)(vi).top_rows(rows_N) = vw(k).top_rows(rows_N);
+                    out.batch(bi)(vi)
+                        .bottom_rows(rows - rows_N)
+                        .set_constant(0);
+                } else {
                     out.batch(bi)(vi).set_constant(0);
+                }
             }
         }
+    }
+
+    template <class Tin, class Tout>
+    void unpack_vectors(typename compact_blas::template batch_view_t<Tin> in,
+                        std::span<Tout> out, index_t rows, index_t rows_N) {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        using view = typename compact_blas::template batch_view_scalar_t<Tout>;
+        view vw{{.data = out.data(), .depth = N + 1, .rows = rows, .cols = 1}};
+        assert(out.size() == static_cast<size_t>(N * rows + rows_N));
+        for (index_t i = 0; i < n; ++i) {
+            auto bi = get_batch_index(i);
+            for (index_t vi = 0; vi < VL; ++vi) {
+                auto k = i + vi * vstride;
+                if (k < N) {
+                    vw(k) = in.batch(bi)(vi);
+                } else if (k == N) {
+                    vw(k).top_rows(rows_N) = in.batch(bi)(vi).top_rows(rows_N);
+                }
+            }
+        }
+    }
+
+    template <class Tin, class Tout>
+    void pack_dyn(std::span<Tin> in,
+                  typename compact_blas::template batch_view_t<Tout> out) {
+        pack_vectors(in, out, dim.nx, dim.nx);
     }
 
     template <class Tin, class Tout>
     void unpack_dyn(typename compact_blas::template batch_view_t<Tin> in,
                     std::span<Tout> out) {
-        auto [N, nx, nu, ny, ny_N] = dim;
-        using view = typename compact_blas::template batch_view_scalar_t<Tout>;
-        view vw{{.data = out.data(), .depth = N + 1, .rows = nx, .cols = 1}};
-        assert(static_cast<index_t>(out.size()) == vw.size());
-        for (index_t i = 0; i < n; ++i) {
-            auto bi = get_batch_index(i);
-            for (index_t vi = 0; vi < VL; ++vi) {
-                auto k = i + vi * vstride;
-                if (k <= N)
-                    vw(k) = in.batch(bi)(vi);
-            }
-        }
+        unpack_vectors(in, out, dim.nx, dim.nx);
     }
 
     template <class Tin, class Tout>
     void pack_constr(std::span<Tin> in,
                      typename compact_blas::template batch_view_t<Tout> out) {
-        auto [N, nx, nu, ny, ny_N] = dim;
-        using view = typename compact_blas::template batch_view_scalar_t<Tin>;
-        view vw{{.data = in.data(), .depth = N + 1, .rows = ny, .cols = 1}};
-        assert(static_cast<index_t>(in.size()) == N * ny + ny_N);
-        for (index_t i = 0; i < n; ++i) {
-            auto bi = get_batch_index(i);
-            for (index_t vi = 0; vi < VL; ++vi) {
-                auto k = i + vi * vstride;
-                if (k < N) {
-                    out.batch(bi)(vi) = vw(k);
-                } else if (k == N) {
-                    out.batch(bi)(vi).top_rows(ny_N) = vw(k).top_rows(ny_N);
-                    out.batch(bi)(vi).bottom_rows(ny - ny_N).set_constant(0);
-                } else {
-                    out.batch(bi)(vi).set_constant(0);
-                }
-            }
-        }
+        pack_vectors(in, out, dim.ny, dim.ny_N);
     }
 
     template <class Tin, class Tout>
     void unpack_constr(typename compact_blas::template batch_view_t<Tin> in,
                        std::span<Tout> out) {
-        auto [N, nx, nu, ny, ny_N] = dim;
-        using view = typename compact_blas::template batch_view_scalar_t<Tout>;
-        view vw{{.data = out.data(), .depth = N + 1, .rows = ny, .cols = 1}};
-        assert(static_cast<index_t>(out.size()) == N * ny + ny_N);
-        for (index_t i = 0; i < n; ++i) {
-            auto bi = get_batch_index(i);
-            for (index_t vi = 0; vi < VL; ++vi) {
-                auto k = i + vi * vstride;
-                if (k < N)
-                    vw(k) = in.batch(bi)(vi);
-                else if (k == N)
-                    vw(k).top_rows(ny_N) = in.batch(bi)(vi).top_rows(ny_N);
-            }
-        }
+        unpack_vectors(in, out, dim.ny, dim.ny_N);
     }
 
     template <class Tin, class Tout>
     void pack_var(std::span<Tin> in,
                   typename compact_blas::template batch_view_t<Tout> out) {
-        auto [N, nx, nu, ny, ny_N] = dim;
-        using view = typename compact_blas::template batch_view_scalar_t<Tin>;
-        view vw{
-            {.data = in.data(), .depth = N + 1, .rows = nx + nu, .cols = 1}};
-        assert(static_cast<index_t>(in.size()) == N * (nx + ny) + nx);
-        for (index_t i = 0; i < n; ++i) {
-            auto bi = get_batch_index(i);
-            for (index_t vi = 0; vi < VL; ++vi) {
-                auto k = i + vi * vstride;
-                if (k < N) {
-                    out.batch(bi)(vi) = vw(k);
-                } else if (k == N) {
-                    out.batch(bi)(vi).top_rows(nx) = vw(k).top_rows(nx);
-                    out.batch(bi)(vi).bottom_rows(nu).set_constant(0);
-                } else {
-                    out.batch(bi)(vi).set_constant(0);
-                }
-            }
-        }
+        pack_vectors(in, out, dim.nx + dim.nu, dim.nx);
     }
 
     template <class Tin, class Tout>
     void unpack_var(typename compact_blas::template batch_view_t<Tin> in,
                     std::span<Tout> out) {
-        auto [N, nx, nu, ny, ny_N] = dim;
-        using view = typename compact_blas::template batch_view_scalar_t<Tout>;
-        view vw{
-            {.data = out.data(), .depth = N + 1, .rows = nx + nu, .cols = 1}};
-        assert(static_cast<index_t>(out.size()) == N * (nx + nu) + nx);
-        for (index_t i = 0; i < n; ++i) {
-            auto bi = get_batch_index(i);
-            for (index_t vi = 0; vi < VL; ++vi) {
-                auto k = i + vi * vstride;
-                if (k < N)
-                    vw(k) = in.batch(bi)(vi);
-                else if (k == N)
-                    vw(k).top_rows(nx) = in.batch(bi)(vi).top_rows(nx);
-            }
-        }
+        unpack_vectors(in, out, dim.nx + dim.nu, dim.nx);
     }
 
     real_t mul_A(real_view_single p, // NOLINT(*-nodiscard)
