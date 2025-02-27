@@ -26,9 +26,9 @@ inline LinearOCPStorage generate_random_ocp(OCPDim dim,
         Ri.generate([&] { return nrml(rng); });
         Si.generate([&] { return nrml(rng); });
         for (index_t j = 0; j < nx; ++j)
-            Qi(j, j) += 10;
+            Qi(j, j) += static_cast<real_t>(nx);
         for (index_t j = 0; j < nu; ++j)
-            Ri(j, j) += 10;
+            Ri(j, j) += static_cast<real_t>(nu);
         for (index_t c = 0; c < nx + nu; ++c)
             for (index_t r = c + 1; r < nx + nu; ++r)
                 Hi(c, r) = Hi(r, c);
@@ -37,7 +37,7 @@ inline LinearOCPStorage generate_random_ocp(OCPDim dim,
     Ci.generate([&] { return nrml(rng); });
     Qi.generate([&] { return nrml(rng); });
     for (index_t j = 0; j < nx; ++j)
-        Qi(j, j) += 25;
+        Qi(j, j) += static_cast<real_t>(nx + nu);
     for (index_t c = 0; c < nx; ++c)
         for (index_t r = c + 1; r < nx; ++r)
             Qi(c, r) = Qi(r, c);
