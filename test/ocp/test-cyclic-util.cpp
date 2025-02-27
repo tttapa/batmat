@@ -168,12 +168,14 @@ struct CyclicOCPSolver {
             auto bi = get_batch_index(i);
             for (index_t vi = 0; vi < VL; ++vi) {
                 auto k = i + vi * vstride;
-                if (k < N)
+                if (k < N) {
                     out.batch(bi)(vi) = vw(k);
-                else if (k == N)
+                } else if (k == N) {
                     out.batch(bi)(vi).top_rows(ny_N) = vw(k).top_rows(ny_N);
-                else
+                    out.batch(bi)(vi).bottom_rows(ny - ny_N).set_constant(0);
+                } else {
                     out.batch(bi)(vi).set_constant(0);
+                }
             }
         }
     }
@@ -193,6 +195,50 @@ struct CyclicOCPSolver {
                     vw(k) = in.batch(bi)(vi);
                 else if (k == N)
                     vw(k).top_rows(ny_N) = in.batch(bi)(vi).top_rows(ny_N);
+            }
+        }
+    }
+
+    template <class Tin, class Tout>
+    void pack_var(std::span<Tin> in,
+                  typename compact_blas::template batch_view_t<Tout> out) {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        using view = typename compact_blas::template batch_view_scalar_t<Tin>;
+        view vw{
+            {.data = in.data(), .depth = N + 1, .rows = nx + nu, .cols = 1}};
+        assert(static_cast<index_t>(in.size()) == N * (nx + ny) + nx);
+        for (index_t i = 0; i < n; ++i) {
+            auto bi = get_batch_index(i);
+            for (index_t vi = 0; vi < VL; ++vi) {
+                auto k = i + vi * vstride;
+                if (k < N) {
+                    out.batch(bi)(vi) = vw(k);
+                } else if (k == N) {
+                    out.batch(bi)(vi).top_rows(nx) = vw(k).top_rows(nx);
+                    out.batch(bi)(vi).bottom_rows(nu).set_constant(0);
+                } else {
+                    out.batch(bi)(vi).set_constant(0);
+                }
+            }
+        }
+    }
+
+    template <class Tin, class Tout>
+    void unpack_var(typename compact_blas::template batch_view_t<Tin> in,
+                    std::span<Tout> out) {
+        auto [N, nx, nu, ny, ny_N] = dim;
+        using view = typename compact_blas::template batch_view_scalar_t<Tout>;
+        view vw{
+            {.data = out.data(), .depth = N + 1, .rows = nx + nu, .cols = 1}};
+        assert(static_cast<index_t>(out.size()) == N * (nx + nu) + nx);
+        for (index_t i = 0; i < n; ++i) {
+            auto bi = get_batch_index(i);
+            for (index_t vi = 0; vi < VL; ++vi) {
+                auto k = i + vi * vstride;
+                if (k < N)
+                    vw(k) = in.batch(bi)(vi);
+                else if (k == N)
+                    vw(k).top_rows(nx) = in.batch(bi)(vi).top_rows(nx);
             }
         }
     }
@@ -230,7 +276,7 @@ struct CyclicOCPSolver {
     void compute_Ψ(real_t S, real_view Σb, bool_view Jb);
     void factor_Ψ();
     void solve_Ψ_work(mut_real_view Δλ, mut_real_view work_pcg) const;
-    void solve_Ψ(mut_real_view Δλ) { return solve_Ψ_work(Δλ, work_pcg); }
+    void solve_Ψ(mut_real_view Δλ) { solve_Ψ_work(Δλ, work_pcg); }
 
 #include "cyclic-storage.ipp"
 
