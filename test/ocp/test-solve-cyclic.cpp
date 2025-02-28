@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <koqkatoo/fork-pool.hpp>
+#include <koqkatoo/linalg-compact/mkl.hpp>
 #include <koqkatoo/loop.hpp>
 #include <koqkatoo/matrix-view.hpp>
 #include <koqkatoo/ocp/conversion.hpp>
@@ -25,11 +26,9 @@
 
 #include <Eigen/Eigen>
 #include <Eigen/SparseLU>
-#include <Spectra/MatOp/SparseSymMatProd.h>
-#include <Spectra/SymEigsSolver.h>
 
 #include "eigen-matchers.hpp"
-#include "koqkatoo/linalg-compact/mkl.hpp"
+#include "reference-solution.hpp"
 
 namespace ko   = koqkatoo::ocp;
 namespace stdx = std::experimental;
@@ -54,82 +53,6 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                   std::span<real_t> Mᵀλ, std::span<real_t> Aᵀŷ,
                   std::span<real_t> d, std::span<real_t> Δλ,
                   std::span<real_t> MᵀΔλ, bool use_pcg);
-
-auto reference_qp(const ko::LinearOCPStorage &ocp, real_t S,
-                  Eigen::Ref<const Eigen::VectorX<real_t>> Σ,
-                  Eigen::Ref<const Eigen::VectorX<bool>> J) {
-    using SpMat      = Eigen::SparseMatrix<real_t, 0, index_t>;
-    index_t n_constr = ocp.num_constraints(),
-            n_dyn    = ocp.num_dynamics_constraints();
-    // Build quadratic program and standard KKT system for the OCP.
-    auto qp   = ko::LinearOCPSparseQP::build(ocp);
-    auto kkt  = qp.build_kkt(S, as_span(Σ), as_span(J));
-    auto &qpA = qp.A_sparsity, &qpQ = qp.Q_sparsity, &qpK = kkt.sparsity;
-    SpMat Q = Eigen::Map<const SpMat>(
-        qpQ.rows, qpQ.cols, qpQ.nnz(), qpQ.outer_ptr.data(),
-        qpQ.inner_idx.data(), qp.Q_values.data(), nullptr);
-    SpMat G(n_constr, qpA.cols), M(n_dyn, qpA.cols), K(qpK.rows, qpK.cols);
-    std::vector<Eigen::Triplet<real_t>> triplets_G, triplets_M, triplets_K;
-    for (index_t c = 0; c < qpA.cols; ++c)
-        for (index_t i = qpA.outer_ptr[c]; i < qpA.outer_ptr[c + 1]; ++i)
-            if (index_t r = qpA.inner_idx[i]; r < n_dyn) // top rows
-                triplets_M.emplace_back(r, c, qp.A_values[i]);
-            else // bottom rows
-                triplets_G.emplace_back(r - n_dyn, c, qp.A_values[i]);
-    for (index_t c = 0; c < qpK.cols; ++c)
-        for (index_t i = qpK.outer_ptr[c]; i < qpK.outer_ptr[c + 1]; ++i) {
-            index_t r = qpK.inner_idx[i];
-            if (r >= c)
-                triplets_K.emplace_back(r, c, kkt.values[i]);
-            if (r > c)
-                triplets_K.emplace_back(c, r, kkt.values[i]);
-        }
-    G.setFromTriplets(triplets_G.begin(), triplets_G.end());
-    M.setFromTriplets(triplets_M.begin(), triplets_M.end());
-    K.setFromTriplets(triplets_K.begin(), triplets_K.end());
-    return std::tuple{std::move(Q), std::move(G), std::move(M), std::move(K)};
-}
-
-real_t cond_sparse_sym(
-    Eigen::Ref<const Eigen::SparseMatrix<real_t, 0, index_t>> K,
-    const Eigen::SparseLU<Eigen::SparseMatrix<real_t, 0, index_t>> *luK =
-        nullptr) {
-    Spectra::SparseSymMatProd<real_t, Eigen::Lower, 0, index_t> op(K);
-    Spectra::SymEigsSolver eigs{op, 1, 10};
-    eigs.init();
-    eigs.compute(Spectra::SortRule::LargestMagn);
-    if (eigs.info() != Spectra::CompInfo::Successful)
-        throw std::runtime_error("Largest eigenvalue failed to converge");
-    real_t λ_min, λ_max = eigs.eigenvalues()[0];
-    if (luK) {
-        struct InvKOp {
-            std::remove_pointer_t<decltype(luK)> &lu;
-            using Scalar = real_t;
-            index_t rows() const { return lu.rows(); }
-            index_t cols() const { return lu.cols(); }
-            void perform_op(const Scalar *x_in, Scalar *x_out) const {
-                Eigen::Map<const Eigen::VectorX<real_t>> xi{x_in, cols()};
-                Eigen::Map<Eigen::VectorX<real_t>> xo{x_out, rows()};
-                xo = lu.solve(xi);
-            }
-        };
-        InvKOp op{*luK};
-        Spectra::SymEigsSolver eigs{op, 1, 10};
-        eigs.init();
-        eigs.compute(Spectra::SortRule::LargestMagn);
-        if (eigs.info() != Spectra::CompInfo::Successful)
-            throw std::runtime_error("Smallest eigenvalue failed to converge");
-        λ_min = 1 / eigs.eigenvalues()[0];
-    } else {
-        eigs.init();
-        eigs.compute(Spectra::SortRule::SmallestMagn);
-        if (eigs.info() != Spectra::CompInfo::Successful)
-            throw std::runtime_error("Smallest eigenvalue failed to converge");
-        λ_min = eigs.eigenvalues()[0];
-    }
-    using std::abs;
-    return abs(λ_max) / abs(λ_min);
-}
 
 const int n_threads = 8;
 TEST_P(OCPCyclic, solve) {
@@ -185,7 +108,7 @@ TEST_P(OCPCyclic, solve) {
     std::ranges::generate(b, [&] { return nrml(rng); });
     std::ranges::generate(λ, [&] { return nrml(rng); });
 
-    auto [Q, G, M, K] = reference_qp(ocp, S, Σ, J);
+    auto [Q, G, M, K] = ko::testing::reference_qp(ocp, S, Σ, J);
 
     VectorXreal Mxb(n_dyn_constr), Mᵀλ(n_var), d(n_var), Δλ(n_dyn_constr),
         MᵀΔλ(n_var), Aᵀŷ(n_var);
@@ -237,7 +160,7 @@ TEST_P(OCPCyclic, solve) {
     auto Δλ_ref          = kkt_sol_ref.bottomRows(n_dyn_constr);
     VectorXreal MᵀΔλ_ref = M.transpose() * Δλ_ref;
 
-    real_t κ = cond_sparse_sym(K, &luK);
+    real_t κ = ko::testing::cond_sparse_sym(K, &luK);
     std::cout << "κ(K) = " << guanaqo::float_to_str(κ) << std::endl;
 
     // Compare the koqkatoo OCP solution to the Eigen reference solution.
