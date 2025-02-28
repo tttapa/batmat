@@ -6,6 +6,7 @@ include(GoogleTest)
 # Dependencies
 find_package(GTest REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(spectra REQUIRED)
 if (NOT TARGET koqkatoo::koqkatoo)
     find_package(koqkatoo REQUIRED COMPONENTS Extra) # TODO
 endif()
@@ -37,7 +38,8 @@ target_link_libraries(tests PRIVATE
     koqkatoo::koqkatoo koqkatoo::linalg-compact koqkatoo::warnings
     koqkatoo::ocp koqkatoo::cholundate
     GTest::gtest_main GTest::gmock
-    Eigen3::Eigen)
+    Eigen3::Eigen
+    Spectra::Spectra)
 if (MSVC)
     target_compile_definitions(tests PRIVATE __PRETTY_FUNCTION__=__FUNCSIG__)
 endif()

@@ -75,10 +75,11 @@ class KoqkatooRecipe(ConanFile):
         if self.options.with_benchmarks:
             self.requires("benchmark/1.8.4")
         if self.options.with_python:
-            self.requires("eigen/tttapa.20240516")
+            self.requires("eigen/tttapa.20240516", force=True)
         else:
-            self.test_requires("eigen/tttapa.20240516")
+            self.test_requires("eigen/tttapa.20240516", force=True)
         self.test_requires("gtest/1.15.0")
+        self.test_requires("spectra/1.0.1")
         if self.options.with_python:
             self.requires("pybind11/2.13.6")
         if self.options.with_libfork:
