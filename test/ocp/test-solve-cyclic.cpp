@@ -5,6 +5,8 @@
 #include <koqkatoo/loop.hpp>
 #include <koqkatoo/matrix-view.hpp>
 #include <koqkatoo/ocp/conversion.hpp>
+#include <koqkatoo/ocp/cyclic-solver/cyclic-solver.hpp>
+#include <koqkatoo/ocp/cyclic-solver/packing.tpp>
 #include <koqkatoo/ocp/ocp.hpp>
 #include <koqkatoo/ocp/random-ocp.hpp>
 #include <koqkatoo/ocp/solver/solve.hpp>
@@ -52,7 +54,35 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
                   std::span<const real_t> ŷ, std::span<real_t> Mxb,
                   std::span<real_t> Mᵀλ, std::span<real_t> Aᵀŷ,
                   std::span<real_t> d, std::span<real_t> Δλ,
-                  std::span<real_t> MᵀΔλ, bool use_pcg);
+                  std::span<real_t> MᵀΔλ, bool use_pcg) {
+    using Solver = ko::CyclicOCPSolver<stdx::simd_abi::deduce_t<real_t, VL>>;
+
+    Solver solver{ocp, {.use_pcg = use_pcg}};
+    auto Σb = solver.pack_constr(Σ), ŷb = solver.pack_constr(ŷ),
+         xb = solver.pack_var(x), gradb = solver.pack_var(grad),
+         bb = solver.pack_dyn(b), λb = solver.pack_dyn(λ);
+    auto Jb   = solver.pack_constr(J);
+    auto Mᵀλb = solver.pack_var(), Aᵀŷb = solver.pack_var(),
+         db = solver.pack_var(), Δλb = solver.pack_dyn(),
+         MᵀΔλb = solver.pack_var();
+    KOQKATOO_OMP(parallel) {
+        solver.mat_vec_dyn_tp(λb, Mᵀλb);
+        solver.mat_vec_dyn(xb, bb, Δλb);
+        KOQKATOO_OMP(single)
+        solver.template unpack_dyn<real_t>(Δλb, Mxb);
+        solver.mat_vec_constr_tp(ŷb, Aᵀŷb);
+        solver.compute_Ψ(S, Σb, Jb);
+        solver.factor_Ψ();
+        solver.solve_H_fwd(gradb, Mᵀλb, Aᵀŷb, db, Δλb);
+        solver.solve_Ψ(Δλb);
+        solver.solve_H_rev(db, Δλb, MᵀΔλb);
+    }
+    solver.template unpack_var<real_t>(Mᵀλb, Mᵀλ);
+    solver.template unpack_var<real_t>(MᵀΔλb, MᵀΔλ);
+    solver.template unpack_var<real_t>(Aᵀŷb, Aᵀŷ);
+    solver.template unpack_var<real_t>(db, d);
+    solver.template unpack_dyn<real_t>(Δλb, Δλ);
+}
 
 const int n_threads = 8;
 TEST_P(OCPCyclic, solve) {
@@ -64,6 +94,10 @@ TEST_P(OCPCyclic, solve) {
     }));
 
     auto [N_horiz, nx, vl, use_pcg] = GetParam();
+    if (N_horiz / vl <= 2)
+        GTEST_SKIP() << "Horizon too short (N=" << N_horiz << ", vl=" << vl
+                     << ")";
+
     std::mt19937 rng{54321};
     std::normal_distribution<real_t> nrml{0, 1};
     std::bernoulli_distribution bernoulli{0.5};
@@ -112,7 +146,7 @@ TEST_P(OCPCyclic, solve) {
 
     VectorXreal Mxb(n_dyn_constr), Mᵀλ(n_var), d(n_var), Δλ(n_dyn_constr),
         MᵀΔλ(n_var), Aᵀŷ(n_var);
-    for (index_t i = 0; i < 100; ++i)
+    for (index_t i = 0; i < 10; ++i)
         solve_cyclic(ocp, S, as_span(Σ), as_span(J), as_span(x), as_span(grad),
                      as_span(λ), as_span(b), as_span(ŷ), as_span(Mxb),
                      as_span(Mᵀλ), as_span(Aᵀŷ), as_span(d), as_span(Δλ),

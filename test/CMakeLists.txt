@@ -15,7 +15,7 @@ add_executable(tests
     "ocp/test-reconstruct.cpp"
     "ocp/test-solve.cpp"
     "ocp/test-solve-cyclic.cpp"
-    "ocp/solve-cyclic.cpp"
+    # "ocp/solve-cyclic.cpp"
     "ocp/test-cyclic-util.cpp"
     "ocp/reference-solution.cpp"
     "linalg-compact/test-rotate.cpp"

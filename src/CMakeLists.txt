@@ -180,6 +180,7 @@ koqkatoo_configure_library(linalg-compact EXPORT_PREFIX koqkatoo)
 add_library(ocp
     "ocp/src/conversion.cpp"
     "ocp/src/solve.cpp"
+    "ocp/src/cyclic-solver.cpp"
 )
 target_sources(ocp PUBLIC FILE_SET headers TYPE HEADERS
     BASE_DIRS "ocp/include"
@@ -192,6 +193,11 @@ target_sources(ocp PUBLIC FILE_SET headers TYPE HEADERS
           "ocp/include/koqkatoo/ocp/solver/storage.tpp"
           "ocp/include/koqkatoo/ocp/solver/mat-vec.tpp"
           "ocp/include/koqkatoo/ocp/solver/updowndate.tpp"
+          "ocp/include/koqkatoo/ocp/cyclic-solver/cyclic-solver.hpp"
+          "ocp/include/koqkatoo/ocp/cyclic-solver/mat-vec.tpp"
+          "ocp/include/koqkatoo/ocp/cyclic-solver/packing.tpp"
+          "ocp/include/koqkatoo/ocp/cyclic-solver/factor.tpp"
+          "ocp/include/koqkatoo/ocp/cyclic-solver/cyclic-storage.ipp"
 )
 target_link_libraries(ocp PUBLIC koqkatoo::linalg-compact)
 target_compile_features(ocp PRIVATE cxx_std_23)
