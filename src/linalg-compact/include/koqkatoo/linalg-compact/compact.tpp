@@ -546,10 +546,14 @@ void CompactBLAS<Abi>::xadd_copy_impl(mut_batch_view out, batch_view x1,
 }
 
 template <class Abi>
-template <class... Views>
-void CompactBLAS<Abi>::xsub_copy_impl(mut_batch_view out, batch_view x1,
-                                      Views... xs)
-    requires(std::same_as<Views, batch_view> && ...)
+template <class OutView, class View, class... Views>
+void CompactBLAS<Abi>::xsub_copy_impl(OutView out, View x1, Views... xs)
+    requires(((std::same_as<OutView, mut_batch_view> &&
+               std::same_as<View, batch_view>) &&
+              ... && std::same_as<Views, batch_view>) ||
+             ((std::same_as<OutView, mut_single_batch_view> &&
+               std::same_as<View, single_batch_view>) &&
+              ... && std::same_as<Views, single_batch_view>))
 {
     assert(((x1.batch_size() == xs.batch_size()) && ...));
     assert(x1.batch_size() == out.batch_size());
@@ -576,6 +580,40 @@ void CompactBLAS<Abi>::xsub_copy_impl(mut_batch_view out, batch_view x1,
         for (index_t c = 0; c < m; ++c)
             for (index_t r = 0; r < n; ++r)
                 out(i, r, c) = x1(i, r, c) - (... + xs(i, r, c));
+}
+
+template <class Abi>
+template <class OutView, class... Views>
+void CompactBLAS<Abi>::xadd_neg_copy_impl(OutView out, Views... xs)
+    requires((std::same_as<OutView, mut_batch_view> && ... &&
+              std::same_as<Views, batch_view>) ||
+             (std::same_as<OutView, mut_single_batch_view> && ... &&
+              std::same_as<Views, single_batch_view>))
+{
+    assert(((out.batch_size() == xs.batch_size()) && ...));
+    assert(out.batch_size() == out.batch_size());
+    assert(((out.depth() == xs.depth()) && ...));
+    assert(out.depth() == out.depth());
+    assert(((out.rows() == xs.rows()) && ...));
+    assert(out.rows() == out.rows());
+    assert(((out.cols() == xs.cols()) && ...));
+    assert(out.cols() == out.cols());
+    index_t i;
+    const auto Bs   = static_cast<index_t>(out.batch_size());
+    const index_t n = out.rows(), m = out.cols();
+    KOQKATOO_OMP(parallel for lastprivate(i))
+    for (i = 0; i <= out.depth() - Bs; i += Bs) {
+        for (index_t c = 0; c < m; ++c) {
+            KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t r = 0; r < n; ++r) {
+                aligned_store(&out(i, r, c),
+                              -(... + aligned_load(&xs(i, r, c))));
+            }
+        }
+    }
+    for (; i < out.depth(); ++i)
+        for (index_t c = 0; c < m; ++c)
+            for (index_t r = 0; r < n; ++r)
+                out(i, r, c) = -(... + xs(i, r, c));
 }
 
 template <class Abi>

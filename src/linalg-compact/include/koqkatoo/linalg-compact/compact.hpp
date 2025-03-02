@@ -396,12 +396,35 @@ struct CompactBLAS {
     static void xadd_copy(mut_batch_view out, Views... xs) {
         xadd_copy_impl(out, batch_view{xs}...);
     }
-    template <class... Views>
-    static void xsub_copy_impl(mut_batch_view out, batch_view x1, Views... xs)
-        requires(std::same_as<Views, batch_view> && ...);
+    template <class OutView, class View, class... Views>
+    static void xsub_copy_impl(OutView out, View x1, Views... xs)
+        requires(((std::same_as<OutView, mut_batch_view> &&
+                   std::same_as<View, batch_view>) &&
+                  ... && std::same_as<Views, batch_view>) ||
+                 ((std::same_as<OutView, mut_single_batch_view> &&
+                   std::same_as<View, single_batch_view>) &&
+                  ... && std::same_as<Views, single_batch_view>));
     template <class... Views>
     static void xsub_copy(mut_batch_view out, Views... xs) {
         xsub_copy_impl(out, batch_view{xs}...);
+    }
+    template <class... Views>
+    static void xsub_copy(mut_single_batch_view out, Views... xs) {
+        xsub_copy_impl(out, single_batch_view{xs}...);
+    }
+    template <class OutView, class... Views>
+    static void xadd_neg_copy_impl(OutView out, Views... xs)
+        requires((std::same_as<OutView, mut_batch_view> && ... &&
+                  std::same_as<Views, batch_view>) ||
+                 (std::same_as<OutView, mut_single_batch_view> && ... &&
+                  std::same_as<Views, single_batch_view>));
+    template <class... Views>
+    static void xadd_neg_copy(mut_batch_view out, Views... xs) {
+        xadd_neg_copy_impl(out, batch_view{xs}...);
+    }
+    template <class... Views>
+    static void xadd_neg_copy(mut_single_batch_view out, Views... xs) {
+        xadd_neg_copy_impl(out, single_batch_view{xs}...);
     }
 
     /// Dot product

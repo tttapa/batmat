@@ -12,14 +12,36 @@ namespace koqkatoo::linalg::compact {
         mut_batch_view, batch_view, batch_view);                               \
     template void CompactBLAS<__VA_ARGS__>::xsub_copy_impl(                    \
         mut_batch_view, batch_view, batch_view);                               \
+    template void CompactBLAS<__VA_ARGS__>::xadd_neg_copy_impl(                \
+        mut_batch_view, batch_view, batch_view);                               \
     template void CompactBLAS<__VA_ARGS__>::xadd_copy_impl(                    \
         mut_batch_view, batch_view, batch_view, batch_view);                   \
     template void CompactBLAS<__VA_ARGS__>::xsub_copy_impl(                    \
+        mut_batch_view, batch_view, batch_view, batch_view);                   \
+    template void CompactBLAS<__VA_ARGS__>::xadd_neg_copy_impl(                \
         mut_batch_view, batch_view, batch_view, batch_view);                   \
     template void CompactBLAS<__VA_ARGS__>::xadd_copy_impl(                    \
         mut_batch_view, batch_view, batch_view, batch_view, batch_view);       \
     template void CompactBLAS<__VA_ARGS__>::xsub_copy_impl(                    \
-        mut_batch_view, batch_view, batch_view, batch_view, batch_view)
+        mut_batch_view, batch_view, batch_view, batch_view, batch_view);       \
+    template void CompactBLAS<__VA_ARGS__>::xadd_neg_copy_impl(                \
+        mut_batch_view, batch_view, batch_view, batch_view, batch_view);       \
+    template void CompactBLAS<__VA_ARGS__>::xsub_copy_impl(                    \
+        mut_single_batch_view, single_batch_view, single_batch_view);          \
+    template void CompactBLAS<__VA_ARGS__>::xadd_neg_copy_impl(                \
+        mut_single_batch_view, single_batch_view, single_batch_view);          \
+    template void CompactBLAS<__VA_ARGS__>::xsub_copy_impl(                    \
+        mut_single_batch_view, single_batch_view, single_batch_view,           \
+        single_batch_view);                                                    \
+    template void CompactBLAS<__VA_ARGS__>::xadd_neg_copy_impl(                \
+        mut_single_batch_view, single_batch_view, single_batch_view,           \
+        single_batch_view);                                                    \
+    template void CompactBLAS<__VA_ARGS__>::xsub_copy_impl(                    \
+        mut_single_batch_view, single_batch_view, single_batch_view,           \
+        single_batch_view, single_batch_view);                                 \
+    template void CompactBLAS<__VA_ARGS__>::xadd_neg_copy_impl(                \
+        mut_single_batch_view, single_batch_view, single_batch_view,           \
+        single_batch_view, single_batch_view)
 
 INSTANTIATE(stdx::simd_abi::deduce_t<real_t, 16>);
 INSTANTIATE(stdx::simd_abi::deduce_t<real_t, 8>);
