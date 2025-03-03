@@ -2,6 +2,7 @@
 
 #include <koqkatoo/ocp/cyclic-solver/factor.tpp>
 #include <koqkatoo/ocp/cyclic-solver/mat-vec.tpp>
+#include <koqkatoo/ocp/cyclic-solver/packing.tpp>
 #include <koqkatoo/ocp/cyclic-solver/pcg.tpp>
 
 namespace koqkatoo::ocp {
