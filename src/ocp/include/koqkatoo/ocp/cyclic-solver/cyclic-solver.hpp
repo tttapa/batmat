@@ -176,7 +176,11 @@ struct CyclicOCPSolver {
     const mut_real_view LΨd = LΨU.top_rows(dim.nx),
                         Ut  = LΨU.middle_rows(dim.nx, dim.nx),
                         Ub  = LΨU.bottom_rows(dim.nx);
-
+    struct alignas(64) atomic_counter {
+        std::atomic<index_t> counter;
+    };
+    mutable std::vector<atomic_counter> counters =
+        std::vector<atomic_counter>(n);
     real_matrix work_pcg{{.depth = vl, .rows = dim.nx, .cols = 4}};
 };
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <koqkatoo/ocp/cyclic-solver/cyclic-solver.hpp>
+#include <print>
 
 namespace koqkatoo::ocp {
 
@@ -149,6 +150,8 @@ template <class Abi>
 void CyclicOCPSolver<Abi>::solve_H_fwd(real_view grad, real_view Mᵀλ,
                                        real_view Aᵀŷ, mut_real_view d,
                                        mut_real_view Δλ) const {
+
+#if 0
     // Solve Hv = -g
     KOQKATOO_OMP(for schedule(static, 1))
     for (index_t i = 0; i < n; ++i) {
@@ -176,6 +179,55 @@ void CyclicOCPSolver<Abi>::solve_H_fwd(real_view grad, real_view Mᵀλ,
                                           Δλ.batch(hi_next));
         }
     }
+#else
+    const auto compute_rhs = [this, &d, &Δλ](index_t hid, index_t hiλ) {
+        KOQKATOO_TRACE("eval rhs Ψ", hiλ); // TODO: map back to i
+        if (hiλ != get_batch_index(0))
+            compact_blas::xgemv_sub(V.batch(hid), d.batch(hid), Δλ.batch(hiλ),
+                                    be);
+        else
+            // Last batch is special since we cross batch boundaries
+            compact_blas::xgemv_sub_shift(V.batch(hid), d.batch(hid),
+                                          Δλ.batch(hiλ));
+    };
+
+    const auto d_prev_ready = index_t{0b010} << ln,
+               λ_ready      = index_t{0b100} << ln;
+    KOQKATOO_OMP(single)
+    for (auto &c : counters)
+        c.counter.store(0, std::memory_order_relaxed);
+    // Solve Hv = -g
+    KOQKATOO_OMP(for schedule(static, 1))
+    for (index_t i = 0; i < n; ++i) {
+        auto hi      = get_batch_index(i),
+             hi_next = get_batch_index(i + 1 < n ? i + 1 : i + 1 - vstride);
+        std::optional tracer = ::koqkatoo::trace_logger.trace("solve Hv=g", hi);
+        compact_blas::xadd_neg_copy(d.batch(hi), grad.batch(hi), Mᵀλ.batch(hi),
+                                    Aᵀŷ.batch(hi));
+        // Solve Lᴴ vʹ = g                                          (d ← vʹ)
+        compact_blas::xtrsv_LNN(LH.batch(hi), d.batch(hi), be);
+        auto finish_next =
+            (counters[hi_next].counter.fetch_or(d_prev_ready | hi) & λ_ready) !=
+            0;
+        // std::println("done d {:>2}->{:<2} ({})", hi, hi_next, finish_next);
+        // Solve Lᴴ⁻ᵀ v = vʹ                                        (λ ← Ev)
+        compact_blas::xgemv_T_add(Wᵀ.batch(hi), d.batch(hi), Δλ.batch(hi), be);
+        index_t counter_current = counters[hi].counter.fetch_or(λ_ready);
+        auto finish_current     = (counter_current & d_prev_ready) != 0;
+        // std::println("done λ {:>2} ({}, {})", hi, finish_current,
+        //  counter_current & ~d_prev_ready);
+        tracer.reset();
+        if (finish_next) {
+            compute_rhs(hi, hi_next);
+        }
+        if (finish_current) {
+            index_t hid = counter_current & ~d_prev_ready;
+            compute_rhs(hid, hi);
+        }
+    }
+    // KOQKATOO_OMP(single)
+    // std::println();
+#endif
 }
 
 template <class Abi>
