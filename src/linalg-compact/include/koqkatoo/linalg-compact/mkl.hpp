@@ -37,44 +37,46 @@ struct vector_format_mkl<float, stdx::simd_abi::deduce_t<float, 4>> {
     static constexpr MKL_COMPACT_PACK format = MKL_COMPACT_SSE;
 };
 
-void xgemm_compact(MKL_LAYOUT layout, MKL_TRANSPOSE transa,
-                   MKL_TRANSPOSE transb, MKL_INT m, MKL_INT n, MKL_INT k,
-                   double alpha, const double *a, MKL_INT ldap, const double *b,
-                   MKL_INT ldbp, double beta, double *c, MKL_INT ldcp,
-                   MKL_COMPACT_PACK format, MKL_INT nm) {
+inline void xgemm_compact(MKL_LAYOUT layout, MKL_TRANSPOSE transa,
+                          MKL_TRANSPOSE transb, MKL_INT m, MKL_INT n, MKL_INT k,
+                          double alpha, const double *a, MKL_INT ldap,
+                          const double *b, MKL_INT ldbp, double beta, double *c,
+                          MKL_INT ldcp, MKL_COMPACT_PACK format, MKL_INT nm) {
     ::mkl_dgemm_compact(layout, transa, transb, m, n, k, alpha, a, ldap, b,
                         ldbp, beta, c, ldcp, format, nm);
 }
-void xtrsm_compact(MKL_LAYOUT layout, MKL_SIDE side, MKL_UPLO uplo,
-                   MKL_TRANSPOSE transa, MKL_DIAG diag, MKL_INT m, MKL_INT n,
-                   double alpha, const double *a, MKL_INT ldap, double *b,
-                   MKL_INT ldbp, MKL_COMPACT_PACK format, MKL_INT nm) {
+inline void xtrsm_compact(MKL_LAYOUT layout, MKL_SIDE side, MKL_UPLO uplo,
+                          MKL_TRANSPOSE transa, MKL_DIAG diag, MKL_INT m,
+                          MKL_INT n, double alpha, const double *a,
+                          MKL_INT ldap, double *b, MKL_INT ldbp,
+                          MKL_COMPACT_PACK format, MKL_INT nm) {
     ::mkl_dtrsm_compact(layout, side, uplo, transa, diag, m, n, alpha, a, ldap,
                         b, ldbp, format, nm);
 }
-void xgemm_compact(MKL_LAYOUT layout, MKL_TRANSPOSE transa,
-                   MKL_TRANSPOSE transb, MKL_INT m, MKL_INT n, MKL_INT k,
-                   float alpha, const float *a, MKL_INT ldap, const float *b,
-                   MKL_INT ldbp, float beta, float *c, MKL_INT ldcp,
-                   MKL_COMPACT_PACK format, MKL_INT nm) {
+inline void xgemm_compact(MKL_LAYOUT layout, MKL_TRANSPOSE transa,
+                          MKL_TRANSPOSE transb, MKL_INT m, MKL_INT n, MKL_INT k,
+                          float alpha, const float *a, MKL_INT ldap,
+                          const float *b, MKL_INT ldbp, float beta, float *c,
+                          MKL_INT ldcp, MKL_COMPACT_PACK format, MKL_INT nm) {
     ::mkl_sgemm_compact(layout, transa, transb, m, n, k, alpha, a, ldap, b,
                         ldbp, beta, c, ldcp, format, nm);
 }
-void xtrsm_compact(MKL_LAYOUT layout, MKL_SIDE side, MKL_UPLO uplo,
-                   MKL_TRANSPOSE transa, MKL_DIAG diag, MKL_INT m, MKL_INT n,
-                   float alpha, const float *a, MKL_INT ldap, float *b,
-                   MKL_INT ldbp, MKL_COMPACT_PACK format, MKL_INT nm) {
+inline void xtrsm_compact(MKL_LAYOUT layout, MKL_SIDE side, MKL_UPLO uplo,
+                          MKL_TRANSPOSE transa, MKL_DIAG diag, MKL_INT m,
+                          MKL_INT n, float alpha, const float *a, MKL_INT ldap,
+                          float *b, MKL_INT ldbp, MKL_COMPACT_PACK format,
+                          MKL_INT nm) {
     ::mkl_strsm_compact(layout, side, uplo, transa, diag, m, n, alpha, a, ldap,
                         b, ldbp, format, nm);
 }
-void xpotrf_compact(MKL_LAYOUT layout, MKL_UPLO uplo, MKL_INT n, double *ap,
-                    MKL_INT ldap, MKL_INT *info, MKL_COMPACT_PACK format,
-                    MKL_INT nm) {
+inline void xpotrf_compact(MKL_LAYOUT layout, MKL_UPLO uplo, MKL_INT n,
+                           double *ap, MKL_INT ldap, MKL_INT *info,
+                           MKL_COMPACT_PACK format, MKL_INT nm) {
     ::mkl_dpotrf_compact(layout, uplo, n, ap, ldap, info, format, nm);
 }
-void xpotrf_compact(MKL_LAYOUT layout, MKL_UPLO uplo, MKL_INT n, float *ap,
-                    MKL_INT ldap, MKL_INT *info, MKL_COMPACT_PACK format,
-                    MKL_INT nm) {
+inline void xpotrf_compact(MKL_LAYOUT layout, MKL_UPLO uplo, MKL_INT n,
+                           float *ap, MKL_INT ldap, MKL_INT *info,
+                           MKL_COMPACT_PACK format, MKL_INT nm) {
     ::mkl_spotrf_compact(layout, uplo, n, ap, ldap, info, format, nm);
 }
 
