@@ -17,7 +17,7 @@
 #include <type_traits>
 
 #ifndef KQT_USE_HEAP_ORDER
-#define KQT_USE_HEAP_ORDER 1
+#define KQT_USE_HEAP_ORDER 0
 #endif
 
 namespace koqkatoo::ocp {
