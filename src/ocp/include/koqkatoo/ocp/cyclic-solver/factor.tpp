@@ -151,7 +151,7 @@ void CyclicOCPSolver<Abi>::solve_H_fwd(real_view grad, real_view Mᵀλ,
                                        real_view Aᵀŷ, mut_real_view d,
                                        mut_real_view Δλ) const {
 
-#if 0
+#if 1
     // Solve Hv = -g
     KOQKATOO_OMP(for schedule(static, 1))
     for (index_t i = 0; i < n; ++i) {
