@@ -65,17 +65,23 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
     auto Mᵀλb = solver.pack_var(), Aᵀŷb = solver.pack_var(),
          db = solver.pack_var(), Δλb = solver.pack_dyn(),
          MᵀΔλb = solver.pack_var();
-    KOQKATOO_OMP(parallel) {
-        solver.mat_vec_dyn_tp(λb, Mᵀλb);
-        solver.mat_vec_dyn(xb, bb, Δλb);
-        KOQKATOO_OMP(single)
-        solver.template unpack_dyn<real_t>(Δλb, Mxb);
-        solver.mat_vec_constr_tp(ŷb, Aᵀŷb);
-        solver.compute_Ψ(S, Σb, Jb);
-        solver.factor_Ψ();
-        solver.solve_H_fwd(gradb, Mᵀλb, Aᵀŷb, db, Δλb);
-        solver.solve_Ψ(Δλb);
-        solver.solve_H_rev(db, Δλb, MᵀΔλb);
+    for (int i = 0; i < 10; ++i) {
+        KOQKATOO_OMP(parallel) {
+            solver.mat_vec_dyn_tp(λb, Mᵀλb);
+            solver.mat_vec_dyn(xb, bb, Δλb);
+            KOQKATOO_OMP(single)
+            solver.template unpack_dyn<real_t>(Δλb, Mxb);
+            solver.mat_vec_constr_tp(ŷb, Aᵀŷb);
+#if KOQKATOO_WITH_TRACING
+            KOQKATOO_OMP(single)
+            koqkatoo::trace_logger.reset();
+#endif
+            solver.compute_Ψ(S, Σb, Jb);
+            solver.factor_Ψ();
+            solver.solve_H_fwd(gradb, Mᵀλb, Aᵀŷb, db, Δλb);
+            solver.solve_Ψ(Δλb);
+            solver.solve_H_rev(db, Δλb, MᵀΔλb);
+        }
     }
     solver.template unpack_var<real_t>(Mᵀλb, Mᵀλ);
     solver.template unpack_var<real_t>(MᵀΔλb, MᵀΔλ);
