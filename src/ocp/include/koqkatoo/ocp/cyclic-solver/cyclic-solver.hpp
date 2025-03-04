@@ -9,11 +9,16 @@
 #include <koqkatoo/trace.hpp>
 
 #include <experimental/simd>
+#include <atomic>
 #include <bit>
 #include <cassert>
 #include <cmath>
 #include <cstdlib>
 #include <type_traits>
+
+#ifndef KQT_USE_HEAP_ORDER
+#define KQT_USE_HEAP_ORDER 1
+#endif
 
 namespace koqkatoo::ocp {
 
@@ -72,12 +77,30 @@ struct CyclicOCPSolver {
     }
 
     [[nodiscard]] constexpr index_t get_batch_index(index_t i) const {
+#if KQT_USE_HEAP_ORDER
         assert(i < n);
-        if (i == 0)
+        if (i == 0) // root node
             return n - 1;
         auto l  = get_level(i);
         auto il = get_index_in_level(i);
         return il + (1 << ln) - (1 << (ln - l));
+#else
+        return i;
+#endif
+    }
+
+    [[nodiscard]] constexpr index_t batch2stage(index_t hi) const {
+#if KQT_USE_HEAP_ORDER
+        if (hi == n - 1) // root node
+            return 0;
+        auto compl_level                = get_depth(n - hi);
+        auto level                      = ln - compl_level;
+        auto first_batch_index_in_level = n - (index_t{1} << compl_level);
+        auto hi_within_level            = hi - first_batch_index_in_level;
+        return (hi_within_level << (level + 1)) + (index_t{1} << level);
+#else
+        return hi;
+#endif
     }
 
     CyclicOCPSolver(OCPDim dim, const Options &opts = {})
@@ -178,6 +201,10 @@ struct CyclicOCPSolver {
                         Ub  = LΨU.bottom_rows(dim.nx);
     struct alignas(64) atomic_counter {
         std::atomic<index_t> counter;
+        index_t fetch_or(index_t i,
+                         std::memory_order m = std::memory_order_seq_cst) {
+            return counter.fetch_or(i, m);
+        }
     };
     mutable std::vector<atomic_counter> counters =
         std::vector<atomic_counter>(n);

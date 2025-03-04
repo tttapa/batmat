@@ -99,7 +99,7 @@ void CyclicOCPSolver<Abi>::factor_Ψ() {
                 const auto hib = get_batch_index(ib);
                 compact_blas::xsyrk_sub(Ub.batch(hi), LΨd.batch(hib), be);
             } else {
-                const auto hib = n - 1;
+                const auto hib = get_batch_index(0);
                 compact_blas::xsyrk_sub_shift(Ub.batch(hi), LΨd.batch(hib));
             }
             // Compute subdiagonal fill-in in next level
@@ -128,20 +128,20 @@ void CyclicOCPSolver<Abi>::factor_Ψ() {
                     const auto hib = get_batch_index(ib);
                     compact_blas::xsyrk_sub(Ub.batch(hi), LΨd.batch(hib), be);
                 } else {
-                    const auto hib = n - 1;
+                    const auto hib = get_batch_index(0);
                     compact_blas::xsyrk_sub_shift(Ub.batch(hi), LΨd.batch(hib));
                 }
             }
             if (last_level && i == offset) {
                 KOQKATOO_TRACE("factor Ψ", 0);
-                compact_blas::xpotrf(LΨd.batch(n - 1), be);
+                compact_blas::xpotrf(LΨd.batch(get_batch_index(0)), be);
             }
         }
     }
     if (ln == 0) {
         KOQKATOO_OMP(single) {
             KOQKATOO_TRACE("factor Ψ", 0);
-            compact_blas::xpotrf(LΨd.batch(n - 1), be);
+            compact_blas::xpotrf(LΨd.batch(get_batch_index(0)), be);
         }
     }
 }
@@ -180,8 +180,13 @@ void CyclicOCPSolver<Abi>::solve_H_fwd(real_view grad, real_view Mᵀλ,
         }
     }
 #else
-    const auto compute_rhs = [this, &d, &Δλ](index_t hid, index_t hiλ) {
-        KOQKATOO_TRACE("eval rhs Ψ", hiλ); // TODO: map back to i
+    const auto compute_Wv = [this, &d, &Δλ](index_t hi) {
+        KOQKATOO_TRACE("eval rhs Ψ (W)", batch2stage(hi));
+        // Solve Lᴴ⁻ᵀ v = vʹ                                        (λ ← Ev)
+        compact_blas::xgemv_T_add(Wᵀ.batch(hi), d.batch(hi), Δλ.batch(hi), be);
+    };
+    const auto compute_Vv = [this, &d, &Δλ](index_t hid, index_t hiλ) {
+        KOQKATOO_TRACE("eval rhs Ψ (V)", batch2stage(hiλ));
         if (hiλ != get_batch_index(0))
             compact_blas::xgemv_sub(V.batch(hid), d.batch(hid), Δλ.batch(hiλ),
                                     be);
@@ -191,38 +196,49 @@ void CyclicOCPSolver<Abi>::solve_H_fwd(real_view grad, real_view Mᵀλ,
                                           Δλ.batch(hiλ));
     };
 
-    const auto d_prev_ready = index_t{0b010} << ln,
-               λ_ready      = index_t{0b100} << ln;
+    const auto w_start_flag = index_t{0b0001} << (ln + 1),
+               w_done_flag  = index_t{0b0010} << (ln + 1),
+               v_start_flag = index_t{0b0100} << (ln + 1),
+               v_done_flag  = index_t{0b1000} << (ln + 1),
+               w_flags      = w_start_flag | w_done_flag,
+               v_flags      = v_start_flag | v_done_flag,
+               wv_flags     = w_flags | v_flags;
     KOQKATOO_OMP(single)
     for (auto &c : counters)
         c.counter.store(0, std::memory_order_relaxed);
     // Solve Hv = -g
     KOQKATOO_OMP(for schedule(static, 1))
-    for (index_t i = 0; i < n; ++i) {
-        auto hi      = get_batch_index(i),
+    for (index_t ii = 0; ii < n; ++ii) {
+        index_t i = ((ii << 1) | (ii >> (ln - 1))) & ((index_t{1} << ln) - 1);
+        auto hi   = get_batch_index(i),
              hi_next = get_batch_index(i + 1 < n ? i + 1 : i + 1 - vstride);
-        std::optional tracer = ::koqkatoo::trace_logger.trace("solve Hv=g", hi);
-        compact_blas::xadd_neg_copy(d.batch(hi), grad.batch(hi), Mᵀλ.batch(hi),
-                                    Aᵀŷ.batch(hi));
-        // Solve Lᴴ vʹ = g                                          (d ← vʹ)
-        compact_blas::xtrsv_LNN(LH.batch(hi), d.batch(hi), be);
-        auto finish_next =
-            (counters[hi_next].counter.fetch_or(d_prev_ready | hi) & λ_ready) !=
-            0;
-        // std::println("done d {:>2}->{:<2} ({})", hi, hi_next, finish_next);
-        // Solve Lᴴ⁻ᵀ v = vʹ                                        (λ ← Ev)
-        compact_blas::xgemv_T_add(Wᵀ.batch(hi), d.batch(hi), Δλ.batch(hi), be);
-        index_t counter_current = counters[hi].counter.fetch_or(λ_ready);
-        auto finish_current     = (counter_current & d_prev_ready) != 0;
-        // std::println("done λ {:>2} ({}, {})", hi, finish_current,
-        //  counter_current & ~d_prev_ready);
-        tracer.reset();
-        if (finish_next) {
-            compute_rhs(hi, hi_next);
+        {
+            KOQKATOO_TRACE("solve Hv=g", i);
+            compact_blas::xadd_neg_copy(d.batch(hi), grad.batch(hi),
+                                        Mᵀλ.batch(hi), Aᵀŷ.batch(hi));
+            // Solve Lᴴ vʹ = g                                          (d ← vʹ)
+            compact_blas::xtrsv_LNN(LH.batch(hi), d.batch(hi), be);
         }
-        if (finish_current) {
-            index_t hid = counter_current & ~d_prev_ready;
-            compute_rhs(hid, hi);
+
+        auto flags_hi = counters[hi].fetch_or(w_start_flag);
+        // If there's no other thread currently writing the product Vv to Δλ(i)
+        if ((flags_hi & v_flags) != v_start_flag) {
+            compute_Wv(hi);
+            flags_hi = counters[hi].fetch_or(w_done_flag);
+            if ((flags_hi & v_flags) == v_start_flag) {
+                auto hi_prev = flags_hi & ~wv_flags;
+                compute_Vv(hi_prev, hi);
+            }
+        }
+
+        auto flags_hi_next = counters[hi_next].fetch_or(v_start_flag | hi);
+        // If there's no other thread currently writing the product Wv to Δλ(i+1)
+        if ((flags_hi_next & w_flags) != w_start_flag) {
+            compute_Vv(hi, hi_next);
+            flags_hi_next = counters[hi_next].fetch_or(v_done_flag);
+            if ((flags_hi_next & w_flags) == w_start_flag) {
+                compute_Wv(hi_next);
+            }
         }
     }
     // KOQKATOO_OMP(single)
@@ -295,7 +311,7 @@ void CyclicOCPSolver<Abi>::solve_Ψ_work(mut_real_view Δλ,
                 compact_blas::xgemv_sub(Ub.batch(hi), Δλ.batch(hi),
                                         Δλ.batch(hib), be);
             } else {
-                const auto hib = n - 1;
+                const auto hib = get_batch_index(0);
                 compact_blas::xgemv_sub_shift(Ub.batch(hi), Δλ.batch(hi),
                                               Δλ.batch(hib));
             }
@@ -323,7 +339,7 @@ void CyclicOCPSolver<Abi>::solve_Ψ_work(mut_real_view Δλ,
                 compact_blas::xgemv_sub(Ub.batch(hi), Δλ.batch(hi),
                                         Δλ.batch(hib), be);
             } else {
-                const auto hib = n - 1;
+                const auto hib = get_batch_index(0);
                 compact_blas::xgemv_sub_shift(Ub.batch(hi), Δλ.batch(hi),
                                               Δλ.batch(hib));
             }
@@ -332,12 +348,13 @@ void CyclicOCPSolver<Abi>::solve_Ψ_work(mut_real_view Δλ,
 
     // Solve the remaining small tridiagonal system using PCG
     KOQKATOO_OMP(single) {
-        auto r  = work_pcg.batch(0).middle_cols(0, 1),
-             z  = work_pcg.batch(0).middle_cols(1, 1),
-             p  = work_pcg.batch(0).middle_cols(2, 1),
-             Ap = work_pcg.batch(0).middle_cols(3, 1);
-        auto x  = Δλ.batch(n - 1);
-        auto A = LΨd.batch(n - 1), B = Ut.batch(n - 1);
+        auto r     = work_pcg.batch(0).middle_cols(0, 1),
+             z     = work_pcg.batch(0).middle_cols(1, 1),
+             p     = work_pcg.batch(0).middle_cols(2, 1),
+             Ap    = work_pcg.batch(0).middle_cols(3, 1);
+        auto x     = Δλ.batch(get_batch_index(0));
+        auto A     = LΨd.batch(get_batch_index(0)),
+             B     = Ut.batch(get_batch_index(0));
         real_t rᵀz = [&] {
             KOQKATOO_TRACE("solve Ψ pcg", 0);
             compact_blas::xcopy(x, r);
@@ -390,7 +407,7 @@ void CyclicOCPSolver<Abi>::solve_Ψ_work(mut_real_view Δλ,
                 compact_blas::xgemv_T_sub(Ub.batch(hi), Δλ.batch(hib),
                                           Δλ.batch(hi), be);
             } else {
-                const auto hib = n - 1;
+                const auto hib = get_batch_index(0);
                 compact_blas::xgemv_T_sub_shift(Ub.batch(hi), Δλ.batch(hib),
                                                 Δλ.batch(hi));
             }
@@ -418,7 +435,7 @@ void CyclicOCPSolver<Abi>::solve_Ψ_work(mut_real_view Δλ,
                 compact_blas::xgemv_T_sub(Ub.batch(hi), Δλ.batch(hib),
                                           Δλ.batch(hi), be);
             } else {
-                const auto hib = n - 1;
+                const auto hib = get_batch_index(0);
                 compact_blas::xgemv_T_sub_shift(Ub.batch(hi), Δλ.batch(hib),
                                                 Δλ.batch(hi));
             }
