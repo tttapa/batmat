@@ -18,6 +18,7 @@ add_executable(tests
     # "ocp/solve-cyclic.cpp"
     "ocp/test-cyclic-util.cpp"
     "ocp/reference-solution.cpp"
+    # "linalg-compact/test-trmv.cpp"
     "linalg-compact/test-rotate.cpp"
     "linalg-compact/test-gemm.cpp"
     "linalg-compact/test-trsm.cpp"
