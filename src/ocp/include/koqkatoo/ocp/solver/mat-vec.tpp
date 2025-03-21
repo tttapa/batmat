@@ -2,14 +2,14 @@
 
 #include <koqkatoo/ocp/solver/solve.hpp>
 #include <koqkatoo/openmp.h>
-#include <koqkatoo/trace.hpp>
+#include <guanaqo/trace.hpp>
 
 namespace koqkatoo::ocp {
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::mat_vec_transpose_dynamics_constr(real_view λ,
                                                     mut_real_view Mᵀλ) {
-    KOQKATOO_TRACE("mat_vec_transpose_dynamics_constr", 0);
+    GUANAQO_TRACE("mat_vec_transpose_dynamics_constr", 0);
     auto [N, nx, nu, ny, ny_N] = storage.dim;
     assert(λ.depth() == N + 1);
     assert(Mᵀλ.depth() == N + 1);
@@ -29,7 +29,7 @@ void Solver<Abi>::mat_vec_transpose_dynamics_constr(real_view λ,
 template <simd_abi_tag Abi>
 void Solver<Abi>::residual_dynamics_constr(real_view x, real_view b,
                                            mut_real_view Mxb) {
-    KOQKATOO_TRACE("residual_dynamics_constr", 0);
+    GUANAQO_TRACE("residual_dynamics_constr", 0);
     auto [N, nx, nu, ny, ny_N] = storage.dim;
     // mFx = -Ax -Bu
     compact_blas::xgemv_neg(AB(), x.first_layers(N),
@@ -48,14 +48,14 @@ void Solver<Abi>::residual_dynamics_constr(real_view x, real_view b,
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::mat_vec_transpose_constr(real_view y, mut_real_view Aᵀy) {
-    KOQKATOO_TRACE("mat_vec_transpose_constr", 0);
+    GUANAQO_TRACE("mat_vec_transpose_constr", 0);
     // Ax = Cx + Du
     compact_blas::xgemv_T(CD(), y, Aᵀy, settings.preferred_backend);
 }
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::mat_vec_cost_add(real_view x, mut_real_view Qx) {
-    KOQKATOO_TRACE("mat_vec_cost_add", 0);
+    GUANAQO_TRACE("mat_vec_cost_add", 0);
     // Qx += Q * x
     compact_blas::xsymv_add(H(), x, Qx, settings.preferred_backend);
 }
@@ -63,7 +63,7 @@ void Solver<Abi>::mat_vec_cost_add(real_view x, mut_real_view Qx) {
 template <simd_abi_tag Abi>
 void Solver<Abi>::cost_gradient(real_view x, real_view q,
                                 mut_real_view grad_f) {
-    KOQKATOO_TRACE("cost_gradient", 0);
+    GUANAQO_TRACE("cost_gradient", 0);
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < H().num_batches(); ++i) {
         compact_blas::xcopy(q.batch(i), grad_f.batch(i));
@@ -75,7 +75,7 @@ void Solver<Abi>::cost_gradient(real_view x, real_view q,
 template <simd_abi_tag Abi>
 void Solver<Abi>::cost_gradient_regularized(real_t S, real_view x, real_view x0,
                                             real_view q, mut_real_view grad_f) {
-    KOQKATOO_TRACE("cost_gradient_regularized", 0);
+    GUANAQO_TRACE("cost_gradient_regularized", 0);
     assert(x.depth() == x0.depth());
     assert(x.depth() == q.depth());
     assert(x.depth() == grad_f.depth());
@@ -108,7 +108,7 @@ template <simd_abi_tag Abi>
 void Solver<Abi>::cost_gradient_remove_regularization(real_t S, real_view x,
                                                       real_view x0,
                                                       mut_real_view grad_f) {
-    KOQKATOO_TRACE("cost_gradient_remove_regularization", 0);
+    GUANAQO_TRACE("cost_gradient_remove_regularization", 0);
     assert(x.depth() == x0.depth());
     assert(x.depth() == grad_f.depth());
     assert(x.rows() == x0.rows());

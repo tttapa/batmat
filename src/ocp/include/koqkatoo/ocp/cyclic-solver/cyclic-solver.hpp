@@ -6,7 +6,6 @@
 #include <koqkatoo/ocp/ocp.hpp>
 #include <koqkatoo/ocp/random-ocp.hpp>
 #include <koqkatoo/openmp.h>
-#include <koqkatoo/trace.hpp>
 
 #include <experimental/simd>
 #include <atomic>

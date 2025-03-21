@@ -12,7 +12,7 @@
 #include <koqkatoo/ocp/solver/solve.hpp>
 #include <koqkatoo/openmp.h>
 #include <koqkatoo/thread-pool.hpp>
-#include <koqkatoo/trace.hpp>
+#include <guanaqo/trace.hpp>
 #include <koqkatoo-version.h>
 
 #include <guanaqo/eigen/span.hpp>
@@ -72,9 +72,9 @@ void solve_cyclic(const koqkatoo::ocp::LinearOCPStorage &ocp, real_t S,
             KOQKATOO_OMP(single)
             solver.template unpack_dyn<real_t>(Δλb, Mxb);
             solver.mat_vec_constr_tp(ŷb, Aᵀŷb);
-#if KOQKATOO_WITH_TRACING
+#if GUANAQO_WITH_TRACING
             KOQKATOO_OMP(single)
-            koqkatoo::trace_logger.reset();
+            guanaqo::trace_logger.reset();
 #endif
             solver.compute_Ψ(S, Σb, Jb);
             solver.factor_Ψ();
@@ -95,7 +95,7 @@ TEST_P(OCPCyclic, solve) {
     KOQKATOO_OMP_IF(omp_set_num_threads(n_threads));
     koqkatoo::pool_set_num_threads(n_threads);
     koqkatoo::fork_set_num_threads(n_threads);
-    KOQKATOO_IF_ITT(koqkatoo::foreach_thread([](index_t i, index_t) {
+    GUANAQO_IF_ITT(koqkatoo::foreach_thread([](index_t i, index_t) {
         __itt_thread_set_name(std::format("OMP({})", i).c_str());
     }));
 
@@ -157,13 +157,13 @@ TEST_P(OCPCyclic, solve) {
                      as_span(λ), as_span(b), as_span(ŷ), as_span(Mxb),
                      as_span(Mᵀλ), as_span(Aᵀŷ), as_span(d), as_span(Δλ),
                      as_span(MᵀΔλ), use_pcg);
-#if KOQKATOO_WITH_TRACING
-    koqkatoo::trace_logger.reset();
+#if GUANAQO_WITH_TRACING
+    guanaqo::trace_logger.reset();
 #endif
     solve_cyclic(ocp, S, as_span(Σ), as_span(J), as_span(x), as_span(grad),
                  as_span(λ), as_span(b), as_span(ŷ), as_span(Mxb), as_span(Mᵀλ),
                  as_span(Aᵀŷ), as_span(d), as_span(Δλ), as_span(MᵀΔλ), use_pcg);
-#if KOQKATOO_WITH_TRACING
+#if GUANAQO_WITH_TRACING
     {
         const auto [N, nx, nu, ny, ny_N] = ocp.dim;
         std::string name                 = std::format("factor_cyclic.csv");
@@ -175,7 +175,7 @@ TEST_P(OCPCyclic, solve) {
         std::filesystem::create_directories(out_dir);
         std::ofstream csv{out_dir / name};
         koqkatoo::TraceLogger::write_column_headings(csv) << '\n';
-        for (const auto &log : koqkatoo::trace_logger.get_logs())
+        for (const auto &log : guanaqo::trace_logger.get_logs())
             csv << log << '\n';
         std::cout << out_dir << std::endl;
     }

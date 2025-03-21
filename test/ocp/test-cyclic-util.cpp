@@ -8,7 +8,7 @@
 #include <koqkatoo/ocp/ocp.hpp>
 #include <koqkatoo/ocp/random-ocp.hpp>
 #include <koqkatoo/openmp.h>
-#include <koqkatoo/trace.hpp>
+#include <guanaqo/trace.hpp>
 
 #include <experimental/simd>
 #include <guanaqo/print.hpp>
@@ -268,7 +268,7 @@ void CyclicOCPSolver
     KOQKATOO_OMP(parallel) {
         KOQKATOO_OMP(for schedule(static, 1))
         for (index_t i = 0; i < n; ++i) {
-            KOQKATOO_TRACE("factor prep", i);
+            GUANAQO_TRACE("factor prep", i);
             const auto hi = get_batch_index(i);
             compact_blas::xcopy(AB.batch(hi), V.batch(hi));
             // Compute H = Hℓ + GᵀΣJ G + Γ⁻¹
@@ -314,7 +314,7 @@ void CyclicOCPSolver
         // Subtract VVᵀ from diagonal
         KOQKATOO_OMP(for schedule(static, 1))
         for (index_t i = 0; i < n; ++i) {
-            KOQKATOO_TRACE("build Ψ", i);
+            GUANAQO_TRACE("build Ψ", i);
             const auto hi = get_batch_index(i);
             if (i + 1 < n) {
                 const auto hi_next = get_batch_index(i + 1);
@@ -343,7 +343,7 @@ void CyclicOCPSolver
             PRINTLN("Level {}\n  offset={:<2}, width={}", l, offset, width);
             KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < n; i += 2 * offset) {
-                KOQKATOO_TRACE("factor Ψ", i);
+                GUANAQO_TRACE("factor Ψ", i);
                 // Parity within the current level
                 const auto even    = (get_index_in_level(i) & 1) == 0;
                 const auto mod4    = get_index_in_level(i) & 3;
@@ -386,7 +386,7 @@ void CyclicOCPSolver
             KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < n; i += 2 * offset) {
                 {
-                    KOQKATOO_TRACE("factor Ψ YY", i);
+                    GUANAQO_TRACE("factor Ψ YY", i);
                     // Parity within the current level
                     const auto odd = (get_index_in_level(i) & 1) != 0;
                     // Batch index of the current column
@@ -418,7 +418,7 @@ void CyclicOCPSolver
                 }
                 if (last_level && i == offset) {
                     PRINTLN("Level {}\n\n===\n", ln);
-                    KOQKATOO_TRACE("factor Ψ", 0);
+                    GUANAQO_TRACE("factor Ψ", 0);
                     compact_blas::xpotrf(LΨd.batch(n - 1), be);
                 }
             }
@@ -428,7 +428,7 @@ void CyclicOCPSolver
         if (ln == 0) {
             KOQKATOO_OMP(single) {
                 PRINTLN("Level {}\n\n===\n", ln);
-                KOQKATOO_TRACE("factor Ψ", 0);
+                GUANAQO_TRACE("factor Ψ", 0);
                 compact_blas::xpotrf(LΨd.batch(n - 1), be);
             }
         }
@@ -450,7 +450,7 @@ void CyclicOCPSolver
             PRINTLN("Level {}\n  offset={:<2}, width={}", l, offset, width);
             KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < n; i += 2 * offset) {
-                KOQKATOO_TRACE("solve ψ fwd", i);
+                GUANAQO_TRACE("solve ψ fwd", i);
                 // Parity within the current level
                 const auto even = (get_index_in_level(i) & 1) == 0;
                 // Batch index of the current column
@@ -487,7 +487,7 @@ void CyclicOCPSolver
             PRINTLN("\n---\n");
             KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < n; i += 2 * offset) {
-                KOQKATOO_TRACE("solve ψ fwd 2", i);
+                GUANAQO_TRACE("solve ψ fwd 2", i);
                 // Parity within the current level
                 const auto odd = (get_index_in_level(i) & 1) != 0;
                 // Batch index of the current column
@@ -530,7 +530,7 @@ void CyclicOCPSolver
             auto x  = Δλ.batch(n - 1);
             auto A = LΨd.batch(n - 1), B = Ut.batch(n - 1);
             real_t rᵀz = [&] {
-                KOQKATOO_TRACE("solve Ψ pcg", 0);
+                GUANAQO_TRACE("solve Ψ pcg", 0);
                 compact_blas::xcopy(x, r);
                 compact_blas::xfill(0, x);
                 real_t rᵀz = mul_precond(r, z, Ap, A, B);
@@ -547,7 +547,7 @@ void CyclicOCPSolver
 #endif
 
             for (index_t it = 0; it < 20; ++it) {
-                KOQKATOO_TRACE("solve Ψ pcg", it + 1);
+                GUANAQO_TRACE("solve Ψ pcg", it + 1);
                 real_t pᵀAp = mul_A(p, Ap, A, B);
                 real_t α    = rᵀz / pᵀAp;
                 compact_blas::xaxpy(+α, p, x);
@@ -571,7 +571,7 @@ void CyclicOCPSolver
             PRINTLN("Level {}\n  offset={:<2}, width={}", l, offset, width);
             KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < n; i += 2 * offset) {
-                KOQKATOO_TRACE("solve ψ rev 2", 0);
+                GUANAQO_TRACE("solve ψ rev 2", 0);
                 // Parity within the current level
                 const auto odd = (get_index_in_level(i) & 1) != 0;
                 // Batch index of the current column
@@ -606,7 +606,7 @@ void CyclicOCPSolver
             PRINTLN("\n---\n");
             KOQKATOO_OMP(for schedule(static, 1))
             for (index_t i = offset; i < n; i += 2 * offset) {
-                KOQKATOO_TRACE("solve ψ rev", i);
+                GUANAQO_TRACE("solve ψ rev", i);
                 // Parity within the current level
                 const auto even = (get_index_in_level(i) & 1) == 0;
                 // Batch index of the current column
@@ -651,7 +651,7 @@ void CyclicOCPSolver
 #include <koqkatoo/linalg-compact/mkl.hpp>
 #include <koqkatoo/openmp.h>
 #include <koqkatoo/thread-pool.hpp>
-#include <koqkatoo/trace.hpp>
+#include <guanaqo/trace.hpp>
 #include <guanaqo/eigen/span.hpp>
 #include <koqkatoo-version.h>
 
@@ -716,7 +716,7 @@ TEST(CyclicUtil, heapIndex) {
     KOQKATOO_OMP_IF(omp_set_num_threads(n_threads));
     koqkatoo::pool_set_num_threads(n_threads);
     koqkatoo::fork_set_num_threads(n_threads);
-    KOQKATOO_IF_ITT(koqkatoo::foreach_thread([](index_t i, index_t) {
+    GUANAQO_IF_ITT(koqkatoo::foreach_thread([](index_t i, index_t) {
         __itt_thread_set_name(std::format("OMP({})", i).c_str());
     }));
 
@@ -815,8 +815,8 @@ TEST(CyclicUtil, heapIndex) {
         solver.solve_Ψ(Δλb);
     }
 
-#if KOQKATOO_WITH_TRACING
-    koqkatoo::trace_logger.reset();
+#if GUANAQO_WITH_TRACING
+    guanaqo::trace_logger.reset();
 #endif
 
 #if DO_PRINT
@@ -873,7 +873,7 @@ TEST(CyclicUtil, heapIndex) {
     EXPECT_THAT(Δλ, EigenAlmostEqual(Δλ_ref, ε * 1e7));
     std::cout << (Δλ - Δλ_ref).template lpNorm<Eigen::Infinity>() << std::endl;
 
-#if KOQKATOO_WITH_TRACING
+#if GUANAQO_WITH_TRACING
     {
         const auto [N, nx, nu, ny, ny_N] = ocp.dim;
         std::string name                 = std::format("factor_cyclic.csv");
@@ -885,7 +885,7 @@ TEST(CyclicUtil, heapIndex) {
         std::filesystem::create_directories(out_dir);
         std::ofstream csv{out_dir / name};
         koqkatoo::TraceLogger::write_column_headings(csv) << '\n';
-        for (const auto &log : koqkatoo::trace_logger.get_logs())
+        for (const auto &log : guanaqo::trace_logger.get_logs())
             csv << log << '\n';
         std::cout << out_dir << std::endl;
     }

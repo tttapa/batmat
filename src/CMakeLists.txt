@@ -5,13 +5,6 @@ if (KOQKATOO_WITH_OPENMP)
     find_package(OpenMP REQUIRED COMPONENTS CXX)
 endif()
 
-if (KOQKATOO_WITH_ITT)
-    if (DEFINED ENV{VTUNE_PROFILER_DIR})
-        list(PREPEND CMAKE_FIND_ROOT_PATH "$ENV{VTUNE_PROFILER_DIR}")
-    endif()
-    find_package(ITT MODULE REQUIRED)
-endif()
-
 # Configuration options
 # ------------------------------------------------------------------------------
 add_library(config INTERFACE)
@@ -38,20 +31,17 @@ add_library(koqkatoo
 )
 target_sources(koqkatoo PUBLIC FILE_SET headers TYPE HEADERS
     BASE_DIRS "koqkatoo/include"
-    FILES "koqkatoo/include/koqkatoo/kib.hpp"
+    FILES "koqkatoo/include/koqkatoo/assume.hpp"
+          "koqkatoo/include/koqkatoo/kib.hpp"
           "koqkatoo/include/koqkatoo/koqkatoo.hpp"
           "koqkatoo/include/koqkatoo/cneg.hpp"
           "koqkatoo/include/koqkatoo/fork-pool.hpp"
           "koqkatoo/include/koqkatoo/lut.hpp"
           "koqkatoo/include/koqkatoo/matrix-view.hpp"
-          "koqkatoo/include/koqkatoo/assume.hpp"
           "koqkatoo/include/koqkatoo/loop.hpp"
           "koqkatoo/include/koqkatoo/openmp.h"
-          "koqkatoo/include/koqkatoo/preprocessor.h"
-          "koqkatoo/include/koqkatoo/stringify.h"
           "koqkatoo/include/koqkatoo/thread-pool.hpp"
           "koqkatoo/include/koqkatoo/timing.hpp"
-          "koqkatoo/include/koqkatoo/trace.hpp"
           "koqkatoo/include/koqkatoo/unroll.h"
 )
 target_link_libraries(koqkatoo PUBLIC koqkatoo::config guanaqo::guanaqo)
@@ -61,9 +51,6 @@ if (KOQKATOO_WITH_OPENMP)
 endif()
 if (KOQKATOO_WITH_ITT)
     target_link_libraries(koqkatoo PUBLIC ITT::ITT)
-endif()
-if (KOQKATOO_WITH_TRACING OR KOQKATOO_WITH_ITT)
-    target_sources(koqkatoo PRIVATE "koqkatoo/src/trace.cpp")
 endif()
 if (KOQKATOO_WITH_LIBFORK)
     find_package(libfork CONFIG REQUIRED)

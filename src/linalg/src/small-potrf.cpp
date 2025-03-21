@@ -4,7 +4,7 @@
 
 #include <koqkatoo/loop.hpp>
 #include <koqkatoo/lut.hpp>
-#include <koqkatoo/trace.hpp>
+#include <guanaqo/trace.hpp>
 #include <koqkatoo/unroll.h>
 
 #include <experimental/simd>
@@ -197,7 +197,7 @@ void small_potrf(real_t *L, index_t ldL, index_t m, index_t N, index_t n) {
                                               n * (n - 1) / 2 + 2 * n,
                                 op_cnt_trsm = n * (n + 1) * (m - n) / 2,
                                 op_cnt_syrk = (N - n) * (N - n + 1) * n / 2;
-    KOQKATOO_TRACE("xpotrf_small", 0, op_cnt_chol + op_cnt_trsm + op_cnt_syrk);
+    GUANAQO_TRACE("xpotrf_small", 0, op_cnt_chol + op_cnt_trsm + op_cnt_syrk);
 
     // Compute the Cholesky factorization of the very last block (right before
     // the Schur complement block), which has size r×r rather than R×R.

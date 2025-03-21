@@ -25,7 +25,7 @@ void CompactBLAS<Abi>::xtrtri_ref(mut_single_batch_view L) {
     [[maybe_unused]] const auto //
         op_cnt_trtri = n * (n - 1) * (n - 2) / 6 + n * (n - 1) + n,
         op_cnt_trmm  = n * (n - 1) * (m - n) / 2 + n * (m - n);
-    KOQKATOO_TRACE("xtrtri", 0, (op_cnt_trtri + op_cnt_trmm) * L.depth());
+    GUANAQO_TRACE("xtrtri", 0, (op_cnt_trtri + op_cnt_trmm) * L.depth());
     static constexpr index_t R               = micro_kernels::trtri::RowsReg;
     mut_single_batch_matrix_accessor<Abi> L_ = L;
     foreach_chunked(
@@ -61,7 +61,7 @@ void CompactBLAS<Abi>::xtrtri_copy_ref(single_batch_view Lin,
     [[maybe_unused]] const auto //
         op_cnt_trtri = n * (n - 1) * (n - 2) / 6 + n * (n - 1) + n,
         op_cnt_trmm  = n * (n - 1) * (m - n) / 2 + n * (m - n);
-    KOQKATOO_TRACE("xtrtri_copy", 0, (op_cnt_trtri + op_cnt_trmm) * L.depth());
+    GUANAQO_TRACE("xtrtri_copy", 0, (op_cnt_trtri + op_cnt_trmm) * L.depth());
     static constexpr index_t R               = micro_kernels::trtri::RowsReg;
     single_batch_matrix_accessor<Abi> Lin_   = Lin;
     mut_single_batch_matrix_accessor<Abi> L_ = L;
@@ -137,7 +137,7 @@ void CompactBLAS<Abi>::xtrtri(mut_single_batch_view L, PreferredBackend b) {
             [[maybe_unused]] const auto //
                 op_cnt_trtri = n * (n - 1) * (n - 2) / 6 + n * (n - 1) + n,
                 op_cnt_trmm  = n * (n - 1) * (m - n) / 2 + n * (m - n);
-            KOQKATOO_TRACE("xtrtri_blas", 0,
+            GUANAQO_TRACE("xtrtri_blas", 0,
                            (op_cnt_trtri + op_cnt_trmm) * L.depth());
             linalg::xtrtri("L", "N", n, L.data, L.outer_stride(), &info);
             lapack_throw_on_err("xtrtri", info);
@@ -164,7 +164,7 @@ void CompactBLAS<Abi>::xtrtri_copy(single_batch_view Lin,
             [[maybe_unused]] const auto //
                 op_cnt_trtri = n * (n - 1) * (n - 2) / 6 + n * (n - 1) + n,
                 op_cnt_trmm  = n * (n - 1) * (m - n) / 2 + n * (m - n);
-            KOQKATOO_TRACE("xtrtri_copy_blas", 0,
+            GUANAQO_TRACE("xtrtri_copy_blas", 0,
                            (op_cnt_trtri + op_cnt_trmm) * L.depth());
             L = Lin;
             linalg::xtrtri("L", "N", n, L.data, L.outer_stride(), &info);

@@ -4,7 +4,7 @@
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
 #include <koqkatoo/loop.hpp>
-#include <koqkatoo/trace.hpp>
+#include <guanaqo/trace.hpp>
 
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xgemm.hpp>
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xtrmm.hpp>
@@ -25,7 +25,7 @@ static constexpr index_t GemmBlockSizeCols = 48;
 template <class Abi>
 void CompactBLAS<Abi>::xgemm_ref(single_batch_view A, single_batch_view B,
                                  mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemm", 0, A.rows() * A.cols() * B.cols() * A.depth());
+    GUANAQO_TRACE("xgemm", 0, A.rows() * A.cols() * B.cols() * A.depth());
     assert(A.rows() == C.rows());
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
@@ -46,7 +46,7 @@ void CompactBLAS<Abi>::xgemm_ref(single_batch_view A, single_batch_view B,
 template <class Abi>
 void CompactBLAS<Abi>::xgemv_ref(single_batch_view A, single_batch_view B,
                                  mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemv", 0, A.rows() * A.cols() * B.cols() * A.depth());
+    GUANAQO_TRACE("xgemv", 0, A.rows() * A.cols() * B.cols() * A.depth());
     assert(A.rows() == C.rows());
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
@@ -68,7 +68,7 @@ void CompactBLAS<Abi>::xgemv_ref(single_batch_view A, single_batch_view B,
 template <class Abi>
 void CompactBLAS<Abi>::xgemm_neg_ref(single_batch_view A, single_batch_view B,
                                      mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemm_neg", 0, A.rows() * A.cols() * B.cols() * A.depth());
+    GUANAQO_TRACE("xgemm_neg", 0, A.rows() * A.cols() * B.cols() * A.depth());
     assert(A.rows() == C.rows());
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
@@ -90,7 +90,7 @@ template <class Abi>
 void CompactBLAS<Abi>::xgemm_NT_neg_ref(single_batch_view A,
                                         single_batch_view B,
                                         mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemm_NT_neg", 0,
+    GUANAQO_TRACE("xgemm_NT_neg", 0,
                    A.rows() * A.cols() * B.rows() * A.depth());
     assert(A.rows() == C.rows());
     assert(A.cols() == B.cols());
@@ -113,7 +113,7 @@ void CompactBLAS<Abi>::xgemm_NT_neg_ref(single_batch_view A,
 template <class Abi>
 void CompactBLAS<Abi>::xgemv_neg_ref(single_batch_view A, single_batch_view B,
                                      mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemv_neg", 0, A.rows() * A.cols() * B.cols() * A.depth());
+    GUANAQO_TRACE("xgemv_neg", 0, A.rows() * A.cols() * B.cols() * A.depth());
     assert(A.rows() == C.rows());
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
@@ -137,7 +137,7 @@ void CompactBLAS<Abi>::xtrmm_RLNN_neg_ref(single_batch_view A,
                                           single_batch_view B,
                                           mut_single_batch_view C) {
     [[maybe_unused]] auto [m, M] = std::minmax({B.rows(), B.cols()});
-    KOQKATOO_TRACE("xtrmm_RLNN_neg", 0,
+    GUANAQO_TRACE("xtrmm_RLNN_neg", 0,
                    (m * (m + 1) / 2 + (M - m) * m) * A.rows() * A.depth());
     assert(A.rows() == C.rows());
     assert(A.cols() == B.rows());
@@ -182,7 +182,7 @@ void CompactBLAS<Abi>::xtrmm_RLNN_neg_ref(single_batch_view A,
 template <class Abi>
 void CompactBLAS<Abi>::xgemm_add_ref(single_batch_view A, single_batch_view B,
                                      mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemm_add", 0, A.rows() * A.cols() * B.cols() * A.depth());
+    GUANAQO_TRACE("xgemm_add", 0, A.rows() * A.cols() * B.cols() * A.depth());
     static constexpr micro_kernels::gemm::KernelConfig conf{.negate = false};
     assert(A.rows() == C.rows());
     assert(A.cols() == B.rows());
@@ -272,7 +272,7 @@ void CompactBLAS<Abi>::xgemm_add_ref(single_batch_view A, single_batch_view B,
 template <class Abi>
 void CompactBLAS<Abi>::xgemm_sub_ref(single_batch_view A, single_batch_view B,
                                      mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemm_sub", 0, A.rows() * A.cols() * B.cols() * A.depth());
+    GUANAQO_TRACE("xgemm_sub", 0, A.rows() * A.cols() * B.cols() * A.depth());
     assert(A.rows() == C.rows());
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
@@ -291,7 +291,7 @@ void CompactBLAS<Abi>::xgemm_sub_ref(single_batch_view A, single_batch_view B,
 template <class Abi>
 void CompactBLAS<Abi>::xgemv_sub_shift(single_batch_view A, single_batch_view B,
                                        mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemv_sub_shift", 0,
+    GUANAQO_TRACE("xgemv_sub_shift", 0,
                    A.rows() * A.cols() * B.cols() * (A.depth() - 1));
     assert(A.rows() == C.rows());
     assert(A.cols() == B.rows());
@@ -313,7 +313,7 @@ void CompactBLAS<Abi>::xgemv_sub_shift(single_batch_view A, single_batch_view B,
 template <class Abi>
 void CompactBLAS<Abi>::xgemv_sub_ref(single_batch_view A, single_batch_view B,
                                      mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemv_sub", 0, A.rows() * A.cols() * B.cols() * A.depth());
+    GUANAQO_TRACE("xgemv_sub", 0, A.rows() * A.cols() * B.cols() * A.depth());
     assert(A.rows() == C.rows());
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
@@ -334,7 +334,7 @@ template <class Abi>
 void CompactBLAS<Abi>::xgemm_TN_sub_ref(single_batch_view A,
                                         single_batch_view B,
                                         mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemm_TN_sub", 0,
+    GUANAQO_TRACE("xgemm_TN_sub", 0,
                    A.cols() * A.rows() * B.cols() * A.depth());
     assert(A.cols() == C.rows());
     assert(A.rows() == B.rows());
@@ -356,7 +356,7 @@ template <class Abi>
 void CompactBLAS<Abi>::xgemm_TN_neg_ref(single_batch_view A,
                                         single_batch_view B,
                                         mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemm_TN_neg", 0,
+    GUANAQO_TRACE("xgemm_TN_neg", 0,
                    A.cols() * A.rows() * B.cols() * A.depth());
     assert(A.cols() == C.rows());
     assert(A.rows() == B.rows());
@@ -381,7 +381,7 @@ template <class Abi>
 void CompactBLAS<Abi>::xgemm_TT_neg_ref(single_batch_view A,
                                         single_batch_view B,
                                         mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemm_TT_neg", 0,
+    GUANAQO_TRACE("xgemm_TT_neg", 0,
                    A.cols() * A.rows() * B.rows() * A.depth());
     assert(A.cols() == C.rows());
     assert(A.rows() == B.cols());
@@ -405,7 +405,7 @@ void CompactBLAS<Abi>::xgemm_TT_neg_ref(single_batch_view A,
 template <class Abi>
 void CompactBLAS<Abi>::xgemv_T_sub_ref(single_batch_view A, single_batch_view B,
                                        mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemv_T_sub", 0,
+    GUANAQO_TRACE("xgemv_T_sub", 0,
                    A.cols() * A.rows() * B.cols() * A.depth());
     assert(A.cols() == C.rows());
     assert(A.rows() == B.rows());
@@ -428,7 +428,7 @@ template <class Abi>
 void CompactBLAS<Abi>::xgemv_T_add_shift(single_batch_view A,
                                          single_batch_view B,
                                          mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemv_T_add_shift", 0,
+    GUANAQO_TRACE("xgemv_T_add_shift", 0,
                    A.cols() * A.rows() * B.cols() * (A.depth() - 1));
     assert(A.cols() == C.rows());
     assert(A.rows() == B.rows());
@@ -451,7 +451,7 @@ template <class Abi>
 void CompactBLAS<Abi>::xgemv_T_sub_shift(single_batch_view A,
                                          single_batch_view B,
                                          mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemv_T_sub_shift", 0,
+    GUANAQO_TRACE("xgemv_T_sub_shift", 0,
                    A.cols() * A.rows() * B.cols() * (A.depth() - 1));
     assert(A.cols() == C.rows());
     assert(A.rows() == B.rows());
@@ -473,7 +473,7 @@ void CompactBLAS<Abi>::xgemv_T_sub_shift(single_batch_view A,
 template <class Abi>
 void CompactBLAS<Abi>::xgemv_T_add_ref(single_batch_view A, single_batch_view B,
                                        mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemv_T_add", 0,
+    GUANAQO_TRACE("xgemv_T_add", 0,
                    A.cols() * A.rows() * B.cols() * A.depth());
     assert(A.cols() == C.rows());
     assert(A.rows() == B.rows());
@@ -494,7 +494,7 @@ void CompactBLAS<Abi>::xgemv_T_add_ref(single_batch_view A, single_batch_view B,
 template <class Abi>
 void CompactBLAS<Abi>::xgemm_TN_ref(single_batch_view A, single_batch_view B,
                                     mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemm_TN", 0, A.cols() * A.rows() * B.cols() * A.depth());
+    GUANAQO_TRACE("xgemm_TN", 0, A.cols() * A.rows() * B.cols() * A.depth());
     assert(A.cols() == C.rows());
     assert(A.rows() == B.rows());
     assert(B.cols() == C.cols());
@@ -517,7 +517,7 @@ void CompactBLAS<Abi>::xgemm_TN_ref(single_batch_view A, single_batch_view B,
 template <class Abi>
 void CompactBLAS<Abi>::xgemv_T_ref(single_batch_view A, single_batch_view B,
                                    mut_single_batch_view C) {
-    KOQKATOO_TRACE("xgemv_T", 0, A.cols() * A.rows() * B.cols() * A.depth());
+    GUANAQO_TRACE("xgemv_T", 0, A.cols() * A.rows() * B.cols() * A.depth());
     assert(A.cols() == C.rows());
     assert(A.rows() == B.rows());
     assert(B.cols() == C.cols());
@@ -551,7 +551,7 @@ void CompactBLAS<Abi>::xgemm(batch_view A, batch_view B, mut_batch_view C,
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && A.has_full_layer_stride() &&
             B.has_full_layer_stride() && C.has_full_layer_stride()) {
-            KOQKATOO_TRACE("xgemm_mkl_compact", 0,
+            GUANAQO_TRACE("xgemm_mkl_compact", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             xgemm_compact(
                 MKL_COL_MAJOR, MKL_NOTRANS, MKL_NOTRANS, A.rows(), B.cols(),
@@ -563,7 +563,7 @@ void CompactBLAS<Abi>::xgemm(batch_view A, batch_view B, mut_batch_view C,
     })
     if constexpr (std::same_as<Abi, scalar_abi>) {
         if (use_mkl_batched(b)) {
-            KOQKATOO_TRACE("xgemm_batched", 0,
+            GUANAQO_TRACE("xgemm_batched", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             linalg::xgemm_batch_strided(
                 CblasColMajor, CblasNoTrans, CblasNoTrans, A.rows(), B.cols(),
@@ -590,7 +590,7 @@ void CompactBLAS<Abi>::xgemv(batch_view A, batch_view B, mut_batch_view C,
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && A.has_full_layer_stride() &&
             B.has_full_layer_stride() && C.has_full_layer_stride()) {
-            KOQKATOO_TRACE("xgemv_mkl_compact", 0,
+            GUANAQO_TRACE("xgemv_mkl_compact", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             xgemm_compact(
                 MKL_COL_MAJOR, MKL_NOTRANS, MKL_NOTRANS, A.rows(), B.cols(),
@@ -602,7 +602,7 @@ void CompactBLAS<Abi>::xgemv(batch_view A, batch_view B, mut_batch_view C,
     })
     if constexpr (std::same_as<Abi, scalar_abi>) {
         if (use_mkl_batched(b)) {
-            KOQKATOO_TRACE("xgemv_batched", 0,
+            GUANAQO_TRACE("xgemv_batched", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             linalg::xgemv_batch_strided(
                 CblasColMajor, CblasNoTrans, A.rows(), A.cols(), real_t{1},
@@ -628,7 +628,7 @@ void CompactBLAS<Abi>::xgemm_neg(batch_view A, batch_view B, mut_batch_view C,
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && A.has_full_layer_stride() &&
             B.has_full_layer_stride() && C.has_full_layer_stride()) {
-            KOQKATOO_TRACE("xgemm_neg_mkl_compact", 0,
+            GUANAQO_TRACE("xgemm_neg_mkl_compact", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             xgemm_compact(
                 MKL_COL_MAJOR, MKL_NOTRANS, MKL_NOTRANS, A.rows(), B.cols(),
@@ -640,7 +640,7 @@ void CompactBLAS<Abi>::xgemm_neg(batch_view A, batch_view B, mut_batch_view C,
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b)) {
-            KOQKATOO_TRACE("xgemm_neg_batched", 0,
+            GUANAQO_TRACE("xgemm_neg_batched", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             linalg::xgemm_batch_strided(
                 CblasColMajor, CblasNoTrans, CblasNoTrans, A.rows(), B.cols(),
@@ -666,7 +666,7 @@ void CompactBLAS<Abi>::xgemm_NT_neg(batch_view A, batch_view B,
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && A.has_full_layer_stride() &&
             B.has_full_layer_stride() && C.has_full_layer_stride()) {
-            KOQKATOO_TRACE("xgemm_NT_neg_mkl_compact", 0,
+            GUANAQO_TRACE("xgemm_NT_neg_mkl_compact", 0,
                            A.rows() * A.cols() * B.rows() * A.depth());
             xgemm_compact(
                 MKL_COL_MAJOR, MKL_NOTRANS, MKL_TRANS, A.rows(), B.rows(),
@@ -678,7 +678,7 @@ void CompactBLAS<Abi>::xgemm_NT_neg(batch_view A, batch_view B,
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b)) {
-            KOQKATOO_TRACE("xgemm_NT_neg_batched", 0,
+            GUANAQO_TRACE("xgemm_NT_neg_batched", 0,
                            A.rows() * A.cols() * B.rows() * A.depth());
             linalg::xgemm_batch_strided(
                 CblasColMajor, CblasNoTrans, CblasTrans, A.rows(), B.rows(),
@@ -705,7 +705,7 @@ void CompactBLAS<Abi>::xgemv_neg(batch_view A, batch_view B, mut_batch_view C,
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && A.has_full_layer_stride() &&
             B.has_full_layer_stride() && C.has_full_layer_stride()) {
-            KOQKATOO_TRACE("xgemv_neg_mkl_compact", 0,
+            GUANAQO_TRACE("xgemv_neg_mkl_compact", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             xgemm_compact(
                 MKL_COL_MAJOR, MKL_NOTRANS, MKL_NOTRANS, A.rows(), B.cols(),
@@ -717,7 +717,7 @@ void CompactBLAS<Abi>::xgemv_neg(batch_view A, batch_view B, mut_batch_view C,
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b)) {
-            KOQKATOO_TRACE("xgemv_neg_batched", 0,
+            GUANAQO_TRACE("xgemv_neg_batched", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             linalg::xgemv_batch_strided(
                 CblasColMajor, CblasNoTrans, A.rows(), B.cols(), real_t{-1},
@@ -756,7 +756,7 @@ void CompactBLAS<Abi>::xgemm_add(batch_view A, batch_view B, mut_batch_view C,
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && A.has_full_layer_stride() &&
             B.has_full_layer_stride() && C.has_full_layer_stride()) {
-            KOQKATOO_TRACE("xgemm_add_mkl_compact", 0,
+            GUANAQO_TRACE("xgemm_add_mkl_compact", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             xgemm_compact(
                 MKL_COL_MAJOR, MKL_NOTRANS, MKL_NOTRANS, A.rows(), B.cols(),
@@ -768,7 +768,7 @@ void CompactBLAS<Abi>::xgemm_add(batch_view A, batch_view B, mut_batch_view C,
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b)) {
-            KOQKATOO_TRACE("xgemm_add_batched", 0,
+            GUANAQO_TRACE("xgemm_add_batched", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             linalg::xgemm_batch_strided(
                 CblasColMajor, CblasNoTrans, CblasNoTrans, A.rows(), B.cols(),
@@ -800,7 +800,7 @@ void CompactBLAS<Abi>::xgemm_sub(batch_view A, batch_view B, mut_batch_view C,
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && A.has_full_layer_stride() &&
             B.has_full_layer_stride() && C.has_full_layer_stride()) {
-            KOQKATOO_TRACE("xgemm_sub_mkl_compact", 0,
+            GUANAQO_TRACE("xgemm_sub_mkl_compact", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             xgemm_compact(
                 MKL_COL_MAJOR, MKL_NOTRANS, MKL_NOTRANS, A.rows(), B.cols(),
@@ -812,7 +812,7 @@ void CompactBLAS<Abi>::xgemm_sub(batch_view A, batch_view B, mut_batch_view C,
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b)) {
-            KOQKATOO_TRACE("xgemm_sub_batched", 0,
+            GUANAQO_TRACE("xgemm_sub_batched", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             linalg::xgemm_batch_strided(
                 CblasColMajor, CblasNoTrans, CblasNoTrans, A.rows(), B.cols(),
@@ -839,7 +839,7 @@ void CompactBLAS<Abi>::xgemv_sub(batch_view A, batch_view B, mut_batch_view C,
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && A.has_full_layer_stride() &&
             B.has_full_layer_stride() && C.has_full_layer_stride()) {
-            KOQKATOO_TRACE("xgemv_sub_mkl_compact", 0,
+            GUANAQO_TRACE("xgemv_sub_mkl_compact", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             xgemm_compact(
                 MKL_COL_MAJOR, MKL_NOTRANS, MKL_NOTRANS, A.rows(), B.cols(),
@@ -851,7 +851,7 @@ void CompactBLAS<Abi>::xgemv_sub(batch_view A, batch_view B, mut_batch_view C,
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b)) {
-            KOQKATOO_TRACE("xgemv_sub_batched", 0,
+            GUANAQO_TRACE("xgemv_sub_batched", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             linalg::xgemv_batch_strided(
                 CblasColMajor, CblasNoTrans, A.rows(), A.cols(), real_t{-1},
@@ -876,7 +876,7 @@ void CompactBLAS<Abi>::xgemm_TN_sub(batch_view A, batch_view B,
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && A.has_full_layer_stride() &&
             B.has_full_layer_stride() && C.has_full_layer_stride()) {
-            KOQKATOO_TRACE("xgemm_TN_sub_mkl_compact", 0,
+            GUANAQO_TRACE("xgemm_TN_sub_mkl_compact", 0,
                            A.cols() * A.rows() * B.cols() * A.depth());
             xgemm_compact(
                 MKL_COL_MAJOR, MKL_TRANS, MKL_NOTRANS, A.cols(), B.cols(),
@@ -888,7 +888,7 @@ void CompactBLAS<Abi>::xgemm_TN_sub(batch_view A, batch_view B,
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b)) {
-            KOQKATOO_TRACE("xgemm_TN_sub_batched", 0,
+            GUANAQO_TRACE("xgemm_TN_sub_batched", 0,
                            A.cols() * A.rows() * B.cols() * A.depth());
             linalg::xgemm_batch_strided(
                 CblasColMajor, CblasTrans, CblasNoTrans, A.cols(), B.cols(),
@@ -914,7 +914,7 @@ void CompactBLAS<Abi>::xgemm_TN_neg(batch_view A, batch_view B,
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && A.has_full_layer_stride() &&
             B.has_full_layer_stride() && C.has_full_layer_stride()) {
-            KOQKATOO_TRACE("xgemm_TN_neg_mkl_compact", 0,
+            GUANAQO_TRACE("xgemm_TN_neg_mkl_compact", 0,
                            A.cols() * A.rows() * B.cols() * A.depth());
             xgemm_compact(
                 MKL_COL_MAJOR, MKL_TRANS, MKL_NOTRANS, A.cols(), B.cols(),
@@ -926,7 +926,7 @@ void CompactBLAS<Abi>::xgemm_TN_neg(batch_view A, batch_view B,
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b)) {
-            KOQKATOO_TRACE("xgemm_TN_neg_batched", 0,
+            GUANAQO_TRACE("xgemm_TN_neg_batched", 0,
                            A.cols() * A.rows() * B.cols() * A.depth());
             linalg::xgemm_batch_strided(
                 CblasColMajor, CblasTrans, CblasNoTrans, A.cols(), B.cols(),
@@ -952,7 +952,7 @@ void CompactBLAS<Abi>::xgemm_TT_neg(batch_view A, batch_view B,
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && A.has_full_layer_stride() &&
             B.has_full_layer_stride() && C.has_full_layer_stride()) {
-            KOQKATOO_TRACE("xgemm_TT_neg_mkl_compact", 0,
+            GUANAQO_TRACE("xgemm_TT_neg_mkl_compact", 0,
                            A.cols() * A.rows() * B.rows() * A.depth());
             xgemm_compact(
                 MKL_COL_MAJOR, MKL_TRANS, MKL_TRANS, A.cols(), B.rows(),
@@ -964,7 +964,7 @@ void CompactBLAS<Abi>::xgemm_TT_neg(batch_view A, batch_view B,
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b)) {
-            KOQKATOO_TRACE("xgemm_TT_neg_batched", 0,
+            GUANAQO_TRACE("xgemm_TT_neg_batched", 0,
                            A.cols() * A.rows() * B.rows() * A.depth());
             linalg::xgemm_batch_strided(
                 CblasColMajor, CblasTrans, CblasTrans, A.cols(), B.rows(),
@@ -991,7 +991,7 @@ void CompactBLAS<Abi>::xgemv_T(batch_view A, batch_view B, mut_batch_view C,
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && A.has_full_layer_stride() &&
             B.has_full_layer_stride() && C.has_full_layer_stride()) {
-            KOQKATOO_TRACE("xgemv_T_mkl_compact", 0,
+            GUANAQO_TRACE("xgemv_T_mkl_compact", 0,
                            A.cols() * A.rows() * B.cols() * A.depth());
             xgemm_compact(
                 MKL_COL_MAJOR, MKL_TRANS, MKL_NOTRANS, A.cols(), B.cols(),
@@ -1003,7 +1003,7 @@ void CompactBLAS<Abi>::xgemv_T(batch_view A, batch_view B, mut_batch_view C,
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b)) {
-            KOQKATOO_TRACE("xgemv_T_batched", 0,
+            GUANAQO_TRACE("xgemv_T_batched", 0,
                            A.cols() * A.rows() * B.cols() * A.depth());
             linalg::xgemv_batch_strided(
                 CblasColMajor, CblasTrans, A.rows(), A.cols(), real_t{1},
@@ -1029,7 +1029,7 @@ void CompactBLAS<Abi>::xgemv_T_sub(batch_view A, batch_view B, mut_batch_view C,
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && A.has_full_layer_stride() &&
             B.has_full_layer_stride() && C.has_full_layer_stride()) {
-            KOQKATOO_TRACE("xgemv_T_sub_mkl_compact", 0,
+            GUANAQO_TRACE("xgemv_T_sub_mkl_compact", 0,
                            A.cols() * A.rows() * B.cols() * A.depth());
             xgemm_compact(
                 MKL_COL_MAJOR, MKL_TRANS, MKL_NOTRANS, A.cols(), B.cols(),
@@ -1041,7 +1041,7 @@ void CompactBLAS<Abi>::xgemv_T_sub(batch_view A, batch_view B, mut_batch_view C,
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b)) {
-            KOQKATOO_TRACE("xgemv_T_sub_batched", 0,
+            GUANAQO_TRACE("xgemv_T_sub_batched", 0,
                            A.cols() * A.rows() * B.cols() * A.depth());
             linalg::xgemv_batch_strided(
                 CblasColMajor, CblasTrans, A.rows(), A.cols(), real_t{-1},
@@ -1066,7 +1066,7 @@ void CompactBLAS<Abi>::xgemm_TN(batch_view A, batch_view B, mut_batch_view C,
     KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
         if (use_mkl_compact(b) && A.has_full_layer_stride() &&
             B.has_full_layer_stride() && C.has_full_layer_stride()) {
-            KOQKATOO_TRACE("xgemm_TN_mkl_compact", 0,
+            GUANAQO_TRACE("xgemm_TN_mkl_compact", 0,
                            A.cols() * A.rows() * B.cols() * A.depth());
             xgemm_compact(
                 MKL_COL_MAJOR, MKL_TRANS, MKL_NOTRANS, A.cols(), B.cols(),
@@ -1078,7 +1078,7 @@ void CompactBLAS<Abi>::xgemm_TN(batch_view A, batch_view B, mut_batch_view C,
     })
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_mkl_batched(b)) {
-            KOQKATOO_TRACE("xgemm_TN_batched", 0,
+            GUANAQO_TRACE("xgemm_TN_batched", 0,
                            A.cols() * A.rows() * B.cols() * A.depth());
             linalg::xgemm_batch_strided(
                 CblasColMajor, CblasTrans, CblasNoTrans, A.cols(), B.cols(),
@@ -1103,7 +1103,7 @@ void CompactBLAS<Abi>::xgemm(single_batch_view A, single_batch_view B,
     assert(B.cols() == C.cols());
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b)) {
-            KOQKATOO_TRACE("xgemm_blas", 0,
+            GUANAQO_TRACE("xgemm_blas", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             return linalg::xgemm(
                 CblasColMajor, CblasNoTrans, CblasNoTrans, A.rows(), B.cols(),
@@ -1122,7 +1122,7 @@ void CompactBLAS<Abi>::xgemv(single_batch_view A, single_batch_view B,
     assert(B.cols() == 1);
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b)) {
-            KOQKATOO_TRACE("xgemv_blas", 0,
+            GUANAQO_TRACE("xgemv_blas", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             return linalg::xgemv(CblasColMajor, CblasNoTrans, A.rows(),
                                  A.cols(), real_t{1}, A.data, A.outer_stride(),
@@ -1140,7 +1140,7 @@ void CompactBLAS<Abi>::xgemm_neg(single_batch_view A, single_batch_view B,
     assert(B.cols() == C.cols());
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b)) {
-            KOQKATOO_TRACE("xgemm_neg_blas", 0,
+            GUANAQO_TRACE("xgemm_neg_blas", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             return linalg::xgemm(
                 CblasColMajor, CblasNoTrans, CblasNoTrans, A.rows(), B.cols(),
@@ -1159,7 +1159,7 @@ void CompactBLAS<Abi>::xgemm_NT_neg(single_batch_view A, single_batch_view B,
     assert(B.rows() == C.cols());
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b)) {
-            KOQKATOO_TRACE("xgemm_NT_neg_blas", 0,
+            GUANAQO_TRACE("xgemm_NT_neg_blas", 0,
                            A.rows() * A.cols() * B.rows() * A.depth());
             return linalg::xgemm(
                 CblasColMajor, CblasNoTrans, CblasTrans, A.rows(), B.rows(),
@@ -1178,7 +1178,7 @@ void CompactBLAS<Abi>::xgemv_neg(single_batch_view A, single_batch_view B,
     assert(B.cols() == 1);
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b)) {
-            KOQKATOO_TRACE("xgemv_neg_blas", 0,
+            GUANAQO_TRACE("xgemv_neg_blas", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             return linalg::xgemv(CblasColMajor, CblasNoTrans, A.rows(),
                                  B.cols(), real_t{-1}, A.data, A.outer_stride(),
@@ -1199,7 +1199,7 @@ void CompactBLAS<Abi>::xtrmm_RLNN_neg(single_batch_view A, single_batch_view B,
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b)) {
             [[maybe_unused]] auto [m, M] = std::minmax({B.rows(), B.cols()});
-            KOQKATOO_TRACE("xtrmm_RLNN_neg_blas", 0,
+            GUANAQO_TRACE("xtrmm_RLNN_neg_blas", 0,
                            (m * (m + 1) / 2 + (M - m) * m) * A.rows() *
                                A.depth());
             auto A1 = A.left_cols(B.cols()), B1 = B.top_rows(B.cols());
@@ -1229,7 +1229,7 @@ void CompactBLAS<Abi>::xgemm_add(single_batch_view A, single_batch_view B,
     assert(B.cols() == C.cols());
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b)) {
-            KOQKATOO_TRACE("xgemm_add_blas", 0,
+            GUANAQO_TRACE("xgemm_add_blas", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             return linalg::xgemm(
                 CblasColMajor, CblasNoTrans, CblasNoTrans, A.rows(), B.cols(),
@@ -1247,7 +1247,7 @@ void CompactBLAS<Abi>::xgemm_sub(single_batch_view A, single_batch_view B,
     assert(B.cols() == C.cols());
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b)) {
-            KOQKATOO_TRACE("xgemm_sub_blas", 0,
+            GUANAQO_TRACE("xgemm_sub_blas", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             return linalg::xgemm(
                 CblasColMajor, CblasNoTrans, CblasNoTrans, A.rows(), B.cols(),
@@ -1266,7 +1266,7 @@ void CompactBLAS<Abi>::xgemv_sub(single_batch_view A, single_batch_view B,
     assert(B.cols() == 1);
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b)) {
-            KOQKATOO_TRACE("xgemv_sub_blas", 0,
+            GUANAQO_TRACE("xgemv_sub_blas", 0,
                            A.rows() * A.cols() * B.cols() * A.depth());
             return linalg::xgemv(CblasColMajor, CblasNoTrans, A.rows(),
                                  A.cols(), real_t{-1}, A.data, A.outer_stride(),
@@ -1285,7 +1285,7 @@ void CompactBLAS<Abi>::xgemm_TN_sub(single_batch_view A, single_batch_view B,
     assert(B.cols() == C.cols());
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b)) {
-            KOQKATOO_TRACE("xgemm_TN_sub_blas", 0,
+            GUANAQO_TRACE("xgemm_TN_sub_blas", 0,
                            A.cols() * A.rows() * B.cols() * A.depth());
             return linalg::xgemm(
                 CblasColMajor, CblasTrans, CblasNoTrans, A.cols(), B.cols(),
@@ -1304,7 +1304,7 @@ void CompactBLAS<Abi>::xgemm_TN_neg(single_batch_view A, single_batch_view B,
     assert(B.cols() == C.cols());
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b)) {
-            KOQKATOO_TRACE("xgemm_TN_neg_blas", 0,
+            GUANAQO_TRACE("xgemm_TN_neg_blas", 0,
                            A.cols() * A.rows() * B.cols() * A.depth());
             return linalg::xgemm(
                 CblasColMajor, CblasTrans, CblasNoTrans, A.cols(), B.cols(),
@@ -1323,7 +1323,7 @@ void CompactBLAS<Abi>::xgemm_TT_neg(single_batch_view A, single_batch_view B,
     assert(B.rows() == C.cols());
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b)) {
-            KOQKATOO_TRACE("xgemm_TT_neg_blas", 0,
+            GUANAQO_TRACE("xgemm_TT_neg_blas", 0,
                            A.cols() * A.rows() * B.rows() * A.depth());
             return linalg::xgemm(
                 CblasColMajor, CblasTrans, CblasTrans, A.cols(), B.rows(),
@@ -1341,7 +1341,7 @@ void CompactBLAS<Abi>::xgemv_T(single_batch_view A, single_batch_view B,
     assert(B.cols() == C.cols());
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b)) {
-            KOQKATOO_TRACE("xgemv_T_blas", 0,
+            GUANAQO_TRACE("xgemv_T_blas", 0,
                            A.cols() * A.rows() * B.cols() * A.depth());
             return linalg::xgemv(CblasColMajor, CblasTrans, A.rows(), A.cols(),
                                  real_t{1}, A.data, A.outer_stride(), B.data,
@@ -1359,7 +1359,7 @@ void CompactBLAS<Abi>::xgemv_T_sub(single_batch_view A, single_batch_view B,
     assert(B.cols() == C.cols());
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b)) {
-            KOQKATOO_TRACE("xgemv_T_sub_blas", 0,
+            GUANAQO_TRACE("xgemv_T_sub_blas", 0,
                            A.cols() * A.rows() * B.cols() * A.depth());
             return linalg::xgemv(CblasColMajor, CblasTrans, A.rows(), A.cols(),
                                  real_t{-1}, A.data, A.outer_stride(), B.data,
@@ -1377,7 +1377,7 @@ void CompactBLAS<Abi>::xgemv_T_add(single_batch_view A, single_batch_view B,
     assert(B.cols() == C.cols());
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b)) {
-            KOQKATOO_TRACE("xgemv_T_add_blas", 0,
+            GUANAQO_TRACE("xgemv_T_add_blas", 0,
                            A.cols() * A.rows() * B.cols() * A.depth());
             return linalg::xgemv(CblasColMajor, CblasTrans, A.rows(), A.cols(),
                                  real_t{1}, A.data, A.outer_stride(), B.data,
@@ -1394,7 +1394,7 @@ void CompactBLAS<Abi>::xgemm_TN(single_batch_view A, single_batch_view B,
     assert(B.cols() == C.cols());
     if constexpr (std::same_as<Abi, scalar_abi>)
         if (use_blas_scalar(b)) {
-            KOQKATOO_TRACE("xgemm_TN_blas", 0,
+            GUANAQO_TRACE("xgemm_TN_blas", 0,
                            A.cols() * A.rows() * B.cols() * A.depth());
             return linalg::xgemm(
                 CblasColMajor, CblasTrans, CblasNoTrans, A.cols(), B.cols(),

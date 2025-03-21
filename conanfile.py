@@ -31,7 +31,6 @@ class KoqkatooRecipe(ConanFile):
         "with_tbb": False,
         "with_blasfeo": False,
         "with_cpu_time": False,
-        "with_tracing": False,
     }
     options = {
         "shared": [True, False],
@@ -67,7 +66,7 @@ class KoqkatooRecipe(ConanFile):
     generators = ("CMakeDeps",)
 
     def requirements(self):
-        self.requires("guanaqo/1.0.0-alpha.7", transitive_headers=True)
+        self.requires("guanaqo/1.0.0-alpha.8", transitive_headers=True)
         if self.options.with_openblas:
             self.requires("openblas/0.3.27", transitive_headers=True)
         if self.options.with_tbb:

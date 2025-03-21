@@ -1,9 +1,9 @@
 #include <koqkatoo/cholundate/householder-updowndate.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
-#include <koqkatoo/preprocessor.h>
 #include <Eigen/Dense>
 #include <benchmark/benchmark.h>
 #include <guanaqo/eigen/view.hpp>
+#include <guanaqo/preprocessor.h>
 #include <koqkatoo-version.h>
 #include <algorithm>
 #include <cstdlib>
@@ -180,8 +180,9 @@ std::vector<::benchmark::internal::Benchmark *> benchmarks;
         return bm;                                                             \
     }()
 #define BM_BLK_IMPL_NAME(name, ...)                                            \
-    KQT_CONCATENATE_TOKENS(name, KQT_JOIN_TOKENS(__VA_ARGS__))
-#define BM_BLK_NAME(name, ...) #name "<" KQT_JOIN_STRINGS(", ", __VA_ARGS__) ">"
+    GUANAQO_CONCATENATE_TOKENS(name, GUANAQO_JOIN_TOKENS(__VA_ARGS__))
+#define BM_BLK_NAME(name, ...)                                                 \
+    #name "<" GUANAQO_JOIN_STRINGS(", ", __VA_ARGS__) ">"
 #define BENCHMARK_BLOCKED(name, func, updown, ...)                             \
     BENCHMARK_TEMPLATE_DEFINE_F(                                               \
         BlockedFixture, BM_BLK_IMPL_NAME(name, __VA_ARGS__), __VA_ARGS__)      \

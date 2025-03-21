@@ -3,7 +3,7 @@
 #include <koqkatoo/loop.hpp>
 #include <koqkatoo/ocp/solver/solve.hpp>
 #include <koqkatoo/openmp.h>
-#include <koqkatoo/trace.hpp>
+#include <guanaqo/trace.hpp>
 #include <optional>
 
 #if KOQKATOO_WITH_MKL
@@ -95,7 +95,7 @@ void Solver<Abi>::prepare_all(real_t S, real_view Σ, bool_view J) {
     using std::isfinite;
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < LH().num_batches(); ++i) {
-        KOQKATOO_TRACE("factor prep", i);
+        GUANAQO_TRACE("factor prep", i);
         schur_complement_Hi(i, Σ, J);
         if (isfinite(S))
             LH().batch(i).add_to_diagonal(1 / S);
@@ -148,7 +148,7 @@ void Solver<Abi>::cholesky_Ψ() {
     auto wLΨd = storage.work_LΨd(), wLΨs = storage.work_LΨs(),
          wVV = storage.work_VV();
     foreach_chunked_merged(0, N, simd_stride, [&](index_t i, auto ni) {
-        KOQKATOO_TRACE("factor Ψ", i / simd_stride);
+        GUANAQO_TRACE("factor Ψ", i / simd_stride);
 #if 1
         index_t b = i / simd_stride, nd = std::min(ni + 1, simd_stride);
         compact_blas::unpack_L(LΨd().batch(b), wLΨd.first_layers(nd));
@@ -258,7 +258,7 @@ void Solver<Abi>::cholesky_Ψ() {
         for (index_t j = 0; j < ni; ++j)
             storage.LΨs_scalar()(i + j) = wLΨs(j);
     });
-    KOQKATOO_TRACE("factor Ψ", N);
+    GUANAQO_TRACE("factor Ψ", N);
     index_t last_j = N % simd_stride;
     if (last_j == 0) {
         // If the previous batch was complete, the term VV - LsLs is in VV.
@@ -471,7 +471,7 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     // ---------------------
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < LH().num_batches(); ++i) {
-        KOQKATOO_TRACE("solve Hv=g", i);
+        GUANAQO_TRACE("solve Hv=g", i);
         // Initialize rhs: g = ∇ϕ + Mᵀλ = ∇f̃ + Aᵀŷ + Mᵀλ                 (d ← g)
         for (index_t j = 0; j < nx + nu; ++j)
             for (index_t ii = i * simd_stride; ii < (i + 1) * simd_stride; ++ii)
@@ -488,7 +488,7 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     // Forward substitution Ψ
     // ----------------------
     {
-        KOQKATOO_TRACE("solve ψ fwd", 0);
+        GUANAQO_TRACE("solve ψ fwd", 0);
         // Initialize rhs r - v = Mx - b - v                     (Δλ_scal ← ...)
         for (index_t j = 0; j < nx; ++j)
             Δλ_scal(0, j, 0) = Mxb(0, j, 0) - d(0, j, 0);
@@ -496,7 +496,7 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
         scalar_blas::xtrsm_LLNN(LΨd.batch(0), Δλ_scal.batch(0), be);
     }
     for (index_t i = 1; i <= N; ++i) {
-        KOQKATOO_TRACE("solve ψ fwd", i);
+        GUANAQO_TRACE("solve ψ fwd", i);
         // Initialize rhs r + f - v = Mx - b + (A B) v - v       (Δλ_scal ← ...)
         for (index_t j = 0; j < nx; ++j)
             Δλ_scal(i, j, 0) = Mxb(i, j, 0) - d(i, j, 0) + Δλ(i - 1, j, 0);
@@ -510,13 +510,13 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     // Backward substitution Ψ
     // -----------------------
     {
-        KOQKATOO_TRACE("solve ψ rev", N);
+        GUANAQO_TRACE("solve ψ rev", N);
         scalar_blas::xtrsm_LLTN(LΨd.batch(N), Δλ_scal.batch(N), be);
         for (index_t j = 0; j < nx; ++j)
             Δλ1(N - 1, j, 0) = Δλ(N, j, 0) = Δλ_scal(N, j, 0);
     }
     for (index_t i = N; i-- > 0;) {
-        KOQKATOO_TRACE("solve ψ rev", i);
+        GUANAQO_TRACE("solve ψ rev", i);
         scalar_blas::xgemm_TN_sub(LΨs.batch(i), Δλ_scal.batch(i + 1),
                                   Δλ_scal.batch(i), be);
         scalar_blas::xtrsm_LLTN(LΨd.batch(i), Δλ_scal.batch(i), be);
@@ -531,7 +531,7 @@ void Solver<Abi>::solve(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     // -----------------------------
     KOQKATOO_OMP(parallel for)
     for (index_t i = 0; i < LH().num_batches(); ++i) {
-        KOQKATOO_TRACE("solve Hd=-g-MᵀΔλ", i);
+        GUANAQO_TRACE("solve Hd=-g-MᵀΔλ", i);
         MᵀΔλ.batch(i).top_rows(nx) = Δλ.batch(i);
         MᵀΔλ.batch(i).bottom_rows(nu).set_constant(0);
         if (i < AB().num_batches())

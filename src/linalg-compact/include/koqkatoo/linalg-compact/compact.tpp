@@ -9,7 +9,7 @@
 #include <koqkatoo/linalg/lapack.hpp>
 #include <koqkatoo/lut.hpp>
 #include <koqkatoo/openmp.h>
-#include <koqkatoo/trace.hpp>
+#include <guanaqo/trace.hpp>
 
 #include "compact/xgemm.tpp"
 #include "compact/xpntrf.tpp"
@@ -28,7 +28,7 @@ namespace koqkatoo::linalg::compact {
 template <index_t R, index_t C, class T>
 [[gnu::always_inline]]
 inline void transpose(const T *pa, index_t lda, T *pb, index_t ldb, index_t d) {
-    KOQKATOO_ASSUME(d <= R);
+    GUANAQO_ASSUME(d <= R);
     T r[C][R];
     for (int i = 0; i < C; ++i)
         for (int j = 0; j < R; ++j)
@@ -73,7 +73,7 @@ inline void transpose<4, 4>(const double *pa, index_t lda, double *pb,
 template <class Abi>
 void CompactBLAS<Abi>::unpack(single_batch_view A,
                               mut_single_batch_view_scalar B) {
-    KOQKATOO_TRACE("unpack", 0, A.rows() * A.cols() * A.depth());
+    GUANAQO_TRACE("unpack", 0, A.rows() * A.cols() * A.depth());
     constexpr auto lut =
         make_1d_lut<simd_stride>([]<index_t R>(index_constant<R>) {
             return transpose<simd_stride, R + 1, real_t>;
@@ -95,7 +95,7 @@ void CompactBLAS<Abi>::unpack(single_batch_view A,
 
 template <class Abi>
 void CompactBLAS<Abi>::unpack(single_batch_view A, mut_batch_view_scalar B) {
-    KOQKATOO_TRACE("unpack", 0, A.rows() * A.cols() * A.depth());
+    GUANAQO_TRACE("unpack", 0, A.rows() * A.cols() * A.depth());
     constexpr auto lut =
         make_1d_lut<simd_stride>([]<index_t R>(index_constant<R>) {
             return transpose<simd_stride, R + 1, real_t>;
@@ -132,7 +132,7 @@ template <class Abi>
 void CompactBLAS<Abi>::unpack_L(single_batch_view A,
                                 mut_single_batch_view_scalar B) {
     [[maybe_unused]] auto [m, M] = std::minmax({A.rows(), A.cols()});
-    KOQKATOO_TRACE("unpack_L", 0, (m * (m + 1) / 2 + (M - m) * m) * A.depth());
+    GUANAQO_TRACE("unpack_L", 0, (m * (m + 1) / 2 + (M - m) * m) * A.depth());
     constexpr auto lut =
         make_1d_lut<simd_stride>([]<index_t R>(index_constant<R>) {
             return transpose<simd_stride, R + 1, real_t>;
@@ -155,7 +155,7 @@ void CompactBLAS<Abi>::unpack_L(single_batch_view A,
 template <class Abi>
 void CompactBLAS<Abi>::unpack_L(single_batch_view A, mut_batch_view_scalar B) {
     [[maybe_unused]] auto [m, M] = std::minmax({A.rows(), A.cols()});
-    KOQKATOO_TRACE("unpack_L", 0, (m * (m + 1) / 2 + (M - m) * m) * A.depth());
+    GUANAQO_TRACE("unpack_L", 0, (m * (m + 1) / 2 + (M - m) * m) * A.depth());
     constexpr auto S   = simd_stride;
     constexpr auto lut = make_1d_lut<S>([]<index_t R>(index_constant<R>) {
         return transpose<S, R + 1, real_t>;
@@ -215,7 +215,7 @@ void CompactBLAS<Abi>::unpack_L(batch_view A, mut_batch_view_scalar B) {
 template <>
 void CompactBLAS<stdx::simd_abi::scalar>::unpack(batch_view A,
                                                  mut_batch_view_scalar B) {
-    KOQKATOO_TRACE("unpack", 0, B.rows() * B.cols() * B.depth());
+    GUANAQO_TRACE("unpack", 0, B.rows() * B.cols() * B.depth());
     assert(A.depth() >= B.depth());
     assert(A.rows() == B.rows());
     assert(A.cols() == B.cols());
@@ -231,7 +231,7 @@ void CompactBLAS<stdx::simd_abi::scalar>::unpack(batch_view A,
 template <>
 void CompactBLAS<stdx::simd_abi::scalar>::unpack_L(batch_view A,
                                                    mut_batch_view_scalar B) {
-    KOQKATOO_TRACE("unpack", 0, B.rows() * B.cols() * B.depth());
+    GUANAQO_TRACE("unpack", 0, B.rows() * B.cols() * B.depth());
     assert(A.depth() >= B.depth());
     for (index_t l = 0; l < B.depth(); ++l)
         for (index_t c = 0; c < B.cols(); ++c)
@@ -240,7 +240,7 @@ void CompactBLAS<stdx::simd_abi::scalar>::unpack_L(batch_view A,
 
 template <class Abi>
 void CompactBLAS<Abi>::xtrmv_ref(single_batch_view L, mut_single_batch_view x) {
-    KOQKATOO_TRACE("xtrmv", 0, (L.rows() * (L.rows() + 1) / 2) * L.depth());
+    GUANAQO_TRACE("xtrmv", 0, (L.rows() * (L.rows() + 1) / 2) * L.depth());
     assert(L.rows() == L.cols());
     assert(x.rows() == L.cols());
     for (index_t j = L.cols(); j-- > 0;) {
@@ -256,7 +256,7 @@ void CompactBLAS<Abi>::xtrmv_ref(single_batch_view L, mut_single_batch_view x) {
 template <class Abi>
 void CompactBLAS<Abi>::xtrmv_T_ref(single_batch_view L,
                                    mut_single_batch_view x) {
-    KOQKATOO_TRACE("xtrmv_T", 0, (L.rows() * (L.rows() + 1) / 2) * L.depth());
+    GUANAQO_TRACE("xtrmv_T", 0, (L.rows() * (L.rows() + 1) / 2) * L.depth());
     assert(L.rows() == L.cols());
     assert(x.rows() == L.cols());
     for (index_t j = 0; j < L.cols(); ++j) {
@@ -307,7 +307,7 @@ void CompactBLAS<Abi>::xtrmv_T(single_batch_view L, mut_single_batch_view x,
 template <class Abi>
 void CompactBLAS<Abi>::xsymv_add_ref(single_batch_view L, single_batch_view x,
                                      mut_single_batch_view y) {
-    KOQKATOO_TRACE("xsymv", 0, L.rows() * L.rows() * L.depth());
+    GUANAQO_TRACE("xsymv", 0, L.rows() * L.rows() * L.depth());
     assert(L.cols() == L.rows());
     assert(x.rows() == L.rows());
     assert(y.rows() == L.rows());
@@ -348,7 +348,7 @@ void CompactBLAS<Abi>::xsymv_add(single_batch_view L, single_batch_view x,
 
 template <class Abi>
 void CompactBLAS<Abi>::xcopy(single_batch_view A, mut_single_batch_view B) {
-    KOQKATOO_TRACE("xcopy", 0, A.rows() * A.cols() * A.depth());
+    GUANAQO_TRACE("xcopy", 0, A.rows() * A.cols() * A.depth());
     assert(A.rows() == B.rows());
     assert(A.cols() == B.cols());
     const index_t n = A.rows(), m = A.cols();
@@ -369,7 +369,7 @@ void CompactBLAS<Abi>::xcopy(batch_view A, mut_batch_view B) {
 template <class Abi>
 void CompactBLAS<Abi>::xcopy_L(single_batch_view A, mut_single_batch_view B) {
     [[maybe_unused]] auto [m, M] = std::minmax({A.rows(), A.cols()});
-    KOQKATOO_TRACE("xcopy_L", 0, (m * (m + 1) / 2 + (M - m) * m) * A.depth());
+    GUANAQO_TRACE("xcopy_L", 0, (m * (m + 1) / 2 + (M - m) * m) * A.depth());
     assert(A.rows() == B.rows());
     assert(A.cols() == B.cols());
     assert(A.rows() >= A.cols());
@@ -389,7 +389,7 @@ void CompactBLAS<Abi>::xcopy_L(batch_view A, mut_batch_view B) {
 
 template <class Abi>
 void CompactBLAS<Abi>::xcopy_T(single_batch_view A, mut_single_batch_view B) {
-    KOQKATOO_TRACE("xcopy_T", 0, A.rows() * A.cols() * A.depth());
+    GUANAQO_TRACE("xcopy_T", 0, A.rows() * A.cols() * A.depth());
     assert(A.rows() == B.cols());
     assert(A.cols() == B.rows());
     const index_t n = A.rows(), m = A.cols();
@@ -408,7 +408,7 @@ void CompactBLAS<Abi>::xcopy_T(batch_view A, mut_batch_view B) {
 
 template <class Abi>
 void CompactBLAS<Abi>::xfill(real_t a, mut_single_batch_view B) {
-    KOQKATOO_TRACE("xcopy", 0, B.rows() * B.cols() * B.depth());
+    GUANAQO_TRACE("xcopy", 0, B.rows() * B.cols() * B.depth());
     const index_t n = B.rows(), m = B.cols();
     for (index_t j = 0; j < m; ++j)
         KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t i = 0; i < n; ++i)
@@ -424,7 +424,7 @@ void CompactBLAS<Abi>::xfill(real_t a, mut_batch_view B) {
 
 template <class Abi>
 void CompactBLAS<Abi>::xneg(mut_single_batch_view A) {
-    KOQKATOO_TRACE("xneg", 0, A.rows() * A.cols() * A.depth());
+    GUANAQO_TRACE("xneg", 0, A.rows() * A.cols() * A.depth());
     const index_t n = A.rows(), m = A.cols();
     for (index_t j = 0; j < m; ++j)
         KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t i = 0; i < n; ++i)
@@ -442,7 +442,7 @@ template <class Abi>
 void CompactBLAS<Abi>::xadd_L(single_batch_view A, mut_single_batch_view B) {
     [[maybe_unused]] const auto tri_op_cnt  = A.cols() * (A.cols() + 1) / 2,
                                 rect_op_cnt = A.cols() * (A.rows() - A.cols());
-    KOQKATOO_TRACE("xadd_L", 0, (tri_op_cnt + rect_op_cnt) * A.depth());
+    GUANAQO_TRACE("xadd_L", 0, (tri_op_cnt + rect_op_cnt) * A.depth());
     assert(A.rows() == B.rows());
     assert(A.cols() == B.cols());
     assert(A.rows() >= A.cols());
@@ -456,7 +456,7 @@ void CompactBLAS<Abi>::xadd_L(single_batch_view A, mut_single_batch_view B) {
 template <class Abi>
 void CompactBLAS<Abi>::xaxpy(real_t a, single_batch_view x,
                              mut_single_batch_view y) {
-    KOQKATOO_TRACE("xaxpy", 0, x.rows() * x.depth());
+    GUANAQO_TRACE("xaxpy", 0, x.rows() * x.depth());
     assert(x.rows() == y.rows());
     assert(x.cols() == y.cols());
     simd a_simd{a};
@@ -484,7 +484,7 @@ void CompactBLAS<Abi>::xaxpby(real_t a, single_batch_view x, real_t b,
     assert(x.cols() == y.cols());
     const index_t n = x.rows();
     if (b == 0) {
-        KOQKATOO_TRACE("xaxpby", 0, x.rows() * x.depth());
+        GUANAQO_TRACE("xaxpby", 0, x.rows() * x.depth());
         simd a_simd{a};
         for (index_t j = 0; j < x.cols(); ++j) {
             KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t i = 0; i < n; ++i) {
@@ -492,7 +492,7 @@ void CompactBLAS<Abi>::xaxpby(real_t a, single_batch_view x, real_t b,
             }
         }
     } else {
-        KOQKATOO_TRACE("xaxpby", 0, 2 * x.rows() * x.depth());
+        GUANAQO_TRACE("xaxpby", 0, 2 * x.rows() * x.depth());
         simd a_simd{a}, b_simd{b};
         for (index_t j = 0; j < x.cols(); ++j) {
             KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t i = 0; i < n; ++i) {

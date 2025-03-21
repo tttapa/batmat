@@ -2,7 +2,7 @@
 
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
-#include <koqkatoo/trace.hpp>
+#include <guanaqo/trace.hpp>
 
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xtrsm.hpp>
 #include "util.hpp"
@@ -17,7 +17,7 @@ void CompactBLAS<Abi>::xtrsm_RLTN_ref(single_batch_view L,
                                       mut_single_batch_view H) {
     [[maybe_unused]] const auto op_cnt_trsm =
         L.rows() * (L.rows() + 1) * H.rows() / 2 + L.rows();
-    KOQKATOO_TRACE("xtrsm_RLTN", 0, op_cnt_trsm * L.depth());
+    GUANAQO_TRACE("xtrsm_RLTN", 0, op_cnt_trsm * L.depth());
     assert(L.rows() == L.cols());
     assert(H.cols() == L.rows());
     micro_kernels::trsm::xtrsm_register<Abi, {.trans = true}>(L, H);
@@ -28,7 +28,7 @@ void CompactBLAS<Abi>::xtrsm_LLNN_ref(single_batch_view L,
                                       mut_single_batch_view H) {
     [[maybe_unused]] const auto op_cnt_trsm =
         L.rows() * (L.rows() + 1) * H.cols() / 2 + L.rows();
-    KOQKATOO_TRACE("xtrsm_LLNN", 0, op_cnt_trsm * L.depth());
+    GUANAQO_TRACE("xtrsm_LLNN", 0, op_cnt_trsm * L.depth());
     assert(L.rows() == L.cols());
     assert(L.rows() == H.rows());
     micro_kernels::trsm::xtrsm_register<Abi, {.trans = false}>(L, H);
@@ -39,7 +39,7 @@ void CompactBLAS<Abi>::xtrsv_LNN_ref(single_batch_view L,
                                      mut_single_batch_view H) {
     [[maybe_unused]] const auto op_cnt_trsm =
         L.rows() * (L.rows() + 1) * H.cols() / 2 + L.rows();
-    KOQKATOO_TRACE("xtrsv_LNN", 0, op_cnt_trsm * L.depth());
+    GUANAQO_TRACE("xtrsv_LNN", 0, op_cnt_trsm * L.depth());
     assert(L.rows() == L.cols());
     assert(L.rows() == H.rows());
     assert(H.cols() == 1);
@@ -51,7 +51,7 @@ void CompactBLAS<Abi>::xtrsm_LLTN_ref(single_batch_view L,
                                       mut_single_batch_view H) {
     [[maybe_unused]] const auto op_cnt_trsm =
         L.rows() * (L.rows() + 1) * H.cols() / 2 + L.rows();
-    KOQKATOO_TRACE("xtrsm_LLTN", 0, op_cnt_trsm * L.depth());
+    GUANAQO_TRACE("xtrsm_LLTN", 0, op_cnt_trsm * L.depth());
     assert(L.rows() == L.cols());
     assert(L.rows() == H.rows());
     micro_kernels::trsm::xtrsm_lltn_register<Abi>(L, H);
@@ -62,7 +62,7 @@ void CompactBLAS<Abi>::xtrsv_LTN_ref(single_batch_view L,
                                      mut_single_batch_view H) {
     [[maybe_unused]] const auto op_cnt_trsm =
         L.rows() * (L.rows() + 1) * H.cols() / 2 + L.rows();
-    KOQKATOO_TRACE("xtrsv_LTN", 0, op_cnt_trsm * L.depth());
+    GUANAQO_TRACE("xtrsv_LTN", 0, op_cnt_trsm * L.depth());
     assert(L.rows() == L.cols());
     assert(L.rows() == H.rows());
     assert(H.cols() == 1);
@@ -86,7 +86,7 @@ void CompactBLAS<Abi>::xtrsm_RLTN(batch_view L, mut_batch_view H,
             H.has_full_layer_stride()) {
             [[maybe_unused]] const auto op_cnt_trsm =
                 L.rows() * (L.rows() + 1) * H.rows() / 2 + L.rows();
-            KOQKATOO_TRACE("xtrsm_RLTN_mkl_compact", 0,
+            GUANAQO_TRACE("xtrsm_RLTN_mkl_compact", 0,
                            op_cnt_trsm * L.depth());
             return xtrsm_compact(
                 MKL_COL_MAJOR, MKL_RIGHT, MKL_LOWER, MKL_TRANS, MKL_NONUNIT,
@@ -99,7 +99,7 @@ void CompactBLAS<Abi>::xtrsm_RLTN(batch_view L, mut_batch_view H,
         if (use_mkl_batched(b)) {
             [[maybe_unused]] const auto op_cnt_trsm =
                 L.rows() * (L.rows() + 1) * H.rows() / 2 + L.rows();
-            KOQKATOO_TRACE("xtrsm_RLTN_batched", 0, op_cnt_trsm * L.depth());
+            GUANAQO_TRACE("xtrsm_RLTN_batched", 0, op_cnt_trsm * L.depth());
             return xtrsm_batch_strided(
                 CblasColMajor, CblasRight, CblasLower, CblasTrans, CblasNonUnit,
                 H.rows(), H.cols(), real_t{1}, L.data, L.outer_stride(),
@@ -131,7 +131,7 @@ void CompactBLAS<Abi>::xtrsm_LLNN(batch_view L, mut_batch_view H,
             H.has_full_layer_stride()) {
             [[maybe_unused]] const auto op_cnt_trsm =
                 L.rows() * (L.rows() + 1) * H.cols() / 2 + L.rows();
-            KOQKATOO_TRACE("xtrsm_LLNN_mkl_compact", 0,
+            GUANAQO_TRACE("xtrsm_LLNN_mkl_compact", 0,
                            op_cnt_trsm * L.depth());
             return xtrsm_compact(
                 MKL_COL_MAJOR, MKL_LEFT, MKL_LOWER, MKL_NOTRANS, MKL_NONUNIT,
@@ -144,7 +144,7 @@ void CompactBLAS<Abi>::xtrsm_LLNN(batch_view L, mut_batch_view H,
         if (use_mkl_batched(b)) {
             [[maybe_unused]] const auto op_cnt_trsm =
                 L.rows() * (L.rows() + 1) * H.cols() / 2 + L.rows();
-            KOQKATOO_TRACE("xtrsm_LLNN_batched", 0, op_cnt_trsm * L.depth());
+            GUANAQO_TRACE("xtrsm_LLNN_batched", 0, op_cnt_trsm * L.depth());
             return xtrsm_batch_strided(
                 CblasColMajor, CblasLeft, CblasLower, CblasNoTrans,
                 CblasNonUnit, H.rows(), H.cols(), real_t{1}, L.data,
@@ -177,7 +177,7 @@ void CompactBLAS<Abi>::xtrsv_LNN(batch_view L, mut_batch_view H,
             H.has_full_layer_stride()) {
             [[maybe_unused]] const auto op_cnt_trsm =
                 L.rows() * (L.rows() + 1) * H.cols() / 2 + L.rows();
-            KOQKATOO_TRACE("xtrsv_LNN_mkl_compact", 0, op_cnt_trsm * L.depth());
+            GUANAQO_TRACE("xtrsv_LNN_mkl_compact", 0, op_cnt_trsm * L.depth());
             return xtrsm_compact(
                 MKL_COL_MAJOR, MKL_LEFT, MKL_LOWER, MKL_NOTRANS, MKL_NONUNIT,
                 H.rows(), H.cols(), real_t{1}, L.data, L.outer_stride(), H.data,
@@ -189,7 +189,7 @@ void CompactBLAS<Abi>::xtrsv_LNN(batch_view L, mut_batch_view H,
         if (use_mkl_batched(b)) {
             [[maybe_unused]] const auto op_cnt_trsm =
                 L.rows() * (L.rows() + 1) * H.cols() / 2 + L.rows();
-            KOQKATOO_TRACE("xtrsv_LNN_batched", 0, op_cnt_trsm * L.depth());
+            GUANAQO_TRACE("xtrsv_LNN_batched", 0, op_cnt_trsm * L.depth());
             return xtrsm_batch_strided(
                 CblasColMajor, CblasLeft, CblasLower, CblasNoTrans,
                 CblasNonUnit, H.rows(), H.cols(), real_t{1}, L.data,
@@ -221,7 +221,7 @@ void CompactBLAS<Abi>::xtrsm_LLTN(batch_view L, mut_batch_view H,
             H.has_full_layer_stride()) {
             [[maybe_unused]] const auto op_cnt_trsm =
                 L.rows() * (L.rows() + 1) * H.cols() / 2 + L.rows();
-            KOQKATOO_TRACE("xtrsm_LLTN_mkl_compact", 0,
+            GUANAQO_TRACE("xtrsm_LLTN_mkl_compact", 0,
                            op_cnt_trsm * L.depth());
             return xtrsm_compact(
                 MKL_COL_MAJOR, MKL_LEFT, MKL_LOWER, MKL_TRANS, MKL_NONUNIT,
@@ -234,7 +234,7 @@ void CompactBLAS<Abi>::xtrsm_LLTN(batch_view L, mut_batch_view H,
         if (use_mkl_batched(b)) {
             [[maybe_unused]] const auto op_cnt_trsm =
                 L.rows() * (L.rows() + 1) * H.cols() / 2 + L.rows();
-            KOQKATOO_TRACE("xtrsm_LLTN_batched", 0, op_cnt_trsm * L.depth());
+            GUANAQO_TRACE("xtrsm_LLTN_batched", 0, op_cnt_trsm * L.depth());
             return xtrsm_batch_strided(
                 CblasColMajor, CblasLeft, CblasLower, CblasTrans, CblasNonUnit,
                 H.rows(), H.cols(), real_t{1}, L.data, L.outer_stride(),
@@ -267,7 +267,7 @@ void CompactBLAS<Abi>::xtrsv_LTN(batch_view L, mut_batch_view H,
             H.has_full_layer_stride()) {
             [[maybe_unused]] const auto op_cnt_trsm =
                 L.rows() * (L.rows() + 1) * H.cols() / 2 + L.rows();
-            KOQKATOO_TRACE("xtrsv_LTN_mkl_compact", 0, op_cnt_trsm * L.depth());
+            GUANAQO_TRACE("xtrsv_LTN_mkl_compact", 0, op_cnt_trsm * L.depth());
             return xtrsm_compact(
                 MKL_COL_MAJOR, MKL_LEFT, MKL_LOWER, MKL_TRANS, MKL_NONUNIT,
                 H.rows(), H.cols(), real_t{1}, L.data, L.outer_stride(), H.data,
@@ -279,7 +279,7 @@ void CompactBLAS<Abi>::xtrsv_LTN(batch_view L, mut_batch_view H,
         if (use_mkl_batched(b)) {
             [[maybe_unused]] const auto op_cnt_trsm =
                 L.rows() * (L.rows() + 1) * H.cols() / 2 + L.rows();
-            KOQKATOO_TRACE("xtrsv_LTN_batched", 0, op_cnt_trsm * L.depth());
+            GUANAQO_TRACE("xtrsv_LTN_batched", 0, op_cnt_trsm * L.depth());
             return xtrsm_batch_strided(
                 CblasColMajor, CblasLeft, CblasLower, CblasTrans, CblasNonUnit,
                 H.rows(), H.cols(), real_t{1}, L.data, L.outer_stride(),
@@ -312,7 +312,7 @@ void CompactBLAS<Abi>::xtrsm_RLTN(single_batch_view L, mut_single_batch_view H,
         if (use_blas_scalar(b)) {
             [[maybe_unused]] const auto op_cnt_trsm =
                 L.rows() * (L.rows() + 1) * H.rows() / 2 + L.rows();
-            KOQKATOO_TRACE("xtrsm_RLTN_blas", 0, op_cnt_trsm * L.depth());
+            GUANAQO_TRACE("xtrsm_RLTN_blas", 0, op_cnt_trsm * L.depth());
             return linalg::xtrsm(CblasColMajor, CblasRight, CblasLower,
                                  CblasTrans, CblasNonUnit, H.rows(), H.cols(),
                                  real_t{1}, L.data, L.outer_stride(), H.data,
@@ -332,7 +332,7 @@ void CompactBLAS<Abi>::xtrsm_LLNN(single_batch_view L, mut_single_batch_view H,
         if (use_blas_scalar(b)) {
             [[maybe_unused]] const auto op_cnt_trsm =
                 L.rows() * (L.rows() + 1) * H.cols() / 2 + L.rows();
-            KOQKATOO_TRACE("xtrsm_LLNN_blas", 0, op_cnt_trsm * L.depth());
+            GUANAQO_TRACE("xtrsm_LLNN_blas", 0, op_cnt_trsm * L.depth());
             return linalg::xtrsm(CblasColMajor, CblasLeft, CblasLower,
                                  CblasNoTrans, CblasNonUnit, H.rows(), H.cols(),
                                  real_t{1}, L.data, L.outer_stride(), H.data,
@@ -353,7 +353,7 @@ void CompactBLAS<Abi>::xtrsv_LNN(single_batch_view L, mut_single_batch_view h,
         if (use_blas_scalar(b)) {
             [[maybe_unused]] const auto op_cnt_trsm =
                 L.rows() * (L.rows() + 1) * h.cols() / 2 + L.rows();
-            KOQKATOO_TRACE("xtrsv_LNN_blas", 0, op_cnt_trsm * L.depth());
+            GUANAQO_TRACE("xtrsv_LNN_blas", 0, op_cnt_trsm * L.depth());
             return linalg::xtrsv(CblasColMajor, CblasLower, CblasNoTrans,
                                  CblasNonUnit, h.rows(), L.data,
                                  L.outer_stride(), h.data, index_t{1});
@@ -372,7 +372,7 @@ void CompactBLAS<Abi>::xtrsm_LLTN(single_batch_view L, mut_single_batch_view H,
         if (use_blas_scalar(b)) {
             [[maybe_unused]] const auto op_cnt_trsm =
                 L.rows() * (L.rows() + 1) * H.cols() / 2 + L.rows();
-            KOQKATOO_TRACE("xtrsm_LLTN_blas", 0, op_cnt_trsm * L.depth());
+            GUANAQO_TRACE("xtrsm_LLTN_blas", 0, op_cnt_trsm * L.depth());
             return linalg::xtrsm(CblasColMajor, CblasLeft, CblasLower,
                                  CblasTrans, CblasNonUnit, H.rows(), H.cols(),
                                  real_t{1}, L.data, L.outer_stride(), H.data,
@@ -393,7 +393,7 @@ void CompactBLAS<Abi>::xtrsv_LTN(single_batch_view L, mut_single_batch_view H,
         if (use_blas_scalar(b)) {
             [[maybe_unused]] const auto op_cnt_trsm =
                 L.rows() * (L.rows() + 1) * H.cols() / 2 + L.rows();
-            KOQKATOO_TRACE("xtrsv_LTN_blas", 0, op_cnt_trsm * L.depth());
+            GUANAQO_TRACE("xtrsv_LTN_blas", 0, op_cnt_trsm * L.depth());
             return linalg::xtrsv(CblasColMajor, CblasLower, CblasTrans,
                                  CblasNonUnit, H.rows(), L.data,
                                  L.outer_stride(), H.data, index_t{1});

@@ -29,10 +29,6 @@ option(KOQKATOO_WITH_CPU_TIME
     "Measure CPU time in addition to wall time" Off)
 option(KOQKATOO_WITH_TBB
     "Use the oneTBB library for parallel implementation" Off)
-option(KOQKATOO_WITH_ITT
-    "Use the Intel ITT library for tracing" Off)
-option(KOQKATOO_WITH_TRACING
-    "Enable tracing of hot functions (note: slows down the solver)" Off)
 # Target options
 option(KOQKATOO_HAVE_TWO_512_FMA_UNITS
     "Does the CPU have 0.5 CPI 512-bit FMA" Off)

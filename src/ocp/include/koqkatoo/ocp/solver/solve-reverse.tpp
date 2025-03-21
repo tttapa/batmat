@@ -5,7 +5,7 @@
 #include <koqkatoo/loop.hpp>
 #include <koqkatoo/ocp/solver/solve.hpp>
 #include <koqkatoo/thread-pool.hpp>
-#include <koqkatoo/trace.hpp>
+#include <guanaqo/trace.hpp>
 #include <algorithm>
 #include <atomic>
 
@@ -19,7 +19,7 @@ namespace koqkatoo::ocp {
 
 template <simd_abi_tag Abi>
 void Solver<Abi>::tridiagonal_factor_rev(index_t k) {
-    KOQKATOO_TRACE("factor Ψ", k);
+    GUANAQO_TRACE("factor Ψ", k);
     auto [N, nx, nu, ny, ny_N] = storage.dim;
     const auto stage_idx       = k * simd_stride;
     KOQKATOO_ASSERT(stage_idx < N + 1);
@@ -67,7 +67,7 @@ template <simd_abi_tag Abi>
 void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
                             real_view Mxb, mut_real_view d, mut_real_view Δλ,
                             mut_real_view MᵀΔλ) {
-    KOQKATOO_TRACE("solve", 0);
+    GUANAQO_TRACE("solve", 0);
 
     auto [N, nx, nu, ny, ny_N] = storage.dim;
     const auto be              = settings.preferred_backend;
@@ -82,7 +82,7 @@ void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     // Parallel solve Hv = -g
     // ----------------------
     auto solve_H1 = [&](index_t i) {
-        KOQKATOO_TRACE("solve Hv=g", i);
+        GUANAQO_TRACE("solve Hv=g", i);
         // Initialize rhs: g = ∇ϕ + Mᵀλ = ∇f̃ + Aᵀŷ + Mᵀλ                 (d ← g)
         for (index_t j = 0; j < nx + nu; ++j)
             for (index_t ii = i * simd_stride; ii < (i + 1) * simd_stride; ++ii)
@@ -135,7 +135,7 @@ void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
     // Parallel solve Hd = -g - Mᵀλ
     // -----------------------------
     auto solve_H2 = [&](index_t i) {
-        KOQKATOO_TRACE("solve Hd=-g-MᵀΔλ", i);
+        GUANAQO_TRACE("solve Hd=-g-MᵀΔλ", i);
         compact_blas::xgemv_sub(Wᵀ().batch(i), Δλ.batch(i), d.batch(i), be);
         if (i < AB().num_batches())
             compact_blas::xgemv_T_add(V().batch(i), Δλ1.batch(i), d.batch(i),
@@ -157,7 +157,7 @@ void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
             if (k + 1 < num_batch &&
                 join_counters[k + 1].value.fetch_add(1) != 1)
                 return false;
-            KOQKATOO_TRACE("solve ψ fwd", k);
+            GUANAQO_TRACE("solve ψ fwd", k);
             // We introduce a delay of 1 when solving in reverse, because we
             // the right-hand side depends on f(i-1) if i > 0.
             const index_t i_start = std::min((k + 1) * simd_stride, N) + 1,
@@ -194,13 +194,13 @@ void Solver<Abi>::solve_rev(real_view grad, real_view Mᵀλ, real_view Aᵀŷ,
                 // Concretely, we can only start solve H for batch k if
                 /// Ψ((k + 1) * simd_stride) is done.
                 {
-                    KOQKATOO_TRACE("solve ψ rev", k);
+                    GUANAQO_TRACE("solve ψ rev", k);
                     if (k == 0)
                         solve_ψ_rev(0);
                     for (index_t i = ik; i < ikp1; ++i)
                         solve_ψ_rev(i + 1); // delay of one for λ(i+1)
                 }
-                KOQKATOO_TRACE("solve store-notify", k);
+                GUANAQO_TRACE("solve store-notify", k);
                 // Once the block of Ψ is done, we can start the next block
                 // of the solution of Hd=g-MᵀΔλ.
                 stage_ready.fetch_add(1, std::memory_order_release);

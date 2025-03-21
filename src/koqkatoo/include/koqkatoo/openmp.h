@@ -1,11 +1,11 @@
 #pragma once
 
 #include <koqkatoo/config.hpp>
-#include <koqkatoo/stringify.h>
+#include <guanaqo/stringify.h>
 
 #if KOQKATOO_WITH_OPENMP
 #include <omp.h>
-#define KOQKATOO_OMP(X) _Pragma(KOQKATOO_STRINGIFY(omp X))
+#define KOQKATOO_OMP(X) _Pragma(GUANAQO_STRINGIFY(omp X))
 #define KOQKATOO_OMP_IF_ELSE(X, Y) X
 #define KOQKATOO_OMP_IF(X) X
 #else

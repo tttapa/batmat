@@ -1,7 +1,7 @@
 #pragma once
 
 #include <koqkatoo/ocp/cyclic-solver/cyclic-solver.hpp>
-#include <print>
+#include <guanaqo/trace.hpp>
 
 namespace koqkatoo::ocp {
 
@@ -10,7 +10,7 @@ void CyclicOCPSolver<Abi>::mat_vec_constr_tp(real_view ŷb,
                                              mut_real_view Aᵀŷb) const {
     KOQKATOO_OMP(for)
     for (index_t i = 0; i < n; ++i) {
-        KOQKATOO_TRACE("mat_vec_transpose_constr", i);
+        GUANAQO_TRACE("mat_vec_transpose_constr", i);
         auto hi = get_batch_index(i);
         compact_blas::xgemv_T(CD.batch(hi), ŷb.batch(hi), Aᵀŷb.batch(hi), be);
     }
@@ -21,7 +21,7 @@ void CyclicOCPSolver<Abi>::mat_vec_dyn(real_view xb, real_view bb,
                                        mut_real_view Mxbb) const {
     KOQKATOO_OMP(for)
     for (index_t i = 0; i < n; ++i) {
-        KOQKATOO_TRACE("residual_dynamics_constr", i);
+        GUANAQO_TRACE("residual_dynamics_constr", i);
         auto hi = get_batch_index(i);
         if (i + 1 < n) {
             auto hi_next = get_batch_index(i + 1);
@@ -47,7 +47,7 @@ void CyclicOCPSolver<Abi>::mat_vec_dyn_tp(real_view λb,
                                           mut_real_view Mᵀλb) const {
     KOQKATOO_OMP(for)
     for (index_t i = 0; i < n; ++i) {
-        KOQKATOO_TRACE("mat_vec_transpose_dynamics_constr", i);
+        GUANAQO_TRACE("mat_vec_transpose_dynamics_constr", i);
         const auto hi                   = get_batch_index(i);
         Mᵀλb.batch(hi).top_rows(dim.nx) = λb.batch(hi);
         Mᵀλb.batch(hi).bottom_rows(dim.nu).set_constant(0);

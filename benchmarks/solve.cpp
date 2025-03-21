@@ -11,7 +11,7 @@
 #include <koqkatoo/ocp/solver/solve.hpp>
 #include <koqkatoo/openmp.h>
 #include <koqkatoo/thread-pool.hpp>
-#include <koqkatoo/trace.hpp>
+#include <guanaqo/trace.hpp>
 #include <koqkatoo-version.h>
 
 #include <guanaqo/eigen/span.hpp>
@@ -97,12 +97,12 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
         }
     }
     {
-        KOQKATOO_TRACE("riccati factor", N);
+        GUANAQO_TRACE("riccati factor", N);
         auto PN = LP.batch(N).bottom_right(nx, nx);
 #if USE_GEMMT_INEQ_SCHUR
         index_t nJ = 0;
         if (n_constraints > 0) {
-            KOQKATOO_TRACE("scale_penalty", N, nx * ny_N);
+            GUANAQO_TRACE("scale_penalty", N, nx * ny_N);
             auto ocpCN = ocp.C(N);
             for (index_t c = 0; c < nx; ++c) {
                 nJ = 0;
@@ -115,11 +115,11 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
             }
         }
         {
-            KOQKATOO_TRACE("copy", N, PN.rows() * PN.rows());
+            GUANAQO_TRACE("copy", N, PN.rows() * PN.rows());
             PN(0) = ocp.Q(N);
         }
         if (nJ > 0) {
-            KOQKATOO_TRACE("xgemmt_blas", N,
+            GUANAQO_TRACE("xgemmt_blas", N,
                            PN.rows() * (PN.rows() + 1) * nJ / 2);
             koqkatoo::linalg::xgemmt(
                 CblasColMajor, CblasLower, CblasTrans, CblasNoTrans, PN.rows(),
@@ -141,7 +141,7 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
 #endif
         PN.add_to_diagonal(1 / S);
         {
-            KOQKATOO_TRACE("xpotrf_blas", N, potrf_op_count(PN.rows()));
+            GUANAQO_TRACE("xpotrf_blas", N, potrf_op_count(PN.rows()));
             index_t info;
             koqkatoo::linalg::xpotrf("L", PN.rows(), PN.data, PN.outer_stride(),
                                      &info);
@@ -151,14 +151,14 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
         }
     }
     for (index_t k = N; k-- > 0;) {
-        KOQKATOO_TRACE("riccati factor", k);
+        GUANAQO_TRACE("riccati factor", k);
         {
-            KOQKATOO_TRACE("copy", k, (nx + nu) * nu);
+            GUANAQO_TRACE("copy", k, (nx + nu) * nu);
             LF(0) = BA(k);
         }
         auto Lxx = LP(k + 1).bottom_right(nx, nx);
         {
-            KOQKATOO_TRACE("xtrmm_blas", k,
+            GUANAQO_TRACE("xtrmm_blas", k,
                            LF.rows() * (LF.rows() + 1) * LF.cols() / 2);
             koqkatoo::linalg::xtrmm(
                 CblasColMajor, CblasLeft, CblasLower, CblasTrans, CblasNonUnit,
@@ -169,7 +169,7 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
 #if USE_GEMMT_INEQ_SCHUR
         index_t nJ = 0;
         if (n_constraints > 0) {
-            KOQKATOO_TRACE("scale_penalty", k, (nx + nu) * ny);
+            GUANAQO_TRACE("scale_penalty", k, (nx + nu) * ny);
             for (index_t c = 0; c < nx; ++c) {
                 nJ = 0;
                 for (index_t r = 0; r < ny; ++r)
@@ -190,11 +190,11 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
             }
         }
         {
-            KOQKATOO_TRACE("copy", k, LP.rows() * LP.cols());
+            GUANAQO_TRACE("copy", k, LP.rows() * LP.cols());
             LP(k) = RSQ(k);
         }
         if (nJ > 0) {
-            KOQKATOO_TRACE("xgemmt_blas", k,
+            GUANAQO_TRACE("xgemmt_blas", k,
                            LP.rows() * (LP.rows() + 1) * nJ / 2);
             koqkatoo::linalg::xgemmt(
                 CblasColMajor, CblasLower, CblasTrans, CblasNoTrans, LP(k).rows,
@@ -209,7 +209,7 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
 #endif
         LP(k).add_to_diagonal(1 / S);
         {
-            KOQKATOO_TRACE("xsyrk_blas", k,
+            GUANAQO_TRACE("xsyrk_blas", k,
                            LP.rows() * (LP.cols() + 1) * LF.rows() / 2);
             koqkatoo::linalg::xsyrk(CblasColMajor, CblasLower, CblasTrans,
                                     LP.rows(), LF.rows(), real_t(1), LF.data(),
@@ -217,7 +217,7 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
                                     LP.outer_stride());
         }
         {
-            KOQKATOO_TRACE("xpotrf_blas", k, potrf_op_count(LP.rows()));
+            GUANAQO_TRACE("xpotrf_blas", k, potrf_op_count(LP.rows()));
             index_t info;
             koqkatoo::linalg::xpotrf("L", LP.rows(), LP(k).data,
                                      LP(k).outer_stride, &info);
@@ -235,7 +235,7 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
         Pb{{.depth = N + 1, .rows = nx}};
     p(N) = q(N).top_rows(nx);
     for (index_t k = N; k-- > 0;) {
-        KOQKATOO_TRACE("riccati solve bwd", k);
+        GUANAQO_TRACE("riccati solve bwd", k);
         auto B = BA(k).left_cols(nu), A = BA(k).right_cols(nx);
         auto Luu = LP(k).top_left(nu, nu), Lxu = LP(k).bottom_left(nx, nu),
              Lxx = LP(k + 1).bottom_right(nx, nx);
@@ -278,7 +278,7 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
                                 index_t{1}, real_t{1}, p(k).data, index_t{1});
     }
     {
-        KOQKATOO_TRACE("riccati solve fwd", -1);
+        GUANAQO_TRACE("riccati solve fwd", -1);
         auto Lxx = LP(0).bottom_right(nx, nx);
         auto x0  = xu(0).top_rows(nx);
         x0       = b(0);
@@ -292,7 +292,7 @@ void solve_riccati(koqkatoo::ocp::LinearOCPStorage &ocp, real_t S, auto Σ,
         Δλ(0) += p(0);
     }
     for (index_t k = 0; k < N; ++k) {
-        KOQKATOO_TRACE("riccati solve fwd", k);
+        GUANAQO_TRACE("riccati solve fwd", k);
         auto Luu = LP(k).top_left(nu, nu), Lxu = LP(k).bottom_left(nx, nu),
              Lxx = LP(k + 1).bottom_right(nx, nx);
         auto u = xu(k).bottom_rows(nu), x = xu(k).top_rows(nx),
@@ -411,8 +411,8 @@ void benchmark_riccati(benchmark::State &state) {
     static size_t num_invocations = 0;
     for (auto _ : state) {
         ++num_invocations;
-#if KOQKATOO_WITH_TRACING
-        koqkatoo::trace_logger.reset();
+#if GUANAQO_WITH_TRACING
+        guanaqo::trace_logger.reset();
 #endif
         solve_riccati(ocp, S, Σ_strided.view, J_strided.view, grad_strided.view,
                       Mxb_strided.view, xu_batched, Δλ_batched);
@@ -424,7 +424,7 @@ void benchmark_riccati(benchmark::State &state) {
         guanaqo::print_python(std::cout, Δλ_mat(0));
     }
 
-#if KOQKATOO_WITH_TRACING
+#if GUANAQO_WITH_TRACING
     static bool saved = false;
     if (num_invocations >= 100 && !std::exchange(saved, true)) {
         std::string name =
@@ -437,7 +437,7 @@ void benchmark_riccati(benchmark::State &state) {
         std::filesystem::create_directories(out_dir);
         std::ofstream csv{out_dir / name};
         koqkatoo::TraceLogger::write_column_headings(csv) << '\n';
-        for (const auto &log : koqkatoo::trace_logger.get_logs())
+        for (const auto &log : guanaqo::trace_logger.get_logs())
             csv << log << '\n';
     }
 #endif
@@ -449,7 +449,7 @@ void benchmark_solve(benchmark::State &state) {
         KOQKATOO_OMP_IF(omp_set_num_threads(n_threads));
         koqkatoo::pool_set_num_threads(n_threads);
         koqkatoo::fork_set_num_threads(n_threads);
-        KOQKATOO_IF_ITT(koqkatoo::foreach_thread([](index_t i, index_t) {
+        GUANAQO_IF_ITT(koqkatoo::foreach_thread([](index_t i, index_t) {
             __itt_thread_set_name(std::format("OMP({})", i).c_str());
         }));
     }
@@ -529,10 +529,10 @@ void benchmark_solve(benchmark::State &state) {
     [[maybe_unused]] static size_t num_invocations = 0;
     for (auto _ : state) {
         ++num_invocations;
-        KOQKATOO_IF_ITT(
-            __itt_frame_begin_v3(koqkatoo::trace_logger.domain, nullptr));
-#if KOQKATOO_WITH_TRACING
-        koqkatoo::trace_logger.reset();
+        GUANAQO_IF_ITT(
+            __itt_frame_begin_v3(guanaqo::trace_logger.domain, nullptr));
+#if GUANAQO_WITH_TRACING
+        guanaqo::trace_logger.reset();
 #endif
         s.template factor<Reverse>(S, Σ_strided, J_strided);
 #if !FACTOR_ONLY
@@ -543,8 +543,8 @@ void benchmark_solve(benchmark::State &state) {
 #if FACTUP
         s.template updowndate<Reverse>(Σ_strided, J_strided, J2_strided);
 #endif
-        KOQKATOO_IF_ITT(
-            __itt_frame_end_v3(koqkatoo::trace_logger.domain, nullptr));
+        GUANAQO_IF_ITT(
+            __itt_frame_end_v3(guanaqo::trace_logger.domain, nullptr));
     }
 
     auto [N, nx, nu, ny, ny_N] = ocp.dim;
@@ -563,7 +563,7 @@ void benchmark_solve(benchmark::State &state) {
         guanaqo::print_python(std::cout, Δλ_mat);
     }
 
-#if KOQKATOO_WITH_TRACING
+#if GUANAQO_WITH_TRACING
     static bool saved = false;
     if (num_invocations >= 100 && !std::exchange(saved, true)) {
         std::string name = std::format(
@@ -577,7 +577,7 @@ void benchmark_solve(benchmark::State &state) {
         std::filesystem::create_directories(out_dir);
         std::ofstream csv{out_dir / name};
         koqkatoo::TraceLogger::write_column_headings(csv) << '\n';
-        for (const auto &log : koqkatoo::trace_logger.get_logs())
+        for (const auto &log : guanaqo::trace_logger.get_logs())
             csv << log << '\n';
     }
 #endif
