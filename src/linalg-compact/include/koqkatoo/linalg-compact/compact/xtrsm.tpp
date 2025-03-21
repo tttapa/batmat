@@ -66,7 +66,6 @@ void CompactBLAS<Abi>::xtrsv_LTN_ref(single_batch_view L,
     assert(L.rows() == L.cols());
     assert(L.rows() == H.rows());
     assert(H.cols() == 1);
-    const auto n = L.rows();
     micro_kernels::trsm::xtrsm_lltn_register<Abi>(L, H);
 }
 

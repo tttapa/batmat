@@ -567,7 +567,7 @@ void CompactBLAS<Abi>::xsub_copy_impl(OutView out, View x1, Views... xs)
     const auto Bs   = static_cast<index_t>(x1.batch_size());
     const index_t n = x1.rows(), m = x1.cols();
     KOQKATOO_OMP(parallel for lastprivate(i))
-    for (i = 0; i <= x1.depth() - Bs; i += Bs) {
+    for (i = 0; i <= static_cast<index_t>(x1.depth()) - Bs; i += Bs) {
         for (index_t c = 0; c < m; ++c) {
             KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t r = 0; r < n; ++r) {
                 aligned_store(&out(i, r, c),
@@ -576,7 +576,7 @@ void CompactBLAS<Abi>::xsub_copy_impl(OutView out, View x1, Views... xs)
             }
         }
     }
-    for (; i < x1.depth(); ++i)
+    for (; i < static_cast<index_t>(x1.depth()); ++i)
         for (index_t c = 0; c < m; ++c)
             for (index_t r = 0; r < n; ++r)
                 out(i, r, c) = x1(i, r, c) - (... + xs(i, r, c));
@@ -602,7 +602,7 @@ void CompactBLAS<Abi>::xadd_neg_copy_impl(OutView out, Views... xs)
     const auto Bs   = static_cast<index_t>(out.batch_size());
     const index_t n = out.rows(), m = out.cols();
     KOQKATOO_OMP(parallel for lastprivate(i))
-    for (i = 0; i <= out.depth() - Bs; i += Bs) {
+    for (i = 0; i <= static_cast<index_t>(out.depth()) - Bs; i += Bs) {
         for (index_t c = 0; c < m; ++c) {
             KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t r = 0; r < n; ++r) {
                 aligned_store(&out(i, r, c),
@@ -610,7 +610,7 @@ void CompactBLAS<Abi>::xadd_neg_copy_impl(OutView out, Views... xs)
             }
         }
     }
-    for (; i < out.depth(); ++i)
+    for (; i < static_cast<index_t>(out.depth()); ++i)
         for (index_t c = 0; c < m; ++c)
             for (index_t r = 0; r < n; ++r)
                 out(i, r, c) = -(... + xs(i, r, c));
