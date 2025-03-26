@@ -110,6 +110,8 @@ struct CyclicOCPSolver {
     }
     CyclicOCPSolver(const CyclicOCPSolver &)            = delete;
     CyclicOCPSolver &operator=(const CyclicOCPSolver &) = delete;
+    CyclicOCPSolver(CyclicOCPSolver &&)                 = default;
+    CyclicOCPSolver &operator=(CyclicOCPSolver &&)      = default;
 
     /// @name Packing for vectorization
     /// @{
