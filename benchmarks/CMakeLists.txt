@@ -58,3 +58,5 @@ target_link_libraries(benchmark-solve PRIVATE
 add_executable(benchmark-custom-potrf custom-potrf.cpp custom-potrf-microkernel.cpp benchmark-main.cpp)
 target_link_libraries(benchmark-custom-potrf PRIVATE
     benchmark::benchmark Eigen3::Eigen koqkatoo::linalg-compact koqkatoo::warnings)
+
+add_subdirectory(ocp-solve)

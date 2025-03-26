@@ -66,7 +66,10 @@ class KoqkatooRecipe(ConanFile):
     generators = ("CMakeDeps",)
 
     def requirements(self):
-        self.requires("guanaqo/1.0.0-alpha.8", transitive_headers=True)
+        self.requires(
+            "guanaqo/1.0.0-alpha.12", transitive_headers=True, transitive_libs=True
+        )
+        self.requires("hyhound/1.0.0", transitive_headers=True)
         if self.options.with_openblas:
             self.requires("openblas/0.3.27", transitive_headers=True)
         if self.options.with_tbb:
@@ -94,6 +97,7 @@ class KoqkatooRecipe(ConanFile):
         # There is currently no 64-bit indices option for OpenBLAS using Conan
         if self.options.with_openblas:
             self.options.rm_safe("dense_index_type")
+        self.options["guanaqo/*"].with_blas = True
 
     def layout(self):
         cmake_layout(self)
