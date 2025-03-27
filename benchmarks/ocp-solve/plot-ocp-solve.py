@@ -77,23 +77,23 @@ plot_opts = {
         alpha=0.8,
         linewidth=0.8,
     ),
-    "bm_solve_schur": dict(
-        label="Solve (Schur)",
-        linestyle="--",
-        color="tab:orange",
-        marker="none",
-        alpha=0.8,
-        linewidth=0.8,
-    ),
-    "bm_update_schur": dict(
-        label="Update (Schur)",
-        linestyle="--",
-        color="tab:green",
-        marker="x",
-        markersize=4,
-        alpha=0.8,
-        linewidth=0.8,
-    ),
+    # "bm_solve_schur": dict(
+    #     label="Solve (Schur)",
+    #     linestyle="--",
+    #     color="tab:orange",
+    #     marker="none",
+    #     alpha=0.8,
+    #     linewidth=0.8,
+    # ),
+    # "bm_update_schur": dict(
+    #     label="Update (Schur)",
+    #     linestyle="--",
+    #     color="tab:green",
+    #     marker="x",
+    #     markersize=4,
+    #     alpha=0.8,
+    #     linewidth=0.8,
+    # ),
     "bm_factor_riccati": dict(
         label="Factor (Riccati)",
         linestyle="-",
@@ -102,32 +102,38 @@ plot_opts = {
         markersize=7,
         mfc="white",
     ),
-    "bm_solve_riccati": dict(
-        label="Solve (Riccati)",
+    "bm_factor_riccati_blasfeo": dict(
+        label="Factor (Riccati, BLASFEO)",
         linestyle="-",
-        color="tab:orange",
-        marker="none",
+        color="aquamarine",
+        marker="*",
     ),
-    "bm_update_riccati": dict(
-        label="Update (Riccati)",
-        linestyle="-",
-        color="tab:green",
-        marker=".",
-        markersize=7,
-        mfc="white",
-    ),
+    # "bm_solve_riccati": dict(
+    #     label="Solve (Riccati)",
+    #     linestyle="-",
+    #     color="tab:orange",
+    #     marker="none",
+    # ),
+    # "bm_update_riccati": dict(
+    #     label="Update (Riccati)",
+    #     linestyle="-",
+    #     color="tab:green",
+    #     marker=".",
+    #     markersize=7,
+    #     mfc="white",
+    # ),
     "bm_factor_schur_kqt": dict(
         label="Factor (Schur, koqkatoo)",
         linestyle=":",
         color="tab:cyan",
         marker=".",
     ),
-    "bm_solve_schur_kqt": dict(
-        label="Solve (Schur, koqkatoo)",
-        linestyle=":",
-        color="gold",
-        marker=".",
-    ),
+    # "bm_solve_schur_kqt": dict(
+    #     label="Solve (Schur, koqkatoo)",
+    #     linestyle=":",
+    #     color="gold",
+    #     marker=".",
+    # ),
 }
 
 fig, ax = plt.subplots(1, 1)
@@ -151,5 +157,20 @@ ax.set_ylabel(r"Run time [$\mu\mathrm{s}$]")
 assert unit == "ns"
 ax.set_ylim(0, None)
 plt.savefig(filename + ".timings.pdf")
+
+
+fig, ax = plt.subplots(1, 1)
+for function, opts in plot_opts.items():
+    function_df = df[df["func_name"] == function]
+    if function_df.empty:
+        continue
+    print(function)
+    ax.plot(function_df[xs_key], 100 * function_df["cpu_usage"].array, **opts)
+ax.legend(loc="upper left")
+ax.set_title("CPU usage\n" + label)
+ax.set_xlabel(xs_key_names[xs_key])
+ax.set_ylabel(r"CPU usage [$\%$]")
+ax.set_ylim(0, None)
+plt.savefig(filename + ".cpu-usage.pdf")
 
 plt.show()

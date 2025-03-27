@@ -14,6 +14,11 @@
 #include <experimental/simd>
 #include <utility>
 
+#if WITH_BLASFEO
+#include "riccati-blasfeo.hpp"
+#include <blasfeo.h>
+#endif
+
 using namespace hyhound;
 using namespace hyhound::ocp;
 namespace stdx = std::experimental;
@@ -36,7 +41,7 @@ auto generate_ocp(benchmark::State &state) {
 }
 
 auto build_cyclic_ocp_solver(const OCPDataRiccati &ocp_ric) {
-    using abi             = stdx::simd_abi::native<real_t>;
+    using abi             = stdx::simd_abi::deduce_t<real_t, 4>;
     using CyclicOCPSolver = koqkatoo::ocp::CyclicOCPSolver<abi>;
     koqkatoo::ocp::LinearOCPStorage ocp{.dim{.N_horiz = ocp_ric.N,
                                              .nx      = ocp_ric.nx,
@@ -139,10 +144,11 @@ void bm_factor_schur_kqt(benchmark::State &state) {
     auto solver   = build_cyclic_ocp_solver(ocp);
     auto Σb       = solver.pack_constr(as_span(Σ.reshaped()));
     auto Jb       = solver.pack_constr(std::span<bool>{});
+    const auto S  = std::numeric_limits<real_t>::infinity();
     Jb.set_constant(true);
-    KOQKATOO_OMP(parallel) {
-        for (auto _ : state) {
-            solver.compute_Ψ(1, Σb, Jb);
+    for (auto _ : state) {
+        KOQKATOO_OMP(parallel) {
+            solver.compute_Ψ(S, Σb, Jb);
             solver.factor_Ψ();
         }
     }
@@ -157,17 +163,32 @@ void bm_solve_schur_kqt(benchmark::State &state) {
          Aᵀŷb = solver.pack_var(), db = solver.pack_var(),
          MᵀΔλb = solver.pack_var();
     auto Δλb   = solver.pack_dyn();
+    const auto S  = std::numeric_limits<real_t>::infinity();
     Jb.set_constant(true);
     KOQKATOO_OMP(parallel) {
-        solver.compute_Ψ(1, Σb, Jb);
+        solver.compute_Ψ(S, Σb, Jb);
         solver.factor_Ψ();
-        for (auto _ : state) {
+    }
+    for (auto _ : state) {
+        KOQKATOO_OMP(parallel) {
             solver.solve_H_fwd(gradb, Mᵀλb, Aᵀŷb, db, Δλb);
             solver.solve_Ψ(Δλb);
             solver.solve_H_rev(db, Δλb, MᵀΔλb);
         }
     }
 }
+
+#if WITH_BLASFEO
+
+void bm_factor_riccati_blasfeo(benchmark::State &state) {
+    auto [ocp, Σ]    = generate_ocp(state);
+    auto ocp_blasfeo = koqkatoo::ocp::OCPDataRiccati::from_riccati(ocp);
+    koqkatoo::ocp::RiccatiFactor fac{.ocp = ocp_blasfeo};
+    for (auto _ : state)
+        factor(fac, Σ);
+}
+
+#endif
 
 std::vector<benchmark::internal::Benchmark *> benchmarks;
 void register_benchmark(benchmark::internal::Benchmark *bm) {
@@ -181,6 +202,9 @@ OCP_BENCHMARK(bm_update_riccati);
 OCP_BENCHMARK(bm_factor_schur);
 OCP_BENCHMARK(bm_solve_schur);
 OCP_BENCHMARK(bm_update_schur);
+#if WITH_BLASFEO
+OCP_BENCHMARK(bm_factor_riccati_blasfeo);
+#endif
 OCP_BENCHMARK(bm_factor_schur_kqt);
 OCP_BENCHMARK(bm_solve_schur_kqt);
 
