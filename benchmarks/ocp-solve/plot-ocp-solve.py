@@ -128,6 +128,12 @@ plot_opts = {
         color="tab:cyan",
         marker=".",
     ),
+    "bm_factor_schur_kqt_1": dict(
+        label="Factor (Schur, koqkatoo, single threaded)",
+        linestyle=":",
+        color="brown",
+        marker=".",
+    ),
     # "bm_solve_schur_kqt": dict(
     #     label="Solve (Schur, koqkatoo)",
     #     linestyle=":",
@@ -142,7 +148,7 @@ for function, opts in plot_opts.items():
     if function_df.empty:
         continue
     print(function)
-    ax.plot(function_df[xs_key], 1e-3 * function_df[metric][stat].array, **opts)
+    ax.semilogy(function_df[xs_key], 1e-3 * function_df[metric][stat].array, **opts)
     ax.fill_between(
         function_df[xs_key],
         1e-3 * function_df[metric]["min"].array,
@@ -166,7 +172,7 @@ for function, opts in plot_opts.items():
         continue
     print(function)
     ax.plot(function_df[xs_key], 100 * function_df["cpu_usage"].array, **opts)
-ax.legend(loc="upper left")
+ax.legend(loc="right")
 ax.set_title("CPU usage\n" + label)
 ax.set_xlabel(xs_key_names[xs_key])
 ax.set_ylabel(r"CPU usage [$\%$]")

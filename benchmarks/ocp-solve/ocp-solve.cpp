@@ -154,6 +154,19 @@ void bm_factor_schur_kqt(benchmark::State &state) {
     }
 }
 
+void bm_factor_schur_kqt_1(benchmark::State &state) {
+    auto [ocp, Σ] = generate_ocp(state);
+    auto solver   = build_cyclic_ocp_solver(ocp);
+    auto Σb       = solver.pack_constr(as_span(Σ.reshaped()));
+    auto Jb       = solver.pack_constr(std::span<bool>{});
+    const auto S  = std::numeric_limits<real_t>::infinity();
+    Jb.set_constant(true);
+    for (auto _ : state) {
+        solver.compute_Ψ(S, Σb, Jb);
+        solver.factor_Ψ();
+    }
+}
+
 void bm_solve_schur_kqt(benchmark::State &state) {
     auto [ocp, Σ] = generate_ocp(state);
     auto solver   = build_cyclic_ocp_solver(ocp);
@@ -161,9 +174,9 @@ void bm_solve_schur_kqt(benchmark::State &state) {
     auto Jb       = solver.pack_constr(std::span<bool>{});
     auto gradb = solver.pack_var(), Mᵀλb = solver.pack_var(),
          Aᵀŷb = solver.pack_var(), db = solver.pack_var(),
-         MᵀΔλb = solver.pack_var();
-    auto Δλb   = solver.pack_dyn();
-    const auto S  = std::numeric_limits<real_t>::infinity();
+         MᵀΔλb   = solver.pack_var();
+    auto Δλb     = solver.pack_dyn();
+    const auto S = std::numeric_limits<real_t>::infinity();
     Jb.set_constant(true);
     KOQKATOO_OMP(parallel) {
         solver.compute_Ψ(S, Σb, Jb);
@@ -197,16 +210,17 @@ void register_benchmark(benchmark::internal::Benchmark *bm) {
 #define OCP_BENCHMARK(...) BENCHMARK(__VA_ARGS__)->Apply(register_benchmark)
 
 OCP_BENCHMARK(bm_factor_riccati);
-OCP_BENCHMARK(bm_solve_riccati);
-OCP_BENCHMARK(bm_update_riccati);
+// OCP_BENCHMARK(bm_solve_riccati);
+// OCP_BENCHMARK(bm_update_riccati);
 OCP_BENCHMARK(bm_factor_schur);
-OCP_BENCHMARK(bm_solve_schur);
-OCP_BENCHMARK(bm_update_schur);
+// OCP_BENCHMARK(bm_solve_schur);
+// OCP_BENCHMARK(bm_update_schur);
 #if WITH_BLASFEO
 OCP_BENCHMARK(bm_factor_riccati_blasfeo);
 #endif
 OCP_BENCHMARK(bm_factor_schur_kqt);
-OCP_BENCHMARK(bm_solve_schur_kqt);
+OCP_BENCHMARK(bm_factor_schur_kqt_1);
+// OCP_BENCHMARK(bm_solve_schur_kqt);
 
 enum class BenchmarkType { vary_N, vary_nu, vary_ny, vary_nx_frac };
 
