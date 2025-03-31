@@ -1,4 +1,5 @@
 #include <koqkatoo/assume.hpp>
+#include <koqkatoo/linalg-compact/mkl.hpp>
 #include <koqkatoo/ocp/cyclic-solver/cyclic-solver.hpp>
 #include <koqkatoo/ocp/ocp.hpp>
 #include <koqkatoo/openmp.h>
@@ -8,10 +9,16 @@
 #include <hyhound-version.h>
 #include <koqkatoo-version.h>
 
+#include <guanaqo/trace.hpp>
 #include <hyhound/ocp/riccati.hpp>
 #include <hyhound/ocp/schur.hpp>
 
 #include <experimental/simd>
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <iostream>
+#include <map>
 #include <utility>
 
 #if WITH_BLASFEO
@@ -23,6 +30,34 @@ using namespace hyhound;
 using namespace hyhound::ocp;
 namespace stdx = std::experimental;
 using guanaqo::as_span;
+
+#if GUANAQO_WITH_TRACING
+std::map<std::tuple<std::string, std::string>, std::filesystem::path> traces;
+void trace(auto &&fun, const auto &name, const auto &params) {
+    std::string filename = std::format("{}.csv", name);
+    std::filesystem::path out_dir{"traces"};
+    out_dir /= *koqkatoo_commit_hash ? koqkatoo_commit_hash : "unknown";
+    out_dir /= KOQKATOO_MKL_IF_ELSE("mkl", "openblas");
+    out_dir /= params;
+    std::filesystem::path out_file = out_dir / filename;
+    if (auto [_, ins] = traces.insert({{name, params}, out_file}); !ins)
+        return;
+    guanaqo::trace_logger.reset();
+    fun();
+    std::filesystem::create_directories(out_dir);
+    std::ofstream csv{out_file};
+    guanaqo::TraceLogger::write_column_headings(csv) << '\n';
+    for (const auto &log : guanaqo::trace_logger.get_logs())
+        csv << log << '\n';
+}
+void print_traces(std::ostream &os) {
+    for (const auto &[_, pth] : traces)
+        os << pth << '\n';
+}
+#else
+void trace(auto &&, const auto &, const auto &) {}
+void print_traces(std::ostream &) {}
+#endif
 
 auto generate_ocp(benchmark::State &state) {
     using std::exp2;
@@ -70,6 +105,9 @@ void bm_factor_riccati(benchmark::State &state) {
     RiccatiFactor fac{.ocp = ocp};
     for (auto _ : state)
         factor(fac, Σ);
+    auto params = std::format("nx={}-nu={}-ny={}-N={}-thr={}", ocp.nx, ocp.nu,
+                              ocp.ny, ocp.N, 1);
+    trace([&] { factor(fac, Σ); }, "factor_riccati", params);
 }
 
 void bm_solve_riccati(benchmark::State &state) {
@@ -78,6 +116,9 @@ void bm_solve_riccati(benchmark::State &state) {
     factor(fac, Σ);
     for (auto _ : state)
         solve(fac);
+    auto params = std::format("nx={}-nu={}-ny={}-N={}-thr={}", ocp.nx, ocp.nu,
+                              ocp.ny, ocp.N, 1);
+    trace([&] { solve(fac); }, "solve_riccati", params);
 }
 
 void bm_update_riccati(benchmark::State &state) {
@@ -88,16 +129,23 @@ void bm_update_riccati(benchmark::State &state) {
 
     auto [ocp, Σ] = generate_ocp(state);
     RiccatiFactor fac{.ocp = ocp};
-    mat ΔΣ = Σ;
-    for (auto _ : state) {
-        state.PauseTiming();
+    mat ΔΣ          = Σ;
+    const auto prep = [&] {
         factor(fac, Σ);
         std::ranges::generate(ΔΣ.reshaped(), [&] {
             return bern(rng) ? exp2(nrml(rng)) : real_t{0};
         });
+    };
+    for (auto _ : state) {
+        state.PauseTiming();
+        prep();
         state.ResumeTiming();
         update(fac, ΔΣ);
     }
+    auto params = std::format("nx={}-nu={}-ny={}-N={}-thr={}-upd={}", ocp.nx,
+                              ocp.nu, ocp.ny, ocp.N, 1, bern.p());
+    prep();
+    trace([&] { update(fac, ΔΣ); }, "update_riccati", params);
 }
 
 void bm_factor_schur(benchmark::State &state) {
@@ -106,6 +154,9 @@ void bm_factor_schur(benchmark::State &state) {
     SchurFactor factor_sch{.ocp = ocp_sch};
     for (auto _ : state)
         factor(factor_sch, Σ);
+    auto params = std::format("nx={}-nu={}-ny={}-N={}-thr={}", ocp.nx, ocp.nu,
+                              ocp.ny, ocp.N, 1);
+    trace([&] { factor(factor_sch, Σ); }, "factor_schur", params);
 }
 
 void bm_solve_schur(benchmark::State &state) {
@@ -115,6 +166,9 @@ void bm_solve_schur(benchmark::State &state) {
     factor(factor_sch, Σ);
     for (auto _ : state)
         solve(factor_sch);
+    auto params = std::format("nx={}-nu={}-ny={}-N={}-thr={}", ocp.nx, ocp.nu,
+                              ocp.ny, ocp.N, 1);
+    trace([&] { solve(factor_sch); }, "solve_schur", params);
 }
 
 void bm_update_schur(benchmark::State &state) {
@@ -146,12 +200,18 @@ void bm_factor_schur_kqt(benchmark::State &state) {
     auto Jb       = solver.pack_constr(std::span<bool>{});
     const auto S  = std::numeric_limits<real_t>::infinity();
     Jb.set_constant(true);
-    for (auto _ : state) {
+    const auto do_factor = [&] {
         KOQKATOO_OMP(parallel) {
             solver.compute_Ψ(S, Σb, Jb);
             solver.factor_Ψ();
         }
-    }
+    };
+    for (auto _ : state)
+        do_factor();
+    auto params =
+        std::format("nx={}-nu={}-ny={}-N={}-thr={}", ocp.nx, ocp.nu, ocp.ny,
+                    ocp.N, KOQKATOO_OMP_IF_ELSE(omp_get_max_threads(), 1));
+    trace([&] { do_factor(); }, "factor_schur_kqt", params);
 }
 
 void bm_factor_schur_kqt_1(benchmark::State &state) {
@@ -182,13 +242,19 @@ void bm_solve_schur_kqt(benchmark::State &state) {
         solver.compute_Ψ(S, Σb, Jb);
         solver.factor_Ψ();
     }
-    for (auto _ : state) {
+    const auto do_solve = [&] {
         KOQKATOO_OMP(parallel) {
             solver.solve_H_fwd(gradb, Mᵀλb, Aᵀŷb, db, Δλb);
             solver.solve_Ψ(Δλb);
             solver.solve_H_rev(db, Δλb, MᵀΔλb);
         }
-    }
+    };
+    for (auto _ : state)
+        do_solve();
+    auto params =
+        std::format("nx={}-nu={}-ny={}-N={}-thr={}", ocp.nx, ocp.nu, ocp.ny,
+                    ocp.N, KOQKATOO_OMP_IF_ELSE(omp_get_max_threads(), 1));
+    trace([&] { do_solve(); }, "solve_schur_kqt", params);
 }
 
 #if WITH_BLASFEO
@@ -199,6 +265,9 @@ void bm_factor_riccati_blasfeo(benchmark::State &state) {
     koqkatoo::ocp::RiccatiFactor fac{.ocp = ocp_blasfeo};
     for (auto _ : state)
         factor(fac, Σ);
+    auto params = std::format("nx={}-nu={}-ny={}-N={}-thr={}", ocp.nx, ocp.nu,
+                              ocp.ny, ocp.N, 1);
+    trace([&] { factor(fac, Σ); }, "factor_riccati_blasfeo", params);
 }
 
 #endif
@@ -222,15 +291,22 @@ OCP_BENCHMARK(bm_factor_schur_kqt);
 OCP_BENCHMARK(bm_factor_schur_kqt_1);
 // OCP_BENCHMARK(bm_solve_schur_kqt);
 
-enum class BenchmarkType { vary_N, vary_nu, vary_ny, vary_nx_frac };
+enum class BenchmarkType {
+    None,
+    vary_N,
+    vary_N_pow_2,
+    vary_nu,
+    vary_ny,
+    vary_nx_frac
+};
 
 int main(int argc, char **argv) {
     if (argc < 1)
         return 1;
     // Parse command-line arguments
     std::vector<char *> argvv{argv, argv + argc};
-    int64_t N = 32, nx = 16, nu = 8, ny = 8, step = 1;
-    BenchmarkType type = BenchmarkType::vary_N;
+    int64_t N = 31, nx = 16, nu = 8, ny = 8, step = 1;
+    BenchmarkType type = BenchmarkType::None;
     for (auto it = argvv.begin(); it != argvv.end();) {
         std::string_view arg = *it;
         if (std::string_view flag = "--N="; arg.starts_with(flag))
@@ -245,6 +321,8 @@ int main(int argc, char **argv) {
             step = std::stoi(std::string(arg.substr(flag.size())));
         else if (arg == "--vary-N")
             type = BenchmarkType::vary_N;
+        else if (arg == "--vary-N-pow-2")
+            type = BenchmarkType::vary_N_pow_2;
         else if (arg == "--vary-nu")
             type = BenchmarkType::vary_nu;
         else if (arg == "--vary-ny")
@@ -262,8 +340,13 @@ int main(int argc, char **argv) {
         bm->MeasureProcessCPUTime()->UseRealTime();
         bm->ArgNames({"N", "nx", "nu", "ny"});
         switch (type) {
+            case BenchmarkType::None: bm->Args({N, nx, nu, ny}); break;
             case BenchmarkType::vary_N:
                 for (int64_t i = step; i <= N; i += step)
+                    bm->Args({i, nx, nu, ny});
+                break;
+            case BenchmarkType::vary_N_pow_2:
+                for (int64_t i = 8; i <= N; i <<= step)
                     bm->Args({i, nx, nu, ny});
                 break;
             case BenchmarkType::vary_nu:
@@ -305,4 +388,5 @@ int main(int argc, char **argv) {
 #endif
     ::benchmark::RunSpecifiedBenchmarks();
     ::benchmark::Shutdown();
+    print_traces(std::cout);
 }

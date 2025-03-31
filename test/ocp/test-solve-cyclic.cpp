@@ -174,7 +174,7 @@ TEST_P(OCPCyclic, solve) {
                                ny, N, n_threads, vl, use_pcg ? "-pcg" : "");
         std::filesystem::create_directories(out_dir);
         std::ofstream csv{out_dir / name};
-        koqkatoo::TraceLogger::write_column_headings(csv) << '\n';
+        guanaqo::TraceLogger::write_column_headings(csv) << '\n';
         for (const auto &log : guanaqo::trace_logger.get_logs())
             csv << log << '\n';
         std::cout << out_dir << std::endl;

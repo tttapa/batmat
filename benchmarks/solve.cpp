@@ -436,7 +436,7 @@ void benchmark_riccati(benchmark::State &state) {
                                n_threads);
         std::filesystem::create_directories(out_dir);
         std::ofstream csv{out_dir / name};
-        koqkatoo::TraceLogger::write_column_headings(csv) << '\n';
+        guanaqo::TraceLogger::write_column_headings(csv) << '\n';
         for (const auto &log : guanaqo::trace_logger.get_logs())
             csv << log << '\n';
     }
@@ -576,7 +576,7 @@ void benchmark_solve(benchmark::State &state) {
                                n_threads);
         std::filesystem::create_directories(out_dir);
         std::ofstream csv{out_dir / name};
-        koqkatoo::TraceLogger::write_column_headings(csv) << '\n';
+        guanaqo::TraceLogger::write_column_headings(csv) << '\n';
         for (const auto &log : guanaqo::trace_logger.get_logs())
             csv << log << '\n';
     }
