@@ -9,6 +9,7 @@
 #include <cmath>
 #include <concepts>
 
+#include <koqkatoo/linalg-compact/compact/micro-kernels/xgemm.hpp>
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xtrtri.hpp>
 #include "util.hpp"
 
@@ -89,6 +90,47 @@ void CompactBLAS<Abi>::xtrtri_copy_ref(single_batch_view Lin,
         LoopDir::Backward);
 }
 
+template <class Abi>
+void CompactBLAS<Abi>::xtrtri_T_copy_ref(single_batch_view Lin,
+                                         mut_single_batch_view L) {
+    using namespace micro_kernels;
+    assert(Lin.rows() == L.rows());
+    assert(Lin.cols() == L.cols());
+    assert(L.rows() == L.cols());
+    const index_t m = L.rows(), n = L.cols();
+    [[maybe_unused]] const auto //
+        op_cnt_trtri = n * (n - 1) * (n - 2) / 6 + n * (n - 1) + n,
+        op_cnt_trmm  = n * (n - 1) * (m - n) / 2 + n * (m - n);
+    GUANAQO_TRACE("xtrtri_T_copy", 0, (op_cnt_trtri + op_cnt_trmm) * L.depth());
+    static constexpr index_t R               = micro_kernels::trtri::RowsReg;
+    single_batch_matrix_accessor<Abi> Lin_   = Lin;
+    mut_single_batch_matrix_accessor<Abi> L_ = L;
+    foreach_chunked(
+        0, n, R,
+        [&](index_t j) {
+            trtri::xtrtri_trmm_copy_T_microkernel<Abi, R>(
+                Lin_.block(j, j), L_.block(0, j), j + R);
+            foreach_chunked(
+                j + R, n, R,
+                [&](index_t k) {
+                    trtri::xtrmm_copy_T_microkernel<Abi, R, R>(
+                        L_.block(0, j), Lin_.block(k, j), L_.block(0, k),
+                        j + R);
+                },
+                [&](index_t k, index_t nk) {
+                    trtri::microkernel_trmm_T_copy_lut<Abi>[nk - 1](
+                        L_.block(0, j), Lin_.block(k, j), L_.block(0, k),
+                        j + R);
+                },
+                LoopDir::Backward);
+        },
+        [&](index_t j, index_t nj) {
+            trtri::microkernel_T_copy_lut<Abi>[nj - 1](Lin_.block(j, j),
+                                                       L_.block(0, j), j + nj);
+        },
+        LoopDir::Forward);
+}
+
 // Parallel batched implementations
 // -----------------------------------------------------------------------------
 
@@ -138,7 +180,7 @@ void CompactBLAS<Abi>::xtrtri(mut_single_batch_view L, PreferredBackend b) {
                 op_cnt_trtri = n * (n - 1) * (n - 2) / 6 + n * (n - 1) + n,
                 op_cnt_trmm  = n * (n - 1) * (m - n) / 2 + n * (m - n);
             GUANAQO_TRACE("xtrtri_blas", 0,
-                           (op_cnt_trtri + op_cnt_trmm) * L.depth());
+                          (op_cnt_trtri + op_cnt_trmm) * L.depth());
             linalg::xtrtri("L", "N", n, L.data, L.outer_stride(), &info);
             lapack_throw_on_err("xtrtri", info);
             if (m > n)
@@ -165,7 +207,7 @@ void CompactBLAS<Abi>::xtrtri_copy(single_batch_view Lin,
                 op_cnt_trtri = n * (n - 1) * (n - 2) / 6 + n * (n - 1) + n,
                 op_cnt_trmm  = n * (n - 1) * (m - n) / 2 + n * (m - n);
             GUANAQO_TRACE("xtrtri_copy_blas", 0,
-                           (op_cnt_trtri + op_cnt_trmm) * L.depth());
+                          (op_cnt_trtri + op_cnt_trmm) * L.depth());
             L = Lin;
             linalg::xtrtri("L", "N", n, L.data, L.outer_stride(), &info);
             lapack_throw_on_err("xtrtri", info);

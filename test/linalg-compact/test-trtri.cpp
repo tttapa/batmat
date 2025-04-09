@@ -30,6 +30,32 @@ TEST(xtrtri, xtrtritrmm) {
     EXPECT_THAT(BLinv, EigenAlmostEqual(B, 1e-8));
 }
 
+TEST(xtrtri, xtrtritrmmCopyT) {
+    std::mt19937 rng{12345};
+    std::normal_distribution<real_t> nrml{0, 1};
+    using EMat = Eigen::MatrixX<real_t>;
+    EMat L(4, 4);
+    EMat UBout(14, 4);
+    auto Uout = UBout.bottomRows(4), Bout = UBout.topRows(10);
+    L << 1.10, 0, 0, 0,      //
+        .21, 2.20, 0, 0,     //
+        .31, .32, 3.30, 0,   //
+        .41, .42, .43, 4.40; //
+    std::ranges::generate(Bout.reshaped(), [&] { return nrml(rng); });
+
+    EMat Uinv = L.triangularView<Eigen::Lower>()
+                    .solve(EMat::Identity(4, 4))
+                    .transpose();
+    EMat BUinv = Bout * Uinv;
+    linalg::compact::micro_kernels::trtri::xtrtri_trmm_copy_T_microkernel<
+        stdx::simd_abi::scalar, 4>(
+        {L.data(), static_cast<index_t>(L.outerStride())},
+        {UBout.data(), static_cast<index_t>(UBout.outerStride())},
+        UBout.rows());
+    EXPECT_THAT(Uout, EigenAlmostEqual(Uinv, 1e-8));
+    EXPECT_THAT(Bout, EigenAlmostEqual(BUinv, 1e-8));
+}
+
 TEST(xtrtri, xtrmm) {
     std::mt19937 rng{12345};
     std::normal_distribution<real_t> nrml{0, 1};
@@ -170,4 +196,32 @@ TEST(xtrtri, xtrtriRectBLAS) {
             .outer_stride = static_cast<index_t>(L.outerStride()),
         }});
     EXPECT_THAT(Linv, EigenAlmostEqual(L.leftCols(m), 1e-8));
+}
+
+TEST(xtrtri, xtrtriCopyT) {
+    std::mt19937 rng{12345};
+    std::normal_distribution<real_t> nrml{0, 1};
+    using EMat = Eigen::MatrixX<real_t>;
+    index_t n  = 13;
+    EMat L(n, n), LT(n, n);
+    std::ranges::generate(L.reshaped(), [&] { return nrml(rng); });
+    L.triangularView<Eigen::StrictlyUpper>().setZero();
+    LT.triangularView<Eigen::StrictlyLower>().setZero();
+    EMat LTinv = L.triangularView<Eigen::Lower>()
+                     .solve(EMat::Identity(n, n))
+                     .transpose();
+    linalg::compact::CompactBLAS<stdx::simd_abi::scalar>::xtrtri_T_copy_ref(
+        {{
+            .data         = std::as_const(L).data(),
+            .rows         = static_cast<index_t>(L.rows()),
+            .cols         = static_cast<index_t>(L.cols()),
+            .outer_stride = static_cast<index_t>(L.outerStride()),
+        }},
+        {{
+            .data         = LT.data(),
+            .rows         = static_cast<index_t>(LT.rows()),
+            .cols         = static_cast<index_t>(LT.cols()),
+            .outer_stride = static_cast<index_t>(LT.outerStride()),
+        }});
+    EXPECT_THAT(LTinv, EigenAlmostEqual(LT, 1e-8));
 }

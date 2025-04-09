@@ -196,6 +196,13 @@ struct CompactBLAS {
     static void xtrtri_copy(batch_view Lin, mut_batch_view L,
                             PreferredBackend b);
 
+    /// L⁻ᵀ
+    static void xtrtri_T_copy_ref(single_batch_view Lin, mut_single_batch_view L);
+    static void xtrtri_T_copy(single_batch_view Lin, mut_single_batch_view L,
+                            PreferredBackend b);
+    static void xtrtri_T_copy(batch_view Lin, mut_batch_view L,
+                            PreferredBackend b);
+
     /// C ← AB
     static void xgemm(single_batch_view A, single_batch_view B,
                       mut_single_batch_view C, PreferredBackend b);
@@ -220,12 +227,28 @@ struct CompactBLAS {
     static void xgemm_neg_ref(single_batch_view A, single_batch_view B,
                               mut_single_batch_view C);
 
-    /// C ← -AB
+    /// C ← ABᵀ
+    static void xgemm_NT(single_batch_view A, single_batch_view B,
+                         mut_single_batch_view C, PreferredBackend b);
+    static void xgemm_NT(batch_view A, batch_view B, mut_batch_view C,
+                         PreferredBackend b);
+    static void xgemm_NT_ref(single_batch_view A, single_batch_view B,
+                             mut_single_batch_view C);
+
+    /// C ← -ABᵀ
     static void xgemm_NT_neg(single_batch_view A, single_batch_view B,
                              mut_single_batch_view C, PreferredBackend b);
     static void xgemm_NT_neg(batch_view A, batch_view B, mut_batch_view C,
                              PreferredBackend b);
     static void xgemm_NT_neg_ref(single_batch_view A, single_batch_view B,
+                                 mut_single_batch_view C);
+
+    /// C -= ABᵀ
+    static void xgemm_NT_sub(single_batch_view A, single_batch_view B,
+                             mut_single_batch_view C, PreferredBackend b);
+    static void xgemm_NT_sub(batch_view A, batch_view B, mut_batch_view C,
+                             PreferredBackend b);
+    static void xgemm_NT_sub_ref(single_batch_view A, single_batch_view B,
                                  mut_single_batch_view C);
 
     /// C ← -AB
@@ -235,6 +258,14 @@ struct CompactBLAS {
                           PreferredBackend b);
     static void xgemv_neg_ref(single_batch_view A, single_batch_view B,
                               mut_single_batch_view C);
+
+    /// C ← AB (with B lower trapezoidal)
+    static void xtrmm_RLNN(single_batch_view A, single_batch_view B,
+                           mut_single_batch_view C, PreferredBackend b);
+    static void xtrmm_RLNN(batch_view A, batch_view B, mut_batch_view C,
+                           PreferredBackend b);
+    static void xtrmm_RLNN_ref(single_batch_view A, single_batch_view B,
+                               mut_single_batch_view C);
 
     /// C ← -AB (with B lower trapezoidal)
     static void xtrmm_RLNN_neg(single_batch_view A, single_batch_view B,
