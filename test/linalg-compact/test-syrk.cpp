@@ -5,6 +5,7 @@
 #include <random>
 
 #include "config.hpp"
+#include <ocp/eigen-matchers.hpp>
 
 using namespace koqkatoo::linalg::compact;
 using koqkatoo::index_t;
@@ -210,5 +211,37 @@ TYPED_TEST(SyrkTest, SyrkTSchurCopy) {
                         << enum_name(backend) << "[" << n
                         << "]: SYRK mismatch at (" << i << ", " << j << ", "
                         << k << ")";
+    }
+}
+
+TEST(SyrkTest, TrTrSyrk) {
+    for (index_t n : koqkatoo::tests::sizes) {
+        std::mt19937 rng{12345};
+        std::normal_distribution<real_t> nrml{0, 1};
+        using EMat = Eigen::MatrixX<real_t>;
+        EMat A(n, n), C(n, n);
+        std::ranges::generate(A.reshaped(), [&] { return nrml(rng); });
+        A.triangularView<Eigen::StrictlyLower>().setZero();
+        std::ranges::generate(C.reshaped(), [&] { return nrml(rng); });
+        EMat C_ref = C;
+
+        koqkatoo::linalg::compact::CompactBLAS<stdx::simd_abi::scalar>::
+            xtrtrsyrk_UL(
+                {{
+                    .data         = std::as_const(A).data(),
+                    .rows         = static_cast<index_t>(A.rows()),
+                    .cols         = static_cast<index_t>(A.cols()),
+                    .outer_stride = static_cast<index_t>(A.outerStride()),
+                }},
+                {{
+                    .data         = C.data(),
+                    .rows         = static_cast<index_t>(C.rows()),
+                    .cols         = static_cast<index_t>(C.cols()),
+                    .outer_stride = static_cast<index_t>(C.outerStride()),
+                }});
+        auto AU = A.triangularView<Eigen::Upper>();
+        C_ref.triangularView<Eigen::Lower>() =
+            AU.toDenseMatrix() * AU.transpose();
+        EXPECT_THAT(C, EigenAlmostEqual(C_ref, 1e-8));
     }
 }

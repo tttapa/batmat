@@ -61,8 +61,8 @@ void xgemmt_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
     static_assert(RowsReg == ColsReg, "Square blocks required");
     const index_t I = C.rows(), J = C.cols();
     const index_t K = Conf.trans_A ? A.rows() : A.cols();
-    KOQKATOO_ASSUME(I == Conf.trans_A ? A.cols() : A.rows());
-    KOQKATOO_ASSUME(J == Conf.trans_B ? B.rows() : B.cols());
+    KOQKATOO_ASSUME(I == (Conf.trans_A ? A.cols() : A.rows()));
+    KOQKATOO_ASSUME(J == (Conf.trans_B ? B.rows() : B.cols()));
     KOQKATOO_ASSUME(I > 0);
     KOQKATOO_ASSUME(J > 0);
     KOQKATOO_ASSUME(K > 0);

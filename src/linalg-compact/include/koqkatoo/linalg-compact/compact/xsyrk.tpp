@@ -1,11 +1,16 @@
 #pragma once
 
+#include <koqkatoo/assume.hpp>
 #include <koqkatoo/kib.hpp>
 #include <koqkatoo/linalg-compact/aligned-storage.hpp>
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xgemm.hpp>
+#include <koqkatoo/linalg-compact/compact/micro-kernels/xtrtrsyrk.hpp>
 #include <koqkatoo/linalg/blas-interface.hpp>
+#include <koqkatoo/loop.hpp>
+#include <koqkatoo/lut.hpp>
 #include <guanaqo/trace.hpp>
+
 #include "util.hpp"
 
 namespace koqkatoo::linalg::compact {
@@ -56,7 +61,7 @@ void CompactBLAS<Abi>::xsyrk_T_schur_copy(single_batch_view C,
                                     C.cols() * (C.cols() + 1) * C.rows() / 2,
                                 op_cnt_diag = C.cols() * C.rows();
     GUANAQO_TRACE("xsyrk_T_schur_copy", 0,
-                   (op_cnt_syrk + op_cnt_diag) * C.depth());
+                  (op_cnt_syrk + op_cnt_diag) * C.depth());
     for (index_t j = 0; j < H_out.cols(); ++j)
         for (index_t i = j; i < H_out.rows(); ++i)
             aligned_store(&H_out(0, i, j), aligned_load(&H_in(0, i, j)));
@@ -149,6 +154,24 @@ void CompactBLAS<Abi>::xsyrk_sub_shift(single_batch_view A,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xsyrk_shift(single_batch_view A,
+                                   mut_single_batch_view C) {
+    assert(C.rows() == C.cols());
+    assert(C.rows() == A.rows());
+    [[maybe_unused]] const auto op_cnt_syrk =
+        C.cols() * (C.cols() + 1) * A.cols() / 2 +
+        (C.rows() - C.cols()) * C.cols() * A.cols();
+    GUANAQO_TRACE("xsyrk_sub_shift", 0, op_cnt_syrk * (C.depth() - 1));
+    // TODO: cache blocking
+    for (index_t j = 0; j < C.cols(); ++j)
+        for (index_t i = j; i < C.rows(); ++i)
+            aligned_store(&C(0, i, j), simd{0});
+    constexpr micro_kernels::gemm::KernelConfig conf{.trans_B = true,
+                                                     .shift   = 1};
+    micro_kernels::gemm::xgemmt_register<Abi, conf>(A, A, C);
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xsyrk_sub_ref(single_batch_view A,
                                      mut_single_batch_view C) {
     assert(C.rows() >= C.cols());
@@ -236,6 +259,41 @@ void CompactBLAS<Abi>::xsyrk_sub_ref(single_batch_view A,
             }
         }
     }
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xtrtrsyrk_UL(single_batch_view A,
+                                    mut_single_batch_view C) {
+    [[maybe_unused]] const index_t op_cnt_xtrtrsyrk = 0; // TODO
+    GUANAQO_TRACE("xtrtrsyrk_UL", 0, op_cnt_xtrtrsyrk * C.depth());
+    assert(C.rows() == C.cols());
+    assert(C.rows() == A.rows());
+
+    using namespace micro_kernels::trtrsyrk;
+
+    static_assert(RowsReg == ColsReg, "Square blocks required");
+    const index_t I = C.rows(), J = C.cols();
+    const index_t K = A.cols();
+    static constexpr KernelConfig Conf{};
+    static const auto microkernel = microkernel_UL_lut<Abi, Conf>;
+    const micro_kernels::single_batch_matrix_accessor<Abi> A_        = A;
+    const micro_kernels::single_batch_matrix_accessor<Abi, true> AT_ = A;
+    const micro_kernels::mut_single_batch_matrix_accessor<Abi> C_    = C;
+    // Optimization for very small matrices
+    if (I <= RowsReg && I == J)
+        return microkernel[I - 1][I - 1](A_, AT_, C_, K, true, true);
+    // Simply loop over all blocks in the given matrices.
+    foreach_chunked_merged(
+        0, J, index_constant<ColsReg>(), [&](index_t j, auto nj) {
+            foreach_chunked_merged(j, I, index_constant<RowsReg>(),
+                                   [&](index_t i, auto ni) {
+                                       const auto Ai  = A_.block(i, i);
+                                       const auto Bj  = AT_.block(i, j);
+                                       const auto Cij = C_.block(i, j);
+                                       microkernel[ni - 1][nj - 1](
+                                           Ai, Bj, Cij, K - i, i == j, true);
+                                   });
+        });
 }
 
 // Parallel batched implementations

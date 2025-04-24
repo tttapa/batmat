@@ -9,7 +9,7 @@
 
 namespace koqkatoo::linalg::compact::micro_kernels::trmm {
 
-/// Generalized matrix multiplication C = C ± A⁾ B, with B lower triangular.
+/// Generalized matrix multiplication C = C ± A B, with B lower triangular.
 /// Single register block.
 template <class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg>
 [[gnu::hot]] void

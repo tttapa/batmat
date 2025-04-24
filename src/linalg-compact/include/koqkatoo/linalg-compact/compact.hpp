@@ -118,12 +118,16 @@ struct CompactBLAS {
     static void xsyrk_add_shift(single_batch_view A, mut_single_batch_view C);
     /// C(1:) -= (AAᵀ)(:-1)
     static void xsyrk_sub_shift(single_batch_view A, mut_single_batch_view C);
+    /// C(1:) = (AAᵀ)(:-1)
+    static void xsyrk_shift(single_batch_view A, mut_single_batch_view C);
 
     /// C -= AAᵀ
     static void xsyrk_sub_ref(single_batch_view A, mut_single_batch_view C);
     static void xsyrk_sub(single_batch_view A, mut_single_batch_view C,
                           PreferredBackend b);
     static void xsyrk_sub(batch_view A, mut_batch_view C, PreferredBackend b);
+
+    static void xtrtrsyrk_UL(single_batch_view A, mut_single_batch_view);
 
     /// Hᵀ ← L⁻¹ Hᵀ or H ← H L⁻ᵀ
     static void xtrsm_RLTN(single_batch_view L, mut_single_batch_view H,
@@ -197,11 +201,8 @@ struct CompactBLAS {
                             PreferredBackend b);
 
     /// L⁻ᵀ
-    static void xtrtri_T_copy_ref(single_batch_view Lin, mut_single_batch_view L);
-    static void xtrtri_T_copy(single_batch_view Lin, mut_single_batch_view L,
-                            PreferredBackend b);
-    static void xtrtri_T_copy(batch_view Lin, mut_batch_view L,
-                            PreferredBackend b);
+    static void xtrtri_T_copy_ref(single_batch_view Lin,
+                                  mut_single_batch_view L);
 
     /// C ← AB
     static void xgemm(single_batch_view A, single_batch_view B,
@@ -234,6 +235,8 @@ struct CompactBLAS {
                          PreferredBackend b);
     static void xgemm_NT_ref(single_batch_view A, single_batch_view B,
                              mut_single_batch_view C);
+    static void xgemm_NT_shift(single_batch_view A, single_batch_view B,
+                               mut_single_batch_view C);
 
     /// C ← -ABᵀ
     static void xgemm_NT_neg(single_batch_view A, single_batch_view B,
