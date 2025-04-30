@@ -31,6 +31,7 @@ add_executable(tests
     "linalg-compact/test-trtri.cpp"
     "cholundate/test-shh-downdate.cpp"
     "cholundate/test-shh-updowndate.cpp"
+    "ocp/test-cyclic-schedule.cpp"
 )
 target_compile_definitions(tests PRIVATE
     $<$<BOOL:${KOQKATOO_EXTENSIVE_TESTS}>:KOQKATOO_EXTENSIVE_TESTS>)
