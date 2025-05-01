@@ -264,7 +264,8 @@ void CompactBLAS<Abi>::xsyrk_sub_ref(single_batch_view A,
 template <class Abi>
 void CompactBLAS<Abi>::xtrtrsyrk_UL(single_batch_view A,
                                     mut_single_batch_view C) {
-    [[maybe_unused]] const index_t op_cnt_xtrtrsyrk = 0; // TODO
+    const index_t n                                 = C.rows();
+    [[maybe_unused]] const index_t op_cnt_xtrtrsyrk = n * (n + 1) * (n + 2) / 6;
     GUANAQO_TRACE("xtrtrsyrk_UL", 0, op_cnt_xtrtrsyrk * C.depth());
     assert(C.rows() == C.cols());
     assert(C.rows() == A.rows());
@@ -275,6 +276,42 @@ void CompactBLAS<Abi>::xtrtrsyrk_UL(single_batch_view A,
     const index_t I = C.rows(), J = C.cols();
     const index_t K = A.cols();
     static constexpr KernelConfig Conf{};
+    static const auto microkernel = microkernel_UL_lut<Abi, Conf>;
+    const micro_kernels::single_batch_matrix_accessor<Abi> A_        = A;
+    const micro_kernels::single_batch_matrix_accessor<Abi, true> AT_ = A;
+    const micro_kernels::mut_single_batch_matrix_accessor<Abi> C_    = C;
+    // Optimization for very small matrices
+    if (I <= RowsReg && I == J)
+        return microkernel[I - 1][I - 1](A_, AT_, C_, K, true, true);
+    // Simply loop over all blocks in the given matrices.
+    foreach_chunked_merged(
+        0, J, index_constant<ColsReg>(), [&](index_t j, auto nj) {
+            foreach_chunked_merged(j, I, index_constant<RowsReg>(),
+                                   [&](index_t i, auto ni) {
+                                       const auto Ai  = A_.block(i, i);
+                                       const auto Bj  = AT_.block(i, j);
+                                       const auto Cij = C_.block(i, j);
+                                       microkernel[ni - 1][nj - 1](
+                                           Ai, Bj, Cij, K - i, i == j, true);
+                                   });
+        });
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xtrtrsyrk_UL_shift(single_batch_view A,
+                                          mut_single_batch_view C) {
+    const index_t n                                 = C.rows();
+    [[maybe_unused]] const index_t op_cnt_xtrtrsyrk = n * (n + 1) * (n + 2) / 6;
+    GUANAQO_TRACE("xtrtrsyrk_UL", 0, op_cnt_xtrtrsyrk * (C.depth() - 1));
+    assert(C.rows() == C.cols());
+    assert(C.rows() == A.rows());
+
+    using namespace micro_kernels::trtrsyrk;
+
+    static_assert(RowsReg == ColsReg, "Square blocks required");
+    const index_t I = C.rows(), J = C.cols();
+    const index_t K = A.cols();
+    static constexpr KernelConfig Conf{.shift = 1};
     static const auto microkernel = microkernel_UL_lut<Abi, Conf>;
     const micro_kernels::single_batch_matrix_accessor<Abi> A_        = A;
     const micro_kernels::single_batch_matrix_accessor<Abi, true> AT_ = A;
