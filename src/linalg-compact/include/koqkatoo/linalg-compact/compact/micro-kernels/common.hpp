@@ -141,12 +141,12 @@ struct cached_mat_access_impl {
         if constexpr (MaskL == 0) {
             x.copy_to(&operator()(r, c), stdx::vector_aligned);
         } else if constexpr (MaskL > 0) {
-            typename simd::mask_type m;
+            typename simd::mask_type m{};
             for (int i = 0; i < m.size(); ++i)
                 m[i] = i >= MaskL;
             where(m, x).copy_to(&operator()(r, c), stdx::vector_aligned);
         } else {
-            typename simd::mask_type m;
+            typename simd::mask_type m{};
             for (int i = 0; i < m.size(); ++i)
                 m[i] = i < m.size() - MaskL;
             where(m, x).copy_to(&operator()(r, c), stdx::vector_aligned);

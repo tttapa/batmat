@@ -524,9 +524,8 @@ struct CyclicOCPSolver {
             // Top block is A → column index is row index of A (biA)
             // Target block in cyclic part is U in column λ(kA)
             PRINTLN("  L⁻ᵀÂᵀ [{}]{}  ->  U[{}]{}", ti, vec_curr, biA, vecA);
-            // TODO: trmm_LUNN_T
             GUANAQO_TRACE("Compute first U", biI);
-            compact_blas::xgemm_NT_neg(DiI, Âi, coupling_U.batch(biA), be);
+            compact_blas::xtrmm_LUNN_T_neg_ref(DiI, Âi, coupling_U.batch(biA));
             counters_UY[biA].notify_or(2);
         } else {
             // Top block is I → column index is row index of I (biI)
@@ -534,11 +533,10 @@ struct CyclicOCPSolver {
             PRINTLN("  ÂL⁻¹  [{}]{}  ->  Y[{}]{}{}", ti, vec_curr, biI, vecI,
                     x_lanes ? "  (×)" : "");
             GUANAQO_TRACE("Compute first Y", biI);
-            // TODO: trmm_N_RUTN
-            x_lanes ? compact_blas::xgemm_NT_neg_shift(Âi, DiI,
-                                                       coupling_Y.batch(biI))
-                    : compact_blas::xgemm_NT_neg(Âi, DiI, coupling_Y.batch(biI),
-                                                 be);
+            x_lanes ? compact_blas::xtrmm_RUTN_neg_shift(Âi, DiI,
+                                                         coupling_Y.batch(biI))
+                    : compact_blas::xtrmm_RUTN_neg_ref(Âi, DiI,
+                                                       coupling_Y.batch(biI));
             counters_UY[biI].notify_or(1);
         }
         // Each column of the cyclic part with coupling equations is updated by
@@ -960,7 +958,7 @@ TEST(NewCyclic, scheduling) {
     }));
 
     const index_t lP = log_n_threads + test::CyclicOCPSolver::lvl;
-    OCPDim dim{.N_horiz = 10 << lP, .nx = 40, .nu = 30, .ny = 0, .ny_N = 0};
+    OCPDim dim{.N_horiz = 1 << lP, .nx = 40, .nu = 30, .ny = 0, .ny_N = 0};
     auto ocp = generate_random_ocp(dim);
     test::CyclicOCPSolver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
@@ -975,7 +973,7 @@ TEST(NewCyclic, scheduling) {
     {
         const auto N     = solver.dim.N_horiz;
         const auto VL    = solver.vl;
-        std::string name = std::format("factor_cyclic.csv");
+        std::string name = std::format("factor_cyclic_new.csv");
         std::filesystem::path out_dir{"traces"};
         out_dir /= *koqkatoo_commit_hash ? koqkatoo_commit_hash : "unknown";
         out_dir /= KOQKATOO_MKL_IF_ELSE("mkl", "openblas");
