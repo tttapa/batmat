@@ -76,7 +76,7 @@ namespace koqkatoo::ocp::test {
 #if KQT_CYCLIC_TEMPLATE
 template <index_t VL = 4>
 #else
-constexpr index_t VL = 2;
+constexpr index_t VL = 4;
 #endif
 struct CyclicOCPSolver {
     static constexpr index_t vl  = VL;
@@ -680,6 +680,14 @@ struct CyclicOCPSolver {
         });
     }
 
+    index_t get_linear_batch_offset(index_t biA) {
+        const auto levA = biA > 0 ? get_level(biA) : lP;
+        const auto levP = lP - lvl;
+        if (levA >= levP)
+            return (((1 << levP) - 1) << (lP - levP)) + (biA >> levP);
+        return (((1 << levA) - 1) << (lP - levA)) + get_index_in_level(biA);
+    }
+
     auto build_sparse(const koqkatoo::ocp::LinearOCPStorage &ocp) {
         std::vector<std::tuple<index_t, index_t, real_t>> tuples;
 
@@ -695,14 +703,12 @@ struct CyclicOCPSolver {
                 const index_t k0 = ti * num_stages + vi * vstride;
                 const auto biA   = ti + vi * num_proc;
                 const auto biI   = sub_wrap_P(biA, 1);
-                const auto levA  = biA > 0 ? get_level(biA) : lP;
-                const auto oA    = (((1 << levA) - 1) << (lP - levA)) +
-                                get_index_in_level(biA);
-                const auto sλA  = sλ + nx * oA;
-                const auto levI = biI > 0 ? get_level(biI) : lP;
-                const auto oI   = (((1 << levI) - 1) << (lP - levI)) +
-                                get_index_in_level(biI);
-                const auto sλI = sλ + nx * oI;
+                const auto sλA   = sλ + nx * get_linear_batch_offset(biA);
+                const auto sλI   = sλ + nx * get_linear_batch_offset(biI);
+                std::println(
+                    "k={:<2}  biA={:<2}  oA={:<2}  biI={:<2}  oI={:<2}", k0,
+                    biA, get_linear_batch_offset(biA), biI,
+                    get_linear_batch_offset(biI));
                 // TODO: handle case if lev > or >= lP - lvl
                 for (index_t i = 0; i < num_stages; ++i) {
                     const index_t k = sub_wrap_N(k0, i);
@@ -793,14 +799,8 @@ struct CyclicOCPSolver {
                 const index_t k0 = ti * num_stages + vi * vstride;
                 const auto biA   = ti + vi * num_proc;
                 const auto biI   = sub_wrap_P(biA, 1);
-                const auto levA  = biA > 0 ? get_level(biA) : lP;
-                const auto oA    = (((1 << levA) - 1) << (lP - levA)) +
-                                get_index_in_level(biA);
-                const auto sλA  = sλ + nx * oA;
-                const auto levI = biI > 0 ? get_level(biI) : lP;
-                const auto oI   = (((1 << levI) - 1) << (lP - levI)) +
-                                get_index_in_level(biI);
-                const auto sλI = sλ + nx * oI;
+                const auto sλA   = sλ + nx * get_linear_batch_offset(biA);
+                const auto sλI   = sλ + nx * get_linear_batch_offset(biI);
                 auto B̂   = riccati_ÂB̂.batch(ti).right_cols(num_stages * nu);
                 auto R̂ŜQ̂ = riccati_R̂ŜQ̂.batch(ti);
                 // TODO: handle case if lev > or >= lP - lvl
