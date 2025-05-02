@@ -1,5 +1,6 @@
 #pragma once
 
+#include "rotate.hpp"
 #include "xtrtrsyrk.hpp"
 
 #include <koqkatoo/assume.hpp>
@@ -17,7 +18,8 @@ xtrtrsyrk_UL_microkernel(const single_batch_matrix_accessor<Abi, false> A,
                          const single_batch_matrix_accessor<Abi, true> B,
                          const mut_single_batch_matrix_accessor<Abi> C,
                          index_t k, bool trtr, bool init_zero) noexcept {
-    using simd = stdx::simd<real_t, Abi>;
+    static constexpr auto S = Conf.shift;
+    using simd              = stdx::simd<real_t, Abi>;
     KOQKATOO_ASSUME(k >= RowsReg);
     if constexpr (RowsReg != ColsReg)
         KOQKATOO_ASSUME(!trtr);
@@ -29,7 +31,7 @@ xtrtrsyrk_UL_microkernel(const single_batch_matrix_accessor<Abi, false> A,
         if (!init_zero) [[unlikely]]
             KOQKATOO_FULLY_UNROLLED_FOR (index_t j = 0; j < ColsReg; ++j)
                 KOQKATOO_FULLY_UNROLLED_FOR (index_t i = j; i < RowsReg; ++i)
-                    C_reg[i][j] = C_cached.load(i, j);
+                    C_reg[i][j] = rotl<S>(C_cached.load(i, j));
         // Triangular-triangular matrix multiplication kernel
         KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < ColsReg; ++l) {
             KOQKATOO_FULLY_UNROLLED_FOR (index_t j = 0; j <= l; ++j) {
@@ -60,14 +62,14 @@ xtrtrsyrk_UL_microkernel(const single_batch_matrix_accessor<Abi, false> A,
         // Store accumulator to memory again
         KOQKATOO_FULLY_UNROLLED_FOR (index_t j = 0; j < ColsReg; ++j)
             KOQKATOO_FULLY_UNROLLED_FOR (index_t i = j; i < RowsReg; ++i)
-                C_cached.store(C_reg[i][j], i, j);
+                C_cached.template store<S>(rotr<S>(C_reg[i][j]), i, j);
     } else {
         // Load accumulator into registers
         simd C_reg[RowsReg][ColsReg]{}; // NOLINT(*-c-arrays)
         if (!init_zero) [[unlikely]]
             KOQKATOO_FULLY_UNROLLED_FOR (index_t j = 0; j < ColsReg; ++j)
                 KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < RowsReg; ++i)
-                    C_reg[i][j] = C_cached.load(i, j);
+                    C_reg[i][j] = rotl<S>(C_cached.load(i, j));
         // Triangular-general matrix multiplication kernel
         KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < RowsReg; ++l)
             KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i <= l; ++i) {
@@ -97,7 +99,7 @@ xtrtrsyrk_UL_microkernel(const single_batch_matrix_accessor<Abi, false> A,
         // Store accumulator to memory again
         KOQKATOO_FULLY_UNROLLED_FOR (index_t j = 0; j < ColsReg; ++j)
             KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < RowsReg; ++i)
-                C_cached.store(C_reg[i][j], i, j);
+                C_cached.template store<S>(rotr<S>(C_reg[i][j]), i, j);
     }
 }
 

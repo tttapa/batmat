@@ -8,7 +8,7 @@ namespace stdx = std::experimental;
 
 namespace detail {
 
-template <size_t S, class F, class Abi>
+template <int S, class F, class Abi>
 [[gnu::always_inline]] inline stdx::simd<F, Abi> rotl(stdx::simd<F, Abi> x) {
     static_assert(S < x.size());
     stdx::simd<F, Abi> y;
@@ -19,7 +19,7 @@ template <size_t S, class F, class Abi>
     return y;
 }
 
-template <size_t S, class F, class Abi>
+template <int S, class F, class Abi>
 [[gnu::always_inline]] inline stdx::simd<F, Abi> rotr(stdx::simd<F, Abi> x) {
     static_assert(S < x.size());
     stdx::simd<F, Abi> y;
@@ -30,7 +30,7 @@ template <size_t S, class F, class Abi>
     return y;
 }
 
-template <size_t S, class F, class Abi>
+template <int S, class F, class Abi>
 [[gnu::always_inline]] inline stdx::simd<F, Abi> shiftl(stdx::simd<F, Abi> x) {
     static_assert(S < x.size());
     stdx::simd<F, Abi> y;
@@ -41,7 +41,7 @@ template <size_t S, class F, class Abi>
     return y;
 }
 
-template <size_t S, class F, class Abi>
+template <int S, class F, class Abi>
 [[gnu::always_inline]] inline stdx::simd<F, Abi> shiftr(stdx::simd<F, Abi> x) {
     static_assert(S < x.size());
     stdx::simd<F, Abi> y;
@@ -54,7 +54,7 @@ template <size_t S, class F, class Abi>
 
 #if defined(__AVX512F__)
 
-template <size_t S>
+template <int S>
 [[gnu::always_inline]] inline auto
 rotl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 8>> x) {
     static_assert(S < x.size());
@@ -66,7 +66,7 @@ rotl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 8>> x) {
     return decltype(x){y};
 }
 
-template <size_t S>
+template <int S>
 [[gnu::always_inline]] inline auto
 rotr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 8>> x) {
     static_assert(S < x.size());
@@ -78,7 +78,7 @@ rotr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 8>> x) {
     return decltype(x){y};
 }
 
-template <size_t S>
+template <int S>
 [[gnu::always_inline]] inline auto
 shiftl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 8>> x) {
     static_assert(S < x.size());
@@ -88,7 +88,7 @@ shiftl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 8>> x) {
     return decltype(x){y};
 }
 
-template <size_t S>
+template <int S>
 [[gnu::always_inline]] inline auto
 shiftr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 8>> x) {
     static_assert(S < x.size());
@@ -102,7 +102,7 @@ shiftr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 8>> x) {
 
 #if defined(__AVX2__)
 
-template <size_t S>
+template <int S>
 [[gnu::always_inline]] inline auto
 shiftl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
     static_assert(S < x.size());
@@ -112,7 +112,7 @@ shiftl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
     return decltype(x){y};
 }
 
-template <size_t S>
+template <int S>
 [[gnu::always_inline]] inline auto
 shiftr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
     static_assert(S < x.size());
@@ -126,7 +126,7 @@ shiftr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
 
 #if defined(__AVX512F__) && 0
 
-template <size_t S>
+template <int S>
 [[gnu::always_inline]] inline auto
 rotl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
     static_assert(S < x.size());
@@ -137,7 +137,7 @@ rotl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
     return decltype(x){y};
 }
 
-template <size_t S>
+template <int S>
 [[gnu::always_inline]] inline auto
 rotr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
     static_assert(S < x.size());
@@ -150,7 +150,7 @@ rotr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
 
 #elif defined(__AVX2__)
 
-template <size_t S>
+template <int S>
 [[gnu::always_inline]] inline auto
 rotl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
     static_assert(S < x.size());
@@ -161,7 +161,7 @@ rotl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
     return decltype(x){y};
 }
 
-template <size_t S>
+template <int S>
 [[gnu::always_inline]] inline auto
 rotr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
     static_assert(S < x.size());
@@ -177,23 +177,27 @@ rotr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
 
 } // namespace detail
 
-template <size_t S, class F, class Abi>
+template <int S, class F, class Abi>
 [[gnu::always_inline]] inline stdx::simd<F, Abi> rotl(stdx::simd<F, Abi> x) {
     if constexpr (S % x.size() == 0)
         return x;
+    else if constexpr (S < 0)
+        return detail::rotr<-S>(x);
     else
         return detail::rotl<S>(x);
 }
 
-template <size_t S, class F, class Abi>
+template <int S, class F, class Abi>
 [[gnu::always_inline]] inline stdx::simd<F, Abi> rotr(stdx::simd<F, Abi> x) {
     if constexpr (S % x.size() == 0)
         return x;
+    else if constexpr (S < 0)
+        return detail::rotl<-S>(x);
     else
         return detail::rotr<S>(x);
 }
 
-template <size_t S, class F, class Abi>
+template <int S, class F, class Abi>
 [[gnu::always_inline]] inline stdx::simd<F, Abi> shiftl(stdx::simd<F, Abi> x) {
     if constexpr (S == 0)
         return x;
@@ -203,7 +207,7 @@ template <size_t S, class F, class Abi>
         return detail::shiftl<S>(x);
 }
 
-template <size_t S, class F, class Abi>
+template <int S, class F, class Abi>
 [[gnu::always_inline]] inline stdx::simd<F, Abi> shiftr(stdx::simd<F, Abi> x) {
     if constexpr (S == 0)
         return x;

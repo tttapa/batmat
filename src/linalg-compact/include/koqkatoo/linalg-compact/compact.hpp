@@ -246,6 +246,8 @@ struct CompactBLAS {
                              PreferredBackend b);
     static void xgemm_NT_neg_ref(single_batch_view A, single_batch_view B,
                                  mut_single_batch_view C);
+    static void xgemm_NT_neg_shift(single_batch_view A, single_batch_view B,
+                                   mut_single_batch_view C);
 
     /// C -= ABᵀ
     static void xgemm_NT_sub(single_batch_view A, single_batch_view B,

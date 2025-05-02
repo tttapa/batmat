@@ -9,6 +9,6 @@ namespace koqkatoo::linalg::compact::micro_kernels::trtrsyrk {
 using Abi = stdx::simd_abi::@simd_abi@;
 
 template const constinit decltype(microkernel_UL_lut<Abi, {}>) microkernel_UL_lut<Abi, {}>;
-template const constinit decltype(microkernel_UL_lut<Abi, {.shift = 1}>) microkernel_UL_lut<Abi, {.shift = 1}>;
+template const constinit decltype(microkernel_UL_lut<Abi, {.shift = -1}>) microkernel_UL_lut<Abi, {.shift = -1}>;
 
 }

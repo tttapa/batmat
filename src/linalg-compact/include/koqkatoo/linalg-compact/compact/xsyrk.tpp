@@ -311,7 +311,7 @@ void CompactBLAS<Abi>::xtrtrsyrk_UL_shift(single_batch_view A,
     static_assert(RowsReg == ColsReg, "Square blocks required");
     const index_t I = C.rows(), J = C.cols();
     const index_t K = A.cols();
-    static constexpr KernelConfig Conf{.shift = 1};
+    static constexpr KernelConfig Conf{.shift = -1};
     static const auto microkernel = microkernel_UL_lut<Abi, Conf>;
     const micro_kernels::single_batch_matrix_accessor<Abi> A_        = A;
     const micro_kernels::single_batch_matrix_accessor<Abi, true> AT_ = A;

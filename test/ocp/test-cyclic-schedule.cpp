@@ -26,6 +26,7 @@
 
 namespace stdx = std::experimental;
 
+#define DO_PRINT 0
 #if DO_PRINT
 #define PRINTLN(...) std::println(__VA_ARGS__)
 #else
@@ -361,19 +362,19 @@ struct CyclicOCPSolver {
         KOQKATOO_ASSERT(l < lP - lvl);
         const index_t N = dim.N_horiz;
         // Updates to batch 0 wrap around
-        const bool cross_lanes = bi == 0;
-        const index_t bi_prev = cross_lanes ? (1 << (lP - lvl)) - (1 << (l - 1))
-                                            : bi - (1 << (l - 1));
+        const bool x_lanes = bi == 0;
+        const index_t bi_prev =
+            x_lanes ? (1 << (lP - lvl)) - (1 << (l - 1)) : bi - (1 << (l - 1));
         // Implicit synchronization because Y was computed on the same thread
         KOQKATOO_ASSERT(batch2thread(l - 1, bi_prev) == batch2thread(l, bi));
         [[maybe_unused]] index_t k = bi * N >> lP, k_prev = bi_prev * N >> lP;
         // Wait for Y(bi_prev) to be computed.
-        PRINTLN("  wait   ({}) Y[{}]{}", 1, bi_prev,
+        PRINTLN("  wait   ({}) D(Y)[{}]{}", 2 * l, bi_prev,
                 VecReg{vl, k_prev, N >> lvl, N});
         {
-            GUANAQO_TRACE("wait Y", bi_prev);
+            GUANAQO_TRACE("wait D(Y)", bi_prev);
             // std::this_thread::sleep_for(std::chrono::microseconds(10));
-            counters_UY[bi_prev].wait_and(1);
+            counters[bi_prev].wait(2 * l);
         }
         // Wait for the previous update to D to complete (different thread)
         PRINTLN("  wait   ({}) D[{}]{}", 2 * l, bi, VecReg{vl, k, N >> lvl, N});
@@ -385,13 +386,12 @@ struct CyclicOCPSolver {
         {
             PRINTLN("  YYᵀ[{}]{}  ->  D[{}]{}{}", bi_prev,
                     VecReg{vl, k_prev, N >> lvl, N}, bi,
-                    VecReg{vl, k, N >> lvl, N}, cross_lanes ? "  (×)" : "");
+                    VecReg{vl, k, N >> lvl, N}, x_lanes ? "  (×)" : "");
             GUANAQO_TRACE("prop_diag_fwd", bi);
-            cross_lanes
-                ? compact_blas::xsyrk_sub_shift(coupling_Y.batch(bi_prev),
-                                                coupling_D.batch(bi))
-                : compact_blas::xsyrk_sub(coupling_Y.batch(bi_prev),
-                                          coupling_D.batch(bi), backend);
+            x_lanes ? compact_blas::xsyrk_sub_shift(coupling_Y.batch(bi_prev),
+                                                    coupling_D.batch(bi))
+                    : compact_blas::xsyrk_sub(coupling_Y.batch(bi_prev),
+                                              coupling_D.batch(bi), backend);
         }
         PRINTLN("  notify   ({}) D[{}]{}", 2 * l + 1, bi,
                 VecReg{vl, k, N >> lvl, N});
@@ -407,11 +407,11 @@ struct CyclicOCPSolver {
         [[maybe_unused]] index_t k = bi * N >> lP, k_next = bi_next * N >> lP;
         // Wait for U(bi_next) to be computed.
         {
-            PRINTLN("  wait   ({}) U[{}]{}", 2, bi_next,
+            PRINTLN("  wait   ({}) D(U)[{}]{}", 2 * l, bi_next,
                     VecReg{vl, k_next, N >> lvl, N});
-            GUANAQO_TRACE("wait U", bi_next);
+            GUANAQO_TRACE("wait D(U)", bi_next);
             // std::this_thread::sleep_for(std::chrono::microseconds(10));
-            counters_UY[bi_next].wait_and(2);
+            counters[bi_next].wait(2 * l);
         }
         {
             PRINTLN("  wait   ({}) D[{}]{}", 2 * l + 1, bi,
@@ -504,7 +504,7 @@ struct CyclicOCPSolver {
         const index_t kI         = biI * num_stages;
         const index_t kA         = biA * num_stages;
         const auto be            = backend;
-        const bool cross_lanes   = ti == 0; // first stage wraps around
+        const bool x_lanes       = ti == 0; // first stage wraps around
         // Coupling equation to previous stage is eliminated after coupling
         // equation to next stage for odd threads, vice versa for even threads.
         const bool I_below_A = (ti & 1) == 1;
@@ -526,18 +526,19 @@ struct CyclicOCPSolver {
             PRINTLN("  L⁻ᵀÂᵀ [{}]{}  ->  U[{}]{}", ti, vec_curr, biA, vecA);
             // TODO: trmm_LUNN_T
             GUANAQO_TRACE("Compute first U", biI);
-            compact_blas::xgemm_NT(DiI, Âi, coupling_U.batch(biA), be);
+            compact_blas::xgemm_NT_neg(DiI, Âi, coupling_U.batch(biA), be);
             counters_UY[biA].notify_or(2);
         } else {
             // Top block is I → column index is row index of I (biI)
             // Target block in cyclic part is Y in column λ(kI)
             PRINTLN("  ÂL⁻¹  [{}]{}  ->  Y[{}]{}{}", ti, vec_curr, biI, vecI,
-                    cross_lanes ? "  (×)" : "");
+                    x_lanes ? "  (×)" : "");
             GUANAQO_TRACE("Compute first Y", biI);
             // TODO: trmm_N_RUTN
-            cross_lanes
-                ? compact_blas::xgemm_NT_shift(Âi, DiI, coupling_Y.batch(biI))
-                : compact_blas::xgemm_NT(Âi, DiI, coupling_Y.batch(biI), be);
+            x_lanes ? compact_blas::xgemm_NT_neg_shift(Âi, DiI,
+                                                       coupling_Y.batch(biI))
+                    : compact_blas::xgemm_NT_neg(Âi, DiI, coupling_Y.batch(biI),
+                                                 be);
             counters_UY[biI].notify_or(1);
         }
         // Each column of the cyclic part with coupling equations is updated by
@@ -545,11 +546,11 @@ struct CyclicOCPSolver {
         // Update the diagonal blocks of the coupling equations,
         // first forward in time ...
         PRINTLN("  L⁻ᵀL⁻¹[{}]{}  ->  D[{}]{}{}", ti, vec_curr, biI, vecI,
-                cross_lanes ? "  (×)" : "");
+                x_lanes ? "  (×)" : "");
         {
             GUANAQO_TRACE("Compute L⁻ᵀL⁻¹", biI);
-            cross_lanes ? compact_blas::xtrtrsyrk_UL_shift(DiI, DiI)
-                        : compact_blas::xtrtrsyrk_UL(DiI, DiI);
+            x_lanes ? compact_blas::xtrtrsyrk_UL_shift(DiI, DiI)
+                    : compact_blas::xtrtrsyrk_UL(DiI, DiI);
         }
         // Then synchronize to make sure there are no two threads updating the
         // same diagonal block.
@@ -618,14 +619,8 @@ struct CyclicOCPSolver {
                 // Update Â = Ã - LB̂ LŜᵀ
                 compact_blas::xgemm_NT_sub(B̂i, Ŝi, Âi, be);
                 // Update and factor Q̂ = Q̃ - LŜ LŜᵀ
-                if (ti == 1)
-                    guanaqo::print_python(std::cout, Q̂i(0));
                 compact_blas::xsyrk_sub(Ŝi, Q̂i, be); // ┐
-                if (ti == 1)
-                    guanaqo::print_python(std::cout, Q̂i(0));
-                compact_blas::xpotrf(Q̂i, be); // ┘
-                if (ti == 1)
-                    guanaqo::print_python(std::cout, Q̂i(0));
+                compact_blas::xpotrf(Q̂i, be);        // ┘
             }
             if (i + 1 < num_stages) {
                 // Copy next B and A
@@ -637,8 +632,6 @@ struct CyclicOCPSolver {
                 auto BAᵀi          = BAᵀ.middle_cols(i * nx, nx);
                 auto Bᵀi = BAᵀi.top_rows(nu), Aᵀi = BAᵀi.bottom_rows(nx);
                 compact_blas::xcopy_T(data_BA.batch(bi_next), BAᵀi);
-                if (ti == 1)
-                    guanaqo::print_python(std::cout << "BA=\n", BAᵀi(0));
                 // Compute next B̂ and Â
                 auto B̂_next = B̂.middle_cols((i + 1) * nu, nu);
                 auto Â_next = Â.middle_cols((i + 1) * nx, nx);
@@ -646,11 +639,7 @@ struct CyclicOCPSolver {
                 compact_blas::xgemm_NT(Âi, Aᵀi, Â_next, be);
                 // Riccati update
                 auto R̂ŜQ̂_next = R̂ŜQ̂.middle_cols((i + 1) * nux, nux);
-                if (ti == 1)
-                    guanaqo::print_python(std::cout << "LQ=\n", Q̂i(0));
                 compact_blas::xtrmm_RLNN(BAᵀi, Q̂i, BAᵀi, be);
-                if (ti == 1)
-                    guanaqo::print_python(std::cout << "BA LQ=\n", BAᵀi(0));
                 compact_blas::xcopy_L(data_RSQ.batch(bi_next), R̂ŜQ̂_next); // ┐
                 compact_blas::xsyrk_add(BAᵀi, R̂ŜQ̂_next, be);              // ┘
             } else {
@@ -666,6 +655,7 @@ struct CyclicOCPSolver {
             c.value.store(0, std::memory_order_relaxed);
         for (auto &c : counters_UY)
             c.value.store(0, std::memory_order_relaxed);
+        coupling_D.set_constant(0); // TODO
         const index_t N = dim.N_horiz;
         KOQKATOO_ASSERT(((N >> lP) << lP) == N);
         koqkatoo::foreach_thread([this](index_t ti, index_t P) {
@@ -786,8 +776,6 @@ struct CyclicOCPSolver {
                 auto AiQᵀ  = AinvQᵀ.batch(ti);
                 auto AiQiᵀ = AiQᵀ.middle_cols(i * nx, nx);
                 compact_blas::xtrtri_T_copy_ref(Qi, iQiᵀ);
-                if (ti == 0 && i == 0)
-                    guanaqo::print_python(std::cout << "LQ⁻ᵀ = \n", iQiᵀ(0));
                 compact_blas::xcopy(Âi, AiQiᵀ);
                 if (i + 1 < num_stages) // Final block is already Â LQ⁻ᵀ
                     compact_blas::xtrsm_RLTN(Qi, AiQiᵀ, backend);
@@ -858,6 +846,56 @@ struct CyclicOCPSolver {
                 }
             }
         }
+        index_t s               = sλ;
+        const auto cyclic_block = [&](index_t i, index_t offset) {
+            const index_t sY = sλ + nx * get_linear_batch_offset(i + offset);
+            const index_t sU = sλ + nx * get_linear_batch_offset(i - offset);
+            std::println("{:>2}: {:<2} {:<2} {:<2}", i, s, sY, sU);
+            const index_t bi = i % (1 << (lP - lvl));
+            const index_t vi = i / (1 << (lP - lvl));
+            for (index_t c = 0; c < nx; ++c) {
+                for (index_t r = c; r < nx; ++r)
+                    tuples.emplace_back(s + r, s + c,
+                                        coupling_D.batch(bi)(vi)(r, c));
+                if (i + offset < (1 << lP))
+                    for (index_t r = 0; r < nx; ++r)
+                        tuples.emplace_back(sY + r, s + c,
+                                            coupling_Y.batch(bi)(vi)(r, c));
+                for (index_t r = 0; r < nx; ++r)
+                    tuples.emplace_back(sU + r, s + c,
+                                        coupling_U.batch(bi)(vi)(r, c));
+            }
+            s += nx;
+        };
+        const auto cyclic_block_final = [&](index_t i, index_t offset) {
+            const index_t sY = sλ + nx * get_linear_batch_offset(i + offset);
+            std::println("{:>2}: {:<2} {:<2}", i, s, sY);
+            const index_t bi = i % (1 << (lP - lvl));
+            const index_t vi = i / (1 << (lP - lvl));
+            for (index_t c = 0; c < nx; ++c) {
+                for (index_t r = c; r < nx; ++r)
+                    tuples.emplace_back(s + r, s + c,
+                                        coupling_D.batch(bi)(vi)(r, c));
+                if (i + offset < (1 << lP))
+                    for (index_t r = 0; r < nx; ++r)
+                        tuples.emplace_back(sY + r, s + c,
+                                            coupling_Y.batch(bi)(vi)(r, c));
+            }
+            s += nx;
+        };
+        if (lP != lvl) {
+            for (index_t i = 0; i < (1 << (lP - 1)); ++i)
+                cyclic_block(2 * i + 1, 1);
+            for (index_t l = 1; l < lP - lvl; ++l) {
+                index_t offset = 1 << l;
+                index_t stride = offset << 1;
+                for (index_t i = offset; i < (1 << lP); i += stride)
+                    cyclic_block(i, offset);
+            }
+        }
+        for (index_t i = 0; i < (1 << lP); i += (1 << (lP - lvl))) {
+            cyclic_block_final(i, 1 << (lP - lvl));
+        }
         return tuples;
     }
 
@@ -865,7 +903,6 @@ struct CyclicOCPSolver {
         std::vector<std::tuple<index_t, index_t, real_t>> tuples;
         auto [N, nx, nu, ny, ny_N] = dim;
         const index_t nux = nu + nx, nuxx = nux + nx;
-        const index_t vstride    = N >> lvl;
         const index_t num_stages = N >> lP; // number of stages per thread
         const index_t num_proc   = 1 << (lP - lvl);
         const index_t sλ         = N * nuxx - (nx << lP);
@@ -884,10 +921,9 @@ struct CyclicOCPSolver {
                 }
             }
         }
-        for (index_t i = 0; i < 1 << lP; ++i) {
+        for (index_t i = 0; i < 1 << lP; ++i)
             for (index_t r = 0; r < nx; ++r)
                 tuples.emplace_back(sλ + nx * i + r, sλ + nx * i + r, -1);
-        }
         return tuples;
     }
 };
@@ -912,7 +948,7 @@ struct CyclicOCPSolver {
 using koqkatoo::index_t;
 using koqkatoo::real_t;
 
-const int log_n_threads = 2; // TODO
+const int log_n_threads = 3; // TODO
 TEST(NewCyclic, scheduling) {
     using namespace koqkatoo::ocp;
 
@@ -924,12 +960,12 @@ TEST(NewCyclic, scheduling) {
     }));
 
     const index_t lP = log_n_threads + test::CyclicOCPSolver::lvl;
-    OCPDim dim{.N_horiz = 2 << lP, .nx = 3, .nu = 3, .ny = 0, .ny_N = 0};
+    OCPDim dim{.N_horiz = 10 << lP, .nx = 40, .nu = 30, .ny = 0, .ny_N = 0};
     auto ocp = generate_random_ocp(dim);
     test::CyclicOCPSolver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
-    // for (int i = 0; i < 10; ++i)
-    //     solver.run();
+    for (int i = 0; i < 10; ++i)
+        solver.run();
 #if GUANAQO_WITH_TRACING
     guanaqo::trace_logger.reset();
 #endif
