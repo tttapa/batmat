@@ -9,6 +9,8 @@ namespace koqkatoo::ocp {
 struct OCPDim {
     index_t N_horiz;
     index_t nx, nu, ny, ny_N = ny;
+    friend constexpr bool operator==(OCPDim, OCPDim) = default;
+    friend constexpr bool operator!=(OCPDim, OCPDim) = default;
 };
 
 struct LinearOCPStorage {

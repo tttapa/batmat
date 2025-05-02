@@ -157,6 +157,13 @@ TYPED_TEST(GemmTest, GemmTNSub) {
                 backend, i, TestFixture::CompactBLAS_t::xgemm_TN_sub,
                 std::bind_front(TestFixture::naive_gemm, true, false, -1, 1));
 }
+TYPED_TEST(GemmTest, Trmm) {
+    for (auto backend : koqkatoo::tests::backends)
+        for (index_t i : koqkatoo::tests::sizes)
+            this->RunTestTrmm(
+                backend, i, TestFixture::CompactBLAS_t::xtrmm_RLNN,
+                std::bind_front(TestFixture::naive_gemm, false, false, 1, 0));
+}
 TYPED_TEST(GemmTest, TrmmNeg) {
     for (auto backend : koqkatoo::tests::backends)
         for (index_t i : koqkatoo::tests::sizes)

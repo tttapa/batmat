@@ -76,17 +76,16 @@ namespace koqkatoo::ocp::test {
 #if KQT_CYCLIC_TEMPLATE
 template <index_t VL = 4>
 #else
-constexpr index_t VL = 4;
+constexpr index_t VL = 2;
 #endif
 struct CyclicOCPSolver {
     static constexpr index_t vl  = VL;
     static constexpr index_t lvl = get_depth(vl);
 
     const OCPDim dim;
-    const index_t lP = 5; ///< log2(P), logarithm of the number of processors
-    // const index_t N  = dim.N_horiz;
-    const index_t ln = lP - lvl;
-    const index_t n  = index_t{1} << ln;
+    /// log2(P), logarithm of the number of parallel execution units
+    /// (number of processors × vector length)
+    const index_t lP = lvl + 3;
 
     linalg::compact::PreferredBackend backend =
         linalg::compact::PreferredBackend::MKLScalarBatched;
@@ -114,24 +113,19 @@ struct CyclicOCPSolver {
         a -= b;
         return a < 0 ? a + (1 << (lP - lvl)) : a;
     }
+    [[nodiscard]] index_t sub_wrap_P(index_t a, index_t b) const {
+        KOQKATOO_ASSUME(a >= 0);
+        KOQKATOO_ASSUME(b >= 0);
+        KOQKATOO_ASSUME(a < (1 << lP));
+        a -= b;
+        return a < 0 ? a + (1 << lP) : a;
+    }
 
     [[nodiscard]] static constexpr index_t get_index_in_level(index_t i) {
+        if (i == 0)
+            return 0;
         auto l = get_level(i);
         return i >> (l + 1);
-    }
-
-    [[nodiscard]] constexpr index_t get_level_width(index_t l) const {
-        assert(l < ln);
-        return index_t{1} << (ln - l - 1);
-    }
-
-    [[nodiscard]] constexpr index_t get_batch_index(index_t i) const {
-        assert(i < n);
-        if (i == 0)
-            return n - 1;
-        auto l  = get_level(i);
-        auto il = get_index_in_level(i);
-        return il + (1 << ln) - (1 << (ln - l));
     }
 
     struct join_counter_t {
@@ -233,6 +227,49 @@ struct CyclicOCPSolver {
         std::vector<join_counter_t>(1 << (lP - lvl));
     std::vector<join_counter_t> counters_UY =
         std::vector<join_counter_t>(1 << (lP - lvl));
+
+    void initialize(const LinearOCPStorage &ocp) {
+        KOQKATOO_ASSERT(ocp.dim == dim);
+        auto [N, nx, nu, ny, ny_N] = dim;
+        const auto vstride         = N >> lvl;
+        const index_t num_stages   = N >> lP; // number of stages per thread
+        for (index_t ti = 0; ti < (1 << (lP - lvl)); ++ti) {
+            const index_t k0  = ti * num_stages;
+            const index_t bi0 = ti * num_stages;
+            for (index_t i = 0; i < num_stages; ++i) {
+                index_t bi = bi0 + i;
+                for (index_t vi = 0; vi < vl; ++vi) {
+                    auto k = sub_wrap_N(k0 + vi * vstride, i);
+                    std::println(
+                        "ti={:<2}, i={:<2}, k={:<2}, bi={:<2}, vi={:<2}", ti, i,
+                        k, bi, vi);
+                    if (k < dim.N_horiz) {
+                        data_BA.batch(bi)(vi).left_cols(nu)     = ocp.B(k);
+                        data_RSQ.batch(bi)(vi).top_left(nu, nu) = ocp.R(k);
+                        if (k == 0) {
+                            data_BA.batch(bi)(vi).right_cols(nx).set_constant(
+                                0);
+                            data_RSQ.batch(bi)(vi)
+                                .bottom_left(nx, nu)
+                                .set_constant(0);
+                            data_RSQ.batch(bi)(vi).bottom_right(nx, nx) =
+                                ocp.Q(N);
+                        } else {
+                            data_BA.batch(bi)(vi).right_cols(nx) = ocp.A(k);
+                            data_RSQ.batch(bi)(vi).bottom_left(nx, nu) =
+                                ocp.S_trans(k); // TODO
+                            data_RSQ.batch(bi)(vi).bottom_right(nx, nx) =
+                                ocp.Q(k);
+                        }
+                    } else {
+                        // data_RSQ.batch(bi)(vi).set_constant(0);
+                        // data_RSQ.batch(bi)(vi).set_diagonal(1);
+                        // data_BA.batch(bi)(vi).set_constant(0);
+                    }
+                }
+            }
+        }
+    }
 
     // For lgp = 5, lgv = 2, N = 3 << lgp
     //
@@ -561,6 +598,7 @@ struct CyclicOCPSolver {
                                 B̂.left_cols(nu));
             compact_blas::xcopy(data_BA.batch(bi0).right_cols(nx),
                                 Â.left_cols(nx));
+            compact_blas::xcopy_L(data_RSQ.batch(bi0), R̂ŜQ̂.left_cols(nux));
         }
         for (index_t i = 0; i < num_stages; ++i) {
             index_t k = sub_wrap_N(k0, i);
@@ -575,14 +613,19 @@ struct CyclicOCPSolver {
             {
                 GUANAQO_TRACE("Riccati QRS", k);
                 // Factor R̂, update Ŝ, and compute LB̂ = B̂ LR̂⁻ᵀ
-                compact_blas::xcopy_L(data_RSQ.batch(bi0 + i), R̂ŜQ̂i); // ┐
-                compact_blas::xpotrf(R̂i, be);                         // │
-                compact_blas::xtrsm_RLTN(R̂i, B̂i, be);                 // ┘
+                compact_blas::xpotrf(R̂Ŝi, be);        // ┐
+                compact_blas::xtrsm_RLTN(R̂i, B̂i, be); // ┘
                 // Update Â = Ã - LB̂ LŜᵀ
                 compact_blas::xgemm_NT_sub(B̂i, Ŝi, Âi, be);
                 // Update and factor Q̂ = Q̃ - LŜ LŜᵀ
+                if (ti == 1)
+                    guanaqo::print_python(std::cout, Q̂i(0));
                 compact_blas::xsyrk_sub(Ŝi, Q̂i, be); // ┐
-                compact_blas::xpotrf(Q̂i, be);        // ┘
+                if (ti == 1)
+                    guanaqo::print_python(std::cout, Q̂i(0));
+                compact_blas::xpotrf(Q̂i, be); // ┘
+                if (ti == 1)
+                    guanaqo::print_python(std::cout, Q̂i(0));
             }
             if (i + 1 < num_stages) {
                 // Copy next B and A
@@ -594,6 +637,8 @@ struct CyclicOCPSolver {
                 auto BAᵀi          = BAᵀ.middle_cols(i * nx, nx);
                 auto Bᵀi = BAᵀi.top_rows(nu), Aᵀi = BAᵀi.bottom_rows(nx);
                 compact_blas::xcopy_T(data_BA.batch(bi_next), BAᵀi);
+                if (ti == 1)
+                    guanaqo::print_python(std::cout << "BA=\n", BAᵀi(0));
                 // Compute next B̂ and Â
                 auto B̂_next = B̂.middle_cols((i + 1) * nu, nu);
                 auto Â_next = Â.middle_cols((i + 1) * nx, nx);
@@ -601,8 +646,13 @@ struct CyclicOCPSolver {
                 compact_blas::xgemm_NT(Âi, Aᵀi, Â_next, be);
                 // Riccati update
                 auto R̂ŜQ̂_next = R̂ŜQ̂.middle_cols((i + 1) * nux, nux);
+                if (ti == 1)
+                    guanaqo::print_python(std::cout << "LQ=\n", Q̂i(0));
                 compact_blas::xtrmm_RLNN(BAᵀi, Q̂i, BAᵀi, be);
-                compact_blas::xsyrk_add(BAᵀi, R̂ŜQ̂_next, be);
+                if (ti == 1)
+                    guanaqo::print_python(std::cout << "BA LQ=\n", BAᵀi(0));
+                compact_blas::xcopy_L(data_RSQ.batch(bi_next), R̂ŜQ̂_next); // ┐
+                compact_blas::xsyrk_add(BAᵀi, R̂ŜQ̂_next, be);              // ┘
             } else {
                 // Compute LÂ = Ã LQ⁻ᵀ
                 GUANAQO_TRACE("Riccati last", k);
@@ -629,12 +679,224 @@ struct CyclicOCPSolver {
                 factor_coupling(l, ti);
         });
     }
+
+    auto build_sparse(const koqkatoo::ocp::LinearOCPStorage &ocp) {
+        std::vector<std::tuple<index_t, index_t, real_t>> tuples;
+
+        auto [N, nx, nu, ny, ny_N] = ocp.dim;
+        const index_t nux = nu + nx, nuxx = nux + nx;
+        const index_t vstride    = N >> lvl;
+        const index_t num_stages = N >> lP; // number of stages per thread
+        const index_t num_proc   = 1 << (lP - lvl);
+        const index_t sλ         = N * nuxx - (nx << lP);
+        for (index_t vi = 0; vi < vl; ++vi) {
+            const index_t sv = vi * num_proc * (nuxx * num_stages - nx);
+            for (index_t ti = 0; ti < num_proc; ++ti) {
+                const index_t k0 = ti * num_stages + vi * vstride;
+                const auto biA   = ti + vi * num_proc;
+                const auto biI   = sub_wrap_P(biA, 1);
+                const auto levA  = biA > 0 ? get_level(biA) : lP;
+                const auto oA    = (((1 << levA) - 1) << (lP - levA)) +
+                                get_index_in_level(biA);
+                const auto sλA  = sλ + nx * oA;
+                const auto levI = biI > 0 ? get_level(biI) : lP;
+                const auto oI   = (((1 << levI) - 1) << (lP - levI)) +
+                                get_index_in_level(biI);
+                const auto sλI = sλ + nx * oI;
+                // TODO: handle case if lev > or >= lP - lvl
+                for (index_t i = 0; i < num_stages; ++i) {
+                    const index_t k = sub_wrap_N(k0, i);
+                    index_t s = sv + ti * (nuxx * num_stages - nx) + nuxx * i;
+                    for (index_t c = 0; c < nu; ++c) {
+                        for (index_t r = c; r < nu; ++r)
+                            tuples.emplace_back(s + r, s + c, ocp.R(k)(r, c));
+                        if (k > 0)
+                            for (index_t r = 0; r < nx; ++r)
+                                tuples.emplace_back(s + r + nu, s + c,
+                                                    ocp.S_trans(k)(r, c));
+                        if (i == 0) {
+                            for (index_t r = 0; r < nx; ++r)
+                                tuples.emplace_back(sλA + r, s + c,
+                                                    ocp.B(k0)(r, c));
+                        }
+                    }
+                    for (index_t c = 0; c < nx; ++c) {
+                        for (index_t r = c; r < nx; ++r)
+                            tuples.emplace_back(s + r + nu, s + c + nu,
+                                                ocp.Q(k == 0 ? N : k)(r, c));
+                        if (i + 1 < num_stages)
+                            tuples.emplace_back(s + c + nux, s + c + nu, -1);
+                        else
+                            tuples.emplace_back(sλI + c, s + c + nu, -1);
+                        if (i == 0 && k > 0) {
+                            for (index_t r = 0; r < nx; ++r)
+                                tuples.emplace_back(sλA + r, s + c + nu,
+                                                    ocp.A(k0)(r, c));
+                        }
+                    }
+                    if (i > 0) {
+                        for (index_t c = 0; c < nx; ++c) {
+                            for (index_t r = 0; r < nu; ++r)
+                                tuples.emplace_back(s + r, s - nx + c,
+                                                    ocp.B(k)(c, r));
+                            for (index_t r = 0; r < nx; ++r)
+                                tuples.emplace_back(s + nu + r, s - nx + c,
+                                                    ocp.A(k)(c, r));
+                        }
+                    }
+                }
+            }
+        }
+        return tuples;
+    }
+
+    auto build_sparse_factor() {
+        std::vector<std::tuple<index_t, index_t, real_t>> tuples;
+        auto [N, nx, nu, ny, ny_N] = dim;
+        const index_t nux = nu + nx, nuxx = nux + nx;
+        const index_t vstride    = N >> lvl;
+        const index_t num_stages = N >> lP; // number of stages per thread
+        const index_t num_proc   = 1 << (lP - lvl);
+        const index_t sλ         = N * nuxx - (nx << lP);
+        matrix invQᵀ{{
+            .depth = 1 << lP,
+            .rows  = dim.nx,
+            .cols  = (dim.N_horiz >> lP) * dim.nx,
+        }};
+        matrix AinvQᵀ{{
+            .depth = 1 << lP,
+            .rows  = dim.nx,
+            .cols  = (dim.N_horiz >> lP) * dim.nx,
+        }};
+        for (index_t ti = 0; ti < num_proc; ++ti) {
+            for (index_t i = 0; i < num_stages; ++i) {
+                auto RSQ   = riccati_R̂ŜQ̂.batch(ti);
+                auto RSQi  = RSQ.middle_cols(i * nux, nux);
+                auto Qi    = RSQi.bottom_right(nx, nx);
+                auto Â     = riccati_ÂB̂.batch(ti).left_cols(num_stages * nx);
+                auto Âi    = Â.middle_cols(i * nx, nx);
+                auto iQᵀ   = invQᵀ.batch(ti);
+                auto iQiᵀ  = iQᵀ.middle_cols(i * nx, nx);
+                auto AiQᵀ  = AinvQᵀ.batch(ti);
+                auto AiQiᵀ = AiQᵀ.middle_cols(i * nx, nx);
+                compact_blas::xtrtri_T_copy_ref(Qi, iQiᵀ);
+                if (ti == 0 && i == 0)
+                    guanaqo::print_python(std::cout << "LQ⁻ᵀ = \n", iQiᵀ(0));
+                compact_blas::xcopy(Âi, AiQiᵀ);
+                if (i + 1 < num_stages) // Final block is already Â LQ⁻ᵀ
+                    compact_blas::xtrsm_RLTN(Qi, AiQiᵀ, backend);
+            }
+        }
+        for (index_t vi = 0; vi < vl; ++vi) {
+            const index_t sv = vi * num_proc * (nuxx * num_stages - nx);
+            for (index_t ti = 0; ti < num_proc; ++ti) {
+                const index_t k0 = ti * num_stages + vi * vstride;
+                const auto biA   = ti + vi * num_proc;
+                const auto biI   = sub_wrap_P(biA, 1);
+                const auto levA  = biA > 0 ? get_level(biA) : lP;
+                const auto oA    = (((1 << levA) - 1) << (lP - levA)) +
+                                get_index_in_level(biA);
+                const auto sλA  = sλ + nx * oA;
+                const auto levI = biI > 0 ? get_level(biI) : lP;
+                const auto oI   = (((1 << levI) - 1) << (lP - levI)) +
+                                get_index_in_level(biI);
+                const auto sλI = sλ + nx * oI;
+                auto B̂   = riccati_ÂB̂.batch(ti).right_cols(num_stages * nu);
+                auto R̂ŜQ̂ = riccati_R̂ŜQ̂.batch(ti);
+                // TODO: handle case if lev > or >= lP - lvl
+                for (index_t i = 0; i < num_stages; ++i) {
+                    [[maybe_unused]] const index_t k = sub_wrap_N(k0, i);
+                    index_t s  = sv + ti * (nuxx * num_stages - nx) + nuxx * i;
+                    auto B̂i    = B̂.middle_cols(i * nu, nu);
+                    auto R̂ŜQ̂i  = R̂ŜQ̂.middle_cols(i * nux, nux);
+                    auto RSi   = R̂ŜQ̂i(vi).left_cols(nu);
+                    auto Qi    = R̂ŜQ̂i(vi).bottom_right(nx, nx);
+                    auto iQᵀ   = invQᵀ.batch(ti);
+                    auto iQiᵀ  = iQᵀ.middle_cols(i * nx, nx);
+                    auto AiQᵀ  = AinvQᵀ.batch(ti);
+                    auto AiQiᵀ = AiQᵀ.middle_cols(i * nx, nx);
+                    auto BAᵀ   = riccati_BAᵀ.batch(ti);
+                    if (i > 0) {
+                        auto BAᵀi     = BAᵀ.middle_cols((i - 1) * nx, nx);
+                        auto iQprevᵀ  = iQᵀ.middle_cols((i - 1) * nx, nx);
+                        auto AiQprevᵀ = AiQᵀ.middle_cols((i - 1) * nx, nx);
+                        for (index_t c = 0; c < nx; ++c) {
+                            for (index_t r = 0; r <= c; ++r)
+                                tuples.emplace_back(s - nx + r, s - nx + c,
+                                                    -iQprevᵀ(vi)(r, c));
+                            for (index_t r = 0; r < nux; ++r)
+                                tuples.emplace_back(s + r, s - nx + c,
+                                                    BAᵀi(vi)(r, c));
+                            for (index_t r = 0; r < nx; ++r)
+                                tuples.emplace_back(sλA + r, s - nx + c,
+                                                    AiQprevᵀ(vi)(r, c));
+                        }
+                    }
+                    for (index_t c = 0; c < nu; ++c) {
+                        for (index_t r = c; r < nux; ++r)
+                            tuples.emplace_back(s + r, s + c, RSi(r, c));
+                        for (index_t r = 0; r < nx; ++r)
+                            tuples.emplace_back(sλA + r, s + c, B̂i(vi)(r, c));
+                    }
+                    for (index_t c = 0; c < nx; ++c) {
+                        for (index_t r = c; r < nx; ++r) {
+                            tuples.emplace_back(s + r + nu, s + c + nu,
+                                                Qi(r, c));
+                        }
+                        if (i + 1 < num_stages)
+                            for (index_t r = 0; r <= c; ++r)
+                                tuples.emplace_back(s + r + nux, s + c + nu,
+                                                    -iQiᵀ(vi)(r, c));
+                        else
+                            for (index_t r = 0; r <= c; ++r)
+                                tuples.emplace_back(sλI + r, s + c + nu,
+                                                    -iQiᵀ(vi)(r, c));
+                        for (index_t r = 0; r < nx; ++r)
+                            tuples.emplace_back(sλA + r, s + c + nu,
+                                                AiQiᵀ(vi)(r, c));
+                    }
+                }
+            }
+        }
+        return tuples;
+    }
+
+    auto build_sparse_diag() {
+        std::vector<std::tuple<index_t, index_t, real_t>> tuples;
+        auto [N, nx, nu, ny, ny_N] = dim;
+        const index_t nux = nu + nx, nuxx = nux + nx;
+        const index_t vstride    = N >> lvl;
+        const index_t num_stages = N >> lP; // number of stages per thread
+        const index_t num_proc   = 1 << (lP - lvl);
+        const index_t sλ         = N * nuxx - (nx << lP);
+        for (index_t vi = 0; vi < vl; ++vi) {
+            const index_t sv = vi * num_proc * (nuxx * num_stages - nx);
+            for (index_t ti = 0; ti < num_proc; ++ti) {
+                for (index_t i = 0; i < num_stages; ++i) {
+                    index_t s = sv + ti * (nuxx * num_stages - nx) + nuxx * i;
+                    if (i > 0)
+                        for (index_t c = 0; c < nx; ++c)
+                            tuples.emplace_back(s - nx + c, s - nx + c, -1);
+                    for (index_t c = 0; c < nu; ++c)
+                        tuples.emplace_back(s + c, s + c, 1);
+                    for (index_t c = 0; c < nx; ++c)
+                        tuples.emplace_back(s + c + nu, s + c + nu, 1);
+                }
+            }
+        }
+        for (index_t i = 0; i < 1 << lP; ++i) {
+            for (index_t r = 0; r < nx; ++r)
+                tuples.emplace_back(sλ + nx * i + r, sλ + nx * i + r, -1);
+        }
+        return tuples;
+    }
 };
 
 } // namespace koqkatoo::ocp::test
 
 #include <koqkatoo/fork-pool.hpp>
 #include <koqkatoo/linalg-compact/mkl.hpp>
+#include <koqkatoo/ocp/random-ocp.hpp>
 #include <koqkatoo/openmp.h>
 #include <koqkatoo/thread-pool.hpp>
 #include <guanaqo/eigen/span.hpp>
@@ -647,21 +909,27 @@ struct CyclicOCPSolver {
 #include <filesystem>
 #include <fstream>
 
-const int n_threads = 8; // TODO
+using koqkatoo::index_t;
+using koqkatoo::real_t;
+
+const int log_n_threads = 2; // TODO
 TEST(NewCyclic, scheduling) {
     using namespace koqkatoo::ocp;
 
-    KOQKATOO_OMP_IF(omp_set_num_threads(n_threads));
-    koqkatoo::pool_set_num_threads(n_threads);
-    koqkatoo::fork_set_num_threads(n_threads);
+    KOQKATOO_OMP_IF(omp_set_num_threads(1 << log_n_threads));
+    koqkatoo::pool_set_num_threads(1 << log_n_threads);
+    koqkatoo::fork_set_num_threads(1 << log_n_threads);
     GUANAQO_IF_ITT(koqkatoo::foreach_thread([](index_t i, index_t) {
         __itt_thread_set_name(std::format("OMP({})", i).c_str());
     }));
 
-    OCPDim dim{.N_horiz = 96, .nx = 40, .nu = 30, .ny = 0, .ny_N = 0};
-    test::CyclicOCPSolver solver{.dim = dim};
-    for (int i = 0; i < 10; ++i)
-        solver.run();
+    const index_t lP = log_n_threads + test::CyclicOCPSolver::lvl;
+    OCPDim dim{.N_horiz = 2 << lP, .nx = 3, .nu = 3, .ny = 0, .ny_N = 0};
+    auto ocp = generate_random_ocp(dim);
+    test::CyclicOCPSolver solver{.dim = dim, .lP = lP};
+    solver.initialize(ocp);
+    // for (int i = 0; i < 10; ++i)
+    //     solver.run();
 #if GUANAQO_WITH_TRACING
     guanaqo::trace_logger.reset();
 #endif
@@ -675,7 +943,7 @@ TEST(NewCyclic, scheduling) {
         std::filesystem::path out_dir{"traces"};
         out_dir /= *koqkatoo_commit_hash ? koqkatoo_commit_hash : "unknown";
         out_dir /= KOQKATOO_MKL_IF_ELSE("mkl", "openblas");
-        out_dir /= std::format("N={}-thr={}-vl={}", N, n_threads, VL);
+        out_dir /= std::format("N={}-thr={}-vl={}", N, 1 << log_n_threads, VL);
         std::filesystem::create_directories(out_dir);
         std::ofstream csv{out_dir / name};
         guanaqo::TraceLogger::write_column_headings(csv) << '\n';
@@ -684,4 +952,23 @@ TEST(NewCyclic, scheduling) {
         std::cout << out_dir << std::endl;
     }
 #endif
+
+    std::ofstream f1("sparse.csv");
+    if (f1) {
+        auto sp = solver.build_sparse(ocp);
+        for (auto [r, c, x] : sp)
+            f1 << r << ',' << c << ',' << guanaqo::float_to_str(x) << '\n';
+    }
+    std::ofstream f2("sparse_factor.csv");
+    if (f2) {
+        auto sp = solver.build_sparse_factor();
+        for (auto [r, c, x] : sp)
+            f2 << r << ',' << c << ',' << guanaqo::float_to_str(x) << '\n';
+    }
+    std::ofstream f3("sparse_diag.csv");
+    if (f3) {
+        auto sp = solver.build_sparse_diag();
+        for (auto [r, c, x] : sp)
+            f3 << r << ',' << c << ',' << guanaqo::float_to_str(x) << '\n';
+    }
 }

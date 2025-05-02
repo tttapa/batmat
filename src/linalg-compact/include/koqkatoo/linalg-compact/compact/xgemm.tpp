@@ -208,9 +208,6 @@ void CompactBLAS<Abi>::xtrmm_RLNN_ref(single_batch_view A, single_batch_view B,
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
     assert(B.rows() >= B.cols());
-    for (index_t j = 0; j < C.cols(); ++j)
-        for (index_t i = 0; i < C.rows(); ++i)
-            simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned); // TODO: remove
     static constexpr index_t R = micro_kernels::gemm::RowsReg;
     static_assert(R == micro_kernels::gemm::ColsReg);
     micro_kernels::single_batch_matrix_accessor<Abi> A_ = A, B_ = B;
@@ -224,13 +221,13 @@ void CompactBLAS<Abi>::xtrmm_RLNN_ref(single_batch_view A, single_batch_view B,
                     micro_kernels::trmm::xtrmm_rlnn_microkernel<
                         Abi, {.negate = false}, R, R>(
                         A_.block(r, c), B_.block(c, c), C_.block(r, c),
-                        B.rows() - c);
+                        B.rows() - c, true);
                 },
                 [&](index_t r, index_t nr) {
                     micro_kernels::trmm::microkernel_rlnn_lut<
                         Abi, {.negate = false}>[nr - 1][R - 1](
                         A_.block(r, c), B_.block(c, c), C_.block(r, c),
-                        B.rows() - c);
+                        B.rows() - c, true);
                 });
         },
         [&](index_t c, index_t nc) {
@@ -238,7 +235,7 @@ void CompactBLAS<Abi>::xtrmm_RLNN_ref(single_batch_view A, single_batch_view B,
                 micro_kernels::trmm::microkernel_rlnn_lut<
                     Abi, {.negate = false}>[nr - 1][nc - 1](
                     A_.block(r, c), B_.block(c, c), C_.block(r, c),
-                    B.rows() - c);
+                    B.rows() - c, true);
             });
         });
     // TODO: cache blocking
@@ -255,9 +252,6 @@ void CompactBLAS<Abi>::xtrmm_RLNN_neg_ref(single_batch_view A,
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
     assert(B.rows() >= B.cols());
-    for (index_t j = 0; j < C.cols(); ++j)
-        for (index_t i = 0; i < C.rows(); ++i)
-            simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned); // TODO: remove
     static constexpr index_t R = micro_kernels::gemm::RowsReg;
     static_assert(R == micro_kernels::gemm::ColsReg);
     micro_kernels::single_batch_matrix_accessor<Abi> A_ = A, B_ = B;
@@ -271,13 +265,13 @@ void CompactBLAS<Abi>::xtrmm_RLNN_neg_ref(single_batch_view A,
                     micro_kernels::trmm::xtrmm_rlnn_microkernel<
                         Abi, {.negate = true}, R, R>(
                         A_.block(r, c), B_.block(c, c), C_.block(r, c),
-                        B.rows() - c);
+                        B.rows() - c, true);
                 },
                 [&](index_t r, index_t nr) {
                     micro_kernels::trmm::microkernel_rlnn_lut<
                         Abi, {.negate = true}>[nr - 1][R - 1](
                         A_.block(r, c), B_.block(c, c), C_.block(r, c),
-                        B.rows() - c);
+                        B.rows() - c, true);
                 });
         },
         [&](index_t c, index_t nc) {
@@ -285,7 +279,7 @@ void CompactBLAS<Abi>::xtrmm_RLNN_neg_ref(single_batch_view A,
                 micro_kernels::trmm::microkernel_rlnn_lut<
                     Abi, {.negate = true}>[nr - 1][nc - 1](
                     A_.block(r, c), B_.block(c, c), C_.block(r, c),
-                    B.rows() - c);
+                    B.rows() - c, true);
             });
         });
     // TODO: cache blocking

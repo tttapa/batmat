@@ -16,16 +16,17 @@ template <class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg>
 xtrmm_rlnn_microkernel(const single_batch_matrix_accessor<Abi, false> A,
                        const single_batch_matrix_accessor<Abi, false> B,
                        const mut_single_batch_matrix_accessor<Abi> C,
-                       const index_t k) noexcept {
+                       const index_t k, const bool init_zero) noexcept {
     using simd = stdx::simd<real_t, Abi>;
     KOQKATOO_ASSUME(k >= ColsReg);
     // Pre-compute the offsets of the columns of C
     auto C_cached = with_cached_access<ColsReg>(C);
     // Load accumulator into registers
-    simd C_reg[RowsReg][ColsReg]; // NOLINT(*-c-arrays)
-    KOQKATOO_FULLY_UNROLLED_FOR (index_t jj = 0; jj < ColsReg; ++jj)
-        KOQKATOO_FULLY_UNROLLED_FOR (index_t ii = 0; ii < RowsReg; ++ii)
-            C_reg[ii][jj] = C_cached.load(ii, jj);
+    simd C_reg[RowsReg][ColsReg]{}; // NOLINT(*-c-arrays)
+    if (!init_zero) [[unlikely]]
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t jj = 0; jj < ColsReg; ++jj)
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t ii = 0; ii < RowsReg; ++ii)
+                C_reg[ii][jj] = C_cached.load(ii, jj);
     // Triangular matrix multiplication kernel
     KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < ColsReg; ++l)
         KOQKATOO_FULLY_UNROLLED_FOR (index_t ii = 0; ii < RowsReg; ++ii) {

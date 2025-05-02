@@ -14,8 +14,8 @@ struct KernelConfig {
 template <class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg>
 void xtrmm_rlnn_microkernel(single_batch_matrix_accessor<Abi, false> A,
                             single_batch_matrix_accessor<Abi, false> B,
-                            mut_single_batch_matrix_accessor<Abi> C,
-                            index_t k) noexcept;
+                            mut_single_batch_matrix_accessor<Abi> C, index_t k,
+                            bool init_zero) noexcept;
 
 using gemm::ColsReg;
 using gemm::RowsReg;
