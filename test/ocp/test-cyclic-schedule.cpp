@@ -524,7 +524,7 @@ struct CyclicOCPSolver {
             // Top block is A → column index is row index of A (biA)
             // Target block in cyclic part is U in column λ(kA)
             PRINTLN("  L⁻ᵀÂᵀ [{}]{}  ->  U[{}]{}", ti, vec_curr, biA, vecA);
-            GUANAQO_TRACE("Compute first U", biI);
+            GUANAQO_TRACE("Compute first U", biA);
             compact_blas::xtrmm_LUNN_T_neg_ref(DiI, Âi, coupling_U.batch(biA));
             counters_UY[biA].notify_or(2);
         } else {
