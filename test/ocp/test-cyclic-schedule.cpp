@@ -21,8 +21,10 @@
 #include <iostream>
 #include <print>
 #include <stdexcept>
-#include <thread>
 #include <type_traits>
+#if !KOQKATOO_WITH_OPENMP
+#include <barrier>
+#endif
 
 namespace stdx = std::experimental;
 
@@ -353,8 +355,15 @@ struct CyclicOCPSolver {
         return ((bi >> l) & 3) == 1 && l + 1 != lP - lvl;
     }
 
+#if !KOQKATOO_WITH_OPENMP
+    std::barrier<> std_barrier{1 << (lP - lvl)};
+#endif
+
     void barrier() {
-        KOQKATOO_OMP(barrier); // TODO: portability
+        KOQKATOO_OMP(barrier);
+#if !KOQKATOO_WITH_OPENMP
+        std_barrier.arrive_and_wait();
+#endif
 #if DO_PRINT
         KOQKATOO_OMP(single)
         std::println("---");
