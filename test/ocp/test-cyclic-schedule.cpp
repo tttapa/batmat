@@ -680,16 +680,7 @@ struct CyclicOCPSolver {
                                 B̂.left_cols(nu));
             compact_blas::xcopy(data_BA.batch(bi0).right_cols(nx),
                                 Â.left_cols(nx));
-            for (index_t i = 0; i < num_stages - 1; ++i) {
-                const auto bi_next = bi0 + i + 1;
-                auto BAᵀi          = BAᵀ.middle_cols(i * nx, nx);
-                compact_blas::xcopy_T(data_BA.batch(bi_next), BAᵀi);
-            }
-            for (index_t i = 0; i < num_stages; ++i) {
-                const auto bi = bi0 + i;
-                auto R̂ŜQ̂i     = R̂ŜQ̂.middle_cols(i * nux, nux);
-                compact_blas::xcopy_L(data_RSQ.batch(bi), R̂ŜQ̂i);
-            }
+            compact_blas::xcopy_L(data_RSQ.batch(bi0), R̂ŜQ̂.left_cols(nux));
         }
         for (index_t i = 0; i < num_stages; ++i) {
             index_t k = sub_wrap_N(k0, i);
@@ -718,9 +709,10 @@ struct CyclicOCPSolver {
                 GUANAQO_TRACE("Riccati update AB", k_next);
                 PRINTLN("  Riccati update AB{}",
                         VecReg{vl, k_next, N >> lvl, N});
-                [[maybe_unused]] const auto bi_next = bi0 + i + 1;
-                auto BAᵀi = BAᵀ.middle_cols(i * nx, nx);
+                const auto bi_next = bi0 + i + 1;
+                auto BAᵀi          = BAᵀ.middle_cols(i * nx, nx);
                 auto Bᵀi = BAᵀi.top_rows(nu), Aᵀi = BAᵀi.bottom_rows(nx);
+                compact_blas::xcopy_T(data_BA.batch(bi_next), BAᵀi);
                 // Compute next B̂ and Â
                 auto B̂_next = B̂.middle_cols((i + 1) * nu, nu);
                 auto Â_next = Â.middle_cols((i + 1) * nx, nx);
@@ -729,8 +721,8 @@ struct CyclicOCPSolver {
                 // Riccati update
                 auto R̂ŜQ̂_next = R̂ŜQ̂.middle_cols((i + 1) * nux, nux);
                 compact_blas::xtrmm_RLNN(BAᵀi, Q̂i, BAᵀi, be);
-                // compact_blas::xcopy_L(data_RSQ.batch(bi_next), R̂ŜQ̂_next); // ┐
-                compact_blas::xsyrk_add(BAᵀi, R̂ŜQ̂_next, be); // ┘
+                compact_blas::xcopy_L(data_RSQ.batch(bi_next), R̂ŜQ̂_next); // ┐
+                compact_blas::xsyrk_add(BAᵀi, R̂ŜQ̂_next, be);              // ┘
             } else {
                 // Compute LÂ = Ã LQ⁻ᵀ
                 GUANAQO_TRACE("Riccati last", k);
