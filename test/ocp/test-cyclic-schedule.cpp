@@ -13,7 +13,6 @@
 
 #include <experimental/simd>
 #include <guanaqo/print.hpp>
-#include <barrier>
 #include <bit>
 #include <cassert>
 #include <cmath>
@@ -354,7 +353,15 @@ struct CyclicOCPSolver {
         return ((bi >> l) & 3) == 1 && l + 1 != lP - lvl;
     }
 
-    void process_active(index_t l, index_t biY, std::barrier<> &barrier) {
+    void barrier() {
+        KOQKATOO_OMP(barrier); // TODO: portability
+#if DO_PRINT
+        KOQKATOO_OMP(single)
+        std::println("---");
+#endif
+    }
+
+    void process_active(index_t l, index_t biY) {
         const index_t offset = 1 << l;
         // Compute Y[bi]
         {
@@ -364,7 +371,7 @@ struct CyclicOCPSolver {
                                      coupling_Y.batch(biY), backend);
         }
         // Wait for U[bi] from process_active_secondary
-        barrier.arrive_and_wait();
+        barrier();
         for (index_t c = 0; c < coupling_U.cols(); c += 1)
             for (index_t r = 0; r < coupling_U.rows(); r += 16)
                 __builtin_prefetch(&coupling_U.batch(biY)(0, r, c), 0, 3);
@@ -388,8 +395,7 @@ struct CyclicOCPSolver {
         }
     }
 
-    void process_active_secondary(index_t l, index_t biU,
-                                  std::barrier<> &barrier) {
+    void process_active_secondary(index_t l, index_t biU) {
         const index_t offset = 1 << l;
         const index_t biD    = sub_wrap_PmV(biU, offset);
         const index_t biY    = sub_wrap_PmV(biD, offset);
@@ -404,7 +410,7 @@ struct CyclicOCPSolver {
                                      coupling_U.batch(biU), backend);
         }
         // Wait for Y[bi] from process_active
-        barrier.arrive_and_wait();
+        barrier();
         for (index_t c = 0; c < coupling_Y.cols(); c += 1)
             for (index_t r = 0; r < coupling_Y.rows(); r += 16)
                 __builtin_prefetch(&coupling_Y.batch(biY)(0, r, c), 0, 3);
@@ -432,7 +438,7 @@ struct CyclicOCPSolver {
         }
     }
 
-    void factor_l0(const index_t ti, std::barrier<> &barrier) {
+    void factor_l0(const index_t ti) {
         const auto [N, nx, nu, ny, ny_N] = dim;
         const index_t num_stages = N >> lP; // number of stages per thread
         const index_t biI        = sub_wrap_PmV(ti, 1);
@@ -482,7 +488,7 @@ struct CyclicOCPSolver {
         }
         // Then synchronize to make sure there are no two threads updating the
         // same diagonal block.
-        barrier.arrive_and_wait();
+        barrier();
         // And finally backward in time, optionally merged with factorization.
         const bool ready_to_factor = (ti & 1) == 1;
         {
@@ -576,28 +582,24 @@ struct CyclicOCPSolver {
         coupling_D.set_constant(0); // TODO
         const index_t N = dim.N_horiz;
         KOQKATOO_ASSERT(((N >> lP) << lP) == N);
-        std::barrier<> barrier{1 << (lP - lvl)};
-        koqkatoo::foreach_thread([this, &barrier](index_t ti, index_t P) {
+        koqkatoo::foreach_thread([this](index_t ti, index_t P) {
             if (P < (1 << (lP - lvl)))
                 throw std::logic_error("Incorrect number of threads");
             if (ti >= (1 << (lP - lvl)))
                 return;
             factor_riccati(ti);
-            factor_l0(ti, barrier);
-            barrier.arrive_and_wait();
+            factor_l0(ti);
             for (index_t l = 0; l < lP - lvl; ++l) {
+                barrier();
                 const index_t offset = 1 << l;
                 const auto bi        = sub_wrap_PmV(ti, offset);
                 const auto biU       = ti;
-                if (is_active(l, bi)) {
-                    process_active(l, bi, barrier);
-                    if (l + 1 < lP - lvl)
-                        barrier.arrive_and_wait();
-                } else if (is_active(l, biU)) {
-                    process_active_secondary(l, biU, barrier);
-                    if (l + 1 < lP - lvl)
-                        barrier.arrive_and_drop();
-                }
+                if (is_active(l, bi))
+                    process_active(l, bi);
+                else if (is_active(l, biU))
+                    process_active_secondary(l, biU);
+                else
+                    barrier();
             }
         });
     }
