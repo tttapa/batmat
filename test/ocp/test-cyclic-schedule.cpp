@@ -114,6 +114,13 @@ struct CyclicOCPSolver {
         a -= b;
         return a < 0 ? a + (1 << (lP - lvl)) : a;
     }
+    [[nodiscard]] index_t add_wrap_PmV(index_t a, index_t b) const {
+        KOQKATOO_ASSUME(a >= 0);
+        KOQKATOO_ASSUME(b >= 0);
+        KOQKATOO_ASSUME(a < (1 << (lP - lvl)));
+        a += b;
+        return a >= (1 << (lP - lvl)) ? a - (1 << (lP - lvl)) : a;
+    }
     [[nodiscard]] index_t sub_wrap_P(index_t a, index_t b) const {
         KOQKATOO_ASSUME(a >= 0);
         KOQKATOO_ASSUME(b >= 0);
@@ -337,6 +344,100 @@ struct CyclicOCPSolver {
     //     1 = Y is available (bit field)
     //     2 = U is available (bit field)
 
+    [[nodiscard]] bool is_active(index_t l, index_t bi) const {
+        const index_t lbi   = bi > 0 ? get_level(bi) : lP - lvl;
+        const bool inactive = lbi < l;
+        return ((bi >> l) & 1) == 1 && !inactive;
+    }
+    [[nodiscard]] bool is_U_below_Y(index_t l, index_t bi) const {
+        return ((bi >> l) & 3) == 1 && l + 1 != lP - lvl;
+    }
+
+    void barrier() {
+        KOQKATOO_OMP(barrier); // TODO: portability
+#if DO_PRINT
+        KOQKATOO_OMP(single)
+        std::println("---");
+#endif
+    }
+
+    void process_active(index_t l, index_t biY) {
+        const index_t offset = 1 << l;
+        // Compute Y[bi]
+        {
+            PRINTLN("trsm D{} Y{}", biY, biY);
+            GUANAQO_TRACE("Trsm Y", biY);
+            compact_blas::xtrsm_RLTN(coupling_D.batch(biY),
+                                     coupling_Y.batch(biY), backend);
+        }
+        // Wait for U[bi] from process_active_secondary
+        barrier();
+        for (index_t c = 0; c < coupling_U.cols(); c += 1)
+            for (index_t r = 0; r < coupling_U.rows(); r += 16)
+                __builtin_prefetch(&coupling_U.batch(biY)(0, r, c), 0, 3);
+        // Compute UYᵀ or YUᵀ
+        if (is_U_below_Y(l, biY)) {
+            const index_t bi_next =
+                add_wrap_PmV(biY, offset); // TODO: need mod?
+            PRINTLN("gemm U{} Y{} -> U{}", biY, biY, bi_next);
+            GUANAQO_TRACE("Compute U", bi_next);
+            compact_blas::xgemm_NT_neg(coupling_U.batch(biY),
+                                       coupling_Y.batch(biY),
+                                       coupling_U.batch(bi_next), backend);
+        } else {
+            const index_t bi_prev =
+                sub_wrap_PmV(biY, offset); // TODO: need mod?
+            PRINTLN("gemm Y{} U{} -> Y{}", biY, biY, bi_prev);
+            GUANAQO_TRACE("Compute Y", bi_prev);
+            compact_blas::xgemm_NT_neg(coupling_Y.batch(biY),
+                                       coupling_U.batch(biY),
+                                       coupling_Y.batch(bi_prev), backend);
+        }
+    }
+
+    void process_active_secondary(index_t l, index_t biU) {
+        const index_t offset = 1 << l;
+        const index_t biD    = sub_wrap_PmV(biU, offset);
+        const index_t biY    = sub_wrap_PmV(biD, offset);
+        for (index_t c = 0; c < coupling_D.cols(); c += 1)
+            for (index_t r = 0; r < coupling_D.rows(); r += 16)
+                __builtin_prefetch(&coupling_D.batch(biD)(0, r, c), 0, 3);
+        // Compute U[bi]
+        {
+            PRINTLN("trsm D{} U{}", biU, biU);
+            GUANAQO_TRACE("Trsm U", biU);
+            compact_blas::xtrsm_RLTN(coupling_D.batch(biU),
+                                     coupling_U.batch(biU), backend);
+        }
+        // Wait for Y[bi] from process_active
+        barrier();
+        for (index_t c = 0; c < coupling_Y.cols(); c += 1)
+            for (index_t r = 0; r < coupling_Y.rows(); r += 16)
+                __builtin_prefetch(&coupling_Y.batch(biY)(0, r, c), 0, 3);
+        // D -= UUᵀ
+        {
+            PRINTLN("syrk U{} -> D{}", biU, biD);
+            GUANAQO_TRACE("Subtract UUᵀ", biD);
+            compact_blas::xsyrk_sub(coupling_U.batch(biU),
+                                    coupling_D.batch(biD), backend);
+        }
+        // D -= YYᵀ
+        {
+            PRINTLN("syrk Y{} -> D{}", biY, biD);
+            GUANAQO_TRACE("Subtract YYᵀ", biD);
+            biD == 0 ? compact_blas::xsyrk_sub_shift(coupling_Y.batch(biY),
+                                                     coupling_D.batch(biD))
+                     : compact_blas::xsyrk_sub(coupling_Y.batch(biY),
+                                               coupling_D.batch(biD), backend);
+        }
+        // chol(D)
+        if (is_active(l + 1, biD)) {
+            PRINTLN("chol D{}", biD);
+            GUANAQO_TRACE("Factor D", biD);
+            compact_blas::xpotrf(coupling_D.batch(biD), backend);
+        }
+    }
+
     void factor_coupling(index_t l, index_t ti) {
         const index_t bi = thread2batch(l, ti);
         bool last        = bi != 0 && get_level(bi) < l;
@@ -523,28 +624,21 @@ struct CyclicOCPSolver {
         if (I_below_A) {
             // Top block is A → column index is row index of A (biA)
             // Target block in cyclic part is U in column λ(kA)
-            PRINTLN("  L⁻ᵀÂᵀ [{}]{}  ->  U[{}]{}", ti, vec_curr, biA, vecA);
             GUANAQO_TRACE("Compute first U", biA);
             compact_blas::xtrmm_LUNN_T_neg_ref(DiI, Âi, coupling_U.batch(biA));
-            counters_UY[biA].notify_or(2);
         } else {
             // Top block is I → column index is row index of I (biI)
             // Target block in cyclic part is Y in column λ(kI)
-            PRINTLN("  ÂL⁻¹  [{}]{}  ->  Y[{}]{}{}", ti, vec_curr, biI, vecI,
-                    x_lanes ? "  (×)" : "");
             GUANAQO_TRACE("Compute first Y", biI);
             x_lanes ? compact_blas::xtrmm_RUTN_neg_shift(Âi, DiI,
                                                          coupling_Y.batch(biI))
                     : compact_blas::xtrmm_RUTN_neg_ref(Âi, DiI,
                                                        coupling_Y.batch(biI));
-            counters_UY[biI].notify_or(1);
         }
         // Each column of the cyclic part with coupling equations is updated by
         // two threads: one for the forward, and one for the backward coupling.
         // Update the diagonal blocks of the coupling equations,
         // first forward in time ...
-        PRINTLN("  L⁻ᵀL⁻¹[{}]{}  ->  D[{}]{}{}", ti, vec_curr, biI, vecI,
-                x_lanes ? "  (×)" : "");
         {
             GUANAQO_TRACE("Compute L⁻ᵀL⁻¹", biI);
             x_lanes ? compact_blas::xtrtrsyrk_UL_shift(DiI, DiI)
@@ -552,27 +646,16 @@ struct CyclicOCPSolver {
         }
         // Then synchronize to make sure there are no two threads updating the
         // same diagonal block.
-        PRINTLN("  notify (1)  D[{}]", biI);
-        counters[biI].notify(1);
-        PRINTLN("  wait   (1)  D[{}]", biA);
-        {
-            GUANAQO_TRACE("Wait D", biA);
-            counters[biA].wait(1);
-        }
+        barrier();
         // And finally backward in time, optionally merged with factorization.
         const bool ready_to_factor = (ti & 1) == 1;
         {
             GUANAQO_TRACE("Compute (BA)(BA)ᵀ", biA);
             compact_blas::xsyrk_add(ÂB̂i, DiA, be);
         }
-        PRINTLN("  {}  D[{}]{}", ready_to_factor ? "factor" : "update", biA,
-                vecA);
         if (ready_to_factor) {
-            PRINTLN("---");
-            prop_subdiag(0, biA);
-        } else {
-            PRINTLN("  notify (2)  D[{}]{}", biA, vecA);
-            counters[biA].notify(2);
+            GUANAQO_TRACE("Factor D", biA);
+            compact_blas::xpotrf(coupling_D.batch(biA), backend);
         }
     }
 
@@ -663,8 +746,18 @@ struct CyclicOCPSolver {
                 return;
             factor_riccati(ti);
             factor_l0(ti);
-            for (index_t l = 1; l < lP - lvl; ++l)
-                factor_coupling(l, ti);
+            for (index_t l = 0; l < lP - lvl; ++l) {
+                barrier();
+                const index_t offset = 1 << l;
+                const auto bi        = sub_wrap_PmV(ti, offset);
+                const auto biU       = ti;
+                if (is_active(l, bi))
+                    process_active(l, bi);
+                else if (is_active(l, biU))
+                    process_active_secondary(l, biU);
+                else
+                    barrier();
+            }
         });
     }
 
