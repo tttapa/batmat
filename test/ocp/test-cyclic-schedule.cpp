@@ -438,164 +438,6 @@ struct CyclicOCPSolver {
         }
     }
 
-    void factor_coupling(index_t l, index_t ti) {
-        const index_t bi = thread2batch(l, ti);
-        bool last        = bi != 0 && get_level(bi) < l;
-        PRINTLN("Thread #{}: {} ({})", ti, bi, last);
-        if (last)
-            return;
-        prop_diag_fwd(l, bi);
-        prop_diag_rev(l, bi);
-        if ((bi >> l) & 1) {
-            PRINTLN("odd");
-            prop_subdiag(l, bi);
-        } else {
-            const index_t N            = dim.N_horiz;
-            [[maybe_unused]] index_t k = bi * N >> lP;
-            PRINTLN("  notify ({})  D[{}]{}", 2 * l + 2, bi,
-                    VecReg{vl, k, N >> lvl, N});
-            GUANAQO_TRACE("notify", bi);
-            // std::this_thread::sleep_for(std::chrono::microseconds(10));
-            counters[bi].notify(2 * l + 2);
-        }
-    }
-    void prop_diag_fwd(const index_t l, const index_t bi) {
-        KOQKATOO_ASSERT(l < lP - lvl);
-        const index_t N = dim.N_horiz;
-        // Updates to batch 0 wrap around
-        const bool x_lanes = bi == 0;
-        const index_t bi_prev =
-            x_lanes ? (1 << (lP - lvl)) - (1 << (l - 1)) : bi - (1 << (l - 1));
-        // Implicit synchronization because Y was computed on the same thread
-        KOQKATOO_ASSERT(batch2thread(l - 1, bi_prev) == batch2thread(l, bi));
-        [[maybe_unused]] index_t k = bi * N >> lP, k_prev = bi_prev * N >> lP;
-        // Wait for Y(bi_prev) to be computed.
-        PRINTLN("  wait   ({}) D(Y)[{}]{}", 2 * l, bi_prev,
-                VecReg{vl, k_prev, N >> lvl, N});
-        {
-            GUANAQO_TRACE("wait D(Y)", bi_prev);
-            // std::this_thread::sleep_for(std::chrono::microseconds(10));
-            counters[bi_prev].wait(2 * l);
-        }
-        // Wait for the previous update to D to complete (different thread)
-        PRINTLN("  wait   ({}) D[{}]{}", 2 * l, bi, VecReg{vl, k, N >> lvl, N});
-        {
-            GUANAQO_TRACE("wait", bi);
-            // std::this_thread::sleep_for(std::chrono::microseconds(10));
-            counters[bi].wait(2 * l);
-        }
-        {
-            PRINTLN("  YYᵀ[{}]{}  ->  D[{}]{}{}", bi_prev,
-                    VecReg{vl, k_prev, N >> lvl, N}, bi,
-                    VecReg{vl, k, N >> lvl, N}, x_lanes ? "  (×)" : "");
-            GUANAQO_TRACE("prop_diag_fwd", bi);
-            x_lanes ? compact_blas::xsyrk_sub_shift(coupling_Y.batch(bi_prev),
-                                                    coupling_D.batch(bi))
-                    : compact_blas::xsyrk_sub(coupling_Y.batch(bi_prev),
-                                              coupling_D.batch(bi), backend);
-        }
-        PRINTLN("  notify   ({}) D[{}]{}", 2 * l + 1, bi,
-                VecReg{vl, k, N >> lvl, N});
-        {
-            GUANAQO_TRACE("notify", bi);
-            // std::this_thread::sleep_for(std::chrono::microseconds(10));
-            counters[bi].notify(2 * l + 1);
-        }
-    }
-    void prop_diag_rev(index_t l, index_t bi) {
-        const index_t N            = dim.N_horiz;
-        const index_t bi_next      = bi + (1 << (l - 1));
-        [[maybe_unused]] index_t k = bi * N >> lP, k_next = bi_next * N >> lP;
-        // Wait for U(bi_next) to be computed.
-        {
-            PRINTLN("  wait   ({}) D(U)[{}]{}", 2 * l, bi_next,
-                    VecReg{vl, k_next, N >> lvl, N});
-            GUANAQO_TRACE("wait D(U)", bi_next);
-            // std::this_thread::sleep_for(std::chrono::microseconds(10));
-            counters[bi_next].wait(2 * l);
-        }
-        {
-            PRINTLN("  wait   ({}) D[{}]{}", 2 * l + 1, bi,
-                    VecReg{vl, k, N >> lvl, N});
-            GUANAQO_TRACE("wait", bi);
-            // std::this_thread::sleep_for(std::chrono::microseconds(10));
-            counters[bi].wait(2 * l + 1);
-        }
-        PRINTLN("  UUᵀ[{}]{}  ->  D[{}]{}", bi_next,
-                VecReg{vl, k_next, N >> lvl, N}, bi,
-                VecReg{vl, k, N >> lvl, N});
-        GUANAQO_TRACE("prop_diag_rev", bi);
-        compact_blas::xsyrk_sub(coupling_U.batch(bi_next), coupling_D.batch(bi),
-                                backend);
-    }
-    void prop_subdiag(index_t l, index_t bi) {
-        const index_t N       = dim.N_horiz;
-        const bool U_below_Y  = ((bi >> l) & 3) == 1 && l + 1 != lP - lvl;
-        const index_t bi_next = bi + (1 << l), bi_prev = bi - (1 << l);
-        [[maybe_unused]] index_t k = bi * N >> lP;
-        auto Di                    = coupling_D.batch(bi);
-        const auto be              = backend;
-        {
-            PRINTLN("  wait   ({}) D[{}]{}", 2 * l, bi,
-                    VecReg{vl, k, N >> lvl, N});
-            GUANAQO_TRACE("wait D", bi);
-            // std::this_thread::sleep_for(std::chrono::microseconds(10));
-            counters[bi].wait(2 * l);
-        }
-        {
-            PRINTLN("  wait   ({}) UY[{}]{}", 3, bi,
-                    VecReg{vl, k, N >> lvl, N});
-            GUANAQO_TRACE("wait UY", 3);
-            // std::this_thread::sleep_for(std::chrono::microseconds(10));
-            counters_UY[bi].wait(3);
-        }
-        {
-            PRINTLN("  factor D[{}]{}", bi, VecReg{vl, k, N >> lvl, N});
-            GUANAQO_TRACE("Factor D", bi);
-            compact_blas::xpotrf(Di, be);                           // ┐
-            compact_blas::xtrsm_RLTN(Di, coupling_U.batch(bi), be); // │
-            compact_blas::xtrsm_RLTN(Di, coupling_Y.batch(bi), be); // ┘
-        }
-        if (U_below_Y) {
-            [[maybe_unused]] index_t k_next = bi_next * N >> lP;
-            PRINTLN("  UYᵀ[{}]{}  ->  U[{}]{}", bi, VecReg{vl, k, N >> lvl, N},
-                    bi_next, VecReg{vl, k_next, N >> lvl, N});
-            GUANAQO_TRACE("Compute U", bi_next);
-            compact_blas::xgemm_NT_neg(coupling_U.batch(bi),
-                                       coupling_Y.batch(bi),
-                                       coupling_U.batch(bi_next), be);
-            {
-                PRINTLN("  notify ({})  U[{}]{}", 2, bi_next,
-                        VecReg{vl, k_next, N >> lvl, N});
-                GUANAQO_TRACE("notify U", bi_next);
-                // std::this_thread::sleep_for(std::chrono::microseconds(10));
-                counters_UY[bi_next].notify_or(2);
-            }
-        } else {
-            [[maybe_unused]] index_t k_prev = bi_prev * N >> lP;
-            PRINTLN("  YUᵀ[{}]{}  ->  Y[{}]{}", bi, VecReg{vl, k, N >> lvl, N},
-                    bi_prev, VecReg{vl, k_prev, N >> lvl, N});
-            GUANAQO_TRACE("Compute Y", bi_prev);
-            compact_blas::xgemm_NT_neg(coupling_Y.batch(bi),
-                                       coupling_U.batch(bi),
-                                       coupling_Y.batch(bi_prev), be);
-            {
-                PRINTLN("  notify ({})  Y[{}]{}", 1, bi_prev,
-                        VecReg{vl, k_prev, N >> lvl, N});
-                GUANAQO_TRACE("notify Y", bi);
-                // std::this_thread::sleep_for(std::chrono::microseconds(10));
-                counters_UY[bi_prev].notify_or(1);
-            }
-        }
-        {
-            PRINTLN("  notify ({})  D[{}]{}", 2 * l + 2, bi,
-                    VecReg{vl, k, N >> lvl, N});
-            GUANAQO_TRACE("notify", bi);
-            // std::this_thread::sleep_for(std::chrono::microseconds(10));
-            counters[bi].notify(2 * l + 2);
-        }
-    }
-
     void factor_l0(const index_t ti) {
         const auto [N, nx, nu, ny, ny_N] = dim;
         const index_t num_stages = N >> lP; // number of stages per thread
@@ -711,15 +553,16 @@ struct CyclicOCPSolver {
                         VecReg{vl, k_next, N >> lvl, N});
                 const auto bi_next = bi0 + i + 1;
                 auto BAᵀi          = BAᵀ.middle_cols(i * nx, nx);
-                auto Bᵀi = BAᵀi.top_rows(nu), Aᵀi = BAᵀi.bottom_rows(nx);
-                compact_blas::xcopy_T(data_BA.batch(bi_next), BAᵀi);
+                auto BAi           = data_BA.batch(bi_next);
+                auto Bi = BAi.left_cols(nu), Ai = BAi.right_cols(nx);
                 // Compute next B̂ and Â
                 auto B̂_next = B̂.middle_cols((i + 1) * nu, nu);
                 auto Â_next = Â.middle_cols((i + 1) * nx, nx);
-                compact_blas::xgemm_NT(Âi, Bᵀi, B̂_next, be);
-                compact_blas::xgemm_NT(Âi, Aᵀi, Â_next, be);
+                compact_blas::xgemm(Âi, Bi, B̂_next, be);
+                compact_blas::xgemm(Âi, Ai, Â_next, be);
                 // Riccati update
                 auto R̂ŜQ̂_next = R̂ŜQ̂.middle_cols((i + 1) * nux, nux);
+                compact_blas::xcopy_T(data_BA.batch(bi_next), BAᵀi);
                 compact_blas::xtrmm_RLNN(BAᵀi, Q̂i, BAᵀi, be);
                 compact_blas::xcopy_L(data_RSQ.batch(bi_next), R̂ŜQ̂_next); // ┐
                 compact_blas::xsyrk_add(BAᵀi, R̂ŜQ̂_next, be);              // ┘
@@ -1055,7 +898,7 @@ TEST(NewCyclic, scheduling) {
     auto ocp = generate_random_ocp(dim);
     test::CyclicOCPSolver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < 100; ++i)
         solver.run();
 #if GUANAQO_WITH_TRACING
     guanaqo::trace_logger.reset();
@@ -1070,7 +913,9 @@ TEST(NewCyclic, scheduling) {
         std::filesystem::path out_dir{"traces"};
         out_dir /= *koqkatoo_commit_hash ? koqkatoo_commit_hash : "unknown";
         out_dir /= KOQKATOO_MKL_IF_ELSE("mkl", "openblas");
-        out_dir /= std::format("N={}-thr={}-vl={}", N, 1 << log_n_threads, VL);
+        out_dir /= std::format("nx={}-nu={}-ny={}-N={}-thr={}-vl={}",
+                               solver.dim.nx, solver.dim.nu, solver.dim.ny, N,
+                               1 << log_n_threads, VL);
         std::filesystem::create_directories(out_dir);
         std::ofstream csv{out_dir / name};
         guanaqo::TraceLogger::write_column_headings(csv) << '\n';
