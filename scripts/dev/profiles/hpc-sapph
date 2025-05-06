@@ -5,8 +5,8 @@ arch=x86_64
 
 [conf]
 tools.cmake.cmaketoolchain:user_toolchain+={{profile_dir}}/toolchains/hpc.cmake
-tools.build:cflags=["-march=icelake-server"]
-tools.build:cxxflags=["-march=icelake-server"]
+tools.build:cflags=["-march=sapphirerapids"]
+tools.build:cxxflags=["-march=sapphirerapids"]
 tools.build:cflags+=["-g3"]
 tools.build:cxxflags+=["-g3"]
 tools.build.cross_building:can_run=true
