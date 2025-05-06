@@ -515,8 +515,8 @@ struct CyclicOCPSolver {
     void factor_riccati(index_t ti) {
         const auto [N, nx, nu, ny, ny_N] = dim;
         const index_t num_stages = N >> lP; // number of stages per thread
-        const index_t bi0        = ti * num_stages;
-        const index_t k0         = ti * num_stages;
+        const index_t di0        = ti * num_stages; // data batch index
+        const index_t k0         = ti * num_stages; // stage index
         const index_t nux        = nu + nx;
         const auto be            = backend;
         PRINTLN("\nThread #{}", ti);
@@ -527,11 +527,11 @@ struct CyclicOCPSolver {
         // Copy B and A from the last stage
         {
             GUANAQO_TRACE("Riccati init", k0);
-            compact_blas::xcopy(data_BA.batch(bi0).left_cols(nu),
+            compact_blas::xcopy(data_BA.batch(di0).left_cols(nu),
                                 B̂.left_cols(nu));
-            compact_blas::xcopy(data_BA.batch(bi0).right_cols(nx),
+            compact_blas::xcopy(data_BA.batch(di0).right_cols(nx),
                                 Â.left_cols(nx));
-            compact_blas::xcopy_L(data_RSQ.batch(bi0), R̂ŜQ̂.left_cols(nux));
+            compact_blas::xcopy_L(data_RSQ.batch(di0), R̂ŜQ̂.left_cols(nux));
         }
         for (index_t i = 0; i < num_stages; ++i) {
             index_t k = sub_wrap_N(k0, i);
@@ -560,9 +560,9 @@ struct CyclicOCPSolver {
                 GUANAQO_TRACE("Riccati update AB", k_next);
                 PRINTLN("  Riccati update AB{}",
                         VecReg{vl, k_next, N >> lvl, N});
-                const auto bi_next = bi0 + i + 1;
+                const auto di_next = di0 + i + 1;
                 auto BAᵀi          = BAᵀ.middle_cols(i * nx, nx);
-                auto BAi           = data_BA.batch(bi_next);
+                auto BAi           = data_BA.batch(di_next);
                 auto Bi = BAi.left_cols(nu), Ai = BAi.right_cols(nx);
                 // Compute next B̂ and Â
                 auto B̂_next = B̂.middle_cols((i + 1) * nu, nu);
@@ -571,9 +571,9 @@ struct CyclicOCPSolver {
                 compact_blas::xgemm(Âi, Ai, Â_next, be);
                 // Riccati update
                 auto R̂ŜQ̂_next = R̂ŜQ̂.middle_cols((i + 1) * nux, nux);
-                compact_blas::xcopy_T(data_BA.batch(bi_next), BAᵀi);
+                compact_blas::xcopy_T(data_BA.batch(di_next), BAᵀi);
                 compact_blas::xtrmm_RLNN(BAᵀi, Q̂i, BAᵀi, be);
-                compact_blas::xcopy_L(data_RSQ.batch(bi_next), R̂ŜQ̂_next); // ┐
+                compact_blas::xcopy_L(data_RSQ.batch(di_next), R̂ŜQ̂_next); // ┐
                 compact_blas::xsyrk_add(BAᵀi, R̂ŜQ̂_next, be);              // ┘
             } else {
                 // Compute LÂ = Ã LQ⁻ᵀ
@@ -601,10 +601,10 @@ struct CyclicOCPSolver {
             for (index_t l = 0; l < lP - lvl; ++l) {
                 barrier();
                 const index_t offset = 1 << l;
-                const auto bi        = sub_wrap_PmV(ti, offset);
+                const auto biY       = sub_wrap_PmV(ti, offset);
                 const auto biU       = ti;
-                if (is_active(l, bi))
-                    process_active(l, bi);
+                if (is_active(l, biY))
+                    process_active(l, biY);
                 else if (is_active(l, biU))
                     process_active_secondary(l, biU);
                 else
@@ -903,7 +903,7 @@ TEST(NewCyclic, scheduling) {
     }));
 
     const index_t lP = log_n_threads + test::CyclicOCPSolver::lvl;
-    OCPDim dim{.N_horiz = 1 << lP, .nx = 40, .nu = 30, .ny = 0, .ny_N = 0};
+    OCPDim dim{.N_horiz = 128, .nx = 40, .nu = 30, .ny = 0, .ny_N = 0};
     auto ocp = generate_random_ocp(dim);
     test::CyclicOCPSolver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
@@ -916,6 +916,8 @@ TEST(NewCyclic, scheduling) {
 
 #if GUANAQO_WITH_TRACING
     {
+        koqkatoo::foreach_thread(
+            [](index_t i, index_t) { GUANAQO_TRACE("thread_id", i); });
         const auto N     = solver.dim.N_horiz;
         const auto VL    = solver.vl;
         std::string name = std::format("factor_cyclic_new.csv");
