@@ -120,6 +120,21 @@ void CompactBLAS<Abi>::xsyrk_add_ref(single_batch_view A,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xsyrk_T_add_ref(single_batch_view A,
+                                       mut_single_batch_view C) {
+    assert(C.rows() >= C.cols());
+    assert(A.cols() == C.rows());
+    [[maybe_unused]] const auto op_cnt_syrk =
+        C.cols() * (C.cols() + 1) * A.rows() / 2 +
+        (C.rows() - C.cols()) * C.cols() * A.rows();
+    GUANAQO_TRACE("xsyrk_T_add", 0, op_cnt_syrk * C.depth());
+    assert(C.rows() == C.cols());
+    assert(C.rows() == A.cols());
+    // TODO: cache blocking
+    micro_kernels::gemm::xgemmt_register<Abi, {.trans_A = true}>(A, A, C);
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xsyrk_add_shift(single_batch_view A,
                                        mut_single_batch_view C) {
     assert(C.rows() >= C.cols());
@@ -442,6 +457,28 @@ void CompactBLAS<Abi>::xsyrk_add(batch_view A, mut_batch_view C,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xsyrk_T_add(batch_view A, mut_batch_view C,
+                                   PreferredBackend b) {
+    assert(A.ceil_depth() == C.ceil_depth());
+    if constexpr (std::same_as<Abi, scalar_abi>) {
+        if (use_mkl_batched(b) && C.rows() == C.cols()) { // TODO
+            [[maybe_unused]] const auto op_cnt_syrk =
+                C.cols() * (C.cols() + 1) * A.rows() / 2;
+            GUANAQO_TRACE("xsyrk_T_add_batched", 0, op_cnt_syrk * C.depth());
+            linalg::xsyrk_batch_strided(CblasColMajor, CblasLower, CblasTrans,
+                                        C.rows(), A.rows(), real_t{1}, A.data,
+                                        A.outer_stride(), A.layer_stride(),
+                                        real_t{1}, C.data, C.outer_stride(),
+                                        C.layer_stride(), A.depth());
+            return;
+        }
+    }
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < A.num_batches(); ++i)
+        xsyrk_T_add_ref(A.batch(i), C.batch(i));
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xsyrk_sub(batch_view A, mut_batch_view C,
                                  PreferredBackend b) {
     assert(A.ceil_depth() == C.ceil_depth());
@@ -521,6 +558,25 @@ void CompactBLAS<Abi>::xsyrk_add(single_batch_view A, mut_single_batch_view C,
         }
     }
     xsyrk_add_ref(A, C);
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xsyrk_T_add(single_batch_view A, mut_single_batch_view C,
+                                   PreferredBackend b) {
+    assert(C.rows() >= C.cols());
+    assert(C.rows() == A.cols());
+    if constexpr (std::same_as<Abi, scalar_abi>) {
+        if (use_blas_scalar(b) && C.rows() == C.cols()) { // TODO
+            [[maybe_unused]] const auto op_cnt_syrk =
+                C.cols() * (C.cols() + 1) * A.rows() / 2;
+            GUANAQO_TRACE("xsyrk_T_add_blas", 0, op_cnt_syrk * C.depth());
+            linalg::xsyrk(CblasColMajor, CblasLower, CblasTrans, C.rows(),
+                          A.rows(), real_t{1}, A.data, A.outer_stride(),
+                          real_t{1}, C.data, C.outer_stride());
+            return;
+        }
+    }
+    xsyrk_T_add_ref(A, C);
 }
 
 template <class Abi>
