@@ -98,6 +98,7 @@ class KoqkatooRecipe(ConanFile):
         if self.options.with_openblas:
             self.options.rm_safe("dense_index_type")
         self.options["guanaqo/*"].with_blas = True
+        self.options["hyhound/*"].with_ocp = True
 
     def layout(self):
         cmake_layout(self)
