@@ -41,12 +41,17 @@ TEST(xtrtri, xtrtritrmmCopyT) {
         .21, 2.20, 0, 0,     //
         .31, .32, 3.30, 0,   //
         .41, .42, .43, 4.40; //
+    Uout << 0, 0, 0, 0,      //
+        21, 0, 0, 0,         //
+        31, 32, 0, 0,        //
+        41, 42, 43, 0;       //
     std::ranges::generate(Bout.reshaped(), [&] { return nrml(rng); });
 
-    EMat Uinv = L.triangularView<Eigen::Lower>()
-                    .solve(EMat::Identity(4, 4))
-                    .transpose();
-    EMat BUinv = Bout * Uinv;
+    EMat Uinv                           = Uout;
+    Uinv.triangularView<Eigen::Upper>() = L.triangularView<Eigen::Lower>()
+                                              .solve(EMat::Identity(4, 4))
+                                              .transpose();
+    EMat BUinv = Bout * Uinv.triangularView<Eigen::Upper>();
     linalg::compact::micro_kernels::trtri::xtrtri_trmm_copy_T_microkernel<
         stdx::simd_abi::scalar, 4>(
         {L.data(), static_cast<index_t>(L.outerStride())},
