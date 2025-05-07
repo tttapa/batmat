@@ -33,7 +33,7 @@ struct DefaultStride {
 };
 
 template <class I = ptrdiff_t, class S = std::integral_constant<I, 1>,
-          class D = I, class L = DefaultStride>
+          class D = I, class L = DefaultStride, bool RowMajor = false>
 struct BatchedMatrixLayout {
     using index_type           = I;
     using batch_size_type      = S;
@@ -55,13 +55,19 @@ struct BatchedMatrixLayout {
             guanaqo::default_stride<depth_type>::value;
         index_type rows         = 0;
         index_type cols         = 1;
-        index_type outer_stride = rows;
+        index_type outer_stride = RowMajor ? cols : rows;
         [[no_unique_address]] batch_size_type batch_size =
             guanaqo::default_stride<batch_size_type>::value;
         [[no_unique_address]] layer_stride_type layer_stride =
-            outer_stride * cols;
+            outer_stride * (RowMajor ? rows : cols);
     };
 
+    [[nodiscard]] constexpr index_type outer_size() const {
+        return RowMajor ? rows : cols;
+    }
+    [[nodiscard]] constexpr index_type inner_size() const {
+        return RowMajor ? cols : rows;
+    }
     [[nodiscard]] constexpr index_type num_batches() const {
         const auto bs = static_cast<I>(batch_size);
         const auto d  = static_cast<I>(depth);
@@ -87,12 +93,13 @@ struct BatchedMatrixLayout {
     }
     [[nodiscard]] constexpr auto get_layer_stride() const {
         if constexpr (std::is_same_v<layer_stride_type, DefaultStride>)
-            return outer_stride * cols;
+            return outer_stride * outer_size();
         else
             return layer_stride;
     }
     [[nodiscard]] bool has_full_layer_stride() const {
-        return static_cast<index_t>(get_layer_stride()) == outer_stride * cols;
+        return static_cast<index_t>(get_layer_stride()) ==
+               outer_stride * outer_size();
     }
     [[nodiscard]] constexpr index_type layer_index(index_type l,
                                                    index_type s) const {
@@ -118,6 +125,7 @@ struct BatchedMatrixLayout {
     }
 
     template <class T>
+        requires(!RowMajor)
     [[nodiscard]] guanaqo::MatrixView<T, I, standard_stride_type>
     operator()(T *data, index_type l) const {
         return {{.data         = data + layer_index(l),
@@ -129,7 +137,10 @@ struct BatchedMatrixLayout {
     template <class T>
     [[nodiscard]] T &operator()(T *data, index_type l, index_type r,
                                 index_type c) const {
-        return operator()(data, l)(r, c);
+        auto *const p = data + layer_index(l);
+        const auto bs = static_cast<I>(batch_size);
+        return *(RowMajor ? p + bs * c + outer_stride * bs * r
+                          : p + bs * r + outer_stride * bs * c);
     }
     [[nodiscard]] index_type size() const {
         return static_cast<I>(depth) * rows * cols;
@@ -269,25 +280,31 @@ struct BatchedMatrixViewShorterLastColumn {
 };
 
 template <class T, class I = ptrdiff_t, class S = std::integral_constant<I, 1>,
-          class D = I, class L = DefaultStride>
+          class D = I, class L = DefaultStride, bool RowMajor = false>
 struct BatchedMatrixView {
-    using layout_type          = BatchedMatrixLayout<I, S, D, L>;
+    using layout_type          = BatchedMatrixLayout<I, S, D, L, RowMajor>;
     using value_type           = T;
     using index_type           = typename layout_type::index_type;
     using batch_size_type      = typename layout_type::batch_size_type;
     using depth_type           = typename layout_type::depth_type;
     using layer_stride_type    = typename layout_type::layer_stride_type;
     using standard_stride_type = typename layout_type::standard_stride_type;
+    static constexpr bool is_row_major     = RowMajor;
     static constexpr bool has_single_batch = requires {
         S::value;
         D::value;
     } && S{} == D{};
     static constexpr bool has_single_layer_at_compile_time =
         requires { D::value; } && D{} == 1;
-    using batch_view_type = BatchedMatrixView<T, I, S, S>;
-    using col_slice_view_type =
+    using batch_view_type =
+        BatchedMatrixView<T, I, S, S, DefaultStride, RowMajor>;
+    using general_slice_view_type =
         std::conditional_t<has_single_batch, BatchedMatrixView,
-                           BatchedMatrixView<T, I, S, D, I>>;
+                           BatchedMatrixView<T, I, S, D, I, RowMajor>>;
+    using col_slice_view_type = std::conditional_t<RowMajor, BatchedMatrixView,
+                                                   general_slice_view_type>;
+    using row_slice_view_type = std::conditional_t<!RowMajor, BatchedMatrixView,
+                                                   general_slice_view_type>;
 
     value_type *data;
     layout_type layout;
@@ -298,11 +315,11 @@ struct BatchedMatrixView {
             guanaqo::default_stride<depth_type>::value;
         index_type rows         = 0;
         index_type cols         = 1;
-        index_type outer_stride = rows;
+        index_type outer_stride = RowMajor ? cols : rows;
         [[no_unique_address]] batch_size_type batch_size =
             guanaqo::default_stride<batch_size_type>::value;
         [[no_unique_address]] layer_stride_type layer_stride =
-            outer_stride * cols;
+            outer_stride * (RowMajor ? rows : cols);
     };
 
     constexpr BatchedMatrixView(PlainBatchedMatrixView p = {})
@@ -319,22 +336,26 @@ struct BatchedMatrixView {
     constexpr BatchedMatrixView(value_type *data, layout_type layout)
         : data{data}, layout{layout} {}
 
-    operator BatchedMatrixView<const T, I, S, D, L>() const
+    operator BatchedMatrixView<const T, I, S, D, L, RowMajor>() const
         requires(!std::is_const_v<T>)
     {
         return {data, layout};
     }
 
     operator guanaqo::MatrixView<T, I, standard_stride_type>() const
-        requires has_single_layer_at_compile_time
+        requires(has_single_layer_at_compile_time && !RowMajor)
     {
         return operator()(0);
     }
 
-    BatchedMatrixView<const T, I, S, D, L> as_const() const { return *this; }
+    BatchedMatrixView<const T, I, S, D, L, RowMajor> as_const() const {
+        return *this;
+    }
 
     [[nodiscard]] guanaqo::MatrixView<T, I, standard_stride_type>
-    operator()(index_type l) const {
+    operator()(index_type l) const
+        requires(!RowMajor)
+    {
         return layout(data, l);
     }
     [[nodiscard]] value_type &operator()(index_type l, index_type r,
@@ -377,9 +398,10 @@ struct BatchedMatrixView {
     }
 
     template <class N>
-    [[nodiscard]] BatchedMatrixView<T, I, S, N, L> middle_layers(index_type l,
-                                                                 N n) const {
+    [[nodiscard]] BatchedMatrixView<T, I, S, N, L, RowMajor>
+    middle_layers(index_type l, N n) const {
         assert(l + n <= depth());
+        assert(l % static_cast<I>(batch_size()) == 0);
         return {{.data         = data + layout.layer_index(l),
                  .depth        = n,
                  .rows         = rows(),
@@ -417,7 +439,7 @@ struct BatchedMatrixView {
     };
 
     [[nodiscard]] linear_iterator begin() const {
-        assert(rows() == outer_stride());
+        assert(inner_size() == outer_stride());
         assert(layout.has_full_layer_stride());
         // Number of elements in each layer
         const auto size = layout.rows * layout.cols;
@@ -449,7 +471,9 @@ struct BatchedMatrixView {
     }
 
     [[nodiscard]] BatchedMatrixViewShorterLastColumn<T, I, S>
-    linear_view_with_short_last_layer(index_type rows_last) const {
+    linear_view_with_short_last_layer(index_type rows_last) const
+        requires(!RowMajor)
+    {
         assert(cols() == 1 && "Only column vectors are supported");
         return {data, layout, rows_last};
     }
@@ -472,6 +496,12 @@ struct BatchedMatrixView {
     [[nodiscard, gnu::always_inline]] index_type outer_stride() const {
         return layout.outer_stride;
     }
+    [[nodiscard, gnu::always_inline]] index_type outer_size() const {
+        return layout.outer_size();
+    }
+    [[nodiscard, gnu::always_inline]] index_type inner_size() const {
+        return layout.inner_size();
+    }
     [[nodiscard, gnu::always_inline]] batch_size_type batch_size() const {
         return layout.batch_size;
     }
@@ -482,31 +512,44 @@ struct BatchedMatrixView {
         return layout.has_full_layer_stride();
     }
 
-    [[nodiscard]] col_slice_view_type reshaped(index_type rows,
-                                               index_type cols) const {
-        assert(this->rows() == this->outer_stride() || this->cols() == 1);
+    template <class V>
+    constexpr auto get_layer_stride_for() const {
+        if constexpr (std::is_same_v<typename V::layer_stride_type,
+                                     layer_stride_type>)
+            return layout.layer_stride;
+        else
+            return layer_stride();
+    }
+
+    [[nodiscard]] general_slice_view_type reshaped(index_type rows,
+                                                   index_type cols) const {
         assert(rows * cols == this->rows() * this->cols());
-        return col_slice_view_type{
-            typename col_slice_view_type::PlainBatchedMatrixView{
+        assert(this->inner_size() == this->outer_stride() ||
+               this->inner_size() == 1);
+        return general_slice_view_type{
+            typename general_slice_view_type::PlainBatchedMatrixView{
                 .data         = data,
                 .depth        = depth(),
                 .rows         = rows,
                 .cols         = cols,
-                .outer_stride = rows,
+                .outer_stride = RowMajor ? cols : rows,
                 .batch_size   = batch_size(),
-                .layer_stride = layer_stride()}};
+                .layer_stride =
+                    this->get_layer_stride_for<general_slice_view_type>()}};
     }
 
-    [[nodiscard]] BatchedMatrixView top_rows(index_type n) const {
+    [[nodiscard]] row_slice_view_type top_rows(index_type n) const {
         assert(0 <= n && n <= rows());
-        return BatchedMatrixView{
-            PlainBatchedMatrixView{.data         = data,
-                                   .depth        = depth(),
-                                   .rows         = n,
-                                   .cols         = cols(),
-                                   .outer_stride = outer_stride(),
-                                   .batch_size   = batch_size(),
-                                   .layer_stride = layout.layer_stride}};
+        return row_slice_view_type{
+            typename row_slice_view_type::PlainBatchedMatrixView{
+                .data         = data,
+                .depth        = depth(),
+                .rows         = n,
+                .cols         = cols(),
+                .outer_stride = outer_stride(),
+                .batch_size   = batch_size(),
+                .layer_stride =
+                    this->get_layer_stride_for<row_slice_view_type>()}};
     }
     [[nodiscard]] col_slice_view_type left_cols(index_type n) const {
         assert(0 <= n && n <= cols());
@@ -518,25 +561,28 @@ struct BatchedMatrixView {
                 .cols         = n,
                 .outer_stride = outer_stride(),
                 .batch_size   = batch_size(),
-                .layer_stride = layer_stride()}};
+                .layer_stride =
+                    this->get_layer_stride_for<col_slice_view_type>()}};
     }
-    [[nodiscard]] BatchedMatrixView bottom_rows(index_type n) const {
+    [[nodiscard]] row_slice_view_type bottom_rows(index_type n) const {
         assert(0 <= n && n <= rows());
         const auto bs     = static_cast<I>(batch_size());
-        const auto offset = bs * (rows() - n);
-        return BatchedMatrixView{
-            PlainBatchedMatrixView{.data         = data + offset,
-                                   .depth        = depth(),
-                                   .rows         = n,
-                                   .cols         = cols(),
-                                   .outer_stride = outer_stride(),
-                                   .batch_size   = batch_size(),
-                                   .layer_stride = layout.layer_stride}};
+        const auto offset = (RowMajor ? outer_stride() : 1) * bs * (rows() - n);
+        return row_slice_view_type{
+            typename row_slice_view_type::PlainBatchedMatrixView{
+                .data         = data + offset,
+                .depth        = depth(),
+                .rows         = n,
+                .cols         = cols(),
+                .outer_stride = outer_stride(),
+                .batch_size   = batch_size(),
+                .layer_stride =
+                    this->get_layer_stride_for<row_slice_view_type>()}};
     }
     [[nodiscard]] col_slice_view_type right_cols(index_type n) const {
         assert(0 <= n && n <= cols());
         const auto bs     = static_cast<I>(batch_size());
-        const auto offset = bs * outer_stride() * (cols() - n);
+        const auto offset = (RowMajor ? 1 : outer_stride()) * bs * (cols() - n);
         return col_slice_view_type{
             typename col_slice_view_type::PlainBatchedMatrixView{
                 .data         = data + offset,
@@ -545,33 +591,34 @@ struct BatchedMatrixView {
                 .cols         = n,
                 .outer_stride = outer_stride(),
                 .batch_size   = batch_size(),
-                .layer_stride = layer_stride()}};
+                .layer_stride =
+                    this->get_layer_stride_for<col_slice_view_type>()}};
     }
-    [[nodiscard]] BatchedMatrixView middle_rows(index_type r,
-                                                index_type n) const {
+    [[nodiscard]] row_slice_view_type middle_rows(index_type r,
+                                                  index_type n) const {
         return bottom_rows(rows() - r).top_rows(n);
     }
     [[nodiscard]] col_slice_view_type middle_cols(index_type c,
                                                   index_type n) const {
         return right_cols(cols() - c).left_cols(n);
     }
-    [[nodiscard]] col_slice_view_type top_left(index_type nr,
-                                               index_type nc) const {
+    [[nodiscard]] general_slice_view_type top_left(index_type nr,
+                                                   index_type nc) const {
         return top_rows(nr).left_cols(nc);
     }
-    [[nodiscard]] col_slice_view_type top_right(index_type nr,
-                                                index_type nc) const {
+    [[nodiscard]] general_slice_view_type top_right(index_type nr,
+                                                    index_type nc) const {
         return top_rows(nr).right_cols(nc);
     }
-    [[nodiscard]] col_slice_view_type bottom_left(index_type nr,
-                                                  index_type nc) const {
+    [[nodiscard]] general_slice_view_type bottom_left(index_type nr,
+                                                      index_type nc) const {
         return bottom_rows(nr).left_cols(nc);
     }
-    [[nodiscard]] col_slice_view_type bottom_right(index_type nr,
-                                                   index_type nc) const {
+    [[nodiscard]] general_slice_view_type bottom_right(index_type nr,
+                                                       index_type nc) const {
         return bottom_rows(nr).right_cols(nc);
     }
-    [[nodiscard]] col_slice_view_type
+    [[nodiscard]] general_slice_view_type
     block(index_type r, index_type c, index_type nr, index_type nc) const {
         return middle_rows(r, nr).middle_cols(c, nc);
     }
@@ -581,6 +628,18 @@ struct BatchedMatrixView {
             .rows = static_cast<index_type>(v.size()),
             .cols = 1,
         }};
+    }
+
+    [[nodiscard]] auto transposed() const {
+        using TpBm = BatchedMatrixView<T, I, S, D, L, !RowMajor>;
+        return TpBm{typename TpBm::PlainBatchedMatrixView{
+            .data         = data,
+            .depth        = depth(),
+            .rows         = cols(),
+            .cols         = rows(),
+            .outer_stride = outer_stride(),
+            .batch_size   = batch_size(),
+            .layer_stride = layout.layer_stride}};
     }
 
     void add_to_diagonal(const value_type &t) {
@@ -600,9 +659,9 @@ struct BatchedMatrixView {
         const auto bs = static_cast<I>(batch_size());
         for (index_type b = 0; b < num_batches(); ++b) {
             auto *dst = this->batch(b).data;
-            for (index_type c = 0; c < this->cols(); ++c) {
+            for (index_type c = 0; c < this->outer_size(); ++c) {
                 auto *dst_         = dst;
-                const index_type n = rows() * bs;
+                const index_type n = inner_size() * bs;
                 for (index_type r = 0; r < n; ++r)
                     *dst_++ = t;
                 dst += bs * this->outer_stride();
@@ -614,9 +673,9 @@ struct BatchedMatrixView {
         const auto bs = static_cast<I>(batch_size());
         for (index_type b = 0; b < num_batches(); ++b) {
             auto *dst = this->batch(b).data;
-            for (index_type c = 0; c < this->cols(); ++c) {
+            for (index_type c = 0; c < this->outer_size(); ++c) {
                 auto *dst_         = dst;
-                const index_type n = rows() * bs;
+                const index_type n = inner_size() * bs;
                 for (index_type r = 0; r < n; ++r, ++dst_)
                     *dst_ = -*dst_;
                 dst += bs * this->outer_stride();
@@ -625,6 +684,7 @@ struct BatchedMatrixView {
     }
 
     void copy_values(auto &other) const {
+        static_assert(RowMajor == other.is_row_major);
         assert(other.rows() == this->rows());
         assert(other.cols() == this->cols());
         assert(other.batch_size() == this->batch_size());
@@ -632,10 +692,10 @@ struct BatchedMatrixView {
         for (index_type b = 0; b < num_batches(); ++b) {
             const auto *src = other.batch(b).data;
             auto *dst       = this->batch(b).data;
-            for (index_type c = 0; c < this->cols(); ++c) {
+            for (index_type c = 0; c < this->outer_size(); ++c) {
                 const auto *src_   = src;
                 auto *dst_         = dst;
-                const index_type n = rows() * bs;
+                const index_type n = inner_size() * bs;
                 for (index_type r = 0; r < n; ++r)
                     *dst_++ = *src_++;
                 src += bs * other.outer_stride();
@@ -653,7 +713,8 @@ struct BatchedMatrixView {
         requires(!std::is_const_v<T> &&
                  std::convertible_to<U, std::remove_cv_t<T>> &&
                  std::equality_comparable_with<I, J>)
-    BatchedMatrixView &operator=(BatchedMatrixView<U, J, R, E, M> other) {
+    BatchedMatrixView &
+    operator=(BatchedMatrixView<U, J, R, E, M, RowMajor> other) {
         copy_values(other);
         return *this;
     }
@@ -662,7 +723,8 @@ struct BatchedMatrixView {
         requires(!std::is_const_v<T> &&
                  std::convertible_to<U, std::remove_cv_t<T>> &&
                  std::equality_comparable_with<I, J>)
-    BatchedMatrixView &operator+=(BatchedMatrixView<U, J, R, E, M> other) {
+    BatchedMatrixView &
+    operator+=(BatchedMatrixView<U, J, R, E, M, RowMajor> other) {
         assert(other.rows() == this->rows());
         assert(other.cols() == this->cols());
         assert(other.batch_size() == this->batch_size());
@@ -670,10 +732,10 @@ struct BatchedMatrixView {
         for (index_type b = 0; b < num_batches(); ++b) {
             const auto *src = other.batch(b).data;
             auto *dst       = this->batch(b).data;
-            for (index_type c = 0; c < this->cols(); ++c) {
+            for (index_type c = 0; c < this->outer_size(); ++c) {
                 const auto *src_   = src;
                 auto *dst_         = dst;
-                const index_type n = rows() * bs;
+                const index_type n = inner_size() * bs;
                 for (index_type r = 0; r < n; ++r)
                     *dst_++ += *src_++;
                 src += bs * other.outer_stride();
@@ -689,7 +751,8 @@ struct BatchedMatrixView {
         return *this;
     }
 
-    operator BatchedMatrixView<T, I, S, integral_value_type_t<D>, L>() const
+    operator BatchedMatrixView<T, I, S, integral_value_type_t<D>, L, RowMajor>()
+        const
         requires(!std::same_as<integral_value_type_t<D>, D>)
     {
         const auto bs = static_cast<integral_value_type_t<D>>(batch_size());
@@ -703,7 +766,7 @@ struct BatchedMatrixView {
             .layer_stride = layout.layer_stride,
         }};
     }
-    operator BatchedMatrixView<T, I, S, D, I>() const
+    operator BatchedMatrixView<T, I, S, D, I, RowMajor>() const
         requires(!std::same_as<I, L>)
     {
         return {{
@@ -716,7 +779,7 @@ struct BatchedMatrixView {
             .layer_stride = layer_stride(),
         }};
     }
-    operator BatchedMatrixView<const T, I, S, D, I>() const
+    operator BatchedMatrixView<const T, I, S, D, I, RowMajor>() const
         requires(!std::is_const_v<T> && !std::same_as<I, L>)
     {
         return {{
@@ -731,22 +794,21 @@ struct BatchedMatrixView {
     }
 };
 
-template <class T, class I, class S, class D>
+template <class T, class I, class S, class D, class L, bool O>
 bool operator==(
-    typename BatchedMatrixView<T, I, S, D>::std::default_sentinel_t s,
-    typename BatchedMatrixView<T, I, S, D>::linear_iterator i) {
+    std::default_sentinel_t s,
+    typename BatchedMatrixView<T, I, S, D, L, O>::linear_iterator i) {
     return i == s;
 }
-template <class T, class I, class S, class D>
+template <class T, class I, class S, class D, class L, bool O>
 bool operator!=(
-    typename BatchedMatrixView<T, I, S, D>::std::default_sentinel_t s,
-    typename BatchedMatrixView<T, I, S, D>::linear_iterator i) {
+    std::default_sentinel_t s,
+    typename BatchedMatrixView<T, I, S, D, L, O>::linear_iterator i) {
     return !(i == s);
 }
-template <class T, class I, class S, class D>
-bool operator!=(
-    typename BatchedMatrixView<T, I, S, D>::linear_iterator i,
-    typename BatchedMatrixView<T, I, S, D>::std::default_sentinel_t s) {
+template <class T, class I, class S, class D, class L, bool O>
+bool operator!=(typename BatchedMatrixView<T, I, S, D, L, O>::linear_iterator i,
+                std::default_sentinel_t s) {
     return !(i == s);
 }
 
@@ -769,11 +831,13 @@ using default_alignment_t = typename default_alignment<T, I, Stride>::type;
 } // namespace detail
 
 template <class T, class I = ptrdiff_t, class S = std::integral_constant<I, 1>,
-          class D = I, class A = detail::default_alignment_t<T, I, S>>
+          class D = I, class A = detail::default_alignment_t<T, I, S>,
+          bool RowMajor = false>
 struct BatchedMatrix {
     static_assert(!std::is_const_v<T>);
-    using view_type            = BatchedMatrixView<T, I, S, D>;
-    using const_view_type      = BatchedMatrixView<const T, I, S, D>;
+    using view_type = BatchedMatrixView<T, I, S, D, DefaultStride, RowMajor>;
+    using const_view_type =
+        BatchedMatrixView<const T, I, S, D, DefaultStride, RowMajor>;
     using layout_type          = typename view_type::layout_type;
     using plain_layout_type    = typename layout_type::PlainBatchedMatrixLayout;
     using value_type           = T;
@@ -848,11 +912,15 @@ struct BatchedMatrix {
 
     operator view_type() { return view; }
     operator const_view_type() const { return view; }
-    operator BatchedMatrixView<T, I, S, D, I>() { return view; }
-    operator BatchedMatrixView<const T, I, S, D, I>() const { return view; }
+    operator BatchedMatrixView<T, I, S, D, I, RowMajor>() { return view; }
+    operator BatchedMatrixView<const T, I, S, D, I, RowMajor>() const {
+        return view;
+    }
 
     [[nodiscard]] guanaqo::MatrixView<T, I, standard_stride_type>
-    operator()(index_type l) {
+    operator()(index_type l)
+        requires(!RowMajor)
+    {
         return view(l);
     }
     [[nodiscard]] value_type &operator()(index_type l, index_type r,
@@ -860,7 +928,9 @@ struct BatchedMatrix {
         return view(l, r, c);
     }
     [[nodiscard]] guanaqo::MatrixView<const T, I, standard_stride_type>
-    operator()(index_type l) const {
+    operator()(index_type l) const
+        requires(!RowMajor)
+    {
         return view.as_const()(l);
     }
     [[nodiscard]] const value_type &operator()(index_type l, index_type r,
