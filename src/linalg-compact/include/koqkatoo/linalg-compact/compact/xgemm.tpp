@@ -604,6 +604,26 @@ void CompactBLAS<Abi>::xgemv_sub_ref(single_batch_view A, single_batch_view B,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xgemv_add_ref(single_batch_view A, single_batch_view B,
+                                     mut_single_batch_view C) {
+    GUANAQO_TRACE("xgemv_add", 0, A.rows() * A.cols() * B.cols() * A.depth());
+    assert(A.rows() == C.rows());
+    assert(A.cols() == B.rows());
+    assert(B.cols() == C.cols());
+    assert(B.cols() == 1);
+    static constexpr micro_kernels::gemm::KernelConfig conf{.negate = false};
+    for (index_t l = 0; l < A.cols(); l += GemmBlockSizeCols) {
+        auto nl = std::min<index_t>(GemmBlockSizeCols, A.cols() - l);
+        for (index_t i = 0; i < A.rows(); i += GemmBlockSizeRows) {
+            auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
+            micro_kernels::gemm::xgemm_register<Abi, conf>(
+                A.block(i, l, ni, nl), B.middle_rows(l, nl),
+                C.middle_rows(i, ni)); // TODO: optimized microkernel
+        }
+    }
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xgemm_TN_sub_ref(single_batch_view A,
                                         single_batch_view B,
                                         mut_single_batch_view C) {
@@ -1188,6 +1208,44 @@ void CompactBLAS<Abi>::xgemm_sub(batch_view A, batch_view B, mut_batch_view C,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xgemv_add(batch_view A, batch_view B, mut_batch_view C,
+                                 PreferredBackend b) {
+    assert(A.depth() == B.depth());
+    assert(B.depth() == C.depth());
+    assert(A.rows() == C.rows());
+    assert(A.cols() == B.rows());
+    assert(B.cols() == C.cols());
+    assert(B.cols() == 1);
+    KOQKATOO_MKL_IF(if constexpr (supports_mkl_packed<real_t, Abi>) {
+        if (use_mkl_compact(b) && A.has_full_layer_stride() &&
+            B.has_full_layer_stride() && C.has_full_layer_stride()) {
+            GUANAQO_TRACE("xgemv_add_mkl_compact", 0,
+                          A.rows() * A.cols() * B.cols() * A.depth());
+            xgemm_compact(
+                MKL_COL_MAJOR, MKL_NOTRANS, MKL_NOTRANS, A.rows(), B.cols(),
+                A.cols(), real_t{1}, A.data, A.outer_stride(), B.data,
+                B.outer_stride(), real_t{1}, C.data, C.outer_stride(),
+                vector_format_mkl<real_t, Abi>::format, A.ceil_depth());
+            return;
+        }
+    })
+    if constexpr (std::same_as<Abi, scalar_abi>)
+        if (use_mkl_batched(b)) {
+            GUANAQO_TRACE("xgemv_add_batched", 0,
+                          A.rows() * A.cols() * B.cols() * A.depth());
+            linalg::xgemv_batch_strided(
+                CblasColMajor, CblasNoTrans, A.rows(), A.cols(), real_t{1},
+                A.data, A.outer_stride(), A.layer_stride(), B.data, index_t{1},
+                B.layer_stride(), real_t{1}, C.data, index_t{1},
+                C.layer_stride(), A.depth());
+            return;
+        }
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < A.num_batches(); ++i)
+        xgemv_add_ref(A.batch(i), B.batch(i), C.batch(i));
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xgemv_sub(batch_view A, batch_view B, mut_batch_view C,
                                  PreferredBackend b) {
     assert(A.depth() == B.depth());
@@ -1684,6 +1742,25 @@ void CompactBLAS<Abi>::xgemm_sub(single_batch_view A, single_batch_view B,
                 B.outer_stride(), real_t{1}, C.data, C.outer_stride());
         }
     xgemm_sub_ref(A, B, C);
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xgemv_add(single_batch_view A, single_batch_view B,
+                                 mut_single_batch_view C, PreferredBackend b) {
+    assert(A.rows() == C.rows());
+    assert(A.cols() == B.rows());
+    assert(B.cols() == C.cols());
+    assert(B.cols() == 1);
+    if constexpr (std::same_as<Abi, scalar_abi>)
+        if (use_blas_scalar(b)) {
+            GUANAQO_TRACE("xgemv_add_blas", 0,
+                          A.rows() * A.cols() * B.cols() * A.depth());
+            return linalg::xgemv(CblasColMajor, CblasNoTrans, A.rows(),
+                                 A.cols(), real_t{1}, A.data, A.outer_stride(),
+                                 B.data, index_t{1}, real_t{1}, C.data,
+                                 index_t{1});
+        }
+    xgemv_add_ref(A, B, C);
 }
 
 template <class Abi>

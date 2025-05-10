@@ -11,6 +11,7 @@
 #include <koqkatoo/openmp.h>
 #include <guanaqo/trace.hpp>
 
+#include "compact/micro-kernels/rotate.hpp"
 #include "compact/xgemm.tpp"
 #include "compact/xpntrf.tpp"
 #include "compact/xpotrf.tpp"
@@ -514,10 +515,14 @@ void CompactBLAS<Abi>::xaxpby(real_t a, batch_view x, real_t b,
 }
 
 template <class Abi>
-template <class... Views>
-void CompactBLAS<Abi>::xadd_copy_impl(mut_batch_view out, batch_view x1,
-                                      Views... xs)
-    requires(std::same_as<Views, batch_view> && ...)
+template <int Rot, class OutView, class View, class... Views>
+void CompactBLAS<Abi>::xadd_copy_impl(OutView out, View x1, Views... xs)
+    requires(((std::same_as<OutView, mut_batch_view> &&
+               std::same_as<View, batch_view>) &&
+              ... && std::same_as<Views, batch_view>) ||
+             ((std::same_as<OutView, mut_single_batch_view> &&
+               std::same_as<View, single_batch_view>) &&
+              ... && std::same_as<Views, single_batch_view>))
 {
     assert(((x1.batch_size() == xs.batch_size()) && ...));
     assert(x1.batch_size() == out.batch_size());
@@ -530,16 +535,18 @@ void CompactBLAS<Abi>::xadd_copy_impl(mut_batch_view out, batch_view x1,
     index_t i;
     const auto Bs   = static_cast<index_t>(x1.batch_size());
     const index_t n = x1.rows(), m = x1.cols();
+    using koqkatoo::linalg::compact::micro_kernels::rotr;
     KOQKATOO_OMP(parallel for lastprivate(i))
-    for (i = 0; i <= x1.depth() - Bs; i += Bs) {
+    for (i = 0; i <= static_cast<index_t>(x1.depth()) - Bs; i += Bs) {
         for (index_t c = 0; c < m; ++c) {
             KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t r = 0; r < n; ++r) {
-                aligned_store(&out(i, r, c), (aligned_load(&x1(i, r, c)) + ... +
-                                              aligned_load(&xs(i, r, c))));
+                aligned_store(&out(i, r, c),
+                              (rotr<Rot>(aligned_load(&x1(i, r, c))) + ... +
+                               aligned_load(&xs(i, r, c))));
             }
         }
     }
-    for (; i < x1.depth(); ++i)
+    for (; i < static_cast<index_t>(x1.depth()); ++i)
         for (index_t c = 0; c < m; ++c)
             for (index_t r = 0; r < n; ++r)
                 out(i, r, c) = (x1(i, r, c) + ... + xs(i, r, c));

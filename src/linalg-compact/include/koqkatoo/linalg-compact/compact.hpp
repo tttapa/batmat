@@ -324,6 +324,13 @@ struct CompactBLAS {
                           PreferredBackend b);
     static void xgemv_sub_ref(single_batch_view A, single_batch_view B,
                               mut_single_batch_view C);
+    /// C -= AB
+    static void xgemv_add(single_batch_view A, single_batch_view B,
+                          mut_single_batch_view C, PreferredBackend b);
+    static void xgemv_add(batch_view A, batch_view B, mut_batch_view C,
+                          PreferredBackend b);
+    static void xgemv_add_ref(single_batch_view A, single_batch_view B,
+                              mut_single_batch_view C);
 
     /// C = AᵀB
     static void xgemm_TN(single_batch_view A, single_batch_view B,
@@ -443,12 +450,21 @@ struct CompactBLAS {
     static void xadd_L(single_batch_view A, mut_single_batch_view B);
 
     /// Sum
-    template <class... Views>
-    static void xadd_copy_impl(mut_batch_view out, batch_view x1, Views... xs)
-        requires(std::same_as<Views, batch_view> && ...);
-    template <class... Views>
+    template <int Rot = 0, class OutView, class View, class... Views>
+    static void xadd_copy_impl(OutView out, View x1, Views... xs)
+        requires(((std::same_as<OutView, mut_batch_view> &&
+                   std::same_as<View, batch_view>) &&
+                  ... && std::same_as<Views, batch_view>) ||
+                 ((std::same_as<OutView, mut_single_batch_view> &&
+                   std::same_as<View, single_batch_view>) &&
+                  ... && std::same_as<Views, single_batch_view>));
+    template <int Rot = 0, class... Views>
     static void xadd_copy(mut_batch_view out, Views... xs) {
-        xadd_copy_impl(out, batch_view{xs}...);
+        xadd_copy_impl<Rot>(out, batch_view{xs}...);
+    }
+    template <int Rot = 0, class... Views>
+    static void xadd_copy(mut_single_batch_view out, Views... xs) {
+        xadd_copy_impl<Rot>(out, single_batch_view{xs}...);
     }
     template <class OutView, class View, class... Views>
     static void xsub_copy_impl(OutView out, View x1, Views... xs)

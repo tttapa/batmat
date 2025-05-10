@@ -10,6 +10,10 @@ namespace koqkatoo::linalg::compact {
     template struct CompactBLAS<__VA_ARGS__>;                                  \
     template void CompactBLAS<__VA_ARGS__>::xadd_copy_impl(                    \
         mut_batch_view, batch_view, batch_view);                               \
+    template void CompactBLAS<__VA_ARGS__>::xadd_copy_impl(                    \
+        mut_single_batch_view, single_batch_view, single_batch_view);          \
+    template void CompactBLAS<__VA_ARGS__>::xadd_copy_impl<-1>(                \
+        mut_single_batch_view, single_batch_view, single_batch_view);          \
     template void CompactBLAS<__VA_ARGS__>::xsub_copy_impl(                    \
         mut_batch_view, batch_view, batch_view);                               \
     template void CompactBLAS<__VA_ARGS__>::xadd_neg_copy_impl(                \
