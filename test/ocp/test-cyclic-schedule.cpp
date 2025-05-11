@@ -663,10 +663,6 @@ struct CyclicOCPSolver {
         auto B̂   = riccati_ÂB̂.batch(ti).right_cols(num_stages * nu);
         auto Â   = riccati_ÂB̂.batch(ti).left_cols(num_stages * nx);
         auto BAᵀ = riccati_BAᵀ.batch(ti);
-        if (ti == 1) {
-            guanaqo::print_python(std::cout << "b" << 0 << " = np.array(\n",
-                                  λ.batch(di0)(0), ")\n");
-        }
         for (index_t i = 0; i < num_stages; ++i) {
             index_t k  = sub_wrap_N(k0, i);
             index_t di = di0 + i;
@@ -675,14 +671,6 @@ struct CyclicOCPSolver {
             auto Q̂i   = R̂ŜQ̂i.bottom_right(nx, nx);
             auto B̂i   = B̂.middle_cols(i * nu, nu);
             auto Âi   = Â.middle_cols(i * nx, nx);
-            if (ti == 1) {
-                guanaqo::print_python(std::cout << "B̂" << i << " = np.array(\n",
-                                      B̂i(0), ")\n");
-                guanaqo::print_python(std::cout << "Â" << i << " = np.array(\n",
-                                      Âi(0), ")\n");
-                guanaqo::print_python(
-                    std::cout << "LQ̂" << i << " = np.array(\n", Q̂i(0), ")\n");
-            }
             {
                 GUANAQO_TRACE("Riccati solve QRS", k);
                 // l = LR⁻¹ r, q = LQ⁻¹(q - LS l)
@@ -690,12 +678,6 @@ struct CyclicOCPSolver {
                 // λ0 -= LB̂ l
                 compact_blas::xgemv_sub(B̂i, ux.batch(di).top_rows(nu),
                                         λ.batch(di0), be);
-            }
-            if (ti == 1) {
-                guanaqo::print_python(std::cout << "l" << i << " = np.array(\n",
-                                      ux.batch(di).top_rows(nu)(0), ")\n");
-                guanaqo::print_python(std::cout << "q̃" << i << " = np.array(\n",
-                                      ux.batch(di).bottom_rows(nx)(0), ")\n");
             }
             if (i + 1 < num_stages) {
                 [[maybe_unused]] const auto k_next = sub_wrap_N(k, 1);
@@ -710,11 +692,6 @@ struct CyclicOCPSolver {
                 compact_blas::xtrmv_T(Q̂i, λ.batch(di_next), be);
                 compact_blas::xadd_copy(λ.batch(di_next), λ.batch(di_next),
                                         ux.batch(di).bottom_rows(nx));
-                if (ti == 1) {
-                    guanaqo::print_python(std::cout << "b̃" << (i + 1)
-                                                    << " = np.array(\n",
-                                          λ.batch(di_next)(0), ")\n");
-                }
                 // l += LB λ, q += LA λ
                 compact_blas::xgemv_add(BAᵀi, λ.batch(di_next),
                                         ux.batch(di_next), be);
@@ -724,10 +701,6 @@ struct CyclicOCPSolver {
                 compact_blas::xgemv_sub(Âi, ux.batch(di).bottom_rows(nx),
                                         λ.batch(di0), be);
             }
-        }
-        if (ti == 1) {
-            guanaqo::print_python(std::cout << "b̂" << 0 << " = np.array(\n",
-                                  λ.batch(di0)(0), ")\n");
         }
         barrier();
         // b = LQ⁻ᵀ x + b
@@ -869,6 +842,8 @@ struct CyclicOCPSolver {
             PRINTLN("  Riccati factor QRS{}", VecReg{vl, k, N >> lvl, N});
             auto R̂ŜQ̂i = R̂ŜQ̂.middle_cols(i * nux, nux);
             auto Q̂i   = R̂ŜQ̂i.bottom_right(nx, nx);
+            auto R̂i   = R̂ŜQ̂i.top_left(nu, nu);
+            auto Ŝi   = R̂ŜQ̂i.bottom_left(nx, nu);
             auto B̂i   = B̂.middle_cols(i * nu, nu);
             auto Âi   = Â.middle_cols(i * nx, nx);
             if (i + 1 < num_stages) {
@@ -903,15 +878,23 @@ struct CyclicOCPSolver {
                 // x_last = LQ⁻ᵀ(LQ⁻¹ λ - LÂᵀ λ)
                 compact_blas::xtrsv_LTN(Q̂i, w, backend);
                 compact_blas::xadd_copy(x_last, x_last, w);
-                compact_blas::xtrmv_T(Q̂i, x_last, backend); // TODO
             }
-            {
+            if (i + 1 < num_stages) {
                 GUANAQO_TRACE("Riccati solve QRS", k);
                 // l -= LB̂ᵀ λ0
                 compact_blas::xgemv_T_sub(B̂i, λ.batch(di0),
                                           ux.batch(di).top_rows(nu), be);
                 // x = LQ⁻ᵀ q, u = LR⁻ᵀ (l - LSᵀ x)
                 compact_blas::xtrsv_LTN(R̂ŜQ̂i, ux.batch(di), be);
+            } else {
+                GUANAQO_TRACE("Riccati solve QRS", k);
+                // l -= LB̂ᵀ λ0 + LSᵀ q
+                compact_blas::xgemv_T_sub(B̂i, λ.batch(di0),
+                                          ux.batch(di).top_rows(nu), be);
+                compact_blas::xgemv_T_sub(Ŝi, ux.batch(di).bottom_rows(nx),
+                                          ux.batch(di).top_rows(nu), be);
+                // x = LQ⁻ᵀ q, u = LR⁻ᵀ (l - LSᵀ x)
+                compact_blas::xtrsv_LTN(R̂i, ux.batch(di).top_rows(nu), be);
             }
         }
     }
@@ -926,11 +909,11 @@ struct CyclicOCPSolver {
             if (ti >= (1 << (lP - lvl)))
                 return;
             for (index_t l = lP - lvl; l-- > 0;) {
-                barrier();
                 const index_t offset = 1 << l;
                 const auto bi        = sub_wrap_PmV(ti, offset);
                 if (is_active(l, bi))
                     solve_reverse_active(l, bi, λ);
+                barrier();
             }
             solve_riccati_reverse(ti, ux, λ, work);
         });
@@ -1309,7 +1292,7 @@ struct CyclicOCPSolver {
 using koqkatoo::index_t;
 using koqkatoo::real_t;
 
-const int log_n_threads = 2; // TODO
+const int log_n_threads = 3; // TODO
 TEST(NewCyclic, scheduling) {
     using namespace koqkatoo::ocp;
 
@@ -1322,7 +1305,7 @@ TEST(NewCyclic, scheduling) {
 
     using Solver     = test::CyclicOCPSolver;
     const index_t lP = log_n_threads + Solver::lvl;
-    OCPDim dim{.N_horiz = 3 * 16, .nx = 3, .nu = 3, .ny = 0, .ny_N = 0};
+    OCPDim dim{.N_horiz = 3 << lP, .nx = 40, .nu = 30, .ny = 0, .ny_N = 0};
     auto ocp = generate_random_ocp(dim);
     Solver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);

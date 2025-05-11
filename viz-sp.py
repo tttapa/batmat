@@ -43,17 +43,17 @@ sol_ref = spla.spsolve(A_sparse, rhs)
 # print(sol)
 # print(sol_ref)
 
-n1 = 384
-n2 = 3 * 4
+n1 = 5376
+n2 = 6 * 4
 
 A = A_sparse.toarray()
 L = L_sparse.toarray()
 D = D_sparse.toarray()
-S = -A[n1:, n1:] + L[n1:, :n1] @ D[:n1, :n1] @ L[n1:, :n1].T
-# L[-n2:, -n2:] = np.linalg.cholesky(L[-n2:, -n2:])
-SLL = L[n1:, n1:] @ L[n1:, n1:].T
+# S = -A[n1:, n1:] + L[n1:, :n1] @ D[:n1, :n1] @ L[n1:, :n1].T
+# # L[-n2:, -n2:] = np.linalg.cholesky(L[-n2:, -n2:])
+# SLL = L[n1:, n1:] @ L[n1:, n1:].T
 
-LS = np.linalg.cholesky(S)
+# LS = np.linalg.cholesky(S)
 
 
 def plot_sparse(A_sparse):
