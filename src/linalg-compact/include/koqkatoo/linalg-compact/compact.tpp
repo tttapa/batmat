@@ -536,7 +536,6 @@ void CompactBLAS<Abi>::xadd_copy_impl(OutView out, View x1, Views... xs)
     const auto Bs   = static_cast<index_t>(x1.batch_size());
     const index_t n = x1.rows(), m = x1.cols();
     using micro_kernels::rotr;
-    KOQKATOO_OMP(parallel for lastprivate(i))
     for (i = 0; i <= static_cast<index_t>(x1.depth()) - Bs; i += Bs) {
         for (index_t c = 0; c < m; ++c) {
             KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t r = 0; r < n; ++r) {
@@ -573,7 +572,6 @@ void CompactBLAS<Abi>::xsub_copy_impl(OutView out, View x1, Views... xs)
     index_t i;
     const auto Bs   = static_cast<index_t>(x1.batch_size());
     const index_t n = x1.rows(), m = x1.cols();
-    KOQKATOO_OMP(parallel for lastprivate(i))
     for (i = 0; i <= static_cast<index_t>(x1.depth()) - Bs; i += Bs) {
         for (index_t c = 0; c < m; ++c) {
             KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t r = 0; r < n; ++r) {
@@ -608,7 +606,6 @@ void CompactBLAS<Abi>::xadd_neg_copy_impl(OutView out, Views... xs)
     index_t i;
     const auto Bs   = static_cast<index_t>(out.batch_size());
     const index_t n = out.rows(), m = out.cols();
-    KOQKATOO_OMP(parallel for lastprivate(i))
     for (i = 0; i <= static_cast<index_t>(out.depth()) - Bs; i += Bs) {
         for (index_t c = 0; c < m; ++c) {
             KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t r = 0; r < n; ++r) {
