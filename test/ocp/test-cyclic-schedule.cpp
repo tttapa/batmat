@@ -703,6 +703,7 @@ struct CyclicOCPSolver {
             }
         }
         barrier();
+        GUANAQO_TRACE("Riccati coupling I", k0);
         // b = LQ⁻ᵀ x + b
         const bool x_lanes = ti == 0; // first stage wraps around
         auto x_last        = ux.batch(di_last).bottom_rows(nx);
@@ -809,10 +810,11 @@ struct CyclicOCPSolver {
         const index_t diY        = biY * num_stages;
         const index_t diU        = biU * num_stages;
         const bool x_lanes       = diY == 0;
+        GUANAQO_TRACE("Solve coupling reverse", bi);
         x_lanes ? compact_blas::xgemv_T_sub_shift(coupling_Y.batch(bi),
-                                                        λ.batch(diY), λ.batch(di))
-                      : compact_blas::xgemv_T_sub(coupling_Y.batch(bi), λ.batch(diY),
-                                                  λ.batch(di), backend);
+                                                  λ.batch(diY), λ.batch(di))
+                : compact_blas::xgemv_T_sub(coupling_Y.batch(bi), λ.batch(diY),
+                                            λ.batch(di), backend);
         compact_blas::xgemv_T_sub(coupling_U.batch(bi), λ.batch(diU),
                                   λ.batch(di), backend);
         compact_blas::xtrsv_LTN(coupling_D.batch(bi), λ.batch(di), backend);
