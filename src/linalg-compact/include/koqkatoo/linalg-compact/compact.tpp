@@ -535,7 +535,7 @@ void CompactBLAS<Abi>::xadd_copy_impl(OutView out, View x1, Views... xs)
     index_t i;
     const auto Bs   = static_cast<index_t>(x1.batch_size());
     const index_t n = x1.rows(), m = x1.cols();
-    using koqkatoo::linalg::compact::micro_kernels::rotr;
+    using micro_kernels::rotr;
     KOQKATOO_OMP(parallel for lastprivate(i))
     for (i = 0; i <= static_cast<index_t>(x1.depth()) - Bs; i += Bs) {
         for (index_t c = 0; c < m; ++c) {

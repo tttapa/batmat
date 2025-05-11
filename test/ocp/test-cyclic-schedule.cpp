@@ -28,6 +28,8 @@
 #include <barrier>
 #endif
 
+#include <koqkatoo/linalg-compact/compact/micro-kernels/xgemm.hpp> // TODO: xsyomv
+
 namespace stdx = std::experimental;
 
 #define DO_PRINT 0
@@ -175,11 +177,13 @@ struct CyclicOCPSolver {
         return (k - (1 << l) + 1) & ((1 << (lP - lvl)) - 1);
     }
 
-    using simd_abi        = stdx::simd_abi::deduce_t<real_t, VL>;
-    using compact_blas    = linalg::compact::CompactBLAS<simd_abi>;
-    using matrix          = compact_blas::matrix;
-    using mut_matrix_view = compact_blas::mut_batch_view;
-    using matrix_view     = compact_blas::batch_view;
+    using simd_abi              = stdx::simd_abi::deduce_t<real_t, VL>;
+    using compact_blas          = linalg::compact::CompactBLAS<simd_abi>;
+    using matrix                = compact_blas::matrix;
+    using mut_matrix_view       = compact_blas::mut_batch_view;
+    using matrix_view           = compact_blas::batch_view;
+    using matrix_view_batch     = compact_blas::single_batch_view;
+    using mut_matrix_view_batch = compact_blas::mut_single_batch_view;
 
     matrix coupling_D = [this] {
         return matrix{{
@@ -237,10 +241,24 @@ struct CyclicOCPSolver {
             .cols  = dim.nu + dim.nx,
         }};
     }();
+    matrix riccati_work = [this] {
+        return matrix{{
+            .depth = 1 << lP,
+            .rows  = dim.nx,
+            .cols  = 1,
+        }};
+    }();
     std::vector<join_counter_t> counters =
         std::vector<join_counter_t>(1 << (lP - lvl));
     std::vector<join_counter_t> counters_UY =
         std::vector<join_counter_t>(1 << (lP - lvl));
+    matrix work_pcg = [this] {
+        return matrix{{
+            .depth = vl,
+            .rows  = dim.nx,
+            .cols  = 4,
+        }};
+    }();
 
     void initialize(const LinearOCPStorage &ocp) {
         KOQKATOO_ASSERT(ocp.dim == dim);
@@ -408,6 +426,11 @@ struct CyclicOCPSolver {
         }
     }
 
+    void solve_active([[maybe_unused]] index_t l, [[maybe_unused]] index_t biY,
+                      [[maybe_unused]] mut_matrix_view λ) const {
+        // TODO: nothing?
+    }
+
     void process_active_secondary(index_t l, index_t biU) {
         const index_t offset = 1 << l;
         const index_t biD    = sub_wrap_PmV(biU, offset);
@@ -444,10 +467,45 @@ struct CyclicOCPSolver {
                                                coupling_D.batch(biD), backend);
         }
         // chol(D)
-        if (is_active(l + 1, biD)) {
+        if (is_active(l + 1, biD) || (l + 1 == lP - lvl && biD == 0)) {
             PRINTLN("chol D{}", biD);
             GUANAQO_TRACE("Factor D", biD);
             compact_blas::xpotrf(coupling_D.batch(biD), backend);
+        }
+    }
+
+    void solve_active_secondary(index_t l, index_t biU,
+                                mut_matrix_view λ) const {
+        const index_t num_stages = dim.N_horiz >> lP;
+        const index_t offset     = 1 << l;
+        const index_t biD        = sub_wrap_PmV(biU, offset);
+        const index_t biY        = sub_wrap_PmV(biD, offset);
+        const index_t diU        = biU * num_stages;
+        const index_t diD        = biD * num_stages;
+        const index_t diY        = biY * num_stages;
+        // b[diD] -= U[biU] b[diU]
+        {
+            PRINTLN("gemv U{} b{} -> b{}", biU, diU, diD);
+            GUANAQO_TRACE("Subtract Ub", biD);
+            compact_blas::xgemv_sub(coupling_U.batch(biU), λ.batch(diU),
+                                    λ.batch(diD), backend);
+        }
+        // D -= YYᵀ
+        {
+            PRINTLN("gemv Y{} b{} -> b{}", biY, diY, diD);
+            GUANAQO_TRACE("Subtract Yb", biD);
+            biD == 0
+                ? compact_blas::xgemv_sub_shift(coupling_Y.batch(biY),
+                                                λ.batch(diY), λ.batch(diD))
+                : compact_blas::xgemv_sub(coupling_Y.batch(biY), λ.batch(diY),
+                                          λ.batch(diD), backend);
+        }
+        // chol(D)
+        if (is_active(l + 1, biD)) {
+            PRINTLN("trsm D{}", biD);
+            GUANAQO_TRACE("Solve b", biD);
+            compact_blas::xtrsv_LNN(coupling_D.batch(biD), λ.batch(diD),
+                                    backend);
         }
     }
 
@@ -605,6 +663,10 @@ struct CyclicOCPSolver {
         auto B̂   = riccati_ÂB̂.batch(ti).right_cols(num_stages * nu);
         auto Â   = riccati_ÂB̂.batch(ti).left_cols(num_stages * nx);
         auto BAᵀ = riccati_BAᵀ.batch(ti);
+        if (ti == 1) {
+            guanaqo::print_python(std::cout << "b" << 0 << " = np.array(\n",
+                                  λ.batch(di0)(0), ")\n");
+        }
         for (index_t i = 0; i < num_stages; ++i) {
             index_t k  = sub_wrap_N(k0, i);
             index_t di = di0 + i;
@@ -613,6 +675,14 @@ struct CyclicOCPSolver {
             auto Q̂i   = R̂ŜQ̂i.bottom_right(nx, nx);
             auto B̂i   = B̂.middle_cols(i * nu, nu);
             auto Âi   = Â.middle_cols(i * nx, nx);
+            if (ti == 1) {
+                guanaqo::print_python(std::cout << "B̂" << i << " = np.array(\n",
+                                      B̂i(0), ")\n");
+                guanaqo::print_python(std::cout << "Â" << i << " = np.array(\n",
+                                      Âi(0), ")\n");
+                guanaqo::print_python(
+                    std::cout << "LQ̂" << i << " = np.array(\n", Q̂i(0), ")\n");
+            }
             {
                 GUANAQO_TRACE("Riccati solve QRS", k);
                 // l = LR⁻¹ r, q = LQ⁻¹(q - LS l)
@@ -621,20 +691,30 @@ struct CyclicOCPSolver {
                 compact_blas::xgemv_sub(B̂i, ux.batch(di).top_rows(nu),
                                         λ.batch(di0), be);
             }
+            if (ti == 1) {
+                guanaqo::print_python(std::cout << "l" << i << " = np.array(\n",
+                                      ux.batch(di).top_rows(nu)(0), ")\n");
+                guanaqo::print_python(std::cout << "q̃" << i << " = np.array(\n",
+                                      ux.batch(di).bottom_rows(nx)(0), ")\n");
+            }
             if (i + 1 < num_stages) {
-                // Copy next B and A
                 [[maybe_unused]] const auto k_next = sub_wrap_N(k, 1);
                 const auto di_next                 = di + 1;
-                std::println("k={:>2}  di={:>2}  k_next={:>2}  di_next={:>2}",
-                             k, di, k_next, di_next);
+                PRINTLN("k={:>2}  di={:>2}  k_next={:>2}  di_next={:>2}", k, di,
+                        k_next, di_next);
                 auto BAᵀi = BAᵀ.middle_cols(i * nx, nx);
                 GUANAQO_TRACE("Riccati solve b", k_next);
+                // λ0 += Â λ
+                compact_blas::xgemv_add(Âi, λ.batch(di_next), λ.batch(di0), be);
                 // b = LQᵀb + q
                 compact_blas::xtrmv_T(Q̂i, λ.batch(di_next), be);
                 compact_blas::xadd_copy(λ.batch(di_next), λ.batch(di_next),
                                         ux.batch(di).bottom_rows(nx));
-                // λ0 += Â λ
-                compact_blas::xgemv_add(Âi, λ.batch(di_next), λ.batch(di0), be);
+                if (ti == 1) {
+                    guanaqo::print_python(std::cout << "b̃" << (i + 1)
+                                                    << " = np.array(\n",
+                                          λ.batch(di_next)(0), ")\n");
+                }
                 // l += LB λ, q += LA λ
                 compact_blas::xgemv_add(BAᵀi, λ.batch(di_next),
                                         ux.batch(di_next), be);
@@ -645,6 +725,10 @@ struct CyclicOCPSolver {
                                         λ.batch(di0), be);
             }
         }
+        if (ti == 1) {
+            guanaqo::print_python(std::cout << "b̂" << 0 << " = np.array(\n",
+                                  λ.batch(di0)(0), ")\n");
+        }
         barrier();
         // b = LQ⁻ᵀ x + b
         const bool x_lanes = ti == 0; // first stage wraps around
@@ -653,8 +737,9 @@ struct CyclicOCPSolver {
         compact_blas::xtrsv_LTN(R̂ŜQ̂.right_cols(nx).bottom_rows(nx), x_last, be);
         x_lanes ? compact_blas::xadd_copy<-1>(λI, x_last, λI)
                 : compact_blas::xadd_copy(λI, x_last, λI);
+        compact_blas::xneg(λI); // TODO: merge
         // TODO: remove after testing
-        compact_blas::xtrmv_T(R̂ŜQ̂.right_cols(nx).bottom_rows(nx), x_last, be);
+        // compact_blas::xtrmv_T(R̂ŜQ̂.right_cols(nx).bottom_rows(nx), x_last, be);
         if (is_active(0, biI))
             compact_blas::xtrsv_LNN(coupling_D.batch(biI), λI, be);
     }
@@ -668,21 +753,199 @@ struct CyclicOCPSolver {
             if (ti >= (1 << (lP - lvl)))
                 return;
             solve_riccati_forward(ti, ux, λ);
-#if 0
             for (index_t l = 0; l < lP - lvl; ++l) {
                 barrier();
                 const index_t offset = 1 << l;
                 const auto biY       = sub_wrap_PmV(ti, offset);
                 const auto biU       = ti;
                 if (is_active(l, biY))
-                    process_active(l, biY);
+                    solve_active(l, biY, λ);
                 else if (is_active(l, biU))
-                    process_active_secondary(l, biU);
-                else
-                    barrier();
+                    solve_active_secondary(l, biU, λ);
             }
-#endif
         });
+    }
+
+    real_t mul_A(matrix_view_batch p, mut_matrix_view_batch Ap,
+                 matrix_view_batch L, matrix_view_batch B) const {
+        compact_blas::xcopy(p, Ap);
+        compact_blas::xtrmv_T(L, Ap, backend);
+        compact_blas::xtrmv(L, Ap, backend);
+        using linalg::compact::micro_kernels::gemm::xsyomv_register; // TODO
+        xsyomv_register<simd_abi, false>(B, p, Ap);
+        return compact_blas::xdot(p, Ap);
+    }
+
+    real_t mul_precond(matrix_view_batch r, mut_matrix_view_batch z,
+                       mut_matrix_view_batch w, matrix_view_batch L,
+                       matrix_view_batch B) const {
+        compact_blas::xcopy(r, z);
+#if USE_JACOBI_PREC
+        std::ignore = w;
+        std::ignore = B;
+#else
+        compact_blas::xcopy(r, w);
+        compact_blas::xtrsv_LNN(L, w, backend);
+        compact_blas::xtrsv_LTN(L, w, backend);
+        using linalg::compact::micro_kernels::gemm::xsyomv_register; // TODO
+        xsyomv_register<simd_abi, true>(B, w.as_const(), z);
+#endif
+        compact_blas::xtrsv_LNN(L, z, backend);
+        compact_blas::xtrsv_LTN(L, z, backend);
+        return compact_blas::xdot(r, z);
+    }
+
+    void solve_pcg(mut_matrix_view_batch λ,
+                   mut_matrix_view_batch work_pcg) const {
+        auto r = work_pcg.middle_cols(0, 1), z = work_pcg.middle_cols(1, 1),
+             p = work_pcg.middle_cols(2, 1), Ap = work_pcg.middle_cols(3, 1);
+        auto A = coupling_D.batch(0), B = coupling_Y.batch(0);
+        real_t rᵀz = [&] {
+            GUANAQO_TRACE("solve Ψ pcg", 0);
+            compact_blas::xcopy(λ, r);
+            compact_blas::xfill(0, λ);
+            real_t rᵀz = mul_precond(r, z, Ap, A, B);
+            compact_blas::xcopy(z, p);
+            return rᵀz;
+        }();
+        for (index_t it = 0; it < 20; ++it) {
+            GUANAQO_TRACE("solve Ψ pcg", it + 1);
+            real_t pᵀAp = mul_A(p, Ap, A, B);
+            real_t α    = rᵀz / pᵀAp;
+            compact_blas::xaxpy(+α, p, λ);
+            compact_blas::xaxpy(-α, Ap, r);
+            real_t r2          = compact_blas::xdot(r, r);
+            constexpr real_t ε = std::numeric_limits<real_t>::epsilon();
+            if (r2 < ε * ε)
+                break;
+            real_t rᵀz_new = mul_precond(r, z, Ap, A, B);
+            real_t β       = rᵀz_new / rᵀz;
+            compact_blas::xaxpby(1, z, β, p);
+            rᵀz = rᵀz_new;
+        }
+    }
+
+    void solve_pcg(mut_matrix_view_batch λ) { solve_pcg(λ, work_pcg.batch(0)); }
+
+    void solve_reverse_active(index_t l, index_t bi, mut_matrix_view λ) const {
+        const index_t offset     = 1 << l;
+        const index_t num_stages = dim.N_horiz >> lP;
+        const index_t biY        = add_wrap_PmV(bi, offset);
+        const index_t biU        = sub_wrap_PmV(bi, offset);
+        const index_t di         = bi * num_stages;
+        const index_t diY        = biY * num_stages;
+        const index_t diU        = biU * num_stages;
+        const bool x_lanes       = diY == 0;
+        x_lanes ? compact_blas::xgemv_T_sub_shift(coupling_Y.batch(bi),
+                                                        λ.batch(diY), λ.batch(di))
+                      : compact_blas::xgemv_T_sub(coupling_Y.batch(bi), λ.batch(diY),
+                                                  λ.batch(di), backend);
+        compact_blas::xgemv_T_sub(coupling_U.batch(bi), λ.batch(diU),
+                                  λ.batch(di), backend);
+        compact_blas::xtrsv_LTN(coupling_D.batch(bi), λ.batch(di), backend);
+    }
+
+    // Performs Riccati recursion and then factors level l=0 of
+    // coupling equations + propagates the subdiagonal blocks to level l=1.
+    void solve_riccati_reverse(index_t ti, mut_matrix_view ux,
+                               mut_matrix_view λ, mut_matrix_view work) const {
+        const auto [N, nx, nu, ny, ny_N] = dim;
+        const index_t num_stages = N >> lP; // number of stages per thread
+        const index_t di0        = ti * num_stages; // data batch index
+        const index_t biI        = sub_wrap_PmV(ti, 1);
+        const index_t diI        = biI * num_stages;
+        const index_t k0         = ti * num_stages; // stage index
+        const index_t nux        = nu + nx;
+        const auto be            = backend;
+        PRINTLN("\nThread #{}", ti);
+        auto R̂ŜQ̂ = riccati_R̂ŜQ̂.batch(ti);
+        auto B̂   = riccati_ÂB̂.batch(ti).right_cols(num_stages * nu);
+        auto Â   = riccati_ÂB̂.batch(ti).left_cols(num_stages * nx);
+        auto BAᵀ = riccati_BAᵀ.batch(ti);
+
+        for (index_t i = num_stages; i-- > 0;) {
+            index_t k  = sub_wrap_N(k0, i);
+            index_t di = di0 + i;
+            PRINTLN("  Riccati factor QRS{}", VecReg{vl, k, N >> lvl, N});
+            auto R̂ŜQ̂i = R̂ŜQ̂.middle_cols(i * nux, nux);
+            auto Q̂i   = R̂ŜQ̂i.bottom_right(nx, nx);
+            auto B̂i   = B̂.middle_cols(i * nu, nu);
+            auto Âi   = Â.middle_cols(i * nx, nx);
+            if (i + 1 < num_stages) {
+                [[maybe_unused]] const auto k_next = sub_wrap_N(k, 1);
+                const auto di_next                 = di + 1;
+                GUANAQO_TRACE("Riccati solve b", k_next);
+                auto BAᵀi = BAᵀ.middle_cols(i * nx, nx);
+                // b -= LBᵀ u + LAᵀ x
+                compact_blas::xgemv_T_sub(BAᵀi, ux.batch(di_next),
+                                          λ.batch(di_next), be);
+                compact_blas::xneg(λ.batch(di_next)); // TODO
+                // q -= b
+                compact_blas::xadd_copy(ux.batch(di).bottom_rows(nx),
+                                        ux.batch(di).bottom_rows(nx),
+                                        λ.batch(di_next));
+                compact_blas::xtrmv(Q̂i, λ.batch(di_next), backend);
+                compact_blas::xgemv_T_add(Âi, λ.batch(di0), λ.batch(di_next),
+                                          backend);
+            } else {
+                // x_last = LQ⁻ᵀ(q_last + LQ⁻¹ λ - LÂᵀ λ)
+                GUANAQO_TRACE("Riccati last", k);
+                // λ0 -= Â λ
+                const auto x_last  = ux.batch(di).bottom_rows(nx);
+                const bool x_lanes = ti == 0;
+                const auto w       = work.batch(ti);
+                x_lanes ? compact_blas::xadd_copy<1>(w, λ.batch(diI))
+                              : compact_blas::xadd_copy<0>(w, λ.batch(diI));
+                // LQ⁻¹ λ
+                compact_blas::xtrsv_LNN(Q̂i, w, backend);
+                // LQ⁻¹ λ - LÂᵀ λ
+                compact_blas::xgemv_T_sub(Âi, λ.batch(di0), w, be);
+                // x_last = LQ⁻ᵀ(LQ⁻¹ λ - LÂᵀ λ)
+                compact_blas::xtrsv_LTN(Q̂i, w, backend);
+                compact_blas::xadd_copy(x_last, x_last, w);
+                compact_blas::xtrmv_T(Q̂i, x_last, backend); // TODO
+            }
+            {
+                GUANAQO_TRACE("Riccati solve QRS", k);
+                // l -= LB̂ᵀ λ0
+                compact_blas::xgemv_T_sub(B̂i, λ.batch(di0),
+                                          ux.batch(di).top_rows(nu), be);
+                // x = LQ⁻ᵀ q, u = LR⁻ᵀ (l - LSᵀ x)
+                compact_blas::xtrsv_LTN(R̂ŜQ̂i, ux.batch(di), be);
+            }
+        }
+    }
+
+    void solve_reverse(mut_matrix_view ux, mut_matrix_view λ,
+                       mut_matrix_view work) const {
+        const index_t N = dim.N_horiz;
+        KOQKATOO_ASSERT(((N >> lP) << lP) == N);
+        koqkatoo::foreach_thread([this, &ux, &λ, &work](index_t ti, index_t P) {
+            if (P < (1 << (lP - lvl)))
+                throw std::logic_error("Incorrect number of threads");
+            if (ti >= (1 << (lP - lvl)))
+                return;
+            for (index_t l = lP - lvl; l-- > 0;) {
+                barrier();
+                const index_t offset = 1 << l;
+                const auto bi        = sub_wrap_PmV(ti, offset);
+                if (is_active(l, bi))
+                    solve_reverse_active(l, bi, λ);
+            }
+            solve_riccati_reverse(ti, ux, λ, work);
+        });
+    }
+
+    void solve(mut_matrix_view ux, mut_matrix_view λ,
+               mut_matrix_view_batch work_pcg,
+               mut_matrix_view work_riccati) const {
+        solve_forward(ux, λ);
+        solve_pcg(λ.batch(0), work_pcg);
+        solve_reverse(ux, λ, work_riccati);
+    }
+
+    void solve(mut_matrix_view ux, mut_matrix_view λ) {
+        solve(ux, λ, work_pcg.batch(0), riccati_work);
     }
 
     void run() {
@@ -1082,7 +1345,7 @@ TEST(NewCyclic, scheduling) {
     guanaqo::trace_logger.reset();
 #endif
     solver.run();
-    solver.solve_forward(ux, λ);
+    solver.solve(ux, λ);
 
 #if GUANAQO_WITH_TRACING
     {
