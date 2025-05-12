@@ -44,6 +44,22 @@ void CompactBLAS<Abi>::xgemm_ref(single_batch_view A, single_batch_view B,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xsyomv(single_batch_view A, single_batch_view x,
+                              mut_single_batch_view v) {
+    GUANAQO_TRACE("xsyomv", 0, A.rows() * A.cols() * A.depth());
+    using micro_kernels::gemm::xsyomv_register; // TODO
+    xsyomv_register<Abi, false>(A, x, v);
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xsyomv_neg(single_batch_view A, single_batch_view x,
+                              mut_single_batch_view v) {
+    GUANAQO_TRACE("xsyomv_neg", 0, A.rows() * A.cols() * A.depth());
+    using micro_kernels::gemm::xsyomv_register; // TODO
+    xsyomv_register<Abi, true>(A, x, v);
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xgemv_ref(single_batch_view A, single_batch_view B,
                                  mut_single_batch_view C) {
     GUANAQO_TRACE("xgemv", 0, A.rows() * A.cols() * B.cols() * A.depth());

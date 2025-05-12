@@ -457,7 +457,7 @@ void CompactBLAS<Abi>::xadd_L(single_batch_view A, mut_single_batch_view B) {
 template <class Abi>
 void CompactBLAS<Abi>::xaxpy(real_t a, single_batch_view x,
                              mut_single_batch_view y) {
-    GUANAQO_TRACE("xaxpy", 0, x.rows() * x.depth());
+    GUANAQO_TRACE("xaxpy", 0, x.rows() * x.cols() * x.depth());
     assert(x.rows() == y.rows());
     assert(x.cols() == y.cols());
     simd a_simd{a};
@@ -485,7 +485,7 @@ void CompactBLAS<Abi>::xaxpby(real_t a, single_batch_view x, real_t b,
     assert(x.cols() == y.cols());
     const index_t n = x.rows();
     if (b == 0) {
-        GUANAQO_TRACE("xaxpby", 0, x.rows() * x.depth());
+        GUANAQO_TRACE("xaxpby", 0, x.rows() * x.cols() * x.depth());
         simd a_simd{a};
         for (index_t j = 0; j < x.cols(); ++j) {
             KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t i = 0; i < n; ++i) {
@@ -493,7 +493,7 @@ void CompactBLAS<Abi>::xaxpby(real_t a, single_batch_view x, real_t b,
             }
         }
     } else {
-        GUANAQO_TRACE("xaxpby", 0, 2 * x.rows() * x.depth());
+        GUANAQO_TRACE("xaxpby", 0, 2 * x.rows() * x.cols() * x.depth());
         simd a_simd{a}, b_simd{b};
         for (index_t j = 0; j < x.cols(); ++j) {
             KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t i = 0; i < n; ++i) {
@@ -622,6 +622,7 @@ void CompactBLAS<Abi>::xadd_neg_copy_impl(OutView out, Views... xs)
 
 template <class Abi>
 real_t CompactBLAS<Abi>::xdot(single_batch_view x, single_batch_view y) {
+    GUANAQO_TRACE("xdot", 0, x.rows() * x.cols() * x.depth());
     using std::fma;
     // TODO: why does fma(xi, yi, accum) give such terrible code gen?
     return xreduce(

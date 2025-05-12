@@ -23,12 +23,11 @@
 #include <print>
 #include <random>
 #include <stdexcept>
+#include <string_view>
 #include <type_traits>
 #if !KOQKATOO_WITH_OPENMP
 #include <barrier>
 #endif
-
-#include <koqkatoo/linalg-compact/compact/micro-kernels/xgemm.hpp> // TODO: xsyomv
 
 namespace stdx = std::experimental;
 
@@ -38,6 +37,8 @@ namespace stdx = std::experimental;
 #else
 #define PRINTLN(...)
 #endif
+
+#define USE_JACOBI_PREC 1
 
 struct VecReg {
     koqkatoo::index_t n, k0, stride, N;
@@ -83,7 +84,7 @@ namespace koqkatoo::ocp::test {
 #if KQT_CYCLIC_TEMPLATE
 template <index_t VL = 4>
 #else
-constexpr index_t VL = 4;
+constexpr index_t VL = 8;
 #endif
 struct CyclicOCPSolver {
     static constexpr index_t vl  = VL;
@@ -745,8 +746,7 @@ struct CyclicOCPSolver {
         compact_blas::xcopy(p, Ap);
         compact_blas::xtrmv_T(L, Ap, backend);
         compact_blas::xtrmv(L, Ap, backend);
-        using linalg::compact::micro_kernels::gemm::xsyomv_register; // TODO
-        xsyomv_register<simd_abi, false>(B, p, Ap);
+        compact_blas::xsyomv(B, p, Ap);
         return compact_blas::xdot(p, Ap);
     }
 
@@ -761,8 +761,7 @@ struct CyclicOCPSolver {
         compact_blas::xcopy(r, w);
         compact_blas::xtrsv_LNN(L, w, backend);
         compact_blas::xtrsv_LTN(L, w, backend);
-        using linalg::compact::micro_kernels::gemm::xsyomv_register; // TODO
-        xsyomv_register<simd_abi, true>(B, w.as_const(), z);
+        compact_blas::xsyomv_neg(B, w.as_const(), z);
 #endif
         compact_blas::xtrsv_LNN(L, z, backend);
         compact_blas::xtrsv_LTN(L, z, backend);
@@ -782,7 +781,7 @@ struct CyclicOCPSolver {
             compact_blas::xcopy(z, p);
             return rᵀz;
         }();
-        for (index_t it = 0; it < 20; ++it) {
+        for (index_t it = 0; it < 100; ++it) { // TODO
             GUANAQO_TRACE("solve Ψ pcg", it + 1);
             real_t pᵀAp = mul_A(p, Ap, A, B);
             real_t α    = rᵀz / pᵀAp;
@@ -1294,7 +1293,7 @@ struct CyclicOCPSolver {
 using koqkatoo::index_t;
 using koqkatoo::real_t;
 
-const int log_n_threads = 3; // TODO
+const int log_n_threads = 1; // TODO
 TEST(NewCyclic, scheduling) {
     using namespace koqkatoo::ocp;
 
@@ -1307,7 +1306,7 @@ TEST(NewCyclic, scheduling) {
 
     using Solver     = test::CyclicOCPSolver;
     const index_t lP = log_n_threads + Solver::lvl;
-    OCPDim dim{.N_horiz = 3 << lP, .nx = 40, .nu = 30, .ny = 0, .ny_N = 0};
+    OCPDim dim{.N_horiz = 1 << lP, .nx = 50, .nu = 50, .ny = 0, .ny_N = 0};
     auto ocp = generate_random_ocp(dim);
     Solver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
@@ -1324,7 +1323,7 @@ TEST(NewCyclic, scheduling) {
             f << guanaqo::float_to_str(x) << '\n';
     }
 
-    for (int i = 0; i < 100; ++i)
+    for (int i = 0; i < 500; ++i)
         solver.run();
 #if GUANAQO_WITH_TRACING
     guanaqo::trace_logger.reset();
@@ -1340,11 +1339,16 @@ TEST(NewCyclic, scheduling) {
         const auto VL    = solver.vl;
         std::string name = std::format("factor_cyclic_new.csv");
         std::filesystem::path out_dir{"traces"};
+#if USE_JACOBI_PREC
+        const std::string_view pcg = "jacobi";
+#else
+        const std::string_view pcg = "stair";
+#endif
         out_dir /= *koqkatoo_commit_hash ? koqkatoo_commit_hash : "unknown";
         out_dir /= KOQKATOO_MKL_IF_ELSE("mkl", "openblas");
-        out_dir /= std::format("nx={}-nu={}-ny={}-N={}-thr={}-vl={}",
+        out_dir /= std::format("nx={}-nu={}-ny={}-N={}-thr={}-vl={}-pcg={}",
                                solver.dim.nx, solver.dim.nu, solver.dim.ny, N,
-                               1 << log_n_threads, VL);
+                               1 << log_n_threads, VL, pcg);
         std::filesystem::create_directories(out_dir);
         std::ofstream csv{out_dir / name};
         guanaqo::TraceLogger::write_column_headings(csv) << '\n';

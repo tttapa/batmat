@@ -395,6 +395,11 @@ struct CompactBLAS {
     static void xgemv_T_sub_ref(single_batch_view A, single_batch_view B,
                                 mut_single_batch_view C);
 
+    static void xsyomv(single_batch_view A, single_batch_view x,
+                       mut_single_batch_view v);
+    static void xsyomv_neg(single_batch_view A, single_batch_view x,
+                           mut_single_batch_view v);
+
     /// Cholesky downdate
     static void xshh(mut_single_batch_view L, mut_single_batch_view A,
                      PreferredBackend b);
