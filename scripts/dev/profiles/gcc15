@@ -9,12 +9,15 @@ os=Linux
 [tool_requires]
 tttapa-toolchains/1.1.0
 mold/2.32.1
+cmake/3.31.6
+ninja/1.12.1
+
+[replace_requires]
+eigen/*: eigen/tttapa.20250504
 
 [buildenv]
 MKLROOT={{ os.getenv("MKLROOT") or os.path.join(os.getenv("HOME"), "intel/oneapi/mkl/latest")}}
 VTUNE_PROFILER_DIR={{ os.getenv("VTUNE_PROFILER_DIR") or os.path.join(os.getenv("HOME"), "intel/oneapi/vtune/latest")}}
-LD_LIBRARY_PATH=!
-LD_PRELOAD=!
 
 [conf]
 tools.cmake.cmaketoolchain:generator=Ninja Multi-Config
