@@ -38,7 +38,7 @@ namespace stdx = std::experimental;
 #define PRINTLN(...)
 #endif
 
-#define USE_JACOBI_PREC 1
+#define USE_JACOBI_PREC 0
 
 struct VecReg {
     koqkatoo::index_t n, k0, stride, N;
@@ -84,7 +84,7 @@ namespace koqkatoo::ocp::test {
 #if KQT_CYCLIC_TEMPLATE
 template <index_t VL = 4>
 #else
-constexpr index_t VL = 8;
+constexpr index_t VL = 4;
 #endif
 struct CyclicOCPSolver {
     static constexpr index_t vl  = VL;
@@ -562,12 +562,12 @@ struct CyclicOCPSolver {
         // same diagonal block.
         barrier();
         // And finally backward in time, optionally merged with factorization.
-        const bool ready_to_factor = (ti & 1) == 1;
+        const bool do_factor = (ti & 1) == 1 || (lP - lvl == 0 && ti == 0);
         {
             GUANAQO_TRACE("Compute (BA)(BA)ᵀ", biA);
             compact_blas::xsyrk_add(ÂB̂i, DiA, be);
         }
-        if (ready_to_factor) {
+        if (do_factor) {
             GUANAQO_TRACE("Factor D", biA);
             compact_blas::xpotrf(coupling_D.batch(biA), backend);
         }
@@ -1293,7 +1293,7 @@ struct CyclicOCPSolver {
 using koqkatoo::index_t;
 using koqkatoo::real_t;
 
-const int log_n_threads = 1; // TODO
+const int log_n_threads = 0; // TODO
 TEST(NewCyclic, scheduling) {
     using namespace koqkatoo::ocp;
 
@@ -1323,7 +1323,7 @@ TEST(NewCyclic, scheduling) {
             f << guanaqo::float_to_str(x) << '\n';
     }
 
-    for (int i = 0; i < 500; ++i)
+    for (int i = 0; i < 50; ++i)
         solver.run();
 #if GUANAQO_WITH_TRACING
     guanaqo::trace_logger.reset();
