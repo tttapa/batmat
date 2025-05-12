@@ -38,7 +38,7 @@ namespace stdx = std::experimental;
 #define PRINTLN(...)
 #endif
 
-#define USE_JACOBI_PREC 0
+#define USE_JACOBI_PREC 1
 
 struct VecReg {
     koqkatoo::index_t n, k0, stride, N;
@@ -81,11 +81,7 @@ namespace koqkatoo::ocp::test {
     return static_cast<index_t>(std::countr_zero(ui));
 }
 
-#if KQT_CYCLIC_TEMPLATE
 template <index_t VL = 4>
-#else
-constexpr index_t VL = 4;
-#endif
 struct CyclicOCPSolver {
     static constexpr index_t vl  = VL;
     static constexpr index_t lvl = get_depth(vl);
@@ -710,7 +706,7 @@ struct CyclicOCPSolver {
         auto x_last        = ux.batch(di_last).bottom_rows(nx);
         auto λI            = λ.batch(diI);
         compact_blas::xtrsv_LTN(R̂ŜQ̂.right_cols(nx).bottom_rows(nx), x_last, be);
-        x_lanes ? compact_blas::xadd_copy<-1>(λI, x_last, λI)
+        x_lanes ? compact_blas::template xadd_copy<-1>(λI, x_last, λI)
                 : compact_blas::xadd_copy(λI, x_last, λI);
         compact_blas::xneg(λI); // TODO: merge
         // TODO: remove after testing
@@ -870,8 +866,8 @@ struct CyclicOCPSolver {
                 const auto x_last  = ux.batch(di).bottom_rows(nx);
                 const bool x_lanes = ti == 0;
                 const auto w       = work.batch(ti);
-                x_lanes ? compact_blas::xadd_copy<1>(w, λ.batch(diI))
-                              : compact_blas::xadd_copy<0>(w, λ.batch(diI));
+                x_lanes ? compact_blas::template xadd_copy<1>(w, λ.batch(diI))
+                              : compact_blas::template xadd_copy<0>(w, λ.batch(diI));
                 // LQ⁻¹ λ
                 compact_blas::xtrsv_LNN(Q̂i, w, backend);
                 // LQ⁻¹ λ - LÂᵀ λ
@@ -1304,7 +1300,7 @@ TEST(NewCyclic, scheduling) {
         __itt_thread_set_name(std::format("OMP({})", i).c_str());
     }));
 
-    using Solver     = test::CyclicOCPSolver;
+    using Solver     = test::CyclicOCPSolver<4>;
     const index_t lP = log_n_threads + Solver::lvl;
     OCPDim dim{.N_horiz = 1 << lP, .nx = 50, .nu = 50, .ny = 0, .ny_N = 0};
     auto ocp = generate_random_ocp(dim);
