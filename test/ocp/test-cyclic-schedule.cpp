@@ -38,7 +38,7 @@ namespace stdx = std::experimental;
 #define PRINTLN(...)
 #endif
 
-#define USE_JACOBI_PREC 1
+#define USE_JACOBI_PREC 0
 
 struct VecReg {
     koqkatoo::index_t n, k0, stride, N;
@@ -389,7 +389,7 @@ struct CyclicOCPSolver {
 #endif
     }
 
-    void process_active(index_t l, index_t biY) {
+    void process_Y(index_t l, index_t biY) {
         const index_t offset = 1 << l;
         // Compute Y[bi]
         {
@@ -398,7 +398,7 @@ struct CyclicOCPSolver {
             compact_blas::xtrsm_RLTN(coupling_D.batch(biY),
                                      coupling_Y.batch(biY), backend);
         }
-        // Wait for U[bi] from process_active_secondary
+        // Wait for U[bi] from process_U
         barrier();
         for (index_t c = 0; c < coupling_U.cols(); c += 1)
             for (index_t r = 0; r < coupling_U.rows(); r += 16)
@@ -428,7 +428,7 @@ struct CyclicOCPSolver {
         // TODO: nothing?
     }
 
-    void process_active_secondary(index_t l, index_t biU) {
+    void process_U(index_t l, index_t biU) {
         const index_t offset = 1 << l;
         const index_t biD    = sub_wrap_PmV(biU, offset);
         const index_t biY    = sub_wrap_PmV(biD, offset);
@@ -442,7 +442,7 @@ struct CyclicOCPSolver {
             compact_blas::xtrsm_RLTN(coupling_D.batch(biU),
                                      coupling_U.batch(biU), backend);
         }
-        // Wait for Y[bi] from process_active
+        // Wait for Y[bi] from process_Y
         barrier();
         for (index_t c = 0; c < coupling_Y.cols(); c += 1)
             for (index_t r = 0; r < coupling_Y.rows(); r += 16)
@@ -511,22 +511,23 @@ struct CyclicOCPSolver {
         const index_t num_stages = N >> lP; // number of stages per thread
         const index_t biI        = sub_wrap_PmV(ti, 1);
         const index_t biA        = ti;
-        const index_t k          = ti * num_stages;
         const index_t kI         = biI * num_stages;
         const index_t kA         = biA * num_stages;
+        const index_t k          = kA;
         const auto be            = backend;
-        const bool x_lanes       = ti == 0; // first stage wraps around
+        const auto biR           = biA;
+        const bool x_lanes       = biA == 0; // first stage wraps around
         // Coupling equation to previous stage is eliminated after coupling
         // equation to next stage for odd threads, vice versa for even threads.
-        const bool I_below_A = (ti & 1) == 1;
+        const bool I_below_A = (biA & 1) == 1;
         // Update the subdiagonal blocks U and Y of the coupling equations
         [[maybe_unused]] VecReg vec_curr{vl, k, N >> lvl, N},
             vecA{vl, kA, N >> lvl, N}, vecI{vl, kI, N >> lvl, N};
         auto DiI = coupling_D.batch(biI);
         auto DiA = coupling_D.batch(biA);
-        auto Âi  = riccati_ÂB̂.batch(ti).middle_cols(nx * (num_stages - 1), nx);
-        auto ÂB̂i = riccati_ÂB̂.batch(ti).right_cols(nx + nu * num_stages);
-        auto Q̂i  = riccati_R̂ŜQ̂.batch(ti).bottom_right(nx, nx);
+        auto Âi  = riccati_ÂB̂.batch(biR).middle_cols(nx * (num_stages - 1), nx);
+        auto ÂB̂i = riccati_ÂB̂.batch(biR).right_cols(nx + nu * num_stages);
+        auto Q̂i  = riccati_R̂ŜQ̂.batch(biR).bottom_right(nx, nx);
         {
             GUANAQO_TRACE("Invert Q", biI);
             compact_blas::xtrtri_T_copy_ref(Q̂i, DiI);
@@ -558,7 +559,7 @@ struct CyclicOCPSolver {
         // same diagonal block.
         barrier();
         // And finally backward in time, optionally merged with factorization.
-        const bool do_factor = (ti & 1) == 1 || (lP - lvl == 0 && ti == 0);
+        const bool do_factor = (biA & 1) == 1 || (lP - lvl == 0 && biA == 0);
         {
             GUANAQO_TRACE("Compute (BA)(BA)ᵀ", biA);
             compact_blas::xsyrk_add(ÂB̂i, DiA, be);
@@ -949,9 +950,9 @@ struct CyclicOCPSolver {
                 const auto biY       = sub_wrap_PmV(ti, offset);
                 const auto biU       = ti;
                 if (is_active(l, biY))
-                    process_active(l, biY);
+                    process_Y(l, biY);
                 else if (is_active(l, biU))
-                    process_active_secondary(l, biU);
+                    process_U(l, biU);
                 else
                     barrier();
             }
@@ -1289,7 +1290,7 @@ struct CyclicOCPSolver {
 using koqkatoo::index_t;
 using koqkatoo::real_t;
 
-const int log_n_threads = 0; // TODO
+const int log_n_threads = 3; // TODO
 TEST(NewCyclic, scheduling) {
     using namespace koqkatoo::ocp;
 
@@ -1302,7 +1303,7 @@ TEST(NewCyclic, scheduling) {
 
     using Solver     = test::CyclicOCPSolver<4>;
     const index_t lP = log_n_threads + Solver::lvl;
-    OCPDim dim{.N_horiz = 1 << lP, .nx = 50, .nu = 50, .ny = 0, .ny_N = 0};
+    OCPDim dim{.N_horiz = 1 << lP, .nx = 40, .nu = 30, .ny = 0, .ny_N = 0};
     auto ocp = generate_random_ocp(dim);
     Solver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
@@ -1319,7 +1320,7 @@ TEST(NewCyclic, scheduling) {
             f << guanaqo::float_to_str(x) << '\n';
     }
 
-    for (int i = 0; i < 50; ++i)
+    for (int i = 0; i < 500; ++i)
         solver.run();
 #if GUANAQO_WITH_TRACING
     guanaqo::trace_logger.reset();
