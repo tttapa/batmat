@@ -30,6 +30,7 @@ add_executable(tests
     "linalg-compact/test-pntrf.cpp"
     "linalg-compact/test-update.cpp"
     "linalg-compact/test-trtri.cpp"
+    "linalg-compact/test-compress.cpp"
     "cholundate/test-shh-downdate.cpp"
     "cholundate/test-shh-updowndate.cpp"
     "ocp/test-cyclic-schedule.cpp"

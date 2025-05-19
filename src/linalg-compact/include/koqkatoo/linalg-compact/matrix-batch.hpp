@@ -139,8 +139,8 @@ struct BatchedMatrixLayout {
                                 index_type c) const {
         auto *const p = data + layer_index(l);
         const auto bs = static_cast<I>(batch_size);
-        return *(RowMajor ? p + bs * c + outer_stride * bs * r
-                          : p + bs * r + outer_stride * bs * c);
+        return *(RowMajor ? p + bs * (c + outer_stride * r)
+                          : p + bs * (r + outer_stride * c));
     }
     [[nodiscard]] index_type size() const {
         return static_cast<I>(depth) * rows * cols;
