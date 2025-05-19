@@ -182,6 +182,8 @@ struct CyclicOCPSolver {
     using matrix_view_batch     = compact_blas::single_batch_view;
     using mut_matrix_view_batch = compact_blas::mut_single_batch_view;
 
+    bool alt = false;
+
     matrix coupling_D = [this] {
         return matrix{{
             .depth = 1 << lP,
@@ -572,7 +574,7 @@ struct CyclicOCPSolver {
 
     // Performs Riccati recursion and then factors level l=0 of
     // coupling equations + propagates the subdiagonal blocks to level l=1.
-    void factor_riccati(index_t ti) {
+    void factor_riccati(index_t ti, bool alt) {
         const auto [N, nx, nu, ny, ny_N] = dim;
         const index_t num_stages = N >> lP; // number of stages per thread
         const index_t di0        = ti * num_stages; // data batch index
@@ -629,6 +631,8 @@ struct CyclicOCPSolver {
                 auto Â_next = Â.middle_cols((i + 1) * nx, nx);
                 compact_blas::xgemm(Âi, Bi, B̂_next, be);
                 compact_blas::xgemm(Âi, Ai, Â_next, be);
+                if (alt)
+                    compact_blas::xtrsm_RLTN(Q̂i, Âi, be);
                 // Riccati update
                 auto R̂ŜQ̂_next = R̂ŜQ̂.middle_cols((i + 1) * nux, nux);
                 compact_blas::xcopy_T(data_BA.batch(di_next), BAᵀi);
@@ -643,8 +647,6 @@ struct CyclicOCPSolver {
         }
     }
 
-    // Performs Riccati recursion and then factors level l=0 of
-    // coupling equations + propagates the subdiagonal blocks to level l=1.
     void solve_riccati_forward(index_t ti, mut_matrix_view ux,
                                mut_matrix_view λ) const {
         const auto [N, nx, nu, ny, ny_N] = dim;
@@ -716,15 +718,99 @@ struct CyclicOCPSolver {
             compact_blas::xtrsv_LNN(coupling_D.batch(biI), λI, be);
     }
 
-    void solve_forward(mut_matrix_view ux, mut_matrix_view λ) const {
+    /// Preserves b in λ (except for coupling equations solved using CR)
+    void solve_riccati_forward_alt(index_t ti, mut_matrix_view ux,
+                                   mut_matrix_view λ,
+                                   mut_matrix_view work) const {
+        const auto [N, nx, nu, ny, ny_N] = dim;
+        const index_t num_stages = N >> lP; // number of stages per thread
+        const index_t di0        = ti * num_stages; // data batch index
+        const index_t biI        = sub_wrap_PmV(ti, 1);
+        const index_t diI        = biI * num_stages;
+        const index_t di_last    = di0 + num_stages - 1;
+        const index_t k0         = ti * num_stages; // stage index
+        const index_t nux        = nu + nx;
+        const auto be            = backend;
+        PRINTLN("\nThread #{}", ti);
+        auto R̂ŜQ̂ = riccati_R̂ŜQ̂.batch(ti);
+        auto B̂   = riccati_ÂB̂.batch(ti).right_cols(num_stages * nu);
+        auto Â   = riccati_ÂB̂.batch(ti).left_cols(num_stages * nx);
+        auto w   = work.batch(ti);
+        for (index_t i = 0; i < num_stages; ++i) {
+            index_t k  = sub_wrap_N(k0, i);
+            index_t di = di0 + i;
+            PRINTLN("  Riccati solve QRS{}", VecReg{vl, k, N >> lvl, N});
+            auto R̂ŜQ̂i = R̂ŜQ̂.middle_cols(i * nux, nux);
+            auto R̂i   = R̂ŜQ̂i.top_left(nu, nu);
+            auto Ŝi   = R̂ŜQ̂i.bottom_left(nx, nu);
+            auto Q̂i   = R̂ŜQ̂i.bottom_right(nx, nx);
+            auto B̂i   = B̂.middle_cols(i * nu, nu);
+            auto Âi   = Â.middle_cols(i * nx, nx);
+            {
+                GUANAQO_TRACE("Riccati solve ux", k);
+                // l = LR⁻¹ r
+                compact_blas::xtrsv_LNN(R̂i, ux.batch(di).top_rows(nu), be);
+                // p = q - LS l
+                compact_blas::xgemv_sub(Ŝi, ux.batch(di).top_rows(nu),
+                                        ux.batch(di).bottom_rows(nx), be);
+                // λ0 -= LB̂ l
+                compact_blas::xgemv_sub(B̂i, ux.batch(di).top_rows(nu),
+                                        λ.batch(di0), be);
+            }
+            if (i + 1 < num_stages) {
+                [[maybe_unused]] const auto k_next = sub_wrap_N(k, 1);
+                const auto di_next                 = di + 1;
+                PRINTLN("k={:>2}  di={:>2}  k_next={:>2}  di_next={:>2}", k, di,
+                        k_next, di_next);
+                GUANAQO_TRACE("Riccati solve b", k_next);
+                // b' = LQᵀb
+                compact_blas::xcopy(λ.batch(di_next), w);
+                compact_blas::xtrmv_T(Q̂i, w, be);
+                // λ0 += LÂ LQᵀb
+                compact_blas::xgemv_add(Âi, w, λ.batch(di0), be);
+                // d' = LQ b'
+                compact_blas::xtrmv(Q̂i, w, be);
+                // d = LQ LQᵀ b + p
+                compact_blas::xadd_copy(w, w, ux.batch(di).bottom_rows(nx));
+                // l += Bᵀd, q += Aᵀd
+                compact_blas::xgemv_T_add(data_BA.batch(di_next), w,
+                                          ux.batch(di_next), be);
+            } else {
+                GUANAQO_TRACE("Riccati solve last", k);
+                // q = LQ⁻¹ p
+                compact_blas::xtrsv_LNN(Q̂i, ux.batch(di).bottom_rows(nx), be);
+                // λ0 -= LÂ q
+                compact_blas::xgemv_sub(Âi, ux.batch(di).bottom_rows(nx),
+                                        λ.batch(di0), be);
+            }
+        }
+        barrier();
+        GUANAQO_TRACE("Riccati coupling I", k0);
+        // b = LQ⁻ᵀ x + b
+        const bool x_lanes = ti == 0; // first stage wraps around
+        auto x_last        = ux.batch(di_last).bottom_rows(nx);
+        auto λI            = λ.batch(diI);
+        compact_blas::xtrsv_LTN(R̂ŜQ̂.right_cols(nx).bottom_rows(nx), x_last, be);
+        // Note: this leaves LQ⁻ᵀ q in x_last,
+        //       which is reused during the backward solve
+        x_lanes ? compact_blas::template xadd_copy<-1>(λI, x_last, λI)
+                : compact_blas::xadd_copy(λI, x_last, λI);
+        compact_blas::xneg(λI); // TODO: merge
+        if (is_active(0, biI))
+            compact_blas::xtrsv_LNN(coupling_D.batch(biI), λI, be);
+    }
+
+    void solve_forward(mut_matrix_view ux, mut_matrix_view λ,
+                       mut_matrix_view work) const {
         const index_t N = dim.N_horiz;
         KOQKATOO_ASSERT(((N >> lP) << lP) == N);
-        koqkatoo::foreach_thread([this, &ux, &λ](index_t ti, index_t P) {
+        koqkatoo::foreach_thread([this, &ux, &λ, &work](index_t ti, index_t P) {
             if (P < (1 << (lP - lvl)))
                 throw std::logic_error("Incorrect number of threads");
             if (ti >= (1 << (lP - lvl)))
                 return;
-            solve_riccati_forward(ti, ux, λ);
+            alt ? solve_riccati_forward_alt(ti, ux, λ, work)
+                : solve_riccati_forward(ti, ux, λ);
             for (index_t l = 0; l < lP - lvl; ++l) {
                 barrier();
                 const index_t offset = 1 << l;
@@ -816,8 +902,6 @@ struct CyclicOCPSolver {
         compact_blas::xtrsv_LTN(coupling_D.batch(bi), λ.batch(di), backend);
     }
 
-    // Performs Riccati recursion and then factors level l=0 of
-    // coupling equations + propagates the subdiagonal blocks to level l=1.
     void solve_riccati_reverse(index_t ti, mut_matrix_view ux,
                                mut_matrix_view λ, mut_matrix_view work) const {
         const auto [N, nx, nu, ny, ny_N] = dim;
@@ -897,6 +981,88 @@ struct CyclicOCPSolver {
         }
     }
 
+    void solve_riccati_reverse_alt(index_t ti, mut_matrix_view ux,
+                                   mut_matrix_view λ,
+                                   mut_matrix_view work) const {
+        const auto [N, nx, nu, ny, ny_N] = dim;
+        const index_t num_stages = N >> lP; // number of stages per thread
+        const index_t di0        = ti * num_stages; // data batch index
+        const index_t biI        = sub_wrap_PmV(ti, 1);
+        const index_t diI        = biI * num_stages;
+        const index_t k0         = ti * num_stages; // stage index
+        const index_t nux        = nu + nx;
+        const auto be            = backend;
+        PRINTLN("\nThread #{}", ti);
+        auto R̂ŜQ̂     = riccati_R̂ŜQ̂.batch(ti);
+        auto B̂       = riccati_ÂB̂.batch(ti).right_cols(num_stages * nu);
+        auto Â       = riccati_ÂB̂.batch(ti).left_cols(num_stages * nx);
+        const auto w = work.batch(ti);
+
+        for (index_t i = num_stages; i-- > 0;) {
+            index_t k  = sub_wrap_N(k0, i);
+            index_t di = di0 + i;
+            PRINTLN("  Riccati factor QRS{}", VecReg{vl, k, N >> lvl, N});
+            auto R̂ŜQ̂i = R̂ŜQ̂.middle_cols(i * nux, nux);
+            auto Q̂i   = R̂ŜQ̂i.bottom_right(nx, nx);
+            auto R̂i   = R̂ŜQ̂i.top_left(nu, nu);
+            auto Ŝi   = R̂ŜQ̂i.bottom_left(nx, nu);
+            auto B̂i   = B̂.middle_cols(i * nu, nu);
+            auto Âi   = Â.middle_cols(i * nx, nx);
+            if (i + 1 < num_stages) {
+                [[maybe_unused]] const auto k_next = sub_wrap_N(k, 1);
+                const auto di_next                 = di + 1;
+                GUANAQO_TRACE("Riccati solve rev", k_next);
+                auto BAi = data_BA.batch(di_next);
+
+                // w = p
+                compact_blas::xcopy(ux.batch(di).bottom_rows(nx), w);
+                // x = A x(next) + B u(next) - b(next)
+                compact_blas::xadd_neg_copy(ux.batch(di).bottom_rows(nx),
+                                            λ.batch(di_next));
+                compact_blas::xgemv_add(BAi, ux.batch(di_next),
+                                        ux.batch(di).bottom_rows(nx), be);
+                // u = LR⁻ᵀ(l - LSᵀ x - LB̂ᵀ λ(last))
+                compact_blas::xgemv_T_sub(B̂i, λ.batch(di0),
+                                          ux.batch(di).top_rows(nu), be);
+                compact_blas::xgemv_T_sub(Ŝi, ux.batch(di).bottom_rows(nx),
+                                          ux.batch(di).top_rows(nu), be);
+                compact_blas::xtrsv_LTN(R̂i, ux.batch(di).top_rows(nu), be);
+
+                // λ(next) = LQ (LQᵀ x + LÂᵀ λ(last)) - p
+                compact_blas::xcopy(ux.batch(di).bottom_rows(nx),
+                                    λ.batch(di_next));
+                compact_blas::xtrmv_T(Q̂i, λ.batch(di_next), be);
+                compact_blas::xgemv_T_add(Âi, λ.batch(di0), λ.batch(di_next),
+                                          be);
+                compact_blas::xtrmv(Q̂i, λ.batch(di_next), be);
+                compact_blas::xsub_copy(λ.batch(di_next), λ.batch(di_next), w);
+            } else {
+                // x_last = LQ⁻ᵀ(q_last + LQ⁻¹ λ - LÂᵀ λ)
+                GUANAQO_TRACE("Riccati solve rev", k);
+                // λ0 -= Â λ
+                const auto x_last  = ux.batch(di).bottom_rows(nx);
+                const bool x_lanes = ti == 0;
+                x_lanes ? compact_blas::template xadd_copy<1>(w, λ.batch(diI))
+                        : compact_blas::template xadd_copy<0>(w, λ.batch(diI));
+                // LQ⁻¹ λ
+                compact_blas::xtrsv_LNN(Q̂i, w, backend);
+                // LQ⁻¹ λ - LÂᵀ λ
+                compact_blas::xgemv_T_sub(Âi, λ.batch(di0), w, be);
+                // x_last = LQ⁻ᵀ(LQ⁻¹ λ - LÂᵀ λ)
+                compact_blas::xtrsv_LTN(Q̂i, w, backend);
+                compact_blas::xadd_copy(x_last, x_last, w);
+
+                // u -= LB̂ᵀ λ0 + LSᵀ q
+                compact_blas::xgemv_T_sub(B̂i, λ.batch(di0),
+                                          ux.batch(di).top_rows(nu), be);
+                compact_blas::xgemv_T_sub(Ŝi, ux.batch(di).bottom_rows(nx),
+                                          ux.batch(di).top_rows(nu), be);
+                // x = LQ⁻ᵀ q, u = LR⁻ᵀ (u - LSᵀ x)
+                compact_blas::xtrsv_LTN(R̂i, ux.batch(di).top_rows(nu), be);
+            }
+        }
+    }
+
     void solve_reverse(mut_matrix_view ux, mut_matrix_view λ,
                        mut_matrix_view work) const {
         const index_t N = dim.N_horiz;
@@ -913,14 +1079,15 @@ struct CyclicOCPSolver {
                     solve_reverse_active(l, bi, λ);
                 barrier();
             }
-            solve_riccati_reverse(ti, ux, λ, work);
+            alt ? solve_riccati_reverse_alt(ti, ux, λ, work)
+                : solve_riccati_reverse(ti, ux, λ, work);
         });
     }
 
     void solve(mut_matrix_view ux, mut_matrix_view λ,
                mut_matrix_view_batch work_pcg,
                mut_matrix_view work_riccati) const {
-        solve_forward(ux, λ);
+        solve_forward(ux, λ, work_riccati);
         solve_pcg(λ.batch(0), work_pcg);
         solve_reverse(ux, λ, work_riccati);
     }
@@ -929,7 +1096,8 @@ struct CyclicOCPSolver {
         solve(ux, λ, work_pcg.batch(0), riccati_work);
     }
 
-    void run() {
+    void run(bool alt = false) {
+        this->alt = alt;
         for (auto &c : counters)
             c.value.store(0, std::memory_order_relaxed);
         for (auto &c : counters_UY)
@@ -937,12 +1105,12 @@ struct CyclicOCPSolver {
         coupling_D.set_constant(0); // TODO
         const index_t N = dim.N_horiz;
         KOQKATOO_ASSERT(((N >> lP) << lP) == N);
-        koqkatoo::foreach_thread([this](index_t ti, index_t P) {
+        koqkatoo::foreach_thread([this, alt](index_t ti, index_t P) {
             if (P < (1 << (lP - lvl)))
                 throw std::logic_error("Incorrect number of threads");
             if (ti >= (1 << (lP - lvl)))
                 return;
-            factor_riccati(ti);
+            factor_riccati(ti, alt);
             factor_l0(ti);
             for (index_t l = 0; l < lP - lvl; ++l) {
                 barrier();
@@ -1303,7 +1471,7 @@ TEST(NewCyclic, scheduling) {
 
     using Solver     = test::CyclicOCPSolver<4>;
     const index_t lP = log_n_threads + Solver::lvl;
-    OCPDim dim{.N_horiz = 1 << lP, .nx = 40, .nu = 30, .ny = 0, .ny_N = 0};
+    OCPDim dim{.N_horiz = 3 << lP, .nx = 5, .nu = 5, .ny = 0, .ny_N = 0};
     auto ocp = generate_random_ocp(dim);
     Solver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
@@ -1320,12 +1488,13 @@ TEST(NewCyclic, scheduling) {
             f << guanaqo::float_to_str(x) << '\n';
     }
 
+    const bool alt = true;
     for (int i = 0; i < 500; ++i)
-        solver.run();
+        solver.run(alt);
 #if GUANAQO_WITH_TRACING
     guanaqo::trace_logger.reset();
 #endif
-    solver.run();
+    solver.run(alt);
     solver.solve(ux, λ);
 
 #if GUANAQO_WITH_TRACING
