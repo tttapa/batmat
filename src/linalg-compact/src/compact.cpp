@@ -51,7 +51,13 @@ namespace koqkatoo::linalg::compact {
         single_batch_view, single_batch_view);                                 \
     template void CompactBLAS<__VA_ARGS__>::xadd_neg_copy_impl(                \
         mut_single_batch_view, single_batch_view, single_batch_view,           \
-        single_batch_view, single_batch_view)
+        single_batch_view, single_batch_view);                                 \
+    template index_t CompactBLAS<__VA_ARGS__>::compress_masks(                 \
+        single_batch_view, single_batch_view, mut_single_batch_view,           \
+        mut_single_batch_view);                                                \
+    template index_t CompactBLAS<__VA_ARGS__>::compress_masks<4>(              \
+        single_batch_view, single_batch_view, mut_single_batch_view,           \
+        mut_single_batch_view)
 
 INSTANTIATE(stdx::simd_abi::deduce_t<real_t, 16>);
 INSTANTIATE(stdx::simd_abi::deduce_t<real_t, 8>);

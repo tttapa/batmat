@@ -9,8 +9,10 @@
 #include <koqkatoo/linalg/lapack.hpp>
 #include <koqkatoo/lut.hpp>
 #include <koqkatoo/openmp.h>
+#include <koqkatoo/unroll.h>
 #include <guanaqo/trace.hpp>
 
+#include "compact/micro-kernels/gather.hpp"
 #include "compact/micro-kernels/rotate.hpp"
 #include "compact/xgemm.tpp"
 #include "compact/xpntrf.tpp"
@@ -731,6 +733,90 @@ void CompactBLAS<Abi>::proj_diff(single_batch_view x, single_batch_view l,
             aligned_store(&y(0, i, j), xij - max(lij, min(xij, uij)));
         }
     }
+}
+
+template <class Abi>
+template <index_t N>
+index_t CompactBLAS<Abi>::compress_masks(single_batch_view A_in,
+                                         single_batch_view S_in,
+                                         mut_single_batch_view A_out,
+                                         mut_single_batch_view S_out) {
+    using koqkatoo::linalg::compact::micro_kernels::gather;
+    assert(A_in.rows() == A_out.rows());
+    assert(A_in.cols() == A_out.cols());
+    assert(A_in.depth() == A_out.depth());
+    assert(A_in.depth() == S_in.depth());
+    assert(A_in.depth() == S_out.depth());
+    assert(A_in.cols() == S_in.rows());
+    assert(A_out.cols() == S_out.rows());
+    const auto C             = A_in.cols();
+    const auto R             = A_in.rows();
+    static constexpr auto VL = stdx::simd_size_v<real_t, Abi>;
+    if (C == 0)
+        return 0;
+    KOQKATOO_ASSUME(R > 0);
+    using simd = typename CompactBLAS<Abi>::simd;
+    using isimd =
+        stdx::simd<index_t, stdx::simd_abi::deduce_t<index_t, simd::size()>>;
+    isimd hist[N]{};
+    index_t j = 0;
+    static const isimd iota{[](auto i) { return i; }};
+
+    const auto commit_no_shift = [&](auto h_commit) {
+        h_commit -= 1;
+        {
+            const auto bs       = static_cast<index_t>(S_in.batch_size());
+            const isimd offsets = h_commit * bs + iota;
+            auto gather_S       = gather<real_t, VL>(&S_in(0, 0, 0), offsets);
+            gather_S.copy_to(&S_out(0, j, 0), stdx::vector_aligned);
+        }
+        for (index_t r = 0; r < R; ++r) {
+            const auto bs       = static_cast<index_t>(A_in.batch_size());
+            const isimd offsets = h_commit * bs * A_in.outer_stride() + iota;
+            auto gather_A       = gather<real_t, VL>(&A_in(0, 0, r), offsets);
+            gather_A.copy_to(&A_out(0, j, r), stdx::vector_aligned);
+        }
+        ++j;
+    };
+    const auto commit = [&] [[gnu::always_inline]] () {
+        const isimd h = hist[0];
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 1; k < N; ++k)
+            hist[k - 1] = hist[k];
+        hist[N - 1] = 0;
+        commit_no_shift(h);
+    };
+
+    for (index_t c = 0; c < C; ++c) {
+        const simd Sc{&S_in(0, c, 0), stdx::vector_aligned};
+        auto Sc_msk = Sc != 0;
+        KOQKATOO_FULLY_UNROLLED_FOR (auto &h : hist) {
+            if (none_of(Sc_msk))
+                break;
+            const auto msk = (h == 0) && Sc_msk.__cvt();
+            where(msk, h)  = isimd{c + 1};
+            Sc_msk         = Sc_msk && (!msk).__cvt();
+        }
+        // Masks of all ones can already be written to memory
+        while (none_of(hist[0] == 0) || (c + 1 == C && any_of(hist[0] != 0)))
+            commit();
+        // If there are still bits set in the mask.
+        if (any_of(Sc_msk)) {
+            // Check if there's an empty slot (always at the end)
+            if (any_of(hist[N - 1] != 0))
+                // If not, commit the first slot to make room.
+                commit();
+            // Find the first empty slot, and add the remaining bits.
+            KOQKATOO_FULLY_UNROLLED_FOR (auto &h : hist)
+                if (all_of(h == 0))
+                    where(Sc_msk.__cvt(), h) = isimd{c + 1};
+        }
+        // Invariant: first registers in the buffer contain fewest zeros
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 1; i < N; ++i)
+            assert(popcount(hist[i] != 0) <= popcount(hist[i - 1] != 0));
+    }
+    if (any_of(hist[0] != 0))
+        commit_no_shift(hist[0]);
+    return j;
 }
 
 } // namespace koqkatoo::linalg::compact

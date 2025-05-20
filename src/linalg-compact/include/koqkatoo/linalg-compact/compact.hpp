@@ -612,6 +612,11 @@ struct CompactBLAS {
         return accum_scal;
     }
 
+    template <index_t N = 8>
+    static index_t
+    compress_masks(single_batch_view A_in, single_batch_view S_in,
+                   mut_single_batch_view A_out, mut_single_batch_view S_out);
+
     /// y = x - clamp(x, l, u)
     static void proj_diff(single_batch_view x, single_batch_view l,
                           single_batch_view u, mut_single_batch_view y);
