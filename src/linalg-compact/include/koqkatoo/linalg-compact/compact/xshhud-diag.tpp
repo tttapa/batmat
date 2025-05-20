@@ -78,6 +78,54 @@ void CompactBLAS<Abi>::xshhud_diag_ref(mut_single_batch_view L,
     }
 }
 
+template <class Abi>
+void CompactBLAS<Abi>::xshhud_diag_2_ref(mut_single_batch_view L,
+                                         mut_single_batch_view A,
+                                         mut_single_batch_view L2,
+                                         mut_single_batch_view A2,
+                                         single_batch_view D) {
+    assert(L.rows() >= L.cols());
+    assert(L.rows() == A.rows());
+    assert(A.cols() == D.rows());
+    assert(A2.cols() == A.cols());
+    assert(L2.cols() == L.cols());
+    using namespace micro_kernels::shhud_diag;
+    static constexpr index_constant<SizeR> R;
+    static constexpr index_constant<SizeS> S;
+
+    using W_t = triangular_accessor<Abi, real_t, R>;
+    alignas(W_t::alignment()) real_t W[W_t::size()];
+
+    // Process all diagonal blocks (in multiples of R, except the last).
+    foreach_chunked_merged(0, L.cols(), R, [&](index_t k, auto rem_k) {
+        // Part of A corresponding to this diagonal block
+        // TODO: packing
+        auto Ad = A.middle_rows(k, rem_k);
+        auto Ld = L.block(k, k, rem_k, rem_k);
+        // Process the diagonal block itself
+        microkernel_diag_lut<Abi>[rem_k - 1](A.cols(), W, Ld, Ad, D);
+        // Process all rows below the diagonal block (in multiples of S).
+        foreach_chunked_merged(
+            k + rem_k, L.rows(), S,
+            [&](index_t i, auto rem_i) {
+                auto As = A.middle_rows(i, rem_i);
+                auto Ls = L.block(i, k, rem_i, rem_k);
+                microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
+                    A.cols(), W, Ls, As, Ad, D, false);
+            },
+            LoopDir::Backward); // TODO: decide on order
+        foreach_chunked_merged(
+            0, L2.rows(), S,
+            [&](index_t i, auto rem_i) {
+                auto As = A2.middle_rows(i, rem_i);
+                auto Ls = L2.block(i, k, rem_i, rem_k);
+                microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
+                    A.cols(), W, Ls, As, Ad, D, false);
+            },
+            LoopDir::Backward); // TODO: decide on order
+    });
+}
+
 // Parallel batched implementations
 // -----------------------------------------------------------------------------
 

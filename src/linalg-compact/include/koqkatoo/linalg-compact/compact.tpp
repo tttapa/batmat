@@ -773,8 +773,8 @@ index_t CompactBLAS<Abi>::compress_masks(single_batch_view A_in,
         for (index_t r = 0; r < R; ++r) {
             const auto bs       = static_cast<index_t>(A_in.batch_size());
             const isimd offsets = h_commit * bs * A_in.outer_stride() + iota;
-            auto gather_A       = gather<real_t, VL>(&A_in(0, 0, r), offsets);
-            gather_A.copy_to(&A_out(0, j, r), stdx::vector_aligned);
+            auto gather_A       = gather<real_t, VL>(&A_in(0, r, 0), offsets);
+            gather_A.copy_to(&A_out(0, r, j), stdx::vector_aligned);
         }
         ++j;
     };

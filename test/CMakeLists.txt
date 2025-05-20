@@ -7,6 +7,7 @@ include(GoogleTest)
 find_package(GTest REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(spectra REQUIRED)
+find_package(guanaqo REQUIRED COMPONENTS BLAS)
 if (NOT TARGET koqkatoo::koqkatoo)
     find_package(koqkatoo REQUIRED COMPONENTS Extra) # TODO
 endif()
@@ -42,6 +43,7 @@ target_compile_definitions(tests PRIVATE _CRT_SECURE_NO_WARNINGS)
 target_link_libraries(tests PRIVATE
     koqkatoo::koqkatoo koqkatoo::linalg-compact koqkatoo::warnings
     koqkatoo::ocp koqkatoo::cholundate
+    guanaqo::blas
     GTest::gtest_main GTest::gmock
     Eigen3::Eigen
     Spectra::Spectra)

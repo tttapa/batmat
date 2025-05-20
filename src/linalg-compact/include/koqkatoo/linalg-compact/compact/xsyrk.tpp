@@ -62,6 +62,7 @@ void CompactBLAS<Abi>::xsyrk_T_schur_copy(single_batch_view C,
                                 op_cnt_diag = C.cols() * C.rows();
     GUANAQO_TRACE("xsyrk_T_schur_copy", 0,
                   (op_cnt_syrk + op_cnt_diag) * C.depth());
+    // TODO: merge copy and gemm
     for (index_t j = 0; j < H_out.cols(); ++j)
         for (index_t i = j; i < H_out.rows(); ++i)
             aligned_store(&H_out(0, i, j), aligned_load(&H_in(0, i, j)));
@@ -69,6 +70,31 @@ void CompactBLAS<Abi>::xsyrk_T_schur_copy(single_batch_view C,
     constexpr micro_kernels::gemm::KernelConfig conf{.trans_A = true};
     micro_kernels::gemm::xgemmt_diag_mask_register<Abi, conf>(C, C, H_out, Σ,
                                                               mask);
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xsyrk_schur_copy(single_batch_view C,
+                                        single_batch_view Σ,
+                                        single_batch_view H_in,
+                                        mut_single_batch_view H_out) {
+    assert(H_out.rows() == C.rows());
+    assert(H_out.rows() == H_in.cols());
+    assert(H_out.rows() == H_in.rows());
+    assert(H_out.cols() == H_in.cols());
+    if (C.rows() == 0 || C.cols() == 0)
+        return xcopy_L(H_in, H_out);
+    [[maybe_unused]] const auto op_cnt_syrk =
+                                    C.rows() * (C.rows() + 1) * C.cols() / 2,
+                                op_cnt_diag = C.cols() * C.rows();
+    GUANAQO_TRACE("xsyrk_schur_copy", 0,
+                  (op_cnt_syrk + op_cnt_diag) * C.depth());
+    // TODO: merge copy and gemm
+    for (index_t j = 0; j < H_out.cols(); ++j)
+        for (index_t i = j; i < H_out.rows(); ++i)
+            aligned_store(&H_out(0, i, j), aligned_load(&H_in(0, i, j)));
+    // TODO: cache blocking
+    constexpr micro_kernels::gemm::KernelConfig conf{.trans_B = true};
+    micro_kernels::gemm::xgemmt_diag_register<Abi, conf>(C, C, H_out, Σ);
 }
 
 template <class Abi>

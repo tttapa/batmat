@@ -96,6 +96,11 @@ struct CompactBLAS {
                                    bool_batch_view mask, batch_view H_in,
                                    mut_batch_view H_out, PreferredBackend b);
 
+    /// H_out ← H_in + C Σ Cᵀ
+    static void xsyrk_schur_copy(single_batch_view C, single_batch_view Σ,
+                                 single_batch_view H_in,
+                                 mut_single_batch_view H_out);
+
     /// C = AᵀA
     static void xsyrk_T_ref(single_batch_view A, mut_single_batch_view C);
     static void xsyrk_T(single_batch_view A, mut_single_batch_view C,
@@ -413,6 +418,11 @@ struct CompactBLAS {
                             PreferredBackend b);
     static void xshhud_diag_ref(mut_single_batch_view L,
                                 mut_single_batch_view A, single_batch_view D);
+    static void xshhud_diag_2_ref(mut_single_batch_view L,
+                                  mut_single_batch_view A,
+                                  mut_single_batch_view L2,
+                                  mut_single_batch_view A2,
+                                  single_batch_view D);
 
     /// y += Lx
     static void xsymv_add(single_batch_view L, single_batch_view x,
