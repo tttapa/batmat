@@ -8,7 +8,7 @@
 TEST(Compact, compress) {
     using namespace koqkatoo;
     using namespace koqkatoo::linalg::compact;
-    const index_t ny            = 20;
+    const index_t ny            = 25;
     const index_t nr            = 6;
     static constexpr index_t VL = 4;
     using abi                   = stdx::simd_abi::deduce_t<real_t, VL>;
@@ -38,6 +38,11 @@ TEST(Compact, compress) {
         0.0,  0.0,  0.0,  0.0,  // (17)
         0.0,  0.0,  18.2, 0.0,  // (18)
         0.0,  19.1, 19.2, 19.3, // (19)
+        0.0,  0.0,  0.0,  0.0,  // (20)
+        0.0,  0.0,  0.0,  0.0,  // (21)
+        0.0,  0.0,  0.0,  0.0,  // (22)
+        0.0,  0.0,  0.0,  0.0,  // (23)
+        24.0, 24.1, 24.2, 24.3, // (24)
     };
     static constexpr const real_t S_expected_data[]{
         1.0,  0.1,  0.2,  2.3,  // (0)
@@ -51,21 +56,29 @@ TEST(Compact, compress) {
         0.0,  10.1, 0.0,  0.0,  // (8)
         0.0,  11.1, 15.2, 15.3, // (9)
         16.0, 12.1, 16.2, 19.3, // (10)
-        0.0,  13.1, 18.2, 0.0,  // (11)
+        24.0, 13.1, 18.2, 24.3, // (11)
         0.0,  14.1, 19.2, 0.0,  // (12)
-        0.0,  15.1, 0.0,  0.0,  // (13)
+        0.0,  15.1, 24.2, 0.0,  // (13)
         0.0,  19.1, 0.0,  0.0,  // (14)
-        0.0,  0.0,  0.0,  0.0,  // (15)
+        0.0,  24.1, 0.0,  0.0,  // (15)
         0.0,  0.0,  0.0,  0.0,  // (16)
         0.0,  0.0,  0.0,  0.0,  // (17)
         0.0,  0.0,  0.0,  0.0,  // (18)
         0.0,  0.0,  0.0,  0.0,  // (19)
+        0.0,  0.0,  0.0,  0.0,  // (20)
+        0.0,  0.0,  0.0,  0.0,  // (21)
+        0.0,  0.0,  0.0,  0.0,  // (22)
+        0.0,  0.0,  0.0,  0.0,  // (23)
+        0.0,  0.0,  0.0,  0.0,  // (24)
     };
     ASSERT_EQ(std::ranges::ssize(S_in_data), VL * ny);
     std::ranges::copy(S_in_data, S_in.data());
 
     auto nj = CompactBLAS<abi>::compress_masks<4>(
         A_in.batch(0), S_in.batch(0), A_out.batch(0), S_out.batch(0));
+    auto njc = CompactBLAS<abi>::compress_masks_count<4>(S_in.batch(0));
+
+    EXPECT_EQ(nj, njc);
 
     for (index_t i = 0; i < ny; ++i) {
         std::print("        ");
@@ -82,6 +95,6 @@ TEST(Compact, compress) {
         std::print("  // ({})\n", i);
     }
 
-    EXPECT_EQ(nj, 15);
+    EXPECT_EQ(nj, 16);
     EXPECT_TRUE(std::ranges::equal(S_expected_data, S_out));
 }

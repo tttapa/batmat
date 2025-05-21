@@ -423,6 +423,12 @@ struct CompactBLAS {
                                   mut_single_batch_view L2,
                                   mut_single_batch_view A2,
                                   single_batch_view D);
+    static void
+    xshhud_diag_cyclic(mut_single_batch_view L11, mut_single_batch_view A1,
+                       mut_single_batch_view L21, single_batch_view A2,
+                       mut_single_batch_view A2_out, mut_single_batch_view L31,
+                       single_batch_view A3, mut_single_batch_view A3_out,
+                       single_batch_view D, index_t split);
 
     /// y += Lx
     static void xsymv_add(single_batch_view L, single_batch_view x,
@@ -626,6 +632,8 @@ struct CompactBLAS {
     static index_t
     compress_masks(single_batch_view A_in, single_batch_view S_in,
                    mut_single_batch_view A_out, mut_single_batch_view S_out);
+    template <index_t N = 8>
+    static index_t compress_masks_count(single_batch_view S_in);
 
     /// y = x - clamp(x, l, u)
     static void proj_diff(single_batch_view x, single_batch_view l,

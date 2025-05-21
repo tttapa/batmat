@@ -57,7 +57,11 @@ namespace koqkatoo::linalg::compact {
         mut_single_batch_view);                                                \
     template index_t CompactBLAS<__VA_ARGS__>::compress_masks<4>(              \
         single_batch_view, single_batch_view, mut_single_batch_view,           \
-        mut_single_batch_view)
+        mut_single_batch_view);                                                \
+    template index_t CompactBLAS<__VA_ARGS__>::compress_masks_count(           \
+        single_batch_view);                                                    \
+    template index_t CompactBLAS<__VA_ARGS__>::compress_masks_count<4>(        \
+        single_batch_view)
 
 INSTANTIATE(stdx::simd_abi::deduce_t<real_t, 16>);
 INSTANTIATE(stdx::simd_abi::deduce_t<real_t, 8>);
