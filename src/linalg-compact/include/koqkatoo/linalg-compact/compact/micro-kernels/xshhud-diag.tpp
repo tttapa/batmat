@@ -114,10 +114,11 @@ template <class Abi, index_t R, index_t S>
     mut_single_batch_matrix_accessor<Abi> L,
     mut_single_batch_matrix_accessor<Abi> A,
     single_batch_matrix_accessor<Abi> B, single_batch_vector_accessor<Abi> diag,
-    bool trans_L) noexcept {
+    bool trans_L, index_t L_upper_offset) noexcept {
     using simd = stdx::simd<real_t, Abi>;
     // Pre-compute the offsets of the columns of L
     KOQKATOO_ASSUME(colsA > 0);
+    KOQKATOO_ASSERT(!trans_L || L_upper_offset >= std::max(R, S));
 
     // Compute product U = A B
     simd V[S][R]{};
@@ -153,13 +154,23 @@ template <class Abi, index_t R, index_t S>
             KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < k; ++l)
                 Wk[l] = W.load(l, k);
             KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
-                simd Lik = L_cached.load(i, k);
+                using mask       = simd::mask_type;
+                constexpr auto N = stdx::simd_size_v<real_t, Abi>;
+                using isimd_abi  = stdx::simd_abi::deduce_t<index_t, N>;
+                using isimd      = stdx::simd<index_t, isimd_abi>;
+                // hack to get better code gen: we want conditional/masked moves
+                // instead of branches
+                const mask L_nonzero{(isimd{i - k} <= L_upper_offset).__cvt()};
+                simd Lik_mem = L_cached.load(i, k);
+                simd Lik{0};
+                where(L_nonzero, Lik) = Lik_mem;
                 V[i][k] += Lik;
                 KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < k; ++l)
                     V[i][k] -= V[i][l] * Wk[l];
                 V[i][k] *= W.load(k, k); // diagonal already inverted
-                Lik = V[i][k] - Lik;
-                L_cached.store(Lik, i, k);
+                Lik                       = V[i][k] - Lik;
+                where(L_nonzero, Lik_mem) = Lik;
+                L_cached.store(Lik_mem, i, k);
             }
         }
     }

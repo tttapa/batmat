@@ -533,7 +533,7 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new) {
                         auto As = A.middle_rows(i, rem_i);
                         auto Ls = HV.block(i, k, rem_i, rem_k);
                         microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
-                            A.cols(), W, Ls, As, Ad, D, false);
+                            A.cols(), W, Ls, As, Ad, D, false, Ls.rows());
                     },
                     LoopDir::Backward); // TODO: decide on order
                 foreach_chunked_merged(
@@ -542,7 +542,7 @@ void Solver<Abi>::updowndate(real_view Σ, bool_view J_old, bool_view J_new) {
                         auto As   = A.middle_rows(i, rem_i);
                         auto Ls   = Wᵀ.block(k, iw, rem_k, rem_i);
                         microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
-                            A.cols(), W, Ls, As, Ad, D, true);
+                            A.cols(), W, Ls, As, Ad, D, true, Ls.rows());
                     });
             });
         };
