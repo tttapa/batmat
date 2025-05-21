@@ -176,22 +176,27 @@ def build_cr_factor(D, Y, U):
     return A
 
 
-def build_cr_update(D, E):
+def build_cr_update(D, S):
+    # Create a lower bidiagonal matrix and perform a CR permutation of the rows
+    #
+    #   [ D0             ]
+    # P [ S0  D1         ]
+    #   [     S1  D2     ]
+    #   [         S2  D3 ]
     N, nx, ny = D.shape
     lP = int(round(np.log2(N)))
     A = np.zeros((N * nx, N * ny))
-    for i in range(N):
-        A[i * nx : (i + 1) * nx, i * ny : (i + 1) * ny] = D[i]
-        j = (i + 1) % N
-        A[i * nx : (i + 1) * nx, j * ny : (j + 1) * ny] = E[i]
+    for j in range(N):
+        A[j * nx : (j + 1) * nx, j * ny : (j + 1) * ny] = D[j]
+        if j + 1 < N:
+            A[(j + 1) * nx : (j + 2) * nx, j * ny : (j + 1) * ny] = S[j]
     iotas = np.tile(np.arange(nx), N)
     sel = np.repeat(np.array(list(cyclic_indices(lP))) * nx, nx) + iotas
-    rot = np.roll(np.arange(N * ny), -ny)
-    return A[np.ix_(sel, rot)]
+    return A[sel, :]
 
 
 rng = np.random.default_rng(seed=123)
-lP = 5
+lP = 4
 N = 1 << lP
 nx = 2
 ny = 3
@@ -207,9 +212,7 @@ A1 = rng.uniform(-1, 1, (N, nx, ny))
 A2 = 1e-3 * rng.uniform(-1, 1, (N, nx, ny))
 
 A1 = 100 + np.kron(np.arange(0, N), np.ones((ny, nx))).reshape((ny, nx, N), order="F").T
-A2 = 200 + np.kron(np.arange(0, N), np.ones((ny, nx))).reshape((ny, nx, N), order="F").T
-
-A1[0] = 0
+A2 = 200 + np.kron(np.arange(0, N - 1), np.ones((ny, nx))).reshape((ny, nx, N - 1), order="F").T
 
 A = build_cr_update(A1, A2)
 plot_sparse(A)
@@ -217,7 +220,7 @@ A
 
 # %%
 
-S = np.ones(N * ny)
+S = 2**rng.uniform(-1, 1, (N * ny))
 T = updowndate(S, A_upd := np.copy(A), L_upd := np.copy(L))
 plot_sparse(A_upd)
 
@@ -227,20 +230,49 @@ LD_upd = np.copy(LD)
 U_upd = np.copy(U)
 Y_upd = np.copy(Y)
 
-W = np.zeros((4, nx, N * ny))
-for i in range(N):
-    if i & 1:
-        W[0, :, i * ny : (i + 1) * ny] = A2[i]
-    else:
-        W[0, :, i * ny : (i + 1) * ny] = A1[i + 1]
-    if (i & 3) == 0:
-        W[2, :, i * ny : (i + 1) * ny] = A2[i]
-    elif (i & 3) == 1:
-        W[1, :, i * ny : (i + 1) * ny] = A1[i + 1]
-    elif (i & 3) == 2:
-        W[1, :, i * ny : (i + 1) * ny] = A2[i]
-    else:
-        W[2, :, i * ny : (i + 1) * ny] = A1[(i + 1) % N]
+def build_cr_update_workspace(A1, A2):
+    N, nx, ny = A1.shape
+    assert N > 2
+    W = np.zeros((4, nx, N * ny))
+    for i in range(N):
+        if i & 1:
+            W[0, :, i * ny : (i + 1) * ny] = A1[i]
+        else:
+            W[0, :, i * ny : (i + 1) * ny] = A2[i]
+        if (i & 3) == 0:
+            W[2, :, i * ny : (i + 1) * ny] = A1[i]
+        elif (i & 3) == 1:
+            W[1, :, i * ny : (i + 1) * ny] = A2[i]
+        elif (i & 3) == 2:
+            W[1, :, i * ny : (i + 1) * ny] = A1[i]
+        elif i + 1 < N:
+            W[2, :, i * ny : (i + 1) * ny] = A2[i]
+    return W
+
+def build_cr_update_workspace(A1, A2):
+    # Builds the workspace used during a factorization update of a CR
+    # factorization:
+    #
+    # [ S0 D1 S2 D3 S4 D5 S6 D7 ]
+    # [  · S1 D2  ·  · S5 D6  · ]
+    # [ D0  ·  · S3 D4  ·  · S7 ]
+    # [  ·  ·  ·  ·  ·  ·  ·  · ]
+    N, nx, ny = A1.shape
+    assert N > 2
+    W = np.zeros((4, nx, N * ny))
+    for i in range(N):
+        match i & 3:
+            case 0: rD, rS = 2, 0
+            case 1: rD, rS = 0, 1
+            case 2: rD, rS = 1, 0
+            case 3: rD, rS = 0, 2
+        W[rD, :, i * ny : (i + 1) * ny] = A1[i]
+        if i + 1 < N:
+            W[rS, :, i * ny : (i + 1) * ny] = A2[i]
+    return W
+
+W = build_cr_update_workspace(A1, A2)
+print(W[:3, ::nx, ::ny])
 
 def update_level(l):
     for i in range(N >> (l + 1)):
@@ -266,11 +298,6 @@ for i in range(lP):
     update_level(i)
 updowndate(S, W[(lP + 2) % 4], LD_upd[0])
 
-# for l in range(0, lP):
-#     offset = 1 << l
-#     stride = offset << 1
-#     for i in range(offset, 1 << lP, stride):
-#         print(l, i, offset)
 
 # %%
 
