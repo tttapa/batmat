@@ -276,6 +276,7 @@ struct CyclicOCPSolver {
             .cols  = 1,
         }};
     }();
+    std::vector<index_t> nJs = std::vector<index_t>(1 << (lP - lvl));
     std::vector<join_counter_t> counters =
         std::vector<join_counter_t>(1 << (lP - lvl));
     std::vector<join_counter_t> counters_UY =
@@ -310,9 +311,8 @@ struct CyclicOCPSolver {
                 index_t bi = bi0 + i;
                 for (index_t vi = 0; vi < vl; ++vi) {
                     auto k = sub_wrap_N(k0 + vi * vstride, i);
-                    std::println(
-                        "ti={:<2}, i={:<2}, k={:<2}, bi={:<2}, vi={:<2}", ti, i,
-                        k, bi, vi);
+                    PRINTLN("ti={:<2}, i={:<2}, k={:<2}, bi={:<2}, vi={:<2}",
+                            ti, i, k, bi, vi);
                     copy_T(ocp.D(k),
                            data_DCᵀ.batch(bi)(vi).top_left(nu, dim.ny));
                     if (k < dim.N_horiz) {
@@ -622,22 +622,26 @@ struct CyclicOCPSolver {
         auto Âi  = riccati_ÂB̂.batch(biR).middle_cols(nx * (num_stages - 1), nx);
         auto ÂB̂i = riccati_ÂB̂.batch(biR).right_cols(nx + nu * num_stages);
         auto Q̂i  = riccati_R̂ŜQ̂.batch(biR).bottom_right(nx, nx);
+        // Upper triangular matrix, one row up from LQ itself
+        assert(nu >= 1);
+        auto Q̂i_inv = riccati_R̂ŜQ̂.batch(biR).block(nu - 1, nu, nx, nx);
         {
             GUANAQO_TRACE("Invert Q", biI);
-            compact_blas::xtrtri_T_copy_ref(Q̂i, DiI);
+            compact_blas::xtrtri_T_copy_ref(Q̂i, Q̂i_inv);
         }
         if (I_below_A) {
             // Top block is A → column index is row index of A (biA)
             // Target block in cyclic part is U in column λ(kA)
             GUANAQO_TRACE("Compute first U", biA);
-            compact_blas::xtrmm_LUNN_T_neg_ref(DiI, Âi, coupling_U.batch(biA));
+            compact_blas::xtrmm_LUNN_T_neg_ref(Q̂i_inv, Âi,
+                                               coupling_U.batch(biA));
         } else {
             // Top block is I → column index is row index of I (biI)
             // Target block in cyclic part is Y in column λ(kI)
             GUANAQO_TRACE("Compute first Y", biI);
-            x_lanes ? compact_blas::xtrmm_RUTN_neg_shift(Âi, DiI,
+            x_lanes ? compact_blas::xtrmm_RUTN_neg_shift(Âi, Q̂i_inv,
                                                          coupling_Y.batch(biI))
-                    : compact_blas::xtrmm_RUTN_neg_ref(Âi, DiI,
+                    : compact_blas::xtrmm_RUTN_neg_ref(Âi, Q̂i_inv,
                                                        coupling_Y.batch(biI));
         }
         // Each column of the cyclic part with coupling equations is updated by
@@ -646,8 +650,8 @@ struct CyclicOCPSolver {
         // first forward in time ...
         {
             GUANAQO_TRACE("Compute L⁻ᵀL⁻¹", biI);
-            x_lanes ? compact_blas::xtrtrsyrk_UL_shift(DiI, DiI)
-                    : compact_blas::xtrtrsyrk_UL(DiI, DiI);
+            x_lanes ? compact_blas::xtrtrsyrk_UL_shift(Q̂i_inv, DiI)
+                    : compact_blas::xtrtrsyrk_UL(Q̂i_inv, DiI);
         }
         // Then synchronize to make sure there are no two threads updating the
         // same diagonal block.
@@ -1268,6 +1272,13 @@ struct CyclicOCPSolver {
         auto ΥΓ2 = riccati_ΥΓ2.batch(ti);
         auto wΣ  = work_Σ.batch(ti);
 
+        // index_t nJ_tot = 0;
+        // for (index_t i = 0; i < num_stages; ++i) {
+        //     const auto di = di0 + i;
+        //     nJ_tot += compact_blas::compress_masks_count(Σ.batch(di));
+        // }
+        // std::println("nJ_tot={}", nJ_tot);
+
         index_t nJ;
         {
             GUANAQO_TRACE("Riccati update compress", k0);
@@ -1288,8 +1299,7 @@ struct CyclicOCPSolver {
 
             index_t nJi = nJ;
             auto ΥΓi    = ((i & 1) ? ΥΓ1 : ΥΓ2).left_cols(nJi);
-            {
-
+            if (nJi > 0) {
                 GUANAQO_TRACE("Riccati update R", k);
                 compact_blas::xshhud_diag_2_ref(R̂Ŝi, ΥΓi.top_rows(nu + nx), B̂i,
                                                 ΥΓi.bottom_rows(nx),
@@ -1297,11 +1307,10 @@ struct CyclicOCPSolver {
             }
             if (i + 1 < num_stages) {
                 [[maybe_unused]] const auto k_next = sub_wrap_N(k, 1);
-                GUANAQO_TRACE("Riccati update prop", k_next);
-                const auto di_next = di0 + i + 1;
-                auto ΥΓ_next       = ((i & 1) ? ΥΓ2 : ΥΓ1).left_cols(nJi + nyM);
-                {
-                    GUANAQO_TRACE("Riccati update prop", k);
+                const auto di_next                 = di0 + i + 1;
+                auto ΥΓ_next = ((i & 1) ? ΥΓ2 : ΥΓ1).left_cols(nJi + nyM);
+                if (nJi > 0) {
+                    GUANAQO_TRACE("Riccati update prop", k_next);
                     compact_blas::xgemm_TN(data_BA.batch(di_next),
                                            ΥΓi.middle_rows(nu, nx),
                                            ΥΓ_next.top_left(nu + nx, nJi), be);
@@ -1321,13 +1330,14 @@ struct CyclicOCPSolver {
                     ΥΓ_next.block(nu + nx, nJi, nx, nJ - nJi).set_constant(0);
                 }
             }
-            {
+            if (nJi > 0) {
                 GUANAQO_TRACE("Riccati update Q", k);
                 compact_blas::xshhud_diag_2_ref(Q̂i, ΥΓi.middle_rows(nu, nx), Âi,
                                                 ΥΓi.bottom_rows(nx),
                                                 wΣ.top_rows(nJi));
             }
         }
+        nJs[ti] = nJ;
     }
 
     index_t get_linear_batch_offset(index_t biA) {
@@ -1507,11 +1517,6 @@ struct CyclicOCPSolver {
         const index_t num_stages = N >> lP; // number of stages per thread
         const index_t num_proc   = 1 << (lP - lvl);
         const index_t sλ         = N * nuxx - (nx << lP);
-        matrix invQᵀ{{
-            .depth = 1 << lP,
-            .rows  = dim.nx,
-            .cols  = (dim.N_horiz >> lP) * dim.nx,
-        }};
         matrix AinvQᵀ{{
             .depth = 1 << lP,
             .rows  = dim.nx,
@@ -1531,14 +1536,11 @@ struct CyclicOCPSolver {
                 auto Qi       = RSQi.bottom_right(nx, nx);
                 auto Â        = riccati_ÂB̂.batch(ti).left_cols(num_stages * nx);
                 auto Âi       = Â.middle_cols(i * nx, nx);
-                auto iQᵀ      = invQᵀ.batch(ti);
-                auto iQiᵀ     = iQᵀ.middle_cols(i * nx, nx);
                 auto AiQᵀ     = AinvQᵀ.batch(ti);
                 auto AiQiᵀ    = AiQᵀ.middle_cols(i * nx, nx);
                 auto BAᵀ      = riccati_BAᵀ.batch(ti);
                 auto LBAt     = LBA.batch(ti);
 
-                compact_blas::xtrtri_T_copy_ref(Qi, iQiᵀ);
                 compact_blas::xcopy(Âi, AiQiᵀ);
                 if (i + 1 < num_stages && !alt) // Final block is already Â LQ⁻ᵀ
                     compact_blas::xtrsm_RLTN(Qi, AiQiᵀ, backend);
@@ -1576,18 +1578,19 @@ struct CyclicOCPSolver {
                     auto R̂ŜQ̂i  = R̂ŜQ̂.middle_cols(i * nux, nux);
                     auto RSi   = R̂ŜQ̂i(vi).left_cols(nu);
                     auto Qi    = R̂ŜQ̂i(vi).bottom_right(nx, nx);
-                    auto iQᵀ   = invQᵀ.batch(ti);
+                    auto iQᵀ   = R̂ŜQ̂i(vi).block(nu - 1, nu, nx, nx);
                     auto iQiᵀ  = iQᵀ.middle_cols(i * nx, nx);
                     auto AiQᵀ  = AinvQᵀ.batch(ti);
                     auto AiQiᵀ = AiQᵀ.middle_cols(i * nx, nx);
                     if (i > 0) {
-                        auto LBAi     = LBAt.middle_cols((i - 1) * nx, nx);
-                        auto iQprevᵀ  = iQᵀ.middle_cols((i - 1) * nx, nx);
+                        auto LBAi      = LBAt.middle_cols((i - 1) * nx, nx);
+                        auto R̂ŜQ̂i_prev = R̂ŜQ̂.middle_cols((i - 1) * nux, nux);
+                        auto iQᵀprev  = R̂ŜQ̂i_prev(vi).block(nu - 1, nu, nx, nx);
                         auto AiQprevᵀ = AiQᵀ.middle_cols((i - 1) * nx, nx);
                         for (index_t c = 0; c < nx; ++c) {
                             for (index_t r = 0; r <= c; ++r)
                                 tuples.emplace_back(s - nx + r, s - nx + c,
-                                                    -iQprevᵀ(vi)(r, c));
+                                                    -iQᵀprev(r, c));
                             for (index_t r = 0; r < nux; ++r)
                                 tuples.emplace_back(s + r, s - nx + c,
                                                     LBAi(vi)(r, c));
@@ -1610,11 +1613,11 @@ struct CyclicOCPSolver {
                         if (i + 1 < num_stages)
                             for (index_t r = 0; r <= c; ++r)
                                 tuples.emplace_back(s + r + nux, s + c + nu,
-                                                    -iQiᵀ(vi)(r, c));
+                                                    -iQiᵀ(r, c));
                         else
                             for (index_t r = 0; r <= c; ++r)
                                 tuples.emplace_back(sλI + r, s + c + nu,
-                                                    -iQiᵀ(vi)(r, c));
+                                                    -iQiᵀ(r, c));
                         for (index_t r = 0; r < nx; ++r)
                             tuples.emplace_back(sλA + r, s + c + nu,
                                                 AiQiᵀ(vi)(r, c));
@@ -1737,12 +1740,11 @@ TEST(NewCyclic, scheduling) {
 
     using Solver     = test::CyclicOCPSolver<4>;
     const index_t lP = log_n_threads + Solver::lvl;
-    OCPDim dim{.N_horiz = 3 << lP, .nx = 1, .nu = 1, .ny = 5, .ny_N = 5};
+    OCPDim dim{.N_horiz = 3 << lP, .nx = 40, .nu = 30, .ny = 40, .ny_N = 40};
     auto ocp = generate_random_ocp(dim);
     Solver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
-    std::vector<real_t> Σ_lin(dim.N_horiz * dim.ny + dim.ny_N),
-        Σ_lin2(dim.N_horiz * dim.ny + dim.ny_N);
+    std::vector<real_t> Σ_lin(dim.N_horiz * dim.ny + dim.ny_N);
     Solver::matrix λ{{.depth = dim.N_horiz, .rows = dim.nx, .cols = 1}},
         ux{{.depth = dim.N_horiz, .rows = dim.nu + dim.nx, .cols = 1}},
         Σ{{.depth = dim.N_horiz, .rows = dim.ny, .cols = 1}},
@@ -1750,17 +1752,24 @@ TEST(NewCyclic, scheduling) {
         ΔΣ{{.depth = dim.N_horiz, .rows = dim.ny, .cols = 1}};
     std::mt19937 rng(102030405);
     std::uniform_real_distribution<real_t> uni(-1, 1);
+    std::bernoulli_distribution bern(0.125);
     std::ranges::generate(λ, [&] { return uni(rng); });
     std::ranges::generate(ux, [&] { return uni(rng); });
     std::ranges::generate(Σ_lin, [&] { return std::exp2(uni(rng)); });
-    std::ranges::generate(Σ_lin2, [&] { return std::exp2(uni(rng)); });
-
-    std::ranges::fill(Σ_lin, real_t{2});  // TODO
-    std::ranges::fill(Σ_lin2, real_t{3}); // TODO
+    std::vector<real_t> Σ_lin2 = Σ_lin;
+    if (0) // TODO: updates
+        for (auto &Σ2i : Σ_lin2)
+            if (bern(rng))
+                Σ2i = std::exp2(uni(rng));
 
     solver.initialize_Σ(Σ_lin, Σ);
     solver.initialize_Σ(Σ_lin2, Σ2);
     std::ranges::transform(Σ2, Σ, std::ranges::begin(ΔΣ), std::minus<>{});
+    for (index_t i = 0; i < dim.N_horiz && 0; ++i) {
+        guanaqo::print_python(std::cout << "Σ1(" << i << "): ", Σ(i));
+        guanaqo::print_python(std::cout << "Σ2(" << i << "): ", Σ2(i));
+        guanaqo::print_python(std::cout << "ΔΣ(" << i << "): ", ΔΣ(i));
+    }
 
     if (std::ofstream f("rhs.csv"); f) {
         auto b = solver.build_rhs(ux, λ);
