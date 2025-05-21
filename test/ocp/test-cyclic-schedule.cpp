@@ -624,7 +624,8 @@ struct CyclicOCPSolver {
         auto Q̂i  = riccati_R̂ŜQ̂.batch(biR).bottom_right(nx, nx);
         // Upper triangular matrix, one row up from LQ itself
         assert(nu >= 1);
-        auto Q̂i_inv = riccati_R̂ŜQ̂.batch(biR).block(nu - 1, nu, nx, nx);
+        auto Q̂i_inv =
+            riccati_R̂ŜQ̂.batch(biR).right_cols(nx).middle_rows(nu - 1, nx);
         {
             GUANAQO_TRACE("Invert Q", biI);
             compact_blas::xtrtri_T_copy_ref(Q̂i, Q̂i_inv);
@@ -1329,12 +1330,20 @@ struct CyclicOCPSolver {
                         wΣ.middle_rows(nJi, nyM));
                     ΥΓ_next.block(nu + nx, nJi, nx, nJ - nJi).set_constant(0);
                 }
-            }
-            if (nJi > 0) {
+                if (nJi > 0) {
+                    GUANAQO_TRACE("Riccati update Q", k);
+                    compact_blas::xshhud_diag_2_ref(Q̂i, ΥΓi.middle_rows(nu, nx),
+                                                    Âi, ΥΓi.bottom_rows(nx),
+                                                    wΣ.top_rows(nJi));
+                }
+            } else if (nJi > 0) {
                 GUANAQO_TRACE("Riccati update Q", k);
-                compact_blas::xshhud_diag_2_ref(Q̂i, ΥΓi.middle_rows(nu, nx), Âi,
-                                                ΥΓi.bottom_rows(nx),
-                                                wΣ.top_rows(nJi));
+                auto ΥΓ_next = ((i & 1) ? ΥΓ2 : ΥΓ1).left_cols(nJi);
+                auto Q̂i_inv  = R̂ŜQ̂i.block(nu - 1, nu, nx, nx);
+                compact_blas::xshhud_diag_riccati(
+                    Q̂i, ΥΓi.middle_rows(nu, nx), Âi, ΥΓi.bottom_rows(nx),
+                    ΥΓ_next.bottom_rows(nx), Q̂i_inv,
+                    ΥΓ_next.middle_rows(nu, nx), wΣ.top_rows(nJi), false);
             }
         }
         nJs[ti] = nJ;
@@ -1534,6 +1543,7 @@ struct CyclicOCPSolver {
                 auto RSQ      = riccati_R̂ŜQ̂.batch(ti);
                 auto RSQi     = RSQ.middle_cols(i * nux, nux);
                 auto Qi       = RSQi.bottom_right(nx, nx);
+                auto Qi_inv   = RSQi.block(nu - 1, nu, nx, nx);
                 auto Â        = riccati_ÂB̂.batch(ti).left_cols(num_stages * nx);
                 auto Âi       = Â.middle_cols(i * nx, nx);
                 auto AiQᵀ     = AinvQᵀ.batch(ti);
@@ -1542,6 +1552,8 @@ struct CyclicOCPSolver {
                 auto LBAt     = LBA.batch(ti);
 
                 compact_blas::xcopy(Âi, AiQiᵀ);
+                if (i + 1 < num_stages) // Final block already inverted
+                    compact_blas::xtrtri_T_copy_ref(Qi, Qi_inv);
                 if (i + 1 < num_stages && !alt) // Final block is already Â LQ⁻ᵀ
                     compact_blas::xtrsm_RLTN(Qi, AiQiᵀ, backend);
                 if (i > 0) {
@@ -1578,8 +1590,7 @@ struct CyclicOCPSolver {
                     auto R̂ŜQ̂i  = R̂ŜQ̂.middle_cols(i * nux, nux);
                     auto RSi   = R̂ŜQ̂i(vi).left_cols(nu);
                     auto Qi    = R̂ŜQ̂i(vi).bottom_right(nx, nx);
-                    auto iQᵀ   = R̂ŜQ̂i(vi).block(nu - 1, nu, nx, nx);
-                    auto iQiᵀ  = iQᵀ.middle_cols(i * nx, nx);
+                    auto iQiᵀ  = R̂ŜQ̂i(vi).block(nu - 1, nu, nx, nx);
                     auto AiQᵀ  = AinvQᵀ.batch(ti);
                     auto AiQiᵀ = AiQᵀ.middle_cols(i * nx, nx);
                     if (i > 0) {
@@ -1740,7 +1751,7 @@ TEST(NewCyclic, scheduling) {
 
     using Solver     = test::CyclicOCPSolver<4>;
     const index_t lP = log_n_threads + Solver::lvl;
-    OCPDim dim{.N_horiz = 3 << lP, .nx = 40, .nu = 30, .ny = 40, .ny_N = 40};
+    OCPDim dim{.N_horiz = 3 << lP, .nx = 2, .nu = 1, .ny = 10, .ny_N = 10};
     auto ocp = generate_random_ocp(dim);
     Solver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
@@ -1757,10 +1768,9 @@ TEST(NewCyclic, scheduling) {
     std::ranges::generate(ux, [&] { return uni(rng); });
     std::ranges::generate(Σ_lin, [&] { return std::exp2(uni(rng)); });
     std::vector<real_t> Σ_lin2 = Σ_lin;
-    if (0) // TODO: updates
-        for (auto &Σ2i : Σ_lin2)
-            if (bern(rng))
-                Σ2i = std::exp2(uni(rng));
+    for (auto &Σ2i : Σ_lin2)
+        if (bern(rng))
+            Σ2i = std::exp2(uni(rng));
 
     solver.initialize_Σ(Σ_lin, Σ);
     solver.initialize_Σ(Σ_lin2, Σ2);
