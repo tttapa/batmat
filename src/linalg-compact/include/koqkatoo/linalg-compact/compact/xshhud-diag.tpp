@@ -46,8 +46,9 @@ void CompactBLAS<Abi>::xshhud_diag_ref(mut_single_batch_view L,
                     [&](index_t i, auto rem_i) {
                         auto As = A.middle_rows(i, rem_i);
                         auto Ls = L.block(i, k, rem_i, R);
-                        microkernel_tail_lut<Abi>[rem_i - 1](A.cols(), W, Ls,
-                                                             As, Ad, D, false);
+                        microkernel_tail_lut<Abi>[rem_i - 1](
+                            0, A.cols(), A.cols(), W, Ls, As, As, Ad, D,
+                            Structure::General);
                     },
                     LoopDir::Backward); // TODO: decide on order
             },
@@ -71,7 +72,8 @@ void CompactBLAS<Abi>::xshhud_diag_ref(mut_single_batch_view L,
                     auto As = A.middle_rows(i, rem_i);
                     auto Ls = L.block(i, k, rem_i, rem_k);
                     microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
-                        A.cols(), W, Ls, As, Ad, D, false);
+                        0, A.cols(), A.cols(), W, Ls, As, As, Ad, D,
+                        Structure::General);
                 },
                 LoopDir::Backward); // TODO: decide on order
         });
@@ -111,7 +113,8 @@ void CompactBLAS<Abi>::xshhud_diag_2_ref(mut_single_batch_view L,
                 auto As = A.middle_rows(i, rem_i);
                 auto Ls = L.block(i, k, rem_i, rem_k);
                 microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
-                    A.cols(), W, Ls, As, Ad, D, false);
+                    0, A.cols(), A.cols(), W, Ls, As, As, Ad, D,
+                    Structure::General);
             },
             LoopDir::Backward); // TODO: decide on order
         foreach_chunked_merged(
@@ -120,7 +123,88 @@ void CompactBLAS<Abi>::xshhud_diag_2_ref(mut_single_batch_view L,
                 auto As = A2.middle_rows(i, rem_i);
                 auto Ls = L2.block(i, k, rem_i, rem_k);
                 microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
-                    A.cols(), W, Ls, As, Ad, D, false);
+                    0, A.cols(), A.cols(), W, Ls, As, As, Ad, D,
+                    Structure::General);
+            },
+            LoopDir::Backward); // TODO: decide on order
+    });
+}
+
+/**
+ * Performs a factorization update of the following matrix:
+ *
+ *     [ A11 A12 | L11 ]     [  0   0  | L̃11 ]
+ *     [  0  A22 | L21 ] Q = [ Ã21 Ã22 | L̃21 ]
+ *     [ A31  0  | L31 ]     [ Ã31 Ã32 | L̃31 ]
+ *           ↑ split_A
+ */
+template <class Abi>
+void CompactBLAS<Abi>::xshhud_diag_cyclic(
+    mut_single_batch_view L11, mut_single_batch_view A1,
+    mut_single_batch_view L21, single_batch_view A2,
+    mut_single_batch_view A2_out, mut_single_batch_view L31,
+    single_batch_view A3, mut_single_batch_view A3_out, single_batch_view D,
+    index_t split_A) {
+    assert(L11.rows() >= L11.cols());
+    assert(L11.rows() == A1.rows());
+    assert(L21.rows() == A2.rows());
+    assert(L31.rows() == A3.rows());
+    assert(A1.cols() == D.rows());
+    assert(A2.cols() == A1.cols());
+    assert(A3.cols() == A1.cols());
+    assert(L21.cols() == L11.cols());
+    assert(L31.cols() == L11.cols());
+    using namespace micro_kernels::shhud_diag;
+    static constexpr index_constant<SizeR> R;
+    static constexpr index_constant<SizeS> S;
+    const index_t C = A1.cols();
+
+    if (C == 0)
+        return;
+
+    using W_t = triangular_accessor<Abi, real_t, R>;
+    alignas(W_t::alignment()) real_t W[W_t::size()];
+
+    // Process all diagonal blocks (in multiples of R, except the last).
+    foreach_chunked_merged(0, L11.cols(), R, [&](index_t k, auto rem_k) {
+        // Part of A corresponding to this diagonal block
+        // TODO: packing
+        auto Ad = A1.middle_rows(k, rem_k);
+        auto Ld = L11.block(k, k, rem_k, rem_k);
+        // Process the diagonal block itself
+        microkernel_diag_lut<Abi>[rem_k - 1](C, W, Ld, Ad, D);
+        // Process all rows below the diagonal block (in multiples of S).
+        foreach_chunked_merged(
+            k + rem_k, L11.rows(), S,
+            [&](index_t i, auto rem_i) {
+                auto As = A1.middle_rows(i, rem_i);
+                auto Ls = L11.block(i, k, rem_i, rem_k);
+                microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
+                    0, C, C, W, Ls, As, As, Ad, D, Structure::General);
+            },
+            LoopDir::Backward); // TODO: decide on order
+        foreach_chunked_merged(
+            0, L21.rows(), S,
+            [&](index_t i, auto rem_i) {
+                auto As_out = A2_out.middle_rows(i, rem_i);
+                auto As     = k == 0 ? A2.middle_rows(i, rem_i) : As_out;
+                auto Ls     = L21.block(i, k, rem_i, rem_k);
+                microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
+                    k == 0 ? split_A : 0, C, C, W, Ls, As, As_out, Ad, D,
+                    Structure::General);
+                // First half of A2 is implicitly zero in first pass
+            },
+            LoopDir::Backward); // TODO: decide on order
+        foreach_chunked_merged(
+            0, L31.rows(), S,
+            [&](index_t i, auto rem_i) {
+                auto As_out = A3_out.middle_rows(i, rem_i);
+                auto As     = k == 0 ? A3.middle_rows(i, rem_i) : As_out;
+                auto Ls     = L31.block(i, k, rem_i, rem_k);
+                microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
+                    0, k == 0 ? split_A : C, C, W, Ls, As, As_out, Ad, D,
+                    Structure::General);
+                // Second half of A3 is implicitly zero in first pass
             },
             LoopDir::Backward); // TODO: decide on order
     });

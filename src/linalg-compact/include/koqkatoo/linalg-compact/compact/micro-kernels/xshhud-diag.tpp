@@ -110,6 +110,117 @@ xshhud_diag_full_microkernel(index_t colsA,
 
 template <class Abi, index_t R, index_t S>
 [[gnu::hot]] void xshhud_diag_tail_microkernel(
+    index_t kA_nonzero_start, index_t kA_nonzero_end, index_t colsA,
+    triangular_accessor<Abi, const real_t, SizeR> W,
+    mut_single_batch_matrix_accessor<Abi> L,
+    single_batch_matrix_accessor<Abi> A_in,
+    mut_single_batch_matrix_accessor<Abi> A_out,
+    single_batch_matrix_accessor<Abi> B, single_batch_vector_accessor<Abi> diag,
+    Structure struc_L) noexcept {
+    using simd = stdx::simd<real_t, Abi>;
+    KOQKATOO_ASSUME(colsA > 0);
+
+    // Compute product U = A B
+    simd V[S][R]{};
+    for (index_t j = kA_nonzero_start; j < kA_nonzero_end; ++j) {
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k) {
+            auto Akj = B.load(k, j) * diag.load(j);
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i)
+                V[i][k] += A_in.load(i, j) * Akj;
+        }
+    }
+
+    // Solve system V = (L+U)W⁻¹ (in-place)
+    auto L_cached = with_cached_access<R>(L);
+    switch (struc_L) {
+        [[likely]]
+        case Structure::General: {
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k) {
+                simd Wk[R];
+                KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < k; ++l)
+                    Wk[l] = W.load(l, k);
+                KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
+                    simd Lik = L_cached.load(i, k);
+                    V[i][k] += Lik;
+                    KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < k; ++l)
+                        V[i][k] -= V[i][l] * Wk[l];
+                    V[i][k] *= W.load(k, k); // diagonal already inverted
+                    Lik = V[i][k] - Lik;
+                    L_cached.store(Lik, i, k);
+                }
+            }
+        } break;
+        case Structure::Zero: {
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k) {
+                simd Wk[R];
+                KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < k; ++l)
+                    Wk[l] = W.load(l, k);
+                KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
+                    KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < k; ++l)
+                        V[i][k] -= V[i][l] * Wk[l];
+                    V[i][k] *= W.load(k, k); // diagonal already inverted
+                }
+            }
+        } break;
+        case Structure::Upper: {
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k) {
+                simd Wk[R];
+                KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < k; ++l)
+                    Wk[l] = W.load(l, k);
+                KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
+                    simd Lik;
+                    if (i <= k) {
+                        Lik = L_cached.load(i, k);
+                        V[i][k] += Lik;
+                    }
+                    KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < k; ++l)
+                        V[i][k] -= V[i][l] * Wk[l];
+                    V[i][k] *= W.load(k, k); // diagonal already inverted
+                    if (i <= k) {
+                        Lik = V[i][k] - Lik;
+                        L_cached.store(Lik, i, k);
+                    }
+                }
+            }
+        } break;
+        default: KOQKATOO_ASSUME(false);
+    }
+    // Update A -= V Bᵀ
+    simd Akj[R];
+    for (index_t j = 0; j < kA_nonzero_start; ++j) [[unlikely]] {
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
+            Akj[k] = B.load(k, j);
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
+            simd Aij{0};
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
+                Aij -= V[i][k] * Akj[k];
+            A_out.store(Aij, i, j);
+        }
+    }
+    for (index_t j = kA_nonzero_start; j < kA_nonzero_end; ++j) [[likely]] {
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
+            Akj[k] = B.load(k, j);
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
+            auto Aij = A_in.load(i, j);
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
+                Aij -= V[i][k] * Akj[k];
+            A_out.store(Aij, i, j);
+        }
+    }
+    for (index_t j = kA_nonzero_end; j < colsA; ++j) [[unlikely]] {
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
+            Akj[k] = B.load(k, j);
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
+            simd Aij{0};
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
+                Aij -= V[i][k] * Akj[k];
+            A_out.store(Aij, i, j);
+        }
+    }
+}
+
+template <class Abi, index_t R, index_t S>
+[[gnu::hot]] void old::xshhud_diag_tail_microkernel(
     index_t colsA, triangular_accessor<Abi, const real_t, SizeR> W,
     mut_single_batch_matrix_accessor<Abi> L,
     mut_single_batch_matrix_accessor<Abi> A,
