@@ -46,8 +46,8 @@ void CompactBLAS<Abi>::xshhud_diag_ref(mut_single_batch_view L,
                     [&](index_t i, auto rem_i) {
                         auto As = A.middle_rows(i, rem_i);
                         auto Ls = L.block(i, k, rem_i, R);
-                        microkernel_tail_lut<Abi>[rem_i - 1](
-                            A.cols(), W, Ls, As, Ad, D, false, L.rows());
+                        microkernel_tail_lut<Abi>[rem_i - 1](A.cols(), W, Ls,
+                                                             As, Ad, D, false);
                     },
                     LoopDir::Backward); // TODO: decide on order
             },
@@ -71,7 +71,7 @@ void CompactBLAS<Abi>::xshhud_diag_ref(mut_single_batch_view L,
                     auto As = A.middle_rows(i, rem_i);
                     auto Ls = L.block(i, k, rem_i, rem_k);
                     microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
-                        A.cols(), W, Ls, As, Ad, D, false, L.rows());
+                        A.cols(), W, Ls, As, Ad, D, false);
                 },
                 LoopDir::Backward); // TODO: decide on order
         });
@@ -111,7 +111,7 @@ void CompactBLAS<Abi>::xshhud_diag_2_ref(mut_single_batch_view L,
                 auto As = A.middle_rows(i, rem_i);
                 auto Ls = L.block(i, k, rem_i, rem_k);
                 microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
-                    A.cols(), W, Ls, As, Ad, D, false, L.rows());
+                    A.cols(), W, Ls, As, Ad, D, false);
             },
             LoopDir::Backward); // TODO: decide on order
         foreach_chunked_merged(
@@ -120,7 +120,7 @@ void CompactBLAS<Abi>::xshhud_diag_2_ref(mut_single_batch_view L,
                 auto As = A2.middle_rows(i, rem_i);
                 auto Ls = L2.block(i, k, rem_i, rem_k);
                 microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
-                    A.cols(), W, Ls, As, Ad, D, false, L2.rows());
+                    A.cols(), W, Ls, As, Ad, D, false);
             },
             LoopDir::Backward); // TODO: decide on order
     });
