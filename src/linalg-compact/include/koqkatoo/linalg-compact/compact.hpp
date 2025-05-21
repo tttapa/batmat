@@ -429,6 +429,12 @@ struct CompactBLAS {
                        mut_single_batch_view A2_out, mut_single_batch_view L31,
                        single_batch_view A3, mut_single_batch_view A3_out,
                        single_batch_view D, index_t split);
+    static void
+    xshhud_diag_riccati(mut_single_batch_view L11, mut_single_batch_view A1,
+                        mut_single_batch_view L21, single_batch_view A2,
+                        mut_single_batch_view A2_out, mut_single_batch_view Lu1,
+                        mut_single_batch_view Au_out, single_batch_view D,
+                        bool shift_Au);
 
     /// y += Lx
     static void xsymv_add(single_batch_view L, single_batch_view x,

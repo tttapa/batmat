@@ -5,6 +5,7 @@
 
 namespace stdx = std::experimental;
 using koqkatoo::real_t;
+using koqkatoo::linalg::compact::micro_kernels::rot;
 using koqkatoo::linalg::compact::micro_kernels::rotl;
 using koqkatoo::linalg::compact::micro_kernels::rotr;
 using koqkatoo::linalg::compact::micro_kernels::shiftl;
@@ -27,6 +28,73 @@ TEST(Rotate, rotl4) {
     EXPECT_TRUE(all_of(y == y_expected));
 }
 
+TEST(Rotate, rotl4var) {
+    using abi  = stdx::simd_abi::deduce_t<real_t, 4>;
+    using simd = stdx::simd<real_t, abi>;
+    simd x;
+    x[0]   = 1;
+    x[1]   = 2;
+    x[2]   = 3;
+    x[3]   = 4;
+    simd y = rot(x, -1);
+    simd y_expected;
+    y_expected[0] = 2;
+    y_expected[1] = 3;
+    y_expected[2] = 4;
+    y_expected[3] = 1;
+    EXPECT_TRUE(all_of(y == y_expected));
+}
+
+TEST(Rotate, rotl8var) {
+    using abi  = stdx::simd_abi::deduce_t<real_t, 8>;
+    using simd = stdx::simd<real_t, abi>;
+    simd x;
+    x[0]   = 1;
+    x[1]   = 2;
+    x[2]   = 3;
+    x[3]   = 4;
+    x[4]   = 5;
+    x[5]   = 6;
+    x[6]   = 7;
+    x[7]   = 8;
+    simd y = rot(x, -1);
+    simd y_expected;
+    y_expected[0] = 2;
+    y_expected[1] = 3;
+    y_expected[2] = 4;
+    y_expected[3] = 5;
+    y_expected[4] = 6;
+    y_expected[5] = 7;
+    y_expected[6] = 8;
+    y_expected[7] = 1;
+    EXPECT_TRUE(all_of(y == y_expected));
+}
+
+TEST(Rotate, rotl8var2) {
+    using abi  = stdx::simd_abi::deduce_t<real_t, 8>;
+    using simd = stdx::simd<real_t, abi>;
+    simd x;
+    x[0]   = 1;
+    x[1]   = 2;
+    x[2]   = 3;
+    x[3]   = 4;
+    x[4]   = 5;
+    x[5]   = 6;
+    x[6]   = 7;
+    x[7]   = 8;
+    simd y = rot(x, -1);
+    simd y_expected;
+    y_expected[0] = 2;
+    y_expected[1] = 3;
+    y_expected[2] = 4;
+    y_expected[3] = 5;
+    y_expected[4] = 6;
+    y_expected[5] = 7;
+    y_expected[6] = 8;
+    y_expected[7] = 1;
+    EXPECT_TRUE(all_of(y == y_expected));
+}
+
 TEST(Rotate, rotr4) {
     using abi  = stdx::simd_abi::deduce_t<real_t, 4>;
     using simd = stdx::simd<real_t, abi>;
@@ -41,6 +109,73 @@ TEST(Rotate, rotr4) {
     y_expected[1] = 1;
     y_expected[2] = 2;
     y_expected[3] = 3;
+    EXPECT_TRUE(all_of(y == y_expected));
+}
+
+TEST(Rotate, rotr4var) {
+    using abi  = stdx::simd_abi::deduce_t<real_t, 4>;
+    using simd = stdx::simd<real_t, abi>;
+    simd x;
+    x[0]   = 1;
+    x[1]   = 2;
+    x[2]   = 3;
+    x[3]   = 4;
+    simd y = rot(x, 1);
+    simd y_expected;
+    y_expected[0] = 4;
+    y_expected[1] = 1;
+    y_expected[2] = 2;
+    y_expected[3] = 3;
+    EXPECT_TRUE(all_of(y == y_expected));
+}
+
+TEST(Rotate, rotr8var) {
+    using abi  = stdx::simd_abi::deduce_t<real_t, 8>;
+    using simd = stdx::simd<real_t, abi>;
+    simd x;
+    x[0]   = 1;
+    x[1]   = 2;
+    x[2]   = 3;
+    x[3]   = 4;
+    x[4]   = 5;
+    x[5]   = 6;
+    x[6]   = 7;
+    x[7]   = 8;
+    simd y = rot(x, 1);
+    simd y_expected;
+    y_expected[0] = 8;
+    y_expected[1] = 1;
+    y_expected[2] = 2;
+    y_expected[3] = 3;
+    y_expected[4] = 4;
+    y_expected[5] = 5;
+    y_expected[6] = 6;
+    y_expected[7] = 7;
+    EXPECT_TRUE(all_of(y == y_expected));
+}
+
+TEST(Rotate, rotr8var2) {
+    using abi  = stdx::simd_abi::deduce_t<real_t, 8>;
+    using simd = stdx::simd<real_t, abi>;
+    simd x;
+    x[0]   = 1;
+    x[1]   = 2;
+    x[2]   = 3;
+    x[3]   = 4;
+    x[4]   = 5;
+    x[5]   = 6;
+    x[6]   = 7;
+    x[7]   = 8;
+    simd y = rot(x, 2);
+    simd y_expected;
+    y_expected[0] = 7;
+    y_expected[1] = 8;
+    y_expected[2] = 1;
+    y_expected[3] = 2;
+    y_expected[4] = 3;
+    y_expected[5] = 4;
+    y_expected[6] = 5;
+    y_expected[7] = 6;
     EXPECT_TRUE(all_of(y == y_expected));
 }
 

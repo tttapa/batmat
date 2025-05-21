@@ -82,7 +82,7 @@ void xshhud_diag_tail_microkernel(
     single_batch_matrix_accessor<Abi> A_in,
     mut_single_batch_matrix_accessor<Abi> A_out,
     single_batch_matrix_accessor<Abi> B, single_batch_vector_accessor<Abi> diag,
-    Structure struc_L) noexcept;
+    Structure struc_L, int rotate_A) noexcept;
 
 template <class Abi>
 inline const constinit auto microkernel_diag_lut =

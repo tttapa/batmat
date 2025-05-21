@@ -1,12 +1,24 @@
 #pragma once
 
 #include <experimental/simd>
+#include <cassert>
 
 namespace koqkatoo::linalg::compact::micro_kernels {
 
 namespace stdx = std::experimental;
 
 namespace detail {
+
+template <class F, class Abi>
+[[gnu::always_inline]] inline stdx::simd<F, Abi> rot(stdx::simd<F, Abi> x,
+                                                     int s) {
+    assert(s <= 0 || static_cast<size_t>(+s) < x.size());
+    assert(s >= 0 || static_cast<size_t>(-s) < x.size());
+    stdx::simd<F, Abi> y;
+    for (size_t j = 0; j < x.size(); ++j)
+        y[j] = x[(x.size() + j - s) % x.size()];
+    return y;
+}
 
 template <int S, class F, class Abi>
 [[gnu::always_inline]] inline stdx::simd<F, Abi> rotl(stdx::simd<F, Abi> x) {
@@ -53,6 +65,40 @@ template <int S, class F, class Abi>
 }
 
 #if defined(__AVX512F__)
+
+[[gnu::always_inline]] inline auto
+rot(stdx::simd<double, stdx::simd_abi::deduce_t<double, 8>> x, int s) {
+    assert(s <= 0 || static_cast<size_t>(+s) < x.size());
+    assert(s >= 0 || static_cast<size_t>(-s) < x.size());
+    constexpr size_t N    = x.size();
+    static constinit std::array<int64_t, 2 * N - 1> indices_lut = [] {
+        std::array<int64_t, 2 * N - 1> indices_lut{};
+        for (size_t i = 0; i < 2 * N - 1; ++i)
+            indices_lut[i] = static_cast<int64_t>((i + 1) % N);
+        return indices_lut;
+    }();
+    static constinit const int64_t *p = indices_lut.data() + N - 1;
+    const __m512i indices = _mm512_loadu_epi64(p - s);
+    __m512d y = _mm512_permutexvar_pd(indices, static_cast<__m512d>(x));
+    return decltype(x){y};
+}
+
+[[gnu::always_inline]] inline auto
+rot(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x, int s) {
+    assert(s <= 0 || static_cast<size_t>(+s) < x.size());
+    assert(s >= 0 || static_cast<size_t>(-s) < x.size());
+    constexpr size_t N    = x.size();
+    static constinit std::array<int64_t, 2 * N - 1> indices_lut = [] {
+        std::array<int64_t, 2 * N - 1> indices_lut{};
+        for (size_t i = 0; i < 2 * N - 1; ++i)
+            indices_lut[i] = static_cast<int64_t>((i + 1) % N);
+        return indices_lut;
+    }();
+    static constinit const int64_t *p = indices_lut.data() + N - 1;
+    const __m256i indices = _mm256_loadu_epi64(p - s);
+    __m256d y = _mm256_permutexvar_pd(indices, static_cast<__m256d>(x));
+    return decltype(x){y};
+}
 
 template <int S>
 [[gnu::always_inline]] inline auto
@@ -216,5 +262,7 @@ template <int S, class F, class Abi>
     else
         return detail::shiftr<S>(x);
 }
+
+using detail::rot;
 
 } // namespace koqkatoo::linalg::compact::micro_kernels

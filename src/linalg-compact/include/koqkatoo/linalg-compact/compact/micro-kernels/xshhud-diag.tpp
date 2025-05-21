@@ -1,5 +1,6 @@
 #pragma once
 
+#include "rotate.hpp"
 #include "xshhud-diag.hpp"
 
 #include <koqkatoo/assume.hpp>
@@ -108,6 +109,21 @@ xshhud_diag_full_microkernel(index_t colsA,
     }
 }
 
+namespace detail {
+
+template <class T, class Abi, int S>
+[[gnu::always_inline]] inline auto rotate(stdx::simd<T, Abi> x,
+                                          std::integral_constant<int, S>) {
+    return rotr<S>(x);
+}
+
+template <class T, class Abi>
+[[gnu::always_inline]] inline auto rotate(stdx::simd<T, Abi> x, int s) {
+    return rot(x, s);
+}
+
+} // namespace detail
+
 template <class Abi, index_t R, index_t S>
 [[gnu::hot]] void xshhud_diag_tail_microkernel(
     index_t kA_nonzero_start, index_t kA_nonzero_end, index_t colsA,
@@ -116,7 +132,7 @@ template <class Abi, index_t R, index_t S>
     single_batch_matrix_accessor<Abi> A_in,
     mut_single_batch_matrix_accessor<Abi> A_out,
     single_batch_matrix_accessor<Abi> B, single_batch_vector_accessor<Abi> diag,
-    Structure struc_L) noexcept {
+    Structure struc_L, int rotate_A) noexcept {
     using simd = stdx::simd<real_t, Abi>;
     KOQKATOO_ASSUME(colsA > 0);
 
@@ -186,37 +202,78 @@ template <class Abi, index_t R, index_t S>
         default: KOQKATOO_ASSUME(false);
     }
     // Update A -= V Bᵀ
-    simd Akj[R];
-    for (index_t j = 0; j < kA_nonzero_start; ++j) [[unlikely]] {
-        KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
-            Akj[k] = B.load(k, j);
-        KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
-            simd Aij{0};
+    const auto update_A = [&] [[gnu::always_inline]] (auto s) {
+        simd Akj[R];
+#if 0
+        for (index_t j = 0; j < kA_nonzero_start; ++j) [[unlikely]] {
             KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
-                Aij -= V[i][k] * Akj[k];
-            A_out.store(Aij, i, j);
+                Akj[k] = B.load(k, j);
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
+                simd Aij{0};
+                KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
+                    Aij -= V[i][k] * Akj[k];
+                A_out.store(detail::rotate(Aij, s), i, j);
+            }
         }
-    }
-    for (index_t j = kA_nonzero_start; j < kA_nonzero_end; ++j) [[likely]] {
-        KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
-            Akj[k] = B.load(k, j);
-        KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
-            auto Aij = A_in.load(i, j);
+        for (index_t j = kA_nonzero_start; j < kA_nonzero_end; ++j) [[likely]] {
             KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
-                Aij -= V[i][k] * Akj[k];
-            A_out.store(Aij, i, j);
+                Akj[k] = B.load(k, j);
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
+                auto Aij = A_in.load(i, j);
+                KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
+                    Aij -= V[i][k] * Akj[k];
+                A_out.store(detail::rotate(Aij, s), i, j);
+            }
         }
-    }
-    for (index_t j = kA_nonzero_end; j < colsA; ++j) [[unlikely]] {
-        KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
-            Akj[k] = B.load(k, j);
-        KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
-            simd Aij{0};
+        for (index_t j = kA_nonzero_end; j < colsA; ++j) [[unlikely]] {
             KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
-                Aij -= V[i][k] * Akj[k];
-            A_out.store(Aij, i, j);
+                Akj[k] = B.load(k, j);
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
+                simd Aij{0};
+                KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
+                    Aij -= V[i][k] * Akj[k];
+                A_out.store(detail::rotate(Aij, s), i, j);
+            }
         }
+#else
+        for (index_t j = kA_nonzero_start; j < kA_nonzero_end; ++j) [[likely]] {
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
+                Akj[k] = B.load(k, j);
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
+                auto Aij = A_in.load(i, j);
+                KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
+                    Aij -= V[i][k] * Akj[k];
+                A_out.store(detail::rotate(Aij, s), i, j);
+            }
+        }
+        for (index_t j = 0; true; ++j) {
+            if (j == kA_nonzero_start)
+                j = kA_nonzero_end;
+            if (j >= colsA)
+                break;
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
+                Akj[k] = B.load(k, j);
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t i = 0; i < S; ++i) {
+                simd Aij{0};
+                KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
+                    Aij -= V[i][k] * Akj[k];
+                A_out.store(detail::rotate(Aij, s), i, j);
+            }
+        }
+#endif
+    };
+#if defined(__AVX512F__) && 0
+    update_A(rotate_A);
+#else
+    switch (rotate_A) {
+        [[likely]] case 0:
+            update_A(std::integral_constant<int, 0>{});
+            break;
+        case -1: update_A(std::integral_constant<int, -1>{}); break;
+        case 1: update_A(std::integral_constant<int, 1>{}); break;
+        default: KOQKATOO_ASSUME(false);
     }
+#endif
 }
 
 template <class Abi, index_t R, index_t S>

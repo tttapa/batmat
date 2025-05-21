@@ -41,7 +41,7 @@ constexpr PreferredBackend backends[] // NOLINT(*-c-arrays)
         PreferredBackend::MKLAll,
     };
 constexpr index_t sizes[] // NOLINT(*-c-arrays)
-    {1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 71};
+    {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 17, 71};
 
 #endif
 
