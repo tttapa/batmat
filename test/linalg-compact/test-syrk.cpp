@@ -221,7 +221,7 @@ TEST(SyrkTest, TrTrSyrk) {
         using EMat = Eigen::MatrixX<real_t>;
         EMat A(n, n), C(n, n);
         std::ranges::generate(A.reshaped(), [&] { return nrml(rng); });
-        A.triangularView<Eigen::StrictlyLower>().setZero();
+        // A.triangularView<Eigen::StrictlyLower>().setZero(); // (implicit)
         std::ranges::generate(C.reshaped(), [&] { return nrml(rng); });
         EMat C_ref = C;
 

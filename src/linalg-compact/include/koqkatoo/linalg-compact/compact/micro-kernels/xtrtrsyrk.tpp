@@ -36,7 +36,7 @@ xtrtrsyrk_UL_microkernel(const single_batch_matrix_accessor<Abi, false> A,
         KOQKATOO_FULLY_UNROLLED_FOR (index_t l = 0; l < ColsReg; ++l) {
             KOQKATOO_FULLY_UNROLLED_FOR (index_t j = 0; j <= l; ++j) {
                 simd Blj = B.load(l, j);
-                KOQKATOO_FULLY_UNROLLED_FOR (index_t i = j; i < RowsReg; ++i) {
+                KOQKATOO_FULLY_UNROLLED_FOR (index_t i = j; i <= l; ++i) {
                     simd Ail  = A.load(i, l);
                     simd &Cij = C_reg[i][j];
                     if constexpr (Conf.negate)
