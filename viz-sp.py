@@ -34,13 +34,13 @@ rhs = np.loadtxt("rhs.csv")
 sol = np.loadtxt("sol.csv")
 A_sparse = load_mat("sparse.csv", make_sym=True)
 L_sparse = load_mat("sparse_factor.csv")
+L_ref_sparse = load_mat("sparse_refactor.csv")
 D_sparse = load_mat("sparse_diag.csv")
 print(A_sparse.shape)
 
 sol_ref = spla.spsolve(A_sparse, rhs)
 
-n1 = 1280
-nx, nu = 1, 1
+nx, nu = 2, 1
 n2 = nx * 4
 
 
@@ -48,10 +48,9 @@ def plot_sparse(A_sparse):
     A_dense = A_sparse.toarray() if hasattr(A_sparse, "toarray") else A_sparse
 
     A_plot = abs(A_dense)
-    A_plot[A_plot == 0] = np.nan
-    nrm = LogNorm(vmin=np.nanmin(A_plot), vmax=np.nanmax(A_plot), clip=False)
+    A_plot[A_plot < 1e-50] = np.nan
+    nrm = LogNorm(vmin=np.nanmin(A_plot) or 1e-50, vmax=min(np.nanmax(A_plot), 1e50) or 1e-49, clip=False)
     A_plot[np.logical_not(np.isfinite(A_dense))] = nrm.vmin / 2
-    print(np.nanmin(A_plot))
 
     plt.figure(figsize=(8, 6))
     cmap = plt.cm.viridis.copy()
@@ -70,9 +69,15 @@ if 1:
     # plot_sparse(A_sparse)
     # plot_sparse(L_sparse)
     # # plot_sparse(D_sparse)
-    plot_sparse(A_sparse - LL_sparse)
+    eps = 1e-20
+    err = (A_sparse - LL_sparse).toarray()
+    err = (L_ref_sparse - L_sparse).toarray()
+    sparsity = np.logical_or(A_sparse.toarray() != 0, L_sparse.toarray() != 0)
+    sparsity = L_ref_sparse.toarray() != 0
+    err[np.logical_and(sparsity, abs(err) < eps)] = eps
+    plot_sparse(err)
     plot_sparse(L_sparse)
-    plot_sparse(L_sparse.tocsc()[:nu + nx, :nu + nx] - la.cholesky(A_sparse.tocsc()[:nu + nx, :nu + nx].toarray()))
+    # plot_sparse(L_sparse.tocsc()[:nu + nx, :nu + nx] - la.cholesky(A_sparse.tocsc()[:nu + nx, :nu + nx].toarray()))
 plt.figure()
 plt.semilogy(abs(sol_ref - sol), ".-")
 plt.semilogy(abs(sol_ref + sol), ".-")

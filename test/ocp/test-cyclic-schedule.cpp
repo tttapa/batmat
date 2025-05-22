@@ -14,6 +14,7 @@
 
 #include <experimental/simd>
 #include <guanaqo/print.hpp>
+#include <algorithm>
 #include <bit>
 #include <cassert>
 #include <cmath>
@@ -21,6 +22,8 @@
 #include <format>
 #include <iostream>
 #include <limits>
+#include <mutex>
+#include <numeric>
 #include <print>
 #include <random>
 #include <stdexcept>
@@ -204,6 +207,20 @@ struct CyclicOCPSolver {
             .depth = 1 << lP,
             .rows  = dim.nx,
             .cols  = dim.nx,
+        }};
+    }();
+    matrix work_update = [this] {
+        return matrix{{
+            .depth = 4 << lvl,
+            .rows  = dim.nx,
+            .cols  = (dim.N_horiz >> lvl) * dim.ny,
+        }};
+    }(); // TODO: merge with riccati_ΥΓ?
+    matrix work_update_Σ = [this] {
+        return matrix{{
+            .depth = 1 << lvl,
+            .rows  = (dim.N_horiz >> lvl) * dim.ny,
+            .cols  = 1,
         }};
     }();
     matrix riccati_ÂB̂ = [this] {
@@ -1229,6 +1246,46 @@ struct CyclicOCPSolver {
         });
     }
 
+    void update_level(index_t l, index_t biY) {
+        const index_t offset = 1 << l;
+        const index_t i      = biY >> (l + 1);
+        const index_t j0     = biY == offset ? 0 : nJs[biY - 1 - offset],
+                      j1 = nJs[biY - 1 + offset], nj = j1 - j0,
+                      jsplit = nJs[biY - 1] - j0;
+        constexpr index_t w3_out_lut[]{1, 0, 0, 1};
+        const index_t w3_out = w3_out_lut[i & 3];
+        std::println("biY={:>2},  i={:>2}  w3={:>2}  {:>2}:{}:{:<2}", biY, i,
+                     w3_out, j0, j0 + jsplit, j1);
+        if (i & 1) {
+            compact_blas::xshhud_diag_cyclic(
+                coupling_D.batch(biY),
+                work_update.batch(l & 3).middle_cols(j0, nj),
+                coupling_Y.batch(biY),
+                work_update.batch((l + 2) % 4).middle_cols(j0, nj),
+                work_update.batch((l + 2 + w3_out) % 4).middle_cols(j0, nj),
+                coupling_U.batch(biY),
+                work_update.batch((l + 1) % 4).middle_cols(j0, nj),
+                work_update.batch((l + 1) % 4).middle_cols(j0, nj),
+                work_update_Σ.batch(0).middle_rows(j0, nj), jsplit, 0);
+            // if (x_lanes) { // TODO
+            //     compact_blas::template xadd_copy<1>(
+            //         work_update_Σ.batch(0).middle_rows(j0, nj),
+            //         work_update_Σ.batch(0).middle_rows(j0, nj));
+            // }
+        } else {
+            compact_blas::xshhud_diag_cyclic(
+                coupling_D.batch(biY),
+                work_update.batch(l & 3).middle_cols(j0, nj),
+                coupling_Y.batch(biY),
+                work_update.batch((l + 1) % 4).middle_cols(j0, nj),
+                work_update.batch((l + 1) % 4).middle_cols(j0, nj),
+                coupling_U.batch(biY),
+                work_update.batch((l + 2) % 4).middle_cols(j0, nj),
+                work_update.batch((l + 2 + w3_out) % 4).middle_cols(j0, nj),
+                work_update_Σ.batch(0).middle_rows(j0, nj), jsplit, 0);
+        }
+    }
+
     void update(matrix_view ΔΣ) {
         const index_t N = dim.N_horiz;
         KOQKATOO_ASSERT(((N >> lP) << lP) == N);
@@ -1239,17 +1296,30 @@ struct CyclicOCPSolver {
                 return;
             update_riccati(ti, alt, ΔΣ);
             for (index_t l = 0; l < lP - lvl; ++l) {
-                // barrier();
-                // const index_t offset = 1 << l;
-                // const auto biY       = sub_wrap_PmV(ti, offset);
-                // const auto biU       = ti;
-                // if (is_active(l, biY))
-                //     process_Y(l, biY);
-                // else if (is_active(l, biU))
-                //     process_U(l, biU);
-                // else
-                //     barrier();
-                // TODO
+                barrier();
+                if (ti == 0)
+                    std::println("=====");
+                barrier();
+
+                const index_t offset = 1 << l;
+                const auto biY       = sub_wrap_PmV(ti, offset);
+                if (is_active(l, biY)) {
+                    const index_t offset = 1 << l;
+                    const index_t i      = biY >> (l + 1);
+                    const index_t j0 =
+                                      biY == offset ? 0 : nJs[biY - 1 - offset],
+                                  j1 = nJs[biY - 1 + offset];
+                    std::println("ti={:>2}, biY={:>2},  i={:>2}  {:>2}:{:<2}",
+                                 ti, biY, i, j0, j1);
+                    update_level(l, biY);
+                    if (l + 1 == lP - lvl) {
+                        const index_t j0 = 0, j1 = nJs.back(), nj = j1 - j0;
+                        compact_blas::xshhud_diag_ref(
+                            coupling_D.batch(0),
+                            work_update.batch((l + 3) & 3).middle_cols(j0, nj),
+                            work_update_Σ.batch(0).middle_rows(j0, nj));
+                    }
+                }
             }
         });
         this->alt = true;
@@ -1336,17 +1406,41 @@ struct CyclicOCPSolver {
                                                     Âi, ΥΓi.bottom_rows(nx),
                                                     wΣ.top_rows(nJi));
                 }
-            } else if (nJi > 0) {
-                GUANAQO_TRACE("Riccati update Q", k);
-                auto ΥΓ_next = ((i & 1) ? ΥΓ2 : ΥΓ1).left_cols(nJi);
-                auto Q̂i_inv  = R̂ŜQ̂i.block(nu - 1, nu, nx, nx);
-                compact_blas::xshhud_diag_riccati(
-                    Q̂i, ΥΓi.middle_rows(nu, nx), Âi, ΥΓi.bottom_rows(nx),
-                    ΥΓ_next.bottom_rows(nx), Q̂i_inv,
-                    ΥΓ_next.middle_rows(nu, nx), wΣ.top_rows(nJi), false);
+            } else {
+                const auto bi_upd = sub_wrap_PmV(ti, 1);
+                nJs[bi_upd]       = nJi;
+                barrier();
+                if (ti == 0)
+                    std::inclusive_scan(begin(nJs), end(nJs), begin(nJs));
+                barrier();
+                const index_t j0 = bi_upd == 0 ? 0 : nJs[bi_upd - 1],
+                              j1 = nJs[bi_upd];
+                assert(nJi == j1 - j0);
+                constexpr index_t wiA_table[]{0, 1, 0, 2};
+                constexpr index_t wiI_table[]{2, 0, 1, 0};
+                const index_t wiA = wiA_table[bi_upd & 3];
+                const index_t wiI = wiI_table[bi_upd & 3];
+                std::println("ti={:>2}, bi_upd={:>2}, {:>2}:{:<2} [{}][{}]", ti,
+                             bi_upd, j0, j1, wiA, wiI);
+                if (nJi > 0) {
+                    GUANAQO_TRACE("Riccati update Q", k);
+                    auto Q̂i_inv = R̂ŜQ̂i.block(nu - 1, nu, nx, nx);
+                    compact_blas::xshhud_diag_riccati(
+                        Q̂i, ΥΓi.middle_rows(nu, nx), Âi, ΥΓi.bottom_rows(nx),
+                        work_update.batch(wiA).middle_cols(j0, nJi), Q̂i_inv,
+                        work_update.batch(wiI).middle_cols(j0, nJi),
+                        wΣ.top_rows(nJi), ti == 0); // TODO
+                    compact_blas::xneg(
+                        work_update.batch(wiI).middle_cols(j0, nJi)); // TODO
+                    ti == 0 ? compact_blas::template xadd_neg_copy<-1>(
+                                  work_update_Σ.batch(0).middle_rows(j0, nJi),
+                                  wΣ.top_rows(nJi))
+                            : compact_blas::xadd_neg_copy(
+                                  work_update_Σ.batch(0).middle_rows(j0, nJi),
+                                  wΣ.top_rows(nJi));
+                }
             }
         }
-        nJs[ti] = nJ;
     }
 
     index_t get_linear_batch_offset(index_t biA) {
@@ -1738,7 +1832,7 @@ struct CyclicOCPSolver {
 using koqkatoo::index_t;
 using koqkatoo::real_t;
 
-const int log_n_threads = 3; // TODO
+const int log_n_threads = 5; // TODO
 TEST(NewCyclic, scheduling) {
     using namespace koqkatoo::ocp;
 
@@ -1749,9 +1843,9 @@ TEST(NewCyclic, scheduling) {
         __itt_thread_set_name(std::format("OMP({})", i).c_str());
     }));
 
-    using Solver     = test::CyclicOCPSolver<4>;
+    using Solver     = test::CyclicOCPSolver<16>;
     const index_t lP = log_n_threads + Solver::lvl;
-    OCPDim dim{.N_horiz = 3 << lP, .nx = 2, .nu = 1, .ny = 10, .ny_N = 10};
+    OCPDim dim{.N_horiz = 2 << lP, .nx = 5, .nu = 3, .ny = 10, .ny_N = 10};
     auto ocp = generate_random_ocp(dim);
     Solver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
@@ -1769,8 +1863,10 @@ TEST(NewCyclic, scheduling) {
     std::ranges::generate(Σ_lin, [&] { return std::exp2(uni(rng)); });
     std::vector<real_t> Σ_lin2 = Σ_lin;
     for (auto &Σ2i : Σ_lin2)
-        if (bern(rng))
+        if (bern(rng)) // TODO
             Σ2i = std::exp2(uni(rng));
+    // std::ranges::transform(Σ_lin, Σ_lin2.begin(),
+    //                        [](auto x) { return x + 1; }); // TODO
 
     solver.initialize_Σ(Σ_lin, Σ);
     solver.initialize_Σ(Σ_lin2, Σ2);
@@ -1843,5 +1939,12 @@ TEST(NewCyclic, scheduling) {
         auto b = solver.build_rhs(ux, λ);
         for (auto x : b)
             f << guanaqo::float_to_str(x) << '\n';
+    }
+
+    solver.run(Σ2, alt);
+    if (std::ofstream f("sparse_refactor.csv"); f) {
+        auto sp = solver.build_sparse_factor();
+        for (auto [r, c, x] : sp)
+            f << r << ',' << c << ',' << guanaqo::float_to_str(x) << '\n';
     }
 }

@@ -590,36 +590,40 @@ void CompactBLAS<Abi>::xsub_copy_impl(OutView out, View x1, Views... xs)
 }
 
 template <class Abi>
-template <class OutView, class... Views>
-void CompactBLAS<Abi>::xadd_neg_copy_impl(OutView out, Views... xs)
-    requires((std::same_as<OutView, mut_batch_view> && ... &&
-              std::same_as<Views, batch_view>) ||
-             (std::same_as<OutView, mut_single_batch_view> && ... &&
-              std::same_as<Views, single_batch_view>))
+template <int Rot, class OutView, class View, class... Views>
+void CompactBLAS<Abi>::xadd_neg_copy_impl(OutView out, View x1, Views... xs)
+    requires(((std::same_as<OutView, mut_batch_view> &&
+               std::same_as<View, batch_view>) &&
+              ... && std::same_as<Views, batch_view>) ||
+             ((std::same_as<OutView, mut_single_batch_view> &&
+               std::same_as<View, single_batch_view>) &&
+              ... && std::same_as<Views, single_batch_view>))
 {
-    assert(((out.batch_size() == xs.batch_size()) && ...));
-    assert(out.batch_size() == out.batch_size());
-    assert(((out.depth() == xs.depth()) && ...));
-    assert(out.depth() == out.depth());
-    assert(((out.rows() == xs.rows()) && ...));
-    assert(out.rows() == out.rows());
-    assert(((out.cols() == xs.cols()) && ...));
-    assert(out.cols() == out.cols());
+    assert(((x1.batch_size() == xs.batch_size()) && ...));
+    assert(x1.batch_size() == out.batch_size());
+    assert(((x1.depth() == xs.depth()) && ...));
+    assert(x1.depth() == out.depth());
+    assert(((x1.rows() == xs.rows()) && ...));
+    assert(x1.rows() == out.rows());
+    assert(((x1.cols() == xs.cols()) && ...));
+    assert(x1.cols() == out.cols());
     index_t i;
-    const auto Bs   = static_cast<index_t>(out.batch_size());
-    const index_t n = out.rows(), m = out.cols();
-    for (i = 0; i <= static_cast<index_t>(out.depth()) - Bs; i += Bs) {
+    const auto Bs   = static_cast<index_t>(x1.batch_size());
+    const index_t n = x1.rows(), m = x1.cols();
+    using micro_kernels::rotr;
+    for (i = 0; i <= static_cast<index_t>(x1.depth()) - Bs; i += Bs) {
         for (index_t c = 0; c < m; ++c) {
             KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t r = 0; r < n; ++r) {
                 aligned_store(&out(i, r, c),
-                              -(... + aligned_load(&xs(i, r, c))));
+                              -(rotr<Rot>(aligned_load(&x1(i, r, c))) + ... +
+                                aligned_load(&xs(i, r, c))));
             }
         }
     }
-    for (; i < static_cast<index_t>(out.depth()); ++i)
+    for (; i < static_cast<index_t>(x1.depth()); ++i)
         for (index_t c = 0; c < m; ++c)
             for (index_t r = 0; r < n; ++r)
-                out(i, r, c) = -(... + xs(i, r, c));
+                out(i, r, c) = -(x1(i, r, c) + ... + xs(i, r, c));
 }
 
 template <class Abi>

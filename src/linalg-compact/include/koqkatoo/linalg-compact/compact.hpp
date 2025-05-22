@@ -428,13 +428,13 @@ struct CompactBLAS {
                        mut_single_batch_view L21, single_batch_view A2,
                        mut_single_batch_view A2_out, mut_single_batch_view L31,
                        single_batch_view A3, mut_single_batch_view A3_out,
-                       single_batch_view D, index_t split);
+                       single_batch_view D, index_t split, int rot_A2);
     static void
     xshhud_diag_riccati(mut_single_batch_view L11, mut_single_batch_view A1,
                         mut_single_batch_view L21, single_batch_view A2,
                         mut_single_batch_view A2_out, mut_single_batch_view Lu1,
                         mut_single_batch_view Au_out, single_batch_view D,
-                        bool shift_Au);
+                        bool shift_A_out);
 
     /// y += Lx
     static void xsymv_add(single_batch_view L, single_batch_view x,
@@ -509,19 +509,21 @@ struct CompactBLAS {
     static void xsub_copy(mut_single_batch_view out, Views... xs) {
         xsub_copy_impl(out, single_batch_view{xs}...);
     }
-    template <class OutView, class... Views>
-    static void xadd_neg_copy_impl(OutView out, Views... xs)
-        requires((std::same_as<OutView, mut_batch_view> && ... &&
-                  std::same_as<Views, batch_view>) ||
-                 (std::same_as<OutView, mut_single_batch_view> && ... &&
-                  std::same_as<Views, single_batch_view>));
-    template <class... Views>
+    template <int Rot = 0, class OutView, class View, class... Views>
+    static void xadd_neg_copy_impl(OutView out, View x1, Views... xs)
+        requires(((std::same_as<OutView, mut_batch_view> &&
+                   std::same_as<View, batch_view>) &&
+                  ... && std::same_as<Views, batch_view>) ||
+                 ((std::same_as<OutView, mut_single_batch_view> &&
+                   std::same_as<View, single_batch_view>) &&
+                  ... && std::same_as<Views, single_batch_view>));
+    template <int Rot = 0, class... Views>
     static void xadd_neg_copy(mut_batch_view out, Views... xs) {
-        xadd_neg_copy_impl(out, batch_view{xs}...);
+        xadd_neg_copy_impl<Rot>(out, batch_view{xs}...);
     }
-    template <class... Views>
+    template <int Rot = 0, class... Views>
     static void xadd_neg_copy(mut_single_batch_view out, Views... xs) {
-        xadd_neg_copy_impl(out, single_batch_view{xs}...);
+        xadd_neg_copy_impl<Rot>(out, single_batch_view{xs}...);
     }
 
     /// Dot product

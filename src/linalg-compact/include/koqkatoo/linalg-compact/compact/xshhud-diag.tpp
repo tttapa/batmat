@@ -9,6 +9,7 @@
 
 #include <cmath>
 #include <concepts>
+#include <print>
 
 #include <koqkatoo/linalg-compact/compact/micro-kernels/xshhud-diag.hpp>
 #include "util.hpp"
@@ -144,7 +145,7 @@ void CompactBLAS<Abi>::xshhud_diag_cyclic(
     mut_single_batch_view L21, single_batch_view A2,
     mut_single_batch_view A2_out, mut_single_batch_view L31,
     single_batch_view A3, mut_single_batch_view A3_out, single_batch_view D,
-    index_t split_A) {
+    index_t split_A, int rot_A2) {
     assert(L11.rows() >= L11.cols());
     assert(L11.rows() == A1.rows());
     assert(L21.rows() == A2.rows());
@@ -191,7 +192,7 @@ void CompactBLAS<Abi>::xshhud_diag_cyclic(
                 auto Ls     = L21.block(i, k, rem_i, rem_k);
                 microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
                     k == 0 ? split_A : 0, C, C, W, Ls, As, As_out, Ad, D,
-                    Structure::General, 0);
+                    Structure::General, k + rem_k == L11.cols() ? rot_A2 : 0);
                 // First half of A2 is implicitly zero in first pass
             },
             LoopDir::Backward); // TODO: decide on order
@@ -223,7 +224,7 @@ void CompactBLAS<Abi>::xshhud_diag_riccati(
     mut_single_batch_view L11, mut_single_batch_view A1,
     mut_single_batch_view L21, single_batch_view A2,
     mut_single_batch_view A2_out, mut_single_batch_view Lu1,
-    mut_single_batch_view Au_out, single_batch_view D, bool shift_Au) {
+    mut_single_batch_view Au_out, single_batch_view D, bool shift_A_out) {
     assert(L11.rows() >= L11.cols());
     assert(L11.rows() == A1.rows());
     assert(L21.rows() == A2.rows());
@@ -248,7 +249,7 @@ void CompactBLAS<Abi>::xshhud_diag_riccati(
 
     // Process all diagonal blocks (in multiples of R, except the last).
     foreach_chunked_merged(0, L11.cols(), R, [&](index_t k, auto rem_k) {
-        const bool do_shift = shift_Au && k + rem_k == L11.cols();
+        const bool do_shift = shift_A_out && k + rem_k == L11.cols();
         // Part of A corresponding to this diagonal block
         // TODO: packing
         auto Ad = A1.middle_rows(k, rem_k);
@@ -272,7 +273,8 @@ void CompactBLAS<Abi>::xshhud_diag_riccati(
                 auto As     = k == 0 ? A2.middle_rows(i, rem_i) : As_out;
                 auto Ls     = L21.block(i, k, rem_i, rem_k);
                 microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
-                    0, C, C, W, Ls, As, As_out, Ad, D, Structure::General, 0);
+                    0, C, C, W, Ls, As, As_out, Ad, D, Structure::General,
+                    do_shift ? -1 : 0);
             },
             LoopDir::Backward); // TODO: decide on order
         foreach_chunked_merged(

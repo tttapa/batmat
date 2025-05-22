@@ -204,7 +204,7 @@ template <class Abi, index_t R, index_t S>
     // Update A -= V Bᵀ
     const auto update_A = [&] [[gnu::always_inline]] (auto s) {
         simd Akj[R];
-#if 0
+#if 0 // bottom variant generates less code
         for (index_t j = 0; j < kA_nonzero_start; ++j) [[unlikely]] {
             KOQKATOO_FULLY_UNROLLED_FOR (index_t k = 0; k < R; ++k)
                 Akj[k] = B.load(k, j);
