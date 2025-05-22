@@ -1,5 +1,6 @@
-#include <Eigen/SparseCholesky>
+#ifndef WITHOUT_TESTS
 #include <gtest/gtest.h>
+#endif
 
 #include <koqkatoo/assume.hpp>
 #include <koqkatoo/config.hpp>
@@ -22,7 +23,6 @@
 #include <format>
 #include <iostream>
 #include <limits>
-#include <mutex>
 #include <numeric>
 #include <print>
 #include <random>
@@ -1814,6 +1814,8 @@ struct CyclicOCPSolver {
 
 } // namespace koqkatoo::ocp::test
 
+#ifndef WITHOUT_TESTS
+
 #include <koqkatoo/fork-pool.hpp>
 #include <koqkatoo/linalg-compact/mkl.hpp>
 #include <koqkatoo/ocp/random-ocp.hpp>
@@ -1948,3 +1950,27 @@ TEST(NewCyclic, scheduling) {
             f << r << ',' << c << ',' << guanaqo::float_to_str(x) << '\n';
     }
 }
+
+#else
+
+#include <memory>
+
+using Solver = koqkatoo::ocp::test::CyclicOCPSolver<4>;
+
+std::shared_ptr<Solver>
+build_new_cyclic_solver(const koqkatoo::ocp::LinearOCPStorage &ocp,
+                        koqkatoo::index_t lP) {
+    auto solver = std::make_shared<Solver>(Solver{.dim=ocp.dim, .lP=lP + Solver::lvl});
+    solver->initialize(ocp);
+    return solver;
+}
+
+void run_new_cyclic_solver(Solver &solver) {
+    if (solver.dim.ny != 0)
+        throw std::logic_error("ny > 0 not yet supported");
+    Solver::matrix_view Σ{
+        {.data = nullptr, .depth = solver.dim.N_horiz, .rows = 0, .cols = 1}};
+    solver.run(Σ);
+}
+
+#endif

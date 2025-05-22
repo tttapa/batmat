@@ -8,6 +8,7 @@
 #include <guanaqo/openmp.h>
 #include <hyhound-version.h>
 #include <koqkatoo-version.h>
+#include <omp.h>
 
 #include <guanaqo/trace.hpp>
 #include <hyhound/ocp/riccati.hpp>
@@ -30,6 +31,16 @@ using namespace hyhound;
 using namespace hyhound::ocp;
 namespace stdx = std::experimental;
 using guanaqo::as_span;
+
+namespace koqkatoo::ocp::test {
+template <koqkatoo::index_t>
+struct CyclicOCPSolver;
+}
+
+std::shared_ptr<koqkatoo::ocp::test::CyclicOCPSolver<4>>
+build_new_cyclic_solver(const koqkatoo::ocp::LinearOCPStorage &ocp,
+                        koqkatoo::index_t lP);
+void run_new_cyclic_solver(koqkatoo::ocp::test::CyclicOCPSolver<4> &solver);
 
 #if GUANAQO_WITH_TRACING
 std::map<std::tuple<std::string, std::string>, std::filesystem::path> traces;
@@ -98,6 +109,28 @@ auto build_cyclic_ocp_solver(const OCPDataRiccati &ocp_ric) {
     as_eigen(ocp.Q(N)) = ocp_ric.Q(N);
     CyclicOCPSolver solver{ocp};
     return solver;
+}
+
+auto build_cyclic_ocp_solver_new(const OCPDataRiccati &ocp_ric, index_t lP) {
+    koqkatoo::ocp::LinearOCPStorage ocp{.dim{.N_horiz = ocp_ric.N,
+                                             .nx      = ocp_ric.nx,
+                                             .nu      = ocp_ric.nu,
+                                             .ny      = ocp_ric.ny,
+                                             .ny_N    = ocp_ric.ny}};
+    const auto N = ocp.dim.N_horiz;
+    for (index_t i = 0; i < N; ++i) {
+        as_eigen(ocp.A(i))       = ocp_ric.A(i);
+        as_eigen(ocp.B(i))       = ocp_ric.B(i);
+        as_eigen(ocp.C(i))       = ocp_ric.C(i);
+        as_eigen(ocp.D(i))       = ocp_ric.D(i);
+        as_eigen(ocp.Q(i))       = ocp_ric.Q(i);
+        as_eigen(ocp.S(i))       = ocp_ric.S(i).transpose();
+        as_eigen(ocp.S_trans(i)) = ocp_ric.S(i);
+        as_eigen(ocp.R(i))       = ocp_ric.R(i);
+    }
+    as_eigen(ocp.C(N)) = ocp_ric.C(N);
+    as_eigen(ocp.Q(N)) = ocp_ric.Q(N);
+    return build_new_cyclic_solver(ocp, lP);
 }
 
 void bm_factor_riccati(benchmark::State &state) {
@@ -257,6 +290,23 @@ void bm_solve_schur_kqt(benchmark::State &state) {
     trace([&] { do_solve(); }, "solve_schur_kqt", params);
 }
 
+void bm_factor_new_kqt(benchmark::State &state) {
+    auto [ocp, Σ]    = generate_ocp(state);
+    const index_t lP = state.range(4);
+#if !KOQKATOO_WITH_OPENMP
+#error ""
+#endif
+    omp_set_num_threads(1 << lP);
+    auto solver          = build_cyclic_ocp_solver_new(ocp, lP);
+    const auto do_factor = [&] { run_new_cyclic_solver(*solver); };
+    for (auto _ : state)
+        do_factor();
+    auto params =
+        std::format("nx={}-nu={}-ny={}-N={}-thr={}", ocp.nx, ocp.nu, ocp.ny,
+                    ocp.N, KOQKATOO_OMP_IF_ELSE(omp_get_max_threads(), 1));
+    trace([&] { do_factor(); }, "factor_schur_kqt", params);
+}
+
 #if WITH_BLASFEO
 
 void bm_factor_riccati_blasfeo(benchmark::State &state) {
@@ -289,6 +339,7 @@ OCP_BENCHMARK(bm_factor_riccati_blasfeo);
 #endif
 OCP_BENCHMARK(bm_factor_schur_kqt);
 OCP_BENCHMARK(bm_factor_schur_kqt_1);
+OCP_BENCHMARK(bm_factor_new_kqt);
 // OCP_BENCHMARK(bm_solve_schur_kqt);
 
 enum class BenchmarkType {
@@ -305,7 +356,11 @@ int main(int argc, char **argv) {
         return 1;
     // Parse command-line arguments
     std::vector<char *> argvv{argv, argv + argc};
-    int64_t N = 31, nx = 16, nu = 8, ny = 8, step = 1;
+    int64_t N = 31, nx = 16, nu = 8, ny = 8, step = 1,
+            lP = KOQKATOO_OMP_IF_ELSE(
+                std::bit_width(static_cast<unsigned>(omp_get_num_threads())) -
+                    1,
+                0);
     BenchmarkType type = BenchmarkType::None;
     for (auto it = argvv.begin(); it != argvv.end();) {
         std::string_view arg = *it;
@@ -319,6 +374,8 @@ int main(int argc, char **argv) {
             ny = std::stoi(std::string(arg.substr(flag.size())));
         else if (std::string_view flag = "--step="; arg.starts_with(flag))
             step = std::stoi(std::string(arg.substr(flag.size())));
+        else if (std::string_view flag = "--lP="; arg.starts_with(flag))
+            lP = std::stoi(std::string(arg.substr(flag.size())));
         else if (arg == "--vary-N")
             type = BenchmarkType::vary_N;
         else if (arg == "--vary-N-pow-2")
@@ -338,28 +395,29 @@ int main(int argc, char **argv) {
 
     for (auto *bm : benchmarks) {
         bm->MeasureProcessCPUTime()->UseRealTime();
-        bm->ArgNames({"N", "nx", "nu", "ny"});
+        bm->ArgNames({"N", "nx", "nu", "ny", "lP"});
         switch (type) {
             case BenchmarkType::None: bm->Args({N, nx, nu, ny}); break;
             case BenchmarkType::vary_N:
                 for (int64_t i = step; i <= N; i += step)
-                    bm->Args({i, nx, nu, ny});
+                    bm->Args({i, nx, nu, ny, lP});
                 break;
             case BenchmarkType::vary_N_pow_2:
                 for (int64_t i = 8; i <= N; i <<= step)
-                    bm->Args({i, nx, nu, ny});
+                    for (int64_t lPi = 0; 1 << (lPi + 2) <= i; lPi += 1)
+                        bm->Args({i, nx, nu, ny, lPi});
                 break;
             case BenchmarkType::vary_nu:
                 for (int64_t i = step; i <= nu; i += step)
-                    bm->Args({N, nx, i, ny});
+                    bm->Args({N, nx, i, ny, lP});
                 break;
             case BenchmarkType::vary_ny:
                 for (int64_t i = step; i <= ny; i += step)
-                    bm->Args({N, nx, nu, i});
+                    bm->Args({N, nx, nu, i, lP});
                 break;
             case BenchmarkType::vary_nx_frac:
                 for (int64_t i = step; i <= nx; i += step)
-                    bm->Args({N, i, (i * nu + (nx - 1) / 2) / nx, ny});
+                    bm->Args({N, i, (i * nu + (nx - 1) / 2) / nx, ny, lP});
                 break;
             default: KOQKATOO_ASSUME(false);
         }
