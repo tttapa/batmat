@@ -16,8 +16,8 @@ struct KernelConfig {
 template <class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg>
 void xgemm_microkernel(single_batch_matrix_accessor<Abi, Conf.trans_A> A,
                        single_batch_matrix_accessor<Abi, Conf.trans_B> B,
-                       mut_single_batch_matrix_accessor<Abi> C,
-                       index_t k) noexcept;
+                       mut_single_batch_matrix_accessor<Abi> C, index_t k,
+                       bool init_zero) noexcept;
 
 template <class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg>
 void xgemm_diag_microkernel(single_batch_matrix_accessor<Abi, Conf.trans_A> A,
@@ -36,8 +36,8 @@ void xgemm_diag_mask_microkernel(
 template <class Abi, KernelConfig Conf, index_t RowsReg>
 void xgemmt_microkernel(single_batch_matrix_accessor<Abi, Conf.trans_A> A,
                         single_batch_matrix_accessor<Abi, Conf.trans_B> B,
-                        mut_single_batch_matrix_accessor<Abi> C,
-                        index_t k) noexcept;
+                        mut_single_batch_matrix_accessor<Abi> C, index_t k,
+                        bool init_zero) noexcept;
 
 template <class Abi, KernelConfig Conf, index_t RowsReg>
 void xgemmt_diag_microkernel(single_batch_matrix_accessor<Abi, Conf.trans_A> A,
@@ -61,7 +61,7 @@ void xsyomv_microkernel(single_batch_matrix_accessor<Abi> A,
 
 template <class Abi, KernelConfig Conf>
 void xgemm_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
-                    mut_single_batch_view<Abi> C) noexcept;
+                    mut_single_batch_view<Abi> C, bool init_zero) noexcept;
 
 template <class Abi, KernelConfig Conf>
 void xgemm_diag_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
@@ -70,7 +70,7 @@ void xgemm_diag_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
 
 template <class Abi, KernelConfig Conf>
 void xgemmt_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
-                     mut_single_batch_view<Abi> C) noexcept;
+                     mut_single_batch_view<Abi> C, bool init_zero) noexcept;
 
 template <class Abi, KernelConfig Conf>
 void xgemmt_diag_register(single_batch_view<Abi> A, single_batch_view<Abi> B,

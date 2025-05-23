@@ -9,28 +9,28 @@ namespace koqkatoo::linalg::compact::micro_kernels::gemm {
 using Abi = stdx::simd_abi::@simd_abi@;
 
 template void xgemmt_register<Abi, {}>(
-    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
+    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>, bool);
 template void xgemmt_register<Abi, {.trans_A = true}>(
-    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
+    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>, bool);
 template void xgemmt_register<Abi, {.trans_B = true}>(
-    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
+    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>, bool);
 template void xgemmt_register<Abi, {.trans_A = true, .trans_B = true}>(
-    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
+    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>, bool);
 template void xgemmt_register<Abi, {.negate = true}>(
-    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
+    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>, bool);
 template void xgemmt_register<Abi, {.negate = true, .trans_A = true}>(
-    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
+    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>, bool);
 template void xgemmt_register<Abi, {.negate = true, .trans_B = true}>(
-    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
+    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>, bool);
 template void xgemmt_register<Abi, {.negate = true, .trans_A = true, .trans_B = true}>(
-    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
+    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>, bool);
 template void xgemmt_register<Abi, {.trans_B = true, .shift = 1}>(
-    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
+    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>, bool);
 template void xgemmt_register<Abi, {.trans_B = true, .shift = -1}>(
-    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
+    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>, bool);
 template void xgemmt_register<Abi, {.negate = true, .trans_B = true, .shift = 1}>(
-    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
+    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>, bool);
 template void xgemmt_register<Abi, {.negate = true, .trans_B = true, .shift = -1}>(
-    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>);
+    single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>, bool);
 
 }

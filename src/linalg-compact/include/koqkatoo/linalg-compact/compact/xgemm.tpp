@@ -29,16 +29,13 @@ void CompactBLAS<Abi>::xgemm_ref(single_batch_view A, single_batch_view B,
     assert(A.rows() == C.rows());
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
-    for (index_t j = 0; j < C.cols(); ++j)
-        for (index_t i = 0; i < C.rows(); ++i)
-            simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned);
     for (index_t l = 0; l < A.cols(); l += GemmBlockSizeCols) {
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.cols() - l);
         for (index_t i = 0; i < A.rows(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
-            micro_kernels::gemm::xgemm_register<Abi, {}>(A.block(i, l, ni, nl),
-                                                         B.middle_rows(l, nl),
-                                                         C.middle_rows(i, ni));
+            micro_kernels::gemm::xgemm_register<Abi, {}>(
+                A.block(i, l, ni, nl), B.middle_rows(l, nl),
+                C.middle_rows(i, ni), l == 0);
         }
     }
 }
@@ -67,16 +64,13 @@ void CompactBLAS<Abi>::xgemv_ref(single_batch_view A, single_batch_view B,
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
     assert(B.cols() == 1);
-    for (index_t j = 0; j < C.cols(); ++j)
-        for (index_t i = 0; i < C.rows(); ++i)
-            simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned);
     for (index_t l = 0; l < A.cols(); l += GemmBlockSizeCols) {
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.cols() - l);
         for (index_t i = 0; i < A.rows(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
             micro_kernels::gemm::xgemm_register<Abi, {}>(
                 A.block(i, l, ni, nl), B.middle_rows(l, nl),
-                C.middle_rows(i, ni)); // TODO: optimized microkernel
+                C.middle_rows(i, ni), l == 0); // TODO: optimized microkernel
         }
     }
 }
@@ -88,16 +82,13 @@ void CompactBLAS<Abi>::xgemm_neg_ref(single_batch_view A, single_batch_view B,
     assert(A.rows() == C.rows());
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
-    for (index_t j = 0; j < C.cols(); ++j)
-        for (index_t i = 0; i < C.rows(); ++i)
-            simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned);
     for (index_t l = 0; l < A.cols(); l += GemmBlockSizeCols) {
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.cols() - l);
         for (index_t i = 0; i < A.rows(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
             micro_kernels::gemm::xgemm_register<Abi, {.negate = true}>(
                 A.block(i, l, ni, nl), B.middle_rows(l, nl),
-                C.middle_rows(i, ni));
+                C.middle_rows(i, ni), l == 0);
         }
     }
 }
@@ -112,16 +103,13 @@ void CompactBLAS<Abi>::xgemm_NT_shift(single_batch_view A, single_batch_view B,
     assert(B.rows() == C.cols());
     constexpr micro_kernels::gemm::KernelConfig conf{.trans_B = true,
                                                      .shift   = 1};
-    for (index_t j = 0; j < C.cols(); ++j)
-        for (index_t i = 0; i < C.rows(); ++i)
-            simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned);
     for (index_t l = 0; l < A.cols(); l += GemmBlockSizeCols) {
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.cols() - l);
         for (index_t i = 0; i < A.rows(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
             micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(i, l, ni, nl), B.middle_cols(l, nl),
-                C.middle_rows(i, ni));
+                C.middle_rows(i, ni), l == 0);
         }
     }
 }
@@ -133,16 +121,13 @@ void CompactBLAS<Abi>::xgemm_NT_ref(single_batch_view A, single_batch_view B,
     assert(A.rows() == C.rows());
     assert(A.cols() == B.cols());
     assert(B.rows() == C.cols());
-    for (index_t j = 0; j < C.cols(); ++j)
-        for (index_t i = 0; i < C.rows(); ++i)
-            simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned);
     for (index_t l = 0; l < A.cols(); l += GemmBlockSizeCols) {
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.cols() - l);
         for (index_t i = 0; i < A.rows(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
             micro_kernels::gemm::xgemm_register<Abi, {.trans_B = true}>(
                 A.block(i, l, ni, nl), B.middle_cols(l, nl),
-                C.middle_rows(i, ni));
+                C.middle_rows(i, ni), l == 0);
         }
     }
 }
@@ -156,9 +141,6 @@ void CompactBLAS<Abi>::xgemm_NT_neg_ref(single_batch_view A,
     assert(A.rows() == C.rows());
     assert(A.cols() == B.cols());
     assert(B.rows() == C.cols());
-    for (index_t j = 0; j < C.cols(); ++j)
-        for (index_t i = 0; i < C.rows(); ++i)
-            simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned);
     for (index_t l = 0; l < A.cols(); l += GemmBlockSizeCols) {
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.cols() - l);
         for (index_t i = 0; i < A.rows(); i += GemmBlockSizeRows) {
@@ -166,7 +148,7 @@ void CompactBLAS<Abi>::xgemm_NT_neg_ref(single_batch_view A,
             micro_kernels::gemm::xgemm_register<Abi, {.negate  = true,
                                                       .trans_B = true}>(
                 A.block(i, l, ni, nl), B.middle_cols(l, nl),
-                C.middle_rows(i, ni));
+                C.middle_rows(i, ni), l == 0);
         }
     }
 }
@@ -182,16 +164,13 @@ void CompactBLAS<Abi>::xgemm_NT_neg_shift(single_batch_view A,
     assert(B.rows() == C.cols());
     constexpr micro_kernels::gemm::KernelConfig conf{
         .negate = true, .trans_B = true, .shift = -1};
-    for (index_t j = 0; j < C.cols(); ++j)
-        for (index_t i = 0; i < C.rows(); ++i)
-            simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned);
     for (index_t l = 0; l < A.cols(); l += GemmBlockSizeCols) {
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.cols() - l);
         for (index_t i = 0; i < A.rows(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
             micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(i, l, ni, nl), B.middle_cols(l, nl),
-                C.middle_rows(i, ni));
+                C.middle_rows(i, ni), l == 0);
         }
     }
 }
@@ -212,7 +191,7 @@ void CompactBLAS<Abi>::xgemm_NT_sub_ref(single_batch_view A,
             micro_kernels::gemm::xgemm_register<Abi, {.negate  = true,
                                                       .trans_B = true}>(
                 A.block(i, l, ni, nl), B.middle_cols(l, nl),
-                C.middle_rows(i, ni));
+                C.middle_rows(i, ni), false);
         }
     }
 }
@@ -248,16 +227,13 @@ void CompactBLAS<Abi>::xgemv_neg_ref(single_batch_view A, single_batch_view B,
     assert(A.cols() == B.rows());
     assert(B.cols() == C.cols());
     assert(B.cols() == 1);
-    for (index_t j = 0; j < C.cols(); ++j)
-        for (index_t i = 0; i < C.rows(); ++i)
-            simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned);
     for (index_t l = 0; l < A.cols(); l += GemmBlockSizeCols) {
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.cols() - l);
         for (index_t i = 0; i < A.rows(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
             micro_kernels::gemm::xgemm_register<Abi, {.negate = true}>(
                 A.block(i, l, ni, nl), B.middle_rows(l, nl),
-                C.middle_rows(i, ni)); // TODO: optimized microkernel
+                C.middle_rows(i, ni), l == 0); // TODO: optimized microkernel
         }
     }
 }
@@ -522,7 +498,7 @@ void CompactBLAS<Abi>::xgemm_add_ref(single_batch_view A, single_batch_view B,
         M_cache;
 
     if (M <= M_cache && N <= N_cache && K <= K_cache)
-        return micro_kernels::gemm::xgemm_register<Abi, conf>(A, B, C);
+        return micro_kernels::gemm::xgemm_register<Abi, conf>(A, B, C, false);
 
     using sto_t                    = aligned_simd_storage<real_t, simd_align>;
     const index_t B_cache_sto_size = B.ceil_depth() * K_cache * N_cache;
@@ -575,7 +551,8 @@ void CompactBLAS<Abi>::xgemm_add_ref(single_batch_view A, single_batch_view B,
                     }
                     return Aik;
                 }();
-                micro_kernels::gemm::xgemm_register<Abi, conf>(Aik, Bkj, Cij);
+                micro_kernels::gemm::xgemm_register<Abi, conf>(Aik, Bkj, Cij,
+                                                               false);
             }
         }
     }
@@ -595,7 +572,7 @@ void CompactBLAS<Abi>::xgemm_sub_ref(single_batch_view A, single_batch_view B,
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
             micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(i, l, ni, nl), B.middle_rows(l, nl),
-                C.middle_rows(i, ni));
+                C.middle_rows(i, ni), false);
         }
     }
 }
@@ -617,7 +594,7 @@ void CompactBLAS<Abi>::xgemv_sub_shift(single_batch_view A, single_batch_view B,
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
             micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(i, l, ni, nl), B.middle_rows(l, nl),
-                C.middle_rows(i, ni)); // TODO: optimized microkernel
+                C.middle_rows(i, ni), false); // TODO: optimized microkernel
         }
     }
 }
@@ -637,7 +614,7 @@ void CompactBLAS<Abi>::xgemv_sub_ref(single_batch_view A, single_batch_view B,
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
             micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(i, l, ni, nl), B.middle_rows(l, nl),
-                C.middle_rows(i, ni)); // TODO: optimized microkernel
+                C.middle_rows(i, ni), false); // TODO: optimized microkernel
         }
     }
 }
@@ -657,7 +634,7 @@ void CompactBLAS<Abi>::xgemv_add_ref(single_batch_view A, single_batch_view B,
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
             micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(i, l, ni, nl), B.middle_rows(l, nl),
-                C.middle_rows(i, ni)); // TODO: optimized microkernel
+                C.middle_rows(i, ni), false); // TODO: optimized microkernel
         }
     }
 }
@@ -679,7 +656,7 @@ void CompactBLAS<Abi>::xgemm_TN_sub_ref(single_batch_view A,
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.cols() - i);
             micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(l, i, nl, ni), B.middle_rows(l, nl),
-                C.middle_rows(i, ni));
+                C.middle_rows(i, ni), false);
         }
     }
 }
@@ -695,16 +672,13 @@ void CompactBLAS<Abi>::xgemm_TN_neg_ref(single_batch_view A,
     assert(B.cols() == C.cols());
     static constexpr micro_kernels::gemm::KernelConfig conf{.negate  = true,
                                                             .trans_A = true};
-    for (index_t j = 0; j < C.cols(); ++j)
-        for (index_t i = 0; i < C.rows(); ++i)
-            simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned);
     for (index_t l = 0; l < A.rows(); l += GemmBlockSizeCols) {
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.rows() - l);
         for (index_t i = 0; i < A.cols(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.cols() - i);
             micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(l, i, nl, ni), B.middle_rows(l, nl),
-                C.middle_rows(i, ni));
+                C.middle_rows(i, ni), l == 0);
         }
     }
 }
@@ -720,16 +694,13 @@ void CompactBLAS<Abi>::xgemm_TT_neg_ref(single_batch_view A,
     assert(B.rows() == C.cols());
     static constexpr micro_kernels::gemm::KernelConfig conf{
         .negate = true, .trans_A = true, .trans_B = true};
-    for (index_t j = 0; j < C.cols(); ++j)
-        for (index_t i = 0; i < C.rows(); ++i)
-            simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned);
     for (index_t l = 0; l < A.rows(); l += GemmBlockSizeCols) {
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.rows() - l);
         for (index_t i = 0; i < A.cols(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.cols() - i);
             micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(l, i, nl, ni), B.middle_cols(l, nl),
-                C.middle_rows(i, ni));
+                C.middle_rows(i, ni), l == 0);
         }
     }
 }
@@ -750,7 +721,7 @@ void CompactBLAS<Abi>::xgemv_T_sub_ref(single_batch_view A, single_batch_view B,
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.cols() - i);
             micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(l, i, nl, ni), B.middle_rows(l, nl),
-                C.middle_rows(i, ni)); // TODO: optimized microkernel
+                C.middle_rows(i, ni), false); // TODO: optimized microkernel
         }
     }
 }
@@ -773,7 +744,7 @@ void CompactBLAS<Abi>::xgemv_T_add_shift(single_batch_view A,
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.cols() - i);
             micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(l, i, nl, ni), B.middle_rows(l, nl),
-                C.middle_rows(i, ni)); // TODO: optimized microkernel
+                C.middle_rows(i, ni), false); // TODO: optimized microkernel
         }
     }
 }
@@ -796,7 +767,7 @@ void CompactBLAS<Abi>::xgemv_T_sub_shift(single_batch_view A,
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.cols() - i);
             micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(l, i, nl, ni), B.middle_rows(l, nl),
-                C.middle_rows(i, ni)); // TODO: optimized microkernel
+                C.middle_rows(i, ni), false); // TODO: optimized microkernel
         }
     }
 }
@@ -816,7 +787,7 @@ void CompactBLAS<Abi>::xgemv_T_add_ref(single_batch_view A, single_batch_view B,
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.cols() - i);
             micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(l, i, nl, ni), B.middle_rows(l, nl),
-                C.middle_rows(i, ni)); // TODO: optimized microkernel
+                C.middle_rows(i, ni), false); // TODO: optimized microkernel
         }
     }
 }
@@ -830,16 +801,13 @@ void CompactBLAS<Abi>::xgemm_TN_ref(single_batch_view A, single_batch_view B,
     assert(B.cols() == C.cols());
     static constexpr micro_kernels::gemm::KernelConfig conf{.negate  = false,
                                                             .trans_A = true};
-    for (index_t j = 0; j < C.cols(); ++j)
-        for (index_t i = 0; i < C.rows(); ++i)
-            simd{0}.copy_to(&C(0, i, j), stdx::vector_aligned);
     for (index_t l = 0; l < A.rows(); l += GemmBlockSizeCols) {
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.rows() - l);
         for (index_t i = 0; i < A.cols(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.cols() - i);
             micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(l, i, nl, ni), B.middle_rows(l, nl),
-                C.middle_rows(i, ni));
+                C.middle_rows(i, ni), l == 0);
         }
     }
 }
@@ -854,15 +822,13 @@ void CompactBLAS<Abi>::xgemv_T_ref(single_batch_view A, single_batch_view B,
     assert(B.cols() == 1);
     static constexpr micro_kernels::gemm::KernelConfig conf{.negate  = false,
                                                             .trans_A = true};
-    for (index_t i = 0; i < C.rows(); ++i)
-        simd{0}.copy_to(&C(0, i, 0), stdx::vector_aligned);
     for (index_t l = 0; l < A.rows(); l += GemmBlockSizeCols) {
         auto nl = std::min<index_t>(GemmBlockSizeCols, A.rows() - l);
         for (index_t i = 0; i < A.cols(); i += GemmBlockSizeRows) {
             auto ni = std::min<index_t>(GemmBlockSizeRows, A.cols() - i);
             micro_kernels::gemm::xgemm_register<Abi, conf>(
                 A.block(l, i, nl, ni), B.middle_rows(l, nl),
-                C.middle_rows(i, ni)); // TODO: optimized microkernel
+                C.middle_rows(i, ni), l == 0); // TODO: optimized microkernel
         }
     }
 }

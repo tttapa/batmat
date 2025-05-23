@@ -106,11 +106,8 @@ void CompactBLAS<Abi>::xsyrk_T_ref(single_batch_view A,
         C.cols() * (C.cols() + 1) * A.rows() / 2 +
         (C.rows() - C.cols()) * C.cols() * A.rows();
     GUANAQO_TRACE("xsyrk_T", 0, op_cnt_syrk * C.depth());
-    for (index_t j = 0; j < C.cols(); ++j)
-        for (index_t i = j; i < C.rows(); ++i)
-            aligned_store(&C(0, i, j), simd{0});
     // TODO: cache blocking
-    micro_kernels::gemm::xgemmt_register<Abi, {.trans_A = true}>(A, A, C);
+    micro_kernels::gemm::xgemmt_register<Abi, {.trans_A = true}>(A, A, C, true);
 }
 
 template <class Abi>
@@ -123,11 +120,8 @@ void CompactBLAS<Abi>::xsyrk_ref(single_batch_view A, mut_single_batch_view C) {
     GUANAQO_TRACE("xsyrk", 0, op_cnt_syrk * C.depth());
     assert(C.rows() == C.cols());
     assert(C.rows() == A.rows());
-    for (index_t j = 0; j < C.cols(); ++j)
-        for (index_t i = j; i < C.rows(); ++i)
-            aligned_store(&C(0, i, j), simd{0});
     // TODO: cache blocking
-    micro_kernels::gemm::xgemmt_register<Abi, {.trans_B = true}>(A, A, C);
+    micro_kernels::gemm::xgemmt_register<Abi, {.trans_B = true}>(A, A, C, true);
 }
 
 template <class Abi>
@@ -142,7 +136,8 @@ void CompactBLAS<Abi>::xsyrk_add_ref(single_batch_view A,
     assert(C.rows() == C.cols());
     assert(C.rows() == A.rows());
     // TODO: cache blocking
-    micro_kernels::gemm::xgemmt_register<Abi, {.trans_B = true}>(A, A, C);
+    micro_kernels::gemm::xgemmt_register<Abi, {.trans_B = true}>(A, A, C,
+                                                                 false);
 }
 
 template <class Abi>
@@ -157,7 +152,8 @@ void CompactBLAS<Abi>::xsyrk_T_add_ref(single_batch_view A,
     assert(C.rows() == C.cols());
     assert(C.rows() == A.cols());
     // TODO: cache blocking
-    micro_kernels::gemm::xgemmt_register<Abi, {.trans_A = true}>(A, A, C);
+    micro_kernels::gemm::xgemmt_register<Abi, {.trans_A = true}>(A, A, C,
+                                                                 false);
 }
 
 template <class Abi>
@@ -174,7 +170,7 @@ void CompactBLAS<Abi>::xsyrk_add_shift(single_batch_view A,
     // TODO: cache blocking
     constexpr micro_kernels::gemm::KernelConfig conf{
         .negate = false, .trans_B = true, .shift = 1};
-    micro_kernels::gemm::xgemmt_register<Abi, conf>(A, A, C);
+    micro_kernels::gemm::xgemmt_register<Abi, conf>(A, A, C, false);
 }
 
 template <class Abi>
@@ -191,7 +187,7 @@ void CompactBLAS<Abi>::xsyrk_sub_shift(single_batch_view A,
     // TODO: cache blocking
     constexpr micro_kernels::gemm::KernelConfig conf{
         .negate = true, .trans_B = true, .shift = 1};
-    micro_kernels::gemm::xgemmt_register<Abi, conf>(A, A, C);
+    micro_kernels::gemm::xgemmt_register<Abi, conf>(A, A, C, false);
 }
 
 template <class Abi>
@@ -204,12 +200,9 @@ void CompactBLAS<Abi>::xsyrk_shift(single_batch_view A,
         (C.rows() - C.cols()) * C.cols() * A.cols();
     GUANAQO_TRACE("xsyrk_sub_shift", 0, op_cnt_syrk * (C.depth() - 1));
     // TODO: cache blocking
-    for (index_t j = 0; j < C.cols(); ++j)
-        for (index_t i = j; i < C.rows(); ++i)
-            aligned_store(&C(0, i, j), simd{0});
     constexpr micro_kernels::gemm::KernelConfig conf{.trans_B = true,
                                                      .shift   = 1};
-    micro_kernels::gemm::xgemmt_register<Abi, conf>(A, A, C);
+    micro_kernels::gemm::xgemmt_register<Abi, conf>(A, A, C, true);
 }
 
 template <class Abi>
@@ -238,7 +231,7 @@ void CompactBLAS<Abi>::xsyrk_sub_ref(single_batch_view A,
 
     const index_t M = C.rows(), N = C.cols(), K = A.cols();
     if (M <= M_cache && N <= N_cache && K <= K_cache) // TODO
-        return uk::gemm::xgemmt_register<Abi, conf>(A, A.top_rows(N), C);
+        return uk::gemm::xgemmt_register<Abi, conf>(A, A.top_rows(N), C, false);
 
     using sto_t                    = aligned_simd_storage<real_t, simd_align>;
     const index_t B_cache_sto_size = A.ceil_depth() * K_cache * N_cache;
@@ -274,7 +267,7 @@ void CompactBLAS<Abi>::xsyrk_sub_ref(single_batch_view A,
                 index_t m_cache = std::min(M_cache, M - i_cache);
                 auto Cij        = C.block(i_cache, j_cache, m_cache, n_cache);
                 if (i_cache == j_cache && m_cache == n_cache) {
-                    uk::gemm::xgemmt_register<Abi, conf>(Bkj, Bkj, Cij);
+                    uk::gemm::xgemmt_register<Abi, conf>(Bkj, Bkj, Cij, false);
                 } else {
                     auto Aik = [&] {
                         auto Aik = A.block(i_cache, p_cache, m_cache, k_cache);
@@ -293,9 +286,11 @@ void CompactBLAS<Abi>::xsyrk_sub_ref(single_batch_view A,
                         return Aik;
                     }();
                     if (i_cache == j_cache) [[unlikely]]
-                        uk::gemm::xgemmt_register<Abi, conf>(Aik, Bkj, Cij);
+                        uk::gemm::xgemmt_register<Abi, conf>(Aik, Bkj, Cij,
+                                                             false);
                     else
-                        uk::gemm::xgemm_register<Abi, conf>(Aik, Bkj, Cij);
+                        uk::gemm::xgemm_register<Abi, conf>(Aik, Bkj, Cij,
+                                                            false);
                 }
             }
         }

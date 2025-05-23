@@ -17,7 +17,7 @@ template <class Abi, KernelConfig Conf, index_t RowsReg>
 xgemmt_microkernel(const single_batch_matrix_accessor<Abi, Conf.trans_A> A,
                    const single_batch_matrix_accessor<Abi, Conf.trans_B> B,
                    const mut_single_batch_matrix_accessor<Abi> C,
-                   const index_t k) noexcept {
+                   const index_t k, const bool init_zero) noexcept {
     static constexpr auto S          = Conf.shift;
     static constexpr index_t ColsReg = RowsReg;
     using simd                       = stdx::simd<real_t, Abi>;
@@ -30,10 +30,11 @@ xgemmt_microkernel(const single_batch_matrix_accessor<Abi, Conf.trans_A> A,
     // Pre-compute the offsets of the columns of C
     auto C_cached = with_cached_access<ColsReg>(C);
     // Load accumulator into registers
-    simd C_reg[RowsReg][ColsReg]; // NOLINT(*-c-arrays)
-    KOQKATOO_FULLY_UNROLLED_FOR (index_t jj = 0; jj < ColsReg; ++jj)
-        KOQKATOO_FULLY_UNROLLED_FOR (index_t ii = jj; ii < RowsReg; ++ii)
-            C_reg[ii][jj] = rotl<S>(C_cached.load(ii, jj));
+    simd C_reg[RowsReg][ColsReg]{}; // NOLINT(*-c-arrays)
+    if (!init_zero) [[likely]]
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t jj = 0; jj < ColsReg; ++jj)
+            KOQKATOO_FULLY_UNROLLED_FOR (index_t ii = jj; ii < RowsReg; ++ii)
+                C_reg[ii][jj] = rotl<S>(C_cached.load(ii, jj));
     // Actual matrix multiplication kernel
     for (index_t l = 0; l < k; ++l)
         KOQKATOO_FULLY_UNROLLED_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
@@ -57,7 +58,7 @@ xgemmt_microkernel(const single_batch_matrix_accessor<Abi, Conf.trans_A> A,
 /// triangle of C. Using register blocking.
 template <class Abi, KernelConfig Conf>
 void xgemmt_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
-                     mut_single_batch_view<Abi> C) noexcept {
+                     mut_single_batch_view<Abi> C, bool init_zero) noexcept {
     static_assert(RowsReg == ColsReg, "Square blocks required");
     const index_t I = C.rows(), J = C.cols();
     const index_t K = Conf.trans_A ? A.rows() : A.cols();
@@ -73,7 +74,7 @@ void xgemmt_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
     const mut_single_batch_matrix_accessor<Abi> C_           = C;
     // Optimization for very small matrices
     if (I <= RowsReg && I == J)
-        return microkernel_t[I - 1](A_, B_, C_, K);
+        return microkernel_t[I - 1](A_, B_, C_, K, init_zero);
     // Simply loop over all blocks in the given matrices.
     index_t j;
     for (j = 0; j + ColsReg <= J; j += ColsReg) {
@@ -85,9 +86,9 @@ void xgemmt_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
             const auto Cij   = C_.block(i, j);
             if (i == j) {
                 KOQKATOO_ASSUME(ni == nj);
-                microkernel_t[nj - 1](Ai, Bj, Cij, K);
+                microkernel_t[nj - 1](Ai, Bj, Cij, K, init_zero);
             } else {
-                microkernel[ni - 1][nj - 1](Ai, Bj, Cij, K);
+                microkernel[ni - 1][nj - 1](Ai, Bj, Cij, K, init_zero);
             }
         }
     }
@@ -101,12 +102,13 @@ void xgemmt_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
             const auto Cij   = C_.block(i, j);
             if (i == j) {
                 KOQKATOO_ASSUME(ni >= nj);
-                microkernel_t[nj - 1](Ai, Bj, Cij, K);
+                microkernel_t[nj - 1](Ai, Bj, Cij, K, init_zero);
                 if (nj < ni) [[unlikely]]
                     microkernel[ni - nj - 1][nj - 1](Ai.middle_rows(nj), Bj,
-                                                     Cij.middle_rows(nj), K);
+                                                     Cij.middle_rows(nj), K,
+                                                     init_zero);
             } else {
-                microkernel[ni - 1][nj - 1](Ai, Bj, Cij, K);
+                microkernel[ni - 1][nj - 1](Ai, Bj, Cij, K, init_zero);
             }
         }
     }
