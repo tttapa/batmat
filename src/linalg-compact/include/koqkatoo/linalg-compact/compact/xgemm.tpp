@@ -197,6 +197,28 @@ void CompactBLAS<Abi>::xgemm_NT_sub_ref(single_batch_view A,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xgemm_NT_sub_copy_ref(single_batch_view A,
+                                             single_batch_view B,
+                                             single_batch_view C,
+                                             mut_single_batch_view D) {
+    GUANAQO_TRACE("xgemm_NT_sub", 0,
+                  A.rows() * A.cols() * B.rows() * A.depth());
+    assert(A.rows() == C.rows());
+    assert(A.cols() == B.cols());
+    assert(B.rows() == C.cols());
+    for (index_t l = 0; l < A.cols(); l += GemmBlockSizeCols) {
+        auto nl = std::min<index_t>(GemmBlockSizeCols, A.cols() - l);
+        for (index_t i = 0; i < A.rows(); i += GemmBlockSizeRows) {
+            auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
+            micro_kernels::gemm::xgemm_copy_register<Abi, {.negate  = true,
+                                                           .trans_B = true}>(
+                A.block(i, l, ni, nl), B.middle_cols(l, nl),
+                C.middle_rows(i, ni), D.middle_rows(i, ni));
+        }
+    }
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xgemm_NT_add_diag_ref(single_batch_view A,
                                              single_batch_view B,
                                              mut_single_batch_view C,

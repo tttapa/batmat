@@ -267,6 +267,9 @@ struct CompactBLAS {
                              PreferredBackend b);
     static void xgemm_NT_sub_ref(single_batch_view A, single_batch_view B,
                                  mut_single_batch_view C);
+    static void xgemm_NT_sub_copy_ref(single_batch_view A, single_batch_view B,
+                                      single_batch_view C,
+                                      mut_single_batch_view D);
 
     /// C += A diag(d) Bᵀ
     static void xgemm_NT_add_diag_ref(single_batch_view A, single_batch_view B,

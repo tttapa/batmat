@@ -700,13 +700,12 @@ struct CyclicOCPSolver {
         auto B̂   = riccati_ÂB̂.batch(ti).right_cols(num_stages * nu);
         auto Â   = riccati_ÂB̂.batch(ti).left_cols(num_stages * nx);
         auto BAᵀ = riccati_BAᵀ.batch(ti);
+        auto A0  = data_BA.batch(di0).right_cols(nx);
         // Copy B and A from the last stage
         {
             GUANAQO_TRACE("Riccati init", k0);
             compact_blas::xcopy(data_BA.batch(di0).left_cols(nu),
                                 B̂.left_cols(nu));
-            compact_blas::xcopy(data_BA.batch(di0).right_cols(nx),
-                                Â.left_cols(nx));
             compact_blas::xsyrk_schur_copy(data_DCᵀ.batch(di0), Σ.batch(di0),
                                            data_RSQ.batch(di0),
                                            R̂ŜQ̂.left_cols(nux));
@@ -727,7 +726,8 @@ struct CyclicOCPSolver {
                 compact_blas::xpotrf(R̂Ŝi, be);        // ┐
                 compact_blas::xtrsm_RLTN(R̂i, B̂i, be); // ┘
                 // Update Â = Ã - LB̂ LŜᵀ
-                compact_blas::xgemm_NT_sub(B̂i, Ŝi, Âi, be);
+                i == 0 ? compact_blas::xgemm_NT_sub_copy_ref(B̂i, Ŝi, A0, Âi)
+                       : compact_blas::xgemm_NT_sub(B̂i, Ŝi, Âi, be);
                 // Update and factor Q̂ = Q̃ - LŜ LŜᵀ
                 compact_blas::xsyrk_sub(Ŝi, Q̂i, be); // ┐
                 compact_blas::xpotrf(Q̂i, be);        // ┘
