@@ -1848,9 +1848,9 @@ TEST(NewCyclic, scheduling) {
         __itt_thread_set_name(std::format("OMP({})", i).c_str());
     }));
 
-    using Solver     = test::CyclicOCPSolver<4>;
+    using Solver     = test::CyclicOCPSolver<8>;
     const index_t lP = log_n_threads + Solver::lvl;
-    OCPDim dim{.N_horiz = 512, .nx = 50, .nu = 15, .ny = 50, .ny_N = 50};
+    OCPDim dim{.N_horiz = 128, .nx = 50, .nu = 15, .ny = 50, .ny_N = 50};
     auto ocp = generate_random_ocp(dim);
     Solver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
@@ -1919,9 +1919,9 @@ TEST(NewCyclic, scheduling) {
 #endif
         out_dir /= *koqkatoo_commit_hash ? koqkatoo_commit_hash : "unknown";
         out_dir /= KOQKATOO_MKL_IF_ELSE("mkl", "openblas");
-        out_dir /= std::format("nx={}-nu={}-ny={}-N={}-thr={}-vl={}-pcg={}",
+        out_dir /= std::format("nx={}-nu={}-ny={}-N={}-thr={}-vl={}-pcg={}{}",
                                solver.dim.nx, solver.dim.nu, solver.dim.ny, N,
-                               1 << log_n_threads, VL, pcg);
+                               1 << log_n_threads, VL, pcg, alt ? "-alt" : "");
         std::filesystem::create_directories(out_dir);
         std::ofstream csv{out_dir / name};
         guanaqo::TraceLogger::write_column_headings(csv) << '\n';
