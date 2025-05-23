@@ -26,6 +26,15 @@ void CompactBLAS<Abi>::xshhud_diag_ref(mut_single_batch_view L,
     using namespace micro_kernels::shhud_diag;
     static constexpr index_constant<SizeR> R;
     static constexpr index_constant<SizeS> S;
+    const index_t C = A.cols();
+    auto n1 = L.cols(), n2 = L.rows() - n1;
+    auto flop_count_diag_11 = (C + 1) * n1 * n1 + 2 * C * n1;
+    auto flop_count_tail_11 = 2 * (C + 1) * n2 * n1 + C * n2;
+    [[maybe_unused]] index_t flop_count =
+        flop_count_diag_11 + flop_count_tail_11;
+    GUANAQO_TRACE("xshhud_diag", 0, flop_count * L.depth());
+    if (C == 0)
+        return;
 
     using W_t = triangular_accessor<Abi, real_t, R>;
     alignas(W_t::alignment()) real_t W[W_t::size()];
@@ -82,49 +91,59 @@ void CompactBLAS<Abi>::xshhud_diag_ref(mut_single_batch_view L,
 }
 
 template <class Abi>
-void CompactBLAS<Abi>::xshhud_diag_2_ref(mut_single_batch_view L,
-                                         mut_single_batch_view A,
-                                         mut_single_batch_view L2,
+void CompactBLAS<Abi>::xshhud_diag_2_ref(mut_single_batch_view L11,
+                                         mut_single_batch_view A1,
+                                         mut_single_batch_view L21,
                                          mut_single_batch_view A2,
                                          single_batch_view D) {
-    assert(L.rows() >= L.cols());
-    assert(L.rows() == A.rows());
-    assert(A.cols() == D.rows());
-    assert(A2.cols() == A.cols());
-    assert(L2.cols() == L.cols());
+    assert(L11.rows() >= L11.cols());
+    assert(L11.rows() == A1.rows());
+    assert(A1.cols() == D.rows());
+    assert(A2.cols() == A1.cols());
+    assert(L21.cols() == L11.cols());
     using namespace micro_kernels::shhud_diag;
     static constexpr index_constant<SizeR> R;
     static constexpr index_constant<SizeS> S;
+    const index_t C = A1.cols();
+    auto n1 = L11.cols(), n2 = L11.rows() - n1;
+    auto flop_count_diag_11 = (C + 1) * n1 * n1 + 2 * C * n1;
+    auto flop_count_tail_11 = 2 * (C + 1) * n2 * n1 + C * n2;
+    auto flop_count_tail_21 = 2 * (C + 1) * L21.rows() * n1 + C * L21.rows();
+    [[maybe_unused]] index_t flop_count =
+        flop_count_diag_11 + flop_count_tail_11 + flop_count_tail_21;
+    GUANAQO_TRACE("xshhud_diag_2", 0, flop_count * L11.depth());
+    if (C == 0)
+        return;
 
     using W_t = triangular_accessor<Abi, real_t, R>;
     alignas(W_t::alignment()) real_t W[W_t::size()];
 
     // Process all diagonal blocks (in multiples of R, except the last).
-    foreach_chunked_merged(0, L.cols(), R, [&](index_t k, auto rem_k) {
+    foreach_chunked_merged(0, L11.cols(), R, [&](index_t k, auto rem_k) {
         // Part of A corresponding to this diagonal block
         // TODO: packing
-        auto Ad = A.middle_rows(k, rem_k);
-        auto Ld = L.block(k, k, rem_k, rem_k);
+        auto Ad = A1.middle_rows(k, rem_k);
+        auto Ld = L11.block(k, k, rem_k, rem_k);
         // Process the diagonal block itself
-        microkernel_diag_lut<Abi>[rem_k - 1](A.cols(), W, Ld, Ad, D);
+        microkernel_diag_lut<Abi>[rem_k - 1](A1.cols(), W, Ld, Ad, D);
         // Process all rows below the diagonal block (in multiples of S).
         foreach_chunked_merged(
-            k + rem_k, L.rows(), S,
+            k + rem_k, L11.rows(), S,
             [&](index_t i, auto rem_i) {
-                auto As = A.middle_rows(i, rem_i);
-                auto Ls = L.block(i, k, rem_i, rem_k);
+                auto As = A1.middle_rows(i, rem_i);
+                auto Ls = L11.block(i, k, rem_i, rem_k);
                 microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
-                    0, A.cols(), A.cols(), W, Ls, As, As, Ad, D,
+                    0, A1.cols(), A1.cols(), W, Ls, As, As, Ad, D,
                     Structure::General, 0);
             },
             LoopDir::Backward); // TODO: decide on order
         foreach_chunked_merged(
-            0, L2.rows(), S,
+            0, L21.rows(), S,
             [&](index_t i, auto rem_i) {
                 auto As = A2.middle_rows(i, rem_i);
-                auto Ls = L2.block(i, k, rem_i, rem_k);
+                auto Ls = L21.block(i, k, rem_i, rem_k);
                 microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
-                    0, A.cols(), A.cols(), W, Ls, As, As, Ad, D,
+                    0, A1.cols(), A1.cols(), W, Ls, As, As, Ad, D,
                     Structure::General, 0);
             },
             LoopDir::Backward); // TODO: decide on order
@@ -159,7 +178,17 @@ void CompactBLAS<Abi>::xshhud_diag_cyclic(
     static constexpr index_constant<SizeR> R;
     static constexpr index_constant<SizeS> S;
     const index_t C = A1.cols();
-
+    auto n1 = L11.cols(), n2 = L11.rows() - n1;
+    auto flop_count_diag_11 = (C + 1) * n1 * n1 + 2 * C * n1;
+    auto flop_count_tail_11 = 2 * (C + 1) * n2 * n1 + C * n2;
+    auto flop_count_tail_21 = 2 * (C + 1) * L21.rows() * n1 + C * L21.rows();
+    auto flop_count_tail_31 = 2 * (C + 1) * L31.rows() * n1 + C * L31.rows();
+    // Note: initial zero values of A for simplicity (for large matrices this
+    //       does not matter)
+    [[maybe_unused]] index_t flop_count =
+        flop_count_diag_11 + flop_count_tail_11 + flop_count_tail_21 +
+        flop_count_tail_31;
+    GUANAQO_TRACE("xshhud_diag_cyclic", 0, flop_count * L11.depth());
     if (C == 0)
         return;
 
@@ -241,7 +270,17 @@ void CompactBLAS<Abi>::xshhud_diag_riccati(
     static constexpr index_constant<SizeS> S;
     static_assert(R == S);
     const index_t C = A1.cols();
-
+    auto n1 = L11.cols(), n2 = L11.rows() - n1;
+    auto flop_count_diag_11 = (C + 1) * n1 * n1 + 2 * C * n1;
+    auto flop_count_tail_11 = 2 * (C + 1) * n2 * n1 + C * n2;
+    auto flop_count_tail_21 = 2 * (C + 1) * L21.rows() * n1 + C * L21.rows();
+    auto flop_count_tail_u1 = 2 * (C + 1) * Lu1.rows() * n1 + C * Lu1.rows();
+    // Note: ignoring upper trapezoidal shape and initial zero value of Au for
+    //       simplicity (for large matrices this does not matter)
+    [[maybe_unused]] index_t flop_count =
+        flop_count_diag_11 + flop_count_tail_11 + flop_count_tail_21 +
+        flop_count_tail_u1;
+    GUANAQO_TRACE("xshhud_diag_riccati", 0, flop_count * L11.depth());
     if (C == 0)
         return;
 

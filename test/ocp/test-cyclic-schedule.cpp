@@ -1255,8 +1255,6 @@ struct CyclicOCPSolver {
                       jsplit = nJs[biY - 1] - j0;
         constexpr index_t w3_out_lut[]{1, 0, 0, 1};
         const index_t w3_out = w3_out_lut[i & 3];
-        std::println("biY={:>2},  i={:>2}  w3={:>2}  {:>2}:{}:{:<2}", biY, i,
-                     w3_out, j0, j0 + jsplit, j1);
         if (i & 1) {
             compact_blas::xshhud_diag_cyclic(
                 coupling_D.batch(biY),
@@ -1294,9 +1292,6 @@ struct CyclicOCPSolver {
                 return;
             update_riccati(ti, alt, ΔΣ);
             for (index_t l = 0; l < lP - lvl; ++l) {
-                barrier();
-                if (ti == 0)
-                    std::println("=====");
                 barrier();
 
                 const index_t offset = 1 << l;
@@ -1434,8 +1429,6 @@ struct CyclicOCPSolver {
                 constexpr index_t wiI_table[]{2, 0, 1, 0};
                 const index_t wiA = wiA_table[bi_upd & 3];
                 const index_t wiI = wiI_table[bi_upd & 3];
-                std::println("ti={:>2}, bi_upd={:>2}, {:>2}:{:<2} [{}][{}]", ti,
-                             bi_upd, j0, j1, wiA, wiI);
                 if (nJi > 0) {
                     GUANAQO_TRACE("Riccati update Q", k);
                     auto Q̂i_inv = R̂ŜQ̂i.block(nu - 1, nu, nx, nx);
@@ -1861,7 +1854,7 @@ TEST(NewCyclic, scheduling) {
 
     using Solver     = test::CyclicOCPSolver<4>;
     const index_t lP = log_n_threads + Solver::lvl;
-    OCPDim dim{.N_horiz = 1 << lP, .nx = 40, .nu = 30, .ny = 10, .ny_N = 10};
+    OCPDim dim{.N_horiz = 3 << lP, .nx = 50, .nu = 15, .ny = 50, .ny_N = 50};
     auto ocp = generate_random_ocp(dim);
     Solver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
@@ -1873,14 +1866,14 @@ TEST(NewCyclic, scheduling) {
         ΔΣ{{.depth = dim.N_horiz, .rows = dim.ny, .cols = 1}};
     std::mt19937 rng(102030405);
     std::uniform_real_distribution<real_t> uni(-1, 1);
-    std::bernoulli_distribution bern(0.125);
+    std::bernoulli_distribution bern(0.01);
     std::ranges::generate(λ, [&] { return uni(rng); });
     std::ranges::generate(ux, [&] { return uni(rng); });
     std::ranges::generate(Σ_lin, [&] { return std::exp2(uni(rng)); });
     std::vector<real_t> Σ_lin2 = Σ_lin;
     for (auto &Σ2i : Σ_lin2)
-        // if (bern(rng)) // TODO
-        Σ2i = std::exp2(uni(rng));
+        if (bern(rng))
+            Σ2i = std::exp2(uni(rng));
     // std::ranges::transform(Σ_lin, Σ_lin2.begin(),
     //                        [](auto x) { return x + 1; }); // TODO
 
@@ -1899,9 +1892,15 @@ TEST(NewCyclic, scheduling) {
             f << guanaqo::float_to_str(x) << '\n';
     }
 
-    const bool alt = true;
-    for (int i = 0; i < 500; ++i)
+    const bool alt        = true;
+    const auto ux_initial = ux, λ_initial = λ;
+    for (int i = 0; i < 500; ++i) {
         solver.run(Σ, alt);
+        solver.update(ΔΣ);
+        solver.solve(ux, λ);
+        ux.view = ux_initial.view;
+        λ.view  = λ_initial.view;
+    }
 #if GUANAQO_WITH_TRACING
     guanaqo::trace_logger.reset();
 #endif

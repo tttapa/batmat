@@ -222,8 +222,10 @@ void CompactBLAS<Abi>::xgemm_NT_add_diag_ref(single_batch_view A,
                                              single_batch_view B,
                                              mut_single_batch_view C,
                                              single_batch_view d) {
-    GUANAQO_TRACE("xgemm_NT_sub", 0,
-                  A.rows() * A.cols() * B.rows() * A.depth());
+    GUANAQO_TRACE("xgemm_NT_add_diag", 0,
+                  (A.rows() * A.cols() * B.rows() +
+                   std::min(A.rows(), B.rows()) * A.cols()) *
+                      A.depth());
     assert(A.rows() == C.rows());
     assert(A.cols() == B.cols());
     assert(B.rows() == C.cols());
