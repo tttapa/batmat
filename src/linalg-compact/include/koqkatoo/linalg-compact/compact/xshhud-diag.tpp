@@ -184,6 +184,7 @@ void CompactBLAS<Abi>::xshhud_diag_cyclic(
                     0, C, C, W, Ls, As, As, Ad, D, Structure::General, 0);
             },
             LoopDir::Backward); // TODO: decide on order
+        const auto rot = k + rem_k == L11.cols() ? rot_A2 : 0;
         foreach_chunked_merged(
             0, L21.rows(), S,
             [&](index_t i, auto rem_i) {
@@ -192,7 +193,7 @@ void CompactBLAS<Abi>::xshhud_diag_cyclic(
                 auto Ls     = L21.block(i, k, rem_i, rem_k);
                 microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
                     k == 0 ? split_A : 0, C, C, W, Ls, As, As_out, Ad, D,
-                    Structure::General, k + rem_k == L11.cols() ? rot_A2 : 0);
+                    Structure::General, rot);
                 // First half of A2 is implicitly zero in first pass
             },
             LoopDir::Backward); // TODO: decide on order

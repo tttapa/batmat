@@ -64,6 +64,11 @@ void xgemm_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
                     mut_single_batch_view<Abi> C) noexcept;
 
 template <class Abi, KernelConfig Conf>
+void xgemm_diag_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
+                         mut_single_batch_view<Abi> C,
+                         single_batch_view<Abi> d) noexcept;
+
+template <class Abi, KernelConfig Conf>
 void xgemmt_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
                      mut_single_batch_view<Abi> C) noexcept;
 

@@ -1247,6 +1247,7 @@ struct CyclicOCPSolver {
     }
 
     void update_level(index_t l, index_t biY) {
+        GUANAQO_TRACE("update_level", biY);
         const index_t offset = 1 << l;
         const index_t i      = biY >> (l + 1);
         const index_t j0     = biY == offset ? 0 : nJs[biY - 1 - offset],
@@ -1267,12 +1268,8 @@ struct CyclicOCPSolver {
                 work_update.batch((l + 1) % 4).middle_cols(j0, nj),
                 work_update.batch((l + 1) % 4).middle_cols(j0, nj),
                 work_update_Σ.batch(0).middle_rows(j0, nj), jsplit, 0);
-            // if (x_lanes) { // TODO
-            //     compact_blas::template xadd_copy<1>(
-            //         work_update_Σ.batch(0).middle_rows(j0, nj),
-            //         work_update_Σ.batch(0).middle_rows(j0, nj));
-            // }
         } else {
+            const bool x_lanes = l + 1 == lP - lvl && 0; // TODO
             compact_blas::xshhud_diag_cyclic(
                 coupling_D.batch(biY),
                 work_update.batch(l & 3).middle_cols(j0, nj),
@@ -1282,7 +1279,8 @@ struct CyclicOCPSolver {
                 coupling_U.batch(biY),
                 work_update.batch((l + 2) % 4).middle_cols(j0, nj),
                 work_update.batch((l + 2 + w3_out) % 4).middle_cols(j0, nj),
-                work_update_Σ.batch(0).middle_rows(j0, nj), jsplit, 0);
+                work_update_Σ.batch(0).middle_rows(j0, nj), jsplit,
+                x_lanes ? 1 : 0);
         }
     }
 
@@ -1303,23 +1301,39 @@ struct CyclicOCPSolver {
 
                 const index_t offset = 1 << l;
                 const auto biY       = sub_wrap_PmV(ti, offset);
-                if (is_active(l, biY)) {
-                    const index_t offset = 1 << l;
-                    const index_t i      = biY >> (l + 1);
-                    const index_t j0 =
-                                      biY == offset ? 0 : nJs[biY - 1 - offset],
-                                  j1 = nJs[biY - 1 + offset];
-                    std::println("ti={:>2}, biY={:>2},  i={:>2}  {:>2}:{:<2}",
-                                 ti, biY, i, j0, j1);
+                if (is_active(l, biY))
                     update_level(l, biY);
-                    if (l + 1 == lP - lvl) {
-                        const index_t j0 = 0, j1 = nJs.back(), nj = j1 - j0;
-                        compact_blas::xshhud_diag_ref(
-                            coupling_D.batch(0),
-                            work_update.batch((l + 3) & 3).middle_cols(j0, nj),
-                            work_update_Σ.batch(0).middle_rows(j0, nj));
-                    }
-                }
+            }
+            barrier(); // TODO: remove and simply execute on the last thread
+            const index_t l      = lP - lvl;
+            const index_t offset = 1 << l;
+            const auto biY       = sub_wrap_PmV(ti, offset);
+            if (biY == 0) {
+                GUANAQO_TRACE("update_level last", biY);
+                const index_t j0 = 0, j1 = nJs.back(), nj = j1 - j0;
+                compact_blas::xgemm_NT_add_diag_ref(
+                    work_update.batch(l & 3).middle_cols(j0, nj),
+                    work_update.batch((l + 2) & 3).middle_cols(j0, nj),
+                    coupling_Y.batch(0),
+                    work_update_Σ.batch(0).middle_rows(j0, nj));
+                compact_blas::xshhud_diag_ref(
+                    coupling_D.batch(biY),
+                    work_update.batch((l + 2) & 3).middle_cols(j0, nj),
+                    work_update_Σ.batch(0).middle_rows(j0, nj));
+                compact_blas::template xadd_copy<1>(
+                    work_update_Σ.batch(0).middle_rows(j0, nj),
+                    work_update_Σ.batch(0).middle_rows(j0, nj));
+                compact_blas::template xadd_copy<1>( // TODO
+                    work_update.batch(l & 3).middle_cols(j0, nj),
+                    work_update.batch(l & 3).middle_cols(j0, nj));
+                compact_blas::xshhud_diag_ref(
+                    coupling_D.batch(biY),
+                    work_update.batch(l & 3).middle_cols(j0, nj),
+                    work_update_Σ.batch(0).middle_rows(j0, nj));
+                // TODO: we should actually merge these two xshhud calls to
+                //       make sure that the intermediate matrix does not become
+                //       indefinite (although this shouldn't be an issue for
+                //       QPALM)
             }
         });
         this->alt = true;
@@ -1834,7 +1848,7 @@ struct CyclicOCPSolver {
 using koqkatoo::index_t;
 using koqkatoo::real_t;
 
-const int log_n_threads = 5; // TODO
+const int log_n_threads = 3; // TODO
 TEST(NewCyclic, scheduling) {
     using namespace koqkatoo::ocp;
 
@@ -1845,9 +1859,9 @@ TEST(NewCyclic, scheduling) {
         __itt_thread_set_name(std::format("OMP({})", i).c_str());
     }));
 
-    using Solver     = test::CyclicOCPSolver<16>;
+    using Solver     = test::CyclicOCPSolver<4>;
     const index_t lP = log_n_threads + Solver::lvl;
-    OCPDim dim{.N_horiz = 2 << lP, .nx = 5, .nu = 3, .ny = 10, .ny_N = 10};
+    OCPDim dim{.N_horiz = 1 << lP, .nx = 40, .nu = 30, .ny = 10, .ny_N = 10};
     auto ocp = generate_random_ocp(dim);
     Solver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
@@ -1865,8 +1879,8 @@ TEST(NewCyclic, scheduling) {
     std::ranges::generate(Σ_lin, [&] { return std::exp2(uni(rng)); });
     std::vector<real_t> Σ_lin2 = Σ_lin;
     for (auto &Σ2i : Σ_lin2)
-        if (bern(rng)) // TODO
-            Σ2i = std::exp2(uni(rng));
+        // if (bern(rng)) // TODO
+        Σ2i = std::exp2(uni(rng));
     // std::ranges::transform(Σ_lin, Σ_lin2.begin(),
     //                        [](auto x) { return x + 1; }); // TODO
 
@@ -1960,7 +1974,8 @@ using Solver = koqkatoo::ocp::test::CyclicOCPSolver<4>;
 std::shared_ptr<Solver>
 build_new_cyclic_solver(const koqkatoo::ocp::LinearOCPStorage &ocp,
                         koqkatoo::index_t lP) {
-    auto solver = std::make_shared<Solver>(Solver{.dim=ocp.dim, .lP=lP + Solver::lvl});
+    auto solver = std::make_shared<Solver>(
+        Solver{.dim = ocp.dim, .lP = lP + Solver::lvl});
     solver->initialize(ocp);
     return solver;
 }

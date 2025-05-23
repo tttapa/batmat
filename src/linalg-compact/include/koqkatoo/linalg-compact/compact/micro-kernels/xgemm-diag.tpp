@@ -54,4 +54,34 @@ xgemm_diag_microkernel(const single_batch_matrix_accessor<Abi, Conf.trans_A> A,
             C_cached.store(C_reg[ii][jj], ii, jj);
 }
 
+/// Generalized matrix multiplication C = C ± A⁽ᵀ⁾ B⁽ᵀ⁾. Using register blocking.
+template <class Abi, KernelConfig Conf>
+void xgemm_diag_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
+                         mut_single_batch_view<Abi> C,
+                         single_batch_view<Abi> d) noexcept {
+    const index_t I = C.rows(), J = C.cols();
+    const index_t K = Conf.trans_A ? A.rows() : A.cols();
+    KOQKATOO_ASSUME(I > 0);
+    KOQKATOO_ASSUME(J > 0);
+    KOQKATOO_ASSUME(K > 0);
+    static const auto microkernel = microkernel_diag_lut<Abi, Conf>;
+    const single_batch_matrix_accessor<Abi, Conf.trans_A> A_ = A;
+    const single_batch_matrix_accessor<Abi, Conf.trans_B> B_ = B;
+    const mut_single_batch_matrix_accessor<Abi> C_           = C;
+    // Optimization for very small matrices
+    if (I <= RowsReg && J <= ColsReg)
+        return microkernel[I - 1][J - 1](A_, B_, C_, K, d);
+    // Simply loop over all blocks in the given matrices.
+    for (index_t j = 0; j < J; j += ColsReg) {
+        const auto nj = std::min<index_t>(ColsReg, J - j);
+        const auto Bj = B_.middle_cols(j);
+        for (index_t i = 0; i < I; i += RowsReg) {
+            const index_t ni = std::min<index_t>(RowsReg, I - i);
+            const auto Ai    = A_.middle_rows(i);
+            const auto Cij   = C_.block(i, j);
+            microkernel[ni - 1][nj - 1](Ai, Bj, Cij, K, d);
+        }
+    }
+}
+
 } // namespace koqkatoo::linalg::compact::micro_kernels::gemm

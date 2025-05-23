@@ -53,7 +53,7 @@ void CompactBLAS<Abi>::xsyomv(single_batch_view A, single_batch_view x,
 
 template <class Abi>
 void CompactBLAS<Abi>::xsyomv_neg(single_batch_view A, single_batch_view x,
-                              mut_single_batch_view v) {
+                                  mut_single_batch_view v) {
     GUANAQO_TRACE("xsyomv_neg", 0, A.rows() * A.cols() * A.depth());
     using micro_kernels::gemm::xsyomv_register; // TODO
     xsyomv_register<Abi, true>(A, x, v);
@@ -213,6 +213,27 @@ void CompactBLAS<Abi>::xgemm_NT_sub_ref(single_batch_view A,
                                                       .trans_B = true}>(
                 A.block(i, l, ni, nl), B.middle_cols(l, nl),
                 C.middle_rows(i, ni));
+        }
+    }
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xgemm_NT_add_diag_ref(single_batch_view A,
+                                             single_batch_view B,
+                                             mut_single_batch_view C,
+                                             single_batch_view d) {
+    GUANAQO_TRACE("xgemm_NT_sub", 0,
+                  A.rows() * A.cols() * B.rows() * A.depth());
+    assert(A.rows() == C.rows());
+    assert(A.cols() == B.cols());
+    assert(B.rows() == C.cols());
+    for (index_t l = 0; l < A.cols(); l += GemmBlockSizeCols) {
+        auto nl = std::min<index_t>(GemmBlockSizeCols, A.cols() - l);
+        for (index_t i = 0; i < A.rows(); i += GemmBlockSizeRows) {
+            auto ni = std::min<index_t>(GemmBlockSizeRows, A.rows() - i);
+            micro_kernels::gemm::xgemm_diag_register<Abi, {.trans_B = true}>(
+                A.block(i, l, ni, nl), B.middle_cols(l, nl),
+                C.middle_rows(i, ni), d.middle_rows(l, nl));
         }
     }
 }
