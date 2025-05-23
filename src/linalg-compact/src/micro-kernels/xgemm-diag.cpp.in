@@ -16,6 +16,7 @@ template const constinit decltype(microkernel_diag_lut<Abi, {.negate = true}>) m
 template const constinit decltype(microkernel_diag_lut<Abi, {.negate = true, .trans_A = true}>) microkernel_diag_lut<Abi, {.negate = true, .trans_A = true}>;
 template const constinit decltype(microkernel_diag_lut<Abi, {.negate = true, .trans_B = true}>) microkernel_diag_lut<Abi, {.negate = true, .trans_B = true}>;
 template const constinit decltype(microkernel_diag_lut<Abi, {.negate = true, .trans_A = true, .trans_B = true}>) microkernel_diag_lut<Abi, {.negate = true, .trans_A = true, .trans_B = true}>;
+template const constinit decltype(microkernel_diag_copy_lut<Abi, {.trans_B = true}>) microkernel_diag_copy_lut<Abi, {.trans_B = true}>;
 
 template void xgemm_diag_register<Abi, {.trans_B = true}>(
     single_batch_view<Abi>, single_batch_view<Abi>, mut_single_batch_view<Abi>, single_batch_view<Abi>);

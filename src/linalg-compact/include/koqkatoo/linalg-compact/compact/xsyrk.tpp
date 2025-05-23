@@ -88,13 +88,10 @@ void CompactBLAS<Abi>::xsyrk_schur_copy(single_batch_view C,
                                 op_cnt_diag = C.cols() * C.rows();
     GUANAQO_TRACE("xsyrk_schur_copy", 0,
                   (op_cnt_syrk + op_cnt_diag) * C.depth());
-    // TODO: merge copy and gemm
-    for (index_t j = 0; j < H_out.cols(); ++j)
-        for (index_t i = j; i < H_out.rows(); ++i)
-            aligned_store(&H_out(0, i, j), aligned_load(&H_in(0, i, j)));
     // TODO: cache blocking
     constexpr micro_kernels::gemm::KernelConfig conf{.trans_B = true};
-    micro_kernels::gemm::xgemmt_diag_register<Abi, conf>(C, C, H_out, Σ);
+    micro_kernels::gemm::xgemmt_diag_copy_register<Abi, conf>(C, C, H_in, H_out,
+                                                              Σ);
 }
 
 template <class Abi>
