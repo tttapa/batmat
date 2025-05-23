@@ -739,7 +739,7 @@ struct CyclicOCPSolver {
                 PRINTLN("  Riccati update AB{}",
                         VecReg{vl, k_next, N >> lvl, N});
                 const auto di_next = di0 + i + 1;
-                auto BAᵀi          = BAᵀ.middle_cols(i * nx, nx);
+                auto BAᵀi          = BAᵀ.middle_cols(alt ? 0 : i * nx, nx);
                 auto BAi           = data_BA.batch(di_next);
                 auto Bi = BAi.left_cols(nu), Ai = BAi.right_cols(nx);
                 // Compute next B̂ and Â
@@ -1848,9 +1848,9 @@ TEST(NewCyclic, scheduling) {
         __itt_thread_set_name(std::format("OMP({})", i).c_str());
     }));
 
-    using Solver     = test::CyclicOCPSolver<8>;
+    using Solver     = test::CyclicOCPSolver<4>;
     const index_t lP = log_n_threads + Solver::lvl;
-    OCPDim dim{.N_horiz = 128, .nx = 50, .nu = 15, .ny = 50, .ny_N = 50};
+    OCPDim dim{.N_horiz = 512, .nx = 50, .nu = 15, .ny = 50, .ny_N = 50};
     auto ocp = generate_random_ocp(dim);
     Solver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
@@ -1888,7 +1888,7 @@ TEST(NewCyclic, scheduling) {
             f << guanaqo::float_to_str(x) << '\n';
     }
 
-    const bool alt        = false;
+    const bool alt        = true;
     const auto ux_initial = ux, λ_initial = λ;
     for (int i = 0; i < 500; ++i) {
         solver.run(Σ, alt);
