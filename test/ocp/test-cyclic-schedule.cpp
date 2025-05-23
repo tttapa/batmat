@@ -747,8 +747,6 @@ struct CyclicOCPSolver {
                 auto Â_next = Â.middle_cols((i + 1) * nx, nx);
                 compact_blas::xgemm(Âi, Bi, B̂_next, be);
                 compact_blas::xgemm(Âi, Ai, Â_next, be);
-                if (alt)
-                    compact_blas::xtrsm_RLTN(Q̂i, Âi, be);
                 // Riccati update
                 auto R̂ŜQ̂_next = R̂ŜQ̂.middle_cols((i + 1) * nux, nux);
                 compact_blas::xcopy_T(data_BA.batch(di_next), BAᵀi);
@@ -882,11 +880,11 @@ struct CyclicOCPSolver {
                 PRINTLN("k={:>2}  di={:>2}  k_next={:>2}  di_next={:>2}", k, di,
                         k_next, di_next);
                 GUANAQO_TRACE("Riccati solve b", k_next);
+                // λ0 += Â b
+                compact_blas::xgemv_add(Âi, λ.batch(di_next), λ.batch(di0), be);
                 // b' = LQᵀb
                 compact_blas::xcopy(λ.batch(di_next), w);
                 compact_blas::xtrmv_T(Q̂i, w, be);
-                // λ0 += LÂ LQᵀb
-                compact_blas::xgemv_add(Âi, w, λ.batch(di0), be);
                 // d' = LQ b'
                 compact_blas::xtrmv(Q̂i, w, be);
                 // d = LQ LQᵀ b + p
@@ -1147,13 +1145,13 @@ struct CyclicOCPSolver {
                                           ux.batch(di).top_rows(nu), be);
                 compact_blas::xtrsv_LTN(R̂i, ux.batch(di).top_rows(nu), be);
 
-                // λ(next) = LQ (LQᵀ x + LÂᵀ λ(last)) - p
+                // λ(next) = LQ LQᵀ x + Âᵀ λ(last) - p
                 compact_blas::xcopy(ux.batch(di).bottom_rows(nx),
                                     λ.batch(di_next));
                 compact_blas::xtrmv_T(Q̂i, λ.batch(di_next), be);
+                compact_blas::xtrmv(Q̂i, λ.batch(di_next), be);
                 compact_blas::xgemv_T_add(Âi, λ.batch(di0), λ.batch(di_next),
                                           be);
-                compact_blas::xtrmv(Q̂i, λ.batch(di_next), be);
                 compact_blas::xsub_copy(λ.batch(di_next), λ.batch(di_next), w);
             } else {
                 // x_last = LQ⁻ᵀ(q_last + LQ⁻¹ λ - LÂᵀ λ)
@@ -1397,10 +1395,6 @@ struct CyclicOCPSolver {
                     compact_blas::xcopy(ΥΓi.bottom_rows(nx),
                                         ΥΓ_next.bottom_left(nx, nJi));
                 }
-                if (!alt) {
-                    GUANAQO_TRACE("Riccati convert alt", k);
-                    compact_blas::xtrsm_RLTN(Q̂i, Âi, be);
-                }
                 {
                     GUANAQO_TRACE("Riccati update compress", k_next);
                     auto DC_next = ΥΓ_next.block(0, nJi, nu + nx, nyM);
@@ -1411,9 +1405,11 @@ struct CyclicOCPSolver {
                 }
                 if (nJi > 0) {
                     GUANAQO_TRACE("Riccati update Q", k);
-                    compact_blas::xshhud_diag_2_ref(Q̂i, ΥΓi.middle_rows(nu, nx),
-                                                    Âi, ΥΓi.bottom_rows(nx),
-                                                    wΣ.top_rows(nJi));
+                    compact_blas::xgemm_NT_add_diag_ref(ΥΓi.bottom_rows(nx),
+                                                        ΥΓi.middle_rows(nu, nx),
+                                                        Âi, wΣ.top_rows(nJi));
+                    compact_blas::xshhud_diag_ref(Q̂i, ΥΓi.middle_rows(nu, nx),
+                                                  wΣ.top_rows(nJi));
                 }
             } else {
                 const auto bi_upd = sub_wrap_PmV(ti, 1);
@@ -1655,7 +1651,7 @@ struct CyclicOCPSolver {
                 compact_blas::xcopy(Âi, AiQiᵀ);
                 if (i + 1 < num_stages) // Final block already inverted
                     compact_blas::xtrtri_T_copy_ref(Qi, Qi_inv);
-                if (i + 1 < num_stages && !alt) // Final block is already Â LQ⁻ᵀ
+                if (i + 1 < num_stages) // Final block is already Â LQ⁻ᵀ
                     compact_blas::xtrsm_RLTN(Qi, AiQiᵀ, backend);
                 if (i > 0) {
                     auto LBAi = LBAt.middle_cols((i - 1) * nx, nx);
@@ -1852,9 +1848,9 @@ TEST(NewCyclic, scheduling) {
         __itt_thread_set_name(std::format("OMP({})", i).c_str());
     }));
 
-    using Solver     = test::CyclicOCPSolver<4>;
+    using Solver     = test::CyclicOCPSolver<8>;
     const index_t lP = log_n_threads + Solver::lvl;
-    OCPDim dim{.N_horiz = 3 << lP, .nx = 50, .nu = 15, .ny = 50, .ny_N = 50};
+    OCPDim dim{.N_horiz = 128, .nx = 50, .nu = 15, .ny = 50, .ny_N = 50};
     auto ocp = generate_random_ocp(dim);
     Solver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
@@ -1892,7 +1888,7 @@ TEST(NewCyclic, scheduling) {
             f << guanaqo::float_to_str(x) << '\n';
     }
 
-    const bool alt        = true;
+    const bool alt        = false;
     const auto ux_initial = ux, λ_initial = λ;
     for (int i = 0; i < 500; ++i) {
         solver.run(Σ, alt);
