@@ -9,18 +9,19 @@ namespace koqkatoo::linalg::compact::micro_kernels::trmm {
 
 struct KernelConfig {
     bool negate  = false;
+    bool trans_A = false;
     bool trans_B = false;
     int shift    = 0;
 };
 
 template <class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg>
-void xtrmm_rlnn_microkernel(single_batch_matrix_accessor<Abi, false> A,
+void xtrmm_rlnn_microkernel(single_batch_matrix_accessor<Abi, Conf.trans_A> A,
                             single_batch_matrix_accessor<Abi, Conf.trans_B> B,
                             mut_single_batch_matrix_accessor<Abi> C, index_t k,
                             bool init_zero) noexcept;
 
 template <class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg>
-void xtrmm_lunn_microkernel(single_batch_matrix_accessor<Abi, false> A,
+void xtrmm_lunn_microkernel(single_batch_matrix_accessor<Abi, Conf.trans_A> A,
                             single_batch_matrix_accessor<Abi, Conf.trans_B> B,
                             mut_single_batch_matrix_accessor<Abi> C, index_t k,
                             bool init_zero) noexcept;

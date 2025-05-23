@@ -283,6 +283,52 @@ void CompactBLAS<Abi>::xtrmm_RLNN_ref(single_batch_view A, single_batch_view B,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xtrmm_RLNN_T_ref(single_batch_view A,
+                                        single_batch_view B,
+                                        mut_single_batch_view C) {
+    [[maybe_unused]] auto [m, M] = std::minmax({B.rows(), B.cols()});
+    GUANAQO_TRACE("xtrmm_RLNN", 0,
+                  (m * (m + 1) / 2 + (M - m) * m) * A.rows() * A.depth());
+    assert(A.rows() == C.rows());
+    assert(A.cols() == B.rows());
+    assert(B.cols() == C.cols());
+    assert(B.rows() >= B.cols());
+    static constexpr index_t R = micro_kernels::gemm::RowsReg;
+    static_assert(R == micro_kernels::gemm::ColsReg);
+    static constexpr micro_kernels::trmm::KernelConfig conf{.trans_A = true};
+    micro_kernels::single_batch_matrix_accessor<Abi, true> A_ = A;
+    micro_kernels::single_batch_matrix_accessor<Abi> B_       = B;
+    micro_kernels::mut_single_batch_matrix_accessor<Abi> C_   = C;
+    foreach_chunked(
+        0, C.cols(), R,
+        [&](index_t c) {
+            foreach_chunked(
+                0, C.rows(), R,
+                [&](index_t r) {
+                    micro_kernels::trmm::xtrmm_rlnn_microkernel<Abi, conf, R,
+                                                                R>(
+                        A_.block(r, c), B_.block(c, c), C_.block(r, c),
+                        B.rows() - c, true);
+                },
+                [&](index_t r, index_t nr) {
+                    micro_kernels::trmm::microkernel_rlnn_lut<
+                        Abi, conf>[nr - 1][R - 1](
+                        A_.block(r, c), B_.block(c, c), C_.block(r, c),
+                        B.rows() - c, true);
+                });
+        },
+        [&](index_t c, index_t nc) {
+            foreach_chunked_merged(0, C.rows(), R, [&](index_t r, auto nr) {
+                micro_kernels::trmm::microkernel_rlnn_lut<Abi, conf>[nr -
+                                                                     1][nc - 1](
+                    A_.block(r, c), B_.block(c, c), C_.block(r, c),
+                    B.rows() - c, true);
+            });
+        });
+    // TODO: cache blocking
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xtrmm_RUTN_neg_ref(single_batch_view A,
                                           single_batch_view B,
                                           mut_single_batch_view C) {

@@ -749,8 +749,8 @@ struct CyclicOCPSolver {
                 compact_blas::xgemm(Âi, Ai, Â_next, be);
                 // Riccati update
                 auto R̂ŜQ̂_next = R̂ŜQ̂.middle_cols((i + 1) * nux, nux);
-                compact_blas::xcopy_T(data_BA.batch(di_next), BAᵀi);
-                compact_blas::xtrmm_RLNN(BAᵀi, Q̂i, BAᵀi, be);
+                compact_blas::xtrmm_RLNN_T_ref(data_BA.batch(di_next), Q̂i,
+                                               BAᵀi);
                 compact_blas::xsyrk_schur_copy(data_DCᵀ.batch(di_next),
                                                Σ.batch(di_next),
                                                data_RSQ.batch(di_next),

@@ -15,7 +15,7 @@ namespace koqkatoo::linalg::compact::micro_kernels::trmm {
 /// Single register block.
 template <class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg>
 [[gnu::hot]] void
-xtrmm_rlnn_microkernel(const single_batch_matrix_accessor<Abi, false> A,
+xtrmm_rlnn_microkernel(const single_batch_matrix_accessor<Abi, Conf.trans_A> A,
                        const single_batch_matrix_accessor<Abi, Conf.trans_B> B,
                        const mut_single_batch_matrix_accessor<Abi> C,
                        const index_t k, const bool init_zero) noexcept {
@@ -67,7 +67,7 @@ xtrmm_rlnn_microkernel(const single_batch_matrix_accessor<Abi, false> A,
 /// Single register block.
 template <class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg>
 [[gnu::hot]] void
-xtrmm_lunn_microkernel(const single_batch_matrix_accessor<Abi, false> A,
+xtrmm_lunn_microkernel(const single_batch_matrix_accessor<Abi, Conf.trans_A> A,
                        const single_batch_matrix_accessor<Abi, Conf.trans_B> B,
                        const mut_single_batch_matrix_accessor<Abi> C,
                        const index_t k, const bool init_zero) noexcept {

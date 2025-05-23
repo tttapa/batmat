@@ -288,6 +288,9 @@ struct CompactBLAS {
                            PreferredBackend b);
     static void xtrmm_RLNN_ref(single_batch_view A, single_batch_view B,
                                mut_single_batch_view C);
+    /// C ← AᵀB (with B lower trapezoidal)
+    static void xtrmm_RLNN_T_ref(single_batch_view A, single_batch_view B,
+                                 mut_single_batch_view C);
 
     /// C ← -AB (with B lower trapezoidal)
     static void xtrmm_RLNN_neg(single_batch_view A, single_batch_view B,

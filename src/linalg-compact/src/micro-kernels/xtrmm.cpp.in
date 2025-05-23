@@ -9,6 +9,7 @@ namespace koqkatoo::linalg::compact::micro_kernels::trmm {
 using Abi = stdx::simd_abi::@simd_abi@;
 
 template const constinit decltype(microkernel_rlnn_lut<Abi, {.negate = false}>) microkernel_rlnn_lut<Abi, {.negate = false}>;
+template const constinit decltype(microkernel_rlnn_lut<Abi, {.negate = false, .trans_A = true}>) microkernel_rlnn_lut<Abi, {.negate = false, .trans_A = true}>;
 template const constinit decltype(microkernel_rlnn_lut<Abi, {.negate = true}>) microkernel_rlnn_lut<Abi, {.negate = true}>;
 template const constinit decltype(microkernel_rlnn_lut<Abi, {.negate = false, .trans_B = true}>) microkernel_rlnn_lut<Abi, {.negate = false, .trans_B = true}>;
 template const constinit decltype(microkernel_rlnn_lut<Abi, {.negate = true, .trans_B = true}>) microkernel_rlnn_lut<Abi, {.negate = true, .trans_B = true}>;
