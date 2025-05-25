@@ -12,6 +12,7 @@ template const constinit decltype(microkernel_diag_lut<Abi>) microkernel_diag_lu
 template const constinit decltype(microkernel_full_lut<Abi>) microkernel_full_lut<Abi>;
 template const constinit decltype(microkernel_tail_lut<Abi>) microkernel_tail_lut<Abi>;
 template const constinit decltype(microkernel_tail_lut_2<Abi>) microkernel_tail_lut_2<Abi>;
+template const constinit decltype(microkernel_tail_lut_2<Abi, true>) microkernel_tail_lut_2<Abi, true>;
 namespace old {
 template const constinit decltype(microkernel_tail_lut<Abi>) microkernel_tail_lut<Abi>;
 template const constinit decltype(microkernel_tail_lut_2<Abi>) microkernel_tail_lut_2<Abi>;

@@ -69,8 +69,8 @@ if 1:
     # plot_sparse(A_sparse)
     # plot_sparse(L_sparse)
     # # plot_sparse(D_sparse)
+    # err = (A_sparse - LL_sparse).toarray()
     eps = 1e-20
-    err = (A_sparse - LL_sparse).toarray()
     err = (L_ref_sparse - L_sparse).toarray()
     sparsity = np.logical_or(A_sparse.toarray() != 0, L_sparse.toarray() != 0)
     sparsity = L_ref_sparse.toarray() != 0

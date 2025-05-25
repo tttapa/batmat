@@ -14,7 +14,11 @@ template const constinit decltype(microkernel_rlnn_lut<Abi, {.negate = true}>) m
 template const constinit decltype(microkernel_rlnn_lut<Abi, {.negate = false, .trans_B = true}>) microkernel_rlnn_lut<Abi, {.negate = false, .trans_B = true}>;
 template const constinit decltype(microkernel_rlnn_lut<Abi, {.negate = true, .trans_B = true}>) microkernel_rlnn_lut<Abi, {.negate = true, .trans_B = true}>;
 template const constinit decltype(microkernel_rlnn_lut<Abi, {.negate = true, .trans_B = true, .shift = -1}>) microkernel_rlnn_lut<Abi, {.negate = true, .trans_B = true, .shift = -1}>;
+template const constinit decltype(microkernel_rlnn_lut<Abi, {.negate = true, .trans_A = true, .trans_B = true}>) microkernel_rlnn_lut<Abi, {.negate = true, .trans_A = true, .trans_B = true}>;
+template const constinit decltype(microkernel_rlnn_lut<Abi, {.negate = true, .trans_A = true, .trans_B = true, .shift = -1}>) microkernel_rlnn_lut<Abi, {.negate = true, .trans_A = true, .trans_B = true, .shift = -1}>;
 
+template const constinit decltype(microkernel_lunn_lut<Abi, {.negate = true}>) microkernel_lunn_lut<Abi, {.negate = true}>;
 template const constinit decltype(microkernel_lunn_lut<Abi, {.negate = true, .trans_B = true}>) microkernel_lunn_lut<Abi, {.negate = true, .trans_B = true}>;
+template const constinit decltype(microkernel_lunn_lut<Abi, {.negate = true, .trans_A = true, .trans_B = true}>) microkernel_lunn_lut<Abi, {.negate = true, .trans_A = true, .trans_B = true}>;
 
 }

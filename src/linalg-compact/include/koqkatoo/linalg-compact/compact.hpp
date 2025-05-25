@@ -310,9 +310,19 @@ struct CompactBLAS {
     static void xtrmm_RUTN_neg_shift(single_batch_view A, single_batch_view B,
                                      mut_single_batch_view C);
 
+    /// C ← -AᵀBᵀ (with B upper trapezoidal)
+    static void xtrmm_RUTN_T_neg_ref(single_batch_view A, single_batch_view B,
+                                     mut_single_batch_view C);
+    /// C ← -AᵀBᵀ (with B upper trapezoidal)
+    static void xtrmm_RUTN_T_neg_shift(single_batch_view A, single_batch_view B,
+                                       mut_single_batch_view C);
+
     /// C ← -ABᵀ (with A upper trapezoidal)
     static void xtrmm_LUNN_T_neg_ref(single_batch_view A, single_batch_view B,
                                      mut_single_batch_view C);
+    /// C ← -AB (with A upper trapezoidal)
+    static void xtrmm_LUNN_neg_ref(single_batch_view A, single_batch_view B,
+                                   mut_single_batch_view C);
 
     /// C += AB
     static void xgemm_add(single_batch_view A, single_batch_view B,
@@ -434,12 +444,18 @@ struct CompactBLAS {
                                   mut_single_batch_view L2,
                                   mut_single_batch_view A2,
                                   single_batch_view D);
+    static void xshhud_diag_2T_ref(mut_single_batch_view L,
+                                   mut_single_batch_view A,
+                                   mut_single_batch_view L2ᵀ,
+                                   mut_single_batch_view A2,
+                                   single_batch_view D);
     static void
     xshhud_diag_cyclic(mut_single_batch_view L11, mut_single_batch_view A1,
                        mut_single_batch_view L21, single_batch_view A2,
                        mut_single_batch_view A2_out, mut_single_batch_view L31,
                        single_batch_view A3, mut_single_batch_view A3_out,
                        single_batch_view D, index_t split, int rot_A2);
+    template <bool TransL21 = false>
     static void
     xshhud_diag_riccati(mut_single_batch_view L11, mut_single_batch_view A1,
                         mut_single_batch_view L21, single_batch_view A2,
