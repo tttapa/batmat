@@ -1841,7 +1841,7 @@ struct CyclicOCPSolver {
 using koqkatoo::index_t;
 using koqkatoo::real_t;
 
-const int log_n_threads = 2; // TODO
+const int log_n_threads = 1; // TODO
 TEST(NewCyclic, scheduling) {
     using namespace koqkatoo::ocp;
 
@@ -1852,9 +1852,9 @@ TEST(NewCyclic, scheduling) {
         __itt_thread_set_name(std::format("OMP({})", i).c_str());
     }));
 
-    using Solver     = test::CyclicOCPSolver<4>;
+    using Solver     = test::CyclicOCPSolver<8>;
     const index_t lP = log_n_threads + Solver::lvl;
-    OCPDim dim{.N_horiz = 64, .nx = 31, .nu = 19, .ny = 61, .ny_N = 61};
+    OCPDim dim{.N_horiz = 32, .nx = 150, .nu = 15, .ny = 50, .ny_N = 50};
     auto ocp = generate_random_ocp(dim);
     Solver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);

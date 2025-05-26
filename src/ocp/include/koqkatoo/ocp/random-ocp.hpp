@@ -18,7 +18,7 @@ inline LinearOCPStorage generate_random_ocp(OCPDim dim,
     for (index_t i = 0; i < N; ++i) {
         auto Ai = ocp.A(i), Bi = ocp.B(i), Ci = ocp.C(i), Di = ocp.D(i);
         auto Qi = ocp.Q(i), Ri = ocp.R(i), Si = ocp.S(i), Hi = ocp.H(i);
-        Ai.generate([&] { return nrml(rng) / 2; });
+        Ai.generate([&] { return nrml(rng) * 0.9; });
         Bi.generate([&] { return nrml(rng); });
         Ci.generate([&] { return nrml(rng); });
         Di.generate([&] { return nrml(rng); });
