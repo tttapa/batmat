@@ -325,8 +325,8 @@ void CompactBLAS<Abi>::xshhud_diag_riccati(
     assert(Lu1.rows() == Au_out.rows());
     assert(A1.cols() == D.rows());
     assert(A2.cols() == A1.cols());
-    const auto r_L21 = TransL21 ? L21.cols() : L21.rows();
-    const auto c_L21 = TransL21 ? L21.rows() : L21.cols();
+    const auto r_L21                  = TransL21 ? L21.cols() : L21.rows();
+    [[maybe_unused]] const auto c_L21 = TransL21 ? L21.rows() : L21.cols();
     assert(L21.cols() == L11.cols());
     assert(r_L21 == A2.rows());
     assert(c_L21 == L11.cols());
