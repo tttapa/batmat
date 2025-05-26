@@ -750,14 +750,14 @@ struct CyclicOCPSolver {
                 // Riccati update
                 auto R̂ŜQ̂_next = R̂ŜQ̂.middle_cols((i + 1) * nux, nux);
                 compact_blas::xtrmm_RLNN_T_ref(data_BA.batch(di_next), Q̂i,
-                                               BAᵀi); // TODO
+                                               BAᵀi);
                 compact_blas::xsyrk_schur_copy(data_DCᵀ.batch(di_next),
                                                Σ.batch(di_next),
                                                data_RSQ.batch(di_next),
                                                R̂ŜQ̂_next);    // ┐
                 compact_blas::xsyrk_add(BAᵀi, R̂ŜQ̂_next, be); // ┘
             } else {
-                // Compute LÂ = Ã LQ⁻ᵀ       LÂᵀ = LQ⁻¹ Ãᵀ
+                // Compute LÂ = Ã LQ⁻ᵀ
                 GUANAQO_TRACE("Riccati last", k);
                 compact_blas::xtrsm_RLTN(Q̂i, Âi, be);
             }
@@ -1111,8 +1111,8 @@ struct CyclicOCPSolver {
         const auto be            = backend;
         PRINTLN("\nThread #{}", ti);
         auto R̂ŜQ̂     = riccati_R̂ŜQ̂.batch(ti);
-        auto B̂ᵀ      = riccati_ÂB̂ᵀ.batch(ti).bottom_rows(num_stages * nu);
-        auto Âᵀ      = riccati_ÂB̂ᵀ.batch(ti).top_rows(num_stages * nx);
+        auto B̂       = riccati_ÂB̂.batch(ti).right_cols(num_stages * nu);
+        auto Â       = riccati_ÂB̂.batch(ti).left_cols(num_stages * nx);
         const auto w = work.batch(ti);
 
         for (index_t i = num_stages; i-- > 0;) {
@@ -1123,8 +1123,8 @@ struct CyclicOCPSolver {
             auto Q̂i   = R̂ŜQ̂i.bottom_right(nx, nx);
             auto R̂i   = R̂ŜQ̂i.top_left(nu, nu);
             auto Ŝi   = R̂ŜQ̂i.bottom_left(nx, nu);
-            auto B̂ᵀi  = B̂ᵀ.middle_rows(i * nu, nu);
-            auto Âᵀi  = Âᵀ.middle_rows(i * nx, nx);
+            auto B̂i   = B̂.middle_cols(i * nu, nu);
+            auto Âi   = Â.middle_cols(i * nx, nx);
             if (i + 1 < num_stages) {
                 [[maybe_unused]] const auto k_next = sub_wrap_N(k, 1);
                 const auto di_next                 = di + 1;
@@ -1139,8 +1139,8 @@ struct CyclicOCPSolver {
                 compact_blas::xgemv_add(BAi, ux.batch(di_next),
                                         ux.batch(di).bottom_rows(nx), be);
                 // u = LR⁻ᵀ(l - LSᵀ x - LB̂ᵀ λ(last))
-                compact_blas::xgemv_sub(B̂ᵀi, λ.batch(di0),
-                                        ux.batch(di).top_rows(nu), be);
+                compact_blas::xgemv_T_sub(B̂i, λ.batch(di0),
+                                          ux.batch(di).top_rows(nu), be);
                 compact_blas::xgemv_T_sub(Ŝi, ux.batch(di).bottom_rows(nx),
                                           ux.batch(di).top_rows(nu), be);
                 compact_blas::xtrsv_LTN(R̂i, ux.batch(di).top_rows(nu), be);
@@ -1150,8 +1150,8 @@ struct CyclicOCPSolver {
                                     λ.batch(di_next));
                 compact_blas::xtrmv_T(Q̂i, λ.batch(di_next), be);
                 compact_blas::xtrmv(Q̂i, λ.batch(di_next), be);
-                compact_blas::xgemv_add(Âᵀi, λ.batch(di0), λ.batch(di_next),
-                                        be);
+                compact_blas::xgemv_T_add(Âi, λ.batch(di0), λ.batch(di_next),
+                                          be);
                 compact_blas::xsub_copy(λ.batch(di_next), λ.batch(di_next), w);
             } else {
                 // x_last = LQ⁻ᵀ(q_last + LQ⁻¹ λ - LÂᵀ λ)
@@ -1164,14 +1164,14 @@ struct CyclicOCPSolver {
                 // LQ⁻¹ λ
                 compact_blas::xtrsv_LNN(Q̂i, w, backend);
                 // LQ⁻¹ λ - LÂᵀ λ
-                compact_blas::xgemv_sub(Âᵀi, λ.batch(di0), w, be);
+                compact_blas::xgemv_T_sub(Âi, λ.batch(di0), w, be);
                 // x_last = LQ⁻ᵀ(LQ⁻¹ λ - LÂᵀ λ)
                 compact_blas::xtrsv_LTN(Q̂i, w, backend);
                 compact_blas::xadd_copy(x_last, x_last, w);
 
                 // u -= LB̂ᵀ λ0 + LSᵀ q
-                compact_blas::xgemv_sub(B̂ᵀi, λ.batch(di0),
-                                        ux.batch(di).top_rows(nu), be);
+                compact_blas::xgemv_T_sub(B̂i, λ.batch(di0),
+                                          ux.batch(di).top_rows(nu), be);
                 compact_blas::xgemv_T_sub(Ŝi, ux.batch(di).bottom_rows(nx),
                                           ux.batch(di).top_rows(nu), be);
                 // x = LQ⁻ᵀ q, u = LR⁻ᵀ (u - LSᵀ x)
@@ -1344,8 +1344,8 @@ struct CyclicOCPSolver {
         const auto be            = backend;
         PRINTLN("\nThread #{}", ti);
         auto R̂ŜQ̂ = riccati_R̂ŜQ̂.batch(ti);
-        auto B̂ᵀ  = riccati_ÂB̂ᵀ.batch(ti).bottom_rows(num_stages * nu);
-        auto Âᵀ  = riccati_ÂB̂ᵀ.batch(ti).top_rows(num_stages * nx);
+        auto B̂   = riccati_ÂB̂.batch(ti).right_cols(num_stages * nu);
+        auto Â   = riccati_ÂB̂.batch(ti).left_cols(num_stages * nx);
         auto ΥΓ1 = riccati_ΥΓ1.batch(ti);
         auto ΥΓ2 = riccati_ΥΓ2.batch(ti);
         auto wΣ  = work_Σ.batch(ti);
@@ -1372,16 +1372,16 @@ struct CyclicOCPSolver {
             auto R̂ŜQ̂i = R̂ŜQ̂.middle_cols(i * nux, nux);
             auto R̂Ŝi  = R̂ŜQ̂i.left_cols(nu);
             auto Q̂i   = R̂ŜQ̂i.bottom_right(nx, nx);
-            auto B̂ᵀi  = B̂ᵀ.middle_rows(i * nu, nu);
-            auto Âᵀi  = Âᵀ.middle_rows(i * nx, nx);
+            auto B̂i   = B̂.middle_cols(i * nu, nu);
+            auto Âi   = Â.middle_cols(i * nx, nx);
 
             index_t nJi = nJ;
             auto ΥΓi    = ((i & 1) ? ΥΓ1 : ΥΓ2).left_cols(nJi);
             if (nJi > 0) {
                 GUANAQO_TRACE("Riccati update R", k);
-                compact_blas::xshhud_diag_2T_ref(R̂Ŝi, ΥΓi.top_rows(nu + nx),
-                                                 B̂ᵀi, ΥΓi.bottom_rows(nx),
-                                                 wΣ.top_rows(nJi));
+                compact_blas::xshhud_diag_2_ref(R̂Ŝi, ΥΓi.top_rows(nu + nx), B̂i,
+                                                ΥΓi.bottom_rows(nx),
+                                                wΣ.top_rows(nJi));
             }
             if (i + 1 < num_stages) {
                 [[maybe_unused]] const auto k_next = sub_wrap_N(k, 1);
@@ -1405,10 +1405,9 @@ struct CyclicOCPSolver {
                 }
                 if (nJi > 0) {
                     GUANAQO_TRACE("Riccati update Q", k);
-                    // Â += ΘΦᵀ       Âᵀ += ΦΘᵀ
-                    compact_blas::xgemm_NT_add_diag_ref(ΥΓi.middle_rows(nu, nx),
-                                                        ΥΓi.bottom_rows(nx),
-                                                        Âᵀi, wΣ.top_rows(nJi));
+                    compact_blas::xgemm_NT_add_diag_ref(ΥΓi.bottom_rows(nx),
+                                                        ΥΓi.middle_rows(nu, nx),
+                                                        Âi, wΣ.top_rows(nJi));
                     compact_blas::xshhud_diag_ref(Q̂i, ΥΓi.middle_rows(nu, nx),
                                                   wΣ.top_rows(nJi));
                 }
@@ -1429,8 +1428,8 @@ struct CyclicOCPSolver {
                 if (nJi > 0) {
                     GUANAQO_TRACE("Riccati update Q", k);
                     auto Q̂i_inv = R̂ŜQ̂i.block(nu - 1, nu, nx, nx);
-                    compact_blas::template xshhud_diag_riccati<true>(
-                        Q̂i, ΥΓi.middle_rows(nu, nx), Âᵀi, ΥΓi.bottom_rows(nx),
+                    compact_blas::xshhud_diag_riccati(
+                        Q̂i, ΥΓi.middle_rows(nu, nx), Âi, ΥΓi.bottom_rows(nx),
                         work_update.batch(wiA).middle_cols(j0, nJi), Q̂i_inv,
                         work_update.batch(wiI).middle_cols(j0, nJi),
                         wΣ.top_rows(nJi), ti == 0); // TODO
@@ -1642,14 +1641,14 @@ struct CyclicOCPSolver {
                 auto RSQi     = RSQ.middle_cols(i * nux, nux);
                 auto Qi       = RSQi.bottom_right(nx, nx);
                 auto Qi_inv   = RSQi.block(nu - 1, nu, nx, nx);
-                auto Âᵀ       = riccati_ÂB̂ᵀ.batch(ti).top_rows(num_stages * nx);
-                auto Âᵀi      = Âᵀ.middle_rows(i * nx, nx);
+                auto Â        = riccati_ÂB̂.batch(ti).left_cols(num_stages * nx);
+                auto Âi       = Â.middle_cols(i * nx, nx);
                 auto AiQᵀ     = AinvQᵀ.batch(ti);
                 auto AiQiᵀ    = AiQᵀ.middle_cols(i * nx, nx);
                 auto BAᵀ      = riccati_BAᵀ.batch(ti);
                 auto LBAt     = LBA.batch(ti);
 
-                compact_blas::xcopy_T(Âᵀi, AiQiᵀ);
+                compact_blas::xcopy(Âi, AiQiᵀ);
                 if (i + 1 < num_stages) // Final block already inverted
                     compact_blas::xtrtri_T_copy_ref(Qi, Qi_inv);
                 if (i + 1 < num_stages) // Final block is already Â LQ⁻ᵀ
@@ -1677,14 +1676,14 @@ struct CyclicOCPSolver {
                 const auto biI   = sub_wrap_P(biA, 1);
                 const auto sλA   = sλ + nx * get_linear_batch_offset(biA);
                 const auto sλI   = sλ + nx * get_linear_batch_offset(biI);
-                auto B̂ᵀ   = riccati_ÂB̂ᵀ.batch(ti).bottom_rows(num_stages * nu);
+                auto B̂    = riccati_ÂB̂.batch(ti).right_cols(num_stages * nu);
                 auto R̂ŜQ̂  = riccati_R̂ŜQ̂.batch(ti);
                 auto LBAt = LBA.batch(ti);
                 // TODO: handle case if lev > or >= lP - lvl
                 for (index_t i = 0; i < num_stages; ++i) {
                     [[maybe_unused]] const index_t k = sub_wrap_N(k0, i);
                     index_t s  = sv + ti * (nuxx * num_stages - nx) + nuxx * i;
-                    auto B̂ᵀi   = B̂ᵀ.middle_rows(i * nu, nu);
+                    auto B̂i    = B̂.middle_cols(i * nu, nu);
                     auto R̂ŜQ̂i  = R̂ŜQ̂.middle_cols(i * nux, nux);
                     auto RSi   = R̂ŜQ̂i(vi).left_cols(nu);
                     auto Qi    = R̂ŜQ̂i(vi).bottom_right(nx, nx);
@@ -1712,7 +1711,7 @@ struct CyclicOCPSolver {
                         for (index_t r = c; r < nux; ++r)
                             tuples.emplace_back(s + r, s + c, RSi(r, c));
                         for (index_t r = 0; r < nx; ++r)
-                            tuples.emplace_back(sλA + r, s + c, B̂ᵀi(vi)(c, r));
+                            tuples.emplace_back(sλA + r, s + c, B̂i(vi)(r, c));
                     }
                     for (index_t c = 0; c < nx; ++c) {
                         for (index_t r = c; r < nx; ++r) {

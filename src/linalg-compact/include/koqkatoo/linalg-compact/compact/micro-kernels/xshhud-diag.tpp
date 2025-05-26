@@ -124,11 +124,11 @@ template <class T, class Abi>
 
 } // namespace detail
 
-template <class Abi, index_t R, index_t S, bool TransL>
+template <class Abi, index_t R, index_t S>
 [[gnu::hot]] void xshhud_diag_tail_microkernel(
     index_t kA_nonzero_start, index_t kA_nonzero_end, index_t colsA,
     triangular_accessor<Abi, const real_t, SizeR> W,
-    mut_single_batch_matrix_accessor<Abi, TransL> L,
+    mut_single_batch_matrix_accessor<Abi> L,
     single_batch_matrix_accessor<Abi> A_in,
     mut_single_batch_matrix_accessor<Abi> A_out,
     single_batch_matrix_accessor<Abi> B, single_batch_vector_accessor<Abi> diag,
@@ -147,7 +147,7 @@ template <class Abi, index_t R, index_t S, bool TransL>
     }
 
     // Solve system V = (L+U)W⁻¹ (in-place)
-    auto L_cached = with_cached_access<TransL ? S : R>(L);
+    auto L_cached = with_cached_access<R>(L);
     switch (struc_L) {
         [[likely]]
         case Structure::General: {

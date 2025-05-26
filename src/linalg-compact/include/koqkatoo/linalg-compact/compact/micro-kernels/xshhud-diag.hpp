@@ -74,11 +74,11 @@ enum class Structure {
     Upper   = 2,
 };
 
-template <class Abi, index_t R, index_t S, bool TransL>
+template <class Abi, index_t R, index_t S>
 void xshhud_diag_tail_microkernel(
     index_t kA_nonzero_start, index_t kA_nonzero_end, index_t colsA,
     triangular_accessor<Abi, const real_t, SizeR> W,
-    mut_single_batch_matrix_accessor<Abi, TransL> L,
+    mut_single_batch_matrix_accessor<Abi> L,
     single_batch_matrix_accessor<Abi> A_in,
     mut_single_batch_matrix_accessor<Abi> A_out,
     single_batch_matrix_accessor<Abi> B, single_batch_vector_accessor<Abi> diag,
@@ -99,13 +99,13 @@ inline const constinit auto microkernel_full_lut =
 template <class Abi>
 inline const constinit auto microkernel_tail_lut =
     make_1d_lut<SizeS>([]<index_t Row>(index_constant<Row>) {
-        return xshhud_diag_tail_microkernel<Abi, SizeR, Row + 1, false>;
+        return xshhud_diag_tail_microkernel<Abi, SizeR, Row + 1>;
     });
 
-template <class Abi, bool TransL = false>
+template <class Abi>
 inline const constinit auto microkernel_tail_lut_2 = make_2d_lut<SizeR, SizeS>(
     []<index_t NR, index_t NS>(index_constant<NR>, index_constant<NS>) {
-        return xshhud_diag_tail_microkernel<Abi, NR + 1, NS + 1, TransL>;
+        return xshhud_diag_tail_microkernel<Abi, NR + 1, NS + 1>;
     });
 
 namespace old {

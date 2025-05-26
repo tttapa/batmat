@@ -101,7 +101,6 @@ void CompactBLAS<Abi>::xshhud_diag_2_ref(mut_single_batch_view L11,
     assert(A1.cols() == D.rows());
     assert(A2.cols() == A1.cols());
     assert(L21.cols() == L11.cols());
-    assert(L21.rows() == A2.rows());
     using namespace micro_kernels::shhud_diag;
     static constexpr index_constant<SizeR> R;
     static constexpr index_constant<SizeS> S;
@@ -144,67 +143,6 @@ void CompactBLAS<Abi>::xshhud_diag_2_ref(mut_single_batch_view L11,
                 auto As = A2.middle_rows(i, rem_i);
                 auto Ls = L21.block(i, k, rem_i, rem_k);
                 microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
-                    0, A1.cols(), A1.cols(), W, Ls, As, As, Ad, D,
-                    Structure::General, 0);
-            },
-            LoopDir::Backward); // TODO: decide on order
-    });
-}
-
-template <class Abi>
-void CompactBLAS<Abi>::xshhud_diag_2T_ref(mut_single_batch_view L11,
-                                          mut_single_batch_view A1,
-                                          mut_single_batch_view L21ᵀ,
-                                          mut_single_batch_view A2,
-                                          single_batch_view D) {
-    assert(L11.rows() >= L11.cols());
-    assert(L11.rows() == A1.rows());
-    assert(A1.cols() == D.rows());
-    assert(A2.cols() == A1.cols());
-    assert(L21ᵀ.rows() == L11.cols());
-    assert(L21ᵀ.cols() == A2.rows());
-    using namespace micro_kernels::shhud_diag;
-    static constexpr index_constant<SizeR> R;
-    static constexpr index_constant<SizeS> S;
-    const index_t C = A1.cols();
-    auto n1 = L11.cols(), n2 = L11.rows() - n1;
-    auto flop_count_diag_11 = (C + 1) * n1 * n1 + 2 * C * n1;
-    auto flop_count_tail_11 = 2 * (C + 1) * n2 * n1 + C * n2;
-    auto flop_count_tail_21 = 2 * (C + 1) * L21ᵀ.cols() * n1 + C * L21ᵀ.cols();
-    [[maybe_unused]] index_t flop_count =
-        flop_count_diag_11 + flop_count_tail_11 + flop_count_tail_21;
-    GUANAQO_TRACE("xshhud_diag_2T", 0, flop_count * L11.depth());
-    if (C == 0)
-        return;
-
-    using W_t = triangular_accessor<Abi, real_t, R>;
-    alignas(W_t::alignment()) real_t W[W_t::size()];
-
-    // Process all diagonal blocks (in multiples of R, except the last).
-    foreach_chunked_merged(0, L11.cols(), R, [&](index_t k, auto rem_k) {
-        // Part of A corresponding to this diagonal block
-        // TODO: packing
-        auto Ad = A1.middle_rows(k, rem_k);
-        auto Ld = L11.block(k, k, rem_k, rem_k);
-        // Process the diagonal block itself
-        microkernel_diag_lut<Abi>[rem_k - 1](A1.cols(), W, Ld, Ad, D);
-        // Process all rows below the diagonal block (in multiples of S).
-        foreach_chunked_merged(
-            k + rem_k, L11.rows(), S,
-            [&](index_t i, auto rem_i) {
-                auto As = A1.middle_rows(i, rem_i);
-                auto Ls = L11.block(i, k, rem_i, rem_k);
-                microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
-                    0, A1.cols(), A1.cols(), W, Ls, As, As, Ad, D,
-                    Structure::General, 0);
-            },
-            LoopDir::Backward); // TODO: decide on order
-        foreach_chunked_merged(
-            0, L21ᵀ.cols(), S,
-            [&](index_t i, auto rem_i) {
-                auto As = A2.middle_rows(i, rem_i);
-                auto Ls = L21ᵀ.block(k, i, rem_k, rem_i);
-                microkernel_tail_lut_2<Abi, true>[rem_k - 1][rem_i - 1](
                     0, A1.cols(), A1.cols(), W, Ls, As, As, Ad, D,
                     Structure::General, 0);
             },
@@ -312,7 +250,6 @@ void CompactBLAS<Abi>::xshhud_diag_cyclic(
  * where Lu1 and L̃u1 are upper triangular
  */
 template <class Abi>
-template <bool TransL21>
 void CompactBLAS<Abi>::xshhud_diag_riccati(
     mut_single_batch_view L11, mut_single_batch_view A1,
     mut_single_batch_view L21, single_batch_view A2,
@@ -320,16 +257,13 @@ void CompactBLAS<Abi>::xshhud_diag_riccati(
     mut_single_batch_view Au_out, single_batch_view D, bool shift_A_out) {
     assert(L11.rows() >= L11.cols());
     assert(L11.rows() == A1.rows());
+    assert(L21.rows() == A2.rows());
     assert(A2_out.rows() == A2.rows());
     assert(A2_out.cols() == A2.cols());
     assert(Lu1.rows() == Au_out.rows());
     assert(A1.cols() == D.rows());
     assert(A2.cols() == A1.cols());
-    const auto r_L21                  = TransL21 ? L21.cols() : L21.rows();
-    [[maybe_unused]] const auto c_L21 = TransL21 ? L21.rows() : L21.cols();
     assert(L21.cols() == L11.cols());
-    assert(r_L21 == A2.rows());
-    assert(c_L21 == L11.cols());
     assert(Lu1.cols() == L11.cols());
     using namespace micro_kernels::shhud_diag;
     static constexpr index_constant<SizeR> R;
@@ -339,7 +273,7 @@ void CompactBLAS<Abi>::xshhud_diag_riccati(
     auto n1 = L11.cols(), n2 = L11.rows() - n1;
     auto flop_count_diag_11 = (C + 1) * n1 * n1 + 2 * C * n1;
     auto flop_count_tail_11 = 2 * (C + 1) * n2 * n1 + C * n2;
-    auto flop_count_tail_21 = 2 * (C + 1) * r_L21 * n1 + C * r_L21;
+    auto flop_count_tail_21 = 2 * (C + 1) * L21.rows() * n1 + C * L21.rows();
     auto flop_count_tail_u1 = 2 * (C + 1) * Lu1.rows() * n1 + C * Lu1.rows();
     // Note: ignoring upper trapezoidal shape and initial zero value of Au for
     //       simplicity (for large matrices this does not matter)
@@ -373,13 +307,12 @@ void CompactBLAS<Abi>::xshhud_diag_riccati(
             },
             LoopDir::Backward); // TODO: decide on order
         foreach_chunked_merged(
-            0, r_L21, S,
+            0, L21.rows(), S,
             [&](index_t i, auto rem_i) {
                 auto As_out = A2_out.middle_rows(i, rem_i);
                 auto As     = k == 0 ? A2.middle_rows(i, rem_i) : As_out;
-                auto Ls     = TransL21 ? L21.block(k, i, rem_k, rem_i)
-                                       : L21.block(i, k, rem_i, rem_k);
-                microkernel_tail_lut_2<Abi, TransL21>[rem_k - 1][rem_i - 1](
+                auto Ls     = L21.block(i, k, rem_i, rem_k);
+                microkernel_tail_lut_2<Abi>[rem_k - 1][rem_i - 1](
                     0, C, C, W, Ls, As, As_out, Ad, D, Structure::General,
                     do_shift ? -1 : 0);
             },
