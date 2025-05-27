@@ -168,6 +168,7 @@ add_library(ocp
     "ocp/src/conversion.cpp"
     "ocp/src/solve.cpp"
     "ocp/src/cyclic-solver.cpp"
+    "ocp/src/cyclocp.cpp"
 )
 target_sources(ocp PUBLIC FILE_SET headers TYPE HEADERS
     BASE_DIRS "ocp/include"
