@@ -603,7 +603,7 @@ struct CompactBLAS {
         assert(((x0.batch_size() == xs.batch_size()) && ...));
         const index_t N_batched = x0.depth() - 1;
         index_t i;
-        for (i = 0; i + Bs <= N_batched; i += Bs)
+        for (i = 0; i + Bs < N_batched; i += Bs)
             for (index_t c = 0; c < n; ++c)
                 for (index_t r = 0; r < m; ++r)
                     init = fun(init, aligned_load(&x0(i, r, c)),
@@ -621,6 +621,32 @@ struct CompactBLAS {
     }
 
     template <class T0, class F, class R, class... Args>
+    static auto xreduce_enumerate(T0 init, F fun, R reduce, batch_view x0,
+                                  const Args &...xs) {
+        const auto Bs   = static_cast<index_t>(x0.batch_size());
+        const index_t m = x0.rows(), n = x0.cols();
+        assert(((x0.rows() == xs.rows()) && ...));
+        assert(((x0.cols() == xs.cols()) && ...));
+        assert(((x0.depth() == xs.depth()) && ...));
+        assert(((x0.batch_size() == xs.batch_size()) && ...));
+        const index_t N_batched = x0.depth() - 1;
+        index_t i;
+        for (i = 0; i + Bs < N_batched; i += Bs)
+            for (index_t c = 0; c < n; ++c)
+                for (index_t r = 0; r < m; ++r)
+                    init = fun(std::make_tuple(i, r, c), init,
+                               aligned_load(&x0(i, r, c)),
+                               aligned_load(&xs(i, r, c))...);
+        auto accum_scal = reduce(init);
+        for (; i < x0.depth(); ++i)
+            for (index_t c = 0; c < n; ++c)
+                for (index_t r = 0; r < m; ++r)
+                    accum_scal = fun(std::make_tuple(i, r, c), accum_scal,
+                                     x0(i, r, c), (xs(i, r, c))...);
+        return accum_scal;
+    }
+
+    template <class T0, class F, class R, class... Args>
     static auto xreduce_enumerate(size_last_t size_last, T0 init, F fun,
                                   R reduce, batch_view x0, const Args &...xs) {
         const auto Bs   = static_cast<index_t>(x0.batch_size());
@@ -631,7 +657,7 @@ struct CompactBLAS {
         assert(((x0.batch_size() == xs.batch_size()) && ...));
         const index_t N_batched = x0.depth() - 1;
         index_t i;
-        for (i = 0; i + Bs <= N_batched; i += Bs)
+        for (i = 0; i + Bs < N_batched; i += Bs)
             for (index_t c = 0; c < n; ++c)
                 for (index_t r = 0; r < m; ++r)
                     init = fun(std::make_tuple(i, r, c), init,

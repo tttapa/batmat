@@ -7,6 +7,7 @@
 #include <koqkatoo/linalg-compact/preferred-backend.hpp>
 #include <koqkatoo/ocp/ocp.hpp>
 #include <koqkatoo/openmp.h>
+#include <koqkatoo/timing.hpp>
 #include <guanaqo/trace.hpp>
 
 #include <experimental/simd>
@@ -63,6 +64,7 @@ struct CyclicOCPSolver {
     using simd_abi              = stdx::simd_abi::deduce_t<real_t, VL>;
     using compact_blas          = linalg::compact::CompactBLAS<simd_abi>;
     using matrix                = compact_blas::matrix;
+    using mask_matrix           = compact_blas::bool_matrix;
     using mut_matrix_view       = compact_blas::mut_batch_view;
     using matrix_view           = compact_blas::batch_view;
     using matrix_view_batch     = compact_blas::single_batch_view;
@@ -156,6 +158,13 @@ struct CyclicOCPSolver {
             .cols  = std::max(dim.ny, dim.ny_N),
         }};
     }();
+    matrix data_rhs_constr = [this] {
+        return matrix{{
+            .depth = dim.N_horiz,
+            .rows  = dim.nx,
+            .cols  = 1,
+        }};
+    }();
     matrix work_Σ = [this] {
         return matrix{{
             .depth = 1 << lP,
@@ -186,8 +195,57 @@ struct CyclicOCPSolver {
     }();
     std::vector<index_t> nJs = std::vector<index_t>(1 << (lP - lvl));
 
+    struct Timings {
+        using type = koqkatoo::DefaultTimings;
+        type todo;
+    };
+
+    /// Constraints on u(0) and x(N) should be independent.
+    ///
+    ///                  nx  nu
+    ///    ocp.CD(0) = [ 0 | D ] ny₀
+    ///                [ 0 | 0 ] ny - ny₀
+    ///
+    /// Since ocp.D(0) and ocp.C(N) will be merged, the top ny₀ rows of ocp.C(N)
+    /// should be zero.
     void initialize(const LinearOCPStorage &ocp);
+    void initialize_rhs(guanaqo::MatrixView<const real_t, index_t> A0,
+                        std::span<const real_t> x0, std::span<const real_t> c,
+                        mut_matrix_view rhs) const;
+    void initialize_rhs(const LinearOCPStorage &ocp, std::span<const real_t> x0,
+                        std::span<const real_t> c, mut_matrix_view rhs) const;
     void initialize_Σ(std::span<const real_t> Σ_lin, mut_matrix_view Σ) const;
+    void pack_variables(std::span<const real_t> ux_lin,
+                        mut_matrix_view ux) const;
+    void unpack_variables(matrix_view ux, std::span<real_t> ux_lin) const;
+    void pack_dynamics(std::span<const real_t> λ_lin, mut_matrix_view λ) const;
+    void unpack_dynamics(matrix_view λ, std::span<real_t> λ_lin) const;
+    void pack_constraints(std::span<const real_t> y_lin, mut_matrix_view y,
+                          real_t fill = 0) const;
+    void unpack_constraints(matrix_view y, std::span<real_t> y_lin) const;
+
+    index_t num_variables() const { return dim.N_horiz * (dim.nu + dim.nx); }
+    index_t num_dynamics_constraints() const { return dim.N_horiz * dim.nx; }
+    index_t num_general_constraints() const {
+        return dim.N_horiz * dim.ny + dim.ny_N;
+    }
+
+    matrix initialize_variables() const {
+        const auto [N, nx, nu, ny, ny_N] = dim;
+        return matrix{{.depth = N, .rows = nu + nx, .cols = 1}};
+    }
+    matrix initialize_dynamics_constraints() const {
+        const auto [N, nx, nu, ny, ny_N] = dim;
+        return matrix{{.depth = N, .rows = nx, .cols = 1}};
+    }
+    matrix initialize_general_constraints() const {
+        const auto [N, nx, nu, ny, ny_N] = dim;
+        return matrix{{.depth = N, .rows = std::max(ny, ny_N), .cols = 1}};
+    }
+    mask_matrix initialize_active_set() const {
+        const auto [N, nx, nu, ny, ny_N] = dim;
+        return mask_matrix{{.depth = N, .rows = std::max(ny, ny_N), .cols = 1}};
+    }
 
     // For lgp = 5, lgv = 2, N = 3 << lgp
     //
@@ -242,11 +300,16 @@ struct CyclicOCPSolver {
     void residual_dynamics_constr(matrix_view x, matrix_view b,
                                   mut_matrix_view Mxb) const;
     void transposed_dynamics_constr(matrix_view λ, mut_matrix_view Mᵀλ) const;
+    void general_constr(matrix_view ux, mut_matrix_view DCux) const;
+    void transposed_general_constr(matrix_view y, mut_matrix_view DCᵀy) const;
     /// grad_f ← Q ux + a q + b grad_f
     void cost_gradient(matrix_view ux, real_t a, matrix_view q, real_t b,
                        mut_matrix_view grad_f) const;
-    void general_constr(matrix_view ux, mut_matrix_view DCux) const;
-    void transposed_general_constr(matrix_view y, mut_matrix_view DCᵀy) const;
+    void cost_gradient_regularized(real_t S, matrix_view ux, matrix_view ux0,
+                                   matrix_view q, mut_matrix_view grad_f) const;
+    void cost_gradient_remove_regularization(real_t S, matrix_view x,
+                                             matrix_view x0,
+                                             mut_matrix_view grad_f) const;
 
     void factor_schur_U(index_t l, index_t biU);
     void factor_schur_Y(index_t l, index_t biY);

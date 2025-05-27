@@ -33,8 +33,16 @@ TEST(CyclOCP, factor) {
 
     using Solver     = cyclocp::CyclicOCPSolver<4>;
     const index_t lP = log_n_threads + Solver::lvl;
-    OCPDim dim{.N_horiz = 96, .nx = 40, .nu = 30, .ny = 50, .ny_N = 50};
+    const index_t ny = 50, ny_0 = 25, ny_N_actual = 25;
+    OCPDim dim{.N_horiz = 96,
+               .nx      = 40,
+               .nu      = 30,
+               .ny      = ny,
+               .ny_N    = ny_0 + ny_N_actual};
     auto ocp = generate_random_ocp(dim);
+    ocp.D(0).bottom_rows(ny - ny_0).set_constant(0);
+    ocp.C(0).set_constant(0);
+    ocp.C(dim.N_horiz).top_rows(ny_0).set_constant(0);
     Solver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
     const index_t ny_ny_N = std::max(dim.ny, dim.ny_N);

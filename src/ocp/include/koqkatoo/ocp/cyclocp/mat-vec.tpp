@@ -82,29 +82,6 @@ void CyclicOCPSolver<VL>::transposed_dynamics_constr(
 }
 
 template <index_t VL>
-void CyclicOCPSolver<VL>::cost_gradient(matrix_view ux, real_t a, matrix_view q,
-                                        real_t b, mut_matrix_view grad_f) const {
-    koqkatoo::foreach_thread([&](index_t ti, index_t P) {
-        if (P < (1 << (lP - lvl)))
-            throw std::logic_error("Incorrect number of threads");
-        if (ti >= (1 << (lP - lvl)))
-            return;
-        const auto [N, nx, nu, ny, ny_N] = dim;
-        const index_t num_stages = N >> lP; // number of stages per thread
-        const index_t di0        = ti * num_stages; // data batch index
-        const index_t k0         = ti * num_stages; // stage index
-        for (index_t i = 0; i < num_stages; ++i) {
-            [[maybe_unused]] index_t k = sub_wrap_N(k0, i);
-            GUANAQO_TRACE("cost_gradient", k);
-            index_t di = di0 + i;
-            compact_blas::xaxpby(a, q.batch(di), b, grad_f.batch(di));
-            compact_blas::xsymv_add(data_RSQ.batch(di), ux.batch(di),
-                                    grad_f.batch(di), backend);
-        }
-    });
-}
-
-template <index_t VL>
 void CyclicOCPSolver<VL>::general_constr(matrix_view ux,
                                          mut_matrix_view DCux) const {
     koqkatoo::foreach_thread([&](index_t ti, index_t P) {
@@ -144,6 +121,96 @@ void CyclicOCPSolver<VL>::transposed_general_constr(
             index_t di = di0 + i;
             compact_blas::xgemv(data_DCᵀ.batch(di), y.batch(di), DCᵀy.batch(di),
                                 backend);
+        }
+    });
+}
+
+template <index_t VL>
+void CyclicOCPSolver<VL>::cost_gradient(matrix_view ux, real_t a, matrix_view q,
+                                        real_t b,
+                                        mut_matrix_view grad_f) const {
+    koqkatoo::foreach_thread([&](index_t ti, index_t P) {
+        if (P < (1 << (lP - lvl)))
+            throw std::logic_error("Incorrect number of threads");
+        if (ti >= (1 << (lP - lvl)))
+            return;
+        const auto [N, nx, nu, ny, ny_N] = dim;
+        const index_t num_stages = N >> lP; // number of stages per thread
+        const index_t di0        = ti * num_stages; // data batch index
+        const index_t k0         = ti * num_stages; // stage index
+        for (index_t i = 0; i < num_stages; ++i) {
+            [[maybe_unused]] index_t k = sub_wrap_N(k0, i);
+            GUANAQO_TRACE("cost_gradient", k);
+            index_t di = di0 + i;
+            if (a != 0 || b != 1)
+                compact_blas::xaxpby(a, q.batch(di), b, grad_f.batch(di));
+            compact_blas::xsymv_add(data_RSQ.batch(di), ux.batch(di),
+                                    grad_f.batch(di), backend);
+        }
+    });
+}
+
+template <index_t VL>
+void CyclicOCPSolver<VL>::cost_gradient_regularized(
+    real_t S, matrix_view ux, matrix_view ux0, matrix_view q,
+    mut_matrix_view grad_f) const {
+    koqkatoo::foreach_thread([&](index_t ti, index_t P) {
+        if (P < (1 << (lP - lvl)))
+            throw std::logic_error("Incorrect number of threads");
+        if (ti >= (1 << (lP - lvl)))
+            return;
+        using simd = typename compact_blas::simd;
+        simd invS{1 / S};
+        const auto [N, nx, nu, ny, ny_N] = dim;
+        const index_t num_stages = N >> lP; // number of stages per thread
+        const index_t di0        = ti * num_stages; // data batch index
+        const index_t k0         = ti * num_stages; // stage index
+        for (index_t i = 0; i < num_stages; ++i) {
+            [[maybe_unused]] index_t k = sub_wrap_N(k0, i);
+            GUANAQO_TRACE("cost_gradient_regularized", k);
+            index_t di = di0 + i;
+            auto qi = q.batch(di), xi = ux.batch(di), x0i = ux0.batch(di);
+            auto grad_fi = grad_f.batch(di);
+            for (index_t j = 0; j < ux.rows(); ++j) {
+                simd qij{&qi(0, j, 0), stdx::vector_aligned},
+                    xij{&xi(0, j, 0), stdx::vector_aligned},
+                    x0ij{&x0i(0, j, 0), stdx::vector_aligned};
+                simd grad_fij = invS * (xij - x0ij) + qij;
+                grad_fij.copy_to(&grad_fi(0, j, 0), stdx::vector_aligned);
+            }
+            compact_blas::xsymv_add(data_RSQ.batch(di), ux.batch(di),
+                                    grad_f.batch(di), backend);
+        }
+    });
+}
+
+template <index_t VL>
+void CyclicOCPSolver<VL>::cost_gradient_remove_regularization(
+    real_t S, matrix_view ux, matrix_view ux0, mut_matrix_view grad_f) const {
+    koqkatoo::foreach_thread([&](index_t ti, index_t P) {
+        if (P < (1 << (lP - lvl)))
+            throw std::logic_error("Incorrect number of threads");
+        if (ti >= (1 << (lP - lvl)))
+            return;
+        using simd = typename compact_blas::simd;
+        simd invS{1 / S};
+        const auto [N, nx, nu, ny, ny_N] = dim;
+        const index_t num_stages = N >> lP; // number of stages per thread
+        const index_t di0        = ti * num_stages; // data batch index
+        const index_t k0         = ti * num_stages; // stage index
+        for (index_t i = 0; i < num_stages; ++i) {
+            [[maybe_unused]] index_t k = sub_wrap_N(k0, i);
+            GUANAQO_TRACE("cost_gradient_remove_regularization", k);
+            index_t di = di0 + i;
+            auto xi = ux.batch(di), x0i = ux0.batch(di);
+            auto grad_fi = grad_f.batch(di);
+            for (index_t j = 0; j < ux.rows(); ++j) {
+                simd grad_fij{&grad_fi(0, j, 0), stdx::vector_aligned},
+                    xij{&xi(0, j, 0), stdx::vector_aligned},
+                    x0ij{&x0i(0, j, 0), stdx::vector_aligned};
+                grad_fij += invS * (x0ij - xij);
+                grad_fij.copy_to(&grad_fi(0, j, 0), stdx::vector_aligned);
+            }
         }
     });
 }
