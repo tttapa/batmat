@@ -309,10 +309,10 @@ void CompactBLAS<Abi>::xtrmm_RLNN_T_ref(single_batch_view A,
                                         single_batch_view B,
                                         mut_single_batch_view C) {
     [[maybe_unused]] auto [m, M] = std::minmax({B.rows(), B.cols()});
-    GUANAQO_TRACE("xtrmm_RLNN", 0,
-                  (m * (m + 1) / 2 + (M - m) * m) * A.rows() * A.depth());
-    assert(A.rows() == C.rows());
-    assert(A.cols() == B.rows());
+    GUANAQO_TRACE("xtrmm_RLNN_T", 0,
+                  (m * (m + 1) / 2 + (M - m) * m) * A.cols() * A.depth());
+    assert(A.cols() == C.rows());
+    assert(A.rows() == B.rows());
     assert(B.cols() == C.cols());
     assert(B.rows() >= B.cols());
     static constexpr index_t R = micro_kernels::gemm::RowsReg;
