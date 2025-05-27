@@ -2,7 +2,7 @@
 
 include(CMakeFindDependencyMacro)
 
-find_dependency(guanaqo)
+find_dependency(guanaqo COMPONENTS BLAS)
 if (@KOQKATOO_WITH_OPENMP@)
     find_dependency(OpenMP COMPONENTS CXX)
 endif()

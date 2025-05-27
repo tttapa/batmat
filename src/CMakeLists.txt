@@ -1,6 +1,6 @@
 include(cmake/Library.cmake)
 include(cmake/BLAS.cmake)
-find_package(guanaqo REQUIRED)
+find_package(guanaqo REQUIRED COMPONENTS BLAS)
 if (KOQKATOO_WITH_OPENMP)
     find_package(OpenMP REQUIRED COMPONENTS CXX)
 endif()
@@ -187,7 +187,7 @@ target_sources(ocp PUBLIC FILE_SET headers TYPE HEADERS
           "ocp/include/koqkatoo/ocp/cyclic-solver/factor.tpp"
           "ocp/include/koqkatoo/ocp/cyclic-solver/cyclic-storage.ipp"
 )
-target_link_libraries(ocp PUBLIC koqkatoo::linalg-compact)
+target_link_libraries(ocp PUBLIC koqkatoo::linalg-compact guanaqo::blas)
 target_compile_features(ocp PRIVATE cxx_std_23)
 koqkatoo_configure_library(ocp EXPORT_PREFIX koqkatoo)
 if (KOQKATOO_WITH_TBB)
