@@ -6,7 +6,7 @@ namespace koqkatoo::ocp::cyclocp {
 
 template <index_t VL>
 auto CyclicOCPSolver<VL>::add_wrap_N(index_t a, index_t b) const -> index_t {
-    const index_t N = dim.N_horiz;
+    const index_t N = N_horiz;
     KOQKATOO_ASSUME(a >= 0);
     KOQKATOO_ASSUME(b >= 0);
     KOQKATOO_ASSUME(a < N);
@@ -15,7 +15,7 @@ auto CyclicOCPSolver<VL>::add_wrap_N(index_t a, index_t b) const -> index_t {
 }
 template <index_t VL>
 auto CyclicOCPSolver<VL>::sub_wrap_N(index_t a, index_t b) const -> index_t {
-    const index_t N = dim.N_horiz;
+    const index_t N = N_horiz;
     KOQKATOO_ASSUME(a >= 0);
     KOQKATOO_ASSUME(b >= 0);
     KOQKATOO_ASSUME(a < N);

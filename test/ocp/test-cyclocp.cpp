@@ -33,33 +33,36 @@ TEST(CyclOCP, factor) {
 
     using Solver     = cyclocp::CyclicOCPSolver<4>;
     const index_t lP = log_n_threads + Solver::lvl;
-    const index_t ny = 50, ny_0 = 25, ny_N_actual = 25;
-    OCPDim dim{.N_horiz = 96,
-               .nx      = 40,
-               .nu      = 30,
-               .ny      = ny,
-               .ny_N    = ny_0 + ny_N_actual};
+    const index_t ny = 50, ny_0 = 25, ny_N = 25;
+    OCPDim dim{.N_horiz = 96, .nx = 40, .nu = 30, .ny = ny, .ny_N = ny_N};
+    const index_t nux = dim.nu + dim.nx, N = dim.N_horiz;
     auto ocp = generate_random_ocp(dim);
-    ocp.D(0).bottom_rows(ny - ny_0).set_constant(0);
-    ocp.C(0).set_constant(0);
-    ocp.C(dim.N_horiz).top_rows(ny_0).set_constant(0);
-    Solver solver{.dim = dim, .lP = lP};
-    solver.initialize(ocp);
-    const index_t ny_ny_N = std::max(dim.ny, dim.ny_N);
-    std::vector<real_t> Σ_lin(dim.N_horiz * dim.ny + dim.ny_N);
-    Solver::matrix λ{{.depth = dim.N_horiz, .rows = dim.nx, .cols = 1}},
-        ux{{.depth = dim.N_horiz, .rows = dim.nu + dim.nx, .cols = 1}},
-        Mᵀλ{{.depth = dim.N_horiz, .rows = dim.nu + dim.nx, .cols = 1}},
-        DCux{{.depth = dim.N_horiz, .rows = ny_ny_N, .cols = 1}},
-        DCᵀΣDCux{{.depth = dim.N_horiz, .rows = dim.nu + dim.nx, .cols = 1}},
-        grad{{.depth = dim.N_horiz, .rows = dim.nu + dim.nx, .cols = 1}},
-        Mxb{{.depth = dim.N_horiz, .rows = dim.nx, .cols = 1}},
-        Σ{{.depth = dim.N_horiz, .rows = dim.ny, .cols = 1}},
-        Σ2{{.depth = dim.N_horiz, .rows = dim.ny, .cols = 1}},
-        ΔΣ{{.depth = dim.N_horiz, .rows = dim.ny, .cols = 1}};
+    ocp.D(0).bottom_rows(ny_0).set_constant(0);
     std::mt19937 rng(102030405);
     std::uniform_real_distribution<real_t> uni(-1, 1);
     std::bernoulli_distribution bern(0.01);
+    std::vector<real_t> qr_lin(nux * N + dim.nx), b_eq_lin(nux * (N + 1)),
+        b_lb_lin(ny * N + ny_N), b_ub_lin(ny * N + ny_N);
+    std::ranges::generate(qr_lin, [&] { return uni(rng); });
+    std::ranges::generate(b_eq_lin, [&] { return uni(rng); });
+    std::ranges::generate(b_lb_lin, [&] { return uni(rng); });
+    std::ranges::generate(b_ub_lin, [&] { return uni(rng); });
+    auto cocp     = cyclocp::CyclicOCPStorage::build(ocp, qr_lin, b_eq_lin,
+                                                     b_lb_lin, b_ub_lin);
+    Solver solver = Solver::build(cocp, lP);
+
+    const index_t nyM = std::max(ny, ny_0 + ny_N);
+    std::vector<real_t> Σ_lin((N - 1) * ny + ny_0 + ny_N);
+    Solver::matrix λ{{.depth = N, .rows = dim.nx, .cols = 1}},
+        ux{{.depth = N, .rows = nux, .cols = 1}},
+        Mᵀλ{{.depth = N, .rows = nux, .cols = 1}},
+        DCux{{.depth = N, .rows = nyM, .cols = 1}},
+        DCᵀΣDCux{{.depth = N, .rows = nux, .cols = 1}},
+        grad{{.depth = N, .rows = nux, .cols = 1}},
+        Mxb{{.depth = N, .rows = dim.nx, .cols = 1}},
+        Σ{{.depth = N, .rows = dim.ny, .cols = 1}},
+        Σ2{{.depth = N, .rows = dim.ny, .cols = 1}},
+        ΔΣ{{.depth = N, .rows = dim.ny, .cols = 1}};
     std::ranges::generate(λ, [&] { return uni(rng); });
     std::ranges::generate(ux, [&] { return uni(rng); });
     std::ranges::generate(Σ_lin, [&] { return std::exp2(uni(rng)); });
@@ -67,8 +70,8 @@ TEST(CyclOCP, factor) {
     for (auto &Σ2i : Σ_lin2)
         if (bern(rng))
             Σ2i = std::exp2(uni(rng));
-    solver.initialize_Σ(Σ_lin, Σ);
-    solver.initialize_Σ(Σ_lin2, Σ2);
+    solver.pack_constraints(Σ_lin, Σ);
+    solver.pack_constraints(Σ_lin2, Σ2);
     std::ranges::transform(Σ2, Σ, std::ranges::begin(ΔΣ), std::minus<>{});
 
     if (std::ofstream f("rhs.csv"); f) {
@@ -115,7 +118,7 @@ TEST(CyclOCP, factor) {
     {
         koqkatoo::foreach_thread(
             [](index_t i, index_t) { GUANAQO_TRACE("thread_id", i); });
-        const auto N     = solver.dim.N_horiz;
+        const auto N     = solver.N_horiz;
         const auto VL    = solver.vl;
         std::string name = std::format("factor_cyclic_new.csv");
         std::filesystem::path out_dir{"traces"};
@@ -127,7 +130,7 @@ TEST(CyclOCP, factor) {
         out_dir /= *koqkatoo_commit_hash ? koqkatoo_commit_hash : "unknown";
         out_dir /= KOQKATOO_MKL_IF_ELSE("mkl", "openblas");
         out_dir /= std::format("nx={}-nu={}-ny={}-N={}-thr={}-vl={}-pcg={}{}",
-                               solver.dim.nx, solver.dim.nu, solver.dim.ny, N,
+                               solver.nx, solver.nu, solver.ny, N,
                                1 << log_n_threads, VL, pcg, alt ? "-alt" : "");
         std::filesystem::create_directories(out_dir);
         std::ofstream csv{out_dir / name};
@@ -139,7 +142,7 @@ TEST(CyclOCP, factor) {
 #endif
 
     if (std::ofstream f("sparse.csv"); f) {
-        auto sp = solver.build_sparse(ocp, Σ_lin2);
+        auto sp = solver.build_sparse(cocp, Σ_lin2);
         for (auto [r, c, x] : sp)
             f << r << ',' << c << ',' << guanaqo::float_to_str(x) << '\n';
     }

@@ -6,55 +6,48 @@
 namespace koqkatoo::ocp::cyclocp {
 
 template <index_t VL>
-auto CyclicOCPSolver<VL>::build_sparse(
-    const koqkatoo::ocp::LinearOCPStorage &ocp, std::span<const real_t> Σ) const
+auto CyclicOCPSolver<VL>::build_sparse(const CyclicOCPStorage &ocp,
+                                       std::span<const real_t> Σ) const
     -> std::vector<std::tuple<index_t, index_t, real_t>> {
     using std::sqrt;
     std::vector<std::tuple<index_t, index_t, real_t>> tuples;
 
-    auto [N, nx, nu, ny, ny_N] = ocp.dim;
     const index_t nux = nu + nx, nuxx = nux + nx;
-    const index_t vstride    = N >> lvl;
-    const index_t num_stages = N >> lP; // number of stages per thread
+    const index_t vstride    = N_horiz >> lvl;
+    const index_t num_stages = N_horiz >> lP; // number of stages per thread
     const index_t num_proc   = 1 << (lP - lvl);
-    const index_t sλ         = N * nuxx - (nx << lP);
+    const index_t sλ         = N_horiz * nuxx - (nx << lP);
 
     linalg::compact::BatchedMatrix<real_t, index_t> RSQ_DC{{
-        .depth = N,
+        .depth = N_horiz,
         .rows  = nux,
         .cols  = nux,
     }};
     linalg::compact::BatchedMatrix<real_t, index_t> DC{{
-        .depth = N,
-        .rows  = std::max(ny, ny_N),
+        .depth = N_horiz,
+        .rows  = std::max(ny, ny_0 + ny_N),
         .cols  = nux,
     }};
     auto R  = RSQ_DC.top_left(nu, nu);
     auto Q  = RSQ_DC.bottom_right(nx, nx);
     auto Sᵀ = RSQ_DC.bottom_left(nx, nu);
-    for (index_t k = 0; k < N; ++k) {
-        R(k) = ocp.R(k);
-        Q(k) = ocp.Q(k == 0 ? N : k);
+    for (index_t k = 0; k < N_horiz; ++k) {
+        RSQ_DC(k) = ocp.data_H(k);
         if (k > 0) {
-            Sᵀ(k)                   = ocp.S_trans(k);
-            DC.top_left(ny, nu)(k)  = ocp.D(k);
-            DC.top_right(ny, nx)(k) = ocp.C(k);
+            DC.top_rows(ny)(k) = ocp.data_G(k - 1);
             for (index_t j = 0; j < ny; ++j)
                 for (index_t i = 0; i < nux; ++i)
-                    DC(k, j, i) *= sqrt(Σ[k * ny + j]);
+                    DC(k, j, i) *= sqrt(Σ[ny_0 + (k - 1) * ny + j]);
             guanaqo::blas::xsyrk_LT(real_t{1}, DC(k), real_t{1}, RSQ_DC(k));
         } else {
-            auto D0 = DC.top_left(ny, nu)(k);
-            auto CN = DC.bottom_right(ny_N, nx)(k);
-            D0      = ocp.D(0);
-            CN      = ocp.C(N);
-            DC.bottom_left(ny_N, nu)(k).set_constant(0); // TODO
-            for (index_t j = 0; j < ny; ++j)
+            DC.top_rows(ny_0 + ny_N)(k) = ocp.data_G0N(0);
+            for (index_t j = 0; j < ny_0; ++j)
                 for (index_t i = 0; i < nu; ++i)
-                    D0(j, i) *= sqrt(Σ[k * ny + j]);
+                    DC(0, j, i) *= sqrt(Σ[j]);
             for (index_t j = 0; j < ny_N; ++j)
                 for (index_t i = 0; i < nx; ++i)
-                    CN(j, i) *= sqrt(Σ[N * ny + j]);
+                    DC(0, ny_0 + j, nu + i) *=
+                        sqrt(Σ[ny_0 + (N_horiz - 1) * ny + j]);
             guanaqo::blas::xsyrk_LT(real_t{1}, DC(k), real_t{1}, RSQ_DC(k));
         }
     }
@@ -78,8 +71,9 @@ auto CyclicOCPSolver<VL>::build_sparse(
                             tuples.emplace_back(s + r + nu, s + c, Sᵀ(k)(r, c));
                     if (i == 0) {
                         for (index_t r = 0; r < nx; ++r)
-                            tuples.emplace_back(sλA + r, s + c,
-                                                ocp.B(k0)(r, c));
+                            tuples.emplace_back(
+                                sλA + r, s + c,
+                                ocp.data_F(k0).left_cols(nu)(r, c));
                     }
                 }
                 for (index_t c = 0; c < nx; ++c) {
@@ -91,18 +85,21 @@ auto CyclicOCPSolver<VL>::build_sparse(
                         tuples.emplace_back(sλI + c, s + c + nu, -1);
                     if (i == 0 && k > 0) {
                         for (index_t r = 0; r < nx; ++r)
-                            tuples.emplace_back(sλA + r, s + c + nu,
-                                                ocp.A(k0)(r, c));
+                            tuples.emplace_back(
+                                sλA + r, s + c + nu,
+                                ocp.data_F(k0).right_cols(nx)(r, c));
                     }
                 }
                 if (i > 0) {
                     for (index_t c = 0; c < nx; ++c) {
                         for (index_t r = 0; r < nu; ++r)
-                            tuples.emplace_back(s + r, s - nx + c,
-                                                ocp.B(k)(c, r));
+                            tuples.emplace_back(
+                                s + r, s - nx + c,
+                                ocp.data_F(k).left_cols(nu)(c, r));
                         for (index_t r = 0; r < nx; ++r)
-                            tuples.emplace_back(s + nu + r, s - nx + c,
-                                                ocp.A(k)(c, r));
+                            tuples.emplace_back(
+                                s + nu + r, s - nx + c,
+                                ocp.data_F(k).right_cols(nx)(c, r));
                     }
                 }
             }
@@ -114,13 +111,12 @@ auto CyclicOCPSolver<VL>::build_sparse(
 template <index_t VL>
 auto CyclicOCPSolver<VL>::build_rhs(matrix_view ux, matrix_view λ) const
     -> std::vector<real_t> {
-    auto [N, nx, nu, ny, ny_N] = dim;
     const index_t nux = nu + nx, nuxx = nux + nx;
-    std::vector<real_t> tuples(nuxx * N);
+    std::vector<real_t> tuples(nuxx * N_horiz);
     std::ranges::fill(tuples, std::numeric_limits<real_t>::quiet_NaN());
-    const index_t num_stages = N >> lP; // number of stages per thread
+    const index_t num_stages = N_horiz >> lP; // number of stages per thread
     const index_t num_proc   = 1 << (lP - lvl);
-    const index_t sλ         = N * nuxx - (nx << lP);
+    const index_t sλ         = N_horiz * nuxx - (nx << lP);
 
     for (index_t vi = 0; vi < vl; ++vi) {
         const index_t sv = vi * num_proc * (nuxx * num_stages - nx);
@@ -166,26 +162,25 @@ template <index_t VL>
 auto CyclicOCPSolver<VL>::build_sparse_factor() const
     -> std::vector<std::tuple<index_t, index_t, real_t>> {
     std::vector<std::tuple<index_t, index_t, real_t>> tuples;
-    auto [N, nx, nu, ny, ny_N] = dim;
     const index_t nux = nu + nx, nuxx = nux + nx;
-    const index_t vstride    = N >> lvl;
-    const index_t num_stages = N >> lP; // number of stages per thread
+    const index_t vstride    = N_horiz >> lvl;
+    const index_t num_stages = N_horiz >> lP; // number of stages per thread
     const index_t num_proc   = 1 << (lP - lvl);
-    const index_t sλ         = N * nuxx - (nx << lP);
+    const index_t sλ         = N_horiz * nuxx - (nx << lP);
     matrix AinvQᵀ{{
         .depth = 1 << lP,
-        .rows  = dim.nx,
-        .cols  = (dim.N_horiz >> lP) * dim.nx,
+        .rows  = nx,
+        .cols  = (N_horiz >> lP) * nx,
     }};
     matrix invQᵀ{{
         .depth = 1 << lP,
-        .rows  = dim.nx,
-        .cols  = (dim.N_horiz >> lP) * dim.nx,
+        .rows  = nx,
+        .cols  = (N_horiz >> lP) * nx,
     }};
     matrix LBA{{
         .depth = 1 << lP,
-        .rows  = dim.nu + dim.nx,
-        .cols  = ((dim.N_horiz >> lP) - 1) * dim.nx,
+        .rows  = nu + nx,
+        .cols  = ((N_horiz >> lP) - 1) * nx,
     }};
     for (index_t ti = 0; ti < num_proc; ++ti) {
         const index_t di0 = ti * num_stages; // data batch index
@@ -343,11 +338,10 @@ template <index_t VL>
 auto CyclicOCPSolver<VL>::build_sparse_diag() const
     -> std::vector<std::tuple<index_t, index_t, real_t>> {
     std::vector<std::tuple<index_t, index_t, real_t>> tuples;
-    auto [N, nx, nu, ny, ny_N] = dim;
     const index_t nux = nu + nx, nuxx = nux + nx;
-    const index_t num_stages = N >> lP; // number of stages per thread
+    const index_t num_stages = N_horiz >> lP; // number of stages per thread
     const index_t num_proc   = 1 << (lP - lvl);
-    const index_t sλ         = N * nuxx - (nx << lP);
+    const index_t sλ         = N_horiz * nuxx - (nx << lP);
     for (index_t vi = 0; vi < vl; ++vi) {
         const index_t sv = vi * num_proc * (nuxx * num_stages - nx);
         for (index_t ti = 0; ti < num_proc; ++ti) {

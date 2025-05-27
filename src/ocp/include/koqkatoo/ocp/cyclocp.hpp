@@ -41,12 +41,81 @@ namespace stdx = std::experimental;
     return i >> (l + 1);
 }
 
+///                ₙ₋₁
+///     minimize    ∑ [½ uᵢᵀ Rᵢ uᵢ + uᵢᵀ S xᵢ + ½ xᵢᵀ Qᵢ xᵢ + rᵢᵀuᵢ + qᵢᵀxᵢ]
+///                ⁱ⁼⁰
+///                + ½ xₙᵀ Qₙ xₙ + qₙᵀ xₙ
+///     s.t.        x₀   = xᵢₙᵢₜ
+///                 xᵢ₊₁ = Aᵢ xᵢ + Bᵢ uᵢ + cᵢ
+///                 lᵢ   ≤ Cᵢ xᵢ + Dᵢ uᵢ ≤ uᵢ
+///                 lₙ   ≤ Cₙ xₙ ≤ uₙ
+///
+///                ₙ₋₁
+///     minimize    ∑ [½ uᵢᵀ Rᵢ uᵢ + uᵢᵀ Sᵢ xᵢ + ½ xᵢᵀ Qᵢ xᵢ + rᵢᵀuᵢ + qᵢᵀxᵢ]
+///                ⁱ⁼¹
+///                + ½ u₀ᵀ R₀ u₀ + (r₀ + S₀ x₀)ᵀ u₀
+///                + ½ xₙᵀ Qₙ xₙ + qₙᵀ xₙ
+///     s.t.        x₀   = xᵢₙᵢₜ
+///                 xᵢ₊₁ = Aᵢ xᵢ + Bᵢ uᵢ + cᵢ
+///                 lᵢ   ≤ Cᵢ xᵢ + Dᵢ uᵢ ≤ uᵢ
+///                 l₀ - C₀ x₀ ≤ D₀ U₀ ≤ u₀ - C₀ x₀
+///                 lₙ   ≤ Cₙ xₙ ≤ uₙ
+struct CyclicOCPStorage {
+    index_t N_horiz;
+    index_t nx, nu, ny, ny_0, ny_N;
+    /// Storage layout:         size                 offset
+    ///     N × [ R  S ] = H    (nu+nx)²             0
+    ///         [ Sᵀ Q ]
+    ///     N × [ B  A ]        nx(nu+nx)            N (nu+nx)²
+    /// (N-1) × [ D  C ]        ny(nu+nx)            N (nu+nx)² + N nx(nu+nx)
+    ///     1 × [ D  C ]        (ny_0+ny_N)(nu+nx)   N (nu+nx)² + N nx(nu+nx) + (N-1)ny(nu+nx)
+    using matrix  = linalg::compact::BatchedMatrix<real_t, index_t>;
+    matrix data_H = [this] {
+        return matrix{{.depth = N_horiz, .rows = nu + nx, .cols = nu + nx}};
+    }();
+    matrix data_F = [this] {
+        return matrix{{.depth = N_horiz, .rows = nx, .cols = nu + nx}};
+    }();
+    matrix data_G = [this] {
+        return matrix{{.depth = N_horiz - 1, .rows = ny, .cols = nu + nx}};
+    }();
+    matrix data_G0N = [this] {
+        return matrix{{.depth = 1, .rows = ny_0 + ny_N, .cols = nu + nx}};
+    }();
+    matrix data_rq = [this] {
+        return matrix{{.depth = N_horiz, .rows = nu + nx, .cols = 1}};
+    }();
+    matrix data_c = [this] {
+        return matrix{{.depth = N_horiz, .rows = nx, .cols = 1}};
+    }();
+    matrix data_lb = [this] {
+        return matrix{{.depth = N_horiz - 1, .rows = ny, .cols = 1}};
+    }();
+    matrix data_lb0N = [this] {
+        return matrix{{.depth = 1, .rows = ny_0 + ny_N, .cols = 1}};
+    }();
+    matrix data_ub = [this] {
+        return matrix{{.depth = N_horiz - 1, .rows = ny, .cols = 1}};
+    }();
+    matrix data_ub0N = [this] {
+        return matrix{{.depth = 1, .rows = ny_0 + ny_N, .cols = 1}};
+    }();
+
+    static CyclicOCPStorage build(const LinearOCPStorage &ocp,
+                                  std::span<const real_t> qr,
+                                  std::span<const real_t> b_eq,
+                                  std::span<const real_t> b_lb,
+                                  std::span<const real_t> b_ub);
+};
+
 template <index_t VL = 4>
 struct CyclicOCPSolver {
     static constexpr index_t vl  = VL;
     static constexpr index_t lvl = get_depth(vl);
 
-    const OCPDim dim;
+    const index_t N_horiz;
+    const index_t nx, nu, ny, ny_0, ny_N;
+
     /// log2(P), logarithm of the number of parallel execution units
     /// (number of processors × vector length)
     const index_t lP = lvl + 3;
@@ -77,119 +146,119 @@ struct CyclicOCPSolver {
     matrix coupling_D = [this] {
         return matrix{{
             .depth = 1 << lP,
-            .rows  = dim.nx,
-            .cols  = dim.nx,
+            .rows  = nx,
+            .cols  = nx,
         }};
     }();
     matrix coupling_U = [this] {
         return matrix{{
             .depth = 1 << lP,
-            .rows  = dim.nx,
-            .cols  = dim.nx,
+            .rows  = nx,
+            .cols  = nx,
         }};
     }();
     matrix coupling_Y = [this] {
         return matrix{{
             .depth = 1 << lP,
-            .rows  = dim.nx,
-            .cols  = dim.nx,
+            .rows  = nx,
+            .cols  = nx,
         }};
     }();
     matrix work_update = [this] {
         return matrix{{
             .depth = 4 << lvl,
-            .rows  = dim.nx,
-            .cols  = (dim.N_horiz >> lvl) * dim.ny,
+            .rows  = nx,
+            .cols  = (N_horiz >> lvl) * ny,
         }};
     }(); // TODO: merge with riccati_ΥΓ?
     matrix work_update_Σ = [this] {
         return matrix{{
             .depth = 1 << lvl,
-            .rows  = (dim.N_horiz >> lvl) * dim.ny,
+            .rows  = (N_horiz >> lvl) * ny,
             .cols  = 1,
         }};
     }();
     matrix riccati_ÂB̂ = [this] {
         return matrix{{
             .depth = 1 << lP,
-            .rows  = dim.nx,
-            .cols  = (dim.N_horiz >> lP) * (dim.nu + dim.nx),
+            .rows  = nx,
+            .cols  = (N_horiz >> lP) * (nu + nx),
         }};
     }();
     matrix riccati_BAᵀ = [this] {
         return matrix{{
             .depth = 1 << lP,
-            .rows  = dim.nu + dim.nx,
-            .cols  = ((dim.N_horiz >> lP) - 1) * dim.nx,
+            .rows  = nu + nx,
+            .cols  = ((N_horiz >> lP) - 1) * nx,
         }};
     }();
     matrix riccati_R̂ŜQ̂ = [this] {
         return matrix{{
             .depth = 1 << lP,
-            .rows  = dim.nu + dim.nx,
-            .cols  = (dim.N_horiz >> lP) * (dim.nu + dim.nx),
+            .rows  = nu + nx,
+            .cols  = (N_horiz >> lP) * (nu + nx),
         }};
     }();
     matrix riccati_ΥΓ1 = [this] {
         return matrix{{
             .depth = 1 << lP,
-            .rows  = dim.nu + dim.nx + dim.nx,
-            .cols  = (dim.N_horiz >> lP) * std::max(dim.ny, dim.ny_N),
+            .rows  = nu + nx + nx,
+            .cols  = (N_horiz >> lP) * std::max(ny, ny_0 + ny_N),
         }};
     }();
     matrix riccati_ΥΓ2 = [this] {
         return matrix{{
             .depth = 1 << lP,
-            .rows  = dim.nu + dim.nx + dim.nx,
-            .cols  = (dim.N_horiz >> lP) * std::max(dim.ny, dim.ny_N),
+            .rows  = nu + nx + nx,
+            .cols  = (N_horiz >> lP) * std::max(ny, ny_0 + ny_N),
         }};
     }();
     matrix data_BA = [this] {
         return matrix{{
-            .depth = dim.N_horiz,
-            .rows  = dim.nx,
-            .cols  = dim.nu + dim.nx,
+            .depth = N_horiz,
+            .rows  = nx,
+            .cols  = nu + nx,
         }};
     }();
     matrix data_DCᵀ = [this] {
         return matrix{{
-            .depth = dim.N_horiz,
-            .rows  = dim.nu + dim.nx,
-            .cols  = std::max(dim.ny, dim.ny_N),
+            .depth = N_horiz,
+            .rows  = nu + nx,
+            .cols  = std::max(ny, ny_0 + ny_N),
         }};
     }();
     matrix data_rhs_constr = [this] {
         return matrix{{
-            .depth = dim.N_horiz,
-            .rows  = dim.nx,
+            .depth = N_horiz,
+            .rows  = nx,
             .cols  = 1,
         }};
     }();
     matrix work_Σ = [this] {
         return matrix{{
             .depth = 1 << lP,
-            .rows  = (dim.N_horiz >> lP) * std::max(dim.ny, dim.ny_N),
+            .rows  = (N_horiz >> lP) * std::max(ny, ny_0 + ny_N),
             .cols  = 1,
         }};
     }();
     matrix data_RSQ = [this] {
         return matrix{{
-            .depth = dim.N_horiz,
-            .rows  = dim.nu + dim.nx,
-            .cols  = dim.nu + dim.nx,
+            .depth = N_horiz,
+            .rows  = nu + nx,
+            .cols  = nu + nx,
         }};
     }();
     matrix riccati_work = [this] {
         return matrix{{
             .depth = 1 << lP,
-            .rows  = dim.nx,
+            .rows  = nx,
             .cols  = 1,
         }};
     }();
     matrix work_pcg = [this] {
         return matrix{{
             .depth = vl,
-            .rows  = dim.nx,
+            .rows  = nx,
             .cols  = 4,
         }};
     }();
@@ -208,13 +277,8 @@ struct CyclicOCPSolver {
     ///
     /// Since ocp.D(0) and ocp.C(N) will be merged, the top ny₀ rows of ocp.C(N)
     /// should be zero.
-    void initialize(const LinearOCPStorage &ocp);
-    void initialize_rhs(guanaqo::MatrixView<const real_t, index_t> A0,
-                        std::span<const real_t> x0, std::span<const real_t> c,
-                        mut_matrix_view rhs) const;
-    void initialize_rhs(const LinearOCPStorage &ocp, std::span<const real_t> x0,
-                        std::span<const real_t> c, mut_matrix_view rhs) const;
-    void initialize_Σ(std::span<const real_t> Σ_lin, mut_matrix_view Σ) const;
+    static CyclicOCPSolver build(const CyclicOCPStorage &ocp, index_t lP);
+    void initialize_rhs(const CyclicOCPStorage &ocp, mut_matrix_view rhs) const;
     void pack_variables(std::span<const real_t> ux_lin,
                         mut_matrix_view ux) const;
     void unpack_variables(matrix_view ux, std::span<real_t> ux_lin) const;
@@ -224,27 +288,25 @@ struct CyclicOCPSolver {
                           real_t fill = 0) const;
     void unpack_constraints(matrix_view y, std::span<real_t> y_lin) const;
 
-    index_t num_variables() const { return dim.N_horiz * (dim.nu + dim.nx); }
-    index_t num_dynamics_constraints() const { return dim.N_horiz * dim.nx; }
+    index_t num_variables() const { return N_horiz * (nu + nx); }
+    index_t num_dynamics_constraints() const { return N_horiz * nx; }
     index_t num_general_constraints() const {
-        return dim.N_horiz * dim.ny + dim.ny_N;
+        return N_horiz * ny + ny_0 + ny_N;
     }
 
     matrix initialize_variables() const {
-        const auto [N, nx, nu, ny, ny_N] = dim;
-        return matrix{{.depth = N, .rows = nu + nx, .cols = 1}};
+        return matrix{{.depth = N_horiz, .rows = nu + nx, .cols = 1}};
     }
     matrix initialize_dynamics_constraints() const {
-        const auto [N, nx, nu, ny, ny_N] = dim;
-        return matrix{{.depth = N, .rows = nx, .cols = 1}};
+        return matrix{{.depth = N_horiz, .rows = nx, .cols = 1}};
     }
     matrix initialize_general_constraints() const {
-        const auto [N, nx, nu, ny, ny_N] = dim;
-        return matrix{{.depth = N, .rows = std::max(ny, ny_N), .cols = 1}};
+        return matrix{
+            {.depth = N_horiz, .rows = std::max(ny, ny_0 + ny_N), .cols = 1}};
     }
     mask_matrix initialize_active_set() const {
-        const auto [N, nx, nu, ny, ny_N] = dim;
-        return mask_matrix{{.depth = N, .rows = std::max(ny, ny_N), .cols = 1}};
+        return mask_matrix{
+            {.depth = N_horiz, .rows = std::max(ny, ny_0 + ny_N), .cols = 1}};
     }
 
     // For lgp = 5, lgv = 2, N = 3 << lgp
@@ -358,12 +420,23 @@ struct CyclicOCPSolver {
     void update_riccati(index_t ti, matrix_view Σ);
 
     std::vector<std::tuple<index_t, index_t, real_t>>
-    build_sparse(const koqkatoo::ocp::LinearOCPStorage &ocp,
-                 std::span<const real_t> Σ) const;
+    build_sparse(const CyclicOCPStorage &ocp, std::span<const real_t> Σ) const;
     std::vector<real_t> build_rhs(matrix_view ux, matrix_view λ) const;
     std::vector<std::tuple<index_t, index_t, real_t>>
     build_sparse_factor() const;
     std::vector<std::tuple<index_t, index_t, real_t>> build_sparse_diag() const;
 };
+
+namespace detail {
+template <class T1, class I1, class S1, class T2, class I2, class S2>
+void copy_T(guanaqo::MatrixView<T1, I1, S1> src,
+            guanaqo::MatrixView<T2, I2, S2> dst) {
+    assert(src.rows == dst.cols);
+    assert(src.cols == dst.rows);
+    for (index_t r = 0; r < src.rows; ++r) // TODO: optimize
+        for (index_t c = 0; c < src.cols; ++c)
+            dst(c, r) = src(r, c);
+}
+} // namespace detail
 
 } // namespace koqkatoo::ocp::cyclocp

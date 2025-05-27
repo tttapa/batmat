@@ -44,8 +44,7 @@ void CyclicOCPSolver<VL>::update_level(index_t l, index_t biY) {
 
 template <index_t VL>
 void CyclicOCPSolver<VL>::update(matrix_view ΔΣ) {
-    const index_t N = dim.N_horiz;
-    KOQKATOO_ASSERT(((N >> lP) << lP) == N);
+    KOQKATOO_ASSERT(((N_horiz >> lP) << lP) == N_horiz);
     koqkatoo::foreach_thread([this, ΔΣ](index_t ti, index_t P) {
         if (P < (1 << (lP - lvl)))
             throw std::logic_error("Incorrect number of threads");
@@ -97,19 +96,18 @@ void CyclicOCPSolver<VL>::update(matrix_view ΔΣ) {
 
 template <index_t VL>
 void CyclicOCPSolver<VL>::update_riccati(index_t ti, matrix_view Σ) {
-    const auto [N, nx, nu, ny, ny_N] = dim;
-    const index_t nyM                = std::max(ny, ny_N);
-    const index_t num_stages         = N >> lP; // number of stages per thread
-    const index_t di0                = ti * num_stages; // data batch index
-    const index_t k0                 = ti * num_stages; // stage index
-    const index_t nux                = nu + nx;
-    const auto be                    = backend;
-    auto R̂ŜQ̂                         = riccati_R̂ŜQ̂.batch(ti);
-    auto B̂   = riccati_ÂB̂.batch(ti).right_cols(num_stages * nu);
-    auto Â   = riccati_ÂB̂.batch(ti).left_cols(num_stages * nx);
-    auto ΥΓ1 = riccati_ΥΓ1.batch(ti);
-    auto ΥΓ2 = riccati_ΥΓ2.batch(ti);
-    auto wΣ  = work_Σ.batch(ti);
+    const index_t nyM        = std::max(ny, ny_0 + ny_N);
+    const index_t num_stages = N_horiz >> lP;   // number of stages per thread
+    const index_t di0        = ti * num_stages; // data batch index
+    const index_t k0         = ti * num_stages; // stage index
+    const index_t nux        = nu + nx;
+    const auto be            = backend;
+    auto R̂ŜQ̂                 = riccati_R̂ŜQ̂.batch(ti);
+    auto B̂                   = riccati_ÂB̂.batch(ti).right_cols(num_stages * nu);
+    auto Â                   = riccati_ÂB̂.batch(ti).left_cols(num_stages * nx);
+    auto ΥΓ1                 = riccati_ΥΓ1.batch(ti);
+    auto ΥΓ2                 = riccati_ΥΓ2.batch(ti);
+    auto wΣ                  = work_Σ.batch(ti);
 
     index_t nJ;
     {

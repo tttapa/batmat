@@ -14,8 +14,7 @@ void CyclicOCPSolver<VL>::residual_dynamics_constr(matrix_view x, matrix_view b,
             throw std::logic_error("Incorrect number of threads");
         if (ti >= (1 << (lP - lvl)))
             return;
-        const auto [N, nx, nu, ny, ny_N] = dim;
-        const index_t num_stages = N >> lP; // number of stages per thread
+        const index_t num_stages = N_horiz >> lP; // number of stages per thread
         const index_t di0        = ti * num_stages; // data batch index
         const index_t k0         = ti * num_stages; // stage index
         {
@@ -54,8 +53,7 @@ void CyclicOCPSolver<VL>::transposed_dynamics_constr(
             throw std::logic_error("Incorrect number of threads");
         if (ti >= (1 << (lP - lvl)))
             return;
-        const auto [N, nx, nu, ny, ny_N] = dim;
-        const index_t num_stages = N >> lP; // number of stages per thread
+        const index_t num_stages = N_horiz >> lP; // number of stages per thread
         const index_t di0        = ti * num_stages; // data batch index
         const index_t k0         = ti * num_stages; // stage index
         for (index_t i = 0; i < num_stages; ++i) {
@@ -89,8 +87,7 @@ void CyclicOCPSolver<VL>::general_constr(matrix_view ux,
             throw std::logic_error("Incorrect number of threads");
         if (ti >= (1 << (lP - lvl)))
             return;
-        const auto [N, nx, nu, ny, ny_N] = dim;
-        const index_t num_stages = N >> lP; // number of stages per thread
+        const index_t num_stages = N_horiz >> lP; // number of stages per thread
         const index_t di0        = ti * num_stages; // data batch index
         const index_t k0         = ti * num_stages; // stage index
         for (index_t i = 0; i < num_stages; ++i) {
@@ -111,8 +108,7 @@ void CyclicOCPSolver<VL>::transposed_general_constr(
             throw std::logic_error("Incorrect number of threads");
         if (ti >= (1 << (lP - lvl)))
             return;
-        const auto [N, nx, nu, ny, ny_N] = dim;
-        const index_t num_stages = N >> lP; // number of stages per thread
+        const index_t num_stages = N_horiz >> lP; // number of stages per thread
         const index_t di0        = ti * num_stages; // data batch index
         const index_t k0         = ti * num_stages; // stage index
         for (index_t i = 0; i < num_stages; ++i) {
@@ -134,8 +130,7 @@ void CyclicOCPSolver<VL>::cost_gradient(matrix_view ux, real_t a, matrix_view q,
             throw std::logic_error("Incorrect number of threads");
         if (ti >= (1 << (lP - lvl)))
             return;
-        const auto [N, nx, nu, ny, ny_N] = dim;
-        const index_t num_stages = N >> lP; // number of stages per thread
+        const index_t num_stages = N_horiz >> lP; // number of stages per thread
         const index_t di0        = ti * num_stages; // data batch index
         const index_t k0         = ti * num_stages; // stage index
         for (index_t i = 0; i < num_stages; ++i) {
@@ -161,8 +156,7 @@ void CyclicOCPSolver<VL>::cost_gradient_regularized(
             return;
         using simd = typename compact_blas::simd;
         simd invS{1 / S};
-        const auto [N, nx, nu, ny, ny_N] = dim;
-        const index_t num_stages = N >> lP; // number of stages per thread
+        const index_t num_stages = N_horiz >> lP; // number of stages per thread
         const index_t di0        = ti * num_stages; // data batch index
         const index_t k0         = ti * num_stages; // stage index
         for (index_t i = 0; i < num_stages; ++i) {
@@ -194,8 +188,7 @@ void CyclicOCPSolver<VL>::cost_gradient_remove_regularization(
             return;
         using simd = typename compact_blas::simd;
         simd invS{1 / S};
-        const auto [N, nx, nu, ny, ny_N] = dim;
-        const index_t num_stages = N >> lP; // number of stages per thread
+        const index_t num_stages = N_horiz >> lP; // number of stages per thread
         const index_t di0        = ti * num_stages; // data batch index
         const index_t k0         = ti * num_stages; // stage index
         for (index_t i = 0; i < num_stages; ++i) {
