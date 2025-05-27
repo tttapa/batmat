@@ -3,7 +3,7 @@
 #include <koqkatoo/ocp/cyclocp/data.tpp>
 #include <koqkatoo/ocp/cyclocp/factor.tpp>
 #include <koqkatoo/ocp/cyclocp/indexing.tpp>
-// #include <koqkatoo/ocp/cyclocp/mat-vec.tpp> // TODO
+#include <koqkatoo/ocp/cyclocp/mat-vec.tpp>
 #include <koqkatoo/ocp/cyclocp/pcg.tpp>
 #include <koqkatoo/ocp/cyclocp/solve.tpp>
 #include <koqkatoo/ocp/cyclocp/sparse.tpp>

@@ -7,15 +7,14 @@
 #include <koqkatoo/ocp/random-ocp.hpp>
 #include <koqkatoo/openmp.h>
 #include <koqkatoo/thread-pool.hpp>
-#include <guanaqo/eigen/span.hpp>
 #include <guanaqo/print.hpp>
 #include <guanaqo/trace.hpp>
 #include <koqkatoo-version.h>
 
-#include <Eigen/Eigen>
-
 #include <filesystem>
 #include <fstream>
+#include <iostream>
+#include <limits>
 
 using koqkatoo::index_t;
 using koqkatoo::real_t;
@@ -23,7 +22,7 @@ using koqkatoo::real_t;
 TEST(CyclOCP, factor) {
     using namespace koqkatoo::ocp;
 
-    const int log_n_threads = 5;
+    const int log_n_threads = 3;
 
     KOQKATOO_OMP_IF(omp_set_num_threads(1 << log_n_threads));
     koqkatoo::pool_set_num_threads(1 << log_n_threads);
@@ -34,13 +33,14 @@ TEST(CyclOCP, factor) {
 
     using Solver     = cyclocp::CyclicOCPSolver<4>;
     const index_t lP = log_n_threads + Solver::lvl;
-    OCPDim dim{.N_horiz = 256, .nx = 11, .nu = 7, .ny = 13, .ny_N = 13};
+    OCPDim dim{.N_horiz = 96, .nx = 40, .nu = 30, .ny = 50, .ny_N = 50};
     auto ocp = generate_random_ocp(dim);
     Solver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
     std::vector<real_t> Σ_lin(dim.N_horiz * dim.ny + dim.ny_N);
     Solver::matrix λ{{.depth = dim.N_horiz, .rows = dim.nx, .cols = 1}},
         ux{{.depth = dim.N_horiz, .rows = dim.nu + dim.nx, .cols = 1}},
+        Mxb{{.depth = dim.N_horiz, .rows = dim.nx, .cols = 1}},
         Σ{{.depth = dim.N_horiz, .rows = dim.ny, .cols = 1}},
         Σ2{{.depth = dim.N_horiz, .rows = dim.ny, .cols = 1}},
         ΔΣ{{.depth = dim.N_horiz, .rows = dim.ny, .cols = 1}};
@@ -64,12 +64,13 @@ TEST(CyclOCP, factor) {
             f << guanaqo::float_to_str(x) << '\n';
     }
 
-    const bool alt        = true;
+    const bool alt        = false;
     const auto ux_initial = ux, λ_initial = λ;
     for (int i = 0; i < 500; ++i) {
         solver.factor(Σ, alt);
         solver.update(ΔΣ);
         solver.solve(ux, λ);
+        solver.residual_dynamics_constr(ux, λ_initial, Mxb);
         ux.view = ux_initial.view;
         λ.view  = λ_initial.view;
     }
@@ -79,6 +80,11 @@ TEST(CyclOCP, factor) {
     solver.factor(Σ, alt);
     solver.update(ΔΣ);
     solver.solve(ux, λ);
+    solver.residual_dynamics_constr(ux, λ_initial, Mxb);
+
+    using std::pow;
+    const auto ε = pow(std::numeric_limits<real_t>::epsilon(), 0.8);
+    EXPECT_LE(Solver::compact_blas::xnrminf(Mxb), ε);
 
 #if GUANAQO_WITH_TRACING
     {

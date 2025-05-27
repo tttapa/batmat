@@ -191,7 +191,7 @@ struct CyclicOCPSolver {
 
     // For lgp = 5, lgv = 2, N = 3 << lgp
     //
-    // | Stage k | Thread t | Index i | Batch b | λ(A) | λ(I) | bλ(A) | bλ(I) |
+    // | Stage k | Thread t | Index i | Data di | λ(A) | λ(I) | bλ(A) | bλ(I) |
     // |:-------:|:--------:|:-------:|:-------:|-----:|-----:|------:|------:|
     // | 0/96    | 0        | 0       | 0       | 0    | 93   | 0     | 7*    |
     // | 95      | 0        | 1       | 1       |      |      |       |       |
@@ -238,6 +238,9 @@ struct CyclicOCPSolver {
         std_barrier.arrive_and_wait();
 #endif
     }
+
+    void residual_dynamics_constr(matrix_view x, matrix_view b,
+                                  mut_matrix_view Mxb) const;
 
     void factor_schur_U(index_t l, index_t biU);
     void factor_schur_Y(index_t l, index_t biY);
