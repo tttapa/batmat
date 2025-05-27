@@ -426,6 +426,26 @@ void CompactBLAS<Abi>::xfill(real_t a, mut_batch_view B) {
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xhadamard(single_batch_view A, mut_single_batch_view B) {
+    GUANAQO_TRACE("xhadamard", 0, A.rows() * A.cols() * A.depth());
+    assert(A.rows() == B.rows());
+    assert(A.cols() == B.cols());
+    const index_t n = A.rows(), m = A.cols();
+    for (index_t j = 0; j < m; ++j)
+        KOQKATOO_UNROLLED_IVDEP_FOR (8, index_t i = 0; i < n; ++i)
+            aligned_store(&B(0, i, j), aligned_load(&A(0, i, j)) *
+                                           aligned_load(&B(0, i, j)));
+}
+
+template <class Abi>
+void CompactBLAS<Abi>::xhadamard(batch_view A, mut_batch_view B) {
+    assert(A.ceil_depth() == B.ceil_depth());
+    KOQKATOO_OMP(parallel for)
+    for (index_t i = 0; i < A.num_batches(); ++i)
+        xhadamard(A.batch(i), B.batch(i));
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xneg(mut_single_batch_view A) {
     GUANAQO_TRACE("xneg", 0, A.rows() * A.cols() * A.depth());
     const index_t n = A.rows(), m = A.cols();

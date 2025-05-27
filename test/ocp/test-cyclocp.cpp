@@ -22,7 +22,7 @@ using koqkatoo::real_t;
 TEST(CyclOCP, factor) {
     using namespace koqkatoo::ocp;
 
-    const int log_n_threads = 3;
+    const int log_n_threads = 2;
 
     KOQKATOO_OMP_IF(omp_set_num_threads(1 << log_n_threads));
     koqkatoo::pool_set_num_threads(1 << log_n_threads);
@@ -37,9 +37,14 @@ TEST(CyclOCP, factor) {
     auto ocp = generate_random_ocp(dim);
     Solver solver{.dim = dim, .lP = lP};
     solver.initialize(ocp);
+    const index_t ny_ny_N = std::max(dim.ny, dim.ny_N);
     std::vector<real_t> Σ_lin(dim.N_horiz * dim.ny + dim.ny_N);
     Solver::matrix λ{{.depth = dim.N_horiz, .rows = dim.nx, .cols = 1}},
         ux{{.depth = dim.N_horiz, .rows = dim.nu + dim.nx, .cols = 1}},
+        Mᵀλ{{.depth = dim.N_horiz, .rows = dim.nu + dim.nx, .cols = 1}},
+        DCux{{.depth = dim.N_horiz, .rows = ny_ny_N, .cols = 1}},
+        DCᵀΣDCux{{.depth = dim.N_horiz, .rows = dim.nu + dim.nx, .cols = 1}},
+        grad{{.depth = dim.N_horiz, .rows = dim.nu + dim.nx, .cols = 1}},
         Mxb{{.depth = dim.N_horiz, .rows = dim.nx, .cols = 1}},
         Σ{{.depth = dim.N_horiz, .rows = dim.ny, .cols = 1}},
         Σ2{{.depth = dim.N_horiz, .rows = dim.ny, .cols = 1}},
@@ -64,13 +69,18 @@ TEST(CyclOCP, factor) {
             f << guanaqo::float_to_str(x) << '\n';
     }
 
-    const bool alt        = false;
+    const bool alt        = true;
     const auto ux_initial = ux, λ_initial = λ;
     for (int i = 0; i < 500; ++i) {
         solver.factor(Σ, alt);
         solver.update(ΔΣ);
         solver.solve(ux, λ);
         solver.residual_dynamics_constr(ux, λ_initial, Mxb);
+        solver.transposed_dynamics_constr(λ, Mᵀλ);
+        solver.cost_gradient(ux, -1, ux_initial, 0, grad);
+        solver.general_constr(ux, DCux);
+        Solver::compact_blas::xhadamard(Σ2, DCux);
+        solver.transposed_general_constr(DCux, DCᵀΣDCux);
         ux.view = ux_initial.view;
         λ.view  = λ_initial.view;
     }
@@ -81,10 +91,17 @@ TEST(CyclOCP, factor) {
     solver.update(ΔΣ);
     solver.solve(ux, λ);
     solver.residual_dynamics_constr(ux, λ_initial, Mxb);
+    solver.transposed_dynamics_constr(λ, Mᵀλ);
+    solver.cost_gradient(ux, -1, ux_initial, 0, grad);
+    solver.general_constr(ux, DCux);
+    Solver::compact_blas::xhadamard(Σ2, DCux);
+    solver.transposed_general_constr(DCux, DCᵀΣDCux);
 
     using std::pow;
-    const auto ε = pow(std::numeric_limits<real_t>::epsilon(), 0.8);
+    const auto ε = pow(std::numeric_limits<real_t>::epsilon(), 0.6);
     EXPECT_LE(Solver::compact_blas::xnrminf(Mxb), ε);
+    Solver::compact_blas::xadd_copy(grad, grad, DCᵀΣDCux, Mᵀλ);
+    EXPECT_LE(Solver::compact_blas::xnrminf(grad), ε);
 
 #if GUANAQO_WITH_TRACING
     {

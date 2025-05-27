@@ -241,6 +241,12 @@ struct CyclicOCPSolver {
 
     void residual_dynamics_constr(matrix_view x, matrix_view b,
                                   mut_matrix_view Mxb) const;
+    void transposed_dynamics_constr(matrix_view λ, mut_matrix_view Mᵀλ) const;
+    /// grad_f ← Q ux + a q + b grad_f
+    void cost_gradient(matrix_view ux, real_t a, matrix_view q, real_t b,
+                       mut_matrix_view grad_f) const;
+    void general_constr(matrix_view ux, mut_matrix_view DCux) const;
+    void transposed_general_constr(matrix_view y, mut_matrix_view DCᵀy) const;
 
     void factor_schur_U(index_t l, index_t biU);
     void factor_schur_Y(index_t l, index_t biY);

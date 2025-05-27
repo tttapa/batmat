@@ -471,6 +471,10 @@ struct CompactBLAS {
     static void xfill(real_t A, mut_single_batch_view B);
     static void xfill(real_t A, mut_batch_view B);
 
+    /// B ← A ⊙ B
+    static void xhadamard(single_batch_view A, mut_single_batch_view B);
+    static void xhadamard(batch_view A, mut_batch_view B);
+
     /// A ← -A
     static void xneg(mut_single_batch_view A);
     static void xneg(mut_batch_view A);
