@@ -2,6 +2,7 @@
 
 #include <koqkatoo/linalg-compact/compact/micro-kernels/common.hpp>
 #include <koqkatoo/lut.hpp>
+#include <utility>
 
 namespace koqkatoo::linalg::compact::micro_kernels::gemm {
 
@@ -60,13 +61,14 @@ void xgemmt_diag_microkernel(single_batch_matrix_accessor<Abi, Conf.trans_A> A,
                              mut_single_batch_matrix_accessor<Abi> C, index_t k,
                              single_batch_vector_accessor<Abi> d) noexcept;
 
+/// Returns the range of nonzero columns/rows of B d.
 template <class Abi, KernelConfig Conf, index_t RowsReg>
-void xgemmt_diag_copy_microkernel(
-    single_batch_matrix_accessor<Abi, Conf.trans_A> A,
-    single_batch_matrix_accessor<Abi, Conf.trans_B> B,
-    single_batch_matrix_accessor<Abi> C,
-    mut_single_batch_matrix_accessor<Abi> D, index_t k,
-    single_batch_vector_accessor<Abi> d) noexcept;
+std::pair<index_t, index_t>
+xgemmt_diag_copy_microkernel(single_batch_matrix_accessor<Abi, Conf.trans_A> A,
+                             single_batch_matrix_accessor<Abi, Conf.trans_B> B,
+                             single_batch_matrix_accessor<Abi> C,
+                             mut_single_batch_matrix_accessor<Abi> D, index_t k,
+                             single_batch_vector_accessor<Abi> d) noexcept;
 
 template <class Abi, KernelConfig Conf, index_t RowsReg>
 void xgemmt_diag_mask_microkernel(

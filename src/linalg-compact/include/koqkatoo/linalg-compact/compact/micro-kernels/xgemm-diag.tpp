@@ -63,13 +63,7 @@ template <class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg>
     const single_batch_matrix_accessor<Abi> C,
     const mut_single_batch_matrix_accessor<Abi> D, const index_t k,
     const single_batch_vector_accessor<Abi> d) noexcept {
-    using simd = stdx::simd<real_t, Abi>;
-    // The following assumption ensures that there is no unnecessary branch
-    // for k == 0 in between the loops. This is crucial for good code
-    // generation, otherwise the compiler inserts jumps and labels between
-    // the matmul kernel and the loading/storing of C, which will cause it to
-    // place C_reg on the stack, resulting in many unnecessary loads and stores.
-    KOQKATOO_ASSUME(k > 0);
+    using simd                      = stdx::simd<real_t, Abi>;
     static constexpr bool A_smaller = RowsReg <= ColsReg;
     // Pre-compute the offsets of the columns of C
     auto C_cached = with_cached_access<ColsReg>(C);
