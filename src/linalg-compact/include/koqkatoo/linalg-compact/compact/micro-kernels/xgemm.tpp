@@ -44,7 +44,11 @@ xgemm_microkernel(const single_batch_matrix_accessor<Abi, Conf.trans_A> A,
             C_reg[ii][jj] = C.load(ii, jj);
 #endif
     // Actual matrix multiplication kernel
-    for (index_t l = 0; l < k; ++l)
+    for (index_t l = 0; l < k; ++l) {
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t ii = 0; ii < RowsReg; ++ii)
+            __builtin_prefetch(&A(ii, l + 2));
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t jj = 0; jj < ColsReg; ++jj)
+            __builtin_prefetch(&B(l + 2, jj));
         KOQKATOO_FULLY_UNROLLED_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
             simd Ail = A.load(ii, l);
             KOQKATOO_FULLY_UNROLLED_FOR (index_t jj = 0; jj < ColsReg; ++jj) {
@@ -56,6 +60,7 @@ xgemm_microkernel(const single_batch_matrix_accessor<Abi, Conf.trans_A> A,
                     Cij += Ail * Blj;
             }
         }
+    }
 #if CACHE_C_INDICES
     // Store accumulator to memory again
     KOQKATOO_FULLY_UNROLLED_FOR (index_t jj = 0; jj < ColsReg; ++jj)
@@ -93,7 +98,11 @@ xgemm_copy_microkernel(const single_batch_matrix_accessor<Abi, Conf.trans_A> A,
         KOQKATOO_FULLY_UNROLLED_FOR (index_t ii = 0; ii < RowsReg; ++ii)
             C_reg[ii][jj] = rotl<S>(C_cached.load(ii, jj));
     // Actual matrix multiplication kernel
-    for (index_t l = 0; l < k; ++l)
+    for (index_t l = 0; l < k; ++l) {
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t ii = 0; ii < RowsReg; ++ii)
+            __builtin_prefetch(&A(ii, l + 2));
+        KOQKATOO_FULLY_UNROLLED_FOR (index_t jj = 0; jj < ColsReg; ++jj)
+            __builtin_prefetch(&B(l + 2, jj));
         KOQKATOO_FULLY_UNROLLED_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
             simd Ail = A.load(ii, l);
             KOQKATOO_FULLY_UNROLLED_FOR (index_t jj = 0; jj < ColsReg; ++jj) {
@@ -105,6 +114,7 @@ xgemm_copy_microkernel(const single_batch_matrix_accessor<Abi, Conf.trans_A> A,
                     Cij += Ail * Blj;
             }
         }
+    }
     auto D_cached = with_cached_access<ColsReg>(D);
     // Store accumulator to memory again
     KOQKATOO_FULLY_UNROLLED_FOR (index_t jj = 0; jj < ColsReg; ++jj)
