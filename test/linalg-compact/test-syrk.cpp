@@ -214,6 +214,41 @@ TYPED_TEST(SyrkTest, SyrkTSchurCopy) {
     }
 }
 
+TYPED_TEST(SyrkTest, SyrkSchurCopy) {
+    for (index_t n : koqkatoo::tests::sizes) {
+        using Mat           = TestFixture::Mat;
+        const index_t m     = n * 2 + 3;
+        const auto backend  = PreferredBackend::Reference;
+        constexpr index_t N = typename TestFixture::simd_stride_t();
+        Mat C{{.depth = N, .rows = n, .cols = m}};
+        Mat Σ{{.depth = N, .rows = m, .cols = 1}};
+        Mat H{{.depth = N, .rows = n, .cols = n}};
+        Mat H_out{{.depth = N, .rows = n, .cols = n}};
+        std::ranges::generate(C, [&] { return this->nrml(this->rng); });
+        std::ranges::generate(Σ, [&] { return this->nrml(this->rng); });
+        std::ranges::generate(H, [&] { return this->nrml(this->rng); });
+        std::ranges::generate(H_out, [&] { return this->nrml(this->rng); });
+
+        Mat H_out_ref = H;
+        this->naive_gemmt_diag(false, true, 1, 1, C, C, H_out_ref, Σ);
+        for (index_t l = 0; l < H_out.depth(); ++l) // upper triangle preserved
+            for (index_t i = 0; i < H_out.rows(); ++i)
+                for (index_t k = i + 1; k < H_out.cols(); ++k)
+                    H_out_ref(l, i, k) = H_out(l, i, k);
+        TestFixture::CompactBLAS_t::xsyrk_schur_copy(
+            C.batch(0), Σ.batch(0), H.batch(0), H_out.batch(0));
+
+        // Verify that the results match the reference implementation
+        for (index_t i = 0; i < H_out.depth(); ++i)
+            for (index_t j = 0; j < H_out.rows(); ++j)
+                for (index_t k = 0; k < H_out.cols(); ++k)
+                    ASSERT_NEAR(H_out(i, j, k), H_out_ref(i, j, k), ε)
+                        << enum_name(backend) << "[" << n
+                        << "]: SYRK mismatch at (" << i << ", " << j << ", "
+                        << k << ")";
+    }
+}
+
 TEST(SyrkTest, TrTrSyrk) {
     for (index_t n : koqkatoo::tests::sizes) {
         std::mt19937 rng{12345};
