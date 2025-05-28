@@ -149,9 +149,16 @@ void CyclicOCPSolver<VL>::pack_variables(std::span<const real_t> ux_lin,
             for (index_t vi = 0; vi < vl; ++vi) {
                 auto k       = sub_wrap_N(k0 + vi * vstride, i);
                 using crview = guanaqo::MatrixView<const real_t, index_t>;
-                if (k < N_horiz) {
-                    ux.batch(di)(vi) =
-                        crview::as_column(ux_lin.subspan(k * nux, nux));
+                if (k == 0) {
+                    ux.batch(di)(vi).top_rows(nu) =
+                        crview::as_column(ux_lin.first(nu));
+                    ux.batch(di)(vi).bottom_rows(nx) = crview::as_column(
+                        ux_lin.subspan(nu + (N_horiz - 1) * nux, nx));
+                } else if (k < N_horiz) {
+                    ux.batch(di)(vi).top_rows(nu) =
+                        crview::as_column(ux_lin.subspan(k * nux, nu));
+                    ux.batch(di)(vi).bottom_rows(nx) = crview::as_column(
+                        ux_lin.subspan(nu + (k - 1) * nux, nx));
                 }
             }
         }
@@ -176,9 +183,17 @@ void CyclicOCPSolver<VL>::unpack_variables(matrix_view ux,
             for (index_t vi = 0; vi < vl; ++vi) {
                 auto k      = sub_wrap_N(k0 + vi * vstride, i);
                 using rview = guanaqo::MatrixView<real_t, index_t>;
-                if (k < N_horiz) {
-                    rview::as_column(ux_lin.subspan(k * nux, nux)) =
-                        ux.batch(di)(vi);
+                if (k == 0) {
+                    rview::as_column(ux_lin.first(nu)) =
+                        ux.batch(di)(vi).top_rows(nu);
+                    rview::as_column(
+                        ux_lin.subspan(nu + (N_horiz - 1) * nux, nx)) =
+                        ux.batch(di)(vi).bottom_rows(nx);
+                } else if (k < N_horiz) {
+                    rview::as_column(ux_lin.subspan(k * nux, nu)) =
+                        ux.batch(di)(vi).top_rows(nu);
+                    rview::as_column(ux_lin.subspan(nu + (k - 1) * nux, nx)) =
+                        ux.batch(di)(vi).bottom_rows(nx);
                 }
             }
         }
