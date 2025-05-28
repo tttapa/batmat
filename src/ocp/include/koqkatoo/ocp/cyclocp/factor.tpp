@@ -135,7 +135,8 @@ void CyclicOCPSolver<VL>::factor_l0(const index_t ti) {
 // Performs Riccati recursion and then factors level l=0 of
 // coupling equations + propagates the subdiagonal blocks to level l=1.
 template <index_t VL>
-void CyclicOCPSolver<VL>::factor_riccati(index_t ti, bool alt, matrix_view Σ) {
+void CyclicOCPSolver<VL>::factor_riccati(index_t ti, bool alt, real_t S,
+                                         matrix_view Σ) {
     const index_t num_stages = N_horiz >> lP;   // number of stages per thread
     const index_t di0        = ti * num_stages; // data batch index
     const index_t k0         = ti * num_stages; // stage index
@@ -164,12 +165,17 @@ void CyclicOCPSolver<VL>::factor_riccati(index_t ti, bool alt, matrix_view Σ) {
         auto Âi   = Â.middle_cols(i * nx, nx);
         {
             GUANAQO_TRACE("Riccati QRS", k);
+            using std::isfinite;
+            if (isfinite(S))
+                R̂i.add_to_diagonal(1 / S);
             // Factor R̂, update Ŝ, and compute LB̂ = B̂ LR̂⁻ᵀ
             compact_blas::xpotrf(R̂Ŝi, be);        // ┐
             compact_blas::xtrsm_RLTN(R̂i, B̂i, be); // ┘
             // Update Â = Ã - LB̂ LŜᵀ
             i == 0 ? compact_blas::xgemm_NT_sub_copy_ref(B̂i, Ŝi, A0, Âi)
                    : compact_blas::xgemm_NT_sub(B̂i, Ŝi, Âi, be);
+            if (isfinite(S))
+                Q̂i.add_to_diagonal(1 / S);
             // Update and factor Q̂ = Q̃ - LŜ LŜᵀ
             compact_blas::xsyrk_sub(Ŝi, Q̂i, be); // ┐
             compact_blas::xpotrf(Q̂i, be);        // ┘
@@ -212,12 +218,12 @@ void CyclicOCPSolver<VL>::factor_riccati(index_t ti, bool alt, matrix_view Σ) {
 }
 
 template <index_t VL>
-void CyclicOCPSolver<VL>::factor(matrix_view Σ, bool alt) {
+void CyclicOCPSolver<VL>::factor(real_t S, matrix_view Σ, bool alt) {
     this->alt = alt;
     KOQKATOO_ASSERT(((N_horiz >> lP) << lP) == N_horiz);
     const index_t P = 1 << (lP - lvl);
-    koqkatoo::foreach_thread(P, [this, alt, Σ](index_t ti, index_t) {
-        factor_riccati(ti, alt, Σ);
+    koqkatoo::foreach_thread(P, [this, alt, S, Σ](index_t ti, index_t) {
+        factor_riccati(ti, alt, S, Σ);
         factor_l0(ti);
         for (index_t l = 0; l < lP - lvl; ++l) {
             barrier();

@@ -317,8 +317,8 @@ struct CyclicOCPSolver {
     void factor_schur_U(index_t l, index_t biU);
     void factor_schur_Y(index_t l, index_t biY);
     void factor_l0(index_t ti);
-    void factor_riccati(index_t ti, bool alt, matrix_view Σ);
-    void factor(matrix_view Σ, bool alt = false);
+    void factor_riccati(index_t ti, bool alt, real_t S, matrix_view Σ);
+    void factor(real_t S, matrix_view Σ, bool alt = false);
 
     void solve_active(index_t l, index_t biY, mut_matrix_view λ) const;
     void solve_active_secondary(index_t l, index_t biU,
