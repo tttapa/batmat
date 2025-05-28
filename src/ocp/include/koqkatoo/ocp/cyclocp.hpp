@@ -6,6 +6,7 @@
 #include <koqkatoo/linalg-compact/matrix-batch.hpp>
 #include <koqkatoo/linalg-compact/preferred-backend.hpp>
 #include <koqkatoo/ocp/ocp.hpp>
+#include <koqkatoo/ocp/cyclocp-storage.hpp>
 #include <koqkatoo/openmp.h>
 #include <koqkatoo/timing.hpp>
 #include <guanaqo/trace.hpp>
@@ -40,73 +41,6 @@ namespace stdx = std::experimental;
     auto l = get_level(i);
     return i >> (l + 1);
 }
-
-///                ₙ₋₁
-///     minimize    ∑ [½ uᵢᵀ Rᵢ uᵢ + uᵢᵀ S xᵢ + ½ xᵢᵀ Qᵢ xᵢ + rᵢᵀuᵢ + qᵢᵀxᵢ]
-///                ⁱ⁼⁰
-///                + ½ xₙᵀ Qₙ xₙ + qₙᵀ xₙ
-///     s.t.        x₀   = xᵢₙᵢₜ
-///                 xᵢ₊₁ = Aᵢ xᵢ + Bᵢ uᵢ + cᵢ
-///                 lᵢ   ≤ Cᵢ xᵢ + Dᵢ uᵢ ≤ uᵢ
-///                 lₙ   ≤ Cₙ xₙ ≤ uₙ
-///
-///                ₙ₋₁
-///     minimize    ∑ [½ uᵢᵀ Rᵢ uᵢ + uᵢᵀ Sᵢ xᵢ + ½ xᵢᵀ Qᵢ xᵢ + rᵢᵀuᵢ + qᵢᵀxᵢ]
-///                ⁱ⁼¹
-///                + ½ u₀ᵀ R₀ u₀ + (r₀ + S₀ x₀)ᵀ u₀
-///                + ½ xₙᵀ Qₙ xₙ + qₙᵀ xₙ
-///     s.t.        x₀   = xᵢₙᵢₜ
-///                 xᵢ₊₁ = Aᵢ xᵢ + Bᵢ uᵢ + cᵢ
-///                 lᵢ   ≤ Cᵢ xᵢ + Dᵢ uᵢ ≤ uᵢ
-///                 l₀ - C₀ x₀ ≤ D₀ U₀ ≤ u₀ - C₀ x₀
-///                 lₙ   ≤ Cₙ xₙ ≤ uₙ
-struct CyclicOCPStorage {
-    index_t N_horiz;
-    index_t nx, nu, ny, ny_0, ny_N;
-    /// Storage layout:         size                 offset
-    ///     N × [ R  S ] = H    (nu+nx)²             0
-    ///         [ Sᵀ Q ]
-    ///     N × [ B  A ]        nx(nu+nx)            N (nu+nx)²
-    /// (N-1) × [ D  C ]        ny(nu+nx)            N (nu+nx)² + N nx(nu+nx)
-    ///     1 × [ D  C ]        (ny_0+ny_N)(nu+nx)   N (nu+nx)² + N nx(nu+nx) + (N-1)ny(nu+nx)
-    using matrix  = linalg::compact::BatchedMatrix<real_t, index_t>;
-    matrix data_H = [this] {
-        return matrix{{.depth = N_horiz, .rows = nu + nx, .cols = nu + nx}};
-    }();
-    matrix data_F = [this] {
-        return matrix{{.depth = N_horiz, .rows = nx, .cols = nu + nx}};
-    }();
-    matrix data_G = [this] {
-        return matrix{{.depth = N_horiz - 1, .rows = ny, .cols = nu + nx}};
-    }();
-    matrix data_G0N = [this] {
-        return matrix{{.depth = 1, .rows = ny_0 + ny_N, .cols = nu + nx}};
-    }();
-    matrix data_rq = [this] {
-        return matrix{{.depth = N_horiz, .rows = nu + nx, .cols = 1}};
-    }();
-    matrix data_c = [this] {
-        return matrix{{.depth = N_horiz, .rows = nx, .cols = 1}};
-    }();
-    matrix data_lb = [this] {
-        return matrix{{.depth = N_horiz - 1, .rows = ny, .cols = 1}};
-    }();
-    matrix data_lb0N = [this] {
-        return matrix{{.depth = 1, .rows = ny_0 + ny_N, .cols = 1}};
-    }();
-    matrix data_ub = [this] {
-        return matrix{{.depth = N_horiz - 1, .rows = ny, .cols = 1}};
-    }();
-    matrix data_ub0N = [this] {
-        return matrix{{.depth = 1, .rows = ny_0 + ny_N, .cols = 1}};
-    }();
-
-    static CyclicOCPStorage build(const LinearOCPStorage &ocp,
-                                  std::span<const real_t> qr,
-                                  std::span<const real_t> b_eq,
-                                  std::span<const real_t> b_lb,
-                                  std::span<const real_t> b_ub);
-};
 
 template <index_t VL = 4>
 struct CyclicOCPSolver {
@@ -279,6 +213,10 @@ struct CyclicOCPSolver {
     /// should be zero.
     static CyclicOCPSolver build(const CyclicOCPStorage &ocp, index_t lP);
     void initialize_rhs(const CyclicOCPStorage &ocp, mut_matrix_view rhs) const;
+    void initialize_gradient(const CyclicOCPStorage &ocp,
+                             mut_matrix_view grad) const;
+    void initialize_bounds(const CyclicOCPStorage &ocp, mut_matrix_view b_min,
+                           mut_matrix_view b_max) const;
     void pack_variables(std::span<const real_t> ux_lin,
                         mut_matrix_view ux) const;
     void unpack_variables(matrix_view ux, std::span<real_t> ux_lin) const;

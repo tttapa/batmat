@@ -2,18 +2,14 @@
 
 #include <koqkatoo/assume.hpp>
 #include <koqkatoo/loop.hpp>
-#include <stdexcept>
 
 namespace koqkatoo::ocp::cyclocp {
 
 template <index_t VL>
 void CyclicOCPSolver<VL>::residual_dynamics_constr(matrix_view x, matrix_view b,
                                                    mut_matrix_view Mxb) const {
-    koqkatoo::foreach_thread([&](index_t ti, index_t P) {
-        if (P < (1 << (lP - lvl)))
-            throw std::logic_error("Incorrect number of threads");
-        if (ti >= (1 << (lP - lvl)))
-            return;
+    const index_t P = 1 << (lP - lvl);
+    koqkatoo::foreach_thread(P, [&](index_t ti, index_t) {
         const index_t num_stages = N_horiz >> lP; // number of stages per thread
         const index_t di0        = ti * num_stages; // data batch index
         const index_t k0         = ti * num_stages; // stage index
@@ -48,11 +44,8 @@ void CyclicOCPSolver<VL>::residual_dynamics_constr(matrix_view x, matrix_view b,
 template <index_t VL>
 void CyclicOCPSolver<VL>::transposed_dynamics_constr(
     matrix_view λ, mut_matrix_view Mᵀλ) const {
-    koqkatoo::foreach_thread([&](index_t ti, index_t P) {
-        if (P < (1 << (lP - lvl)))
-            throw std::logic_error("Incorrect number of threads");
-        if (ti >= (1 << (lP - lvl)))
-            return;
+    const index_t P = 1 << (lP - lvl);
+    koqkatoo::foreach_thread(P, [&](index_t ti, index_t) {
         const index_t num_stages = N_horiz >> lP; // number of stages per thread
         const index_t di0        = ti * num_stages; // data batch index
         const index_t k0         = ti * num_stages; // stage index
@@ -82,11 +75,8 @@ void CyclicOCPSolver<VL>::transposed_dynamics_constr(
 template <index_t VL>
 void CyclicOCPSolver<VL>::general_constr(matrix_view ux,
                                          mut_matrix_view DCux) const {
-    koqkatoo::foreach_thread([&](index_t ti, index_t P) {
-        if (P < (1 << (lP - lvl)))
-            throw std::logic_error("Incorrect number of threads");
-        if (ti >= (1 << (lP - lvl)))
-            return;
+    const index_t P = 1 << (lP - lvl);
+    koqkatoo::foreach_thread(P, [&](index_t ti, index_t) {
         const index_t num_stages = N_horiz >> lP; // number of stages per thread
         const index_t di0        = ti * num_stages; // data batch index
         const index_t k0         = ti * num_stages; // stage index
@@ -103,11 +93,8 @@ void CyclicOCPSolver<VL>::general_constr(matrix_view ux,
 template <index_t VL>
 void CyclicOCPSolver<VL>::transposed_general_constr(
     matrix_view y, mut_matrix_view DCᵀy) const {
-    koqkatoo::foreach_thread([&](index_t ti, index_t P) {
-        if (P < (1 << (lP - lvl)))
-            throw std::logic_error("Incorrect number of threads");
-        if (ti >= (1 << (lP - lvl)))
-            return;
+    const index_t P = 1 << (lP - lvl);
+    koqkatoo::foreach_thread(P, [&](index_t ti, index_t) {
         const index_t num_stages = N_horiz >> lP; // number of stages per thread
         const index_t di0        = ti * num_stages; // data batch index
         const index_t k0         = ti * num_stages; // stage index
@@ -125,11 +112,8 @@ template <index_t VL>
 void CyclicOCPSolver<VL>::cost_gradient(matrix_view ux, real_t a, matrix_view q,
                                         real_t b,
                                         mut_matrix_view grad_f) const {
-    koqkatoo::foreach_thread([&](index_t ti, index_t P) {
-        if (P < (1 << (lP - lvl)))
-            throw std::logic_error("Incorrect number of threads");
-        if (ti >= (1 << (lP - lvl)))
-            return;
+    const index_t P = 1 << (lP - lvl);
+    koqkatoo::foreach_thread(P, [&](index_t ti, index_t) {
         const index_t num_stages = N_horiz >> lP; // number of stages per thread
         const index_t di0        = ti * num_stages; // data batch index
         const index_t k0         = ti * num_stages; // stage index
@@ -149,11 +133,8 @@ template <index_t VL>
 void CyclicOCPSolver<VL>::cost_gradient_regularized(
     real_t S, matrix_view ux, matrix_view ux0, matrix_view q,
     mut_matrix_view grad_f) const {
-    koqkatoo::foreach_thread([&](index_t ti, index_t P) {
-        if (P < (1 << (lP - lvl)))
-            throw std::logic_error("Incorrect number of threads");
-        if (ti >= (1 << (lP - lvl)))
-            return;
+    const index_t P = 1 << (lP - lvl);
+    koqkatoo::foreach_thread(P, [&](index_t ti, index_t) {
         using simd = typename compact_blas::simd;
         simd invS{1 / S};
         const index_t num_stages = N_horiz >> lP; // number of stages per thread
@@ -181,11 +162,8 @@ void CyclicOCPSolver<VL>::cost_gradient_regularized(
 template <index_t VL>
 void CyclicOCPSolver<VL>::cost_gradient_remove_regularization(
     real_t S, matrix_view ux, matrix_view ux0, mut_matrix_view grad_f) const {
-    koqkatoo::foreach_thread([&](index_t ti, index_t P) {
-        if (P < (1 << (lP - lvl)))
-            throw std::logic_error("Incorrect number of threads");
-        if (ti >= (1 << (lP - lvl)))
-            return;
+    const index_t P = 1 << (lP - lvl);
+    koqkatoo::foreach_thread(P, [&](index_t ti, index_t) {
         using simd = typename compact_blas::simd;
         simd invS{1 / S};
         const index_t num_stages = N_horiz >> lP; // number of stages per thread

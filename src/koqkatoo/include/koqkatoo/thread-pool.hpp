@@ -5,6 +5,7 @@
 #include <functional>
 #include <mutex>
 #include <optional>
+#include <stdexcept>
 #include <thread>
 #include <utility>
 #include <vector>
@@ -84,6 +85,16 @@ class thread_pool {
             schedule(i,
                      [&f, i, n] { f(static_cast<I>(i), static_cast<I>(n)); });
         wait_all();
+    }
+
+    template <class I = size_t, class F>
+    void sync_run_n(I n, F &&f) {
+        if (static_cast<size_t>(n) > size())
+            throw std::invalid_argument("Not enough threads in pool");
+        for (size_t i = 0; i < static_cast<size_t>(n); ++i)
+            schedule(i, [&f, i, n] { f(static_cast<I>(i), n); });
+        for (size_t i = 0; i < static_cast<size_t>(n); ++i)
+            wait(i);
     }
 
     [[nodiscard]] size_t size() const { return threads.size(); }

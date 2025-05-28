@@ -45,15 +45,11 @@ void CyclicOCPSolver<VL>::update_level(index_t l, index_t biY) {
 template <index_t VL>
 void CyclicOCPSolver<VL>::update(matrix_view ΔΣ) {
     KOQKATOO_ASSERT(((N_horiz >> lP) << lP) == N_horiz);
-    koqkatoo::foreach_thread([this, ΔΣ](index_t ti, index_t P) {
-        if (P < (1 << (lP - lvl)))
-            throw std::logic_error("Incorrect number of threads");
-        if (ti >= (1 << (lP - lvl)))
-            return;
+    const index_t P = 1 << (lP - lvl);
+    koqkatoo::foreach_thread(P, [this, ΔΣ](index_t ti, index_t) {
         update_riccati(ti, ΔΣ);
         for (index_t l = 0; l < lP - lvl; ++l) {
             barrier();
-
             const index_t offset = 1 << l;
             const auto biY       = sub_wrap_PmV(ti, offset);
             if (is_active(l, biY))

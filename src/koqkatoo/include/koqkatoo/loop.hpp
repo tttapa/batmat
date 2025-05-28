@@ -98,4 +98,22 @@ foreach_chunked_merged_parallel(index_t i_begin, index_t i_end, auto chunk_size,
 #endif
 }
 
+[[gnu::always_inline]] inline void foreach_thread(index_t num_threads,
+                                                  auto &&func) {
+#if KOQKATOO_WITH_OPENMP
+    if (num_threads == 1) {
+        func(index_t{0}, index_t{1});
+    } else {
+        KOQKATOO_OMP(parallel num_threads(num_threads)) {
+            auto ni = static_cast<index_t>(omp_get_num_threads());
+            KOQKATOO_OMP(for schedule(static))
+            for (index_t i = 0; i < ni; ++i)
+                func(i, ni);
+        }
+    }
+#else
+    pool->sync_run_n<index_t>(num_threads, func);
+#endif
+}
+
 } // namespace koqkatoo

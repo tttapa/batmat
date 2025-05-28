@@ -187,11 +187,8 @@ template <index_t VL>
 void CyclicOCPSolver<VL>::solve_forward(mut_matrix_view ux, mut_matrix_view λ,
                                         mut_matrix_view work) const {
     KOQKATOO_ASSERT(((N_horiz >> lP) << lP) == N_horiz);
-    koqkatoo::foreach_thread([this, &ux, &λ, &work](index_t ti, index_t P) {
-        if (P < (1 << (lP - lvl)))
-            throw std::logic_error("Incorrect number of threads");
-        if (ti >= (1 << (lP - lvl)))
-            return;
+    const index_t P = 1 << (lP - lvl);
+    koqkatoo::foreach_thread(P, [this, &ux, &λ, &work](index_t ti, index_t) {
         alt ? solve_riccati_forward_alt(ti, ux, λ, work)
             : solve_riccati_forward(ti, ux, λ);
         for (index_t l = 0; l < lP - lvl; ++l) {
@@ -388,11 +385,8 @@ template <index_t VL>
 void CyclicOCPSolver<VL>::solve_reverse(mut_matrix_view ux, mut_matrix_view λ,
                                         mut_matrix_view work) const {
     KOQKATOO_ASSERT(((N_horiz >> lP) << lP) == N_horiz);
-    koqkatoo::foreach_thread([this, &ux, &λ, &work](index_t ti, index_t P) {
-        if (P < (1 << (lP - lvl)))
-            throw std::logic_error("Incorrect number of threads");
-        if (ti >= (1 << (lP - lvl)))
-            return;
+    const index_t P = 1 << (lP - lvl);
+    koqkatoo::foreach_thread(P, [this, &ux, &λ, &work](index_t ti, index_t) {
         for (index_t l = lP - lvl; l-- > 0;) {
             const index_t offset = 1 << l;
             const auto bi        = sub_wrap_PmV(ti, offset);

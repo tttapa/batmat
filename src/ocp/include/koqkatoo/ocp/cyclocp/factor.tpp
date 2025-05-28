@@ -208,11 +208,8 @@ void CyclicOCPSolver<VL>::factor(matrix_view Σ, bool alt) {
     this->alt = alt;
     coupling_D.set_constant(0); // TODO
     KOQKATOO_ASSERT(((N_horiz >> lP) << lP) == N_horiz);
-    koqkatoo::foreach_thread([this, alt, Σ](index_t ti, index_t P) {
-        if (P < (1 << (lP - lvl)))
-            throw std::logic_error("Incorrect number of threads");
-        if (ti >= (1 << (lP - lvl)))
-            return;
+    const index_t P = 1 << (lP - lvl);
+    koqkatoo::foreach_thread(P, [this, alt, Σ](index_t ti, index_t) {
         factor_riccati(ti, alt, Σ);
         factor_l0(ti);
         for (index_t l = 0; l < lP - lvl; ++l) {
