@@ -83,7 +83,7 @@ TEST(CyclOCP, factor) {
     const bool alt        = true;
     const auto ux_initial = ux, λ_initial = λ;
     for (int i = 0; i < 500; ++i) {
-        solver.factor(Σ, alt);
+        solver.factor(1e100, Σ, alt);
         solver.update(ΔΣ);
         solver.solve(ux, λ);
         solver.residual_dynamics_constr(ux, λ_initial, Mxb);
@@ -98,7 +98,7 @@ TEST(CyclOCP, factor) {
 #if GUANAQO_WITH_TRACING
     guanaqo::trace_logger.reset();
 #endif
-    solver.factor(Σ, alt);
+    solver.factor(1e100, Σ, alt);
     solver.update(ΔΣ);
     solver.solve(ux, λ);
     solver.residual_dynamics_constr(ux, λ_initial, Mxb);
