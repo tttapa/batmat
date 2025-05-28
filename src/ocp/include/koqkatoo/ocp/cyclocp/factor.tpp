@@ -206,7 +206,6 @@ void CyclicOCPSolver<VL>::factor_riccati(index_t ti, bool alt, matrix_view Σ) {
 template <index_t VL>
 void CyclicOCPSolver<VL>::factor(matrix_view Σ, bool alt) {
     this->alt = alt;
-    coupling_D.set_constant(0); // TODO
     KOQKATOO_ASSERT(((N_horiz >> lP) << lP) == N_horiz);
     const index_t P = 1 << (lP - lvl);
     koqkatoo::foreach_thread(P, [this, alt, Σ](index_t ti, index_t) {
