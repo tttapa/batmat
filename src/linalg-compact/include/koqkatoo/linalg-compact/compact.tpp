@@ -246,11 +246,13 @@ void CompactBLAS<Abi>::xtrmv_ref(single_batch_view L, mut_single_batch_view x) {
     GUANAQO_TRACE("xtrmv", 0, (L.rows() * (L.rows() + 1) / 2) * L.depth());
     assert(L.rows() == L.cols());
     assert(x.rows() == L.cols());
-    for (index_t j = L.cols(); j-- > 0;) {
+    for (index_t j = L.cols(); j-- > 0;) { // TODO: optimize
         auto xj = aligned_load(&x(0, j, 0));
         for (index_t i = L.rows(); i-- > j;) {
             auto Lij = aligned_load(&L(0, i, j));
-            aligned_store(&x(0, i, 0), fma(Lij, xj, aligned_load(&x(0, i, 0))));
+            auto xi  = aligned_load(&x(0, i, 0));
+            xi += Lij * xj;
+            aligned_store(&x(0, i, 0), xi);
         }
         aligned_store(&x(0, j, 0), aligned_load(&L(0, j, j)) * xj);
     }
