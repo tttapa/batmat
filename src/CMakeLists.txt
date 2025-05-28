@@ -178,6 +178,8 @@ target_sources(ocp PUBLIC FILE_SET headers TYPE HEADERS
           "ocp/include/koqkatoo/ocp/solver/storage.hpp"
           "ocp/include/koqkatoo/ocp/conversion.hpp"
           "ocp/include/koqkatoo/ocp/ocp.hpp"
+          "ocp/include/koqkatoo/ocp/cyclocp.hpp"
+          "ocp/include/koqkatoo/ocp/cyclocp-storage.hpp"
           "ocp/include/koqkatoo/ocp/random-ocp.hpp"
           "ocp/include/koqkatoo/ocp/solver/storage.tpp"
           "ocp/include/koqkatoo/ocp/solver/mat-vec.tpp"
@@ -187,6 +189,14 @@ target_sources(ocp PUBLIC FILE_SET headers TYPE HEADERS
           "ocp/include/koqkatoo/ocp/cyclic-solver/packing.tpp"
           "ocp/include/koqkatoo/ocp/cyclic-solver/factor.tpp"
           "ocp/include/koqkatoo/ocp/cyclic-solver/cyclic-storage.ipp"
+          "ocp/include/koqkatoo/ocp/cyclocp/data.tpp"
+          "ocp/include/koqkatoo/ocp/cyclocp/factor.tpp"
+          "ocp/include/koqkatoo/ocp/cyclocp/mat-vec.tpp"
+          "ocp/include/koqkatoo/ocp/cyclocp/indexing.tpp"
+          "ocp/include/koqkatoo/ocp/cyclocp/sparse.tpp"
+          "ocp/include/koqkatoo/ocp/cyclocp/update.tpp"
+          "ocp/include/koqkatoo/ocp/cyclocp/pcg.tpp"
+          "ocp/include/koqkatoo/ocp/cyclocp/solve.tpp"
 )
 target_link_libraries(ocp PUBLIC koqkatoo::linalg-compact guanaqo::blas)
 target_compile_features(ocp PRIVATE cxx_std_23)
