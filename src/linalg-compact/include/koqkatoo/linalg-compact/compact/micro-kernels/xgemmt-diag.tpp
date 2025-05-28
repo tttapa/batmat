@@ -186,7 +186,7 @@ void xgemmt_diag_copy_register(single_batch_view<Abi> A,
         }();
         const auto Bj = B_.middle_cols(j).middle_rows(k0);
         const auto dj = d_.middle_rows(k0);
-        for (index_t i = j + 1; i < I; i += RowsReg) {
+        for (index_t i = j + RowsReg; i < I; i += RowsReg) {
             const index_t ni = std::min<index_t>(RowsReg, I - i);
             const auto Ai    = A_.middle_rows(i).middle_cols(k0);
             const auto Cij   = C_.block(i, j);
