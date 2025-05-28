@@ -215,7 +215,7 @@ void CyclicOCPSolver<VL>::pack_dynamics(std::span<const real_t> λ_lin,
 template <index_t VL>
 void CyclicOCPSolver<VL>::unpack_dynamics(matrix_view λ,
                                           std::span<real_t> λ_lin) const {
-    const index_t nλ = nu + nx;
+    const index_t nλ = nx;
     KOQKATOO_ASSERT(static_cast<index_t>(λ_lin.size()) == nλ * N_horiz);
     KOQKATOO_ASSERT(λ.depth() == N_horiz);
     KOQKATOO_ASSERT(λ.rows() == nλ);
@@ -282,7 +282,7 @@ void CyclicOCPSolver<VL>::unpack_constraints(matrix_view y,
     KOQKATOO_ASSERT(static_cast<index_t>(y_lin.size()) ==
                     ny * (N_horiz - 1) + ny_0 + ny_N);
     KOQKATOO_ASSERT(y.depth() == N_horiz);
-    KOQKATOO_ASSERT(y.rows() == std::max(ny, ny_N));
+    KOQKATOO_ASSERT(y.rows() == std::max(ny, ny_0 + ny_N));
     KOQKATOO_ASSERT(y.cols() == 1);
     const auto vstride       = N_horiz >> lvl;
     const index_t num_stages = N_horiz >> lP; // number of stages per thread
