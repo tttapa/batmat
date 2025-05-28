@@ -119,6 +119,10 @@ struct CompactBLAS {
                           PreferredBackend b);
     static void xsyrk_add(batch_view A, mut_batch_view C, PreferredBackend b);
 
+    /// D = C + AAᵀ
+    static void xsyrk_add_copy(single_batch_view A, single_batch_view C,
+                               mut_single_batch_view D);
+
     /// C += AᵀA
     static void xsyrk_T_add_ref(single_batch_view A, mut_single_batch_view C);
     static void xsyrk_T_add(single_batch_view A, mut_single_batch_view C,

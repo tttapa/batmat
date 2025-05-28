@@ -56,6 +56,13 @@ void xgemmt_microkernel(single_batch_matrix_accessor<Abi, Conf.trans_A> A,
                         bool init_zero) noexcept;
 
 template <class Abi, KernelConfig Conf, index_t RowsReg>
+void xgemmt_copy_microkernel(single_batch_matrix_accessor<Abi, Conf.trans_A> A,
+                             single_batch_matrix_accessor<Abi, Conf.trans_B> B,
+                             single_batch_matrix_accessor<Abi> C,
+                             mut_single_batch_matrix_accessor<Abi> D,
+                             index_t k) noexcept;
+
+template <class Abi, KernelConfig Conf, index_t RowsReg>
 void xgemmt_diag_microkernel(single_batch_matrix_accessor<Abi, Conf.trans_A> A,
                              single_batch_matrix_accessor<Abi, Conf.trans_B> B,
                              mut_single_batch_matrix_accessor<Abi> C, index_t k,
@@ -101,6 +108,11 @@ void xgemm_diag_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
 template <class Abi, KernelConfig Conf>
 void xgemmt_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
                      mut_single_batch_view<Abi> C, bool init_zero) noexcept;
+
+template <class Abi, KernelConfig Conf>
+void xgemmt_copy_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
+                          single_batch_view<Abi> C,
+                          mut_single_batch_view<Abi> D) noexcept;
 
 template <class Abi, KernelConfig Conf>
 void xgemmt_diag_register(single_batch_view<Abi> A, single_batch_view<Abi> B,
@@ -188,6 +200,12 @@ template <class Abi, KernelConfig Conf>
 inline const constinit auto microkernel_t_lut =
     make_1d_lut<RowsReg>([]<index_t Row>(index_constant<Row>) {
         return xgemmt_microkernel<Abi, Conf, Row + 1>;
+    });
+
+template <class Abi, KernelConfig Conf>
+inline const constinit auto microkernel_t_copy_lut =
+    make_1d_lut<RowsReg>([]<index_t Row>(index_constant<Row>) {
+        return xgemmt_copy_microkernel<Abi, Conf, Row + 1>;
     });
 
 template <class Abi, KernelConfig Conf>

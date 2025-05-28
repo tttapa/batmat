@@ -245,3 +245,43 @@ TEST(SyrkTest, TrTrSyrk) {
         EXPECT_THAT(C, EigenAlmostEqual(C_ref, 1e-8));
     }
 }
+
+TEST(SyrkTest, syrkAddCopy) {
+    for (index_t n : koqkatoo::tests::sizes) {
+        for (index_t m : koqkatoo::tests::sizes) {
+            std::mt19937 rng{12345};
+            std::normal_distribution<real_t> nrml{0, 1};
+            using EMat = Eigen::MatrixX<real_t>;
+            EMat A(n, m), C(n, n), D(n, n);
+            std::ranges::generate(A.reshaped(), [&] { return nrml(rng); });
+            std::ranges::generate(C.reshaped(), [&] { return nrml(rng); });
+            std::ranges::generate(D.reshaped(), [&] { return nrml(rng); });
+            EMat D_ref = D;
+            D_ref.triangularView<Eigen::Lower>() =
+                C.triangularView<Eigen::Lower>();
+            D_ref.selfadjointView<Eigen::Lower>().rankUpdate(A);
+
+            koqkatoo::linalg::compact::CompactBLAS<stdx::simd_abi::scalar>::
+                xsyrk_add_copy(
+                    {{
+                        .data         = std::as_const(A).data(),
+                        .rows         = static_cast<index_t>(A.rows()),
+                        .cols         = static_cast<index_t>(A.cols()),
+                        .outer_stride = static_cast<index_t>(A.outerStride()),
+                    }},
+                    {{
+                        .data         = std::as_const(C).data(),
+                        .rows         = static_cast<index_t>(C.rows()),
+                        .cols         = static_cast<index_t>(C.cols()),
+                        .outer_stride = static_cast<index_t>(C.outerStride()),
+                    }},
+                    {{
+                        .data         = D.data(),
+                        .rows         = static_cast<index_t>(D.rows()),
+                        .cols         = static_cast<index_t>(D.cols()),
+                        .outer_stride = static_cast<index_t>(D.outerStride()),
+                    }});
+            EXPECT_THAT(D, EigenAlmostEqual(D_ref, 1e-8));
+        }
+    }
+}

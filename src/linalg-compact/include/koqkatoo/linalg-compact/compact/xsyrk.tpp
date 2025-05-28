@@ -138,6 +138,24 @@ void CompactBLAS<Abi>::xsyrk_add_ref(single_batch_view A,
 }
 
 template <class Abi>
+void CompactBLAS<Abi>::xsyrk_add_copy(single_batch_view A, single_batch_view C,
+                                      mut_single_batch_view D) {
+    assert(C.rows() >= C.cols());
+    assert(C.rows() == D.rows());
+    assert(C.cols() == D.cols());
+    assert(A.rows() == C.rows());
+    [[maybe_unused]] const auto op_cnt_syrk =
+        C.cols() * (C.cols() + 1) * A.cols() / 2 +
+        (C.rows() - C.cols()) * C.cols() * A.cols();
+    GUANAQO_TRACE("xsyrk_add", 0, op_cnt_syrk * C.depth());
+    assert(C.rows() == C.cols());
+    assert(C.rows() == A.rows());
+    // TODO: cache blocking
+    micro_kernels::gemm::xgemmt_copy_register<Abi, {.trans_B = true}>(A, A, C,
+                                                                      D);
+}
+
+template <class Abi>
 void CompactBLAS<Abi>::xsyrk_T_add_ref(single_batch_view A,
                                        mut_single_batch_view C) {
     assert(C.rows() >= C.cols());
