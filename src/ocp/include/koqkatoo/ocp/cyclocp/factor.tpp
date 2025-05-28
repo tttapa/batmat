@@ -190,11 +190,19 @@ void CyclicOCPSolver<VL>::factor_riccati(index_t ti, bool alt, matrix_view Σ) {
             // Riccati update
             auto R̂ŜQ̂_next = R̂ŜQ̂.middle_cols((i + 1) * nux, nux);
             compact_blas::xtrmm_RLNN_T_ref(data_BA.batch(di_next), Q̂i, BAᵀi);
+#if 1
+            compact_blas::xsyrk_add_copy(BAᵀi, data_RSQ.batch(di_next),
+                                         R̂ŜQ̂_next);
+            compact_blas::xsyrk_schur_copy(data_DCᵀ.batch(di_next),
+                                           Σ.batch(di_next), R̂ŜQ̂_next,
+                                           R̂ŜQ̂_next); // TODO: non-copy variant
+#else
             compact_blas::xsyrk_schur_copy(data_DCᵀ.batch(di_next),
                                            Σ.batch(di_next),
                                            data_RSQ.batch(di_next),
                                            R̂ŜQ̂_next);    // ┐
             compact_blas::xsyrk_add(BAᵀi, R̂ŜQ̂_next, be); // ┘
+#endif
         } else {
             // Compute LÂ = Ã LQ⁻ᵀ
             GUANAQO_TRACE("Riccati last", k);
