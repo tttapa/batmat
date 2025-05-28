@@ -1,7 +1,7 @@
 #include <koqkatoo/ocp/cyclocp.hpp>
 
 #include <koqkatoo/assume.hpp>
-#include <limits>
+#include <print>
 
 namespace koqkatoo::ocp::cyclocp {
 
@@ -48,15 +48,17 @@ void CyclicOCPSolver<VL>::solve_pcg(mut_matrix_view_batch λ,
         compact_blas::xcopy(z, p);
         return rᵀz;
     }();
-    for (index_t it = 0; it < max_pcg_iter; ++it) { // TODO
+    const auto ε2 = pcg_tolerance * pcg_tolerance;
+    for (index_t it = 0; it < pcg_max_iter; ++it) { // TODO
         GUANAQO_TRACE("solve Ψ pcg", it + 1);
         real_t pᵀAp = mul_A(p, Ap, A, B);
         real_t α    = rᵀz / pᵀAp;
         compact_blas::xaxpy(+α, p, λ);
         compact_blas::xaxpy(-α, Ap, r);
-        real_t r2          = compact_blas::xdot(r, r);
-        constexpr real_t ε = std::numeric_limits<real_t>::epsilon();
-        if (r2 < ε * ε)
+        real_t r2 = compact_blas::xdot(r, r);
+        if (pcg_print_resid)
+            std::println("{:>4}) pcg resid = {:15.6e}", it, std::sqrt(r2));
+        if (r2 < ε2)
             break;
         real_t rᵀz_new = mul_precond(r, z, Ap, A, B);
         real_t β       = rᵀz_new / rᵀz;

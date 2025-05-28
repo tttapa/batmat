@@ -5,8 +5,8 @@
 #include <koqkatoo/linalg-compact/compact.hpp>
 #include <koqkatoo/linalg-compact/matrix-batch.hpp>
 #include <koqkatoo/linalg-compact/preferred-backend.hpp>
-#include <koqkatoo/ocp/ocp.hpp>
 #include <koqkatoo/ocp/cyclocp-storage.hpp>
+#include <koqkatoo/ocp/ocp.hpp>
 #include <koqkatoo/openmp.h>
 #include <koqkatoo/timing.hpp>
 #include <guanaqo/trace.hpp>
@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <bit>
 #include <cassert>
+#include <limits>
 #if !KOQKATOO_WITH_OPENMP
 #include <barrier>
 #endif
@@ -75,7 +76,9 @@ struct CyclicOCPSolver {
 
     bool alt                      = true;
     bool use_stair_preconditioner = true;
-    index_t max_pcg_iter          = 100;
+    index_t pcg_max_iter          = 100;
+    real_t pcg_tolerance          = std::numeric_limits<real_t>::epsilon() / 10;
+    bool pcg_print_resid          = false;
 
     matrix coupling_D = [this] {
         return matrix{{
@@ -229,7 +232,7 @@ struct CyclicOCPSolver {
     index_t num_variables() const { return N_horiz * (nu + nx); }
     index_t num_dynamics_constraints() const { return N_horiz * nx; }
     index_t num_general_constraints() const {
-        return N_horiz * ny + ny_0 + ny_N;
+        return (N_horiz - 1) * ny + ny_0 + ny_N;
     }
 
     matrix initialize_variables() const {
