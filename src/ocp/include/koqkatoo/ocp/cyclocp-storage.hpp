@@ -72,6 +72,10 @@ struct CyclicOCPStorage {
                                   std::span<const real_t> b_eq,
                                   std::span<const real_t> b_lb,
                                   std::span<const real_t> b_ub);
+    static void
+    reconstruct_ineq_multipliers(const LinearOCPStorage &ocp,
+                                 std::span<const real_t> y_compressed,
+                                 std::span<real_t> y);
 };
 
 } // namespace koqkatoo::ocp::cyclocp

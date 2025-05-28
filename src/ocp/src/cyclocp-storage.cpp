@@ -1,6 +1,29 @@
+#include <koqkatoo/assume.hpp>
 #include <koqkatoo/ocp/cyclocp-storage.hpp>
 
 namespace koqkatoo::ocp::cyclocp {
+
+void CyclicOCPStorage::reconstruct_ineq_multipliers(
+    const LinearOCPStorage &ocp, std::span<const real_t> y_compressed,
+    std::span<real_t> y) {
+    const auto [N, nx, nu, ny, ny_N] = ocp.dim;
+    // Count the number of input constraints in the first stage
+    std::vector<bool> Ju0(ny);
+    for (index_t c = 0; c < nu; ++c)
+        for (index_t r = 0; r < ny; ++r)
+            if (ocp.D(0)(r, c) != 0)
+                Ju0[r] = true;
+    const auto ny_0 = static_cast<index_t>(std::ranges::count(Ju0, true));
+    KOQKATOO_ASSERT(static_cast<index_t>(y.size()) == N * ny + ny_N);
+    KOQKATOO_ASSERT(static_cast<index_t>(y_compressed.size()) ==
+                    (N - 1) * ny + ny_0 + ny_N);
+    for (index_t r = 0, j = 0; r < ny; ++r)
+        if (Ju0[r])
+            y[r] = y_compressed[j++];
+        else
+            y[r] = 0;
+    std::ranges::copy(y_compressed.subspan(ny_0), y.begin() + ny);
+}
 
 CyclicOCPStorage CyclicOCPStorage::build(const LinearOCPStorage &ocp,
                                          std::span<const real_t> qr,
@@ -15,7 +38,7 @@ CyclicOCPStorage CyclicOCPStorage::build(const LinearOCPStorage &ocp,
         for (index_t r = 0; r < ny; ++r)
             if (ocp.D(0)(r, c) != 0)
                 Ju0[r] = true;
-    const index_t ny_0 = std::ranges::count(Ju0, index_t{0});
+    const auto ny_0 = static_cast<index_t>(std::ranges::count(Ju0, true));
     CyclicOCPStorage res{
         .N_horiz = N, .nx = nx, .nu = nu, .ny = ny, .ny_0 = ny_0, .ny_N = ny_N};
     // H₀ = [ R₀ 0 ]
