@@ -15,7 +15,7 @@ void CyclicOCPSolver<VL>::solve_active(
 template <index_t VL>
 void CyclicOCPSolver<VL>::solve_active_secondary(index_t l, index_t biU,
                                                  mut_matrix_view λ) const {
-    const index_t num_stages = N_horiz >> lP;
+    const index_t num_stages = ceil_N >> lP;
     const index_t offset     = 1 << l;
     const index_t biD        = sub_wrap_PmV(biU, offset);
     const index_t biY        = sub_wrap_PmV(biD, offset);
@@ -44,7 +44,7 @@ void CyclicOCPSolver<VL>::solve_active_secondary(index_t l, index_t biU,
 template <index_t VL>
 void CyclicOCPSolver<VL>::solve_riccati_forward(index_t ti, mut_matrix_view ux,
                                                 mut_matrix_view λ) const {
-    const index_t num_stages = N_horiz >> lP;   // number of stages per thread
+    const index_t num_stages = ceil_N >> lP;    // number of stages per thread
     const index_t di0        = ti * num_stages; // data batch index
     const index_t biI        = sub_wrap_PmV(ti, 1);
     const index_t diI        = biI * num_stages;
@@ -110,7 +110,7 @@ template <index_t VL>
 void CyclicOCPSolver<VL>::solve_riccati_forward_alt(
     index_t ti, mut_matrix_view ux, mut_matrix_view λ,
     mut_matrix_view work) const {
-    const index_t num_stages = N_horiz >> lP;   // number of stages per thread
+    const index_t num_stages = ceil_N >> lP;    // number of stages per thread
     const index_t di0        = ti * num_stages; // data batch index
     const index_t biI        = sub_wrap_PmV(ti, 1);
     const index_t diI        = biI * num_stages;
@@ -186,7 +186,6 @@ void CyclicOCPSolver<VL>::solve_riccati_forward_alt(
 template <index_t VL>
 void CyclicOCPSolver<VL>::solve_forward(mut_matrix_view ux, mut_matrix_view λ,
                                         mut_matrix_view work) const {
-    KOQKATOO_ASSERT(((N_horiz >> lP) << lP) == N_horiz);
     const index_t P = 1 << (lP - lvl);
     koqkatoo::foreach_thread(P, [this, &ux, &λ, &work](index_t ti, index_t) {
         alt ? solve_riccati_forward_alt(ti, ux, λ, work)
@@ -208,7 +207,7 @@ template <index_t VL>
 void CyclicOCPSolver<VL>::solve_reverse_active(index_t l, index_t bi,
                                                mut_matrix_view λ) const {
     const index_t offset     = 1 << l;
-    const index_t num_stages = N_horiz >> lP;
+    const index_t num_stages = ceil_N >> lP;
     const index_t biY        = add_wrap_PmV(bi, offset);
     const index_t biU        = sub_wrap_PmV(bi, offset);
     const index_t di         = bi * num_stages;
@@ -229,7 +228,7 @@ template <index_t VL>
 void CyclicOCPSolver<VL>::solve_riccati_reverse(index_t ti, mut_matrix_view ux,
                                                 mut_matrix_view λ,
                                                 mut_matrix_view work) const {
-    const index_t num_stages = N_horiz >> lP;   // number of stages per thread
+    const index_t num_stages = ceil_N >> lP;    // number of stages per thread
     const index_t di0        = ti * num_stages; // data batch index
     const index_t biI        = sub_wrap_PmV(ti, 1);
     const index_t diI        = biI * num_stages;
@@ -307,7 +306,7 @@ template <index_t VL>
 void CyclicOCPSolver<VL>::solve_riccati_reverse_alt(
     index_t ti, mut_matrix_view ux, mut_matrix_view λ,
     mut_matrix_view work) const {
-    const index_t num_stages = N_horiz >> lP;   // number of stages per thread
+    const index_t num_stages = ceil_N >> lP;    // number of stages per thread
     const index_t di0        = ti * num_stages; // data batch index
     const index_t biI        = sub_wrap_PmV(ti, 1);
     const index_t diI        = biI * num_stages;
@@ -384,7 +383,6 @@ void CyclicOCPSolver<VL>::solve_riccati_reverse_alt(
 template <index_t VL>
 void CyclicOCPSolver<VL>::solve_reverse(mut_matrix_view ux, mut_matrix_view λ,
                                         mut_matrix_view work) const {
-    KOQKATOO_ASSERT(((N_horiz >> lP) << lP) == N_horiz);
     const index_t P = 1 << (lP - lvl);
     koqkatoo::foreach_thread(P, [this, &ux, &λ, &work](index_t ti, index_t) {
         for (index_t l = lP - lvl; l-- > 0;) {

@@ -71,7 +71,7 @@ void CyclicOCPSolver<VL>::factor_schur_U(index_t l, index_t biU) {
 
 template <index_t VL>
 void CyclicOCPSolver<VL>::factor_l0(const index_t ti) {
-    const index_t num_stages = N_horiz >> lP; // number of stages per thread
+    const index_t num_stages = ceil_N >> lP; // number of stages per thread
     const index_t biI        = sub_wrap_PmV(ti, 1);
     const index_t biA        = ti;
     const auto be            = backend;
@@ -137,7 +137,7 @@ void CyclicOCPSolver<VL>::factor_l0(const index_t ti) {
 template <index_t VL>
 void CyclicOCPSolver<VL>::factor_riccati(index_t ti, bool alt, real_t S,
                                          matrix_view Σ) {
-    const index_t num_stages = N_horiz >> lP;   // number of stages per thread
+    const index_t num_stages = ceil_N >> lP;    // number of stages per thread
     const index_t di0        = ti * num_stages; // data batch index
     const index_t k0         = ti * num_stages; // stage index
     const index_t nux        = nu + nx;
@@ -219,8 +219,7 @@ void CyclicOCPSolver<VL>::factor_riccati(index_t ti, bool alt, real_t S,
 
 template <index_t VL>
 void CyclicOCPSolver<VL>::factor(real_t S, matrix_view Σ, bool alt) {
-    this->alt = alt;
-    KOQKATOO_ASSERT(((N_horiz >> lP) << lP) == N_horiz);
+    this->alt       = alt;
     const index_t P = 1 << (lP - lvl);
     koqkatoo::foreach_thread(P, [this, alt, S, Σ](index_t ti, index_t) {
         factor_riccati(ti, alt, S, Σ);

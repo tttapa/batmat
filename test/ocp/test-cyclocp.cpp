@@ -34,7 +34,7 @@ TEST(CyclOCP, factor) {
     using Solver     = cyclocp::CyclicOCPSolver<4>;
     const index_t lP = log_n_threads + Solver::lvl;
     const index_t ny = 50, ny_0 = 25, ny_N = 25;
-    OCPDim dim{.N_horiz = 96, .nx = 40, .nu = 30, .ny = ny, .ny_N = ny_N};
+    OCPDim dim{.N_horiz = 91, .nx = 40, .nu = 30, .ny = ny, .ny_N = ny_N};
     const index_t nux = dim.nu + dim.nx, N = dim.N_horiz;
     auto ocp = generate_random_ocp(dim);
     ocp.D(0).bottom_rows(ny_0).set_constant(0);
@@ -53,16 +53,16 @@ TEST(CyclOCP, factor) {
 
     const index_t nyM = std::max(ny, ny_0 + ny_N);
     std::vector<real_t> Σ_lin((N - 1) * ny + ny_0 + ny_N);
-    Solver::matrix λ{{.depth = N, .rows = dim.nx, .cols = 1}},
-        ux{{.depth = N, .rows = nux, .cols = 1}},
-        Mᵀλ{{.depth = N, .rows = nux, .cols = 1}},
-        DCux{{.depth = N, .rows = nyM, .cols = 1}},
-        DCᵀΣDCux{{.depth = N, .rows = nux, .cols = 1}},
-        grad{{.depth = N, .rows = nux, .cols = 1}},
-        Mxb{{.depth = N, .rows = dim.nx, .cols = 1}},
-        Σ{{.depth = N, .rows = dim.ny, .cols = 1}},
-        Σ2{{.depth = N, .rows = dim.ny, .cols = 1}},
-        ΔΣ{{.depth = N, .rows = dim.ny, .cols = 1}};
+    Solver::matrix λ{{.depth = solver.ceil_N, .rows = dim.nx, .cols = 1}},
+        ux{{.depth = solver.ceil_N, .rows = nux, .cols = 1}},
+        Mᵀλ{{.depth = solver.ceil_N, .rows = nux, .cols = 1}},
+        DCux{{.depth = solver.ceil_N, .rows = nyM, .cols = 1}},
+        DCᵀΣDCux{{.depth = solver.ceil_N, .rows = nux, .cols = 1}},
+        grad{{.depth = solver.ceil_N, .rows = nux, .cols = 1}},
+        Mxb{{.depth = solver.ceil_N, .rows = dim.nx, .cols = 1}},
+        Σ{{.depth = solver.ceil_N, .rows = dim.ny, .cols = 1}},
+        Σ2{{.depth = solver.ceil_N, .rows = dim.ny, .cols = 1}},
+        ΔΣ{{.depth = solver.ceil_N, .rows = dim.ny, .cols = 1}};
     std::ranges::generate(λ, [&] { return uni(rng); });
     std::ranges::generate(ux, [&] { return uni(rng); });
     std::ranges::generate(Σ_lin, [&] { return std::exp2(uni(rng)); });
@@ -162,7 +162,7 @@ TEST(CyclOCP, factor) {
             f << guanaqo::float_to_str(x) << '\n';
     }
 
-    solver.factor(Σ2, alt);
+    solver.factor(1e100, Σ2, alt);
     if (std::ofstream f("sparse_refactor.csv"); f) {
         auto sp = solver.build_sparse_factor();
         for (auto [r, c, x] : sp)

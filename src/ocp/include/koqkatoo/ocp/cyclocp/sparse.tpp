@@ -13,10 +13,10 @@ auto CyclicOCPSolver<VL>::build_sparse(const CyclicOCPStorage &ocp,
     std::vector<std::tuple<index_t, index_t, real_t>> tuples;
 
     const index_t nux = nu + nx, nuxx = nux + nx;
-    const index_t vstride    = N_horiz >> lvl;
-    const index_t num_stages = N_horiz >> lP; // number of stages per thread
+    const index_t vstride    = ceil_N >> lvl;
+    const index_t num_stages = ceil_N >> lP; // number of stages per thread
     const index_t num_proc   = 1 << (lP - lvl);
-    const index_t sλ         = N_horiz * nuxx - (nx << lP);
+    const index_t sλ         = ceil_N * nuxx - (nx << lP);
 
     linalg::compact::BatchedMatrix<real_t, index_t> RSQ_DC{{
         .depth = N_horiz,
@@ -63,6 +63,18 @@ auto CyclicOCPSolver<VL>::build_sparse(const CyclicOCPStorage &ocp,
             for (index_t i = 0; i < num_stages; ++i) {
                 const index_t k = sub_wrap_N(k0, i);
                 index_t s       = sv + ti * (nuxx * num_stages - nx) + nuxx * i;
+                if (k >= N_horiz) {
+                    for (index_t c = 0; c < nu; ++c)
+                        tuples.emplace_back(s + c, s + c, 1);
+                    for (index_t c = 0; c < nx; ++c) {
+                        tuples.emplace_back(s + c + nu, s + c + nu, 1);
+                        if (i + 1 < num_stages)
+                            tuples.emplace_back(s + c + nux, s + c + nu, -1);
+                        else
+                            tuples.emplace_back(sλI + c, s + c + nu, -1);
+                    }
+                    continue;
+                }
                 for (index_t c = 0; c < nu; ++c) {
                     for (index_t r = c; r < nu; ++r)
                         tuples.emplace_back(s + r, s + c, R(k)(r, c));
@@ -112,11 +124,11 @@ template <index_t VL>
 auto CyclicOCPSolver<VL>::build_rhs(matrix_view ux, matrix_view λ) const
     -> std::vector<real_t> {
     const index_t nux = nu + nx, nuxx = nux + nx;
-    std::vector<real_t> tuples(nuxx * N_horiz);
+    std::vector<real_t> tuples(nuxx * ceil_N);
     std::ranges::fill(tuples, std::numeric_limits<real_t>::quiet_NaN());
-    const index_t num_stages = N_horiz >> lP; // number of stages per thread
+    const index_t num_stages = ceil_N >> lP; // number of stages per thread
     const index_t num_proc   = 1 << (lP - lvl);
-    const index_t sλ         = N_horiz * nuxx - (nx << lP);
+    const index_t sλ         = ceil_N * nuxx - (nx << lP);
 
     for (index_t vi = 0; vi < vl; ++vi) {
         const index_t sv = vi * num_proc * (nuxx * num_stages - nx);
@@ -163,24 +175,24 @@ auto CyclicOCPSolver<VL>::build_sparse_factor() const
     -> std::vector<std::tuple<index_t, index_t, real_t>> {
     std::vector<std::tuple<index_t, index_t, real_t>> tuples;
     const index_t nux = nu + nx, nuxx = nux + nx;
-    const index_t vstride    = N_horiz >> lvl;
-    const index_t num_stages = N_horiz >> lP; // number of stages per thread
+    const index_t vstride    = ceil_N >> lvl;
+    const index_t num_stages = ceil_N >> lP; // number of stages per thread
     const index_t num_proc   = 1 << (lP - lvl);
-    const index_t sλ         = N_horiz * nuxx - (nx << lP);
+    const index_t sλ         = ceil_N * nuxx - (nx << lP);
     matrix AinvQᵀ{{
         .depth = 1 << lP,
         .rows  = nx,
-        .cols  = (N_horiz >> lP) * nx,
+        .cols  = (ceil_N >> lP) * nx,
     }};
     matrix invQᵀ{{
         .depth = 1 << lP,
         .rows  = nx,
-        .cols  = (N_horiz >> lP) * nx,
+        .cols  = (ceil_N >> lP) * nx,
     }};
     matrix LBA{{
         .depth = 1 << lP,
         .rows  = nu + nx,
-        .cols  = ((N_horiz >> lP) - 1) * nx,
+        .cols  = ((ceil_N >> lP) - 1) * nx,
     }};
     for (index_t ti = 0; ti < num_proc; ++ti) {
         const index_t di0 = ti * num_stages; // data batch index
@@ -339,9 +351,9 @@ auto CyclicOCPSolver<VL>::build_sparse_diag() const
     -> std::vector<std::tuple<index_t, index_t, real_t>> {
     std::vector<std::tuple<index_t, index_t, real_t>> tuples;
     const index_t nux = nu + nx, nuxx = nux + nx;
-    const index_t num_stages = N_horiz >> lP; // number of stages per thread
+    const index_t num_stages = ceil_N >> lP; // number of stages per thread
     const index_t num_proc   = 1 << (lP - lvl);
-    const index_t sλ         = N_horiz * nuxx - (nx << lP);
+    const index_t sλ         = ceil_N * nuxx - (nx << lP);
     for (index_t vi = 0; vi < vl; ++vi) {
         const index_t sv = vi * num_proc * (nuxx * num_stages - nx);
         for (index_t ti = 0; ti < num_proc; ++ti) {

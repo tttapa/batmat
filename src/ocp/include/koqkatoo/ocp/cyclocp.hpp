@@ -55,6 +55,8 @@ struct CyclicOCPSolver {
     /// (number of processors × vector length)
     const index_t lP = lvl + 3;
 
+    const index_t ceil_N = ((N_horiz + (1 << lP) - 1) / (1 << lP)) * (1 << lP);
+
     linalg::compact::PreferredBackend backend =
         linalg::compact::PreferredBackend::MKLScalarBatched;
 
@@ -105,13 +107,13 @@ struct CyclicOCPSolver {
         return matrix{{
             .depth = 4 << lvl,
             .rows  = nx,
-            .cols  = (N_horiz >> lvl) * ny,
+            .cols  = (ceil_N >> lvl) * ny,
         }};
     }(); // TODO: merge with riccati_ΥΓ?
     matrix work_update_Σ = [this] {
         return matrix{{
             .depth = 1 << lvl,
-            .rows  = (N_horiz >> lvl) * ny,
+            .rows  = (ceil_N >> lvl) * ny,
             .cols  = 1,
         }};
     }();
@@ -119,54 +121,54 @@ struct CyclicOCPSolver {
         return matrix{{
             .depth = 1 << lP,
             .rows  = nx,
-            .cols  = (N_horiz >> lP) * (nu + nx),
+            .cols  = (ceil_N >> lP) * (nu + nx),
         }};
     }();
     matrix riccati_BAᵀ = [this] {
         return matrix{{
             .depth = 1 << lP,
             .rows  = nu + nx,
-            .cols  = ((N_horiz >> lP) - 1) * nx,
+            .cols  = ((ceil_N >> lP) - 1) * nx,
         }};
     }();
     matrix riccati_R̂ŜQ̂ = [this] {
         return matrix{{
             .depth = 1 << lP,
             .rows  = nu + nx,
-            .cols  = (N_horiz >> lP) * (nu + nx),
+            .cols  = (ceil_N >> lP) * (nu + nx),
         }};
     }();
     matrix riccati_ΥΓ1 = [this] {
         return matrix{{
             .depth = 1 << lP,
             .rows  = nu + nx + nx,
-            .cols  = (N_horiz >> lP) * std::max(ny, ny_0 + ny_N),
+            .cols  = (ceil_N >> lP) * std::max(ny, ny_0 + ny_N),
         }};
     }();
     matrix riccati_ΥΓ2 = [this] {
         return matrix{{
             .depth = 1 << lP,
             .rows  = nu + nx + nx,
-            .cols  = (N_horiz >> lP) * std::max(ny, ny_0 + ny_N),
+            .cols  = (ceil_N >> lP) * std::max(ny, ny_0 + ny_N),
         }};
     }();
     matrix data_BA = [this] {
         return matrix{{
-            .depth = N_horiz,
+            .depth = ceil_N,
             .rows  = nx,
             .cols  = nu + nx,
         }};
     }();
     matrix data_DCᵀ = [this] {
         return matrix{{
-            .depth = N_horiz,
+            .depth = ceil_N,
             .rows  = nu + nx,
             .cols  = std::max(ny, ny_0 + ny_N),
         }};
     }();
     matrix data_rhs_constr = [this] {
         return matrix{{
-            .depth = N_horiz,
+            .depth = ceil_N,
             .rows  = nx,
             .cols  = 1,
         }};
@@ -174,13 +176,13 @@ struct CyclicOCPSolver {
     matrix work_Σ = [this] {
         return matrix{{
             .depth = 1 << lP,
-            .rows  = (N_horiz >> lP) * std::max(ny, ny_0 + ny_N),
+            .rows  = (ceil_N >> lP) * std::max(ny, ny_0 + ny_N),
             .cols  = 1,
         }};
     }();
     matrix data_RSQ = [this] {
         return matrix{{
-            .depth = N_horiz,
+            .depth = ceil_N,
             .rows  = nu + nx,
             .cols  = nu + nx,
         }};
@@ -229,25 +231,25 @@ struct CyclicOCPSolver {
                           real_t fill = 0) const;
     void unpack_constraints(matrix_view y, std::span<real_t> y_lin) const;
 
-    index_t num_variables() const { return N_horiz * (nu + nx); }
-    index_t num_dynamics_constraints() const { return N_horiz * nx; }
+    index_t num_variables() const { return ceil_N * (nu + nx); }
+    index_t num_dynamics_constraints() const { return ceil_N * nx; }
     index_t num_general_constraints() const {
-        return (N_horiz - 1) * ny + ny_0 + ny_N;
+        return (ceil_N - 1) * ny + ny_0 + ny_N;
     }
 
     matrix initialize_variables() const {
-        return matrix{{.depth = N_horiz, .rows = nu + nx, .cols = 1}};
+        return matrix{{.depth = ceil_N, .rows = nu + nx, .cols = 1}};
     }
     matrix initialize_dynamics_constraints() const {
-        return matrix{{.depth = N_horiz, .rows = nx, .cols = 1}};
+        return matrix{{.depth = ceil_N, .rows = nx, .cols = 1}};
     }
     matrix initialize_general_constraints() const {
         return matrix{
-            {.depth = N_horiz, .rows = std::max(ny, ny_0 + ny_N), .cols = 1}};
+            {.depth = ceil_N, .rows = std::max(ny, ny_0 + ny_N), .cols = 1}};
     }
     mask_matrix initialize_active_set() const {
         return mask_matrix{
-            {.depth = N_horiz, .rows = std::max(ny, ny_0 + ny_N), .cols = 1}};
+            {.depth = ceil_N, .rows = std::max(ny, ny_0 + ny_N), .cols = 1}};
     }
 
     // For lgp = 5, lgv = 2, N = 3 << lgp

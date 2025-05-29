@@ -44,7 +44,6 @@ void CyclicOCPSolver<VL>::update_level(index_t l, index_t biY) {
 
 template <index_t VL>
 void CyclicOCPSolver<VL>::update(matrix_view ΔΣ) {
-    KOQKATOO_ASSERT(((N_horiz >> lP) << lP) == N_horiz);
     const index_t P = 1 << (lP - lvl);
     koqkatoo::foreach_thread(P, [this, ΔΣ](index_t ti, index_t) {
         update_riccati(ti, ΔΣ);
@@ -93,7 +92,7 @@ void CyclicOCPSolver<VL>::update(matrix_view ΔΣ) {
 template <index_t VL>
 void CyclicOCPSolver<VL>::update_riccati(index_t ti, matrix_view Σ) {
     const index_t nyM        = std::max(ny, ny_0 + ny_N);
-    const index_t num_stages = N_horiz >> lP;   // number of stages per thread
+    const index_t num_stages = ceil_N >> lP;    // number of stages per thread
     const index_t di0        = ti * num_stages; // data batch index
     const index_t k0         = ti * num_stages; // stage index
     const index_t nux        = nu + nx;
