@@ -30,8 +30,9 @@ CyclicOCPStorage CyclicOCPStorage::build(const LinearOCPStorage &ocp,
                                          std::span<const real_t> b_eq,
                                          std::span<const real_t> b_lb,
                                          std::span<const real_t> b_ub) {
-    using crview = guanaqo::MatrixView<const real_t, index_t>;
+    using vw = guanaqo::MatrixView<const real_t, index_t>;
     const auto [N, nx, nu, ny, ny_N] = ocp.dim;
+    const auto nux                   = nu + nx;
     // Count the number of input constraints in the first stage
     std::vector<bool> Ju0(ny);
     for (index_t c = 0; c < nu; ++c)
@@ -68,17 +69,17 @@ CyclicOCPStorage CyclicOCPStorage::build(const LinearOCPStorage &ocp,
     }
     res.data_G0N(0).bottom_right(ny_N, nx) = ocp.C(N);
     res.data_lb0N(0).bottom_rows(ny_N) =
-        crview::as_column(b_lb.subspan(N * ny, ny_N));
+        vw::as_column(b_lb.subspan(N * ny, ny_N));
     res.data_ub0N(0).bottom_rows(ny_N) =
-        crview::as_column(b_ub.subspan(N * ny, ny_N));
+        vw::as_column(b_ub.subspan(N * ny, ny_N));
     // c̃₀ = c₀ + A₀ x₀      (b_eq = [x₀, c₀, ... cₙ₋₁])
-    res.data_c(0) = crview::as_column(b_eq.subspan(nx, nx));
+    res.data_c(0) = vw::as_column(b_eq.subspan(nx, nx));
     for (index_t r = 0; r < nx; ++r)
         for (index_t c = 0; c < nx; ++c)
             res.data_c(0, r, 0) += ocp.A(0)(r, c) * b_eq[c];
     // r̃₀ = r₀ + S₀ x₀
-    res.data_rq(0).bottom_rows(nx) = crview::as_column(qr.first(nx));
-    res.data_rq(0).top_rows(nu)    = crview::as_column(qr.subspan(nx, nu));
+    res.data_rq(0).bottom_rows(nx) = vw::as_column(qr.subspan(nux * N, nx));
+    res.data_rq(0).top_rows(nu)    = vw::as_column(qr.subspan(nx, nu));
     for (index_t r = 0; r < nu; ++r)
         for (index_t c = 0; c < nx; ++c)
             res.data_rq(0, r, 0) += ocp.S_trans(0)(c, r) * b_eq[c];
@@ -91,9 +92,12 @@ CyclicOCPStorage CyclicOCPStorage::build(const LinearOCPStorage &ocp,
         res.data_F(i).right_cols(nx)       = ocp.A(i);
         res.data_G(i - 1).left_cols(nu)    = ocp.D(i);
         res.data_G(i - 1).right_cols(nx)   = ocp.C(i);
-        res.data_lb(i - 1) = crview::as_column(b_lb.subspan(i * ny, ny));
-        res.data_ub(i - 1) = crview::as_column(b_ub.subspan(i * ny, ny));
-        res.data_c(i)      = crview::as_column(b_eq.subspan((i + 1) * nx, nx));
+        res.data_lb(i - 1) = vw::as_column(b_lb.subspan(i * ny, ny));
+        res.data_ub(i - 1) = vw::as_column(b_ub.subspan(i * ny, ny));
+        res.data_c(i)      = vw::as_column(b_eq.subspan((i + 1) * nx, nx));
+        res.data_rq(i).bottom_rows(nx) = vw::as_column(qr.subspan(i * nux, nx));
+        res.data_rq(i).top_rows(nu) =
+            vw::as_column(qr.subspan(i * nux + nx, nu));
     }
     return res;
 }
