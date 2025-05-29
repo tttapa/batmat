@@ -2,6 +2,7 @@
 
 #include <koqkatoo/assume.hpp>
 #include <guanaqo/blas/hl-blas-interface.hpp>
+#include <limits>
 
 namespace koqkatoo::ocp::cyclocp {
 
@@ -64,15 +65,21 @@ auto CyclicOCPSolver<VL>::build_sparse(const CyclicOCPStorage &ocp,
                 const index_t k = sub_wrap_N(k0, i);
                 index_t s       = sv + ti * (nuxx * num_stages - nx) + nuxx * i;
                 if (k >= N_horiz) {
+                    const auto ε = std::numeric_limits<real_t>::epsilon();
                     for (index_t c = 0; c < nu; ++c)
                         tuples.emplace_back(s + c, s + c, 1);
                     for (index_t c = 0; c < nx; ++c) {
-                        tuples.emplace_back(s + c + nu, s + c + nu, 1);
+                        tuples.emplace_back(s + c + nu, s + c + nu, ε * ε);
                         if (i + 1 < num_stages)
                             tuples.emplace_back(s + c + nux, s + c + nu, -1);
                         else
                             tuples.emplace_back(sλI + c, s + c + nu, -1);
+                        if (i == 0)
+                            tuples.emplace_back(sλA + c, s + c + nu, 1);
                     }
+                    if (i > 0)
+                        for (index_t c = 0; c < nx; ++c)
+                            tuples.emplace_back(s + nu + c, s - nx + c, 1);
                     continue;
                 }
                 for (index_t c = 0; c < nu; ++c) {

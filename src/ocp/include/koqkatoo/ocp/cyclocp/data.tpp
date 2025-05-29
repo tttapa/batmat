@@ -2,6 +2,7 @@
 
 #include <koqkatoo/assume.hpp>
 #include <guanaqo/blas/hl-blas-interface.hpp>
+#include <limits>
 
 namespace koqkatoo::ocp::cyclocp {
 
@@ -39,7 +40,16 @@ CyclicOCPSolver<VL> CyclicOCPSolver<VL>::build(const CyclicOCPStorage &ocp,
                             res.data_DCᵀ.batch(di)(vi).left_cols(res.ny));
                     }
                 } else {
-                    res.data_RSQ.batch(di)(vi).add_to_diagonal(1);
+                    const auto ε = std::numeric_limits<real_t>::epsilon();
+                    res.data_RSQ.batch(di)(vi)
+                        .top_left(res.nu, res.nu)
+                        .add_to_diagonal(1);
+                    res.data_RSQ.batch(di)(vi)
+                        .bottom_right(res.nx, res.nx)
+                        .add_to_diagonal(ε * ε);
+                    res.data_BA.batch(di)(vi)
+                        .right_cols(res.nx)
+                        .add_to_diagonal(1);
                 }
             }
         }
