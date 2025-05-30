@@ -231,10 +231,10 @@ struct CyclicOCPSolver {
                           real_t fill = 0) const;
     void unpack_constraints(matrix_view y, std::span<real_t> y_lin) const;
 
-    index_t num_variables() const { return ceil_N * (nu + nx); }
-    index_t num_dynamics_constraints() const { return ceil_N * nx; }
+    index_t num_variables() const { return N_horiz * (nu + nx); }
+    index_t num_dynamics_constraints() const { return N_horiz * nx; }
     index_t num_general_constraints() const {
-        return (ceil_N - 1) * ny + ny_0 + ny_N;
+        return (N_horiz - 1) * ny + ny_0 + ny_N;
     }
 
     matrix initialize_variables() const {
