@@ -67,7 +67,7 @@ class KoqkatooRecipe(ConanFile):
 
     def requirements(self):
         self.requires(
-            "guanaqo/1.0.0-alpha.13", transitive_headers=True, transitive_libs=True, force=True
+            "guanaqo/1.0.0-alpha.14", transitive_headers=True, transitive_libs=True, force=True
         )
         self.requires("hyhound/1.0.0", transitive_headers=True)
         if self.options.with_openblas:

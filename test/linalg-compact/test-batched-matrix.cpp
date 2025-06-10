@@ -15,17 +15,20 @@ struct ViewTypeConfig {
 template <typename Config>
 class BatchedMatrixViewParamTest : public ::testing::Test {
   protected:
-    using T                        = float;
-    using I                        = ptrdiff_t;
-    using S                        = typename Config::size;
-    static constexpr bool RowMajor = Config::is_row_major;
+    using T = float;
+    using I = ptrdiff_t;
+    using S = typename Config::size;
+    static constexpr auto storage_order =
+        Config::is_row_major
+            ? koqkatoo::linalg::compact::StorageOrder::RowMajor
+            : koqkatoo::linalg::compact::StorageOrder::ColMajor;
 
     static constexpr I depth      = S() * 6;
     static constexpr I rows       = 5;
     static constexpr I cols       = 7;
     static constexpr I batch_size = S::value;
 
-    using View = BatchedMatrixView<T, I, S, I, DefaultStride, RowMajor>;
+    using View = BatchedMatrixView<T, I, S, I, DefaultStride, storage_order>;
 
     std::vector<T> data;
     View view;
