@@ -1,6 +1,8 @@
 #include <koqkatoo/assume.hpp>
 #include <koqkatoo/linalg-compact/mkl.hpp>
+#include <koqkatoo/loop.hpp>
 #include <koqkatoo/ocp/cyclic-solver/cyclic-solver.hpp>
+#include <koqkatoo/ocp/cyclocp.hpp>
 #include <koqkatoo/ocp/ocp.hpp>
 #include <koqkatoo/openmp.h>
 #include <benchmark/benchmark.h>
@@ -32,16 +34,6 @@ using namespace hyhound::ocp;
 namespace stdx = std::experimental;
 using guanaqo::as_span;
 
-namespace koqkatoo::ocp::test {
-template <koqkatoo::index_t>
-struct CyclicOCPSolver;
-}
-
-std::shared_ptr<koqkatoo::ocp::test::CyclicOCPSolver<4>>
-build_new_cyclic_solver(const koqkatoo::ocp::LinearOCPStorage &ocp,
-                        koqkatoo::index_t lP);
-void run_new_cyclic_solver(koqkatoo::ocp::test::CyclicOCPSolver<4> &solver);
-
 #if GUANAQO_WITH_TRACING
 std::map<std::tuple<std::string, std::string>, std::filesystem::path> traces;
 void trace(auto &&fun, const auto &name, const auto &params) {
@@ -54,6 +46,8 @@ void trace(auto &&fun, const auto &name, const auto &params) {
     if (auto [_, ins] = traces.insert({{name, params}, out_file}); !ins)
         return;
     guanaqo::trace_logger.reset();
+    koqkatoo::foreach_thread(
+        [](index_t i, index_t) { GUANAQO_TRACE("thread_id", i); });
     fun();
     std::filesystem::create_directories(out_dir);
     std::ofstream csv{out_file};
@@ -117,7 +111,8 @@ auto build_cyclic_ocp_solver_new(const OCPDataRiccati &ocp_ric, index_t lP) {
                                              .nu      = ocp_ric.nu,
                                              .ny      = ocp_ric.ny,
                                              .ny_N    = ocp_ric.ny}};
-    const auto N = ocp.dim.N_horiz;
+    const auto [N, nx, nu, ny, ny_N] = ocp.dim;
+    const index_t nux                = nu + nx;
     for (index_t i = 0; i < N; ++i) {
         as_eigen(ocp.A(i))       = ocp_ric.A(i);
         as_eigen(ocp.B(i))       = ocp_ric.B(i);
@@ -130,7 +125,12 @@ auto build_cyclic_ocp_solver_new(const OCPDataRiccati &ocp_ric, index_t lP) {
     }
     as_eigen(ocp.C(N)) = ocp_ric.C(N);
     as_eigen(ocp.Q(N)) = ocp_ric.Q(N);
-    return build_new_cyclic_solver(ocp, lP);
+    using Solver       = koqkatoo::ocp::cyclocp::CyclicOCPSolver<4>;
+    std::vector<real_t> qr_lin(nux * N + nx), b_eq_lin(nux * (N + 1)),
+        b_lb_lin(ny * N + ny_N), b_ub_lin(ny * N + ny_N);
+    auto cocp = koqkatoo::ocp::cyclocp::CyclicOCPStorage::build(
+        ocp, qr_lin, b_eq_lin, b_lb_lin, b_ub_lin);
+    return Solver::build(cocp, lP + Solver::lvl);
 }
 
 void bm_factor_riccati(benchmark::State &state) {
@@ -297,8 +297,10 @@ void bm_factor_new_kqt(benchmark::State &state) {
 #error ""
 #endif
     omp_set_num_threads(1 << lP);
-    auto solver          = build_cyclic_ocp_solver_new(ocp, lP);
-    const auto do_factor = [&] { run_new_cyclic_solver(*solver); };
+    auto solver   = build_cyclic_ocp_solver_new(ocp, lP);
+    auto Σ_packed = solver.initialize_general_constraints();
+    solver.pack_constraints(as_span(Σ.reshaped()), Σ_packed);
+    const auto do_factor = [&] { solver.factor(1e100, Σ_packed); };
     for (auto _ : state)
         do_factor();
     auto params =
