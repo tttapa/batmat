@@ -9,22 +9,12 @@
 
 namespace batmat::linalg {
 
-struct GemmConfig {
-    bool negate = false;
-    int shift_A = 0;
-    int shift_B = 0;
-    int shift_C = 0;
-    int shift_D = shift_C;
-};
-
-template <class T, class Abi, GemmConfig Conf, StorageOrder OA, StorageOrder OB, StorageOrder OC>
+template <class T, class Abi, micro_kernels::gemm::KernelConfig Conf, StorageOrder OA,
+          StorageOrder OB, StorageOrder OC>
 void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B, view<T, Abi, OC> C, bool init_zero) {
     GUANAQO_TRACE("gemm", 0, A.rows() * A.cols() * B.cols() * A.depth());
     static constexpr micro_kernels::gemm::KernelConfig conf{
         .negate  = Conf.negate,
-        .order_A = OA,
-        .order_B = OB,
-        .order_C = OC,
         .shift_A = Conf.shift_A,
         .shift_B = Conf.shift_B,
         .shift_C = Conf.shift_C,
@@ -100,43 +90,13 @@ void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B, view<T, Abi, OC> C
                     copy<T, Abi>(Aik, Aik_cache);
                 }
                 if (pack_A && pack_B) {
-                    static constexpr micro_kernels::gemm::KernelConfig conf{
-                        .negate  = false,
-                        .order_A = StorageOrder::RowMajor,
-                        .order_B = StorageOrder::ColMajor,
-                        .order_C = OC,
-                        .shift_A = Conf.shift_A,
-                        .shift_B = Conf.shift_B,
-                        .shift_C = Conf.shift_C,
-                        .shift_D = Conf.shift_D,
-                    };
-                    micro_kernels::gemm::gemm_register<T, Abi, conf>(Aik_cache, Bkj_cache, Cij,
-                                                                     init_zero && p_cache == 0);
+                    micro_kernels::gemm::gemm_register<T, Abi, conf>(
+                        Aik_cache.as_const(), Bkj_cache.as_const(), Cij, init_zero && p_cache == 0);
                 } else if (pack_A) {
-                    static constexpr micro_kernels::gemm::KernelConfig conf{
-                        .negate  = false,
-                        .order_A = StorageOrder::RowMajor,
-                        .order_B = OB,
-                        .order_C = OC,
-                        .shift_A = Conf.shift_A,
-                        .shift_B = Conf.shift_B,
-                        .shift_C = Conf.shift_C,
-                        .shift_D = Conf.shift_D,
-                    };
-                    micro_kernels::gemm::gemm_register<T, Abi, conf>(Aik_cache, Bkj, Cij,
+                    micro_kernels::gemm::gemm_register<T, Abi, conf>(Aik_cache.as_const(), Bkj, Cij,
                                                                      init_zero && p_cache == 0);
                 } else if (pack_B) {
-                    static constexpr micro_kernels::gemm::KernelConfig conf{
-                        .negate  = false,
-                        .order_A = OA,
-                        .order_B = StorageOrder::ColMajor,
-                        .order_C = OC,
-                        .shift_A = Conf.shift_A,
-                        .shift_B = Conf.shift_B,
-                        .shift_C = Conf.shift_C,
-                        .shift_D = Conf.shift_D,
-                    };
-                    micro_kernels::gemm::gemm_register<T, Abi, conf>(Aik, Bkj_cache, Cij,
+                    micro_kernels::gemm::gemm_register<T, Abi, conf>(Aik, Bkj_cache.as_const(), Cij,
                                                                      init_zero && p_cache == 0);
                 } else {
                     micro_kernels::gemm::gemm_register<T, Abi, conf>(Aik, Bkj, Cij,

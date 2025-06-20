@@ -13,6 +13,10 @@ namespace linalg::micro_kernels::gemm {
 /// block of matrix C (leaving some registers for loading A and B):
 template <class T, class Abi>
 inline constexpr index_t RowsReg = 3;
+// Vectors greater than the physical vector length use more registers, so decrease the block size.
+template <class T, size_t N>
+    requires(N * sizeof(T) > 32)
+inline constexpr index_t RowsReg<T, stdx::simd_abi::fixed_size<N>> = 2;
 
 } // namespace linalg::micro_kernels::gemm
 namespace ops {

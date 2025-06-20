@@ -7,11 +7,11 @@
 namespace batmat::linalg::micro_kernels::gemm {
 
 /// Generalized matrix multiplication C = C ± A⁽ᵀ⁾ B⁽ᵀ⁾. Single register block.
-template <class T, class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg>
-[[gnu::hot, gnu::flatten]] void gemm_microkernel(const uview<const T, Abi, Conf.order_A> A,
-                                                 const uview<const T, Abi, Conf.order_B> B,
-                                                 const uview<T, Abi, Conf.order_C> C,
-                                                 const index_t k, bool init_zero) noexcept {
+template <class T, class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg, StorageOrder OA,
+          StorageOrder OB, StorageOrder OC>
+[[gnu::hot, gnu::flatten]] void
+gemm_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi, OB> B,
+                 const uview<T, Abi, OC> C, const index_t k, bool init_zero) noexcept {
     using namespace ops;
     using simd = stdx::simd<T, Abi>;
     // The following assumption ensures that there is no unnecessary branch
@@ -49,12 +49,12 @@ template <class T, class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsRe
 }
 
 /// Generalized matrix multiplication D = C ± A⁽ᵀ⁾ B⁽ᵀ⁾. Single register block.
-template <class T, class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg>
-[[gnu::hot, gnu::flatten]] void gemm_copy_microkernel(const uview<const T, Abi, Conf.order_A> A,
-                                                      const uview<const T, Abi, Conf.order_B> B,
-                                                      const uview<const T, Abi, Conf.order_C> C,
-                                                      const uview<T, Abi, Conf.order_D> D,
-                                                      const index_t k) noexcept {
+template <class T, class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg, StorageOrder OA,
+          StorageOrder OB, StorageOrder OC, StorageOrder OD>
+[[gnu::hot, gnu::flatten]] void
+gemm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi, OB> B,
+                      const uview<const T, Abi, OC> C, const uview<T, Abi, OD> D,
+                      const index_t k) noexcept {
     using namespace ops;
     using simd = stdx::simd<T, Abi>;
     // The following assumption ensures that there is no unnecessary branch
@@ -92,19 +92,18 @@ template <class T, class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsRe
 }
 
 /// Generalized matrix multiplication C = C ± A⁽ᵀ⁾ B⁽ᵀ⁾. Using register blocking.
-template <class T, class Abi, KernelConfig Conf>
-void gemm_register(const view<const T, Abi, Conf.order_A> A,
-                   const view<const T, Abi, Conf.order_B> B, const view<T, Abi, Conf.order_C> C,
-                   const bool init_zero) noexcept {
+template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OB, StorageOrder OC>
+void gemm_register(const view<const T, Abi, OA> A, const view<const T, Abi, OB> B,
+                   const view<T, Abi, OC> C, const bool init_zero) noexcept {
     constexpr auto Rows = RowsReg<T, Abi>, Cols = ColsReg<T, Abi>;
     const index_t I = C.rows(), J = C.cols(), K = A.cols();
     BATMAT_ASSUME(I > 0);
     BATMAT_ASSUME(J > 0);
     BATMAT_ASSUME(K > 0);
-    static const auto microkernel              = gemm_lut<T, Abi, Conf>;
-    const uview<const T, Abi, Conf.order_A> A_ = A;
-    const uview<const T, Abi, Conf.order_B> B_ = B;
-    const uview<T, Abi, Conf.order_C> C_       = C;
+    static const auto microkernel    = gemm_lut<T, Abi, Conf, OA, OB, OC>;
+    const uview<const T, Abi, OA> A_ = A;
+    const uview<const T, Abi, OB> B_ = B;
+    const uview<T, Abi, OC> C_       = C;
     // Optimization for very small matrices
     if (I <= Rows && J <= Cols)
         return microkernel[I - 1][J - 1](A_, B_, C_, K, init_zero);
@@ -122,21 +121,20 @@ void gemm_register(const view<const T, Abi, Conf.order_A> A,
 }
 
 /// Generalized matrix multiplication D = C ± A⁽ᵀ⁾ B⁽ᵀ⁾. Using register blocking.
-template <class T, class Abi, KernelConfig Conf>
-void gemm_copy_register(const view<const T, Abi, Conf.order_A> A,
-                        const view<const T, Abi, Conf.order_B> B,
-                        const view<const T, Abi, Conf.order_C> C,
-                        const view<T, Abi, Conf.order_D> D) noexcept {
+template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OB, StorageOrder OC,
+          StorageOrder OD>
+void gemm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi, OB> B,
+                        const view<const T, Abi, OC> C, const view<T, Abi, OD> D) noexcept {
     constexpr auto Rows = RowsReg<T, Abi>, Cols = ColsReg<T, Abi>;
     const index_t I = C.rows(), J = C.cols(), K = A.cols();
     BATMAT_ASSUME(I > 0);
     BATMAT_ASSUME(J > 0);
     BATMAT_ASSUME(K > 0);
-    static const auto microkernel              = gemm_copy_lut<T, Abi, Conf>;
-    const uview<const T, Abi, Conf.order_A> A_ = A;
-    const uview<const T, Abi, Conf.order_B> B_ = B;
-    const uview<const T, Abi, Conf.order_C> C_ = C;
-    const uview<T, Abi, Conf.order_D> D_       = D;
+    static const auto microkernel    = gemm_copy_lut<T, Abi, Conf, OA, OB, OC, OD>;
+    const uview<const T, Abi, OA> A_ = A;
+    const uview<const T, Abi, OB> B_ = B;
+    const uview<const T, Abi, OC> C_ = C;
+    const uview<T, Abi, OD> D_       = D;
     // Optimization for very small matrices
     if (I <= Rows && J <= Cols)
         return microkernel[I - 1][J - 1](A_, B_, C_, D_, K);

@@ -12,75 +12,34 @@ using DType = @DType@;
 // clang-format on
 
 #define BATMAT_INST_LUT(...) template const constinit decltype(__VA_ARGS__) __VA_ARGS__
-#define BATMAT_INST_ALL_IMPL(Conf)                                                                 \
-    BATMAT_INST_LUT(gemm_lut<DType, Abi, Conf>);                                                   \
-    BATMAT_INST_LUT(gemm_copy_lut<DType, Abi, Conf>);                                              \
-    template void gemm_register<DType, Abi, Conf>(                                                 \
-        view<const DType, Abi, (Conf).order_A> A, view<const DType, Abi, (Conf).order_B> B,        \
-        view<DType, Abi, (Conf).order_C> C, bool init_zero);                                       \
-    template void gemm_copy_register<DType, Abi, Conf>(                                            \
-        view<const DType, Abi, (Conf).order_A> A, view<const DType, Abi, (Conf).order_B> B,        \
-        view<const DType, Abi, (Conf).order_C> C, view<DType, Abi, (Conf).order_D> D);
-#define BATMAT_INST_ALL_IMPL_NAME(Conf, ...)                                                       \
+#define BATMAT_INST_ALL_IMPL(Conf, OA, OB, OC)                                                     \
+    BATMAT_INST_LUT(gemm_lut<DType, Abi, Conf, OA, OB, OC>);                                       \
+    BATMAT_INST_LUT(gemm_copy_lut<DType, Abi, Conf, OA, OB, OC, OC>);                              \
+    template void gemm_register<DType, Abi, Conf, OA, OB, OC>(                                     \
+        view<const DType, Abi, OA> A, view<const DType, Abi, OB> B, view<DType, Abi, OC> C,        \
+        bool init_zero);                                                                           \
+    template void gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>(                            \
+        view<const DType, Abi, OA> A, view<const DType, Abi, OB> B, view<const DType, Abi, OC> C,  \
+        view<DType, Abi, OC> D);
+#define BATMAT_INST_ALL_IMPL_NAME(Conf, OA, OB, OC, ...)                                           \
     static constexpr KernelConfig Conf __VA_ARGS__;                                                \
-    BATMAT_INST_ALL_IMPL(Conf)
+    BATMAT_INST_ALL_IMPL(Conf, OA, OB, OC)
 #define BATMAT_INST_ALL(...) BATMAT_INST_ALL_IMPL_NAME(GUANAQO_CAT(Conf, __COUNTER__), __VA_ARGS__)
 
-BATMAT_INST_ALL({.negate  = false,
-                 .order_A = StorageOrder::ColMajor,
-                 .order_B = StorageOrder::ColMajor,
-                 .order_C = StorageOrder::ColMajor});
-BATMAT_INST_ALL({.negate  = true,
-                 .order_A = StorageOrder::ColMajor,
-                 .order_B = StorageOrder::ColMajor,
-                 .order_C = StorageOrder::ColMajor});
-BATMAT_INST_ALL({.negate  = false,
-                 .order_A = StorageOrder::RowMajor,
-                 .order_B = StorageOrder::ColMajor,
-                 .order_C = StorageOrder::ColMajor});
-BATMAT_INST_ALL({.negate  = true,
-                 .order_A = StorageOrder::RowMajor,
-                 .order_B = StorageOrder::ColMajor,
-                 .order_C = StorageOrder::ColMajor});
-BATMAT_INST_ALL({.negate  = false,
-                 .order_A = StorageOrder::RowMajor,
-                 .order_B = StorageOrder::RowMajor,
-                 .order_C = StorageOrder::ColMajor});
-BATMAT_INST_ALL({.negate  = true,
-                 .order_A = StorageOrder::RowMajor,
-                 .order_B = StorageOrder::RowMajor,
-                 .order_C = StorageOrder::ColMajor});
-BATMAT_INST_ALL({.negate  = false,
-                 .order_A = StorageOrder::ColMajor,
-                 .order_B = StorageOrder::RowMajor,
-                 .order_C = StorageOrder::ColMajor});
-BATMAT_INST_ALL({.negate  = true,
-                 .order_A = StorageOrder::ColMajor,
-                 .order_B = StorageOrder::RowMajor,
-                 .order_C = StorageOrder::ColMajor});
-BATMAT_INST_ALL({.negate  = false,
-                 .order_A = StorageOrder::ColMajor,
-                 .order_B = StorageOrder::ColMajor,
-                 .order_C = StorageOrder::RowMajor});
-BATMAT_INST_ALL({.negate  = true,
-                 .order_A = StorageOrder::ColMajor,
-                 .order_B = StorageOrder::ColMajor,
-                 .order_C = StorageOrder::RowMajor});
-BATMAT_INST_ALL({.negate  = false,
-                 .order_A = StorageOrder::RowMajor,
-                 .order_B = StorageOrder::RowMajor,
-                 .order_C = StorageOrder::RowMajor});
-BATMAT_INST_ALL({.negate  = true,
-                 .order_A = StorageOrder::RowMajor,
-                 .order_B = StorageOrder::RowMajor,
-                 .order_C = StorageOrder::RowMajor});
-BATMAT_INST_ALL({.negate  = false,
-                 .order_A = StorageOrder::ColMajor,
-                 .order_B = StorageOrder::RowMajor,
-                 .order_C = StorageOrder::RowMajor});
-BATMAT_INST_ALL({.negate  = true,
-                 .order_A = StorageOrder::ColMajor,
-                 .order_B = StorageOrder::RowMajor,
-                 .order_C = StorageOrder::RowMajor});
+using enum StorageOrder;
+BATMAT_INST_ALL(ColMajor, ColMajor, ColMajor, {.negate = false});
+BATMAT_INST_ALL(ColMajor, ColMajor, ColMajor, {.negate = true});
+BATMAT_INST_ALL(RowMajor, ColMajor, ColMajor, {.negate = false});
+BATMAT_INST_ALL(RowMajor, ColMajor, ColMajor, {.negate = true});
+BATMAT_INST_ALL(RowMajor, RowMajor, ColMajor, {.negate = false});
+BATMAT_INST_ALL(RowMajor, RowMajor, ColMajor, {.negate = true});
+BATMAT_INST_ALL(ColMajor, RowMajor, ColMajor, {.negate = false});
+BATMAT_INST_ALL(ColMajor, RowMajor, ColMajor, {.negate = true});
+BATMAT_INST_ALL(ColMajor, ColMajor, RowMajor, {.negate = false});
+BATMAT_INST_ALL(ColMajor, ColMajor, RowMajor, {.negate = true});
+BATMAT_INST_ALL(RowMajor, RowMajor, RowMajor, {.negate = false});
+BATMAT_INST_ALL(RowMajor, RowMajor, RowMajor, {.negate = true});
+BATMAT_INST_ALL(ColMajor, RowMajor, RowMajor, {.negate = false});
+BATMAT_INST_ALL(ColMajor, RowMajor, RowMajor, {.negate = true});
 
 } // namespace batmat::linalg::micro_kernels::gemm

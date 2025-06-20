@@ -31,22 +31,22 @@ class GemmTest : public ::testing::Test {
     std::mt19937 rng{12345};
     std::normal_distribution<type> nrml{0, 1};
 
-    template <GemmConfig Conf, bool InitZero>
+    template <micro_kernels::gemm::KernelConfig Conf, bool InitZero>
     static void gemm_NN(view<const type, Abi> A, view<const type, Abi> B, view<type, Abi> C) {
         batmat::linalg::gemm<type, Abi, Conf>(A, B, C, InitZero);
     }
 
-    template <GemmConfig Conf, bool InitZero>
+    template <micro_kernels::gemm::KernelConfig Conf, bool InitZero>
     static void gemm_TN(view<const type, Abi> A, view<const type, Abi> B, view<type, Abi> C) {
         batmat::linalg::gemm<type, Abi, Conf>(A.transposed(), B, C, InitZero);
     }
 
-    template <GemmConfig Conf, bool InitZero>
+    template <micro_kernels::gemm::KernelConfig Conf, bool InitZero>
     static void gemm_NT(view<const type, Abi> A, view<const type, Abi> B, view<type, Abi> C) {
         batmat::linalg::gemm<type, Abi, Conf>(A, B.transposed(), C, InitZero);
     }
 
-    template <GemmConfig Conf, bool InitZero>
+    template <micro_kernels::gemm::KernelConfig Conf, bool InitZero>
     static void gemm_TT(view<const type, Abi> A, view<const type, Abi> B, view<type, Abi> C) {
         batmat::linalg::gemm<type, Abi, Conf>(A.transposed(), B.transposed(), C, InitZero);
     }
