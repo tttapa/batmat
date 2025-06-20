@@ -1,5 +1,5 @@
 find_package(benchmark REQUIRED)
 
 # TODO: port benchmarks
-add_executable(benchmarks "benchmark-main.cpp")
-target_link_libraries(benchmarks PRIVATE batmat::batmat batmat::warnings benchmark::benchmark)
+add_executable(benchmark-gemm "gemm.cpp" "benchmark-main.cpp")
+target_link_libraries(benchmark-gemm PRIVATE batmat::linalg batmat::warnings benchmark::benchmark -static-libstdc++ -static-libgcc)
