@@ -1,4 +1,0 @@
-#include <koqkatoo-version.h>
-
-const char *const koqkatoo_build_time = "@KOQKATOO_BUILD_TIME@";
-const char *const koqkatoo_commit_hash = "@KOQKATOO_COMMIT_HASH@";

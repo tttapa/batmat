@@ -1,0 +1,78 @@
+#ifdef __clang__
+#pragma clang fp contract(fast)
+#endif
+
+#include <batmat/linalg/micro-kernels/gemm.tpp>
+
+namespace batmat::linalg::micro_kernels::gemm {
+
+// clang-format off
+using Abi   = std::experimental::simd_abi::@simd_abi@;
+using DType = @DType@;
+// clang-format on
+
+#define BATMAT_INST_LUT(...) template const constinit decltype(__VA_ARGS__) __VA_ARGS__
+#define BATMAT_INST_ALL_IMPL(Conf)                                                                 \
+    BATMAT_INST_LUT(gemm_lut<DType, Abi, Conf>);                                                   \
+    BATMAT_INST_LUT(gemm_copy_lut<DType, Abi, Conf>);                                              \
+    template void gemm_register<DType, Abi, Conf>(                                                 \
+        view<const DType, Abi, (Conf).order_A> A, view<const DType, Abi, (Conf).order_B> B,        \
+        view<DType, Abi, (Conf).order_C> C, bool init_zero);                                       \
+    template void gemm_copy_register<DType, Abi, Conf>(                                            \
+        view<const DType, Abi, (Conf).order_A> A, view<const DType, Abi, (Conf).order_B> B,        \
+        view<const DType, Abi, (Conf).order_C> C, view<DType, Abi, (Conf).order_D> D);
+#define BATMAT_INST_ALL_IMPL_NAME(Conf, ...)                                                       \
+    static constexpr KernelConfig Conf __VA_ARGS__;                                                \
+    BATMAT_INST_ALL_IMPL(Conf)
+#define BATMAT_INST_ALL(...) BATMAT_INST_ALL_IMPL_NAME(GUANAQO_CAT(Conf, __COUNTER__), __VA_ARGS__)
+
+BATMAT_INST_ALL({.negate  = false,
+                 .order_A = StorageOrder::ColMajor,
+                 .order_B = StorageOrder::ColMajor,
+                 .order_C = StorageOrder::ColMajor});
+BATMAT_INST_ALL({.negate  = true,
+                 .order_A = StorageOrder::ColMajor,
+                 .order_B = StorageOrder::ColMajor,
+                 .order_C = StorageOrder::ColMajor});
+BATMAT_INST_ALL({.negate  = false,
+                 .order_A = StorageOrder::RowMajor,
+                 .order_B = StorageOrder::RowMajor,
+                 .order_C = StorageOrder::ColMajor});
+BATMAT_INST_ALL({.negate  = true,
+                 .order_A = StorageOrder::RowMajor,
+                 .order_B = StorageOrder::RowMajor,
+                 .order_C = StorageOrder::ColMajor});
+BATMAT_INST_ALL({.negate  = false,
+                 .order_A = StorageOrder::ColMajor,
+                 .order_B = StorageOrder::RowMajor,
+                 .order_C = StorageOrder::ColMajor});
+BATMAT_INST_ALL({.negate  = true,
+                 .order_A = StorageOrder::ColMajor,
+                 .order_B = StorageOrder::RowMajor,
+                 .order_C = StorageOrder::ColMajor});
+BATMAT_INST_ALL({.negate  = false,
+                 .order_A = StorageOrder::ColMajor,
+                 .order_B = StorageOrder::ColMajor,
+                 .order_C = StorageOrder::RowMajor});
+BATMAT_INST_ALL({.negate  = true,
+                 .order_A = StorageOrder::ColMajor,
+                 .order_B = StorageOrder::ColMajor,
+                 .order_C = StorageOrder::RowMajor});
+BATMAT_INST_ALL({.negate  = false,
+                 .order_A = StorageOrder::RowMajor,
+                 .order_B = StorageOrder::RowMajor,
+                 .order_C = StorageOrder::RowMajor});
+BATMAT_INST_ALL({.negate  = true,
+                 .order_A = StorageOrder::RowMajor,
+                 .order_B = StorageOrder::RowMajor,
+                 .order_C = StorageOrder::RowMajor});
+BATMAT_INST_ALL({.negate  = false,
+                 .order_A = StorageOrder::ColMajor,
+                 .order_B = StorageOrder::RowMajor,
+                 .order_C = StorageOrder::RowMajor});
+BATMAT_INST_ALL({.negate  = true,
+                 .order_A = StorageOrder::ColMajor,
+                 .order_B = StorageOrder::RowMajor,
+                 .order_C = StorageOrder::RowMajor});
+
+} // namespace batmat::linalg::micro_kernels::gemm

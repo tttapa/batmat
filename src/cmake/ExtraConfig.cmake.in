@@ -3,6 +3,6 @@
 include(CMakeFindDependencyMacro)
 
 find_dependency(Eigen3)
-include("${CMAKE_CURRENT_LIST_DIR}/koqkatooExtraTargets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/batmatExtraTargets.cmake")
 
-check_required_components(koqkatooExtra)
+check_required_components(batmatExtra)
