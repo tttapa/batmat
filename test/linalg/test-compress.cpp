@@ -6,7 +6,7 @@
 #include <batmat/linalg/compress.hpp>
 #include <batmat/linalg/uview.hpp>
 
-TEST(Compact, compress) {
+TEST(linalg, compress) {
     using namespace batmat;
     using namespace batmat::linalg;
     const index_t ny            = 25;
