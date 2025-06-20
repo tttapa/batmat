@@ -54,6 +54,8 @@ struct simd_view_types {
 
 template <class T, class Abi, StorageOrder Order = StorageOrder::ColMajor>
 using view = simd_view_types<std::remove_const_t<T>, Abi>::template view<T, Order>;
+template <class T, class Abi, StorageOrder Order = StorageOrder::ColMajor>
+using matrix = simd_view_types<std::remove_const_t<T>, Abi>::template matrix<T, Order>;
 
 template <class Abi, StorageOrder Order = StorageOrder::ColMajor>
 using real_view = simd_view_types<real_t, Abi>::template view<const real_t, Order>;

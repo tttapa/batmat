@@ -14,6 +14,8 @@ endif()
 add_executable(tests
     "matrix/test-view.cpp"
     "linalg/test-compress.cpp"
+    "linalg/test-copy.cpp"
+    "linalg/test-gemm.cpp"
 )
 target_compile_definitions(tests PRIVATE
     $<$<BOOL:${BATMAT_EXTENSIVE_TESTS}>:BATMAT_EXTENSIVE_TESTS>)

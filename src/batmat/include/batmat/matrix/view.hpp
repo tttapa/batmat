@@ -182,28 +182,35 @@ struct View {
         };
     }
     [[nodiscard]] std::default_sentinel_t end() const { return {}; }
-    [[nodiscard]] index_type size() const { return layout.size(); }
-    [[nodiscard]] index_type padded_size() const { return layout.padded_size(); }
 
-    [[nodiscard, gnu::always_inline]] depth_type depth() const { return layout.depth; }
-    [[nodiscard, gnu::always_inline]] index_type ceil_depth() const { return layout.ceil_depth(); }
-    [[nodiscard, gnu::always_inline]] index_type num_batches() const {
+    [[nodiscard]] constexpr index_type size() const { return layout.size(); }
+    [[nodiscard]] constexpr index_type padded_size() const { return layout.padded_size(); }
+
+    [[nodiscard, gnu::always_inline]] constexpr depth_type depth() const { return layout.depth; }
+    [[nodiscard, gnu::always_inline]] constexpr index_type ceil_depth() const {
+        return layout.ceil_depth();
+    }
+    [[nodiscard, gnu::always_inline]] constexpr index_type num_batches() const {
         return layout.num_batches();
     }
-    [[nodiscard, gnu::always_inline]] index_type rows() const { return layout.rows; }
-    [[nodiscard, gnu::always_inline]] index_type cols() const { return layout.cols; }
-    [[nodiscard, gnu::always_inline]] index_type outer_stride() const {
+    [[nodiscard, gnu::always_inline]] constexpr index_type rows() const { return layout.rows; }
+    [[nodiscard, gnu::always_inline]] constexpr index_type cols() const { return layout.cols; }
+    [[nodiscard, gnu::always_inline]] constexpr index_type outer_stride() const {
         return layout.outer_stride;
     }
-    [[nodiscard, gnu::always_inline]] index_type outer_size() const { return layout.outer_size(); }
-    [[nodiscard, gnu::always_inline]] index_type inner_size() const { return layout.inner_size(); }
-    [[nodiscard, gnu::always_inline]] batch_size_type batch_size() const {
+    [[nodiscard, gnu::always_inline]] constexpr index_type outer_size() const {
+        return layout.outer_size();
+    }
+    [[nodiscard, gnu::always_inline]] constexpr index_type inner_size() const {
+        return layout.inner_size();
+    }
+    [[nodiscard, gnu::always_inline]] constexpr batch_size_type batch_size() const {
         return layout.batch_size;
     }
-    [[nodiscard, gnu::always_inline]] index_type layer_stride() const {
+    [[nodiscard, gnu::always_inline]] constexpr index_type layer_stride() const {
         return layout.get_layer_stride();
     }
-    [[nodiscard, gnu::always_inline]] bool has_full_layer_stride() const {
+    [[nodiscard, gnu::always_inline]] constexpr bool has_full_layer_stride() const {
         return layout.has_full_layer_stride();
     }
 
@@ -358,7 +365,7 @@ struct View {
         }
     }
 
-    void copy_values(auto &other) const {
+    void copy_values(const auto &other) const {
         static_assert(this->is_row_major == other.is_row_major);
         assert(other.rows() == this->rows());
         assert(other.cols() == this->cols());

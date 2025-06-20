@@ -113,9 +113,8 @@ struct Layout {
     }
 
     template <class T>
-        requires is_column_major
-    [[nodiscard]] guanaqo::MatrixView<T, I, standard_stride_type> operator()(T *data,
-                                                                             index_type l) const {
+    [[nodiscard]] guanaqo::MatrixView<T, I, standard_stride_type, storage_order>
+    operator()(T *data, index_type l) const {
         return {{.data         = data + layer_index(l),
                  .rows         = rows,
                  .cols         = cols,
