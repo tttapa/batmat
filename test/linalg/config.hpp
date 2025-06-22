@@ -9,7 +9,7 @@ namespace batmat::tests {
 
 namespace stdx = std::experimental;
 
-#if KOQKATOO_EXTENSIVE_TESTS
+#if BATMAT_EXTENSIVE_TESTS
 
 using Abis = ::testing::Types<stdx::simd_abi::scalar,              //
                               stdx::simd_abi::deduce_t<real_t, 2>, //
