@@ -33,22 +33,27 @@ class GemmTest : public ::testing::Test {
 
     template <micro_kernels::gemm::KernelConfig Conf, bool InitZero>
     static void gemm_NN(view<const type, Abi> A, view<const type, Abi> B, view<type, Abi> C) {
-        batmat::linalg::gemm<type, Abi, Conf>(A, B, C, InitZero);
+        batmat::linalg::gemm<type, Abi, Conf>(
+            A, B, InitZero ? std::nullopt : std::make_optional(C.as_const()), C);
     }
 
     template <micro_kernels::gemm::KernelConfig Conf, bool InitZero>
     static void gemm_TN(view<const type, Abi> A, view<const type, Abi> B, view<type, Abi> C) {
-        batmat::linalg::gemm<type, Abi, Conf>(A.transposed(), B, C, InitZero);
+        batmat::linalg::gemm<type, Abi, Conf>(
+            A.transposed(), B, InitZero ? std::nullopt : std::make_optional(C.as_const()), C);
     }
 
     template <micro_kernels::gemm::KernelConfig Conf, bool InitZero>
     static void gemm_NT(view<const type, Abi> A, view<const type, Abi> B, view<type, Abi> C) {
-        batmat::linalg::gemm<type, Abi, Conf>(A, B.transposed(), C, InitZero);
+        batmat::linalg::gemm<type, Abi, Conf>(
+            A, B.transposed(), InitZero ? std::nullopt : std::make_optional(C.as_const()), C);
     }
 
     template <micro_kernels::gemm::KernelConfig Conf, bool InitZero>
     static void gemm_TT(view<const type, Abi> A, view<const type, Abi> B, view<type, Abi> C) {
-        batmat::linalg::gemm<type, Abi, Conf>(A.transposed(), B.transposed(), C, InitZero);
+        batmat::linalg::gemm<type, Abi, Conf>(
+            A.transposed(), B.transposed(),
+            InitZero ? std::nullopt : std::make_optional(C.as_const()), C);
     }
 
     void RunTest(index_t n, func_t func, naive_func_t naive_func) {

@@ -7,6 +7,7 @@
 #include <batmat/loop.hpp>
 #include <batmat/matrix/storage.hpp>
 #include <guanaqo/trace.hpp>
+#include <optional>
 
 namespace batmat::linalg {
 
@@ -20,9 +21,9 @@ struct TilingOptions {
 };
 
 template <class T, class Abi, micro_kernels::gemm::KernelConfig Conf, StorageOrder OA,
-          StorageOrder OB, StorageOrder OC>
-void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B, view<T, Abi, OC> C, bool init_zero,
-          TilingOptions packing = {}) {
+          StorageOrder OB, StorageOrder OC, StorageOrder OD>
+void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
+          std::optional<view<const T, Abi, OC>> C, view<T, Abi, OD> D, TilingOptions packing = {}) {
     GUANAQO_TRACE("gemm", 0, A.rows() * A.cols() * B.cols() * A.depth());
     static constexpr micro_kernels::gemm::KernelConfig conf{
         .negate  = Conf.negate,
@@ -31,10 +32,12 @@ void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B, view<T, Abi, OC> C
         .shift_C = Conf.shift_C,
         .shift_D = Conf.shift_D,
     };
-    assert(A.rows() == C.rows());
-    assert(A.cols() == B.rows());
-    assert(B.cols() == C.cols());
-    const index_t M = C.rows(), N = C.cols(), K = A.cols();
+    BATMAT_ASSERT(!C || C->rows() == D.rows());
+    BATMAT_ASSERT(!C || C->cols() == D.cols());
+    BATMAT_ASSERT(A.rows() == D.rows());
+    BATMAT_ASSERT(A.cols() == B.rows());
+    BATMAT_ASSERT(B.cols() == D.cols());
+    const index_t M = D.rows(), N = D.cols(), K = A.cols();
     if (M == 0 || N == 0 || K == 0) [[unlikely]]
         return;
     // TODO: cache blocking
@@ -56,7 +59,7 @@ void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B, view<T, Abi, OC> C
     const index_t N_cache = packing.n_c ? packing.n_c : N_cache_default;
 
     if ((M <= M_cache && N <= N_cache && K <= K_cache) || packing.no_tiling) [[likely]]
-        return micro_kernels::gemm::gemm_register<T, Abi, conf>(A, B, C, init_zero);
+        return micro_kernels::gemm::gemm_copy_register<T, Abi, conf>(A, B, C, D);
 
     using sto_t               = batmat::matrix::aligned_simd_storage<T, simd_align>;
     const index_t B_pack_size = B.ceil_depth() * K_cache * N_cache;
@@ -181,7 +184,7 @@ void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B, view<T, Abi, OC> C
         });
     }
 #else
-    using micro_kernels::gemm::gemm_register;
+    using micro_kernels::gemm::gemm_copy_register;
     foreach_chunked_merged(0, N, N_cache, [&](index_t j_c, index_t n_c) {
         foreach_chunked_merged(0, K, K_cache, [&](index_t p_c, index_t k_c) {
             auto Bkj = B.block(p_c, j_c, k_c, n_c);
@@ -189,29 +192,31 @@ void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B, view<T, Abi, OC> C
                 Bkj_pack.reassign({{.data = B_pack.data(), .rows = k_c, .cols = n_c}});
                 copy<T, Abi>(Bkj, Bkj_pack);
                 foreach_chunked_merged(0, M, M_cache, [&](index_t i_c, index_t m_c) {
-                    auto Cij = C.block(i_c, j_c, m_c, n_c);
+                    auto Cij = C ? std::make_optional(C->block(i_c, j_c, m_c, n_c)) : std::nullopt;
+                    auto Dij = D.block(i_c, j_c, m_c, n_c);
                     auto Aik = A.block(i_c, p_c, m_c, k_c);
                     if (pack_A) {
                         Aik_pack.reassign({{.data = A_pack.data(), .rows = m_c, .cols = k_c}});
                         copy<T, Abi>(Aik, Aik_pack);
-                        gemm_register<T, Abi, conf>(Aik_pack.as_const(), Bkj_pack.as_const(), Cij,
-                                                    init_zero && p_c == 0);
+                        gemm_copy_register<T, Abi, conf>(Aik_pack.as_const(), Bkj_pack.as_const(),
+                                                         p_c == 0 ? Cij : Dij, Dij);
                     } else {
-                        gemm_register<T, Abi, conf>(Aik, Bkj_pack.as_const(), Cij,
-                                                    init_zero && p_c == 0);
+                        gemm_copy_register<T, Abi, conf>(Aik, Bkj_pack.as_const(),
+                                                         p_c == 0 ? Cij : Dij, Dij);
                     }
                 });
             } else {
-                foreach_chunked_merged(0, M, M_cache, [&](index_t i_cache, index_t m_cache) {
-                    auto Cij = C.block(i_cache, j_c, m_cache, n_c);
-                    auto Aik = A.block(i_cache, p_c, m_cache, k_c);
+                foreach_chunked_merged(0, M, M_cache, [&](index_t i_c, index_t m_c) {
+                    auto Cij = C ? std::make_optional(C->block(i_c, j_c, m_c, n_c)) : std::nullopt;
+                    auto Dij = D.block(i_c, j_c, m_c, n_c);
+                    auto Aik = A.block(i_c, p_c, m_c, k_c);
                     if (pack_A) {
-                        Aik_pack.reassign({{.data = A_pack.data(), .rows = m_cache, .cols = k_c}});
+                        Aik_pack.reassign({{.data = A_pack.data(), .rows = m_c, .cols = k_c}});
                         copy<T, Abi>(Aik, Aik_pack);
-                        gemm_register<T, Abi, conf>(Aik_pack.as_const(), Bkj, Cij,
-                                                    init_zero && p_c == 0);
+                        gemm_copy_register<T, Abi, conf>(Aik_pack.as_const(), Bkj,
+                                                         p_c == 0 ? Cij : Dij, Dij);
                     } else {
-                        gemm_register<T, Abi, conf>(Aik, Bkj, Cij, init_zero && p_c == 0);
+                        gemm_copy_register<T, Abi, conf>(Aik, Bkj, p_c == 0 ? Cij : Dij, Dij);
                     }
                 });
             }

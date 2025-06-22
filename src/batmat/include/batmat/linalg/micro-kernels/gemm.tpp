@@ -9,45 +9,6 @@
 
 namespace batmat::linalg::micro_kernels::gemm {
 
-/// Generalized matrix multiplication C = C ± A⁽ᵀ⁾ B⁽ᵀ⁾. Single register block.
-template <class T, class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg, StorageOrder OA,
-          StorageOrder OB, StorageOrder OC>
-[[gnu::hot, gnu::flatten]] void
-gemm_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi, OB> B,
-                 const uview<T, Abi, OC> C, const index_t k, bool init_zero) noexcept {
-    using namespace ops;
-    using simd = stdx::simd<T, Abi>;
-    // The following assumption ensures that there is no unnecessary branch
-    // for k == 0 in between the loops. This is crucial for good code
-    // generation, otherwise the compiler inserts jumps and labels between
-    // the matmul kernel and the loading/storing of C, which will cause it to
-    // place C_reg on the stack, resulting in many unnecessary loads and stores.
-    BATMAT_ASSUME(k > 0);
-    // Pre-compute the offsets of the columns of C
-    auto C_cached = with_cached_access<RowsReg, ColsReg>(C);
-    // Load accumulator into registers
-    simd C_reg[RowsReg][ColsReg]{}; // NOLINT(*-c-arrays)
-    if (!init_zero) [[likely]]
-        UNROLL_FOR (index_t jj = 0; jj < ColsReg; ++jj)
-            UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
-                C_reg[ii][jj] = rotl<Conf.shift_C>(C_cached.load(ii, jj));
-    // Actual matrix multiplication kernel
-    for (index_t l = 0; l < k; ++l) {
-        UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
-            simd Ail = shiftl<Conf.shift_A>(A.load(ii, l));
-            UNROLL_FOR (index_t jj = 0; jj < ColsReg; ++jj) {
-                simd &Cij = C_reg[ii][jj];
-                simd Blj  = shiftl<Conf.shift_B>(B.load(l, jj));
-                Conf.negate ? (Cij -= Ail * Blj) : (Cij += Ail * Blj);
-            }
-        }
-    }
-    // Store accumulator to memory again
-    UNROLL_FOR (index_t jj = 0; jj < ColsReg; ++jj)
-        UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
-            C_cached.template store<Conf.shift_D>(rotr<Conf.shift_D>(C_reg[ii][jj]), ii, jj);
-}
-
 template <MatrixStructure Struc>
 inline constexpr auto first_column =
     [](index_t row_index) { return Struc == MatrixStructure::UpperTriangular ? row_index : 0; };
@@ -198,35 +159,6 @@ gemm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
             D_cached.template store<Conf.shift_D>(rotr<Conf.shift_D>(C_reg[ii][jj]), ii, jj);
 }
 
-/// Generalized matrix multiplication C = C ± A⁽ᵀ⁾ B⁽ᵀ⁾. Using register blocking.
-template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OB, StorageOrder OC>
-void gemm_register(const view<const T, Abi, OA> A, const view<const T, Abi, OB> B,
-                   const view<T, Abi, OC> C, const bool init_zero) noexcept {
-    constexpr auto Rows = RowsReg<T, Abi>, Cols = ColsReg<T, Abi>;
-    const index_t I = C.rows(), J = C.cols(), K = A.cols();
-    BATMAT_ASSUME(I > 0);
-    BATMAT_ASSUME(J > 0);
-    BATMAT_ASSUME(K > 0);
-    static const auto microkernel    = gemm_lut<T, Abi, Conf, OA, OB, OC>;
-    const uview<const T, Abi, OA> A_ = A;
-    const uview<const T, Abi, OB> B_ = B;
-    const uview<T, Abi, OC> C_       = C;
-    // Optimization for very small matrices
-    if (I <= Rows && J <= Cols)
-        return microkernel[I - 1][J - 1](A_, B_, C_, K, init_zero);
-    // Simply loop over all blocks in the given matrices.
-    for (index_t j = 0; j < J; j += Cols) {
-        const auto nj = std::min<index_t>(Cols, J - j);
-        const auto Bj = B_.middle_cols(j);
-        for (index_t i = 0; i < I; i += Rows) {
-            const index_t ni = std::min<index_t>(Rows, I - i);
-            const auto Ai    = A_.middle_rows(i);
-            const auto Cij   = C_.block(i, j);
-            microkernel[ni - 1][nj - 1](Ai, Bj, Cij, K, init_zero);
-        }
-    }
-}
-
 /// Generalized matrix multiplication D = C ± A⁽ᵀ⁾ B⁽ᵀ⁾. Using register blocking.
 template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OB, StorageOrder OC,
           StorageOrder OD>
@@ -235,6 +167,7 @@ void gemm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi,
                         const view<T, Abi, OD> D) noexcept {
     using enum MatrixStructure;
     constexpr auto Rows = RowsReg<T, Abi>, Cols = ColsReg<T, Abi>;
+    // Check dimensions
     const index_t I = D.rows(), J = D.cols(), K = A.cols();
     BATMAT_ASSUME(A.rows() == I);
     BATMAT_ASSUME(B.rows() == K);
@@ -248,6 +181,7 @@ void gemm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi,
     BATMAT_ASSUME(I > 0);
     BATMAT_ASSUME(J > 0);
     BATMAT_ASSUME(K > 0);
+    // Configurations for the various micro-kernels
     constexpr KernelConfig ConfGXG{.negate  = Conf.negate,
                                    .shift_A = Conf.shift_A,
                                    .shift_B = Conf.shift_B,
@@ -276,13 +210,16 @@ void gemm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi,
     static const auto microkernel_GXG = gemm_copy_lut<T, Abi, ConfGXG, OA, OB, OC, OD>;
     static const auto microkernel_XGG = gemm_copy_lut<T, Abi, ConfXGG, OA, OB, OC, OD>;
     static const auto microkernel_XXG = gemm_copy_lut<T, Abi, ConfXXG, OA, OB, OC, OD>;
-    const uview<const T, Abi, OA> A_  = A;
-    const uview<const T, Abi, OB> B_  = B;
+    // Sizeless views to partition and pass to the micro-kernels
+    const uview<const T, Abi, OA> A_                = A;
+    const uview<const T, Abi, OB> B_                = B;
     const std::optional<uview<const T, Abi, OC>> C_ = C;
     const uview<T, Abi, OD> D_                      = D;
+
     // Optimization for very small matrices
     if (I <= Rows && J <= Cols)
         return microkernel[I - 1][J - 1](A_, B_, C_, D_, K);
+
     // Simply loop over all blocks in the given matrices.
     for (index_t j = 0; j < J; j += Cols) {
         const auto nj = std::min<index_t>(Cols, J - j);

@@ -36,10 +36,19 @@ void dgemm(benchmark::State &state) {
     std::ranges::generate(A, [&] { return nrml(rng); });
     std::ranges::generate(B, [&] { return nrml(rng); });
     std::ranges::generate(C, [&] { return nrml(rng); });
-    for (auto _ : state)
-        for (index_t l = 0; l < A.num_batches(); ++l)
-            gemm<real_t, Abi, {}>(A.batch(l).as_const(), B.batch(l).as_const(), C.batch(l), true,
-                                  {!Tiling, PA, PB});
+    if constexpr (Tiling) {
+        for (auto _ : state)
+            for (index_t l = 0; l < A.num_batches(); ++l)
+                gemm<real_t, Abi, {}>(A.batch(l).as_const(), B.batch(l).as_const(),
+                                      std::optional<view<const real_t, Abi>>{}, C.batch(l),
+                                      {!Tiling, PA, PB});
+    } else {
+        for (auto _ : state)
+            for (index_t l = 0; l < A.num_batches(); ++l)
+                micro_kernels::gemm::gemm_copy_register<real_t, Abi, {}>(
+                    A.batch(l).as_const(), B.batch(l).as_const(),
+                    std::optional<view<const real_t, Abi>>{}, C.batch(l));
+    }
     const auto nd = static_cast<double>(n), dd = static_cast<double>(d);
     auto flop_cnt                 = dd * std::pow(nd, 3);
     state.counters["GFLOP count"] = {1e-9 * flop_cnt};
