@@ -16,13 +16,13 @@ template <class Abi>
 class GemmTest : public ::testing::Test {
   protected:
     using type          = real_t;
-    using types         = simd_view_types<type, Abi>;
     using abi_t         = Abi;
+    using types         = simd_view_types<type, abi_t>;
     using simd          = stdx::simd<type, abi_t>;
     using simd_stride_t = stdx::simd_size<type, abi_t>;
-    using Mat           = batmat::linalg::matrix<type, Abi>;
-    using View          = batmat::linalg::view<const type, Abi>;
-    using MutView       = batmat::linalg::view<type, Abi>;
+    using Mat           = batmat::linalg::matrix<type, abi_t>;
+    using View          = batmat::linalg::view<const type, abi_t>;
+    using MutView       = batmat::linalg::view<type, abi_t>;
     using func_t        = void(View, View, MutView);
     using naive_func_t  = std::function<void(View, View, MutView)>;
 
@@ -32,26 +32,26 @@ class GemmTest : public ::testing::Test {
     std::normal_distribution<type> nrml{0, 1};
 
     template <micro_kernels::gemm::KernelConfig Conf, bool InitZero>
-    static void gemm_NN(view<const type, Abi> A, view<const type, Abi> B, view<type, Abi> C) {
-        batmat::linalg::gemm<type, Abi, Conf>(
+    static void gemm_NN(view<const type, abi_t> A, view<const type, abi_t> B, view<type, abi_t> C) {
+        batmat::linalg::detail::gemm<type, abi_t, Conf>(
             A, B, InitZero ? std::nullopt : std::make_optional(C.as_const()), C);
     }
 
     template <micro_kernels::gemm::KernelConfig Conf, bool InitZero>
-    static void gemm_TN(view<const type, Abi> A, view<const type, Abi> B, view<type, Abi> C) {
-        batmat::linalg::gemm<type, Abi, Conf>(
+    static void gemm_TN(view<const type, abi_t> A, view<const type, abi_t> B, view<type, abi_t> C) {
+        batmat::linalg::detail::gemm<type, abi_t, Conf>(
             A.transposed(), B, InitZero ? std::nullopt : std::make_optional(C.as_const()), C);
     }
 
     template <micro_kernels::gemm::KernelConfig Conf, bool InitZero>
-    static void gemm_NT(view<const type, Abi> A, view<const type, Abi> B, view<type, Abi> C) {
-        batmat::linalg::gemm<type, Abi, Conf>(
+    static void gemm_NT(view<const type, abi_t> A, view<const type, abi_t> B, view<type, abi_t> C) {
+        batmat::linalg::detail::gemm<type, abi_t, Conf>(
             A, B.transposed(), InitZero ? std::nullopt : std::make_optional(C.as_const()), C);
     }
 
     template <micro_kernels::gemm::KernelConfig Conf, bool InitZero>
-    static void gemm_TT(view<const type, Abi> A, view<const type, Abi> B, view<type, Abi> C) {
-        batmat::linalg::gemm<type, Abi, Conf>(
+    static void gemm_TT(view<const type, abi_t> A, view<const type, abi_t> B, view<type, abi_t> C) {
+        batmat::linalg::detail::gemm<type, abi_t, Conf>(
             A.transposed(), B.transposed(),
             InitZero ? std::nullopt : std::make_optional(C.as_const()), C);
     }

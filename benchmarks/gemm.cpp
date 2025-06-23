@@ -39,9 +39,7 @@ void dgemm(benchmark::State &state) {
     if constexpr (Tiling) {
         for (auto _ : state)
             for (index_t l = 0; l < A.num_batches(); ++l)
-                gemm<real_t, Abi, {}>(A.batch(l).as_const(), B.batch(l).as_const(),
-                                      std::optional<view<const real_t, Abi>>{}, C.batch(l),
-                                      {!Tiling, PA, PB});
+                gemm(A.batch(l), B.batch(l), C.batch(l), {!Tiling, PA, PB});
     } else {
         for (auto _ : state)
             for (index_t l = 0; l < A.num_batches(); ++l)

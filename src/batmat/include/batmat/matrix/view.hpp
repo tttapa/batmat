@@ -6,6 +6,18 @@
 
 namespace batmat::matrix {
 
+/// @tparam T
+///         Element value type (possibly const-qualified).
+/// @tparam I
+///         Index and size type.
+/// @tparam S
+///         Inner stride type (batch size).
+/// @tparam D
+///         Batch depth type.
+/// @tparam L
+///         Layer stride type.
+/// @tparam O
+///         Storage order (column or row major).
 template <class T, class I = ptrdiff_t, class S = std::integral_constant<I, 1>, class D = I,
           class L = DefaultStride, StorageOrder O = StorageOrder::ColMajor>
 struct View {

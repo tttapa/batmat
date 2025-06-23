@@ -3,6 +3,7 @@
 #include <batmat/matrix/storage.hpp>
 #include <batmat/matrix/view.hpp>
 
+#include <type_traits>
 #include <utility>
 
 namespace batmat::matrix {
@@ -23,10 +24,25 @@ struct default_alignment<T, I, Stride> {
 template <class T, class I, class Stride>
 using default_alignment_t = typename default_alignment<T, I, Stride>::type;
 
+static_assert(default_alignment_t<double, int, std::integral_constant<int, 4>>::value == 8 * 4);
+static_assert(default_alignment_t<double, int, int>::value == 0);
+
 } // namespace detail
 
+/// @tparam T
+///         Element value type.
+/// @tparam I
+///         Index type.
+/// @tparam S
+///         Inner stride (batch size).
+/// @tparam D
+///         Depth type.
+/// @tparam A
+///         Batch alignment type.
+/// @tparam O
+///         Storage order (column or row major).
 template <class T, class I = ptrdiff_t, class S = std::integral_constant<I, 1>, class D = I,
-          class A = detail::default_alignment_t<T, I, S>, StorageOrder O = StorageOrder::ColMajor>
+          StorageOrder O = StorageOrder::ColMajor, class A = detail::default_alignment_t<T, I, S>>
 struct Matrix {
     static_assert(!std::is_const_v<T>);
     using view_type            = View<T, I, S, D, DefaultStride, O>;
@@ -43,20 +59,24 @@ struct Matrix {
   private:
     view_type view_;
 
-    static constexpr alignment_type default_alignment(layout_type layout) {
+    static constexpr auto default_alignment(layout_type layout) {
         if constexpr (alignment_type{} == 0)
-            return alignof(T) * layout.batch_size;
+            return alignof(T) * static_cast<size_t>(layout.batch_size);
         else
-            return {};
+            return alignment_type{};
     }
     [[nodiscard]] static auto allocate(layout_type layout) {
         const auto alignment = default_alignment(layout);
         return make_aligned_unique_ptr<T>(layout.padded_size(), alignment);
     }
+    [[nodiscard]] static auto allocate(layout_type layout, uninitialized_t init) {
+        const auto alignment = default_alignment(layout);
+        return make_aligned_unique_ptr<T>(layout.padded_size(), alignment, init);
+    }
     void clear() {
         const auto alignment = default_alignment(view_.layout);
         if (auto d = std::exchange(view_.data, nullptr))
-            aligned_deleter<T>(view_.layout.padded_size(), alignment)(d);
+            aligned_deleter<T, decltype(alignment)>(view_.layout.padded_size(), alignment)(d);
         view_.layout.rows = 0;
     }
 
@@ -78,7 +98,10 @@ struct Matrix {
 
     Matrix() = default;
     Matrix(layout_type layout) : view_{allocate(layout).release(), layout} {}
+    Matrix(layout_type layout, uninitialized_t init)
+        : view_{allocate(layout, init).release(), layout} {}
     Matrix(plain_layout_type p) : Matrix{layout_type{p}} {}
+    Matrix(plain_layout_type p, uninitialized_t init) : Matrix{layout_type{p}, init} {}
 
     Matrix(const Matrix &o) : Matrix{o.layout()} {
         this->view().copy_values(o.view()); // TODO: exception safety

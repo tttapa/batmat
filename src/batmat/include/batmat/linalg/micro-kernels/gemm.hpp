@@ -13,8 +13,9 @@ struct KernelConfig {
     bool negate             = false;
     int shift_A             = 0;
     int shift_B             = 0;
-    int shift_C             = 0;
-    int shift_D             = shift_C;
+    int rotate_C            = 0;
+    int rotate_D            = rotate_C;
+    int mask_D              = rotate_D;
     MatrixStructure struc_A = MatrixStructure::General;
     MatrixStructure struc_B = MatrixStructure::General;
     MatrixStructure struc_C = MatrixStructure::General;

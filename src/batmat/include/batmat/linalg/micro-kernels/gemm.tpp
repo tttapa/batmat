@@ -51,7 +51,7 @@ gemm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
         const auto C_cached = with_cached_access<RowsReg, ColsReg>(*C);
         UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
             UNROLL_FOR (index_t jj = min_col(ii); jj <= max_col(ii); ++jj)
-                C_reg[ii][jj] = rotl<Conf.shift_C>(C_cached.load(ii, jj));
+                C_reg[ii][jj] = rotl<Conf.rotate_C>(C_cached.load(ii, jj));
     } else {
         UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
             UNROLL_FOR (index_t jj = min_col(ii); jj <= max_col(ii); ++jj)
@@ -157,7 +157,7 @@ gemm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
     // Store accumulator to memory again
     UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
         UNROLL_FOR (index_t jj = min_col(ii); jj <= max_col(ii); ++jj)
-            D_cached.template store<Conf.shift_D>(rotr<Conf.shift_D>(C_reg[ii][jj]), ii, jj);
+            D_cached.template store<Conf.mask_D>(rotr<Conf.rotate_D>(C_reg[ii][jj]), ii, jj);
 }
 
 /// Generalized matrix multiplication D = C ± A⁽ᵀ⁾ B⁽ᵀ⁾. Using register blocking.
@@ -183,30 +183,33 @@ void gemm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi,
     BATMAT_ASSUME(J > 0);
     BATMAT_ASSUME(K > 0);
     // Configurations for the various micro-kernels
-    constexpr KernelConfig ConfGXG{.negate  = Conf.negate,
-                                   .shift_A = Conf.shift_A,
-                                   .shift_B = Conf.shift_B,
-                                   .shift_C = Conf.shift_C,
-                                   .shift_D = Conf.shift_D,
-                                   .struc_A = General,
-                                   .struc_B = Conf.struc_B,
-                                   .struc_C = General};
-    constexpr KernelConfig ConfXGG{.negate  = Conf.negate,
-                                   .shift_A = Conf.shift_A,
-                                   .shift_B = Conf.shift_B,
-                                   .shift_C = Conf.shift_C,
-                                   .shift_D = Conf.shift_D,
-                                   .struc_A = Conf.struc_A,
-                                   .struc_B = General,
-                                   .struc_C = General};
-    constexpr KernelConfig ConfXXG{.negate  = Conf.negate,
-                                   .shift_A = Conf.shift_A,
-                                   .shift_B = Conf.shift_B,
-                                   .shift_C = Conf.shift_C,
-                                   .shift_D = Conf.shift_D,
-                                   .struc_A = Conf.struc_A,
-                                   .struc_B = Conf.struc_B,
-                                   .struc_C = General};
+    constexpr KernelConfig ConfGXG{.negate   = Conf.negate,
+                                   .shift_A  = Conf.shift_A,
+                                   .shift_B  = Conf.shift_B,
+                                   .rotate_C = Conf.rotate_C,
+                                   .rotate_D = Conf.rotate_D,
+                                   .mask_D   = Conf.mask_D,
+                                   .struc_A  = General,
+                                   .struc_B  = Conf.struc_B,
+                                   .struc_C  = General};
+    constexpr KernelConfig ConfXGG{.negate   = Conf.negate,
+                                   .shift_A  = Conf.shift_A,
+                                   .shift_B  = Conf.shift_B,
+                                   .rotate_C = Conf.rotate_C,
+                                   .rotate_D = Conf.rotate_D,
+                                   .mask_D   = Conf.mask_D,
+                                   .struc_A  = Conf.struc_A,
+                                   .struc_B  = General,
+                                   .struc_C  = General};
+    constexpr KernelConfig ConfXXG{.negate   = Conf.negate,
+                                   .shift_A  = Conf.shift_A,
+                                   .shift_B  = Conf.shift_B,
+                                   .rotate_C = Conf.rotate_C,
+                                   .rotate_D = Conf.rotate_D,
+                                   .mask_D   = Conf.mask_D,
+                                   .struc_A  = Conf.struc_A,
+                                   .struc_B  = Conf.struc_B,
+                                   .struc_C  = General};
     static const auto microkernel     = gemm_copy_lut<T, Abi, Conf, OA, OB, OC, OD>;
     static const auto microkernel_GXG = gemm_copy_lut<T, Abi, ConfGXG, OA, OB, OC, OD>;
     static const auto microkernel_XGG = gemm_copy_lut<T, Abi, ConfXGG, OA, OB, OC, OD>;

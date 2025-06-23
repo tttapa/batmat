@@ -30,7 +30,7 @@ struct simd_view_types {
     template <class S = T, StorageOrder O = StorageOrder::ColMajor>
     using view = matrix::View<S, index_t, simd_stride_t, simd_stride_t, matrix::DefaultStride, O>;
     template <class S = T, StorageOrder O = StorageOrder::ColMajor>
-    using matrix = matrix::Matrix<S, index_t, simd_stride_t, index_t, simd_align_t, O>;
+    using matrix = matrix::Matrix<S, index_t, simd_stride_t, index_t, O, simd_align_t>;
 
     static simd aligned_load(const T *p) noexcept { return simd{p, stdx::vector_aligned}; }
 
@@ -87,7 +87,7 @@ struct uview {
     [[gnu::always_inline]] void store(simd x, index_t r, index_t c) const noexcept
         requires(!std::is_const_v<T>)
     {
-        types::aligned_store(x, &operator()(r, c));
+        types::template aligned_store<MaskL>(x, &operator()(r, c));
     }
     template <class Self>
     [[gnu::always_inline]] Self block(this const Self &self, index_t r, index_t c) noexcept {
@@ -137,7 +137,7 @@ struct cached_uview {
     [[gnu::always_inline]] void store(simd x, index_t r, index_t c) const noexcept
         requires(!std::is_const_v<T>)
     {
-        types::aligned_store(x, &operator()(r, c));
+        types::template aligned_store<MaskL>(x, &operator()(r, c));
     }
 
     template <index_t... Is>

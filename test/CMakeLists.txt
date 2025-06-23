@@ -12,10 +12,12 @@ if (NOT TARGET batmat::batmat)
 endif()
 
 add_executable(tests
+    "ops/test-rotate.cpp"
     "matrix/test-view.cpp"
     "linalg/test-compress.cpp"
     "linalg/test-copy.cpp"
     "linalg/test-gemm.cpp"
+    "linalg/test-gemm-new.cpp"
     "linalg/test-trtrsyrk.cpp"
 )
 target_compile_definitions(tests PRIVATE

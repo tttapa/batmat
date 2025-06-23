@@ -35,6 +35,32 @@ extern const auto gemm_copy_register_inst_gemm =
             constexpr KernelConfig Conf{.negate = Neg};
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
+extern const auto gemm_copy_register_inst_gemm_sA =
+    guanaqo::make_lut<FalseTrue, ColRowMajor, ColRowMajor, ColRowMajor, 2>(
+        []<auto Neg, auto OA, auto OB, auto OC>(std::bool_constant<Neg>, CStorageOrder<OA>,
+                                                CStorageOrder<OB>, CStorageOrder<OC>,
+                                                auto S) -> const void * {
+            constexpr KernelConfig Conf{.negate = Neg, .shift_A = S ? 1 : -1};
+            return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
+        });
+extern const auto gemm_copy_register_inst_gemm_sB =
+    guanaqo::make_lut<FalseTrue, ColRowMajor, ColRowMajor, ColRowMajor, 2>(
+        []<auto Neg, auto OA, auto OB, auto OC>(std::bool_constant<Neg>, CStorageOrder<OA>,
+                                                CStorageOrder<OB>, CStorageOrder<OC>,
+                                                auto S) -> const void * {
+            constexpr KernelConfig Conf{.negate = Neg, .shift_B = S ? 1 : -1};
+            return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
+        });
+extern const auto gemm_copy_register_inst_gemm_sC =
+    guanaqo::make_lut<FalseTrue, ColRowMajor, ColRowMajor, ColRowMajor, 2, 2>(
+        []<auto Neg, auto OA, auto OB, auto OC>(std::bool_constant<Neg>, CStorageOrder<OA>,
+                                                CStorageOrder<OB>, CStorageOrder<OC>, auto S,
+                                                auto M) -> const void * {
+            constexpr int sC = S ? 1 : -1;
+            constexpr KernelConfig Conf{
+                .negate = Neg, .rotate_C = sC, .rotate_D = sC, .mask_D = M ? sC : 0};
+            return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
+        });
 extern const auto gemm_copy_register_inst_trmm_A =
     guanaqo::make_lut<FalseTrue, ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
         []<auto Neg, auto OA, auto OB, auto OC, auto SA>(std::bool_constant<Neg>, CStorageOrder<OA>,
