@@ -4,6 +4,7 @@
 #include <batmat/linalg/micro-kernels/gemm.hpp>
 #include <batmat/ops/rotate.hpp>
 #include "batmat/linalg/uview.hpp"
+#include "batmat/loop.hpp"
 
 #define UNROLL_FOR(...) BATMAT_FULLY_UNROLLED_FOR (__VA_ARGS__)
 
@@ -221,54 +222,62 @@ void gemm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi,
         return microkernel[I - 1][J - 1](A_, B_, C_, D_, K);
 
     // Simply loop over all blocks in the given matrices.
-    for (index_t j = 0; j < J; j += Cols) {
-        const auto nj = std::min<index_t>(Cols, J - j);
-        const auto Bj = B_.middle_cols(j);
-        const auto i0 = Conf.struc_C == LowerTriangular ? j : 0;
-        const auto i1 = Conf.struc_C == UpperTriangular ? j + nj : I;
-        for (index_t i = i0; i < i1; i += Rows) {
-            const index_t ni = std::min<index_t>(Rows, I - i);
-            const auto l0A   = Conf.struc_A == UpperTriangular ? i : 0;
-            const auto l1A   = Conf.struc_A == LowerTriangular ? i + ni + std::max(K, I) - I : K;
-            const auto l0B   = Conf.struc_B == LowerTriangular ? j : 0;
-            const auto l1B   = Conf.struc_B == UpperTriangular ? j + nj + std::max(K, J) - J : K;
-            const auto l0    = std::max(l0A, l0B);
-            const auto l1    = std::min(l1A, l1B);
-            const auto Ai    = A_.middle_rows(i);
-            const auto Cij   = C_ ? std::make_optional(C_->block(i, j)) : std::nullopt;
-            const auto Dij   = D_.block(i, j);
-            const auto Ail   = Ai.middle_cols(l0);
-            const auto Blj   = Bj.middle_rows(l0);
+    auto run = [&] [[gnu::always_inline]] (index_t i, index_t ni, index_t j, index_t nj) {
+        const auto Bj  = B_.middle_cols(j);
+        const auto l0A = Conf.struc_A == UpperTriangular ? i : 0;
+        const auto l1A = Conf.struc_A == LowerTriangular ? i + ni + std::max(K, I) - I : K;
+        const auto l0B = Conf.struc_B == LowerTriangular ? j : 0;
+        const auto l1B = Conf.struc_B == UpperTriangular ? j + nj + std::max(K, J) - J : K;
+        const auto l0  = std::max(l0A, l0B);
+        const auto l1  = std::min(l1A, l1B);
+        const auto Ai  = A_.middle_rows(i);
+        const auto Cij = C_ ? std::make_optional(C_->block(i, j)) : std::nullopt;
+        const auto Dij = D_.block(i, j);
+        const auto Ail = Ai.middle_cols(l0);
+        const auto Blj = Bj.middle_rows(l0);
 
-            if (l1 == l0)
-                continue;
-            if constexpr (Conf.struc_A == LowerTriangular && Conf.struc_B == UpperTriangular) {
-                if (l1A > l1B) {
-                    microkernel_GXG[ni - 1][nj - 1](Ail, Blj, Cij, Dij, l1 - l0);
-                    continue;
-                } else if (l1A < l1B) {
-                    microkernel_XGG[ni - 1][nj - 1](Ail, Blj, Cij, Dij, l1 - l0);
-                    continue;
-                }
+        if (l1 == l0)
+            return;
+        if constexpr (Conf.struc_A == LowerTriangular && Conf.struc_B == UpperTriangular) {
+            if (l1A > l1B) {
+                microkernel_GXG[ni - 1][nj - 1](Ail, Blj, Cij, Dij, l1 - l0);
+                return;
+            } else if (l1A < l1B) {
+                microkernel_XGG[ni - 1][nj - 1](Ail, Blj, Cij, Dij, l1 - l0);
+                return;
             }
-            if constexpr (Conf.struc_A == UpperTriangular && Conf.struc_B == LowerTriangular) {
-                if (l0A > l0B) {
-                    microkernel_XGG[ni - 1][nj - 1](Ail, Blj, Cij, Dij, l1 - l0);
-                    continue;
-                } else if (l0A < l0B) {
-                    microkernel_GXG[ni - 1][nj - 1](Ail, Blj, Cij, Dij, l1 - l0);
-                    continue;
-                }
-            }
-            if constexpr (Conf.struc_C != General) {
-                if (i != j) {
-                    microkernel_XXG[ni - 1][nj - 1](Ail, Blj, Cij, Dij, l1 - l0);
-                    continue;
-                }
-            }
-            microkernel[ni - 1][nj - 1](Ail, Blj, Cij, Dij, l1 - l0);
         }
-    }
+        if constexpr (Conf.struc_A == UpperTriangular && Conf.struc_B == LowerTriangular) {
+            if (l0A > l0B) {
+                microkernel_XGG[ni - 1][nj - 1](Ail, Blj, Cij, Dij, l1 - l0);
+                return;
+            } else if (l0A < l0B) {
+                microkernel_GXG[ni - 1][nj - 1](Ail, Blj, Cij, Dij, l1 - l0);
+                return;
+            }
+        }
+        if constexpr (Conf.struc_C != General) {
+            if (i != j) {
+                microkernel_XXG[ni - 1][nj - 1](Ail, Blj, Cij, Dij, l1 - l0);
+                return;
+            }
+        }
+        microkernel[ni - 1][nj - 1](Ail, Blj, Cij, Dij, l1 - l0);
+    };
+    // Pick loop directions that allow having A=D or B=D
+    constexpr auto dir_i = Conf.struc_A == LowerTriangular ? LoopDir::Backward : LoopDir::Forward,
+                   dir_j = Conf.struc_B == UpperTriangular ? LoopDir::Backward : LoopDir::Forward;
+    // Loop over block rows of A and block columns of B
+    foreach_chunked_merged(
+        0, J, index_constant<Cols>(),
+        [&](index_t j, auto nj) {
+            const auto i0 = Conf.struc_C == LowerTriangular ? j : 0,
+                       i1 = Conf.struc_C == UpperTriangular ? j + nj : I;
+            foreach_chunked_merged(
+                i0, i1, index_constant<Rows>(), [&](index_t i, auto ni) { run(i, ni, j, nj); },
+                dir_i);
+        },
+        dir_j);
 }
 
 } // namespace batmat::linalg::micro_kernels::gemm
