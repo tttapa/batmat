@@ -7,8 +7,9 @@
 namespace batmat::linalg::micro_kernels::gemm {
 
 // clang-format off
-using Abi   = std::experimental::simd_abi::@simd_abi@;
+using Abi   = std::experimental::simd_abi::@Abi@;
 using DType = @DType@;
+static constexpr bool Negate = @Negate@;
 // clang-format on
 
 using enum StorageOrder;
@@ -19,78 +20,73 @@ using CStorageOrder = std::integral_constant<StorageOrder, O>;
 template <MatrixStructure O>
 using CMatrixStructure = std::integral_constant<MatrixStructure, O>;
 
-constexpr std::array FalseTrue{false, true};
 constexpr std::array ColRowMajor{ColMajor, RowMajor};
-constexpr std::array Structures{General, LowerTriangular, UpperTriangular};
 constexpr std::array Triangular{LowerTriangular, UpperTriangular};
 
+namespace {
 template <auto V>
 const auto wrap = V;
+} // namespace
 
 extern const auto gemm_copy_register_inst_gemm =
-    guanaqo::make_lut<FalseTrue, ColRowMajor, ColRowMajor, ColRowMajor>(
-        []<auto Neg, auto OA, auto OB, auto OC>(std::bool_constant<Neg>, CStorageOrder<OA>,
-                                                CStorageOrder<OB>,
-                                                CStorageOrder<OC>) -> const void * {
-            constexpr KernelConfig Conf{.negate = Neg};
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor>(
+        []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>,
+                                      CStorageOrder<OC>) -> const void * {
+            constexpr KernelConfig Conf{.negate = Negate};
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
 extern const auto gemm_copy_register_inst_gemm_sA =
-    guanaqo::make_lut<FalseTrue, ColRowMajor, ColRowMajor, ColRowMajor, 2>(
-        []<auto Neg, auto OA, auto OB, auto OC>(std::bool_constant<Neg>, CStorageOrder<OA>,
-                                                CStorageOrder<OB>, CStorageOrder<OC>,
-                                                auto S) -> const void * {
-            constexpr KernelConfig Conf{.negate = Neg, .shift_A = S ? 1 : -1};
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, 2>(
+        []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>, CStorageOrder<OC>,
+                                      auto S) -> const void * {
+            constexpr KernelConfig Conf{.negate = Negate, .shift_A = S ? 1 : -1};
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
 extern const auto gemm_copy_register_inst_gemm_sB =
-    guanaqo::make_lut<FalseTrue, ColRowMajor, ColRowMajor, ColRowMajor, 2>(
-        []<auto Neg, auto OA, auto OB, auto OC>(std::bool_constant<Neg>, CStorageOrder<OA>,
-                                                CStorageOrder<OB>, CStorageOrder<OC>,
-                                                auto S) -> const void * {
-            constexpr KernelConfig Conf{.negate = Neg, .shift_B = S ? 1 : -1};
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, 2>(
+        []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>, CStorageOrder<OC>,
+                                      auto S) -> const void * {
+            constexpr KernelConfig Conf{.negate = Negate, .shift_B = S ? 1 : -1};
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
 extern const auto gemm_copy_register_inst_gemm_sC =
-    guanaqo::make_lut<FalseTrue, ColRowMajor, ColRowMajor, ColRowMajor, 2, 2>(
-        []<auto Neg, auto OA, auto OB, auto OC>(std::bool_constant<Neg>, CStorageOrder<OA>,
-                                                CStorageOrder<OB>, CStorageOrder<OC>, auto S,
-                                                auto M) -> const void * {
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, 2, 2>(
+        []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>, CStorageOrder<OC>,
+                                      auto S, auto M) -> const void * {
             constexpr int sC = S ? 1 : -1;
             constexpr KernelConfig Conf{
-                .negate = Neg, .rotate_C = sC, .rotate_D = sC, .mask_D = M ? sC : 0};
+                .negate = Negate, .rotate_C = sC, .rotate_D = sC, .mask_D = M ? sC : 0};
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
 extern const auto gemm_copy_register_inst_trmm_A =
-    guanaqo::make_lut<FalseTrue, ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
-        []<auto Neg, auto OA, auto OB, auto OC, auto SA>(std::bool_constant<Neg>, CStorageOrder<OA>,
-                                                         CStorageOrder<OB>, CStorageOrder<OC>,
-                                                         CMatrixStructure<SA>) -> const void * {
-            constexpr KernelConfig Conf{.negate = Neg, .struc_A = SA};
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
+        []<auto OA, auto OB, auto OC, auto SA>(CStorageOrder<OA>, CStorageOrder<OB>,
+                                               CStorageOrder<OC>,
+                                               CMatrixStructure<SA>) -> const void * {
+            constexpr KernelConfig Conf{.negate = Negate, .struc_A = SA};
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
 extern const auto gemm_copy_register_inst_trmm_B =
-    guanaqo::make_lut<FalseTrue, ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
-        []<auto Neg, auto OA, auto OB, auto OC, auto SB>(std::bool_constant<Neg>, CStorageOrder<OA>,
-                                                         CStorageOrder<OB>, CStorageOrder<OC>,
-                                                         CMatrixStructure<SB>) -> const void * {
-            constexpr KernelConfig Conf{.negate = Neg, .struc_B = SB};
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
+        []<auto OA, auto OB, auto OC, auto SB>(CStorageOrder<OA>, CStorageOrder<OB>,
+                                               CStorageOrder<OC>,
+                                               CMatrixStructure<SB>) -> const void * {
+            constexpr KernelConfig Conf{.negate = Negate, .struc_B = SB};
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
 extern const auto gemm_copy_register_inst_syrk_C =
-    guanaqo::make_lut<FalseTrue, ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
-        []<auto Neg, auto OA, auto OB, auto OC, auto SC>(std::bool_constant<Neg>, CStorageOrder<OA>,
-                                                         CStorageOrder<OB>, CStorageOrder<OC>,
-                                                         CMatrixStructure<SC>) -> const void * {
-            constexpr KernelConfig Conf{.negate = Neg, .struc_C = SC};
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
+        []<auto OA, auto OB, auto OC, auto SC>(CStorageOrder<OA>, CStorageOrder<OB>,
+                                               CStorageOrder<OC>,
+                                               CMatrixStructure<SC>) -> const void * {
+            constexpr KernelConfig Conf{.negate = Negate, .struc_C = SC};
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
 extern const auto gemm_copy_register_inst_trtrsyrk_ =
-    guanaqo::make_lut<FalseTrue, ColRowMajor, ColRowMajor, ColRowMajor>(
-        []<auto Neg, auto OA, auto OB, auto OC>(std::bool_constant<Neg>, CStorageOrder<OA>,
-                                                CStorageOrder<OB>,
-                                                CStorageOrder<OC>) -> const void * {
-            constexpr KernelConfig Conf{.negate  = Neg,
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor>(
+        []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>,
+                                      CStorageOrder<OC>) -> const void * {
+            constexpr KernelConfig Conf{.negate  = Negate,
                                         .struc_A = UpperTriangular,
                                         .struc_B = LowerTriangular,
                                         .struc_C = LowerTriangular};

@@ -1,183 +1,196 @@
 #include <batmat/linalg/gemm.hpp>
+#include <batmat/matrix/matrix.hpp>
+#include <batmat/matrix/view.hpp>
 #include <gtest/gtest.h>
-#include <functional>
+#include <guanaqo/eigen/view.hpp>
+#include <algorithm>
 #include <limits>
 #include <random>
 
 #include "config.hpp"
+#include "eigen-matchers.hpp"
 
-using namespace batmat::linalg;
 using batmat::index_t;
-using batmat::real_t;
+using batmat::matrix::DefaultStride;
+using batmat::matrix::StorageOrder;
+using batmat::tests::CatTypes;
 
-const auto ε = std::pow(std::numeric_limits<real_t>::epsilon(), real_t(0.6));
-
-template <class Abi>
-class GemmTest : public ::testing::Test {
-  protected:
-    using type          = real_t;
-    using abi_t         = Abi;
-    using types         = simd_view_types<type, abi_t>;
-    using simd          = stdx::simd<type, abi_t>;
-    using simd_stride_t = stdx::simd_size<type, abi_t>;
-    using Mat           = batmat::linalg::matrix<type, abi_t>;
-    using View          = batmat::linalg::view<const type, abi_t>;
-    using MutView       = batmat::linalg::view<type, abi_t>;
-    using func_t        = void(View, View, MutView);
-    using naive_func_t  = std::function<void(View, View, MutView)>;
-
-    void SetUp() override { rng.seed(12345); }
-
-    std::mt19937 rng{12345};
-    std::normal_distribution<type> nrml{0, 1};
-
-    template <micro_kernels::gemm::KernelConfig Conf, bool InitZero>
-    static void gemm_NN(view<const type, abi_t> A, view<const type, abi_t> B, view<type, abi_t> C) {
-        batmat::linalg::detail::gemm<type, abi_t, Conf>(
-            A, B, InitZero ? std::nullopt : std::make_optional(C.as_const()), C);
-    }
-
-    template <micro_kernels::gemm::KernelConfig Conf, bool InitZero>
-    static void gemm_TN(view<const type, abi_t> A, view<const type, abi_t> B, view<type, abi_t> C) {
-        batmat::linalg::detail::gemm<type, abi_t, Conf>(
-            A.transposed(), B, InitZero ? std::nullopt : std::make_optional(C.as_const()), C);
-    }
-
-    template <micro_kernels::gemm::KernelConfig Conf, bool InitZero>
-    static void gemm_NT(view<const type, abi_t> A, view<const type, abi_t> B, view<type, abi_t> C) {
-        batmat::linalg::detail::gemm<type, abi_t, Conf>(
-            A, B.transposed(), InitZero ? std::nullopt : std::make_optional(C.as_const()), C);
-    }
-
-    template <micro_kernels::gemm::KernelConfig Conf, bool InitZero>
-    static void gemm_TT(view<const type, abi_t> A, view<const type, abi_t> B, view<type, abi_t> C) {
-        batmat::linalg::detail::gemm<type, abi_t, Conf>(
-            A.transposed(), B.transposed(),
-            InitZero ? std::nullopt : std::make_optional(C.as_const()), C);
-    }
-
-    void RunTest(index_t n, func_t func, naive_func_t naive_func) {
-        Mat A{{.depth = 15, .rows = n, .cols = n}};
-        Mat B{{.depth = 15, .rows = n, .cols = n}};
-        Mat C{{.depth = 15, .rows = n, .cols = n}};
-        std::ranges::generate(A, [&] { return nrml(rng); });
-        std::ranges::generate(B, [&] { return nrml(rng); });
-        std::ranges::generate(C, [&] { return nrml(rng); });
-
-        // Save the original C matrix for comparison
-        Mat C_reference = C;
-
-        // Perform the operation
-        for (index_t l = 0; l < C.num_batches(); ++l)
-            func(A.batch(l), B.batch(l), C.batch(l));
-
-        // Perform the reference operation for comparison
-        for (index_t l = 0; l < C.num_batches(); ++l)
-            naive_func(A.batch(l), B.batch(l), C_reference.batch(l));
-
-        // Verify that the results match the reference implementation
-        for (index_t i = 0; i < C.depth(); ++i)
-            for (index_t j = 0; j < C.rows(); ++j)
-                for (index_t k = 0; k < C.cols(); ++k)
-                    ASSERT_NEAR(C(i, j, k), C_reference(i, j, k), ε)
-                        << "[" << n << "]: GEMM mismatch at (" << i << ", " << j << ", " << k
-                        << ")";
-    }
-
-    void RunTestTrmm(index_t n, func_t func, naive_func_t naive_func) {
-        Mat A{{.depth = 15, .rows = n, .cols = n + 13}};
-        Mat B{{.depth = 15, .rows = n + 13, .cols = n + 3}};
-        Mat C{{.depth = 15, .rows = n, .cols = n + 3}};
-        std::ranges::generate(A, [&] { return nrml(rng); });
-        std::ranges::generate(B, [&] { return nrml(rng); });
-        std::ranges::generate(C, [&] { return nrml(rng); });
-        Mat Bl = B;
-        for (index_t c = 1; c < Bl.cols(); ++c) // Make Bl lower trapezoidal
-            Bl.block(0, c, c, 1).set_constant(0);
-
-        // Save the original C matrix for comparison
-        Mat C_reference = C;
-
-        // Perform the operation
-        for (index_t l = 0; l < C.num_batches(); ++l)
-            func(A.batch(l), B.batch(l), C.batch(l));
-
-        // Perform the reference operation for comparison
-        for (index_t l = 0; l < C.num_batches(); ++l)
-            naive_func(A.batch(l), B.batch(l), C_reference.batch(l));
-
-        // Verify that the results match the reference implementation
-        for (index_t i = 0; i < C.depth(); ++i)
-            for (index_t j = 0; j < C.rows(); ++j)
-                for (index_t k = 0; k < C.cols(); ++k)
-                    ASSERT_NEAR(C(i, j, k), C_reference(i, j, k), ε)
-                        << "[" << n << "]: TRMM mismatch at (" << i << ", " << j << ", " << k
-                        << ")";
-    }
-
-    static void naive_gemm(bool transA, bool transB, real_t α, real_t β, View A, View B,
-                           MutView C) {
-        auto M = transA ? A.cols() : A.rows();
-        auto N = transB ? B.rows() : B.cols();
-        auto K = transA ? A.rows() : A.cols();
-        for (index_t l = 0; l < static_cast<index_t>(A.depth()); ++l) {
-            for (index_t r = 0; r < M; ++r) {
-                for (index_t c = 0; c < N; ++c) {
-                    auto Crc = C(l, r, c);
-                    Crc *= β;
-                    for (index_t k = 0; k < K; ++k) {
-                        auto Ark = transA ? A(l, k, r) : A(l, r, k);
-                        auto Bkc = transB ? B(l, c, k) : B(l, k, c);
-                        Crc += α * Ark * Bkc;
-                    }
-                    C(l, r, c) = Crc;
-                }
-            }
-        }
-    }
+template <class T, index_t N, StorageOrder OA, StorageOrder OB, StorageOrder OC>
+struct TestConfig {
+    using value_type                      = T;
+    using batch_size                      = std::integral_constant<index_t, N>;
+    static constexpr StorageOrder order_A = OA, order_B = OB, order_C = OC;
 };
 
-TYPED_TEST_SUITE(GemmTest, batmat::tests::Abis);
+template <class Config>
+class GemmTest : public ::testing::Test {
+  protected:
+    using value_type = typename Config::value_type;
+    using batch_size = typename Config::batch_size;
 
-TYPED_TEST(GemmTest, Gemm) {
-    for (index_t i : batmat::tests::sizes)
-        this->RunTest(i, TestFixture::template gemm_NN<{}, true>,
-                      std::bind_front(TestFixture::naive_gemm, false, false, 1, 0));
+    template <StorageOrder O>
+    using Matrix = batmat::matrix::Matrix<value_type, index_t, batch_size, batch_size, O>;
+
+    std::mt19937 rng{12345};
+    std::normal_distribution<value_type> nrml{0, 1};
+    void SetUp() override { rng.seed(12345); }
+
+    template <StorageOrder O>
+    auto get_matrix(index_t r, index_t c) {
+        Matrix<O> a{{.rows = r, .cols = c}};
+        std::ranges::generate(a, [this] { return nrml(rng); });
+        return a;
+    }
+
+    auto get_A(index_t r, index_t c) { return get_matrix<Config::order_A>(r, c); }
+    auto get_B(index_t r, index_t c) { return get_matrix<Config::order_B>(r, c); }
+    auto get_C(index_t r, index_t c) { return get_matrix<Config::order_C>(r, c); }
+};
+
+TYPED_TEST_SUITE_P(GemmTest);
+
+TYPED_TEST_P(GemmTest, gemm) {
+    using batmat::linalg::gemm;
+    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes)
+            for (auto k : batmat::tests::sizes) {
+                const auto A = this->get_A(m, k);
+                const auto B = this->get_B(k, n);
+                auto C       = this->get_C(m, n);
+                gemm(A, B, C);
+                for (index_t l = 0; l < A.depth(); ++l) {
+                    auto Cl_ref = as_eigen(A(l)) * as_eigen(B(l));
+                    EXPECT_THAT(as_eigen(C(l)), EigenAlmostEqual(Cl_ref, ε));
+                }
+            }
 }
-TYPED_TEST(GemmTest, GemmNeg) {
-    for (index_t i : batmat::tests::sizes)
-        this->RunTest(i, TestFixture::template gemm_NN<{.negate = true}, true>,
-                      std::bind_front(TestFixture::naive_gemm, false, false, -1, 0));
+
+TYPED_TEST_P(GemmTest, gemmNeg) {
+    using batmat::linalg::gemm_neg;
+    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes)
+            for (auto k : batmat::tests::sizes) {
+                const auto A = this->get_A(m, k);
+                const auto B = this->get_B(k, n);
+                auto C       = this->get_C(m, n);
+                gemm_neg(A, B, C);
+                for (index_t l = 0; l < A.depth(); ++l) {
+                    auto Cl_ref = -as_eigen(A(l)) * as_eigen(B(l));
+                    EXPECT_THAT(as_eigen(C(l)), EigenAlmostEqual(Cl_ref, ε));
+                }
+            }
 }
-TYPED_TEST(GemmTest, GemmAdd) {
-    for (index_t i : batmat::tests::sizes)
-        this->RunTest(i, TestFixture::template gemm_NN<{}, false>,
-                      std::bind_front(TestFixture::naive_gemm, false, false, 1, 1));
+
+TYPED_TEST_P(GemmTest, gemmAdd) {
+    using batmat::linalg::gemm_add;
+    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes)
+            for (auto k : batmat::tests::sizes) {
+                const auto A = this->get_A(m, k);
+                const auto B = this->get_B(k, n);
+                const auto C = this->get_C(m, n);
+                auto D       = this->get_C(m, n);
+                gemm_add(A, B, C, D);
+                for (index_t l = 0; l < A.depth(); ++l) {
+                    auto Cl_ref = as_eigen(C(l)) + as_eigen(A(l)) * as_eigen(B(l));
+                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Cl_ref, ε));
+                }
+            }
 }
-TYPED_TEST(GemmTest, GemmSub) {
-    for (index_t i : batmat::tests::sizes)
-        this->RunTest(i, TestFixture::template gemm_NN<{.negate = true}, false>,
-                      std::bind_front(TestFixture::naive_gemm, false, false, -1, 1));
+
+TYPED_TEST_P(GemmTest, gemmSub) {
+    using batmat::linalg::gemm_sub;
+    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes)
+            for (auto k : batmat::tests::sizes) {
+                const auto A = this->get_A(m, k);
+                const auto B = this->get_B(k, n);
+                const auto C = this->get_C(m, n);
+                auto D       = this->get_C(m, n);
+                gemm_sub(A, B, C, D);
+                for (index_t l = 0; l < A.depth(); ++l) {
+                    auto Cl_ref = as_eigen(C(l)) - as_eigen(A(l)) * as_eigen(B(l));
+                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Cl_ref, ε));
+                }
+            }
 }
-TYPED_TEST(GemmTest, GemmTN) {
-    for (index_t i : batmat::tests::sizes)
-        this->RunTest(i, TestFixture::template gemm_TN<{}, true>,
-                      std::bind_front(TestFixture::naive_gemm, true, false, 1, 0));
+
+TYPED_TEST_P(GemmTest, gemmSubShiftA) {
+    using batmat::linalg::gemm_sub;
+    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes)
+            for (auto k : batmat::tests::sizes) {
+                auto A       = this->get_A(m, k);
+                const auto B = this->get_B(k, n);
+                const auto C = this->get_C(m, n);
+                auto D       = this->get_C(m, n);
+                gemm_sub(A, B, C, D, {}, batmat::linalg::with_shift_A<-1>);
+                EXPECT_THAT(as_eigen(D(0)), EigenAlmostEqual(as_eigen(C(0)), ε)) << 0;
+                for (index_t l = 1; l < A.depth(); ++l) {
+                    auto Cl_ref = as_eigen(C(l)) - as_eigen(A(l - 1)) * as_eigen(B(l));
+                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Cl_ref, ε)) << l;
+                }
+            }
 }
-TYPED_TEST(GemmTest, GemmTNSub) {
-    for (index_t i : batmat::tests::sizes)
-        this->RunTest(i, TestFixture::template gemm_TN<{.negate = true}, false>,
-                      std::bind_front(TestFixture::naive_gemm, true, false, -1, 1));
+
+TYPED_TEST_P(GemmTest, gemmSubShiftCD) {
+    using batmat::linalg::gemm_sub;
+    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes)
+            for (auto k : batmat::tests::sizes) {
+                auto A       = this->get_A(m, k);
+                const auto B = this->get_B(k, n);
+                const auto C = this->get_C(m, n);
+                auto D       = this->get_C(m, n);
+                auto D0      = D;
+                gemm_sub(A, B, C, D, {}, batmat::linalg::with_rotate_C<1>,
+                         batmat::linalg::with_rotate_D<1>, batmat::linalg::with_mask_D<1>);
+                EXPECT_THAT(as_eigen(D(0)), EigenAlmostEqual(as_eigen(D0(0)), ε)) << 0;
+                for (index_t l = 1; l < A.depth(); ++l) {
+                    auto Cl_ref = as_eigen(C(l)) - as_eigen(A(l - 1)) * as_eigen(B(l - 1));
+                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Cl_ref, ε)) << l;
+                }
+            }
 }
-// TYPED_TEST(GemmTest, Trmm) {
-//         for (index_t i : batmat::tests::sizes)
-//             this->RunTestTrmm(
-//                 i, TestFixture::CompactBLAS_t::xtrmm_RLNN,
-//                 std::bind_front(TestFixture::naive_gemm, false, false, 1, 0));
-// }
-// TYPED_TEST(GemmTest, TrmmNeg) {
-//         for (index_t i : batmat::tests::sizes)
-//             this->RunTestTrmm(
-//                 i, TestFixture::CompactBLAS_t::xtrmm_RLNN_neg,
-//                 std::bind_front(TestFixture::naive_gemm, false, false, -1, 0));
-// }
+
+TYPED_TEST_P(GemmTest, gemmSubShiftCDNeg) {
+    using batmat::linalg::gemm_sub;
+    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes)
+            for (auto k : batmat::tests::sizes) {
+                auto A       = this->get_A(m, k);
+                const auto B = this->get_B(k, n);
+                const auto C = this->get_C(m, n);
+                auto D       = this->get_C(m, n);
+                gemm_sub(A, B, C, D, {}, batmat::linalg::with_rotate_C<-1>,
+                         batmat::linalg::with_rotate_D<-1>, batmat::linalg::with_mask_D<0>);
+                const auto N = A.depth();
+                for (index_t l = 0; l < N; ++l) {
+                    auto l_next = (l + 1) % N;
+                    auto Cl_ref = as_eigen(C(l)) - as_eigen(A(l_next)) * as_eigen(B(l_next));
+                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Cl_ref, ε)) << l;
+                }
+            }
+}
+
+REGISTER_TYPED_TEST_SUITE_P(GemmTest, gemm, gemmNeg, gemmAdd, gemmSub, gemmSubShiftA,
+                            gemmSubShiftCD, gemmSubShiftCDNeg);
+
+using enum batmat::matrix::StorageOrder;
+template <class T, index_t N>
+using TestConfigs = ::testing::Types<
+    TestConfig<T, N, ColMajor, ColMajor, ColMajor>, TestConfig<T, N, ColMajor, ColMajor, RowMajor>,
+    TestConfig<T, N, ColMajor, RowMajor, ColMajor>, TestConfig<T, N, ColMajor, RowMajor, RowMajor>,
+    TestConfig<T, N, RowMajor, ColMajor, ColMajor>, TestConfig<T, N, RowMajor, ColMajor, RowMajor>,
+    TestConfig<T, N, RowMajor, RowMajor, ColMajor>, TestConfig<T, N, RowMajor, RowMajor, RowMajor>>;
+using AllTestConfigs = typename CatTypes<TestConfigs<double, 1>, TestConfigs<double, 4>,
+                                         TestConfigs<float, 1>, TestConfigs<float, 8>>::type;
+
+INSTANTIATE_TYPED_TEST_SUITE_P(linalg, GemmTest, AllTestConfigs);

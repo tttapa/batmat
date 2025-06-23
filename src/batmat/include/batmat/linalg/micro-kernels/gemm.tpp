@@ -2,9 +2,9 @@
 
 #include <batmat/assume.hpp>
 #include <batmat/linalg/micro-kernels/gemm.hpp>
+#include <batmat/linalg/uview.hpp>
+#include <batmat/loop.hpp>
 #include <batmat/ops/rotate.hpp>
-#include "batmat/linalg/uview.hpp"
-#include "batmat/loop.hpp"
 
 #define UNROLL_FOR(...) BATMAT_FULLY_UNROLLED_FOR (__VA_ARGS__)
 
@@ -241,7 +241,7 @@ void gemm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi,
 
         if (l1 == l0)
             return;
-        if constexpr (Conf.struc_A == LowerTriangular && Conf.struc_B == UpperTriangular) {
+        if constexpr (Conf.struc_A == LowerTriangular && Conf.struc_B == UpperTriangular) { // LU
             if (l1A > l1B) {
                 microkernel_GXG[ni - 1][nj - 1](Ail, Blj, Cij, Dij, l1 - l0);
                 return;
@@ -250,7 +250,7 @@ void gemm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi,
                 return;
             }
         }
-        if constexpr (Conf.struc_A == UpperTriangular && Conf.struc_B == LowerTriangular) {
+        if constexpr (Conf.struc_A == UpperTriangular && Conf.struc_B == LowerTriangular) { // UL
             if (l0A > l0B) {
                 microkernel_XGG[ni - 1][nj - 1](Ail, Blj, Cij, Dij, l1 - l0);
                 return;
@@ -259,7 +259,7 @@ void gemm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi,
                 return;
             }
         }
-        if constexpr (Conf.struc_C != General) {
+        if constexpr (Conf.struc_C != General) { // syrk
             if (i != j) {
                 microkernel_XXG[ni - 1][nj - 1](Ail, Blj, Cij, Dij, l1 - l0);
                 return;
