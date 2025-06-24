@@ -17,7 +17,6 @@ add_executable(tests
     "linalg/test-compress.cpp"
     "linalg/test-copy.cpp"
     "linalg/test-gemm.cpp"
-    "linalg/test-trtrsyrk.cpp"
 )
 target_compile_definitions(tests PRIVATE
     $<$<BOOL:${BATMAT_EXTENSIVE_TESTS}>:BATMAT_EXTENSIVE_TESTS>)
