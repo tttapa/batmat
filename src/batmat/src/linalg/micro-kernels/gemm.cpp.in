@@ -91,13 +91,11 @@ extern const auto gemm_copy_register_inst_syrk_C =
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
 extern const auto gemm_copy_register_inst_trtrsyrk_ =
-    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor>(
-        []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>,
-                                      CStorageOrder<OC>) -> const void * {
-            constexpr KernelConfig Conf{.negate  = Negate,
-                                        .struc_A = UpperTriangular,
-                                        .struc_B = LowerTriangular,
-                                        .struc_C = LowerTriangular};
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
+        []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>, CStorageOrder<OC>,
+                                      auto S) -> const void * {
+            constexpr KernelConfig Conf{
+                .negate = Negate, .struc_A = transpose(S), .struc_B = S, .struc_C = S};
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
 

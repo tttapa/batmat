@@ -1,9 +1,8 @@
 #pragma once
 
-#include <batmat/linalg/micro-kernels/gemm.hpp>
+#include <batmat/linalg/structure.hpp>
 
 namespace batmat::linalg {
-using micro_kernels::gemm::MatrixStructure;
 
 template <class M, MatrixStructure S = MatrixStructure::General>
 struct Structured {

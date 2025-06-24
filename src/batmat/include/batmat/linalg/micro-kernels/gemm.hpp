@@ -1,13 +1,12 @@
 #pragma once
 
 #include <batmat/linalg/uview.hpp>
+#include <batmat/linalg/structure.hpp>
 #include <batmat/lut.hpp>
 #include <batmat/platform/platform.hpp>
 #include <optional>
 
 namespace batmat::linalg::micro_kernels::gemm {
-
-enum class MatrixStructure : int8_t { General, LowerTriangular, UpperTriangular };
 
 struct KernelConfig {
     bool negate             = false;

@@ -1,0 +1,34 @@
+#ifdef __clang__
+#pragma clang fp contract(fast)
+#endif
+
+#include <batmat/linalg/micro-kernels/trsm.tpp>
+
+namespace batmat::linalg::micro_kernels::trsm {
+
+// clang-format off
+using Abi   = std::experimental::simd_abi::@Abi@;
+using DType = @DType@;
+// clang-format on
+
+using enum StorageOrder;
+
+template <StorageOrder O>
+using CStorageOrder = std::integral_constant<StorageOrder, O>;
+
+constexpr std::array ColRowMajor{ColMajor, RowMajor};
+
+namespace {
+template <auto V>
+const auto wrap = V;
+} // namespace
+
+extern const auto trsm_copy_register_inst_llnn_rltn =
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor>(
+        []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>,
+                                      CStorageOrder<OC>) -> const void * {
+            constexpr KernelConfig Conf{};
+            return &wrap<trsm_copy_register<DType, Abi, Conf, OA, OB, OC>>;
+        });
+
+} // namespace batmat::linalg::micro_kernels::trsm

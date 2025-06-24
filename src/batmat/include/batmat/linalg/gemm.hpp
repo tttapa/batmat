@@ -24,7 +24,6 @@ struct TilingOptions {
 };
 
 namespace detail {
-using micro_kernels::gemm::MatrixStructure;
 template <class T, class Abi, micro_kernels::gemm::KernelConfig Conf = {}, StorageOrder OA,
           StorageOrder OB, StorageOrder OC, StorageOrder OD>
     requires(Conf.struc_A == MatrixStructure::General && Conf.struc_B == MatrixStructure::General &&
@@ -252,7 +251,7 @@ template <char UpLo = 'L', simdifiable VA, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VD>
 void syrk(VA &&A, VD &&D, Opts... opts) {
     static_assert(UpLo == 'L' || UpLo == 'U');
-    using enum micro_kernels::gemm::MatrixStructure;
+    using enum MatrixStructure;
     std::optional<decltype(simdify(D).as_const())> null;
     constexpr auto conf = detail::apply_options(
         {.negate = false, .struc_C = UpLo == 'U' ? UpperTriangular : LowerTriangular}, opts...);
@@ -265,7 +264,7 @@ template <char UpLo = 'L', simdifiable VA, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VD>
 void syrk_neg(VA &&A, VD &&D, Opts... opts) {
     static_assert(UpLo == 'L' || UpLo == 'U');
-    using enum micro_kernels::gemm::MatrixStructure;
+    using enum MatrixStructure;
     std::optional<decltype(simdify(D).as_const())> null;
     constexpr auto conf = detail::apply_options(
         {.negate = true, .struc_C = UpLo == 'U' ? UpperTriangular : LowerTriangular}, opts...);
@@ -278,7 +277,7 @@ template <char UpLo = 'L', simdifiable VA, simdifiable VC, simdifiable VD, shift
     requires simdify_compatible<VA, VC, VD>
 void syrk_add(VA A, VC C, VD D, Opts... opts) {
     static_assert(UpLo == 'L' || UpLo == 'U');
-    using enum micro_kernels::gemm::MatrixStructure;
+    using enum MatrixStructure;
     constexpr auto conf = detail::apply_options(
         {.negate = false, .struc_C = UpLo == 'U' ? UpperTriangular : LowerTriangular}, opts...);
     detail::gemmt<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
@@ -296,7 +295,7 @@ template <char UpLo = 'L', simdifiable VA, simdifiable VC, simdifiable VD, shift
     requires simdify_compatible<VA, VC, VD>
 void syrk_sub(VA A, VC C, VD D, Opts... opts) {
     static_assert(UpLo == 'L' || UpLo == 'U');
-    using enum micro_kernels::gemm::MatrixStructure;
+    using enum MatrixStructure;
     constexpr auto conf = detail::apply_options(
         {.negate = true, .struc_C = UpLo == 'U' ? UpperTriangular : LowerTriangular}, opts...);
     detail::gemmt<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
