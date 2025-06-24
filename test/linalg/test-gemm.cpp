@@ -285,6 +285,25 @@ TYPED_TEST_P(GemmTest, trmmULLinplace) {
     }
 }
 
+TYPED_TEST_P(GemmTest, trmmLUUinplace) {
+    using batmat::linalg::tril;
+    using batmat::linalg::triu;
+    using batmat::linalg::trmm;
+    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    for (auto m : batmat::tests::sizes) {
+        const auto A0 = this->get_A(m, m);
+        auto A        = A0;
+        trmm(tril(A), triu(A.transposed()), triu(A));
+        for (index_t l = 0; l < A.depth(); ++l) {
+            auto Al     = tri<Eigen::Lower>(as_eigen(A0(l)));
+            auto Dl_ref = tri<Eigen::Upper>(Al * Al.transpose());
+            EXPECT_THAT(tri<Eigen::Upper>(as_eigen(A(l))), EigenAlmostEqual(Dl_ref, ε));
+            EXPECT_THAT(tri<Eigen::StrictlyLower>(as_eigen(A(l))),
+                        EigenAlmostEqual(tri<Eigen::StrictlyLower>(as_eigen(A0(l))), ε));
+        }
+    }
+}
+
 #if 0 // TODO
 TYPED_TEST_P(GemmTest, trmmLLL) {
     using batmat::linalg::tril;
@@ -321,7 +340,7 @@ TYPED_TEST_P(GemmTest, trmmLLLinplace) {
 
 REGISTER_TYPED_TEST_SUITE_P(GemmTest, gemm, gemmNeg, gemmAdd, gemmSub, gemmSubShiftA,
                             gemmSubShiftCD, gemmSubShiftCDNeg, trmmLGinplace, trmmUGinplace,
-                            trmmGLinplace, trmmGUinplace, trmmULLinplace);
+                            trmmGLinplace, trmmGUinplace, trmmULLinplace, trmmLUUinplace);
 
 using enum batmat::matrix::StorageOrder;
 template <class T, index_t N>
