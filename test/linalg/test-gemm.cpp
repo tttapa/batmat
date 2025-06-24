@@ -66,6 +66,25 @@ TYPED_TEST_P(GemmTest, gemm) {
             }
 }
 
+TYPED_TEST_P(GemmTest, gemmSub) {
+    using batmat::linalg::gemm_sub;
+    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes)
+            for (auto k : batmat::tests::sizes) {
+                const auto A = this->get_A(m, k);
+                const auto B = this->get_B(k, n);
+                const auto C = this->get_C(m, n);
+                auto D       = this->get_C(m, n);
+                gemm_sub(A, B, C, D);
+                for (index_t l = 0; l < A.depth(); ++l) {
+                    auto Cl_ref = as_eigen(C(l)) - as_eigen(A(l)) * as_eigen(B(l));
+                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Cl_ref, ε));
+                }
+            }
+}
+
+#if BATMAT_EXTENSIVE_TESTS
 TYPED_TEST_P(GemmTest, gemmNeg) {
     using batmat::linalg::gemm_neg;
     const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
@@ -96,24 +115,6 @@ TYPED_TEST_P(GemmTest, gemmAdd) {
                 gemm_add(A, B, C, D);
                 for (index_t l = 0; l < A.depth(); ++l) {
                     auto Cl_ref = as_eigen(C(l)) + as_eigen(A(l)) * as_eigen(B(l));
-                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Cl_ref, ε));
-                }
-            }
-}
-
-TYPED_TEST_P(GemmTest, gemmSub) {
-    using batmat::linalg::gemm_sub;
-    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
-    for (auto m : batmat::tests::sizes)
-        for (auto n : batmat::tests::sizes)
-            for (auto k : batmat::tests::sizes) {
-                const auto A = this->get_A(m, k);
-                const auto B = this->get_B(k, n);
-                const auto C = this->get_C(m, n);
-                auto D       = this->get_C(m, n);
-                gemm_sub(A, B, C, D);
-                for (index_t l = 0; l < A.depth(); ++l) {
-                    auto Cl_ref = as_eigen(C(l)) - as_eigen(A(l)) * as_eigen(B(l));
                     EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Cl_ref, ε));
                 }
             }
@@ -180,16 +181,158 @@ TYPED_TEST_P(GemmTest, gemmSubShiftCDNeg) {
             }
 }
 
+#else
+TYPED_TEST_P(GemmTest, gemmNeg) { GTEST_SKIP() << "BATMAT_EXTENSIVE_TESTS=0"; }
+TYPED_TEST_P(GemmTest, gemmAdd) { GTEST_SKIP() << "BATMAT_EXTENSIVE_TESTS=0"; }
+TYPED_TEST_P(GemmTest, gemmSubShiftA) { GTEST_SKIP() << "BATMAT_EXTENSIVE_TESTS=0"; }
+TYPED_TEST_P(GemmTest, gemmSubShiftCD) { GTEST_SKIP() << "BATMAT_EXTENSIVE_TESTS=0"; }
+TYPED_TEST_P(GemmTest, gemmSubShiftCDNeg) { GTEST_SKIP() << "BATMAT_EXTENSIVE_TESTS=0"; }
+#endif
+
+template <Eigen::UpLoType UpLo, class T>
+auto tri(T &&t) -> Eigen::MatrixX<typename T::Scalar> {
+    return std::forward<T>(t).template triangularView<UpLo>().toDenseMatrix();
+}
+
+TYPED_TEST_P(GemmTest, trmmLGinplace) {
+    using batmat::linalg::tril;
+    using batmat::linalg::trmm;
+    using EMat   = Eigen::MatrixX<typename TestFixture::value_type>;
+    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes) {
+            const auto A  = this->get_A(m, m);
+            const auto D0 = this->get_B(m, n);
+            auto D        = D0;
+            trmm(tril(A), D, D);
+            for (index_t l = 0; l < A.depth(); ++l) {
+                EMat Dl_ref = tri<Eigen::Lower>(as_eigen(A(l))) * as_eigen(D0(l));
+                EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Dl_ref, ε));
+            }
+        }
+}
+
+TYPED_TEST_P(GemmTest, trmmUGinplace) {
+    using batmat::linalg::triu;
+    using batmat::linalg::trmm;
+    using EMat   = Eigen::MatrixX<typename TestFixture::value_type>;
+    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes) {
+            const auto A  = this->get_A(m, m);
+            const auto D0 = this->get_B(m, n);
+            auto D        = D0;
+            trmm(triu(A), D, D);
+            for (index_t l = 0; l < A.depth(); ++l) {
+                EMat Dl_ref = tri<Eigen::Upper>(as_eigen(A(l))) * as_eigen(D0(l));
+                EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Dl_ref, ε));
+            }
+        }
+}
+
+TYPED_TEST_P(GemmTest, trmmGLinplace) {
+    using batmat::linalg::tril;
+    using batmat::linalg::trmm;
+    using EMat   = Eigen::MatrixX<typename TestFixture::value_type>;
+    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes) {
+            const auto A  = this->get_A(m, m);
+            const auto D0 = this->get_B(n, m);
+            auto D        = D0;
+            trmm(D, tril(A), D);
+            for (index_t l = 0; l < A.depth(); ++l) {
+                EMat Dl_ref = as_eigen(D0(l)) * tri<Eigen::Lower>(as_eigen(A(l)));
+                EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Dl_ref, ε));
+            }
+        }
+}
+
+TYPED_TEST_P(GemmTest, trmmGUinplace) {
+    using batmat::linalg::triu;
+    using batmat::linalg::trmm;
+    using EMat   = Eigen::MatrixX<typename TestFixture::value_type>;
+    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes) {
+            const auto A  = this->get_A(m, m);
+            const auto D0 = this->get_B(n, m);
+            auto D        = D0;
+            trmm(D, triu(A), D);
+            for (index_t l = 0; l < A.depth(); ++l) {
+                EMat Dl_ref = as_eigen(D0(l)) * tri<Eigen::Upper>(as_eigen(A(l)));
+                EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Dl_ref, ε));
+            }
+        }
+}
+
+TYPED_TEST_P(GemmTest, trmmULLinplace) {
+    using batmat::linalg::tril;
+    using batmat::linalg::triu;
+    using batmat::linalg::trmm;
+    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    for (auto m : batmat::tests::sizes) {
+        const auto A0 = this->get_A(m, m);
+        auto A        = A0;
+        trmm(triu(A), tril(A.transposed()), tril(A));
+        for (index_t l = 0; l < A.depth(); ++l) {
+            auto Al     = tri<Eigen::Upper>(as_eigen(A0(l)));
+            auto Dl_ref = tri<Eigen::Lower>(Al * Al.transpose());
+            EXPECT_THAT(tri<Eigen::Lower>(as_eigen(A(l))), EigenAlmostEqual(Dl_ref, ε));
+            EXPECT_THAT(tri<Eigen::StrictlyUpper>(as_eigen(A(l))),
+                        EigenAlmostEqual(tri<Eigen::StrictlyUpper>(as_eigen(A0(l))), ε));
+        }
+    }
+}
+
+#if 0 // TODO
+TYPED_TEST_P(GemmTest, trmmLLL) {
+    using batmat::linalg::tril;
+    using batmat::linalg::trmm;
+    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    for (auto m : batmat::tests::sizes) {
+        const auto A = this->get_A(m, m);
+        auto D       = this->get_A(m, m);
+        trmm(tril(A), tril(A), tril(D));
+        for (index_t l = 0; l < A.depth(); ++l) {
+            auto Al     = as_eigen(A(l)).template triangularView<Eigen::Lower>().toDenseMatrix();
+            auto Dl_ref = Al * Al;
+            EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Dl_ref, ε));
+        }
+    }
+}
+
+TYPED_TEST_P(GemmTest, trmmLLLinplace) {
+    using batmat::linalg::tril;
+    using batmat::linalg::trmm;
+    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    for (auto m : batmat::tests::sizes) {
+        const auto A0 = this->get_A(m, m);
+        auto A        = A0;
+        trmm(tril(A), tril(A), tril(A));
+        for (index_t l = 0; l < A.depth(); ++l) {
+            auto Al     = as_eigen(A0(l)).template triangularView<Eigen::Lower>().toDenseMatrix();
+            auto Dl_ref = Al * Al;
+            EXPECT_THAT(as_eigen(A(l)), EigenAlmostEqual(Dl_ref, ε));
+        }
+    }
+}
+#endif
+
 REGISTER_TYPED_TEST_SUITE_P(GemmTest, gemm, gemmNeg, gemmAdd, gemmSub, gemmSubShiftA,
-                            gemmSubShiftCD, gemmSubShiftCDNeg);
+                            gemmSubShiftCD, gemmSubShiftCDNeg, trmmLGinplace, trmmUGinplace,
+                            trmmGLinplace, trmmGUinplace, trmmULLinplace);
 
 using enum batmat::matrix::StorageOrder;
 template <class T, index_t N>
 using TestConfigs = ::testing::Types<
-    TestConfig<T, N, ColMajor, ColMajor, ColMajor>, TestConfig<T, N, ColMajor, ColMajor, RowMajor>,
-    TestConfig<T, N, ColMajor, RowMajor, ColMajor>, TestConfig<T, N, ColMajor, RowMajor, RowMajor>,
-    TestConfig<T, N, RowMajor, ColMajor, ColMajor>, TestConfig<T, N, RowMajor, ColMajor, RowMajor>,
-    TestConfig<T, N, RowMajor, RowMajor, ColMajor>, TestConfig<T, N, RowMajor, RowMajor, RowMajor>>;
+    TestConfig<T, N, ColMajor, ColMajor, ColMajor>,
+#if BATMAT_EXTENSIVE_TESTS
+    TestConfig<T, N, ColMajor, ColMajor, RowMajor>, TestConfig<T, N, ColMajor, RowMajor, ColMajor>,
+    TestConfig<T, N, ColMajor, RowMajor, RowMajor>, TestConfig<T, N, RowMajor, ColMajor, ColMajor>,
+    TestConfig<T, N, RowMajor, ColMajor, RowMajor>, TestConfig<T, N, RowMajor, RowMajor, ColMajor>,
+#endif
+    TestConfig<T, N, RowMajor, RowMajor, RowMajor>>;
 using AllTestConfigs = typename CatTypes<TestConfigs<double, 1>, TestConfigs<double, 4>,
                                          TestConfigs<float, 1>, TestConfigs<float, 8>>::type;
 

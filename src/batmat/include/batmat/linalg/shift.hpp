@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <type_traits>
 
 namespace batmat::linalg {
@@ -27,39 +28,39 @@ template <int I>
 inline constexpr with_mask_D_t<I> with_mask_D;
 
 template <class...>
-inline constexpr int shift_A = 0;
+inline constexpr std::optional<int> shift_A = std::nullopt;
 template <class T, class... Ts>
-inline constexpr int shift_A<T, Ts...> = shift_A<Ts...>;
+inline constexpr std::optional<int> shift_A<T, Ts...> = shift_A<Ts...>;
 template <int I, class... Ts>
-inline constexpr int shift_A<with_shift_A_t<I>, Ts...> = I;
+inline constexpr std::optional<int> shift_A<with_shift_A_t<I>, Ts...> = I;
 
 template <class...>
-inline constexpr int shift_B = 0;
+inline constexpr std::optional<int> shift_B = std::nullopt;
 template <class T, class... Ts>
-inline constexpr int shift_B<T, Ts...> = shift_B<Ts...>;
+inline constexpr std::optional<int> shift_B<T, Ts...> = shift_B<Ts...>;
 template <int I, class... Ts>
-inline constexpr int shift_B<with_shift_B_t<I>, Ts...> = I;
+inline constexpr std::optional<int> shift_B<with_shift_B_t<I>, Ts...> = I;
 
 template <class...>
-inline constexpr int rotate_C = 0;
+inline constexpr std::optional<int> rotate_C = std::nullopt;
 template <class T, class... Ts>
-inline constexpr int rotate_C<T, Ts...> = rotate_C<Ts...>;
+inline constexpr std::optional<int> rotate_C<T, Ts...> = rotate_C<Ts...>;
 template <int I, class... Ts>
-inline constexpr int rotate_C<with_rotate_C_t<I>, Ts...> = I;
+inline constexpr std::optional<int> rotate_C<with_rotate_C_t<I>, Ts...> = I;
 
 template <class...>
-inline constexpr int rotate_D = 0;
+inline constexpr std::optional<int> rotate_D = std::nullopt;
 template <class T, class... Ts>
-inline constexpr int rotate_D<T, Ts...> = rotate_D<Ts...>;
+inline constexpr std::optional<int> rotate_D<T, Ts...> = rotate_D<Ts...>;
 template <int I, class... Ts>
-inline constexpr int rotate_D<with_rotate_D_t<I>, Ts...> = I;
+inline constexpr std::optional<int> rotate_D<with_rotate_D_t<I>, Ts...> = I;
 
 template <class...>
-inline constexpr int mask_D = 0;
+inline constexpr std::optional<int> mask_D = std::nullopt;
 template <class T, class... Ts>
-inline constexpr int mask_D<T, Ts...> = mask_D<Ts...>;
+inline constexpr std::optional<int> mask_D<T, Ts...> = mask_D<Ts...>;
 template <int I, class... Ts>
-inline constexpr int mask_D<with_mask_D_t<I>, Ts...> = I;
+inline constexpr std::optional<int> mask_D<with_mask_D_t<I>, Ts...> = I;
 
 template <class>
 inline constexpr bool is_shift_opt = false;

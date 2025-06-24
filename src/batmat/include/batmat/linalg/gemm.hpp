@@ -5,6 +5,7 @@
 #include <batmat/linalg/micro-kernels/gemm.hpp>
 #include <batmat/linalg/shift.hpp>
 #include <batmat/linalg/simdify.hpp>
+#include <batmat/linalg/triangular.hpp>
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
 #include <batmat/matrix/storage.hpp>
@@ -138,7 +139,7 @@ template <class T, class Abi, micro_kernels::gemm::KernelConfig Conf = {}, Stora
              Conf.struc_C != MatrixStructure::General)
 void gemmt(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
            std::optional<view<const T, Abi, OC>> C, view<T, Abi, OD> D) {
-    GUANAQO_TRACE("gemmt", 0, A.rows() * A.cols() * B.cols() * A.depth());
+    GUANAQO_TRACE("gemmt", 0, A.rows() * A.cols() * (B.cols() + 1) * A.depth() / 2);
     BATMAT_ASSERT(D.rows() == D.cols()); // TODO: could be relaxed
     BATMAT_ASSERT(!C || C->rows() == D.rows());
     BATMAT_ASSERT(!C || C->cols() == D.cols());
@@ -151,19 +152,57 @@ void gemmt(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
     // TODO: cache blocking
     return micro_kernels::gemm::gemm_copy_register<T, Abi, Conf>(A, B, C, D);
 }
+
+template <class T, class Abi, micro_kernels::gemm::KernelConfig Conf = {}, StorageOrder OA,
+          StorageOrder OB, StorageOrder OC, StorageOrder OD>
+    requires(Conf.struc_A != MatrixStructure::General || Conf.struc_B != MatrixStructure::General)
+void trmm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
+          std::optional<view<const T, Abi, OC>> C, view<T, Abi, OD> D) {
+    [[maybe_unused]] index_t flop_count = Conf.struc_A == Conf.struc_B ? 0 : 0; // TODO
+    GUANAQO_TRACE("trmm", 0, flop_count * A.depth());
+    static_assert(Conf.struc_A != MatrixStructure::General ||
+                  Conf.struc_B != MatrixStructure::General);
+    static_assert(Conf.struc_A != Conf.struc_B,
+                  "lower times lower or upper times upper currently not supported"); // TODO
+    if (Conf.struc_A != MatrixStructure::General)
+        BATMAT_ASSERT(A.rows() == A.cols()); // TODO: could be relaxed
+    if (Conf.struc_B != MatrixStructure::General)
+        BATMAT_ASSERT(B.rows() == B.cols()); // TODO: could be relaxed
+    BATMAT_ASSERT(!C || C->rows() == D.rows());
+    BATMAT_ASSERT(!C || C->cols() == D.cols());
+    BATMAT_ASSERT(A.rows() == D.rows());
+    BATMAT_ASSERT(A.cols() == B.rows());
+    BATMAT_ASSERT(B.cols() == D.cols());
+    const index_t M = D.rows(), N = D.cols(), K = A.cols();
+    if (M == 0 || N == 0 || K == 0) [[unlikely]]
+        return;
+    // TODO: cache blocking
+    return micro_kernels::gemm::gemm_copy_register<T, Abi, Conf>(A, B, C, D);
+}
+
+template <class... Opts>
+constexpr micro_kernels::gemm::KernelConfig apply_options(micro_kernels::gemm::KernelConfig conf,
+                                                          Opts...) {
+    if (auto s = shift_A<Opts...>)
+        conf.shift_A = *s;
+    if (auto s = shift_B<Opts...>)
+        conf.shift_B = *s;
+    if (auto s = rotate_C<Opts...>)
+        conf.rotate_C = *s;
+    if (auto s = rotate_D<Opts...>)
+        conf.rotate_D = *s;
+    if (auto s = mask_D<Opts...>)
+        conf.mask_D = *s;
+    return conf;
+}
 } // namespace detail
 
 /// D = A B
 template <simdifiable VA, simdifiable VB, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VB, VD>
-void gemm(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts...) {
+void gemm(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts... opts) {
     std::optional<decltype(simdify(D).as_const())> null;
-    constexpr micro_kernels::gemm::KernelConfig conf{.negate   = false,
-                                                     .shift_A  = shift_A<Opts...>,
-                                                     .shift_B  = shift_B<Opts...>,
-                                                     .rotate_C = rotate_D<Opts...>,
-                                                     .rotate_D = rotate_D<Opts...>,
-                                                     .mask_D   = mask_D<Opts...>};
+    constexpr auto conf = detail::apply_options({.negate = false}, opts...);
     detail::gemm<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A).as_const(), simdify(B).as_const(), null, simdify(D), packing);
 }
@@ -171,14 +210,9 @@ void gemm(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts...) {
 /// D = -A B
 template <simdifiable VA, simdifiable VB, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VB, VD>
-void gemm_neg(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts...) {
+void gemm_neg(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts... opts) {
     std::optional<decltype(simdify(D).as_const())> null;
-    constexpr micro_kernels::gemm::KernelConfig conf{.negate   = true,
-                                                     .shift_A  = shift_A<Opts...>,
-                                                     .shift_B  = shift_B<Opts...>,
-                                                     .rotate_C = rotate_D<Opts...>,
-                                                     .rotate_D = rotate_D<Opts...>,
-                                                     .mask_D   = mask_D<Opts...>};
+    constexpr auto conf = detail::apply_options({.negate = true}, opts...);
     detail::gemm<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A).as_const(), simdify(B).as_const(), null, simdify(D), packing);
 }
@@ -186,13 +220,8 @@ void gemm_neg(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts...) {
 /// D = C + A B
 template <simdifiable VA, simdifiable VB, simdifiable VC, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VB, VC, VD>
-void gemm_add(VA &&A, VB &&B, VC &&C, VD &&D, TilingOptions packing = {}, Opts...) {
-    constexpr micro_kernels::gemm::KernelConfig conf{.negate   = false,
-                                                     .shift_A  = shift_A<Opts...>,
-                                                     .shift_B  = shift_B<Opts...>,
-                                                     .rotate_C = rotate_C<Opts...>,
-                                                     .rotate_D = rotate_D<Opts...>,
-                                                     .mask_D   = mask_D<Opts...>};
+void gemm_add(VA &&A, VB &&B, VC &&C, VD &&D, TilingOptions packing = {}, Opts... opts) {
+    constexpr auto conf = detail::apply_options({.negate = false}, opts...);
     detail::gemm<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A).as_const(), simdify(B).as_const(), std::make_optional(simdify(C).as_const()),
         simdify(D), packing);
@@ -206,13 +235,8 @@ void gemm_add(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts... opts) 
 /// D = C - A B
 template <simdifiable VA, simdifiable VB, simdifiable VC, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VB, VC, VD>
-void gemm_sub(VA &&A, VB &&B, VC &&C, VD &&D, TilingOptions packing = {}, Opts...) {
-    constexpr micro_kernels::gemm::KernelConfig conf{.negate   = true,
-                                                     .shift_A  = shift_A<Opts...>,
-                                                     .shift_B  = shift_B<Opts...>,
-                                                     .rotate_C = rotate_C<Opts...>,
-                                                     .rotate_D = rotate_D<Opts...>,
-                                                     .mask_D   = mask_D<Opts...>};
+void gemm_sub(VA &&A, VB &&B, VC &&C, VD &&D, TilingOptions packing = {}, Opts... opts) {
+    constexpr auto conf = detail::apply_options({.negate = true}, opts...);
     detail::gemm<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A).as_const(), simdify(B).as_const(), std::make_optional(simdify(C).as_const()),
         simdify(D), packing);
@@ -226,18 +250,12 @@ void gemm_sub(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts... opts) 
 /// D = A Aᵀ with D symmetric
 template <char UpLo = 'L', simdifiable VA, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VD>
-void syrk(VA &&A, VD &&D, Opts...) {
+void syrk(VA &&A, VD &&D, Opts... opts) {
     static_assert(UpLo == 'L' || UpLo == 'U');
     using enum micro_kernels::gemm::MatrixStructure;
     std::optional<decltype(simdify(D).as_const())> null;
-    constexpr micro_kernels::gemm::KernelConfig conf{.negate   = false,
-                                                     .struc_C  = UpLo == 'U' ? UpperTriangular
-                                                                             : LowerTriangular,
-                                                     .shift_A  = shift_A<Opts...>,
-                                                     .shift_B  = shift_B<Opts...>,
-                                                     .rotate_C = rotate_D<Opts...>,
-                                                     .rotate_D = rotate_D<Opts...>,
-                                                     .mask_D   = mask_D<Opts...>};
+    constexpr auto conf = detail::apply_options(
+        {.negate = false, .struc_C = UpLo == 'U' ? UpperTriangular : LowerTriangular}, opts...);
     detail::gemmt<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A).as_const(), simdify(A).as_const().transposed(), null, simdify(D));
 }
@@ -245,18 +263,12 @@ void syrk(VA &&A, VD &&D, Opts...) {
 /// D = -A Aᵀ with D symmetric
 template <char UpLo = 'L', simdifiable VA, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VD>
-void syrk_neg(VA &&A, VD &&D, Opts...) {
+void syrk_neg(VA &&A, VD &&D, Opts... opts) {
     static_assert(UpLo == 'L' || UpLo == 'U');
     using enum micro_kernels::gemm::MatrixStructure;
     std::optional<decltype(simdify(D).as_const())> null;
-    constexpr micro_kernels::gemm::KernelConfig conf{.negate   = true,
-                                                     .struc_C  = UpLo == 'U' ? UpperTriangular
-                                                                             : LowerTriangular,
-                                                     .shift_A  = shift_A<Opts...>,
-                                                     .shift_B  = shift_B<Opts...>,
-                                                     .rotate_C = rotate_D<Opts...>,
-                                                     .rotate_D = rotate_D<Opts...>,
-                                                     .mask_D   = mask_D<Opts...>};
+    constexpr auto conf = detail::apply_options(
+        {.negate = true, .struc_C = UpLo == 'U' ? UpperTriangular : LowerTriangular}, opts...);
     detail::gemmt<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A).as_const(), simdify(A).as_const().transposed(), null, simdify(D));
 }
@@ -264,17 +276,11 @@ void syrk_neg(VA &&A, VD &&D, Opts...) {
 /// D = C + A Aᵀ with C, D symmetric
 template <char UpLo = 'L', simdifiable VA, simdifiable VC, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VC, VD>
-void syrk_add(VA A, VC C, VD D, Opts...) {
+void syrk_add(VA A, VC C, VD D, Opts... opts) {
     static_assert(UpLo == 'L' || UpLo == 'U');
     using enum micro_kernels::gemm::MatrixStructure;
-    constexpr micro_kernels::gemm::KernelConfig conf{.negate   = false,
-                                                     .struc_C  = UpLo == 'U' ? UpperTriangular
-                                                                             : LowerTriangular,
-                                                     .shift_A  = shift_A<Opts...>,
-                                                     .shift_B  = shift_B<Opts...>,
-                                                     .rotate_C = rotate_C<Opts...>,
-                                                     .rotate_D = rotate_D<Opts...>,
-                                                     .mask_D   = mask_D<Opts...>};
+    constexpr auto conf = detail::apply_options(
+        {.negate = false, .struc_C = UpLo == 'U' ? UpperTriangular : LowerTriangular}, opts...);
     detail::gemmt<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A).as_const(), simdify(A).as_const().transposed(),
         std::make_optional(simdify(C).as_const()), simdify(D));
@@ -288,17 +294,11 @@ void syrk_add(VA &&A, VD &&D, Opts... opts) {
 /// D = C - A Aᵀ with C, D symmetric
 template <char UpLo = 'L', simdifiable VA, simdifiable VC, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VC, VD>
-void syrk_sub(VA A, VC C, VD D, Opts...) {
+void syrk_sub(VA A, VC C, VD D, Opts... opts) {
     static_assert(UpLo == 'L' || UpLo == 'U');
     using enum micro_kernels::gemm::MatrixStructure;
-    constexpr micro_kernels::gemm::KernelConfig conf{.negate   = true,
-                                                     .struc_C  = UpLo == 'U' ? UpperTriangular
-                                                                             : LowerTriangular,
-                                                     .shift_A  = shift_A<Opts...>,
-                                                     .shift_B  = shift_B<Opts...>,
-                                                     .rotate_C = rotate_C<Opts...>,
-                                                     .rotate_D = rotate_D<Opts...>,
-                                                     .mask_D   = mask_D<Opts...>};
+    constexpr auto conf = detail::apply_options(
+        {.negate = true, .struc_C = UpLo == 'U' ? UpperTriangular : LowerTriangular}, opts...);
     detail::gemmt<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A).as_const(), simdify(A).as_const().transposed(),
         std::make_optional(simdify(C).as_const()), simdify(D));
@@ -307,6 +307,82 @@ void syrk_sub(VA A, VC C, VD D, Opts...) {
 template <char UpLo = 'L', simdifiable VA, simdifiable VD, shift_opt... Opts>
 void syrk_sub(VA &&A, VD &&D, Opts... opts) {
     return syrk_sub<UpLo>(A, D, D, opts...);
+}
+
+/// D = A B with A and/or B triangular
+template <MatrixStructure SA, MatrixStructure SB, MatrixStructure SD, simdifiable VA,
+          simdifiable VB, simdifiable VD, shift_opt... Opts>
+    requires simdify_compatible<VA, VB, VD>
+void trmm(Structured<VA, SA> A, Structured<VB, SB> B, Structured<VD, SD> D, Opts... opts) {
+    std::optional<decltype(simdify(D.value).as_const())> null;
+    constexpr auto conf = detail::apply_options(
+        {.negate = false, .struc_A = SA, .struc_B = SB, .struc_C = SD}, opts...);
+    detail::trmm<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
+        simdify(A.value).as_const(), simdify(B.value).as_const(), null, simdify(D.value));
+}
+/// D = A B with A and/or B triangular
+template <class TA, class TB, class TD, class... Opts>
+void trmm(TA &&A, TB &&B, TD &&D, Opts &&...opts) {
+    return trmm(Structured{std::forward<TA>(A)}, Structured{std::forward<TB>(B)},
+                Structured{std::forward<TD>(D)}, std::forward<Opts>(opts)...);
+}
+
+/// D = -A B with A and/or B triangular
+template <MatrixStructure SA, MatrixStructure SB, MatrixStructure SD, simdifiable VA,
+          simdifiable VB, simdifiable VD, shift_opt... Opts>
+    requires simdify_compatible<VA, VB, VD>
+void trmm_neg(Structured<VA, SA> A, Structured<VB, SB> B, Structured<VD, SD> D, Opts... opts) {
+    std::optional<decltype(simdify(D.value).as_const())> null;
+    constexpr auto conf = detail::apply_options(
+        {.negate = true, .struc_A = SA, .struc_B = SB, .struc_C = SD}, opts...);
+    detail::trmm<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
+        simdify(A.value).as_const(), simdify(B.value).as_const(), null, simdify(D.value));
+}
+/// D = -A B with A and/or B triangular
+template <class TA, class TB, class TD, class... Opts>
+void trmm_neg(TA &&A, TB &&B, TD &&D, Opts &&...opts) {
+    return trmm_neg(Structured{std::forward<TA>(A)}, Structured{std::forward<TB>(B)},
+                    Structured{std::forward<TD>(D)}, std::forward<Opts>(opts)...);
+}
+
+/// D = C + A B with A and/or B triangular
+template <MatrixStructure SA, MatrixStructure SB, MatrixStructure SD, simdifiable VA,
+          simdifiable VB, simdifiable VC, simdifiable VD, shift_opt... Opts>
+    requires simdify_compatible<VA, VB, VD>
+void trmm_add(Structured<VA, SA> A, Structured<VB, SB> B, Structured<VC, SD> C,
+              Structured<VD, SD> D, Opts... opts) {
+    constexpr auto conf = detail::apply_options(
+        {.negate = false, .struc_A = SA, .struc_B = SB, .struc_C = SD}, opts...);
+    detail::trmm<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
+        simdify(A.value).as_const(), simdify(B.value).as_const(),
+        std::make_optional(simdify(C.value).as_const()), simdify(D.value));
+}
+/// D = C + A B with A and/or B triangular
+template <class TA, class TB, class TC, class TD, class... Opts>
+void trmm_add(TA &&A, TB &&B, TC &&C, TD &&D, Opts &&...opts) {
+    return trmm_add(Structured{std::forward<TA>(A)}, Structured{std::forward<TB>(B)},
+                    Structured{std::forward<TC>(C)}, Structured{std::forward<TD>(D)},
+                    std::forward<Opts>(opts)...);
+}
+
+/// D = C - A B with A and/or B triangular
+template <MatrixStructure SA, MatrixStructure SB, MatrixStructure SD, simdifiable VA,
+          simdifiable VB, simdifiable VC, simdifiable VD, shift_opt... Opts>
+    requires simdify_compatible<VA, VB, VD>
+void trmm_sub(Structured<VA, SA> A, Structured<VB, SB> B, Structured<VC, SD> C,
+              Structured<VD, SD> D, Opts... opts) {
+    constexpr auto conf = detail::apply_options(
+        {.negate = true, .struc_A = SA, .struc_B = SB, .struc_C = SD}, opts...);
+    detail::trmm<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
+        simdify(A.value).as_const(), simdify(B.value).as_const(),
+        std::make_optional(simdify(C.value).as_const()), simdify(D.value));
+}
+/// D = C - A B with A and/or B triangular
+template <class TA, class TB, class TC, class TD, class... Opts>
+void trmm_sub(TA &&A, TB &&B, TC &&C, TD &&D, Opts &&...opts) {
+    return trmm_sub(Structured{std::forward<TA>(A)}, Structured{std::forward<TB>(B)},
+                    Structured{std::forward<TC>(C)}, Structured{std::forward<TD>(D)},
+                    std::forward<Opts>(opts)...);
 }
 
 } // namespace batmat::linalg

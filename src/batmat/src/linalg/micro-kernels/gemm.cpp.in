@@ -74,6 +74,14 @@ extern const auto gemm_copy_register_inst_trmm_B =
             constexpr KernelConfig Conf{.negate = Negate, .struc_B = SB};
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
+extern const auto gemm_copy_register_inst_trtrtr =
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
+        []<auto OA, auto OB, auto OC, auto S>(CStorageOrder<OA>, CStorageOrder<OB>,
+                                              CStorageOrder<OC>,
+                                              CMatrixStructure<S>) -> const void * {
+            constexpr KernelConfig Conf{.negate = Negate, .struc_A = S, .struc_B = S, .struc_C = S};
+            return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
+        });
 extern const auto gemm_copy_register_inst_syrk_C =
     guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
         []<auto OA, auto OB, auto OC, auto SC>(CStorageOrder<OA>, CStorageOrder<OB>,
