@@ -377,8 +377,9 @@ struct View {
         }
     }
 
-    void copy_values(const auto &other) const {
-        static_assert(this->is_row_major == other.is_row_major);
+    template <class Other>
+    void copy_values(const Other &other) const {
+        static_assert(is_row_major == Other::is_row_major);
         assert(other.rows() == this->rows());
         assert(other.cols() == this->cols());
         assert(other.batch_size() == this->batch_size());

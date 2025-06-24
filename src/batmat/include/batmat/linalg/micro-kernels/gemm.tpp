@@ -47,7 +47,7 @@ gemm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
         BATMAT_ASSUME(k >= ColsReg);
     // Load accumulator into registers
     simd C_reg[RowsReg][ColsReg]; // NOLINT(*-c-arrays)
-    if (C) {
+    if (C) [[likely]] {
         const auto C_cached = with_cached_access<RowsReg, ColsReg>(*C);
         UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
             UNROLL_FOR (index_t jj = min_col(ii); jj <= max_col(ii); ++jj)
