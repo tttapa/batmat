@@ -15,7 +15,7 @@ using batmat::matrix::DefaultStride;
 using batmat::matrix::StorageOrder;
 using batmat::tests::CatTypes;
 
-template <class T, index_t N, StorageOrder OA, StorageOrder OB, StorageOrder OC>
+template <class T, index_t N, StorageOrder OA, StorageOrder OB>
 struct TestConfig {
     using value_type                      = T;
     using batch_size                      = std::integral_constant<index_t, N>;
@@ -154,14 +154,13 @@ REGISTER_TYPED_TEST_SUITE_P(TrsmTest, trsmLLinplace, trsmLUinplace, trsmRUinplac
 
 using enum batmat::matrix::StorageOrder;
 template <class T, index_t N>
-using TestConfigs = ::testing::Types<
-    TestConfig<T, N, ColMajor, ColMajor, ColMajor>,
+using TestConfigs =
+    ::testing::Types<TestConfig<T, N, ColMajor, ColMajor>,
 #if BATMAT_EXTENSIVE_TESTS
-    TestConfig<T, N, ColMajor, ColMajor, RowMajor>, TestConfig<T, N, ColMajor, RowMajor, ColMajor>,
-    TestConfig<T, N, ColMajor, RowMajor, RowMajor>, TestConfig<T, N, RowMajor, ColMajor, ColMajor>,
-    TestConfig<T, N, RowMajor, ColMajor, RowMajor>, TestConfig<T, N, RowMajor, RowMajor, ColMajor>,
+                     TestConfig<T, N, ColMajor, ColMajor>, TestConfig<T, N, ColMajor, RowMajor>,
+                     TestConfig<T, N, RowMajor, ColMajor>,
 #endif
-    TestConfig<T, N, RowMajor, RowMajor, RowMajor>>;
+                     TestConfig<T, N, RowMajor, RowMajor>>;
 using AllTestConfigs = typename CatTypes<TestConfigs<double, 1>, TestConfigs<double, 4>,
                                          TestConfigs<float, 1>, TestConfigs<float, 8>>::type;
 
