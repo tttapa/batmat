@@ -65,24 +65,34 @@ using enum PackingSelector;
         ->DenseRange(256, 512, 32)                                                                 \
         ->MeasureProcessCPUTime()                                                                  \
         ->UseRealTime()
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, RowMajor, ColMajor, Never, Never, true>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, RowMajor, RowMajor, Never, Never, true>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, ColMajor, ColMajor, Never, Never, true>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, ColMajor, RowMajor, Never, Never, true>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, RowMajor, ColMajor, Always, Always, true>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, RowMajor, RowMajor, Always, Always, true>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, ColMajor, ColMajor, Always, Always, true>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, ColMajor, RowMajor, Always, Always, true>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, RowMajor, ColMajor, Never, Always, true>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, RowMajor, RowMajor, Never, Always, true>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, ColMajor, ColMajor, Never, Always, true>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, ColMajor, RowMajor, Never, Always, true>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, RowMajor, ColMajor, Always, Never, true>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, RowMajor, RowMajor, Always, Never, true>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, ColMajor, ColMajor, Always, Never, true>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, ColMajor, RowMajor, Always, Never, true>)->BM_RANGES();
+#ifdef __AVX512F__
+using default_abi = deduced_abi<real_t, 8>;
+#else
+using default_abi = deduced_abi<real_t, 4>;
+#endif
+BENCHMARK(dgemm<default_abi, RowMajor, ColMajor, Transpose, Transpose, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, RowMajor, RowMajor, Transpose, Transpose, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, ColMajor, ColMajor, Transpose, Transpose, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, ColMajor, RowMajor, Transpose, Transpose, true>)->BM_RANGES();
 
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, RowMajor, ColMajor, Never, Never, false>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, RowMajor, RowMajor, Never, Never, false>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, ColMajor, ColMajor, Never, Never, false>)->BM_RANGES();
-BENCHMARK(dgemm<deduced_abi<real_t, 8>, ColMajor, RowMajor, Never, Never, false>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, RowMajor, ColMajor, Never, Never, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, RowMajor, RowMajor, Never, Never, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, ColMajor, ColMajor, Never, Never, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, ColMajor, RowMajor, Never, Never, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, RowMajor, ColMajor, Always, Always, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, RowMajor, RowMajor, Always, Always, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, ColMajor, ColMajor, Always, Always, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, ColMajor, RowMajor, Always, Always, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, RowMajor, ColMajor, Never, Always, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, RowMajor, RowMajor, Never, Always, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, ColMajor, ColMajor, Never, Always, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, ColMajor, RowMajor, Never, Always, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, RowMajor, ColMajor, Always, Never, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, RowMajor, RowMajor, Always, Never, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, ColMajor, ColMajor, Always, Never, true>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, ColMajor, RowMajor, Always, Never, true>)->BM_RANGES();
+
+BENCHMARK(dgemm<default_abi, RowMajor, ColMajor, Never, Never, false>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, RowMajor, RowMajor, Never, Never, false>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, ColMajor, ColMajor, Never, Never, false>)->BM_RANGES();
+BENCHMARK(dgemm<default_abi, ColMajor, RowMajor, Never, Never, false>)->BM_RANGES();
