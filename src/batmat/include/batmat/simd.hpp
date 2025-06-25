@@ -20,12 +20,14 @@ using scalar_abi = deduced_abi<Tp, 1>;
 
 template <class V>
 V unaligned_load(const typename V::value_type *p) {
-    return std::datapar::unchecked_load<V>(p, V::size());
+    std::span<typename V::value_type, V::size()> sp{const_cast<V::value_type *>(p), V::size()};
+    return std::datapar::unchecked_load<V>(sp);
 }
 
 template <class V>
 V aligned_load(const typename V::value_type *p) {
-    return std::datapar::unchecked_load<V>(p, V::size(), std::datapar::flag_aligned);
+    std::span<typename V::value_type, V::size()> sp{const_cast<V::value_type *>(p), V::size()};
+    return std::datapar::unchecked_load<V>(sp, std::datapar::flag_aligned);
 }
 
 template <class V>
@@ -35,12 +37,19 @@ void unaligned_store(V v, typename V::value_type *p) {
 
 template <class V>
 void aligned_store(V v, typename V::value_type *p) {
-    std::datapar::unchecked_store(v, p, V::size(), std::datapar::flag_aligned);
+    std::span<typename V::value_type, V::size()> sp{p, V::size()};
+    std::datapar::unchecked_store(v, sp, std::datapar::flag_aligned);
 }
 
 template <class V>
 void masked_aligned_store(V v, typename V::mask_type m, typename V::value_type *p) {
-    std::datapar::unchecked_store(v, p, V::size(), m, std::datapar::flag_aligned);
+    std::span<typename V::value_type, V::size()> sp{p, V::size()};
+    if constexpr (V::size() == 1) {
+        if (m[0])
+            std::datapar::unchecked_store(v, sp, std::datapar::flag_aligned);
+    } else {
+        std::datapar::unchecked_store(v, sp, m, std::datapar::flag_aligned);
+    }
 }
 
 #if defined(__x86_64__) || defined(_M_X64)
@@ -54,7 +63,7 @@ auto to_intrin(V v) {
 template <class Tp, class Abi>
 using simd_size = decltype(simd<Tp, Abi>::size);
 template <class Tp, class Abi>
-using simd_align = std::simd_alignment<simd<Tp, Abi>>;
+using simd_align = std::datapar::alignment<simd<Tp, Abi>>;
 
 } // namespace batmat::datapar
 
