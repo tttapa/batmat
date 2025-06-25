@@ -128,48 +128,48 @@ class RotateTest : public ::testing::Test {};
 TYPED_TEST_SUITE(RotateTest, TestCases);
 
 TYPED_TEST(RotateTest, rotl) {
-    using simd         = batmat::datapar::simd<real_t, typename TypeParam::abi>;
-    constexpr size_t N = simd::size();
-    constexpr size_t S = TypeParam::shift;
-    simd x{[&](size_t i) { return static_cast<real_t>(i + 1); }};
+    using simd      = batmat::datapar::simd<real_t, typename TypeParam::abi>;
+    constexpr int N = simd::size();
+    constexpr int S = TypeParam::shift;
+    simd x{[&](int i) { return static_cast<real_t>(i + 1); }};
 
     simd y = rotl<S>(x);
-    simd y_expected{[&](size_t i) { return x[(i + S) % N]; }};
+    simd y_expected{[&](int i) { return x[(i + S) % N]; }};
 
     EXPECT_TRUE(all_of(y == y_expected));
 }
 
 TYPED_TEST(RotateTest, rotr) {
-    using simd         = batmat::datapar::simd<real_t, typename TypeParam::abi>;
-    constexpr size_t N = simd::size();
-    constexpr size_t S = TypeParam::shift;
-    simd x{[&](size_t i) { return static_cast<real_t>(i + 1); }};
+    using simd      = batmat::datapar::simd<real_t, typename TypeParam::abi>;
+    constexpr int N = simd::size();
+    constexpr int S = TypeParam::shift;
+    simd x{[&](int i) { return static_cast<real_t>(i + 1); }};
 
     simd y = rotr<S>(x);
-    simd y_expected{[&](size_t i) { return x[(i + N - S) % N]; }};
+    simd y_expected{[&](int i) { return x[(i + N - S) % N]; }};
 
     EXPECT_TRUE(all_of(y == y_expected));
 }
 
 TYPED_TEST(RotateTest, shiftl) {
-    using simd         = batmat::datapar::simd<real_t, typename TypeParam::abi>;
-    constexpr size_t N = simd::size();
-    constexpr size_t S = TypeParam::shift;
-    simd x{[&](size_t i) { return static_cast<real_t>(i + 1); }};
+    using simd      = batmat::datapar::simd<real_t, typename TypeParam::abi>;
+    constexpr int N = simd::size();
+    constexpr int S = TypeParam::shift;
+    simd x{[&](int i) { return static_cast<real_t>(i + 1); }};
 
     simd y = shiftl<S>(x);
-    simd y_expected{[&](size_t i) { return (i + S < N) ? x[i + S] : 0.0; }};
+    simd y_expected{[&](int i) { return (i + S < N) ? x[i + S] : 0.0; }};
 
     EXPECT_TRUE(all_of(y == y_expected));
 }
 
 TYPED_TEST(RotateTest, shiftr) {
-    using simd         = batmat::datapar::simd<real_t, typename TypeParam::abi>;
-    constexpr size_t S = TypeParam::shift;
-    simd x{[&](size_t i) { return static_cast<real_t>(i + 1); }};
+    using simd      = batmat::datapar::simd<real_t, typename TypeParam::abi>;
+    constexpr int S = TypeParam::shift;
+    simd x{[&](int i) { return static_cast<real_t>(i + 1); }};
 
     simd y = shiftr<S>(x);
-    simd y_expected{[&](size_t i) { return (i >= S) ? x[i - S] : 0.0; }};
+    simd y_expected{[&](int i) { return (i >= S) ? x[i - S] : 0.0; }};
 
     EXPECT_TRUE(all_of(y == y_expected));
 }
