@@ -7,8 +7,8 @@
 namespace batmat::linalg::micro_kernels::trsm {
 
 // clang-format off
-using Abi   = std::experimental::simd_abi::@Abi@;
 using DType = @DType@;
+using Abi   = datapar::deduced_abi<DType, @VL@>;
 // clang-format on
 
 using enum StorageOrder;
