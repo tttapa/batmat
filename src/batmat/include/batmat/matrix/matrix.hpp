@@ -60,7 +60,9 @@ struct Matrix {
     view_type view_;
 
     static constexpr auto default_alignment(layout_type layout) {
-        if constexpr (alignment_type{} == 0)
+        if constexpr (std::is_integral_v<alignment_type>)
+            return alignof(T) * static_cast<size_t>(layout.batch_size); // TODO
+        if constexpr (alignment_type::value == 0)
             return alignof(T) * static_cast<size_t>(layout.batch_size);
         else
             return alignment_type{};

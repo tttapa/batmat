@@ -140,104 +140,106 @@ gather(datapar::deduced_simd<float, 4> src, __mmask8 mask, datapar::deduced_simd
 
 #elif defined(__AVX2__)
 
-[[gnu::always_inline]] inline __m256i compare_ge_0(deduce_simd<int32_t, 8> x) {
+[[gnu::always_inline]] inline __m256i compare_ge_0(datapar::deduced_simd<int32_t, 8> x) {
     __m256i zero = _mm256_setzero_si256();
     return _mm256_or_si256(_mm256_cmpgt_epi32(static_cast<__m256i>(x), zero),
                            _mm256_cmpeq_epi32(static_cast<__m256i>(x), zero));
 }
 
-[[gnu::always_inline]] inline __m128i compare_ge_0(deduce_simd<int32_t, 4> x) {
+[[gnu::always_inline]] inline __m128i compare_ge_0(datapar::deduced_simd<int32_t, 4> x) {
     __m128i zero = _mm_setzero_si128();
     return _mm_or_si128(_mm_cmpgt_epi32(static_cast<__m128i>(x), zero),
                         _mm_cmpeq_epi32(static_cast<__m128i>(x), zero));
 }
 
-[[gnu::always_inline]] inline __m128i compare_ge_0(deduce_simd<int32_t, 2> x) {
+#if !BATMAT_WITH_GSI_HPC_SIMD // TODO
+[[gnu::always_inline]] inline __m128i compare_ge_0(datapar::deduced_simd<int32_t, 2> x) {
     __m128i zero = _mm_setzero_si128();
     return _mm_or_si128(_mm_cmpgt_epi64(static_cast<__m128i>(x), zero),
                         _mm_cmpeq_epi64(static_cast<__m128i>(x), zero));
 }
+#endif
 
-[[gnu::always_inline]] inline __m256i compare_ge_0(deduce_simd<int64_t, 4> x) {
+[[gnu::always_inline]] inline __m256i compare_ge_0(datapar::deduced_simd<int64_t, 4> x) {
     __m256i zero = _mm256_setzero_si256();
     return _mm256_or_si256(_mm256_cmpgt_epi64(static_cast<__m256i>(x), zero),
                            _mm256_cmpeq_epi64(static_cast<__m256i>(x), zero));
 }
 
-[[gnu::always_inline]] inline __m128i compare_ge_0(deduce_simd<int64_t, 2> x) {
+[[gnu::always_inline]] inline __m128i compare_ge_0(datapar::deduced_simd<int64_t, 2> x) {
     __m128i zero = _mm_setzero_si128();
     return _mm_or_si128(_mm_cmpgt_epi64(static_cast<__m128i>(x), zero),
                         _mm_cmpeq_epi64(static_cast<__m128i>(x), zero));
 }
 
 template <int Scale = sizeof(float)>
-[[gnu::always_inline]] inline deduce_simd<float, 8> gather(deduce_simd<float, 8> src, __m256i mask,
-                                                           deduce_simd<int32_t, 8> vindex,
-                                                           const float *base_addr) {
+[[gnu::always_inline]] inline datapar::deduced_simd<float, 8>
+gather(datapar::deduced_simd<float, 8> src, __m256i mask, datapar::deduced_simd<int32_t, 8> vindex,
+       const float *base_addr) {
     __m256i active     = mask;
     __m256i safe_index = _mm256_and_si256(static_cast<__m256i>(vindex), active);
     __m256 gathered    = _mm256_i32gather_ps(base_addr, safe_index, Scale);
     __m256 result =
         _mm256_blendv_ps(static_cast<__m256>(src), gathered, _mm256_castsi256_ps(active));
-    return deduce_simd<float, 8>{result};
+    return datapar::deduced_simd<float, 8>{result};
 }
 
 template <int Scale = sizeof(double)>
-[[gnu::always_inline]] inline deduce_simd<double, 4>
-gather(deduce_simd<double, 4> src, __m256i mask, deduce_simd<int64_t, 4> vindex,
+[[gnu::always_inline]] inline datapar::deduced_simd<double, 4>
+gather(datapar::deduced_simd<double, 4> src, __m256i mask, datapar::deduced_simd<int64_t, 4> vindex,
        const double *base_addr) {
     __m256i active     = mask;
     __m256i safe_index = _mm256_and_si256(static_cast<__m256i>(vindex), active);
     __m256d gathered   = _mm256_i64gather_pd(base_addr, safe_index, Scale);
     __m256d result =
         _mm256_blendv_pd(static_cast<__m256d>(src), gathered, _mm256_castsi256_pd(active));
-    return deduce_simd<double, 4>{result};
+    return datapar::deduced_simd<double, 4>{result};
 }
 
 template <int Scale = sizeof(double)>
-[[gnu::always_inline]] inline deduce_simd<double, 4>
-gather(deduce_simd<double, 4> src, __m128i mask, deduce_simd<int32_t, 4> vindex,
+[[gnu::always_inline]] inline datapar::deduced_simd<double, 4>
+gather(datapar::deduced_simd<double, 4> src, __m128i mask, datapar::deduced_simd<int32_t, 4> vindex,
        const double *base_addr) {
     __m128i active     = mask;
     __m128i safe_index = _mm_and_si128(static_cast<__m128i>(vindex), active);
     __m256d gathered   = _mm256_i32gather_pd(base_addr, safe_index, Scale);
     __m256d result     = _mm256_blendv_pd(static_cast<__m256d>(src), gathered,
                                           _mm256_castsi256_pd(_mm256_cvtepi32_epi64(active)));
-    return deduce_simd<double, 4>{result};
+    return datapar::deduced_simd<double, 4>{result};
 }
 
 template <int Scale = sizeof(float)>
-[[gnu::always_inline]] inline deduce_simd<float, 4> gather(deduce_simd<float, 4> src, __m128i mask,
-                                                           deduce_simd<int32_t, 4> vindex,
-                                                           const float *base_addr) {
+[[gnu::always_inline]] inline datapar::deduced_simd<float, 4>
+gather(datapar::deduced_simd<float, 4> src, __m128i mask, datapar::deduced_simd<int32_t, 4> vindex,
+       const float *base_addr) {
     __m128i active     = mask;
     __m128i safe_index = _mm_and_si128(static_cast<__m128i>(vindex), active);
     __m128 gathered    = _mm_i32gather_ps(base_addr, safe_index, Scale);
     __m128 result = _mm_blendv_ps(static_cast<__m128>(src), gathered, _mm_castsi128_ps(active));
-    return deduce_simd<float, 4>{result};
+    return datapar::deduced_simd<float, 4>{result};
 }
 
 template <int Scale = sizeof(double)>
-[[gnu::always_inline]] inline deduce_simd<double, 2>
-gather(deduce_simd<double, 2> src, __m128i mask, deduce_simd<int64_t, 2> vindex,
+[[gnu::always_inline]] inline datapar::deduced_simd<double, 2>
+gather(datapar::deduced_simd<double, 2> src, __m128i mask, datapar::deduced_simd<int64_t, 2> vindex,
        const double *base_addr) {
     __m128i active     = mask;
     __m128i safe_index = _mm_and_si128(static_cast<__m128i>(vindex), active);
     __m128d gathered   = _mm_i64gather_pd(base_addr, safe_index, Scale);
     __m128d result = _mm_blendv_pd(static_cast<__m128d>(src), gathered, _mm_castsi128_pd(active));
-    return deduce_simd<double, 2>{result};
+    return datapar::deduced_simd<double, 2>{result};
 }
 
 template <int Scale = sizeof(double)>
-[[gnu::always_inline]] inline deduce_simd<double, 2>
-gather(deduce_simd<double, 2> src, __m128i mask, deduce_simd<int32_t, 2> vindex,
+[[gnu::always_inline]] inline datapar::deduced_simd<double, 2>
+gather(datapar::deduced_simd<double, 2> src, __m128i mask, datapar::deduced_simd<int32_t, 2> vindex,
        const double *base_addr) {
     __m128i active     = mask;
     __m128i safe_index = _mm_and_si128(static_cast<__m128i>(vindex), active);
     __m128d gathered   = _mm_i32gather_pd(base_addr, safe_index, Scale);
     __m128d result     = _mm_blendv_pd(static_cast<__m128d>(src), gathered,
                                        _mm_castsi128_pd(_mm_cvtepi32_epi64(active)));
-    return deduce_simd<double, 2>{result};
+    return datapar::deduced_simd<double, 2>{result};
 }
 
 #endif
@@ -251,10 +253,18 @@ concept same_size_but_different_ints =
 template <class T, size_t N, class I>
 datapar::deduced_simd<T, N> gather(const T *p, datapar::deduced_simd<I, N> idx) {
     if constexpr (detail::same_size_but_different_ints<I, int32_t>) {
+#if BATMAT_WITH_GSI_HPC_SIMD // TODO: add simd_cast wrapper
+        const datapar::deduced_simd<int32_t, N> idx_{idx};
+#else
         const auto idx_ = simd_cast<datapar::deduced_simd<int32_t, N>>(idx);
+#endif
         return detail::gather(datapar::deduced_simd<T, N>{}, detail::compare_ge_0(idx_), idx_, p);
     } else if constexpr (detail::same_size_but_different_ints<I, int64_t>) {
+#if BATMAT_WITH_GSI_HPC_SIMD // TODO: add simd_cast wrapper
+        const datapar::deduced_simd<int64_t, N> idx_{idx};
+#else
         const auto idx_ = simd_cast<datapar::deduced_simd<int64_t, N>>(idx);
+#endif
         return detail::gather(datapar::deduced_simd<T, N>{}, detail::compare_ge_0(idx_), idx_, p);
     } else {
         return detail::gather(datapar::deduced_simd<T, N>{}, detail::compare_ge_0(idx), idx, p);

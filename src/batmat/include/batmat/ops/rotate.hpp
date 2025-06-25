@@ -11,54 +11,32 @@ template <class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> rot(datapar::simd<F, Abi> x, int s) {
     assert(s <= 0 || static_cast<size_t>(+s) < x.size());
     assert(s >= 0 || static_cast<size_t>(-s) < x.size());
-    datapar::simd<F, Abi> y;
-    for (size_t j = 0; j < x.size(); ++j)
-        y[j] = x[(x.size() + j - s) % x.size()];
-    return y;
+    int n = x.size();
+    return datapar::simd<F, Abi>{[&](int j) { return x[(n + j - s) % n]; }};
 }
 
 template <int S, class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> rotl(datapar::simd<F, Abi> x) {
     static_assert(S > 0 && S < x.size());
-    datapar::simd<F, Abi> y;
-    for (size_t j = 0; j < x.size() - S; ++j)
-        y[j] = x[j + S];
-    for (size_t j = x.size() - S; j < x.size(); ++j)
-        y[j] = x[j + S - x.size()];
-    return y;
+    return datapar::simd<F, Abi>{[&](int j) { return x[(j + S) % x.size()]; }};
 }
 
 template <int S, class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> rotr(datapar::simd<F, Abi> x) {
     static_assert(S > 0 && S < x.size());
-    datapar::simd<F, Abi> y;
-    for (size_t j = x.size() - S; j < x.size(); ++j)
-        y[j + S - x.size()] = x[j];
-    for (size_t j = 0; j < x.size() - S; ++j)
-        y[j + S] = x[j];
-    return y;
+    return datapar::simd<F, Abi>{[&](int j) { return x[(x.size() + j - S) % x.size()]; }};
 }
 
 template <int S, class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> shiftl(datapar::simd<F, Abi> x) {
     static_assert(S > 0 && S < x.size());
-    datapar::simd<F, Abi> y;
-    for (size_t j = 0; j < x.size() - S; ++j)
-        y[j] = x[j + S];
-    for (size_t j = x.size() - S; j < x.size(); ++j)
-        y[j] = 0;
-    return y;
+    return datapar::simd<F, Abi>{[&](int j) { return j + S < x.size() ? x[j + S] : F{}; }};
 }
 
 template <int S, class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> shiftr(datapar::simd<F, Abi> x) {
     static_assert(S > 0 && S < x.size());
-    datapar::simd<F, Abi> y;
-    for (size_t j = x.size() - S; j < x.size(); ++j)
-        y[j + S - x.size()] = 0;
-    for (size_t j = 0; j < x.size() - S; ++j)
-        y[j + S] = x[j];
-    return y;
+    return datapar::simd<F, Abi>{[&](int j) { return j >= S ? x[j - S] : F(0); }};
 }
 
 #if defined(__AVX512F__)

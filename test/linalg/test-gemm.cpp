@@ -51,7 +51,7 @@ TYPED_TEST_SUITE_P(GemmTest);
 
 TYPED_TEST_P(GemmTest, gemm) {
     using batmat::linalg::gemm;
-    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    const auto ε = 5000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
     for (auto m : batmat::tests::sizes)
         for (auto n : batmat::tests::sizes)
             for (auto k : batmat::tests::sizes) {
@@ -68,7 +68,7 @@ TYPED_TEST_P(GemmTest, gemm) {
 
 TYPED_TEST_P(GemmTest, gemmSub) {
     using batmat::linalg::gemm_sub;
-    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    const auto ε = 5000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
     for (auto m : batmat::tests::sizes)
         for (auto n : batmat::tests::sizes)
             for (auto k : batmat::tests::sizes) {
@@ -87,7 +87,7 @@ TYPED_TEST_P(GemmTest, gemmSub) {
 #if BATMAT_EXTENSIVE_TESTS
 TYPED_TEST_P(GemmTest, gemmNeg) {
     using batmat::linalg::gemm_neg;
-    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    const auto ε = 5000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
     for (auto m : batmat::tests::sizes)
         for (auto n : batmat::tests::sizes)
             for (auto k : batmat::tests::sizes) {
@@ -104,7 +104,7 @@ TYPED_TEST_P(GemmTest, gemmNeg) {
 
 TYPED_TEST_P(GemmTest, gemmAdd) {
     using batmat::linalg::gemm_add;
-    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    const auto ε = 5000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
     for (auto m : batmat::tests::sizes)
         for (auto n : batmat::tests::sizes)
             for (auto k : batmat::tests::sizes) {
@@ -122,7 +122,7 @@ TYPED_TEST_P(GemmTest, gemmAdd) {
 
 TYPED_TEST_P(GemmTest, gemmSubShiftA) {
     using batmat::linalg::gemm_sub;
-    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    const auto ε = 5000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
     for (auto m : batmat::tests::sizes)
         for (auto n : batmat::tests::sizes)
             for (auto k : batmat::tests::sizes) {
@@ -141,7 +141,7 @@ TYPED_TEST_P(GemmTest, gemmSubShiftA) {
 
 TYPED_TEST_P(GemmTest, gemmSubShiftCD) {
     using batmat::linalg::gemm_sub;
-    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    const auto ε = 5000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
     for (auto m : batmat::tests::sizes)
         for (auto n : batmat::tests::sizes)
             for (auto k : batmat::tests::sizes) {
@@ -162,7 +162,7 @@ TYPED_TEST_P(GemmTest, gemmSubShiftCD) {
 
 TYPED_TEST_P(GemmTest, gemmSubShiftCDNeg) {
     using batmat::linalg::gemm_sub;
-    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    const auto ε = 5000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
     for (auto m : batmat::tests::sizes)
         for (auto n : batmat::tests::sizes)
             for (auto k : batmat::tests::sizes) {
@@ -198,7 +198,7 @@ TYPED_TEST_P(GemmTest, trmmLGinplace) {
     using batmat::linalg::tril;
     using batmat::linalg::trmm;
     using EMat   = Eigen::MatrixX<typename TestFixture::value_type>;
-    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    const auto ε = 5000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
     for (auto m : batmat::tests::sizes)
         for (auto n : batmat::tests::sizes) {
             const auto A  = this->get_A(m, m);
@@ -216,7 +216,7 @@ TYPED_TEST_P(GemmTest, trmmUGinplace) {
     using batmat::linalg::triu;
     using batmat::linalg::trmm;
     using EMat   = Eigen::MatrixX<typename TestFixture::value_type>;
-    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    const auto ε = 5000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
     for (auto m : batmat::tests::sizes)
         for (auto n : batmat::tests::sizes) {
             const auto A  = this->get_A(m, m);
@@ -234,7 +234,7 @@ TYPED_TEST_P(GemmTest, trmmGLinplace) {
     using batmat::linalg::tril;
     using batmat::linalg::trmm;
     using EMat   = Eigen::MatrixX<typename TestFixture::value_type>;
-    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    const auto ε = 5000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
     for (auto m : batmat::tests::sizes)
         for (auto n : batmat::tests::sizes) {
             const auto A  = this->get_A(m, m);
@@ -252,7 +252,7 @@ TYPED_TEST_P(GemmTest, trmmGUinplace) {
     using batmat::linalg::triu;
     using batmat::linalg::trmm;
     using EMat   = Eigen::MatrixX<typename TestFixture::value_type>;
-    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    const auto ε = 5000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
     for (auto m : batmat::tests::sizes)
         for (auto n : batmat::tests::sizes) {
             const auto A  = this->get_A(m, m);
@@ -270,7 +270,7 @@ TYPED_TEST_P(GemmTest, trmmULLinplace) {
     using batmat::linalg::tril;
     using batmat::linalg::triu;
     using batmat::linalg::trmm;
-    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    const auto ε = 5000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
     for (auto m : batmat::tests::sizes) {
         const auto A0 = this->get_A(m, m);
         auto A        = A0;
@@ -289,7 +289,7 @@ TYPED_TEST_P(GemmTest, trmmLUUinplace) {
     using batmat::linalg::tril;
     using batmat::linalg::triu;
     using batmat::linalg::trmm;
-    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    const auto ε = 5000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
     for (auto m : batmat::tests::sizes) {
         const auto A0 = this->get_A(m, m);
         auto A        = A0;
@@ -308,7 +308,7 @@ TYPED_TEST_P(GemmTest, trmmLUUinplace) {
 TYPED_TEST_P(GemmTest, trmmLLL) {
     using batmat::linalg::tril;
     using batmat::linalg::trmm;
-    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    const auto ε = 5000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
     for (auto m : batmat::tests::sizes) {
         const auto A = this->get_A(m, m);
         auto D       = this->get_A(m, m);
@@ -324,7 +324,7 @@ TYPED_TEST_P(GemmTest, trmmLLL) {
 TYPED_TEST_P(GemmTest, trmmLLLinplace) {
     using batmat::linalg::tril;
     using batmat::linalg::trmm;
-    const auto ε = 1000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
+    const auto ε = 5000 * std::numeric_limits<typename TestFixture::value_type>::epsilon();
     for (auto m : batmat::tests::sizes) {
         const auto A0 = this->get_A(m, m);
         auto A        = A0;

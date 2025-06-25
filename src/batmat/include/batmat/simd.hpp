@@ -61,7 +61,7 @@ auto to_intrin(V v) {
 #endif
 
 template <class Tp, class Abi>
-using simd_size = decltype(simd<Tp, Abi>::size);
+using simd_size = std::remove_cvref_t<decltype(simd<Tp, Abi>::size)>;
 template <class Tp, class Abi>
 using simd_align = std::datapar::alignment<simd<Tp, Abi>>;
 
@@ -125,3 +125,14 @@ using scalar_abi = deduced_abi<Tp, 1>;
 } // namespace batmat::datapar
 
 #endif
+
+namespace batmat::datapar {
+
+template <class V>
+constexpr V from_values(auto... values) {
+    alignas(simd_align<typename V::value_type, typename V::abi_type>::value)
+        const typename V::value_type data[]{values...};
+    return aligned_load<V>(data);
+}
+
+} // namespace batmat::datapar

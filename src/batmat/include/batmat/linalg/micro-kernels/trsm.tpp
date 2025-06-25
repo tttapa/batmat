@@ -46,7 +46,7 @@ trsm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
     // Triangular solve
     if constexpr (lower) {
         UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
-            simd Aii = 1 / A.load(ii, k + ii);
+            simd Aii = simd{1} / A.load(ii, k + ii);
             UNROLL_FOR (index_t jj = 0; jj < ColsReg; ++jj) {
                 simd &Xij = B_reg[ii][jj];
                 UNROLL_FOR (index_t ll = 0; ll < ii; ++ll) {
@@ -59,7 +59,7 @@ trsm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
         }
     } else {
         UNROLL_FOR (index_t ii = RowsReg; ii-- > 0;) {
-            simd Aii = 1 / A.load(ii, ii);
+            simd Aii = simd{1} / A.load(ii, ii);
             UNROLL_FOR (index_t jj = 0; jj < ColsReg; ++jj) {
                 simd &Xij = B_reg[ii][jj];
                 UNROLL_FOR (index_t ll = ii + 1; ll < RowsReg; ++ll) {

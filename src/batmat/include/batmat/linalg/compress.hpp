@@ -64,9 +64,15 @@ index_t compress_masks(real_view<Abi> A_in, real_view<Abi> S_in, mut_real_view<A
         const simd Sc = types::aligned_load(&S_in(0, c, 0));
         auto Sc_msk   = Sc != 0;
         BATMAT_FULLY_UNROLLED_FOR (auto &h : hist) {
+#if BATMAT_WITH_GSI_HPC_SIMD
+            const auto msk = (h == 0) && Sc_msk;
+            h              = isimd{[&](int i) { return msk[i] ? c1_simd[i] : h[i]; }}; // TODO
+            Sc_msk         = Sc_msk && (!msk);
+#else
             const auto msk = (h == 0) && Sc_msk.__cvt();
             where(msk, h)  = c1_simd;
             Sc_msk         = Sc_msk && (!msk).__cvt();
+#endif
         }
         // Masks of all ones can already be written to memory
         while (none_of(hist[0] == 0) || (c + 1 == C && any_of(hist[0] != 0)))
@@ -80,11 +86,19 @@ index_t compress_masks(real_view<Abi> A_in, real_view<Abi> S_in, mut_real_view<A
             // Find the first empty slot, and add the remaining bits.
             BATMAT_FULLY_UNROLLED_FOR (auto &h : hist)
                 if (all_of(h == 0))
+#if BATMAT_WITH_GSI_HPC_SIMD
+                    h = isimd{[&](int i) { return Sc_msk[i] ? c1_simd[i] : h[i]; }}; // TODO
+#else
                     where(Sc_msk.__cvt(), h) = c1_simd;
+#endif
         }
         // Invariant: first registers in the buffer contain fewest zeros
         BATMAT_FULLY_UNROLLED_FOR (index_t i = 1; i < N; ++i)
+#if BATMAT_WITH_GSI_HPC_SIMD
+            assert(reduce_count(hist[i] != 0) <= reduce_count(hist[i - 1] != 0));
+#else
             assert(popcount(hist[i] != 0) <= popcount(hist[i - 1] != 0));
+#endif
     }
     if (any_of(hist[0] != 0))
         commit_no_shift(hist[0]);
@@ -114,9 +128,15 @@ index_t compress_masks_count(real_view<Abi> S_in) {
         const simd Sc = types::aligned_load(&S_in(0, c, 0));
         auto Sc_msk   = Sc != 0;
         BATMAT_FULLY_UNROLLED_FOR (auto &h : hist) {
+#if BATMAT_WITH_GSI_HPC_SIMD
+            const auto msk = (h == 0) && Sc_msk;
+            h              = isimd{[&](int i) { return msk[i] ? 1 : h[i]; }}; // TODO
+            Sc_msk         = Sc_msk && (!msk);
+#else
             const auto msk = (h == 0) && Sc_msk.__cvt();
             where(msk, h)  = 1;
             Sc_msk         = Sc_msk && (!msk).__cvt();
+#endif
         }
         // Masks of all ones can already be written to memory
         while (none_of(hist[0] == 0) || (c + 1 == C && any_of(hist[0] != 0)))
@@ -130,11 +150,19 @@ index_t compress_masks_count(real_view<Abi> S_in) {
             // Find the first empty slot, and add the remaining bits.
             BATMAT_FULLY_UNROLLED_FOR (auto &h : hist)
                 if (all_of(h == 0))
+#if BATMAT_WITH_GSI_HPC_SIMD
+                    h = isimd{[&](int i) { return Sc_msk[i] ? 1 : h[i]; }}; // TODO
+#else
                     where(Sc_msk.__cvt(), h) = 1;
+#endif
         }
         // Invariant: first registers in the buffer contain fewest zeros
         BATMAT_FULLY_UNROLLED_FOR (index_t i = 1; i < N; ++i)
+#if BATMAT_WITH_GSI_HPC_SIMD
+            assert(reduce_count(hist[i] != 0) <= reduce_count(hist[i - 1] != 0));
+#else
             assert(popcount(hist[i] != 0) <= popcount(hist[i - 1] != 0));
+#endif
     }
     if (any_of(hist[0] != 0))
         ++j;
