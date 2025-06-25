@@ -82,8 +82,8 @@ trsm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
 template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OB, StorageOrder OD>
 void trsm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi, OB> B,
                         const view<T, Abi, OD> D) noexcept {
-    static_assert(Conf.struc_A == MatrixStructure::LowerTriangular ||
-                  Conf.struc_A == MatrixStructure::UpperTriangular);
+    using enum MatrixStructure;
+    static_assert(Conf.struc_A == LowerTriangular || Conf.struc_A == UpperTriangular);
     constexpr auto Rows = RowsReg<T, Abi>, Cols = ColsReg<T, Abi>;
     // Check dimensions
     const index_t I = A.rows(), K = A.cols(), J = B.cols();
@@ -104,52 +104,39 @@ void trsm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi,
     if (I <= Rows && J <= Cols)
         return microkernel[I - 1][J - 1](A_, B_, D_, 0);
 
-    if constexpr (Conf.struc_A == MatrixStructure::LowerTriangular) {
-        // Simply loop over all blocks in the given matrices.
-        auto run = [&] [[gnu::always_inline]] (index_t i, index_t ni, index_t j, index_t nj) {
+    // Function to compute a single block X(i,j)
+    auto blk = [&] [[gnu::always_inline]] (index_t i, index_t ni, index_t j, index_t nj) {
+        // i iterates backwards from I to 0, because we want to process the remainder block first,
+        // as processing it last would have poor matrix-matrix performance in the microkernel.
+        if constexpr (Conf.struc_A == LowerTriangular) {
+            i        = I - i - ni;        // iterate forward, smallest chunk first
             auto Ai0 = A_.middle_rows(i); // subdiagonal block row
             auto Bij = B_.block(i, j);    // rhs block to solve now
             auto X0j = D_.middle_cols(j); // solution up to i and solution block to fill in
             microkernel[ni - 1][nj - 1](Ai0, Bij, X0j, i + K - I);
-        };
-        if constexpr (OD == StorageOrder::ColMajor)
-            // Loop over block columns of B and D
-            foreach_chunked_merged(0, J, Cols, [&](index_t j, auto nj) {
-                // Loop over the diagonal blocks of A
-                foreach_chunked_merged(0, I, Rows, [&](index_t i, auto ni) { run(i, ni, j, nj); });
-            });
-        else
-            // Loop over the diagonal blocks of A
-            foreach_chunked_merged(0, I, Rows, [&](index_t i, auto ni) {
-                // Loop over block columns of B and D
-                foreach_chunked_merged(0, J, Cols, [&](index_t j, auto nj) { run(i, ni, j, nj); });
-            });
-    } else {
-        // Simply loop over all blocks in the given matrices.
-        auto run = [&] [[gnu::always_inline]] (index_t i, index_t ni, index_t j, index_t nj) {
+        } else {
             auto Ai0 = A_.block(i, i); // superdiagonal block row
             auto Bij = B_.block(i, j); // rhs block to solve now
             auto X0j = D_.block(i, j); // solution up to i and solution block to fill in
             microkernel[ni - 1][nj - 1](Ai0, Bij, X0j, K - i - ni);
-        };
-        if constexpr (OD == StorageOrder::ColMajor)
-            // Loop over block columns of B and D
-            foreach_chunked_merged(0, J, Cols, [&](index_t j, auto nj) {
-                // Loop over the diagonal blocks of A
-                foreach_chunked_merged(
-                    0, I, Rows, [&](index_t i, auto ni) { run(i, ni, j, nj); }, LoopDir::Backward);
-            });
-        else
-            // Loop over the diagonal blocks of A
-            foreach_chunked_merged(
-                0, I, Rows,
-                [&](index_t i, auto ni) {
-                    // Loop over block columns of B and D
-                    foreach_chunked_merged(0, J, Cols,
-                                           [&](index_t j, auto nj) { run(i, ni, j, nj); });
-                },
-                LoopDir::Backward);
-    }
+        }
+    };
+    if constexpr (OD == StorageOrder::ColMajor)
+        foreach_chunked_merged( // Loop over block columns of B and D
+            0, J, Cols,
+            [&](index_t j, auto nj) {
+                foreach_chunked_merged( // Loop over the diagonal blocks of A
+                    0, I, Rows, [&](index_t i, auto ni) { blk(i, ni, j, nj); }, LoopDir::Backward);
+            },
+            LoopDir::Forward);
+    else
+        foreach_chunked_merged( // Loop over the diagonal blocks of A
+            0, I, Rows,
+            [&](index_t i, auto ni) {
+                foreach_chunked_merged( // Loop over block columns of B and D
+                    0, J, Cols, [&](index_t j, auto nj) { blk(i, ni, j, nj); }, LoopDir::Forward);
+            },
+            LoopDir::Backward);
 }
 
 } // namespace batmat::linalg::micro_kernels::trsm
