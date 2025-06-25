@@ -1,0 +1,15 @@
+include({{ os.path.join(profile_dir, "clang20") }})
+
+[settings]
+arch=x86_64
+
+[conf]
+tools.build:cflags+=["-march=skylake"]
+tools.build:cxxflags+=["-march=skylake"]
+tools.build:cflags+=["-g3"]
+tools.build:cxxflags+=["-g3"]
+tools.build.cross_building:can_run=true
+
+[options]
+openblas/*:target=HASWELL
+blasfeo/*:target=X64_INTEL_HASWELL
