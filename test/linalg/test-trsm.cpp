@@ -72,6 +72,30 @@ TYPED_TEST_P(TrsmTest, trsmLLinplace) {
         }
 }
 
+TYPED_TEST_P(TrsmTest, trsmLUinplace) {
+    using batmat::linalg::triu;
+    using batmat::linalg::trsm;
+    using real_t = typename TestFixture::value_type;
+    using EMat   = Eigen::MatrixX<real_t>;
+    const auto ε = std::pow(std::numeric_limits<real_t>::epsilon(), real_t(0.6));
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes) {
+            const auto A = [&] {
+                auto A = this->get_A(m, m);
+                A.view().add_to_diagonal(10);
+                return A;
+            }();
+            const auto D0 = this->get_B(m, n);
+            auto D        = D0;
+            trsm(triu(A), D, D);
+            for (index_t l = 0; l < A.depth(); ++l) {
+                EMat Dl_ref =
+                    as_eigen(A(l)).template triangularView<Eigen::Upper>().solve(as_eigen(D0(l)));
+                EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Dl_ref, ε));
+            }
+        }
+}
+
 TYPED_TEST_P(TrsmTest, trsmRUinplace) {
     using batmat::linalg::triu;
     using batmat::linalg::trsm;
@@ -99,7 +123,34 @@ TYPED_TEST_P(TrsmTest, trsmRUinplace) {
         }
 }
 
-REGISTER_TYPED_TEST_SUITE_P(TrsmTest, trsmLLinplace, trsmRUinplace);
+TYPED_TEST_P(TrsmTest, trsmRLinplace) {
+    using batmat::linalg::tril;
+    using batmat::linalg::trsm;
+    using real_t = typename TestFixture::value_type;
+    using EMat   = Eigen::MatrixX<real_t>;
+    const auto ε = std::pow(std::numeric_limits<real_t>::epsilon(), real_t(0.6));
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes) {
+            const auto A = [&] {
+                auto A = this->get_A(m, m);
+                A.view().add_to_diagonal(10);
+                return A;
+            }();
+            const auto D0 = this->get_B(n, m);
+            auto D        = D0;
+            trsm(D, tril(A), D);
+            for (index_t l = 0; l < A.depth(); ++l) {
+                EMat Dl_ref = as_eigen(A(l))
+                                  .template triangularView<Eigen::Lower>()
+                                  .transpose()
+                                  .solve(as_eigen(D0(l)).transpose())
+                                  .transpose();
+                EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Dl_ref, ε));
+            }
+        }
+}
+
+REGISTER_TYPED_TEST_SUITE_P(TrsmTest, trsmLLinplace, trsmLUinplace, trsmRUinplace, trsmRLinplace);
 
 using enum batmat::matrix::StorageOrder;
 template <class T, index_t N>

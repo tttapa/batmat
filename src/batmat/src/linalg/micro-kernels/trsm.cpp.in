@@ -12,22 +12,27 @@ using DType = @DType@;
 // clang-format on
 
 using enum StorageOrder;
+using enum MatrixStructure;
 
 template <StorageOrder O>
 using CStorageOrder = std::integral_constant<StorageOrder, O>;
+template <MatrixStructure O>
+using CMatrixStructure = std::integral_constant<MatrixStructure, O>;
 
 constexpr std::array ColRowMajor{ColMajor, RowMajor};
+constexpr std::array Triangular{LowerTriangular, UpperTriangular};
 
 namespace {
 template <auto V>
 const auto wrap = V;
 } // namespace
 
-extern const auto trsm_copy_register_inst_llnn_rltn =
-    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor>(
-        []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>,
-                                      CStorageOrder<OC>) -> const void * {
-            constexpr KernelConfig Conf{};
+extern const auto trsm_copy_register_inst =
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
+        []<auto OA, auto OB, auto OC, auto SA>(CStorageOrder<OA>, CStorageOrder<OB>,
+                                               CStorageOrder<OC>,
+                                               CMatrixStructure<SA>) -> const void * {
+            constexpr KernelConfig Conf{.struc_A = SA};
             return &wrap<trsm_copy_register<DType, Abi, Conf, OA, OB, OC>>;
         });
 

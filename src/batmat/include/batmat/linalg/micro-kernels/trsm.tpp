@@ -2,6 +2,7 @@
 
 #include <batmat/assume.hpp>
 #include <batmat/linalg/micro-kernels/trsm.hpp>
+#include <batmat/linalg/structure.hpp>
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
 
@@ -9,7 +10,7 @@
 
 namespace batmat::linalg::micro_kernels::trsm {
 
-/// @param  A Lower trapezoidal RowsReg×(k+RowsReg).
+/// @param  A Lower or upper trapezoidal RowsReg×(k+RowsReg).
 /// @param  B RowsReg×ColsReg.
 /// @param  D (k+RowsReg)×ColsReg.
 template <class T, class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg, StorageOrder OA,
@@ -17,7 +18,9 @@ template <class T, class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsRe
 [[gnu::hot, gnu::flatten]] void
 trsm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi, OB> B,
                       const uview<T, Abi, OD> D, const index_t k) noexcept {
-    static_assert(Conf.struc_A == MatrixStructure::LowerTriangular); // TODO
+    static_assert(Conf.struc_A == MatrixStructure::LowerTriangular ||
+                  Conf.struc_A == MatrixStructure::UpperTriangular);
+    constexpr bool lower = Conf.struc_A == MatrixStructure::LowerTriangular;
     static_assert(RowsReg > 0 && ColsReg > 0);
     using namespace ops;
     using simd = stdx::simd<T, Abi>;
@@ -30,7 +33,8 @@ trsm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
             B_reg[ii][jj] = B_cached.load(ii, jj);
     // Matrix multiplication
     const auto D_cached = with_cached_access<0, ColsReg>(D);
-    for (index_t l = 0; l < k; ++l)
+    const index_t l0 = lower ? 0 : RowsReg, l1 = lower ? k : k + RowsReg;
+    for (index_t l = l0; l < l1; ++l)
         UNROLL_FOR (index_t jj = 0; jj < ColsReg; ++jj) {
             simd Xlj = D_cached.load(l, jj);
             UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
@@ -40,22 +44,37 @@ trsm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
             }
         }
     // Triangular solve
-    UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
-        simd Aii = 1 / A.load(ii, k + ii);
-        UNROLL_FOR (index_t jj = 0; jj < ColsReg; ++jj) {
-            simd &Xij = B_reg[ii][jj];
-            UNROLL_FOR (index_t l = 0; l < ii; ++l) {
-                simd Ail  = A.load(ii, k + l);
-                simd &Xlj = B_reg[l][jj];
-                Xij -= Ail * Xlj;
+    if constexpr (lower) {
+        UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
+            simd Aii = 1 / A.load(ii, k + ii);
+            UNROLL_FOR (index_t jj = 0; jj < ColsReg; ++jj) {
+                simd &Xij = B_reg[ii][jj];
+                UNROLL_FOR (index_t ll = 0; ll < ii; ++ll) {
+                    simd Ail  = A.load(ii, k + ll);
+                    simd &Xlj = B_reg[ll][jj];
+                    Xij -= Ail * Xlj;
+                }
+                Xij *= Aii; // Diagonal already inverted
             }
-            Xij *= Aii; // Diagonal already inverted
+        }
+    } else {
+        UNROLL_FOR (index_t ii = RowsReg; ii-- > 0;) {
+            simd Aii = 1 / A.load(ii, ii);
+            UNROLL_FOR (index_t jj = 0; jj < ColsReg; ++jj) {
+                simd &Xij = B_reg[ii][jj];
+                UNROLL_FOR (index_t ll = ii + 1; ll < RowsReg; ++ll) {
+                    simd Ail  = A.load(ii, ll);
+                    simd &Xlj = B_reg[ll][jj];
+                    Xij -= Ail * Xlj;
+                }
+                Xij *= Aii; // Diagonal already inverted
+            }
         }
     }
     // Store accumulator to memory again
     UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
         UNROLL_FOR (index_t jj = 0; jj < ColsReg; ++jj)
-            D_cached.store(B_reg[ii][jj], k + ii, jj);
+            D_cached.store(B_reg[ii][jj], lower ? k + ii : ii, jj);
 }
 
 /// Triangular solve D = (A⁽ᵀ⁾)⁻¹ B⁽ᵀ⁾ where A⁽ᵀ⁾ is lower triangular. Using register blocking.
@@ -63,7 +82,8 @@ trsm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
 template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OB, StorageOrder OD>
 void trsm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi, OB> B,
                         const view<T, Abi, OD> D) noexcept {
-    static_assert(Conf.struc_A == MatrixStructure::LowerTriangular); // TODO
+    static_assert(Conf.struc_A == MatrixStructure::LowerTriangular ||
+                  Conf.struc_A == MatrixStructure::UpperTriangular);
     constexpr auto Rows = RowsReg<T, Abi>, Cols = ColsReg<T, Abi>;
     // Check dimensions
     const index_t I = A.rows(), K = A.cols(), J = B.cols();
@@ -84,25 +104,52 @@ void trsm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi,
     if (I <= Rows && J <= Cols)
         return microkernel[I - 1][J - 1](A_, B_, D_, 0);
 
-    // Simply loop over all blocks in the given matrices.
-    auto run = [&] [[gnu::always_inline]] (index_t i, index_t ni, index_t j, index_t nj) {
-        auto Ai0 = A_.middle_rows(i); // subdiagonal block row
-        auto Bij = B_.block(i, j);    // rhs block to solve now
-        auto X0j = D_.middle_cols(j); // solution up to i and solution block to fill in
-        microkernel[ni - 1][nj - 1](Ai0, Bij, X0j, i + K - I);
-    };
-    if constexpr (OD == StorageOrder::ColMajor)
-        // Loop over block columns of B and D
-        foreach_chunked_merged(0, J, Cols, [&](index_t j, auto nj) {
-            // Loop over the diagonal blocks of A
-            foreach_chunked_merged(0, I, Rows, [&](index_t i, auto ni) { run(i, ni, j, nj); });
-        });
-    else
-        // Loop over the diagonal blocks of A
-        foreach_chunked_merged(0, I, Rows, [&](index_t i, auto ni) {
+    if constexpr (Conf.struc_A == MatrixStructure::LowerTriangular) {
+        // Simply loop over all blocks in the given matrices.
+        auto run = [&] [[gnu::always_inline]] (index_t i, index_t ni, index_t j, index_t nj) {
+            auto Ai0 = A_.middle_rows(i); // subdiagonal block row
+            auto Bij = B_.block(i, j);    // rhs block to solve now
+            auto X0j = D_.middle_cols(j); // solution up to i and solution block to fill in
+            microkernel[ni - 1][nj - 1](Ai0, Bij, X0j, i + K - I);
+        };
+        if constexpr (OD == StorageOrder::ColMajor)
             // Loop over block columns of B and D
-            foreach_chunked_merged(0, J, Cols, [&](index_t j, auto nj) { run(i, ni, j, nj); });
-        });
+            foreach_chunked_merged(0, J, Cols, [&](index_t j, auto nj) {
+                // Loop over the diagonal blocks of A
+                foreach_chunked_merged(0, I, Rows, [&](index_t i, auto ni) { run(i, ni, j, nj); });
+            });
+        else
+            // Loop over the diagonal blocks of A
+            foreach_chunked_merged(0, I, Rows, [&](index_t i, auto ni) {
+                // Loop over block columns of B and D
+                foreach_chunked_merged(0, J, Cols, [&](index_t j, auto nj) { run(i, ni, j, nj); });
+            });
+    } else {
+        // Simply loop over all blocks in the given matrices.
+        auto run = [&] [[gnu::always_inline]] (index_t i, index_t ni, index_t j, index_t nj) {
+            auto Ai0 = A_.block(i, i); // superdiagonal block row
+            auto Bij = B_.block(i, j); // rhs block to solve now
+            auto X0j = D_.block(i, j); // solution up to i and solution block to fill in
+            microkernel[ni - 1][nj - 1](Ai0, Bij, X0j, K - i - ni);
+        };
+        if constexpr (OD == StorageOrder::ColMajor)
+            // Loop over block columns of B and D
+            foreach_chunked_merged(0, J, Cols, [&](index_t j, auto nj) {
+                // Loop over the diagonal blocks of A
+                foreach_chunked_merged(
+                    0, I, Rows, [&](index_t i, auto ni) { run(i, ni, j, nj); }, LoopDir::Backward);
+            });
+        else
+            // Loop over the diagonal blocks of A
+            foreach_chunked_merged(
+                0, I, Rows,
+                [&](index_t i, auto ni) {
+                    // Loop over block columns of B and D
+                    foreach_chunked_merged(0, J, Cols,
+                                           [&](index_t j, auto nj) { run(i, ni, j, nj); });
+                },
+                LoopDir::Backward);
+    }
 }
 
 } // namespace batmat::linalg::micro_kernels::trsm
