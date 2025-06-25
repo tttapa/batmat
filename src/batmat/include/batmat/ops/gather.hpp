@@ -1,145 +1,140 @@
 #pragma once
 
-#include <experimental/simd>
+#include <batmat/simd.hpp>
 #include <concepts>
 
 namespace batmat::ops {
 
-namespace stdx = std::experimental;
-
-template <class T, size_t N>
-using deduce_simd = stdx::simd<T, stdx::simd_abi::deduce_t<T, N>>;
-
 namespace detail {
 
 template <class T, class Abi>
-[[gnu::always_inline]] inline stdx::simd_mask<T, Abi> compare_ge_0(stdx::simd<T, Abi> x) {
-    return x >= stdx::simd<T, Abi>{};
+[[gnu::always_inline]] inline auto compare_ge_0(datapar::simd<T, Abi> x) {
+    return x >= datapar::simd<T, Abi>{};
 }
 
 template <int Scale, class T, class AbiT, class I, class AbiI>
-[[gnu::always_inline]] inline stdx::simd<T, AbiT>
-gather(stdx::simd<T, AbiT> src, stdx::simd_mask<I, AbiI> mask, stdx::simd<I, AbiI> vindex,
-       const T *base_addr) {
-    return stdx::simd<T, AbiT>{[=](auto i) { return mask[i] ? base_addr[vindex[i]] : src[i]; }};
+[[gnu::always_inline]] inline datapar::simd<T, AbiT>
+gather(datapar::simd<T, AbiT> src, typename datapar::simd<I, AbiI>::mask_type mask,
+       datapar::simd<I, AbiI> vindex, const T *base_addr) {
+    return datapar::simd<T, AbiT>{[=](auto i) { return mask[i] ? base_addr[vindex[i]] : src[i]; }};
 }
 
 #if defined(__AVX512F__)
 
-[[gnu::always_inline]] inline __mmask8 compare_ge_0(deduce_simd<int32_t, 4> x) {
+[[gnu::always_inline]] inline __mmask8 compare_ge_0(datapar::deduced_simd<int32_t, 4> x) {
     return _mm_cmp_epi32_mask(static_cast<__m128i>(x), static_cast<__m128i>(decltype(x){}),
                               _MM_CMPINT_NLT);
 }
 
-[[gnu::always_inline]] inline __mmask8 compare_ge_0(deduce_simd<int32_t, 8> x) {
+[[gnu::always_inline]] inline __mmask8 compare_ge_0(datapar::deduced_simd<int32_t, 8> x) {
     return _mm256_cmp_epi32_mask(static_cast<__m256i>(x), static_cast<__m256i>(decltype(x){}),
                                  _MM_CMPINT_NLT);
 }
 
-[[gnu::always_inline]] inline __mmask16 compare_ge_0(deduce_simd<int32_t, 16> x) {
+[[gnu::always_inline]] inline __mmask16 compare_ge_0(datapar::deduced_simd<int32_t, 16> x) {
     return _mm512_cmp_epi32_mask(static_cast<__m512i>(x), static_cast<__m512i>(decltype(x){}),
                                  _MM_CMPINT_NLT);
 }
 
-[[gnu::always_inline]] inline __mmask8 compare_ge_0(deduce_simd<int64_t, 2> x) {
+[[gnu::always_inline]] inline __mmask8 compare_ge_0(datapar::deduced_simd<int64_t, 2> x) {
     return _mm_cmp_epi64_mask(static_cast<__m128i>(x), static_cast<__m128i>(decltype(x){}),
                               _MM_CMPINT_NLT);
 }
-[[gnu::always_inline]] inline __mmask8 compare_ge_0(deduce_simd<int64_t, 4> x) {
+[[gnu::always_inline]] inline __mmask8 compare_ge_0(datapar::deduced_simd<int64_t, 4> x) {
     return _mm256_cmp_epi64_mask(static_cast<__m256i>(x), static_cast<__m256i>(decltype(x){}),
                                  _MM_CMPINT_NLT);
 }
 
-[[gnu::always_inline]] inline __mmask8 compare_ge_0(deduce_simd<int64_t, 8> x) {
+[[gnu::always_inline]] inline __mmask8 compare_ge_0(datapar::deduced_simd<int64_t, 8> x) {
     return _mm512_cmp_epi64_mask(static_cast<__m512i>(x), static_cast<__m512i>(decltype(x){}),
                                  _MM_CMPINT_NLT);
 }
 
 template <int Scale = sizeof(double)>
-[[gnu::always_inline]] inline deduce_simd<double, 8>
-gather(deduce_simd<double, 8> src, __mmask8 mask, deduce_simd<int64_t, 8> vindex,
-       const void *base_addr) {
-    return deduce_simd<double, 8>{_mm512_mask_i64gather_pd(
+[[gnu::always_inline]] inline datapar::deduced_simd<double, 8>
+gather(datapar::deduced_simd<double, 8> src, __mmask8 mask,
+       datapar::deduced_simd<int64_t, 8> vindex, const void *base_addr) {
+    return datapar::deduced_simd<double, 8>{_mm512_mask_i64gather_pd(
         static_cast<__m512d>(src), mask, static_cast<__m512i>(vindex), base_addr, Scale)};
 }
 
 template <int Scale = sizeof(double)>
-[[gnu::always_inline]] inline deduce_simd<double, 4>
-gather(deduce_simd<double, 4> src, __mmask8 mask, deduce_simd<int64_t, 4> vindex,
-       const void *base_addr) {
-    return deduce_simd<double, 4>{_mm256_mmask_i64gather_pd(
+[[gnu::always_inline]] inline datapar::deduced_simd<double, 4>
+gather(datapar::deduced_simd<double, 4> src, __mmask8 mask,
+       datapar::deduced_simd<int64_t, 4> vindex, const void *base_addr) {
+    return datapar::deduced_simd<double, 4>{_mm256_mmask_i64gather_pd(
         static_cast<__m256d>(src), mask, static_cast<__m256i>(vindex), base_addr, Scale)};
 }
 
 template <int Scale = sizeof(double)>
-[[gnu::always_inline]] inline deduce_simd<double, 2>
-gather(deduce_simd<double, 2> src, __mmask8 mask, deduce_simd<int64_t, 2> vindex,
-       const void *base_addr) {
-    return deduce_simd<double, 2>{_mm_mmask_i64gather_pd(
+[[gnu::always_inline]] inline datapar::deduced_simd<double, 2>
+gather(datapar::deduced_simd<double, 2> src, __mmask8 mask,
+       datapar::deduced_simd<int64_t, 2> vindex, const void *base_addr) {
+    return datapar::deduced_simd<double, 2>{_mm_mmask_i64gather_pd(
         static_cast<__m128d>(src), mask, static_cast<__m128i>(vindex), base_addr, Scale)};
 }
 
 template <int Scale = sizeof(double)>
-[[gnu::always_inline]] inline deduce_simd<double, 8>
-gather(deduce_simd<double, 8> src, __mmask8 mask, deduce_simd<int32_t, 8> vindex,
-       const void *base_addr) {
-    return deduce_simd<double, 8>{_mm512_mask_i32gather_pd(
+[[gnu::always_inline]] inline datapar::deduced_simd<double, 8>
+gather(datapar::deduced_simd<double, 8> src, __mmask8 mask,
+       datapar::deduced_simd<int32_t, 8> vindex, const void *base_addr) {
+    return datapar::deduced_simd<double, 8>{_mm512_mask_i32gather_pd(
         static_cast<__m512d>(src), mask, static_cast<__m256i>(vindex), base_addr, Scale)};
 }
 
 template <int Scale = sizeof(double)>
-[[gnu::always_inline]] inline deduce_simd<double, 4>
-gather(deduce_simd<double, 4> src, __mmask8 mask, deduce_simd<int32_t, 4> vindex,
-       const void *base_addr) {
-    return deduce_simd<double, 4>{_mm256_mmask_i32gather_pd(
+[[gnu::always_inline]] inline datapar::deduced_simd<double, 4>
+gather(datapar::deduced_simd<double, 4> src, __mmask8 mask,
+       datapar::deduced_simd<int32_t, 4> vindex, const void *base_addr) {
+    return datapar::deduced_simd<double, 4>{_mm256_mmask_i32gather_pd(
         static_cast<__m256d>(src), mask, static_cast<__m128i>(vindex), base_addr, Scale)};
 }
 
 template <int Scale = sizeof(double)>
-[[gnu::always_inline]] inline deduce_simd<double, 2>
-gather(deduce_simd<double, 2> src, __mmask8 mask, deduce_simd<int32_t, 2> vindex,
-       const void *base_addr) {
-    return deduce_simd<double, 2>{_mm_mmask_i32gather_pd(
+[[gnu::always_inline]] inline datapar::deduced_simd<double, 2>
+gather(datapar::deduced_simd<double, 2> src, __mmask8 mask,
+       datapar::deduced_simd<int32_t, 2> vindex, const void *base_addr) {
+    return datapar::deduced_simd<double, 2>{_mm_mmask_i32gather_pd(
         static_cast<__m128d>(src), mask, static_cast<__m128i>(vindex), base_addr, Scale)};
 }
 
 template <int Scale = sizeof(float)>
-[[gnu::always_inline]] inline deduce_simd<float, 16>
-gather(deduce_simd<float, 16> src, __mmask16 mask, deduce_simd<int32_t, 16> vindex,
-       const void *base_addr) {
-    return deduce_simd<float, 16>{_mm512_mask_i32gather_ps(
+[[gnu::always_inline]] inline datapar::deduced_simd<float, 16>
+gather(datapar::deduced_simd<float, 16> src, __mmask16 mask,
+       datapar::deduced_simd<int32_t, 16> vindex, const void *base_addr) {
+    return datapar::deduced_simd<float, 16>{_mm512_mask_i32gather_ps(
         static_cast<__m512>(src), mask, static_cast<__m512i>(vindex), base_addr, Scale)};
 }
 
 template <int Scale = sizeof(float)>
-[[gnu::always_inline]] inline deduce_simd<float, 8> gather(deduce_simd<float, 8> src, __mmask8 mask,
-                                                           deduce_simd<int32_t, 8> vindex,
-                                                           const void *base_addr) {
-    return deduce_simd<float, 8>{_mm256_mmask_i32gather_ps(
+[[gnu::always_inline]] inline datapar::deduced_simd<float, 8>
+gather(datapar::deduced_simd<float, 8> src, __mmask8 mask, datapar::deduced_simd<int32_t, 8> vindex,
+       const void *base_addr) {
+    return datapar::deduced_simd<float, 8>{_mm256_mmask_i32gather_ps(
         static_cast<__m256>(src), mask, static_cast<__m256i>(vindex), base_addr, Scale)};
 }
 
 template <int Scale = sizeof(float)>
-[[gnu::always_inline]] inline deduce_simd<float, 4> gather(deduce_simd<float, 4> src, __mmask8 mask,
-                                                           deduce_simd<int32_t, 4> vindex,
-                                                           const void *base_addr) {
-    return deduce_simd<float, 4>{_mm_mmask_i32gather_ps(
+[[gnu::always_inline]] inline datapar::deduced_simd<float, 4>
+gather(datapar::deduced_simd<float, 4> src, __mmask8 mask, datapar::deduced_simd<int32_t, 4> vindex,
+       const void *base_addr) {
+    return datapar::deduced_simd<float, 4>{_mm_mmask_i32gather_ps(
         static_cast<__m128>(src), mask, static_cast<__m128i>(vindex), base_addr, Scale)};
 }
 
 template <int Scale = sizeof(float)>
-[[gnu::always_inline]] inline deduce_simd<float, 8> gather(deduce_simd<float, 8> src, __mmask8 mask,
-                                                           deduce_simd<int64_t, 8> vindex,
-                                                           const void *base_addr) {
-    return deduce_simd<float, 8>{_mm512_mask_i64gather_ps(
+[[gnu::always_inline]] inline datapar::deduced_simd<float, 8>
+gather(datapar::deduced_simd<float, 8> src, __mmask8 mask, datapar::deduced_simd<int64_t, 8> vindex,
+       const void *base_addr) {
+    return datapar::deduced_simd<float, 8>{_mm512_mask_i64gather_ps(
         static_cast<__m256>(src), mask, static_cast<__m512i>(vindex), base_addr, Scale)};
 }
 
 template <int Scale = sizeof(float)>
-[[gnu::always_inline]] inline deduce_simd<float, 4> gather(deduce_simd<float, 4> src, __mmask8 mask,
-                                                           deduce_simd<int64_t, 4> vindex,
-                                                           const void *base_addr) {
-    return deduce_simd<float, 4>{_mm256_mmask_i64gather_ps(
+[[gnu::always_inline]] inline datapar::deduced_simd<float, 4>
+gather(datapar::deduced_simd<float, 4> src, __mmask8 mask, datapar::deduced_simd<int64_t, 4> vindex,
+       const void *base_addr) {
+    return datapar::deduced_simd<float, 4>{_mm256_mmask_i64gather_ps(
         static_cast<__m128>(src), mask, static_cast<__m256i>(vindex), base_addr, Scale)};
 }
 
@@ -254,15 +249,15 @@ concept same_size_but_different_ints =
 } // namespace detail
 
 template <class T, size_t N, class I>
-deduce_simd<T, N> gather(const T *p, deduce_simd<I, N> idx) {
+datapar::deduced_simd<T, N> gather(const T *p, datapar::deduced_simd<I, N> idx) {
     if constexpr (detail::same_size_but_different_ints<I, int32_t>) {
-        const auto idx_ = simd_cast<deduce_simd<int32_t, N>>(idx);
-        return detail::gather(deduce_simd<T, N>{}, detail::compare_ge_0(idx_), idx_, p);
+        const auto idx_ = simd_cast<datapar::deduced_simd<int32_t, N>>(idx);
+        return detail::gather(datapar::deduced_simd<T, N>{}, detail::compare_ge_0(idx_), idx_, p);
     } else if constexpr (detail::same_size_but_different_ints<I, int64_t>) {
-        const auto idx_ = simd_cast<deduce_simd<int64_t, N>>(idx);
-        return detail::gather(deduce_simd<T, N>{}, detail::compare_ge_0(idx_), idx_, p);
+        const auto idx_ = simd_cast<datapar::deduced_simd<int64_t, N>>(idx);
+        return detail::gather(datapar::deduced_simd<T, N>{}, detail::compare_ge_0(idx_), idx_, p);
     } else {
-        return detail::gather(deduce_simd<T, N>{}, detail::compare_ge_0(idx), idx, p);
+        return detail::gather(datapar::deduced_simd<T, N>{}, detail::compare_ge_0(idx), idx, p);
     }
 }
 

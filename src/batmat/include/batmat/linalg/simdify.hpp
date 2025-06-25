@@ -2,13 +2,12 @@
 
 #include <batmat/matrix/matrix.hpp>
 #include <batmat/matrix/view.hpp>
-#include <experimental/simd>
+#include <batmat/simd.hpp>
 #include <type_traits>
 
 namespace batmat::linalg {
 
 using batmat::matrix::StorageOrder;
-namespace stdx = std::experimental;
 
 namespace detail {
 
@@ -18,10 +17,10 @@ struct simdified_view_type;
 template <class T, class S, class L, StorageOrder O>
 struct simdified_view_type<batmat::matrix::View<T, index_t, S, S, L, O>> {
     using value_type   = std::remove_const_t<T>;
-    using abi_type     = stdx::simd_abi::deduce_t<value_type, S{}>;
-    using simd_type    = stdx::simd<value_type, abi_type>;
-    using stride       = stdx::simd_size<value_type, abi_type>;
-    using alignment    = stdx::memory_alignment<simd_type>;
+    using abi_type     = datapar::deduced_abi<value_type, S{}>;
+    using simd_type    = datapar::simd<value_type, abi_type>;
+    using stride       = datapar::simd_size<value_type, abi_type>;
+    using alignment    = datapar::simd_align<value_type, abi_type>;
     using layer_stride = batmat::matrix::DefaultStride;
     using type         = batmat::matrix::View<T, index_t, stride, stride, layer_stride, O>;
     static_assert(stride::value * sizeof(value_type) >= alignment::value);
@@ -30,10 +29,10 @@ struct simdified_view_type<batmat::matrix::View<T, index_t, S, S, L, O>> {
 template <class T, class S, class L, StorageOrder O>
 struct simdified_view_type<const batmat::matrix::View<T, index_t, S, S, L, O>> {
     using value_type   = std::remove_const_t<T>;
-    using abi_type     = stdx::simd_abi::deduce_t<value_type, S{}>;
-    using simd_type    = stdx::simd<value_type, abi_type>;
-    using stride       = stdx::simd_size<value_type, abi_type>;
-    using alignment    = stdx::memory_alignment<simd_type>;
+    using abi_type     = datapar::deduced_abi<value_type, S{}>;
+    using simd_type    = datapar::simd<value_type, abi_type>;
+    using stride       = datapar::simd_size<value_type, abi_type>;
+    using alignment    = datapar::simd_align<value_type, abi_type>;
     using layer_stride = batmat::matrix::DefaultStride;
     using type         = batmat::matrix::View<T, index_t, stride, stride, layer_stride, O>;
     static_assert(stride::value * sizeof(value_type) >= alignment::value);
@@ -42,10 +41,10 @@ struct simdified_view_type<const batmat::matrix::View<T, index_t, S, S, L, O>> {
 template <class T, class I, class S, StorageOrder O, class A>
 struct simdified_view_type<batmat::matrix::Matrix<T, I, S, S, O, A>> {
     using value_type   = T;
-    using abi_type     = stdx::simd_abi::deduce_t<value_type, S{}>;
-    using simd_type    = stdx::simd<value_type, abi_type>;
-    using stride       = stdx::simd_size<value_type, abi_type>;
-    using alignment    = stdx::memory_alignment<simd_type>;
+    using abi_type     = datapar::deduced_abi<value_type, S{}>;
+    using simd_type    = datapar::simd<value_type, abi_type>;
+    using stride       = datapar::simd_size<value_type, abi_type>;
+    using alignment    = datapar::simd_align<value_type, abi_type>;
     using layer_stride = batmat::matrix::DefaultStride;
     using type         = batmat::matrix::View<T, index_t, stride, stride, layer_stride, O>;
     static_assert(A{} >= alignment::value);
@@ -54,10 +53,10 @@ struct simdified_view_type<batmat::matrix::Matrix<T, I, S, S, O, A>> {
 template <class T, class I, class S, class A, StorageOrder O>
 struct simdified_view_type<const batmat::matrix::Matrix<T, I, S, S, O, A>> {
     using value_type   = T;
-    using abi_type     = stdx::simd_abi::deduce_t<value_type, S{}>;
-    using simd_type    = stdx::simd<value_type, abi_type>;
-    using stride       = stdx::simd_size<value_type, abi_type>;
-    using alignment    = stdx::memory_alignment<simd_type>;
+    using abi_type     = datapar::deduced_abi<value_type, S{}>;
+    using simd_type    = datapar::simd<value_type, abi_type>;
+    using stride       = datapar::simd_size<value_type, abi_type>;
+    using alignment    = datapar::simd_align<value_type, abi_type>;
     using layer_stride = batmat::matrix::DefaultStride;
     using type         = batmat::matrix::View<const T, index_t, stride, stride, layer_stride, O>;
     static_assert(A{} >= alignment::value);

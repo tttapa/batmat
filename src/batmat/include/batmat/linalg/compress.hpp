@@ -20,15 +20,16 @@ index_t compress_masks(real_view<Abi> A_in, real_view<Abi> S_in, mut_real_view<A
     assert(A_in.depth() == S_out.depth());
     assert(A_in.cols() == S_in.rows());
     assert(A_out.cols() == S_out.rows());
-    const auto C             = A_in.cols();
-    const auto R             = A_in.rows();
-    static constexpr auto VL = stdx::simd_size_v<real_t, Abi>;
+    const auto C = A_in.cols();
+    const auto R = A_in.rows();
     if (C == 0)
         return 0;
     BATMAT_ASSUME(R > 0);
-    using types = simd_view_types<real_t, Abi>;
-    using simd  = typename types::simd;
-    using isimd = typename types::isimd;
+    using types              = simd_view_types<real_t, Abi>;
+    using simd               = typename types::simd;
+    using isimd              = typename types::isimd;
+    static constexpr auto VL = simd::size();
+
     isimd hist[N]{};
     index_t j = 0;
     static const isimd iota{[](auto i) { return i; }};

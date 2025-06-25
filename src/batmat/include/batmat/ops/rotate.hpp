@@ -1,28 +1,26 @@
 #pragma once
 
-#include <experimental/simd>
+#include <batmat/simd.hpp>
 #include <cassert>
 
 namespace batmat::ops {
 
-namespace stdx = std::experimental;
-
 namespace detail {
 
 template <class F, class Abi>
-[[gnu::always_inline]] inline stdx::simd<F, Abi> rot(stdx::simd<F, Abi> x, int s) {
+[[gnu::always_inline]] inline datapar::simd<F, Abi> rot(datapar::simd<F, Abi> x, int s) {
     assert(s <= 0 || static_cast<size_t>(+s) < x.size());
     assert(s >= 0 || static_cast<size_t>(-s) < x.size());
-    stdx::simd<F, Abi> y;
+    datapar::simd<F, Abi> y;
     for (size_t j = 0; j < x.size(); ++j)
         y[j] = x[(x.size() + j - s) % x.size()];
     return y;
 }
 
 template <int S, class F, class Abi>
-[[gnu::always_inline]] inline stdx::simd<F, Abi> rotl(stdx::simd<F, Abi> x) {
+[[gnu::always_inline]] inline datapar::simd<F, Abi> rotl(datapar::simd<F, Abi> x) {
     static_assert(S > 0 && S < x.size());
-    stdx::simd<F, Abi> y;
+    datapar::simd<F, Abi> y;
     for (size_t j = 0; j < x.size() - S; ++j)
         y[j] = x[j + S];
     for (size_t j = x.size() - S; j < x.size(); ++j)
@@ -31,9 +29,9 @@ template <int S, class F, class Abi>
 }
 
 template <int S, class F, class Abi>
-[[gnu::always_inline]] inline stdx::simd<F, Abi> rotr(stdx::simd<F, Abi> x) {
+[[gnu::always_inline]] inline datapar::simd<F, Abi> rotr(datapar::simd<F, Abi> x) {
     static_assert(S > 0 && S < x.size());
-    stdx::simd<F, Abi> y;
+    datapar::simd<F, Abi> y;
     for (size_t j = x.size() - S; j < x.size(); ++j)
         y[j + S - x.size()] = x[j];
     for (size_t j = 0; j < x.size() - S; ++j)
@@ -42,9 +40,9 @@ template <int S, class F, class Abi>
 }
 
 template <int S, class F, class Abi>
-[[gnu::always_inline]] inline stdx::simd<F, Abi> shiftl(stdx::simd<F, Abi> x) {
+[[gnu::always_inline]] inline datapar::simd<F, Abi> shiftl(datapar::simd<F, Abi> x) {
     static_assert(S > 0 && S < x.size());
-    stdx::simd<F, Abi> y;
+    datapar::simd<F, Abi> y;
     for (size_t j = 0; j < x.size() - S; ++j)
         y[j] = x[j + S];
     for (size_t j = x.size() - S; j < x.size(); ++j)
@@ -53,9 +51,9 @@ template <int S, class F, class Abi>
 }
 
 template <int S, class F, class Abi>
-[[gnu::always_inline]] inline stdx::simd<F, Abi> shiftr(stdx::simd<F, Abi> x) {
+[[gnu::always_inline]] inline datapar::simd<F, Abi> shiftr(datapar::simd<F, Abi> x) {
     static_assert(S > 0 && S < x.size());
-    stdx::simd<F, Abi> y;
+    datapar::simd<F, Abi> y;
     for (size_t j = x.size() - S; j < x.size(); ++j)
         y[j + S - x.size()] = 0;
     for (size_t j = 0; j < x.size() - S; ++j)
@@ -65,8 +63,7 @@ template <int S, class F, class Abi>
 
 #if defined(__AVX512F__)
 
-[[gnu::always_inline]] inline auto rot(stdx::simd<double, stdx::simd_abi::deduce_t<double, 8>> x,
-                                       int s) {
+[[gnu::always_inline]] inline auto rot(datapar::deduced_simd<double, 8> x, int s) {
     assert(s <= 0 || static_cast<size_t>(+s) < x.size());
     assert(s >= 0 || static_cast<size_t>(-s) < x.size());
     constexpr size_t N                                          = x.size();
@@ -82,8 +79,7 @@ template <int S, class F, class Abi>
     return decltype(x){y};
 }
 
-[[gnu::always_inline]] inline auto rot(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x,
-                                       int s) {
+[[gnu::always_inline]] inline auto rot(datapar::deduced_simd<double, 4> x, int s) {
     assert(s <= 0 || static_cast<size_t>(+s) < x.size());
     assert(s >= 0 || static_cast<size_t>(-s) < x.size());
     constexpr size_t N                                          = x.size();
@@ -100,7 +96,7 @@ template <int S, class F, class Abi>
 }
 
 template <int S>
-[[gnu::always_inline]] inline auto rotl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 8>> x) {
+[[gnu::always_inline]] inline auto rotl(datapar::deduced_simd<double, 8> x) {
     static_assert(S > 0 && S < x.size());
     constexpr size_t N    = x.size();
     const __m512i indices = _mm512_set_epi64((S + 7) % N, (S + 6) % N, (S + 5) % N, (S + 4) % N,
@@ -110,7 +106,7 @@ template <int S>
 }
 
 template <int S>
-[[gnu::always_inline]] inline auto rotr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 8>> x) {
+[[gnu::always_inline]] inline auto rotr(datapar::deduced_simd<double, 8> x) {
     static_assert(S > 0 && S < x.size());
     constexpr size_t N = x.size();
     const __m512i indices =
@@ -121,8 +117,7 @@ template <int S>
 }
 
 template <int S>
-[[gnu::always_inline]] inline auto
-shiftl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 8>> x) {
+[[gnu::always_inline]] inline auto shiftl(datapar::deduced_simd<double, 8> x) {
     static_assert(S > 0 && S < x.size());
     constexpr uint8_t mask = (1u << (x.size() - S)) - 1u;
     auto y                 = static_cast<__m512d>(rotl<S>(x));
@@ -131,8 +126,7 @@ shiftl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 8>> x) {
 }
 
 template <int S>
-[[gnu::always_inline]] inline auto
-shiftr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 8>> x) {
+[[gnu::always_inline]] inline auto shiftr(datapar::deduced_simd<double, 8> x) {
     static_assert(S > 0 && S < x.size());
     constexpr uint8_t mask = (1u << S) - 1u;
     auto y                 = static_cast<__m512d>(rotr<S>(x));
@@ -145,8 +139,7 @@ shiftr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 8>> x) {
 #if defined(__AVX2__)
 
 template <int S>
-[[gnu::always_inline]] inline auto
-shiftl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
+[[gnu::always_inline]] inline auto shiftl(datapar::deduced_simd<double, 4> x) {
     static_assert(S > 0 && S < x.size());
     constexpr uint8_t mask = (1u << (x.size() - S)) - 1u;
     auto y                 = static_cast<__m256d>(rotl<S>(x));
@@ -155,8 +148,7 @@ shiftl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
 }
 
 template <int S>
-[[gnu::always_inline]] inline auto
-shiftr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
+[[gnu::always_inline]] inline auto shiftr(datapar::deduced_simd<double, 4> x) {
     static_assert(S > 0 && S < x.size());
     constexpr uint8_t mask = (1u << S) - 1u;
     auto y                 = static_cast<__m256d>(rotr<S>(x));
@@ -169,7 +161,7 @@ shiftr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
 #if defined(__AVX512F__)
 
 template <int S>
-[[gnu::always_inline]] inline auto rotl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
+[[gnu::always_inline]] inline auto rotl(datapar::deduced_simd<double, 4> x) {
     static_assert(S > 0 && S < x.size());
     constexpr size_t N    = x.size();
     const __m256i indices = _mm256_set_epi64x((S + 3) % N, (S + 2) % N, (S + 1) % N, S % N);
@@ -178,7 +170,7 @@ template <int S>
 }
 
 template <int S>
-[[gnu::always_inline]] inline auto rotr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
+[[gnu::always_inline]] inline auto rotr(datapar::deduced_simd<double, 4> x) {
     static_assert(S > 0 && S < x.size());
     constexpr size_t N = x.size();
     const __m256i indices =
@@ -190,7 +182,7 @@ template <int S>
 #elif defined(__AVX2__)
 
 template <int S>
-[[gnu::always_inline]] inline auto rotl(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
+[[gnu::always_inline]] inline auto rotl(datapar::deduced_simd<double, 4> x) {
     static_assert(S > 0 && S < x.size());
     constexpr size_t N = x.size();
     constexpr int indices =
@@ -200,7 +192,7 @@ template <int S>
 }
 
 template <int S>
-[[gnu::always_inline]] inline auto rotr(stdx::simd<double, stdx::simd_abi::deduce_t<double, 4>> x) {
+[[gnu::always_inline]] inline auto rotr(datapar::deduced_simd<double, 4> x) {
     static_assert(S > 0 && S < x.size());
     constexpr size_t N    = x.size();
     constexpr int indices = (((N - S + 3) % N) << 6) | (((N - S + 2) % N) << 4) |
@@ -214,7 +206,7 @@ template <int S>
 } // namespace detail
 
 template <int S, class F, class Abi>
-[[gnu::always_inline]] inline stdx::simd<F, Abi> rotl(stdx::simd<F, Abi> x) {
+[[gnu::always_inline]] inline datapar::simd<F, Abi> rotl(datapar::simd<F, Abi> x) {
     if constexpr (S % x.size() == 0)
         return x;
     else if constexpr (S < 0)
@@ -224,7 +216,7 @@ template <int S, class F, class Abi>
 }
 
 template <int S, class F, class Abi>
-[[gnu::always_inline]] inline stdx::simd<F, Abi> rotr(stdx::simd<F, Abi> x) {
+[[gnu::always_inline]] inline datapar::simd<F, Abi> rotr(datapar::simd<F, Abi> x) {
     if constexpr (S % x.size() == 0)
         return x;
     else if constexpr (S < 0)
@@ -234,11 +226,11 @@ template <int S, class F, class Abi>
 }
 
 template <int S, class F, class Abi>
-[[gnu::always_inline]] inline stdx::simd<F, Abi> shiftl(stdx::simd<F, Abi> x) {
+[[gnu::always_inline]] inline datapar::simd<F, Abi> shiftl(datapar::simd<F, Abi> x) {
     if constexpr (S == 0)
         return x;
     else if constexpr (S >= static_cast<int>(x.size()) || -S >= static_cast<int>(x.size()))
-        return stdx::simd<F, Abi>{0};
+        return datapar::simd<F, Abi>{0};
     else if constexpr (S < 0)
         return detail::shiftr<-S>(x);
     else
@@ -246,11 +238,11 @@ template <int S, class F, class Abi>
 }
 
 template <int S, class F, class Abi>
-[[gnu::always_inline]] inline stdx::simd<F, Abi> shiftr(stdx::simd<F, Abi> x) {
+[[gnu::always_inline]] inline datapar::simd<F, Abi> shiftr(datapar::simd<F, Abi> x) {
     if constexpr (S == 0)
         return x;
     else if constexpr (S >= static_cast<int>(x.size()) || -S >= static_cast<int>(x.size()))
-        return stdx::simd<F, Abi>{0};
+        return datapar::simd<F, Abi>{0};
     else if constexpr (S < 0)
         return detail::shiftl<-S>(x);
     else

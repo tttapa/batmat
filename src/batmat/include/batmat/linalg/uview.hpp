@@ -3,9 +3,9 @@
 #include <batmat/config.hpp>
 #include <batmat/matrix/matrix.hpp>
 #include <batmat/matrix/view.hpp>
+#include <batmat/simd.hpp>
 #include <batmat/unroll.h>
 
-#include <experimental/simd>
 #include <cstddef>
 #include <type_traits>
 #include <utility>
@@ -14,16 +14,14 @@ namespace batmat::linalg {
 
 using guanaqo::StorageOrder;
 
-namespace stdx = std::experimental;
-
 template <class T, class Abi>
 struct simd_view_types {
-    using value_type    = T;
-    using simd          = stdx::simd<T, Abi>;
-    using mask          = typename simd::mask_type;
-    using isimd         = stdx::simd<index_t, stdx::simd_abi::deduce_t<index_t, simd::size()>>;
-    using simd_stride_t = stdx::simd_size<T, Abi>;
-    using simd_align_t  = stdx::memory_alignment<simd>;
+    using value_type                  = T;
+    using simd                        = datapar::simd<T, Abi>;
+    using mask                        = typename simd::mask_type;
+    using isimd                       = datapar::deduced_simd<index_t, simd::size()>;
+    using simd_stride_t               = datapar::simd_size<T, Abi>;
+    using simd_align_t                = datapar::simd_align<T, Abi>;
     static constexpr auto simd_stride = simd_stride_t::value;
     static constexpr auto simd_align  = simd_align_t::value;
     static_assert(simd_align <= simd_stride * sizeof(T));
@@ -32,22 +30,22 @@ struct simd_view_types {
     template <class S = T, StorageOrder O = StorageOrder::ColMajor>
     using matrix = matrix::Matrix<S, index_t, simd_stride_t, index_t, O, simd_align_t>;
 
-    static simd aligned_load(const T *p) noexcept { return simd{p, stdx::vector_aligned}; }
+    static simd aligned_load(const T *p) noexcept { return datapar::aligned_load<simd>(p); }
 
     template <int MaskL = 0>
     [[gnu::always_inline]] static void aligned_store(simd x, value_type *p) noexcept {
         if constexpr (MaskL == 0) {
-            x.copy_to(p, stdx::vector_aligned);
+            datapar::aligned_store(x, p);
         } else if constexpr (MaskL > 0) {
             typename simd::mask_type m{};
             for (int i = 0; i < m.size(); ++i)
                 m[i] = i >= MaskL;
-            where(m, x).copy_to(p, stdx::vector_aligned);
+            datapar::masked_aligned_store(x, m, p);
         } else {
             typename simd::mask_type m{};
             for (int i = 0; i < m.size(); ++i)
                 m[i] = i < m.size() - MaskL;
-            where(m, x).copy_to(p, stdx::vector_aligned);
+            datapar::masked_aligned_store(x, m, p);
         }
     }
 };

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <batmat/assume.hpp>
-#include <experimental/simd>
+#include <batmat/simd.hpp>
 #include <bit>
 #include <cmath>
 #include <cstdint>
@@ -10,7 +10,6 @@
 
 namespace batmat::ops {
 namespace detail {
-namespace stdx = std::experimental;
 
 template <class T>
 struct floating_point_to_int; // deliberately undefined
@@ -50,16 +49,17 @@ template <class T, class Abi>
 }
 
 template <class T, class Abi>
-    requires(requires { typename floating_point_to_int_t<T>; } &&
-             std::numeric_limits<T>::is_iec559 && std::is_trivially_copyable_v<stdx::simd<T, Abi>>)
-[[gnu::always_inline]] inline stdx::simd<T, Abi> cneg(stdx::simd<T, Abi> x,
-                                                      stdx::simd<T, Abi> signs) {
-#ifndef __clang__ // TODO: enable once Clang supports operator==
+    requires(requires {
+        typename floating_point_to_int_t<T>;
+    } && std::numeric_limits<T>::is_iec559 && std::is_trivially_copyable_v<datapar::simd<T, Abi>>)
+[[gnu::always_inline]] inline datapar::simd<T, Abi> cneg(datapar::simd<T, Abi> x,
+                                                         datapar::simd<T, Abi> signs) {
+#if !BATMAT_WITH_GSI_HPC_SIMD // TODO: enable once Clang supports operator==
     BATMAT_ASSUME(all_of(signs == 0));
 #endif
-    using flt_simd = stdx::simd<T, Abi>;
+    using flt_simd = datapar::simd<T, Abi>;
     using int_type = floating_point_to_int_t<T>;
-    using int_simd = stdx::rebind_simd_t<int_type, flt_simd>;
+    using int_simd = datapar::rebind_simd_t<int_type, flt_simd>;
     auto r         = std::bit_cast<int_simd>(x) ^ std::bit_cast<int_simd>(signs);
     return std::bit_cast<flt_simd>(r);
 }

@@ -12,7 +12,7 @@ TEST(linalg, compress) {
     const index_t ny            = 25;
     const index_t nr            = 6;
     static constexpr index_t VL = 4;
-    using abi                   = stdx::simd_abi::deduce_t<real_t, VL>;
+    using abi                   = datapar::deduced_abi<real_t, VL>;
     using types                 = simd_view_types<real_t, abi>;
     using mat                   = types::matrix<>;
     mat A_in{{.depth = VL, .rows = nr, .cols = ny}}, A_out{{.depth = VL, .rows = nr, .cols = ny}};

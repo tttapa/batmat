@@ -4,7 +4,6 @@
 #include <batmat/ops/rotate.hpp>
 #include <print>
 
-namespace stdx = std::experimental;
 using batmat::real_t;
 using batmat::ops::rot;
 using batmat::ops::rotl;
@@ -13,8 +12,7 @@ using batmat::ops::shiftl;
 using batmat::ops::shiftr;
 
 TEST(Rotate, rotl4) {
-    using abi  = stdx::simd_abi::deduce_t<real_t, 4>;
-    using simd = stdx::simd<real_t, abi>;
+    using simd = batmat::datapar::deduced_simd<real_t, 4>;
     simd x;
     x[0]   = 1;
     x[1]   = 2;
@@ -30,8 +28,7 @@ TEST(Rotate, rotl4) {
 }
 
 TEST(Rotate, rotl4var) {
-    using abi  = stdx::simd_abi::deduce_t<real_t, 4>;
-    using simd = stdx::simd<real_t, abi>;
+    using simd = batmat::datapar::deduced_simd<real_t, 4>;
     simd x;
     x[0]   = 1;
     x[1]   = 2;
@@ -47,8 +44,7 @@ TEST(Rotate, rotl4var) {
 }
 
 TEST(Rotate, rotl8var) {
-    using abi  = stdx::simd_abi::deduce_t<real_t, 8>;
-    using simd = stdx::simd<real_t, abi>;
+    using simd = batmat::datapar::deduced_simd<real_t, 8>;
     simd x;
     x[0]   = 1;
     x[1]   = 2;
@@ -72,8 +68,7 @@ TEST(Rotate, rotl8var) {
 }
 
 TEST(Rotate, rotl8var2) {
-    using abi  = stdx::simd_abi::deduce_t<real_t, 8>;
-    using simd = stdx::simd<real_t, abi>;
+    using simd = batmat::datapar::deduced_simd<real_t, 8>;
     simd x;
     x[0]   = 1;
     x[1]   = 2;
@@ -97,8 +92,7 @@ TEST(Rotate, rotl8var2) {
 }
 
 TEST(Rotate, rotr4) {
-    using abi  = stdx::simd_abi::deduce_t<real_t, 4>;
-    using simd = stdx::simd<real_t, abi>;
+    using simd = batmat::datapar::deduced_simd<real_t, 4>;
     simd x;
     x[0]   = 1;
     x[1]   = 2;
@@ -114,8 +108,7 @@ TEST(Rotate, rotr4) {
 }
 
 TEST(Rotate, rotr4var) {
-    using abi  = stdx::simd_abi::deduce_t<real_t, 4>;
-    using simd = stdx::simd<real_t, abi>;
+    using simd = batmat::datapar::deduced_simd<real_t, 4>;
     simd x;
     x[0]   = 1;
     x[1]   = 2;
@@ -131,8 +124,7 @@ TEST(Rotate, rotr4var) {
 }
 
 TEST(Rotate, rotr8var) {
-    using abi  = stdx::simd_abi::deduce_t<real_t, 8>;
-    using simd = stdx::simd<real_t, abi>;
+    using simd = batmat::datapar::deduced_simd<real_t, 8>;
     simd x;
     x[0]   = 1;
     x[1]   = 2;
@@ -156,8 +148,7 @@ TEST(Rotate, rotr8var) {
 }
 
 TEST(Rotate, rotr8var2) {
-    using abi  = stdx::simd_abi::deduce_t<real_t, 8>;
-    using simd = stdx::simd<real_t, abi>;
+    using simd = batmat::datapar::deduced_simd<real_t, 8>;
     simd x;
     x[0]   = 1;
     x[1]   = 2;
@@ -180,12 +171,11 @@ TEST(Rotate, rotr8var2) {
     EXPECT_TRUE(all_of(y == y_expected));
 }
 
-using TestAbis = ::testing::Types<stdx::simd_abi::scalar,              //
-                                  stdx::simd_abi::deduce_t<real_t, 1>, //
-                                  stdx::simd_abi::deduce_t<real_t, 2>, //
-                                  stdx::simd_abi::deduce_t<real_t, 4>, //
-                                  stdx::simd_abi::deduce_t<real_t, 8>, //
-                                  stdx::simd_abi::deduce_t<real_t, 16> //
+using TestAbis = ::testing::Types<batmat::datapar::deduced_abi<real_t, 1>, //
+                                  batmat::datapar::deduced_abi<real_t, 2>, //
+                                  batmat::datapar::deduced_abi<real_t, 4>, //
+                                  batmat::datapar::deduced_abi<real_t, 8>, //
+                                  batmat::datapar::deduced_abi<real_t, 16> //
                                   >;
 
 template <typename Abi, size_t Shift>
@@ -216,10 +206,10 @@ struct GenerateTestTypes<::testing::Types<>> {
 };
 template <typename FirstAbi, typename... RestAbis>
 struct GenerateTestTypes<::testing::Types<FirstAbi, RestAbis...>> {
-    using _expanded =
-        ExpandShiftCounts<FirstAbi, std::make_index_sequence<stdx::simd<real_t, FirstAbi>::size()>>;
+    using expanded = ExpandShiftCounts<
+        FirstAbi, std::make_index_sequence<batmat::datapar::simd<real_t, FirstAbi>::size()>>;
     using type = typename ConcatTestTypes<
-        typename _expanded::type,
+        typename expanded::type,
         typename GenerateTestTypes<::testing::Types<RestAbis...>>::type>::type;
 };
 
@@ -233,7 +223,7 @@ class RotateTest : public ::testing::Test {};
 TYPED_TEST_SUITE(RotateTest, TestCases);
 
 TYPED_TEST(RotateTest, rotl) {
-    using simd         = stdx::simd<real_t, typename TypeParam::abi>;
+    using simd         = batmat::datapar::simd<real_t, typename TypeParam::abi>;
     constexpr size_t N = simd::size();
     constexpr size_t S = TypeParam::shift;
     simd x;
@@ -249,7 +239,7 @@ TYPED_TEST(RotateTest, rotl) {
 }
 
 TYPED_TEST(RotateTest, rotr) {
-    using simd         = stdx::simd<real_t, typename TypeParam::abi>;
+    using simd         = batmat::datapar::simd<real_t, typename TypeParam::abi>;
     constexpr size_t N = simd::size();
     constexpr size_t S = TypeParam::shift;
     simd x;
@@ -265,7 +255,7 @@ TYPED_TEST(RotateTest, rotr) {
 }
 
 TYPED_TEST(RotateTest, shiftl) {
-    using simd         = stdx::simd<real_t, typename TypeParam::abi>;
+    using simd         = batmat::datapar::simd<real_t, typename TypeParam::abi>;
     constexpr size_t N = simd::size();
     constexpr size_t S = TypeParam::shift;
     simd x;
@@ -285,7 +275,7 @@ TYPED_TEST(RotateTest, shiftl) {
 }
 
 TYPED_TEST(RotateTest, shiftr) {
-    using simd         = stdx::simd<real_t, typename TypeParam::abi>;
+    using simd         = batmat::datapar::simd<real_t, typename TypeParam::abi>;
     constexpr size_t N = simd::size();
     constexpr size_t S = TypeParam::shift;
     simd x;

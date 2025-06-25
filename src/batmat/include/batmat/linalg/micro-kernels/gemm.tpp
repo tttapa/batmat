@@ -30,7 +30,7 @@ gemm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
     static_assert(RowsReg > 0 && ColsReg > 0);
     using enum MatrixStructure;
     using namespace ops;
-    using simd = stdx::simd<T, Abi>;
+    using simd = datapar::simd<T, Abi>;
     // Column range for triangular matrix C (gemmt)
     static constexpr auto min_col = first_column<Conf.struc_C>;
     static constexpr auto max_col = last_column<ColsReg, Conf.struc_C>;

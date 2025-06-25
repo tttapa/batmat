@@ -2,10 +2,7 @@
 
 #include <batmat/config.hpp>
 
-#include <experimental/simd>
-
 namespace batmat {
-namespace stdx = std::experimental;
 namespace linalg::micro_kernels::gemm {
 
 /// Register block size of the matrix-matrix multiplication micro-kernels.

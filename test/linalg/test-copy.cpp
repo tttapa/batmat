@@ -3,19 +3,19 @@
 #include <batmat/linalg/copy.hpp>
 #include <batmat/matrix/matrix.hpp>
 #include <batmat/matrix/view.hpp>
+#include <batmat/simd.hpp>
 
 #include "config.hpp"
 
 #include <numeric>
 
-namespace stdx = std::experimental;
 using batmat::index_t;
 using batmat::matrix::StorageOrder;
 
 template <ptrdiff_t N, StorageOrder OA, StorageOrder OB>
 struct CopyConfig {
     using type                            = batmat::real_t;
-    using abi                             = stdx::simd_abi::deduce_t<type, N>;
+    using abi                             = batmat::datapar::deduced_abi<type, N>;
     static constexpr StorageOrder order_A = OA;
     static constexpr StorageOrder order_B = OB;
 };

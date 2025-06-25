@@ -28,6 +28,7 @@ class BatmatRecipe(ConanFile):
         "with_benchmarks": False,
         "with_python": False,
         "with_cpu_time": False,
+        "with_gsi_hpc_simd": False,
     }
     options = {
         "shared": [True, False],
@@ -77,6 +78,10 @@ class BatmatRecipe(ConanFile):
         self.test_requires("gtest/1.15.0")
         if self.options.with_python:
             self.requires("pybind11/2.13.6")
+        if self.options.with_openmp and self.settings.compiler == "clang":
+            self.requires(f"llvm-openmp/[~{self.settings.compiler.version}]")
+        if self.options.with_gsi_hpc_simd:
+            self.requires("gsi-hpc-simd/tttapa.20250625")
 
     def config_options(self):
         if self.settings.get_safe("os") == "Windows":

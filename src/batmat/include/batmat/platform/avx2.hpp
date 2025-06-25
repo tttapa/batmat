@@ -1,11 +1,9 @@
 #pragma once
 
 #include <batmat/config.hpp>
-
-#include <experimental/simd>
+#include <batmat/simd.hpp>
 
 namespace batmat {
-namespace stdx = std::experimental;
 namespace linalg::micro_kernels::gemm {
 
 /// Register block size of the matrix-matrix multiplication micro-kernels.
@@ -14,9 +12,9 @@ namespace linalg::micro_kernels::gemm {
 template <class T, class Abi>
 inline constexpr index_t RowsReg = 3;
 // Vectors greater than the physical vector length use more registers, so decrease the block size.
-template <class T, size_t N>
-    requires(N * sizeof(T) > 32)
-inline constexpr index_t RowsReg<T, stdx::simd_abi::fixed_size<N>> = 2;
+template <class T, class Abi>
+    requires(datapar::simd_size<T, Abi>::value * sizeof(T) > 32)
+inline constexpr index_t RowsReg<T, Abi> = 2;
 
 } // namespace linalg::micro_kernels::gemm
 namespace ops {

@@ -23,7 +23,7 @@ trsm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
     constexpr bool lower = Conf.struc_A == MatrixStructure::LowerTriangular;
     static_assert(RowsReg > 0 && ColsReg > 0);
     using namespace ops;
-    using simd = stdx::simd<T, Abi>;
+    using simd = datapar::simd<T, Abi>;
     // Pre-compute the offsets of the columns/rows of B
     const auto B_cached = with_cached_access<RowsReg, ColsReg>(B);
     // Load accumulator into registers

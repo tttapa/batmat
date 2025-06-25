@@ -14,7 +14,7 @@ namespace batmat::linalg {
 
 template <class T, class Abi, StorageOrder OA, StorageOrder OB>
 [[gnu::flatten, gnu::noinline]] void copy(view<const T, Abi, OA> A, view<T, Abi, OB> B)
-    requires(!std::same_as<Abi, stdx::simd_abi::scalar>)
+    requires(!std::same_as<Abi, datapar::scalar_abi<T>>)
 {
     GUANAQO_TRACE("copy", 0, A.rows() * A.cols() * A.depth());
     assert(A.rows() == B.rows());
@@ -30,7 +30,7 @@ template <class T, class Abi, StorageOrder OA, StorageOrder OB>
 
 template <class T, class Abi, StorageOrder OA, StorageOrder OB>
 [[gnu::flatten, gnu::noinline]] void copy(view<const T, Abi, OA> A, view<T, Abi, OB> B)
-    requires(std::same_as<Abi, stdx::simd_abi::scalar> && OA == OB)
+    requires(std::same_as<Abi, datapar::scalar_abi<T>> && OA == OB)
 {
     GUANAQO_TRACE("copy", 0, A.rows() * A.cols() * A.depth());
     assert(A.rows() == B.rows());
@@ -50,7 +50,7 @@ template <class T, class Abi, StorageOrder OA, StorageOrder OB>
 
 template <class T, class Abi, StorageOrder OA, StorageOrder OB>
 [[gnu::flatten, gnu::noinline]] void copy(view<const T, Abi, OA> A, view<T, Abi, OB> B)
-    requires(std::same_as<Abi, stdx::simd_abi::scalar> && OA != OB)
+    requires(std::same_as<Abi, datapar::scalar_abi<T>> && OA != OB)
 {
     GUANAQO_TRACE("copy(T)", 0, A.rows() * A.cols() * A.depth());
     assert(A.rows() == B.rows());

@@ -4,6 +4,9 @@ find_package(guanaqo REQUIRED COMPONENTS BLAS)
 if (BATMAT_WITH_OPENMP)
     find_package(OpenMP REQUIRED COMPONENTS CXX)
 endif()
+if (BATMAT_WITH_GSI_HPC_SIMD)
+    find_package(gsi-hpc-simd REQUIRED)
+endif()
 
 # Configuration options
 # ------------------------------------------------------------------------------
@@ -18,6 +21,7 @@ target_compile_definitions(config INTERFACE
     $<$<BOOL:${BATMAT_VERIFY_ASSUMPTIONS}>:BATMAT_VERIFY_ASSUMPTIONS>
     $<$<BOOL:${BATMAT_WITH_MKL}>:BATMAT_WITH_MKL>
     $<$<BOOL:${BATMAT_WITH_OPENMP}>:BATMAT_WITH_OPENMP>
+    $<$<BOOL:${BATMAT_WITH_GSI_HPC_SIMD}>:BATMAT_WITH_GSI_HPC_SIMD>
 )
 batmat_configure_interface_library(config EXPORT_PREFIX batmat)
 
@@ -42,6 +46,9 @@ target_link_libraries(batmat PUBLIC batmat::config guanaqo::guanaqo)
 batmat_configure_library(batmat)
 if (BATMAT_WITH_OPENMP)
     target_link_libraries(batmat PUBLIC OpenMP::OpenMP_CXX)
+endif()
+if (BATMAT_WITH_GSI_HPC_SIMD)
+    target_link_libraries(batmat PUBLIC gsi-hpc-simd::simd)
 endif()
 
 # Linear algebra routines for compact batches of matrices
