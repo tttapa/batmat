@@ -4,7 +4,7 @@
 
 #include <batmat/linalg/micro-kernels/trsm.tpp>
 
-namespace batmat::linalg::micro_kernels::trsm {
+namespace batmat::linalg::micro_kernels::trsm::@DType@_@VL@ {
 
 // clang-format off
 using DType = @DType@;

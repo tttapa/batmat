@@ -4,7 +4,7 @@
 
 #include <batmat/linalg/micro-kernels/potrf.tpp>
 
-namespace batmat::linalg::micro_kernels::potrf {
+namespace batmat::linalg::micro_kernels::potrf::@DType@_@VL@_@Negate@ {
 
 // clang-format off
 using DType = @DType@;

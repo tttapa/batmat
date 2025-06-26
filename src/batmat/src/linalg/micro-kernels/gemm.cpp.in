@@ -4,7 +4,7 @@
 
 #include <batmat/linalg/micro-kernels/gemm.tpp>
 
-namespace batmat::linalg::micro_kernels::gemm {
+namespace batmat::linalg::micro_kernels::gemm::@DType@_@VL@_@Negate@ {
 
 // clang-format off
 using DType = @DType@;
@@ -90,7 +90,7 @@ extern const auto gemm_copy_register_inst_syrk_C =
             constexpr KernelConfig Conf{.negate = Negate, .struc_C = SC};
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
-extern const auto gemm_copy_register_inst_trtrsyrk_ =
+extern const auto gemm_copy_register_inst_trtrsyrk =
     guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
         []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>, CStorageOrder<OC>,
                                       auto S) -> const void * {
