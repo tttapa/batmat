@@ -230,6 +230,7 @@ gather(datapar::deduced_simd<double, 2> src, __m128i mask, datapar::deduced_simd
     return datapar::deduced_simd<double, 2>{result};
 }
 
+#if !BATMAT_WITH_GSI_HPC_SIMD // TODO
 template <int Scale = sizeof(double)>
 [[gnu::always_inline]] inline datapar::deduced_simd<double, 2>
 gather(datapar::deduced_simd<double, 2> src, __m128i mask, datapar::deduced_simd<int32_t, 2> vindex,
@@ -241,6 +242,7 @@ gather(datapar::deduced_simd<double, 2> src, __m128i mask, datapar::deduced_simd
                                        _mm_castsi128_pd(_mm_cvtepi32_epi64(active)));
     return datapar::deduced_simd<double, 2>{result};
 }
+#endif
 
 #endif
 
