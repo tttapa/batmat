@@ -1,5 +1,6 @@
 #pragma once
 
+#include <batmat/assume.hpp>
 #include <batmat/config.hpp>
 #include <batmat/matrix/matrix.hpp>
 #include <batmat/matrix/view.hpp>
@@ -119,6 +120,54 @@ struct uview {
         requires std::is_const_v<T>
         : data{o.data}, outer_stride{o.outer_stride} {}
     [[gnu::always_inline]] uview(const uview &o) = default;
+};
+
+template <class T, class Abi>
+struct uview_vec {
+    using value_type = T;
+    value_type *data;
+
+    using types = simd_view_types<std::remove_const_t<T>, Abi>;
+    template <StorageOrder Order>
+    using view = types::template view<T, Order>;
+    template <StorageOrder Order>
+    using mut_view                          = types::template view<std::remove_const_t<T>, Order>;
+    using mut_uview                         = uview_vec<std::remove_const_t<T>, Abi>;
+    using simd                              = typename types::simd;
+    static constexpr ptrdiff_t inner_stride = typename types::simd_stride_t();
+
+    [[gnu::always_inline]] value_type &operator()(index_t r) const noexcept {
+        return data[inner_stride * static_cast<ptrdiff_t>(r)];
+    }
+    [[gnu::always_inline]] simd load(index_t r) const noexcept {
+        return types::aligned_load(&operator()(r));
+    }
+    template <int MaskL = 0>
+    [[gnu::always_inline]] void store(simd x, index_t r) const noexcept
+        requires(!std::is_const_v<T>)
+    {
+        types::template aligned_store<MaskL>(x, &operator()(r));
+    }
+    template <class Self>
+    [[gnu::always_inline]] Self segment(this const Self &self, index_t r) noexcept {
+        return {&self(r)};
+    }
+
+    [[gnu::always_inline]] uview_vec(value_type *data) noexcept : data{data} {}
+    template <StorageOrder Order>
+    [[gnu::always_inline]] explicit uview_vec(const mut_view<Order> &v) noexcept
+        requires std::is_const_v<T>
+        : data{v.data} {
+        BATMAT_ASSUME(v.outer_size() == 1);
+    }
+    template <StorageOrder Order>
+    [[gnu::always_inline]] explicit uview_vec(const view<Order> &v) noexcept : data{v.data} {
+        BATMAT_ASSUME(v.outer_size() == 1);
+    }
+    [[gnu::always_inline]] uview_vec(const mut_uview &o) noexcept
+        requires std::is_const_v<T>
+        : data{o.data} {}
+    [[gnu::always_inline]] uview_vec(const uview_vec &o) = default;
 };
 
 template <index_t Size, class T, class Abi, StorageOrder Order>
