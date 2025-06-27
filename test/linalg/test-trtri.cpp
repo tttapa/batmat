@@ -103,7 +103,56 @@ TYPED_TEST_P(TrtriTest, trtriLinplace) {
     }
 }
 
-REGISTER_TYPED_TEST_SUITE_P(TrtriTest, trtriL, trtriLinplace);
+TYPED_TEST_P(TrtriTest, trtriU) {
+    using batmat::linalg::triu;
+    using batmat::linalg::trtri;
+    using real_t = typename TestFixture::value_type;
+    using EMat   = Eigen::MatrixX<real_t>;
+    const auto ε = std::pow(std::numeric_limits<real_t>::epsilon(), real_t(0.6));
+    for (auto m : batmat::tests::sizes) {
+        const auto A = [&] {
+            auto A = this->get_A(m, m);
+            A.view().add_to_diagonal(static_cast<real_t>(100 * m));
+            return A;
+        }();
+        const auto D0 = this->get_B(m, m);
+        auto D        = D0;
+        trtri(triu(A), triu(D));
+        for (index_t l = 0; l < A.depth(); ++l) {
+            const auto I      = EMat::Identity(m, m);
+            const EMat Dl_ref = as_eigen(A(l)).template triangularView<Eigen::Upper>().solve(I);
+            EXPECT_THAT(tri<Eigen::Upper>(as_eigen(D(l))), EigenAlmostEqual(Dl_ref, ε));
+            EXPECT_THAT(tri<Eigen::StrictlyLower>(as_eigen(D(l))),
+                        EigenAlmostEqual(tri<Eigen::StrictlyLower>(as_eigen(D0(l))), ε));
+        }
+    }
+}
+
+TYPED_TEST_P(TrtriTest, trtriUinplace) {
+    using batmat::linalg::triu;
+    using batmat::linalg::trtri;
+    using real_t = typename TestFixture::value_type;
+    using EMat   = Eigen::MatrixX<real_t>;
+    const auto ε = std::pow(std::numeric_limits<real_t>::epsilon(), real_t(0.6));
+    for (auto m : batmat::tests::sizes) {
+        const auto D0 = [&] {
+            auto D = this->get_A(m, m);
+            D.view().add_to_diagonal(static_cast<real_t>(100 * m));
+            return D;
+        }();
+        auto D = D0;
+        trtri(triu(D));
+        for (index_t l = 0; l < D.depth(); ++l) {
+            const auto I      = EMat::Identity(m, m);
+            const EMat Dl_ref = as_eigen(D0(l)).template triangularView<Eigen::Upper>().solve(I);
+            EXPECT_THAT(tri<Eigen::Upper>(as_eigen(D(l))), EigenAlmostEqual(Dl_ref, ε));
+            EXPECT_THAT(tri<Eigen::StrictlyLower>(as_eigen(D(l))),
+                        EigenAlmostEqual(tri<Eigen::StrictlyLower>(as_eigen(D0(l))), ε));
+        }
+    }
+}
+
+REGISTER_TYPED_TEST_SUITE_P(TrtriTest, trtriL, trtriLinplace, trtriU, trtriUinplace);
 
 using enum batmat::matrix::StorageOrder;
 template <class T, index_t N>

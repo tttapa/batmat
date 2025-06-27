@@ -29,19 +29,40 @@ void trtri(view<const T, Abi, OA> A, view<T, Abi, OD> D) {
 }
 } // namespace detail
 
-/// D = A⁻¹ with A, D triangular
-template <MatrixStructure SAD, simdifiable VA, simdifiable VD>
+/// D = A⁻¹ with A, D lower triangular
+template <simdifiable VA, simdifiable VD>
     requires simdify_compatible<VA, VD>
-void trtri(Structured<VA, SAD> A, Structured<VD, SAD> D) {
-    detail::trtri<simdified_value_t<VA>, simdified_abi_t<VA>, {.struc = SAD}>(
-        simdify(A.value).as_const(), simdify(D.value));
+void trtri(Structured<VA, MatrixStructure::LowerTriangular> A,
+           Structured<VD, MatrixStructure::LowerTriangular> D) {
+    detail::trtri<simdified_value_t<VA>, simdified_abi_t<VA>,
+                  {.struc = MatrixStructure::LowerTriangular}>(simdify(A.value).as_const(),
+                                                               simdify(D.value));
 }
 
-/// D = D⁻¹ with D triangular
-template <MatrixStructure SD, simdifiable VD>
-void trtri(Structured<VD, SD> D) {
-    detail::trtri<simdified_value_t<VD>, simdified_abi_t<VD>, {.struc = SD}>(
-        simdify(D.value).as_const(), simdify(D.value));
+/// D = A⁻¹ with A, D upper triangular
+template <simdifiable VA, simdifiable VD>
+    requires simdify_compatible<VA, VD>
+void trtri(Structured<VA, MatrixStructure::UpperTriangular> A,
+           Structured<VD, MatrixStructure::UpperTriangular> D) {
+    detail::trtri<simdified_value_t<VA>, simdified_abi_t<VA>,
+                  {.struc = MatrixStructure::LowerTriangular}>(
+        simdify(A.value).transposed().as_const(), simdify(D.value).transposed());
+}
+
+/// D = D⁻¹ with D lower triangular
+template <simdifiable VD>
+void trtri(Structured<VD, MatrixStructure::LowerTriangular> D) {
+    detail::trtri<simdified_value_t<VD>, simdified_abi_t<VD>,
+                  {.struc = MatrixStructure::LowerTriangular}>(simdify(D.value).as_const(),
+                                                               simdify(D.value));
+}
+
+/// D = D⁻¹ with D upper triangular
+template <simdifiable VD>
+void trtri(Structured<VD, MatrixStructure::UpperTriangular> D) {
+    detail::trtri<simdified_value_t<VD>, simdified_abi_t<VD>,
+                  {.struc = MatrixStructure::LowerTriangular}>(
+        simdify(D.value).transposed().as_const(), simdify(D.value).transposed());
 }
 
 } // namespace batmat::linalg
