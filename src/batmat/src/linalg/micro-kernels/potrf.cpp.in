@@ -4,9 +4,8 @@
 
 #include <batmat/linalg/micro-kernels/potrf.tpp>
 
-namespace batmat::linalg::micro_kernels::potrf::@DType@_@VL@_@Negate@ {
-
 // clang-format off
+namespace batmat::linalg::micro_kernels::potrf::@DType@_@VL@_@Negate@ {
 using DType = @DType@;
 using Abi   = datapar::deduced_abi<DType, @VL@>;
 static constexpr bool Negate = @Negate@;
