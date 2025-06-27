@@ -72,3 +72,8 @@ MATCHER_P2(EigenAlmostEqualRel, expect, rtol, "") {
     }
     return diffnorm <= rtol && diff.allFinite();
 }
+
+template <Eigen::UpLoType UpLo, class T>
+auto tri(T &&t) -> Eigen::MatrixX<typename std::remove_cvref_t<T>::Scalar> {
+    return std::forward<T>(t).template triangularView<UpLo>().toDenseMatrix();
+}

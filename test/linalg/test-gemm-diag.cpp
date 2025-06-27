@@ -9,58 +9,16 @@
 
 #include "config.hpp"
 #include "eigen-matchers.hpp"
+#include "fixtures.hpp"
 
 using batmat::index_t;
 using batmat::matrix::DefaultStride;
 using batmat::matrix::StorageOrder;
 using batmat::tests::CatTypes;
 
-template <class T, index_t N, StorageOrder OA, StorageOrder OB, StorageOrder OC>
-struct TestConfig {
-    using value_type                      = T;
-    using batch_size                      = std::integral_constant<index_t, N>;
-    static constexpr StorageOrder order_A = OA, order_B = OB, order_C = OC;
-};
-
 template <class Config>
-class GemmDiagTest : public ::testing::Test {
-  protected:
-    using value_type = typename Config::value_type;
-    using batch_size = typename Config::batch_size;
-
-    template <StorageOrder O>
-    using Matrix = batmat::matrix::Matrix<value_type, index_t, batch_size, batch_size, O>;
-
-    std::mt19937 rng{12345};
-    std::normal_distribution<value_type> nrml{0, 1};
-    std::bernoulli_distribution brnl{0.5};
-    void SetUp() override { rng.seed(12345); }
-
-    template <StorageOrder O>
-    auto get_matrix(index_t r, index_t c) {
-        Matrix<O> a{{.rows = r, .cols = c}};
-        std::ranges::generate(a, [this] { return nrml(rng); });
-        return a;
-    }
-
-    auto get_A(index_t r, index_t c) { return get_matrix<Config::order_A>(r, c); }
-    auto get_B(index_t r, index_t c) { return get_matrix<Config::order_B>(r, c); }
-    auto get_C(index_t r, index_t c) { return get_matrix<Config::order_C>(r, c); }
-    auto get_d(index_t r) {
-        auto d = get_matrix<StorageOrder::ColMajor>(r, 1);
-        for (auto &di : d)
-            if (brnl(rng))
-                di = 0;
-        return d;
-    }
-};
-
+struct GemmDiagTest : batmat::tests::LinalgTest<Config> {};
 TYPED_TEST_SUITE_P(GemmDiagTest);
-
-template <Eigen::UpLoType UpLo, class T>
-auto tri(T &&t) -> Eigen::MatrixX<typename std::remove_cvref_t<T>::Scalar> {
-    return std::forward<T>(t).template triangularView<UpLo>().toDenseMatrix();
-}
 
 TYPED_TEST_P(GemmDiagTest, gemm) {
     using batmat::linalg::gemm_diag;
@@ -70,10 +28,10 @@ TYPED_TEST_P(GemmDiagTest, gemm) {
     for (auto m : batmat::tests::sizes)
         for (auto n : batmat::tests::sizes)
             for (auto k : batmat::tests::sizes) {
-                const auto A = this->get_A(m, k);
-                const auto B = this->get_B(k, n);
-                auto C       = this->get_C(m, n);
-                const auto d = this->get_d(k);
+                const auto A = this->template get_matrix<0>(m, k);
+                const auto B = this->template get_matrix<1>(k, n);
+                auto C       = this->template get_matrix<2>(m, n);
+                const auto d = this->get_sparse_vector(k);
                 gemm_diag(A, B, C, d);
                 for (index_t l = 0; l < A.depth(); ++l) {
                     EMat Cl_ref = as_eigen(A(l)) * as_eigen(d(l)).asDiagonal() * as_eigen(B(l));
