@@ -11,26 +11,29 @@ template <class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> rot(datapar::simd<F, Abi> x, int s) {
     assert(s <= 0 || static_cast<size_t>(+s) < x.size());
     assert(s >= 0 || static_cast<size_t>(-s) < x.size());
-    int n = x.size();
+    const int n = x.size();
     return datapar::simd<F, Abi>{[&](int j) { return x[(n + j - s) % n]; }};
 }
 
 template <int S, class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> rotl(datapar::simd<F, Abi> x) {
     static_assert(S > 0 && S < x.size());
-    return datapar::simd<F, Abi>{[&](int j) { return x[(j + S) % x.size()]; }};
+    const int n = x.size();
+    return datapar::simd<F, Abi>{[&](int j) { return x[(j + S) % n]; }};
 }
 
 template <int S, class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> rotr(datapar::simd<F, Abi> x) {
     static_assert(S > 0 && S < x.size());
-    return datapar::simd<F, Abi>{[&](int j) { return x[(x.size() + j - S) % x.size()]; }};
+    const int n = x.size();
+    return datapar::simd<F, Abi>{[&](int j) { return x[(n + j - S) % n]; }};
 }
 
 template <int S, class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> shiftl(datapar::simd<F, Abi> x) {
     static_assert(S > 0 && S < x.size());
-    return datapar::simd<F, Abi>{[&](int j) { return j + S < x.size() ? x[j + S] : F{}; }};
+    const int n = x.size();
+    return datapar::simd<F, Abi>{[&](int j) { return j + S < n ? x[j + S] : F{}; }};
 }
 
 template <int S, class F, class Abi>
