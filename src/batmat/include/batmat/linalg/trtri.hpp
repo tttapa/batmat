@@ -44,9 +44,7 @@ template <simdifiable VA, simdifiable VD>
     requires simdify_compatible<VA, VD>
 void trtri(Structured<VA, MatrixStructure::UpperTriangular> A,
            Structured<VD, MatrixStructure::UpperTriangular> D) {
-    detail::trtri<simdified_value_t<VA>, simdified_abi_t<VA>,
-                  {.struc = MatrixStructure::LowerTriangular}>(
-        simdify(A.value).transposed().as_const(), simdify(D.value).transposed());
+    trtri(A.transposed(), D.transposed());
 }
 
 /// D = D⁻¹ with D lower triangular
@@ -60,9 +58,7 @@ void trtri(Structured<VD, MatrixStructure::LowerTriangular> D) {
 /// D = D⁻¹ with D upper triangular
 template <simdifiable VD>
 void trtri(Structured<VD, MatrixStructure::UpperTriangular> D) {
-    detail::trtri<simdified_value_t<VD>, simdified_abi_t<VD>,
-                  {.struc = MatrixStructure::LowerTriangular}>(
-        simdify(D.value).transposed().as_const(), simdify(D.value).transposed());
+    trtri(D.transposed());
 }
 
 } // namespace batmat::linalg
