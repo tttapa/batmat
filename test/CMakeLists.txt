@@ -19,6 +19,7 @@ add_executable(tests
     "linalg/test-gemm.cpp"
     "linalg/test-trsm.cpp"
     "linalg/test-potrf.cpp"
+    "linalg/test-trtri.cpp"
 )
 target_compile_definitions(tests PRIVATE
     $<$<BOOL:${BATMAT_EXTENSIVE_TESTS}>:BATMAT_EXTENSIVE_TESTS>)
