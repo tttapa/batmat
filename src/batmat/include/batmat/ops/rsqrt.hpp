@@ -87,9 +87,7 @@ template <>
 inline datapar::deduced_simd<float, 4> rsqrt(datapar::deduced_simd<float, 4> x) {
     return detail::rsqrt_1(x);
 }
-#endif
-
-#if __AVX2__
+#elif __AVX2__
 template <>
 inline datapar::deduced_simd<float, 8> rsqrt(datapar::deduced_simd<float, 8> x) {
     return detail::rsqrt_1(x); // TODO: one or two Newton iterations?
