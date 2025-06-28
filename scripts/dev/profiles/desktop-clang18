@@ -6,8 +6,8 @@ arch=x86_64
 [conf]
 tools.build:cflags+=["-march=rocketlake", "-mavx512f", "-mavx512dq", "-mavx512ifma", "-mavx512cd", "-mavx512bw", "-mavx512vl", "-mavx512vbmi", "-mavx512vbmi2", "-mavx512vnni", "-mavx512bitalg", "-mavx512vpopcntdq", "-mfma"]
 tools.build:cxxflags+=["-march=rocketlake", "-mavx512f", "-mavx512dq", "-mavx512ifma", "-mavx512cd", "-mavx512bw", "-mavx512vl", "-mavx512vbmi", "-mavx512vbmi2", "-mavx512vnni", "-mavx512bitalg", "-mavx512vpopcntdq", "-mfma"]
-tools.build:cflags+=["-g3"]
-tools.build:cxxflags+=["-g3"]
+tools.build:cflags+=["-gdwarf-4"]
+tools.build:cxxflags+=["-gdwarf-4"]
 tools.build.cross_building:can_run=true
 
 [options]

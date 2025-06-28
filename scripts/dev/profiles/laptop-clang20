@@ -6,8 +6,8 @@ arch=x86_64
 [conf]
 tools.build:cflags+=["-march=skylake"]
 tools.build:cxxflags+=["-march=skylake"]
-tools.build:cflags+=["-g3"]
-tools.build:cxxflags+=["-g3"]
+tools.build:cflags+=["-gdwarf-4"]
+tools.build:cxxflags+=["-gdwarf-4"]
 tools.build.cross_building:can_run=true
 
 [options]
