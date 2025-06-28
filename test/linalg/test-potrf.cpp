@@ -57,7 +57,8 @@ TYPED_TEST_P(SyrkPotrfTest, syrkPotrfLinplace) {
             this->check(
                 [&](auto &&A, EMat Dl) {
                     auto Dll = Dl.template selfadjointView<Lower>();
-                    Dll.rankUpdate(A);
+                    if (A.cols() > 0) // TODO: Eigen crashes if this is zero
+                        Dll.rankUpdate(A);
                     return Dll.llt().matrixL().toDenseMatrix();
                 },
                 [&](auto l, auto &&res, auto &&ref, auto &&, auto &&D0) {
