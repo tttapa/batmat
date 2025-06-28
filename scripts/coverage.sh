@@ -28,7 +28,7 @@ echo "Compiler: ${compiler}${version}"
 if [ -n "$GCOV_BIN" ]; then
     gcov_tool=("--gcov-tool" "$GCOV_BIN");
 elif [ "${compiler}" == "clang" ]; then
-    gcov_tool=("--gcov-tool" "llvm-cov${version}" "--gcov-tool" "gcov")
+    gcov_tool=("--gcov-tool" "llvm-cov${version}" "--gcov-tool" "gcov" "--ignore-errors" "format")
 else
     gcov_tool=("--gcov-tool" "gcov${version}")
 fi
@@ -59,7 +59,7 @@ lcov \
     --rc branch_coverage=$branches
 
 # Run tests
-ctest
+ctest -j 8
 
 # Actual capture
 lcov \

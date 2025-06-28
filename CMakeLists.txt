@@ -89,7 +89,8 @@ if (BATMAT_WITH_COVERAGE)
     add_custom_target(coverage
         ${CMAKE_CURRENT_LIST_DIR}/scripts/coverage.sh
         ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        USES_TERMINAL)
     add_compile_options("--coverage")
     add_link_options("--coverage")
     add_dependencies(coverage batmat::tests)
