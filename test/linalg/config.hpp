@@ -16,7 +16,7 @@ using Abis = ::testing::Types<datapar::deduced_abi<real_t, 1>, //
                               datapar::deduced_abi<real_t, 16>>;
 
 constexpr index_t sizes[] // NOLINT(*-c-arrays)
-    {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 29, 63, 71, 293, 311};
+    {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 29, 63, 71, 293, 311};
 
 #else
 
@@ -25,7 +25,7 @@ using Abis = ::testing::Types<datapar::deduced_abi<real_t, 1>, //
                               datapar::deduced_abi<real_t, 8>>;
 
 constexpr index_t sizes[] // NOLINT(*-c-arrays)
-    {1, 2, 3, 4, 5, 6, 9, 10, 11, 17, 71, 131, 311};
+    {0, 1, 2, 3, 4, 5, 6, 9, 10, 11, 17, 71, 131, 311};
 
 #endif
 

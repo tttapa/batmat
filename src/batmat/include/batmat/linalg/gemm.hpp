@@ -42,8 +42,15 @@ void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
     static const index_t M_reg = micro_kernels::gemm::RowsReg<T, Abi>;
 
     // Degenerate case
-    if (M == 0 || N == 0 || K == 0) [[unlikely]]
+    if (M == 0 || N == 0) [[unlikely]]
         return;
+    if (K == 0) [[unlikely]] {
+        if (C)
+            copy<T, Abi>(*C, D);
+        else
+            D.set_constant(T{});
+        return;
+    }
 
     // Small matrices
     using micro_kernels::gemm::gemm_copy_lut;
@@ -146,8 +153,15 @@ void gemmt(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
     BATMAT_ASSERT(A.cols() == B.rows());
     BATMAT_ASSERT(B.cols() == D.cols());
     const index_t M = D.rows(), N = D.cols(), K = A.cols();
-    if (M == 0 || N == 0 || K == 0) [[unlikely]]
+    if (M == 0 || N == 0) [[unlikely]]
         return;
+    if (K == 0) [[unlikely]] {
+        if (C)
+            copy<T, Abi, Conf.struc_C>(*C, D);
+        else
+            D.set_constant(T{});
+        return;
+    }
     // TODO: cache blocking
     return micro_kernels::gemm::gemm_copy_register<T, Abi, Conf>(A, B, C, D);
 }
@@ -173,8 +187,15 @@ void trmm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
     BATMAT_ASSERT(A.cols() == B.rows());
     BATMAT_ASSERT(B.cols() == D.cols());
     const index_t M = D.rows(), N = D.cols(), K = A.cols();
-    if (M == 0 || N == 0 || K == 0) [[unlikely]]
+    if (M == 0 || N == 0) [[unlikely]]
         return;
+    if (K == 0) [[unlikely]] {
+        if (C)
+            copy<T, Abi, Conf.struc_C>(*C, D);
+        else
+            D.set_constant(T{});
+        return;
+    }
     // TODO: cache blocking
     return micro_kernels::gemm::gemm_copy_register<T, Abi, Conf>(A, B, C, D);
 }
