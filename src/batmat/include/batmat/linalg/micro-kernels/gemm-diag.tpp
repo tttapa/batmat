@@ -65,7 +65,7 @@ gemm_diag_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T,
         UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
             simd Ail = dl * A_cached.load(ii, l);
             if constexpr (Conf.track_zeros)
-                all_zero &= all_of(Ail == 0);
+                all_zero &= all_of(Ail == simd{0});
             UNROLL_FOR (index_t jj = min_col(ii); jj <= max_col(ii); ++jj) {
                 simd &Cij = C_reg[ii][jj];
                 simd Blj  = B_cached.load(l, jj);
@@ -115,8 +115,8 @@ void gemm_diag_copy_register(const view<const T, Abi, OA> A, const view<const T,
     BATMAT_ASSUME(J > 0);
     BATMAT_ASSUME(K > 0);
     // Configurations for the various micro-kernels
-    constexpr KernelConfig ConfSmall{.negate = Conf.negate, .track_zeros = false};
-    constexpr KernelConfig ConfSub{.negate = Conf.negate, .track_zeros = false, .struc_C = General};
+    constexpr KernelConfig ConfSmall{.negate = Conf.negate, .struc_C = Conf.struc_C};
+    constexpr KernelConfig ConfSub{.negate = Conf.negate, .struc_C = General};
     static const auto microkernel       = gemm_diag_copy_lut<T, Abi, Conf, OA, OB, OC, OD>;
     static const auto microkernel_small = gemm_diag_copy_lut<T, Abi, ConfSmall, OA, OB, OC, OD>;
     static const auto microkernel_sub   = gemm_diag_copy_lut<T, Abi, ConfSub, OA, OB, OC, OD>;
