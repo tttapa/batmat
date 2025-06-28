@@ -1,6 +1,7 @@
 #pragma once
 
 #include <batmat/config.hpp>
+#include <batmat/matrix/layout.hpp>
 #include <batmat/simd.hpp>
 #include <gtest/gtest.h>
 
@@ -28,6 +29,16 @@ constexpr index_t sizes[] // NOLINT(*-c-arrays)
 
 #endif
 
+using batmat::matrix::StorageOrder;
+using enum StorageOrder;
+
+template <class T, index_t N, StorageOrder... Orders>
+struct TestConfig {
+    using value_type = T;
+    using batch_size = std::integral_constant<index_t, N>;
+    static constexpr StorageOrder orders[sizeof...(Orders)]{Orders...};
+};
+
 template <class...>
 struct CatTypes;
 
@@ -39,5 +50,31 @@ template <class... T1, class... T2, class... Others>
 struct CatTypes<::testing::Types<T1...>, ::testing::Types<T2...>, Others...> {
     using type = typename CatTypes<::testing::Types<T1..., T2...>, Others...>::type;
 };
+
+template <class T, index_t N>
+using OrderConfigs3 = ::testing::Types<
+    TestConfig<T, N, ColMajor, ColMajor, ColMajor>,
+#if BATMAT_EXTENSIVE_TESTS
+    TestConfig<T, N, ColMajor, ColMajor, RowMajor>, TestConfig<T, N, ColMajor, RowMajor, ColMajor>,
+    TestConfig<T, N, ColMajor, RowMajor, RowMajor>, TestConfig<T, N, RowMajor, ColMajor, ColMajor>,
+    TestConfig<T, N, RowMajor, ColMajor, RowMajor>, TestConfig<T, N, RowMajor, RowMajor, ColMajor>,
+#endif
+    TestConfig<T, N, RowMajor, RowMajor, RowMajor>>;
+
+template <class T, index_t N>
+using OrderConfigs2 =
+    ::testing::Types<TestConfig<T, N, ColMajor, ColMajor>,
+#if BATMAT_EXTENSIVE_TESTS
+                     TestConfig<T, N, ColMajor, ColMajor>, TestConfig<T, N, ColMajor, RowMajor>,
+                     TestConfig<T, N, RowMajor, ColMajor>,
+#endif
+                     TestConfig<T, N, RowMajor, RowMajor>>;
+
+template <class T, index_t N>
+using OrderConfigs1 = ::testing::Types<TestConfig<T, N, ColMajor>, TestConfig<T, N, RowMajor>>;
+
+template <template <class T, index_t N> class OrderConfigs>
+using TestConfigs = typename CatTypes<OrderConfigs<double, 1>, OrderConfigs<double, 4>,
+                                      OrderConfigs<float, 1>, OrderConfigs<float, 8>>::type;
 
 } // namespace batmat::tests

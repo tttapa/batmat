@@ -1,169 +1,117 @@
 #include <batmat/linalg/trtri.hpp>
-#include <batmat/matrix/matrix.hpp>
-#include <batmat/matrix/view.hpp>
-#include <Eigen/Cholesky>
 #include <gtest/gtest.h>
-#include <guanaqo/eigen/view.hpp>
-#include <algorithm>
-#include <limits>
-#include <random>
 
 #include "config.hpp"
 #include "eigen-matchers.hpp"
+#include "fixtures.hpp"
 
-using batmat::index_t;
-using batmat::matrix::DefaultStride;
-using batmat::matrix::StorageOrder;
-using batmat::tests::CatTypes;
-
-template <class T, index_t N, StorageOrder OA, StorageOrder OB>
-struct TestConfig {
-    using value_type                      = T;
-    using batch_size                      = std::integral_constant<index_t, N>;
-    static constexpr StorageOrder order_A = OA, order_B = OB;
-};
+using enum Eigen::UpLoType;
 
 template <class Config>
-class TrtriTest : public ::testing::Test {
-  protected:
-    using value_type = typename Config::value_type;
-    using batch_size = typename Config::batch_size;
-
-    template <StorageOrder O>
-    using Matrix = batmat::matrix::Matrix<value_type, index_t, batch_size, batch_size, O>;
-
-    std::mt19937 rng{12345};
-    std::normal_distribution<value_type> nrml{0, 1};
-    void SetUp() override { rng.seed(12345); }
-
-    template <StorageOrder O>
-    auto get_matrix(index_t r, index_t c) {
-        Matrix<O> a{{.rows = r, .cols = c}};
-        std::ranges::generate(a, [this] { return nrml(rng); });
-        return a;
-    }
-
-    auto get_A(index_t r, index_t c) { return get_matrix<Config::order_A>(r, c); }
-    auto get_B(index_t r, index_t c) { return get_matrix<Config::order_B>(r, c); }
-};
-
+struct TrtriTest : batmat::tests::LinalgTest<Config> {};
 TYPED_TEST_SUITE_P(TrtriTest);
-
-template <Eigen::UpLoType UpLo, class T>
-auto tri(T &&t) -> Eigen::MatrixX<typename T::Scalar> {
-    return std::forward<T>(t).template triangularView<UpLo>().toDenseMatrix();
-}
 
 TYPED_TEST_P(TrtriTest, trtriL) {
     using batmat::linalg::tril;
     using batmat::linalg::trtri;
-    using real_t = typename TestFixture::value_type;
-    using EMat   = Eigen::MatrixX<real_t>;
-    const auto ε = std::pow(std::numeric_limits<real_t>::epsilon(), real_t(0.6));
     for (auto m : batmat::tests::sizes) {
         const auto A = [&] {
-            auto A = this->get_A(m, m);
-            A.view().add_to_diagonal(static_cast<real_t>(100 * m));
+            auto A = this->template get_matrix<0>(m, m);
+            A.view().add_to_diagonal(static_cast<TestFixture::value_type>(100 * m));
             return A;
         }();
-        const auto D0 = this->get_B(m, m);
+        const auto D0 = this->template get_matrix<1>(m, m);
         auto D        = D0;
         trtri(tril(A), tril(D));
-        for (index_t l = 0; l < A.depth(); ++l) {
-            const auto I      = EMat::Identity(m, m);
-            const EMat Dl_ref = as_eigen(A(l)).template triangularView<Eigen::Lower>().solve(I);
-            EXPECT_THAT(tri<Eigen::Lower>(as_eigen(D(l))), EigenAlmostEqual(Dl_ref, ε));
-            EXPECT_THAT(tri<Eigen::StrictlyUpper>(as_eigen(D(l))),
-                        EigenAlmostEqual(tri<Eigen::StrictlyUpper>(as_eigen(D0(l))), ε));
-        }
-    }
-}
-
-TYPED_TEST_P(TrtriTest, trtriLinplace) {
-    using batmat::linalg::tril;
-    using batmat::linalg::trtri;
-    using real_t = typename TestFixture::value_type;
-    using EMat   = Eigen::MatrixX<real_t>;
-    const auto ε = std::pow(std::numeric_limits<real_t>::epsilon(), real_t(0.6));
-    for (auto m : batmat::tests::sizes) {
-        const auto D0 = [&] {
-            auto D = this->get_A(m, m);
-            D.view().add_to_diagonal(static_cast<real_t>(100 * m));
-            return D;
-        }();
-        auto D = D0;
-        trtri(tril(D));
-        for (index_t l = 0; l < D.depth(); ++l) {
-            const auto I      = EMat::Identity(m, m);
-            const EMat Dl_ref = as_eigen(D0(l)).template triangularView<Eigen::Lower>().solve(I);
-            EXPECT_THAT(tri<Eigen::Lower>(as_eigen(D(l))), EigenAlmostEqual(Dl_ref, ε));
-            EXPECT_THAT(tri<Eigen::StrictlyUpper>(as_eigen(D(l))),
-                        EigenAlmostEqual(tri<Eigen::StrictlyUpper>(as_eigen(D0(l))), ε));
-        }
+        const auto I = Eigen::MatrixX<typename TestFixture::value_type>::Identity(m, m);
+        this->check([&](auto &&Al, auto &&) { return triv<Lower>(Al).solve(I).eval(); },
+                    [&](auto l, auto &&res, auto &&ref, auto &&, auto &&D0) {
+                        const auto resL = tri<Lower>(res), resU = tri<StrictlyUpper>(res);
+                        EXPECT_THAT(resL, EigenAlmostEqual(ref, this->tolerance)) << l;
+                        EXPECT_THAT(resU, EigenAlmostEqual(tri<StrictlyUpper>(D0), this->tolerance))
+                            << l;
+                    },
+                    D, A, D0);
     }
 }
 
 TYPED_TEST_P(TrtriTest, trtriU) {
     using batmat::linalg::triu;
     using batmat::linalg::trtri;
-    using real_t = typename TestFixture::value_type;
-    using EMat   = Eigen::MatrixX<real_t>;
-    const auto ε = std::pow(std::numeric_limits<real_t>::epsilon(), real_t(0.6));
     for (auto m : batmat::tests::sizes) {
         const auto A = [&] {
-            auto A = this->get_A(m, m);
-            A.view().add_to_diagonal(static_cast<real_t>(100 * m));
+            auto A = this->template get_matrix<0>(m, m);
+            A.view().add_to_diagonal(static_cast<TestFixture::value_type>(100 * m));
             return A;
         }();
-        const auto D0 = this->get_B(m, m);
+        const auto D0 = this->template get_matrix<1>(m, m);
         auto D        = D0;
         trtri(triu(A), triu(D));
-        for (index_t l = 0; l < A.depth(); ++l) {
-            const auto I      = EMat::Identity(m, m);
-            const EMat Dl_ref = as_eigen(A(l)).template triangularView<Eigen::Upper>().solve(I);
-            EXPECT_THAT(tri<Eigen::Upper>(as_eigen(D(l))), EigenAlmostEqual(Dl_ref, ε));
-            EXPECT_THAT(tri<Eigen::StrictlyLower>(as_eigen(D(l))),
-                        EigenAlmostEqual(tri<Eigen::StrictlyLower>(as_eigen(D0(l))), ε));
-        }
+        const auto I = Eigen::MatrixX<typename TestFixture::value_type>::Identity(m, m);
+        this->check([&](auto &&Al, auto &&) { return triv<Upper>(Al).solve(I).eval(); },
+                    [&](auto l, auto &&res, auto &&ref, auto &&, auto &&D0) {
+                        const auto resU = tri<Upper>(res), resL = tri<StrictlyLower>(res);
+                        EXPECT_THAT(resU, EigenAlmostEqual(ref, this->tolerance)) << l;
+                        EXPECT_THAT(resL, EigenAlmostEqual(tri<StrictlyLower>(D0), this->tolerance))
+                            << l;
+                    },
+                    D, A, D0);
     }
 }
 
-TYPED_TEST_P(TrtriTest, trtriUinplace) {
-    using batmat::linalg::triu;
+template <class Config>
+struct TrtriInplaceTest : batmat::tests::LinalgTest<Config> {};
+TYPED_TEST_SUITE_P(TrtriInplaceTest);
+
+TYPED_TEST_P(TrtriInplaceTest, trtriL) {
+    using batmat::linalg::tril;
     using batmat::linalg::trtri;
-    using real_t = typename TestFixture::value_type;
-    using EMat   = Eigen::MatrixX<real_t>;
-    const auto ε = std::pow(std::numeric_limits<real_t>::epsilon(), real_t(0.6));
     for (auto m : batmat::tests::sizes) {
         const auto D0 = [&] {
-            auto D = this->get_A(m, m);
-            D.view().add_to_diagonal(static_cast<real_t>(100 * m));
+            auto D = this->template get_matrix<0>(m, m);
+            D.view().add_to_diagonal(static_cast<TestFixture::value_type>(100 * m));
+            return D;
+        }();
+        auto D = D0;
+        trtri(tril(D));
+        const auto I = Eigen::MatrixX<typename TestFixture::value_type>::Identity(m, m);
+        this->check([&](auto &&Dl) { return triv<Lower>(Dl).solve(I).eval(); },
+                    [&](auto l, auto &&res, auto &&ref, auto &&D0) {
+                        const auto resL = tri<Lower>(res), resU = tri<StrictlyUpper>(res);
+                        EXPECT_THAT(resL, EigenAlmostEqual(ref, this->tolerance)) << l;
+                        EXPECT_THAT(resU, EigenAlmostEqual(tri<StrictlyUpper>(D0), this->tolerance))
+                            << l;
+                    },
+                    D, D0);
+    }
+}
+
+TYPED_TEST_P(TrtriInplaceTest, trtriU) {
+    using batmat::linalg::triu;
+    using batmat::linalg::trtri;
+    for (auto m : batmat::tests::sizes) {
+        const auto D0 = [&] {
+            auto D = this->template get_matrix<0>(m, m);
+            D.view().add_to_diagonal(static_cast<TestFixture::value_type>(100 * m));
             return D;
         }();
         auto D = D0;
         trtri(triu(D));
-        for (index_t l = 0; l < D.depth(); ++l) {
-            const auto I      = EMat::Identity(m, m);
-            const EMat Dl_ref = as_eigen(D0(l)).template triangularView<Eigen::Upper>().solve(I);
-            EXPECT_THAT(tri<Eigen::Upper>(as_eigen(D(l))), EigenAlmostEqual(Dl_ref, ε));
-            EXPECT_THAT(tri<Eigen::StrictlyLower>(as_eigen(D(l))),
-                        EigenAlmostEqual(tri<Eigen::StrictlyLower>(as_eigen(D0(l))), ε));
-        }
+        const auto I = Eigen::MatrixX<typename TestFixture::value_type>::Identity(m, m);
+        this->check([&](auto &&Dl) { return triv<Upper>(Dl).solve(I).eval(); },
+                    [&](auto l, auto &&res, auto &&ref, auto &&D0) {
+                        const auto resU = tri<Upper>(res), resL = tri<StrictlyLower>(res);
+                        EXPECT_THAT(resU, EigenAlmostEqual(ref, this->tolerance)) << l;
+                        EXPECT_THAT(resL, EigenAlmostEqual(tri<StrictlyLower>(D0), this->tolerance))
+                            << l;
+                    },
+                    D, D0);
     }
 }
 
-REGISTER_TYPED_TEST_SUITE_P(TrtriTest, trtriL, trtriLinplace, trtriU, trtriUinplace);
+REGISTER_TYPED_TEST_SUITE_P(TrtriTest, trtriL, trtriU);
+REGISTER_TYPED_TEST_SUITE_P(TrtriInplaceTest, trtriL, trtriU);
 
-using enum batmat::matrix::StorageOrder;
-template <class T, index_t N>
-using TestConfigs =
-    ::testing::Types<TestConfig<T, N, ColMajor, ColMajor>,
-#if BATMAT_EXTENSIVE_TESTS
-                     TestConfig<T, N, ColMajor, ColMajor>, TestConfig<T, N, ColMajor, RowMajor>,
-                     TestConfig<T, N, RowMajor, ColMajor>,
-#endif
-                     TestConfig<T, N, RowMajor, RowMajor>>;
-using AllTestConfigs = typename CatTypes<TestConfigs<double, 1>, TestConfigs<double, 4>,
-                                         TestConfigs<float, 1>, TestConfigs<float, 8>>::type;
-
-INSTANTIATE_TYPED_TEST_SUITE_P(linalg, TrtriTest, AllTestConfigs);
+using namespace batmat::tests;
+INSTANTIATE_TYPED_TEST_SUITE_P(linalg, TrtriTest, TestConfigs<OrderConfigs2>);
+INSTANTIATE_TYPED_TEST_SUITE_P(linalg, TrtriInplaceTest, TestConfigs<OrderConfigs1>);
