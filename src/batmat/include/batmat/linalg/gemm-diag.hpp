@@ -31,9 +31,16 @@ void gemm_diag(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
     const index_t M = D.rows(), N = D.cols(), K = A.cols();
 
     // Degenerate case
-    if (M == 0 || N == 0 || K == 0) [[unlikely]]
+    if (M == 0 || N == 0) [[unlikely]]
         return;
-
+    if (K == 0) [[unlikely]] {
+        if (C)
+            copy<T, Abi>(*C, D);
+        else
+            D.set_constant(T{});
+        return;
+    }
+    // TODO: cache blocking
     return micro_kernels::gemm_diag::gemm_diag_copy_register<T, Abi, Conf>(A, B, C, D, d);
 }
 } // namespace detail
