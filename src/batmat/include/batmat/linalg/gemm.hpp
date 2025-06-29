@@ -45,11 +45,13 @@ void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
     if (M == 0 || N == 0) [[unlikely]]
         return;
     if (K == 0) [[unlikely]] {
+        // https://github.com/llvm/llvm-project/issues/146272
+        constexpr CopyRotate rot{.rotate = Conf.rotate_C - Conf.rotate_D, .mask = Conf.mask_D};
+        constexpr FillMask msk{.mask = Conf.mask_D};
         if (C)
-            copy<T, Abi, Conf.struc_C,
-                 {.rotate = Conf.rotate_C - Conf.rotate_D, .mask = Conf.mask_D}>(*C, D);
+            copy<T, Abi, Conf.struc_C, rot>(*C, D);
         else
-            copy<T, Abi, Conf.struc_C, {.mask = Conf.mask_D}>(T{}, D);
+            copy<T, Abi, Conf.struc_C, msk>(T{}, D);
         return;
     }
 
@@ -157,11 +159,13 @@ void gemmt(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
     if (M == 0 || N == 0) [[unlikely]]
         return;
     if (K == 0) [[unlikely]] {
+        // https://github.com/llvm/llvm-project/issues/146272
+        constexpr CopyRotate rot{.rotate = Conf.rotate_C - Conf.rotate_D, .mask = Conf.mask_D};
+        constexpr FillMask msk{.mask = Conf.mask_D};
         if (C)
-            copy<T, Abi, Conf.struc_C,
-                 {.rotate = Conf.rotate_C - Conf.rotate_D, .mask = Conf.mask_D}>(*C, D);
+            copy<T, Abi, Conf.struc_C, rot>(*C, D);
         else
-            copy<T, Abi, Conf.struc_C, {.mask = Conf.mask_D}>(T{}, D);
+            copy<T, Abi, Conf.struc_C, msk>(T{}, D);
         return;
     }
     // TODO: cache blocking
@@ -192,11 +196,13 @@ void trmm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
     if (M == 0 || N == 0) [[unlikely]]
         return;
     if (K == 0) [[unlikely]] {
+        // https://github.com/llvm/llvm-project/issues/146272
+        constexpr CopyRotate rot{.rotate = Conf.rotate_C - Conf.rotate_D, .mask = Conf.mask_D};
+        constexpr FillMask msk{.mask = Conf.mask_D};
         if (C)
-            copy<T, Abi, Conf.struc_C,
-                 {.rotate = Conf.rotate_C - Conf.rotate_D, .mask = Conf.mask_D}>(*C, D);
+            copy<T, Abi, Conf.struc_C, rot>(*C, D);
         else
-            copy<T, Abi, Conf.struc_C, {.mask = Conf.mask_D}>(T{}, D);
+            copy<T, Abi, Conf.struc_C, msk>(T{}, D);
         return;
     }
     // TODO: cache blocking
