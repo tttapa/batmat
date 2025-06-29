@@ -34,10 +34,12 @@ void gemm_diag(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
     if (M == 0 || N == 0) [[unlikely]]
         return;
     if (K == 0) [[unlikely]] {
+        constexpr detail::copy::CopyConfig rot{.struc = Conf.struc_C};
+        constexpr detail::copy::FillConfig msk{.struc = Conf.struc_C};
         if (C)
-            copy<T, Abi, Conf.struc_C, {}>(*C, D);
+            detail::copy::copy<T, Abi, rot>(*C, D);
         else
-            copy<T, Abi, Conf.struc_C>(T{}, D);
+            detail::copy::copy<T, Abi, msk>(T{}, D);
         return;
     }
     // TODO: cache blocking

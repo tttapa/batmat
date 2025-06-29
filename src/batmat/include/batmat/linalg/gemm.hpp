@@ -46,12 +46,13 @@ void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
         return;
     if (K == 0) [[unlikely]] {
         // https://github.com/llvm/llvm-project/issues/146272
-        constexpr CopyRotate rot{.rotate = Conf.rotate_C - Conf.rotate_D, .mask = Conf.mask_D};
-        constexpr FillMask msk{.mask = Conf.mask_D};
+        constexpr detail::copy::CopyConfig rot{
+            .rotate = Conf.rotate_C - Conf.rotate_D, .mask = Conf.mask_D, .struc = Conf.struc_C};
+        constexpr detail::copy::FillConfig msk{.mask = Conf.mask_D, .struc = Conf.struc_C};
         if (C)
-            copy<T, Abi, Conf.struc_C, rot>(*C, D);
+            detail::copy::copy<T, Abi, rot>(*C, D);
         else
-            copy<T, Abi, Conf.struc_C, msk>(T{}, D);
+            detail::copy::copy<T, Abi, msk>(T{}, D);
         return;
     }
 
@@ -108,14 +109,14 @@ void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
             auto Bkj = B.block(p_c, j_c, k_c, n_c);
             if (pack_B) {
                 Bkj_pack.reassign({{.data = B_pack.get(), .rows = k_c, .cols = n_c}});
-                copy<T, Abi>(Bkj, Bkj_pack);
+                detail::copy::copy<T, Abi>(Bkj, Bkj_pack);
                 foreach_chunked_merged(0, M, M_cache, [&](index_t i_c, index_t m_c) {
                     auto Cij = C ? std::make_optional(C->block(i_c, j_c, m_c, n_c)) : std::nullopt;
                     auto Dij = D.block(i_c, j_c, m_c, n_c);
                     auto Aik = A.block(i_c, p_c, m_c, k_c);
                     if (pack_A) {
                         Aik_pack.reassign({{.data = A_pack.get(), .rows = m_c, .cols = k_c}});
-                        copy<T, Abi>(Aik, Aik_pack);
+                        detail::copy::copy<T, Abi>(Aik, Aik_pack);
                         gemm_copy_register<T, Abi, Conf>(Aik_pack.as_const(), Bkj_pack.as_const(),
                                                          p_c == 0 ? Cij : Dij, Dij);
                     } else {
@@ -130,7 +131,7 @@ void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
                     auto Aik = A.block(i_c, p_c, m_c, k_c);
                     if (pack_A) {
                         Aik_pack.reassign({{.data = A_pack.get(), .rows = m_c, .cols = k_c}});
-                        copy<T, Abi>(Aik, Aik_pack);
+                        detail::copy::copy<T, Abi>(Aik, Aik_pack);
                         gemm_copy_register<T, Abi, Conf>(Aik_pack.as_const(), Bkj,
                                                          p_c == 0 ? Cij : Dij, Dij);
                     } else {
@@ -160,12 +161,13 @@ void gemmt(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
         return;
     if (K == 0) [[unlikely]] {
         // https://github.com/llvm/llvm-project/issues/146272
-        constexpr CopyRotate rot{.rotate = Conf.rotate_C - Conf.rotate_D, .mask = Conf.mask_D};
-        constexpr FillMask msk{.mask = Conf.mask_D};
+        constexpr detail::copy::CopyConfig rot{
+            .rotate = Conf.rotate_C - Conf.rotate_D, .mask = Conf.mask_D, .struc = Conf.struc_C};
+        constexpr detail::copy::FillConfig msk{.mask = Conf.mask_D, .struc = Conf.struc_C};
         if (C)
-            copy<T, Abi, Conf.struc_C, rot>(*C, D);
+            detail::copy::copy<T, Abi, rot>(*C, D);
         else
-            copy<T, Abi, Conf.struc_C, msk>(T{}, D);
+            detail::copy::copy<T, Abi, msk>(T{}, D);
         return;
     }
     // TODO: cache blocking
@@ -197,12 +199,13 @@ void trmm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
         return;
     if (K == 0) [[unlikely]] {
         // https://github.com/llvm/llvm-project/issues/146272
-        constexpr CopyRotate rot{.rotate = Conf.rotate_C - Conf.rotate_D, .mask = Conf.mask_D};
-        constexpr FillMask msk{.mask = Conf.mask_D};
+        constexpr detail::copy::CopyConfig rot{
+            .rotate = Conf.rotate_C - Conf.rotate_D, .mask = Conf.mask_D, .struc = Conf.struc_C};
+        constexpr detail::copy::FillConfig msk{.mask = Conf.mask_D, .struc = Conf.struc_C};
         if (C)
-            copy<T, Abi, Conf.struc_C, rot>(*C, D);
+            detail::copy::copy<T, Abi, rot>(*C, D);
         else
-            copy<T, Abi, Conf.struc_C, msk>(T{}, D);
+            detail::copy::copy<T, Abi, msk>(T{}, D);
         return;
     }
     // TODO: cache blocking
@@ -277,65 +280,61 @@ void gemm_sub(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts... opts) 
 }
 
 /// D = A Aᵀ with D symmetric
-template <char UpLo = 'L', simdifiable VA, simdifiable VD, shift_opt... Opts>
+template <MatrixStructure SD, simdifiable VA, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VD>
-void syrk(VA &&A, VD &&D, Opts... opts) {
-    static_assert(UpLo == 'L' || UpLo == 'U');
+void syrk(VA &&A, Structured<VD, SD> D, Opts... opts) {
     using enum MatrixStructure;
-    std::optional<decltype(simdify(D).as_const())> null;
-    constexpr auto conf = detail::apply_options(
-        {.negate = false, .struc_C = UpLo == 'U' ? UpperTriangular : LowerTriangular}, opts...);
+    static_assert(SD != General);
+    std::optional<decltype(simdify(D.value).as_const())> null;
+    constexpr auto conf = detail::apply_options({.negate = false, .struc_C = SD}, opts...);
     detail::gemmt<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
-        simdify(A).as_const(), simdify(A).as_const().transposed(), null, simdify(D));
+        simdify(A).as_const(), simdify(A).as_const().transposed(), null, simdify(D.value));
 }
 
 /// D = -A Aᵀ with D symmetric
-template <char UpLo = 'L', simdifiable VA, simdifiable VD, shift_opt... Opts>
+template <MatrixStructure SD, simdifiable VA, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VD>
-void syrk_neg(VA &&A, VD &&D, Opts... opts) {
-    static_assert(UpLo == 'L' || UpLo == 'U');
+void syrk_neg(VA &&A, Structured<VD, SD> D, Opts... opts) {
     using enum MatrixStructure;
-    std::optional<decltype(simdify(D).as_const())> null;
-    constexpr auto conf = detail::apply_options(
-        {.negate = true, .struc_C = UpLo == 'U' ? UpperTriangular : LowerTriangular}, opts...);
+    static_assert(SD != General);
+    std::optional<decltype(simdify(D.value).as_const())> null;
+    constexpr auto conf = detail::apply_options({.negate = true, .struc_C = SD}, opts...);
     detail::gemmt<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
-        simdify(A).as_const(), simdify(A).as_const().transposed(), null, simdify(D));
+        simdify(A).as_const(), simdify(A).as_const().transposed(), null, simdify(D.value));
 }
 
 /// D = C + A Aᵀ with C, D symmetric
-template <char UpLo = 'L', simdifiable VA, simdifiable VC, simdifiable VD, shift_opt... Opts>
+template <MatrixStructure SD, simdifiable VA, simdifiable VC, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VC, VD>
-void syrk_add(VA A, VC C, VD D, Opts... opts) {
-    static_assert(UpLo == 'L' || UpLo == 'U');
+void syrk_add(VA &&A, Structured<VC, SD> C, Structured<VD, SD> D, Opts... opts) {
     using enum MatrixStructure;
-    constexpr auto conf = detail::apply_options(
-        {.negate = false, .struc_C = UpLo == 'U' ? UpperTriangular : LowerTriangular}, opts...);
+    static_assert(SD != General);
+    constexpr auto conf = detail::apply_options({.negate = false, .struc_C = SD}, opts...);
     detail::gemmt<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A).as_const(), simdify(A).as_const().transposed(),
-        std::make_optional(simdify(C).as_const()), simdify(D));
+        std::make_optional(simdify(C.value).as_const()), simdify(D.value));
 }
 /// D += A Aᵀ with D symmetric
-template <char UpLo = 'L', simdifiable VA, simdifiable VD, shift_opt... Opts>
-void syrk_add(VA &&A, VD &&D, Opts... opts) {
-    return syrk_add<UpLo>(A, D, D, opts...);
+template <MatrixStructure SD, simdifiable VA, simdifiable VD, shift_opt... Opts>
+void syrk_add(VA &&A, Structured<VD, SD> D, Opts... opts) {
+    return syrk_add(A, D.ref(), D.ref(), opts...);
 }
 
 /// D = C - A Aᵀ with C, D symmetric
-template <char UpLo = 'L', simdifiable VA, simdifiable VC, simdifiable VD, shift_opt... Opts>
+template <MatrixStructure SD, simdifiable VA, simdifiable VC, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VC, VD>
-void syrk_sub(VA A, VC C, VD D, Opts... opts) {
-    static_assert(UpLo == 'L' || UpLo == 'U');
+void syrk_sub(VA &&A, Structured<VC, SD> C, Structured<VD, SD> D, Opts... opts) {
     using enum MatrixStructure;
-    constexpr auto conf = detail::apply_options(
-        {.negate = true, .struc_C = UpLo == 'U' ? UpperTriangular : LowerTriangular}, opts...);
+    static_assert(SD != General);
+    constexpr auto conf = detail::apply_options({.negate = true, .struc_C = SD}, opts...);
     detail::gemmt<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A).as_const(), simdify(A).as_const().transposed(),
-        std::make_optional(simdify(C).as_const()), simdify(D));
+        std::make_optional(simdify(C.value).as_const()), simdify(D.value));
 }
 /// D -= A Aᵀ with D symmetric
-template <char UpLo = 'L', simdifiable VA, simdifiable VD, shift_opt... Opts>
-void syrk_sub(VA &&A, VD &&D, Opts... opts) {
-    return syrk_sub<UpLo>(A, D, D, opts...);
+template <MatrixStructure SD, simdifiable VA, simdifiable VD, shift_opt... Opts>
+void syrk_sub(VA &&A, Structured<VD, SD> D, Opts... opts) {
+    return syrk_sub(A, D.ref(), D.ref(), opts...);
 }
 
 /// D = A B with A and/or B triangular

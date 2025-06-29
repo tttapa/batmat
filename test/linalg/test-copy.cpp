@@ -41,7 +41,8 @@ class CopyTest : public ::testing::Test {
         auto A = pad_A.block(padding, padding, rows, cols).as_const();
         auto B = pad_B.block(padding, padding, rows, cols);
 
-        batmat::linalg::copy<type, abi, Conf::struc>(A.batch(0), B.batch(0));
+        batmat::linalg::copy(batmat::linalg::make_structured<Conf::struc>(A.batch(0)),
+                             batmat::linalg::make_structured<Conf::struc>(B.batch(0)));
 
         const index_t JI_adif = std::max<index_t>(0, cols - rows);
         const index_t IJ_adif = std::max<index_t>(0, rows - cols);

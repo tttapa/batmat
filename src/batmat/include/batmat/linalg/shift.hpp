@@ -78,4 +78,38 @@ inline constexpr bool is_shift_opt<with_mask_D_t<I>> = true;
 template <class Opt>
 concept shift_opt = is_shift_opt<Opt>;
 
+template <int I>
+struct with_rotate_t : std::integral_constant<int, I> {};
+template <int I>
+struct with_mask_t : std::integral_constant<int, I> {};
+
+template <int I>
+inline constexpr with_rotate_t<I> with_rotate;
+template <int I>
+inline constexpr with_mask_t<I> with_mask;
+
+template <class...>
+inline constexpr std::optional<int> get_rotate = std::nullopt;
+template <class T, class... Ts>
+inline constexpr std::optional<int> get_rotate<T, Ts...> = get_rotate<Ts...>;
+template <int I, class... Ts>
+inline constexpr std::optional<int> get_rotate<with_rotate_t<I>, Ts...> = I;
+
+template <class...>
+inline constexpr std::optional<int> get_mask = std::nullopt;
+template <class T, class... Ts>
+inline constexpr std::optional<int> get_mask<T, Ts...> = get_mask<Ts...>;
+template <int I, class... Ts>
+inline constexpr std::optional<int> get_mask<with_mask_t<I>, Ts...> = I;
+
+template <class>
+inline constexpr bool is_rotate_opt = false;
+template <int I>
+inline constexpr bool is_rotate_opt<with_rotate_t<I>> = true;
+template <int I>
+inline constexpr bool is_rotate_opt<with_mask_t<I>> = true;
+
+template <class Opt>
+concept rotate_opt = is_rotate_opt<Opt>;
+
 } // namespace batmat::linalg
