@@ -35,9 +35,9 @@ void gemm_diag(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
         return;
     if (K == 0) [[unlikely]] {
         if (C)
-            copy<T, Abi>(*C, D);
+            copy<T, Abi, Conf.struc_C, {}>(*C, D);
         else
-            D.set_constant(T{});
+            copy<T, Abi, Conf.struc_C>(T{}, D);
         return;
     }
     // TODO: cache blocking

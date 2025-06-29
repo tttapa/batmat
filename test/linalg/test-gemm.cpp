@@ -24,7 +24,8 @@ TYPED_TEST_P(GemmTest, gemm) {
                 gemm(A, B, C);
                 this->check([&](auto &&Al, auto &&Bl) { return Al * Bl; },
                             [&](auto l, auto &&res, auto &&ref, auto &&...) {
-                                EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance)) << l;
+                                EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance))
+                                    << l << "    (" << m << "×" << k << "×" << n << ")";
                             },
                             C, A, B);
             }
@@ -42,7 +43,8 @@ TYPED_TEST_P(GemmTest, gemmSub) {
                 gemm_sub(A, B, C, D);
                 this->check([&](auto &&Al, auto &&Bl, auto &&Cl) { return Cl - Al * Bl; },
                             [&](auto l, auto &&res, auto &&ref, auto &&...) {
-                                EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance)) << l;
+                                EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance))
+                                    << l << "    (" << m << "×" << k << "×" << n << ")";
                             },
                             D, A, B, C);
             }
@@ -60,7 +62,8 @@ TYPED_TEST_P(GemmTest, gemmNeg) {
                 gemm_neg(A, B, C);
                 this->check([&](auto &&Al, auto &&Bl) { return -Al * Bl; },
                             [&](auto l, auto &&res, auto &&ref, auto &&...) {
-                                EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance)) << l;
+                                EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance))
+                                    << l << "    (" << m << "×" << k << "×" << n << ")";
                             },
                             C, A, B);
             }
@@ -78,7 +81,8 @@ TYPED_TEST_P(GemmTest, gemmAdd) {
                 gemm_add(A, B, C, D);
                 this->check([&](auto &&Al, auto &&Bl, auto &&Cl) { return Cl + Al * Bl; },
                             [&](auto l, auto &&res, auto &&ref, auto &&...) {
-                                EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance)) << l;
+                                EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance))
+                                    << l << "    (" << m << "×" << k << "×" << n << ")";
                             },
                             D, A, B, C);
             }
@@ -95,10 +99,34 @@ TYPED_TEST_P(GemmTest, gemmSubShiftA) {
                 const auto C = this->template get_matrix<2>(m, n);
                 auto D       = this->template get_matrix<2>(m, n);
                 gemm_sub(A, B, C, D, {}, batmat::linalg::with_shift_A<-1>);
-                EXPECT_THAT(as_eigen(D(0)), EigenAlmostEqual(as_eigen(C(0)), ε)) << 0;
+                EXPECT_THAT(as_eigen(D(0)), EigenAlmostEqual(as_eigen(C(0)), ε))
+                    << 0 << "    (" << m << "×" << k << "×" << n << ")";
                 for (index_t l = 1; l < A.depth(); ++l) {
                     auto Cl_ref = as_eigen(C(l)) - as_eigen(A(l - 1)) * as_eigen(B(l));
-                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Cl_ref, ε)) << l;
+                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Cl_ref, ε))
+                        << l << "    (" << m << "×" << k << "×" << n << ")";
+                }
+            }
+}
+
+TYPED_TEST_P(GemmTest, gemmShiftCD) {
+    using batmat::linalg::gemm;
+    const auto ε = this->tolerance;
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes)
+            for (auto k : batmat::tests::sizes) {
+                auto A        = this->template get_matrix<0>(m, k);
+                const auto B  = this->template get_matrix<1>(k, n);
+                const auto D0 = this->template get_matrix<2>(m, n);
+                auto D        = D0;
+                gemm(A, B, D, {}, batmat::linalg::with_rotate_C<1>,
+                     batmat::linalg::with_rotate_D<1>, batmat::linalg::with_mask_D<1>);
+                EXPECT_THAT(as_eigen(D(0)), EigenAlmostEqual(as_eigen(D0(0)), ε))
+                    << 0 << "    (" << m << "×" << k << "×" << n << ")";
+                for (index_t l = 1; l < A.depth(); ++l) {
+                    auto Cl_ref = as_eigen(A(l - 1)) * as_eigen(B(l - 1));
+                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Cl_ref, ε))
+                        << l << "    (" << m << "×" << k << "×" << n << ")";
                 }
             }
 }
@@ -109,17 +137,41 @@ TYPED_TEST_P(GemmTest, gemmSubShiftCD) {
     for (auto m : batmat::tests::sizes)
         for (auto n : batmat::tests::sizes)
             for (auto k : batmat::tests::sizes) {
-                auto A       = this->template get_matrix<0>(m, k);
-                const auto B = this->template get_matrix<1>(k, n);
-                const auto C = this->template get_matrix<2>(m, n);
-                auto D       = this->template get_matrix<2>(m, n);
-                auto D0      = D;
+                auto A        = this->template get_matrix<0>(m, k);
+                const auto B  = this->template get_matrix<1>(k, n);
+                const auto C  = this->template get_matrix<2>(m, n);
+                const auto D0 = this->template get_matrix<2>(m, n);
+                auto D        = D0;
                 gemm_sub(A, B, C, D, {}, batmat::linalg::with_rotate_C<1>,
                          batmat::linalg::with_rotate_D<1>, batmat::linalg::with_mask_D<1>);
-                EXPECT_THAT(as_eigen(D(0)), EigenAlmostEqual(as_eigen(D0(0)), ε)) << 0;
+                EXPECT_THAT(as_eigen(D(0)), EigenAlmostEqual(as_eigen(D0(0)), ε))
+                    << 0 << "    (" << m << "×" << k << "×" << n << ")";
                 for (index_t l = 1; l < A.depth(); ++l) {
                     auto Cl_ref = as_eigen(C(l)) - as_eigen(A(l - 1)) * as_eigen(B(l - 1));
-                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Cl_ref, ε)) << l;
+                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Cl_ref, ε))
+                        << l << "    (" << m << "×" << k << "×" << n << ")";
+                }
+            }
+}
+
+TYPED_TEST_P(GemmTest, gemmShiftCDNeg) {
+    using batmat::linalg::gemm;
+    const auto ε = this->tolerance;
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes)
+            for (auto k : batmat::tests::sizes) {
+                auto A        = this->template get_matrix<0>(m, k);
+                const auto B  = this->template get_matrix<1>(k, n);
+                const auto D0 = this->template get_matrix<2>(m, n);
+                auto D        = D0;
+                gemm(A, B, D, {}, batmat::linalg::with_rotate_C<-1>,
+                     batmat::linalg::with_rotate_D<-1>, batmat::linalg::with_mask_D<0>);
+                const auto N = A.depth();
+                for (index_t l = 0; l < N; ++l) {
+                    auto l_next = (l + 1) % N;
+                    auto Cl_ref = as_eigen(A(l_next)) * as_eigen(B(l_next));
+                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Cl_ref, ε))
+                        << l << "    (" << m << "×" << k << "×" << n << ")";
                 }
             }
 }
@@ -140,7 +192,8 @@ TYPED_TEST_P(GemmTest, gemmSubShiftCDNeg) {
                 for (index_t l = 0; l < N; ++l) {
                     auto l_next = (l + 1) % N;
                     auto Cl_ref = as_eigen(C(l)) - as_eigen(A(l_next)) * as_eigen(B(l_next));
-                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Cl_ref, ε)) << l;
+                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Cl_ref, ε))
+                        << l << "    (" << m << "×" << k << "×" << n << ")";
                 }
             }
 }
@@ -149,7 +202,9 @@ TYPED_TEST_P(GemmTest, gemmSubShiftCDNeg) {
 TYPED_TEST_P(GemmTest, gemmNeg) { GTEST_SKIP() << "BATMAT_EXTENSIVE_TESTS=0"; }
 TYPED_TEST_P(GemmTest, gemmAdd) { GTEST_SKIP() << "BATMAT_EXTENSIVE_TESTS=0"; }
 TYPED_TEST_P(GemmTest, gemmSubShiftA) { GTEST_SKIP() << "BATMAT_EXTENSIVE_TESTS=0"; }
+TYPED_TEST_P(GemmTest, gemmShiftCD) { GTEST_SKIP() << "BATMAT_EXTENSIVE_TESTS=0"; }
 TYPED_TEST_P(GemmTest, gemmSubShiftCD) { GTEST_SKIP() << "BATMAT_EXTENSIVE_TESTS=0"; }
+TYPED_TEST_P(GemmTest, gemmShiftCDNeg) { GTEST_SKIP() << "BATMAT_EXTENSIVE_TESTS=0"; }
 TYPED_TEST_P(GemmTest, gemmSubShiftCDNeg) { GTEST_SKIP() << "BATMAT_EXTENSIVE_TESTS=0"; }
 #endif
 
@@ -168,7 +223,8 @@ TYPED_TEST_P(TrmmInplaceTest, trmmLGinplace) {
             trmm(tril(A), D, D);
             this->check([&](auto &&Al, auto &&Dl) { return triv<Lower>(Al) * Dl; },
                         [&](auto l, auto &&res, auto &&ref, auto &&...) {
-                            EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance)) << l;
+                            EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance))
+                                << l << "    (" << m << "×" << m << "×" << n << ")";
                         },
                         D, A, D0);
         }
@@ -185,7 +241,8 @@ TYPED_TEST_P(TrmmInplaceTest, trmmUGinplace) {
             trmm(triu(A), D, D);
             this->check([&](auto &&Al, auto &&Dl) { return triv<Upper>(Al) * Dl; },
                         [&](auto l, auto &&res, auto &&ref, auto &&...) {
-                            EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance)) << l;
+                            EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance))
+                                << l << "    (" << m << "×" << m << "×" << n << ")";
                         },
                         D, A, D0);
         }
@@ -202,7 +259,8 @@ TYPED_TEST_P(TrmmInplaceTest, trmmGLinplace) {
             trmm(D, tril(A), D);
             this->check([&](auto &&Al, auto &&Dl) { return Dl * triv<Lower>(Al); },
                         [&](auto l, auto &&res, auto &&ref, auto &&...) {
-                            EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance)) << l;
+                            EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance))
+                                << l << "    (" << n << "×" << m << "×" << m << ")";
                         },
                         D, A, D0);
         }
@@ -219,7 +277,8 @@ TYPED_TEST_P(TrmmInplaceTest, trmmGUinplace) {
             trmm(D, triu(A), D);
             this->check([&](auto &&Al, auto &&Dl) { return Dl * triv<Upper>(Al); },
                         [&](auto l, auto &&res, auto &&ref, auto &&...) {
-                            EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance)) << l;
+                            EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance))
+                                << l << "    (" << n << "×" << m << "×" << m << ")";
                         },
                         D, A, D0);
         }
@@ -244,8 +303,10 @@ TYPED_TEST_P(TrtrsyrkInplaceTest, trmmULLinplace) {
             },
             [&](auto l, auto &&res, auto &&ref, auto &&A0) {
                 const auto resL = tri<Lower>(res), resU = tri<StrictlyUpper>(res);
-                EXPECT_THAT(resL, EigenAlmostEqual(ref, this->tolerance)) << l;
-                EXPECT_THAT(resU, EigenAlmostEqual(tri<StrictlyUpper>(A0), this->tolerance)) << l;
+                EXPECT_THAT(resL, EigenAlmostEqual(ref, this->tolerance))
+                    << l << "    (" << m << "×" << m << "×" << m << ")";
+                EXPECT_THAT(resU, EigenAlmostEqual(tri<StrictlyUpper>(A0), this->tolerance))
+                    << l << "    (" << m << "×" << m << "×" << m << ")";
             },
             A, A0);
     }
@@ -266,8 +327,10 @@ TYPED_TEST_P(TrtrsyrkInplaceTest, trmmLUUinplace) {
             },
             [&](auto l, auto &&res, auto &&ref, auto &&A0) {
                 const auto resL = tri<StrictlyLower>(res), resU = tri<Upper>(res);
-                EXPECT_THAT(resU, EigenAlmostEqual(ref, this->tolerance)) << l;
-                EXPECT_THAT(resL, EigenAlmostEqual(tri<StrictlyLower>(A0), this->tolerance)) << l;
+                EXPECT_THAT(resU, EigenAlmostEqual(ref, this->tolerance))
+                    << l << "    (" << m << "×" << m << "×" << m << ")";
+                EXPECT_THAT(resL, EigenAlmostEqual(tri<StrictlyLower>(A0), this->tolerance))
+                    << l << "    (" << m << "×" << m << "×" << m << ")";
             },
             A, A0);
     }
@@ -305,8 +368,8 @@ TYPED_TEST_P(GemmTest, trmmLLLinplace) {
 }
 #endif
 
-REGISTER_TYPED_TEST_SUITE_P(GemmTest, gemm, gemmNeg, gemmAdd, gemmSub, gemmSubShiftA,
-                            gemmSubShiftCD, gemmSubShiftCDNeg);
+REGISTER_TYPED_TEST_SUITE_P(GemmTest, gemm, gemmNeg, gemmAdd, gemmSub, gemmSubShiftA, gemmShiftCD,
+                            gemmSubShiftCD, gemmShiftCDNeg, gemmSubShiftCDNeg);
 REGISTER_TYPED_TEST_SUITE_P(TrmmInplaceTest, trmmLGinplace, trmmUGinplace, trmmGLinplace,
                             trmmGUinplace);
 REGISTER_TYPED_TEST_SUITE_P(TrtrsyrkInplaceTest, trmmULLinplace, trmmLUUinplace);

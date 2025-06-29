@@ -46,9 +46,10 @@ void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
         return;
     if (K == 0) [[unlikely]] {
         if (C)
-            copy<T, Abi>(*C, D);
+            copy<T, Abi, Conf.struc_C,
+                 {.rotate = Conf.rotate_C - Conf.rotate_D, .mask = Conf.mask_D}>(*C, D);
         else
-            D.set_constant(T{});
+            copy<T, Abi, Conf.struc_C, {.mask = Conf.mask_D}>(T{}, D);
         return;
     }
 
@@ -157,9 +158,10 @@ void gemmt(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
         return;
     if (K == 0) [[unlikely]] {
         if (C)
-            copy<T, Abi, Conf.struc_C>(*C, D);
+            copy<T, Abi, Conf.struc_C,
+                 {.rotate = Conf.rotate_C - Conf.rotate_D, .mask = Conf.mask_D}>(*C, D);
         else
-            D.set_constant(T{});
+            copy<T, Abi, Conf.struc_C, {.mask = Conf.mask_D}>(T{}, D);
         return;
     }
     // TODO: cache blocking
@@ -191,9 +193,10 @@ void trmm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
         return;
     if (K == 0) [[unlikely]] {
         if (C)
-            copy<T, Abi, Conf.struc_C>(*C, D);
+            copy<T, Abi, Conf.struc_C,
+                 {.rotate = Conf.rotate_C - Conf.rotate_D, .mask = Conf.mask_D}>(*C, D);
         else
-            D.set_constant(T{});
+            copy<T, Abi, Conf.struc_C, {.mask = Conf.mask_D}>(T{}, D);
         return;
     }
     // TODO: cache blocking
