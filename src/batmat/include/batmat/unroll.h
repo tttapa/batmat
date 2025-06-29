@@ -8,11 +8,10 @@
 #define BATMAT_FULLY_UNROLL_LOOP _Pragma("clang loop unroll(full)")
 #define BATMAT_FULLY_UNROLLED_FOR(...) BATMAT_FULLY_UNROLL_LOOP for (__VA_ARGS__)
 #define BATMAT_FULLY_UNROLLED_IVDEP_FOR(...)                                                       \
-    BATMAT_FULLY_UNROLL_LOOP _Pragma(                                                              \
-        "clang loop vectorize(enable) interleave(enable)") for (__VA_ARGS__)
+    BATMAT_FULLY_UNROLL_LOOP _Pragma("clang loop interleave(enable)") for (__VA_ARGS__)
 #define BATMAT_UNROLLED_IVDEP_FOR(N, ...)                                                          \
     _Pragma(GUANAQO_STRINGIFY(clang loop unroll_count(N)))                                         \
-        _Pragma("clang loop vectorize(enable) interleave(enable)") for (__VA_ARGS__)
+        _Pragma("clang loop interleave(enable)") for (__VA_ARGS__)
 #else
 #define BATMAT_FULLY_UNROLL_LOOP _Pragma("GCC unroll 99")
 #define BATMAT_FULLY_UNROLLED_FOR(...) BATMAT_FULLY_UNROLL_LOOP for (__VA_ARGS__)
