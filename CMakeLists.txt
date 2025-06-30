@@ -8,7 +8,6 @@ project(batmat
 include(CTest)
 
 # Options
-include(CMakeDependentOption)
 option(BATMAT_WITH_MKL
     "Use the Intel MKL" Off)
 option(BATMAT_WITH_OPENBLAS
@@ -29,9 +28,6 @@ option(BATMAT_WITH_TESTS
     "Build the tests" ${BUILD_TESTING})
 option(BATMAT_WITH_BENCHMARKS
     "Build the benchmarks" Off)
-# Enable/disable interfaces to other programming languages
-option(BATMAT_WITH_PYTHON
-    "Build the Python bindings" Off)
 # Developer options
 option(BATMAT_WARNINGS_AS_ERRORS
     "Enable -Werror or /WX" Off)
@@ -44,7 +40,7 @@ option(BATMAT_WITH_ACCURATE_BUILD_TIME
 option(BATMAT_VERIFY_ASSUMPTIONS
     "Check assumptions at run time instead of blindly assuming" Off)
 option(BATMAT_DEVELOPER_MODE
-    "Enable developer options such as ccache and colored compiler output" Off)
+    "Enable developer options such as sccache and colored compiler output" Off)
 
 # Installation paths
 include(GNUInstallDirs)
@@ -81,9 +77,6 @@ set(CMAKE_DEBUG_POSTFIX "_d")
 set(CMAKE_RELWITHDEBINFO_POSTFIX "_rd")
 set(CMAKE_MINSIZEREL_POSTFIX "_rs")
 
-# CMake search paths
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/find")
-
 # Coverage
 if (BATMAT_WITH_COVERAGE)
     add_custom_target(coverage
@@ -115,9 +108,4 @@ endif()
 # Benchmarks
 if (BATMAT_WITH_BENCHMARKS)
     add_subdirectory(benchmarks)
-endif()
-
-if (false) # TODO
-    # Interfaces to other languages
-    add_subdirectory(interfaces)
 endif()

@@ -57,8 +57,8 @@ endmacro()
 set(BATMAT_INSTALLED_TARGETS_MSG "\nSummary of batmat components and targets to install:\n\n")
 
 # Install the batmat core libraries
-set(BATMAT_CORE_HIDDEN_TARGETS warnings common_options linalg-headers ${BATMAT_CODEGEN_TARGETS})
-set(BATMAT_CORE_TARGETS config batmat linalg)
+set(BATMAT_CORE_HIDDEN_TARGETS warnings common_options ${BATMAT_CODEGEN_TARGETS})
+set(BATMAT_CORE_TARGETS config batmat)
 if (BATMAT_CORE_TARGETS)
     install(TARGETS ${BATMAT_CORE_HIDDEN_TARGETS} ${BATMAT_CORE_TARGETS}
         EXPORT batmatCoreTargets

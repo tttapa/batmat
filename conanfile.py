@@ -26,7 +26,6 @@ class BatmatRecipe(ConanFile):
         "with_mkl": False,
         "with_openmp": False,
         "with_benchmarks": False,
-        "with_python": False,
         "with_cpu_time": False,
         "with_gsi_hpc_simd": False,
     }
@@ -64,24 +63,17 @@ class BatmatRecipe(ConanFile):
     generators = ("CMakeDeps",)
 
     def requirements(self):
-        self.requires(
-            "guanaqo/1.0.0-alpha.15", transitive_headers=True, transitive_libs=True, force=True
-        )
-        if self.options.with_openblas:
-            self.requires("openblas/0.3.27", transitive_headers=True)
-        if self.options.with_benchmarks:
+        self.requires("guanaqo/1.0.0-alpha.15", transitive_headers=True, transitive_libs=True)
+        if self.options.get_safe("with_openblas"):
+            self.requires("openblas/0.3.27")
+        if self.options.get_safe("with_benchmarks"):
             self.requires("benchmark/1.8.4")
-        if self.options.with_python:
-            self.requires("eigen/tttapa.20240516", force=True)
-        else:
-            self.test_requires("eigen/tttapa.20240516", force=True)
+        self.test_requires("eigen/tttapa.20240516", force=True)
         self.test_requires("gtest/1.15.0")
-        if self.options.with_python:
-            self.requires("pybind11/2.13.6")
-        if self.options.with_openmp and self.settings.compiler == "clang":
+        if self.options.get_safe("with_openmp") and self.settings.compiler == "clang":
             self.requires(f"llvm-openmp/[~{self.settings.compiler.version}]")
-        if self.options.with_gsi_hpc_simd:
-            self.requires("gsi-hpc-simd/tttapa.20250625")
+        if self.options.get_safe("with_gsi_hpc_simd"):
+            self.requires("gsi-hpc-simd/tttapa.20250625", transitive_headers=True)
 
     def config_options(self):
         if self.settings.get_safe("os") == "Windows":
@@ -89,9 +81,11 @@ class BatmatRecipe(ConanFile):
 
     def configure(self):
         # There is currently no 64-bit indices option for OpenBLAS using Conan
-        if self.options.with_openblas:
+        if not self.options.get_safe("with_benchmarks"):
+            self.options.rm_safe("with_mkl")
+            self.options.rm_safe("with_openblas")
+        if self.options.get_safe("with_openblas"):
             self.options.rm_safe("dense_index_type")
-        self.options["guanaqo/*"].with_blas = True
 
     def layout(self):
         cmake_layout(self)
@@ -99,16 +93,12 @@ class BatmatRecipe(ConanFile):
 
     def generate(self):
         tc = CMakeToolchain(self)
-        tc.variables["BATMAT_DENSE_INDEX_TYPE"] = self.options.get_safe(
-            "dense_index_type", default="int"
-        )
-        print(tc.variables["BATMAT_DENSE_INDEX_TYPE"])
+        index_t = self.options.get_safe("dense_index_type", default="int")
+        tc.variables["BATMAT_DENSE_INDEX_TYPE"] = index_t
         for k in self.bool_batmat_options:
             value = getattr(self.options, k, None)
             if value is not None and value.value is not None:
                 tc.variables["BATMAT_" + k.upper()] = bool(value)
-        if self.options.with_python:
-            tc.variables["USE_GLOBAL_PYBIND11"] = True
         if can_run(self):
             tc.variables["BATMAT_FORCE_TEST_DISCOVERY"] = True
         tc.generate()

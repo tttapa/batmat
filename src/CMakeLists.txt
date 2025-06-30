@@ -1,6 +1,6 @@
 include(cmake/Library.cmake)
 include(cmake/BLAS.cmake)
-find_package(guanaqo REQUIRED COMPONENTS BLAS)
+find_package(guanaqo REQUIRED)
 if (BATMAT_WITH_OPENMP)
     find_package(OpenMP REQUIRED COMPONENTS CXX)
 endif()
@@ -23,7 +23,7 @@ target_compile_definitions(config INTERFACE
     $<$<BOOL:${BATMAT_WITH_OPENMP}>:BATMAT_WITH_OPENMP>
     $<$<BOOL:${BATMAT_WITH_GSI_HPC_SIMD}>:BATMAT_WITH_GSI_HPC_SIMD>
 )
-batmat_configure_interface_library(config EXPORT_PREFIX batmat)
+batmat_configure_interface_library(config)
 
 # Main library
 # ------------------------------------------------------------------------------
@@ -34,13 +34,27 @@ add_library(batmat
 target_sources(batmat PUBLIC FILE_SET headers TYPE HEADERS
     BASE_DIRS "batmat/include"
     FILES "batmat/include/batmat/assume.hpp"
-          "batmat/include/batmat/lut.hpp"
+          "batmat/include/batmat/kib.hpp"
           "batmat/include/batmat/loop.hpp"
+          "batmat/include/batmat/lut.hpp"
           "batmat/include/batmat/openmp.h"
           "batmat/include/batmat/unroll.h"
+          "batmat/include/batmat/simd.hpp"
+          "batmat/include/batmat/thread-pool.hpp"
+          "batmat/include/batmat/matrix/layout.hpp"
+          "batmat/include/batmat/matrix/matrix.hpp"
+          "batmat/include/batmat/matrix/storage.hpp"
+          "batmat/include/batmat/matrix/view.hpp"
           "batmat/include/batmat/ops/cneg.hpp"
+          "batmat/include/batmat/ops/gather.hpp"
+          "batmat/include/batmat/ops/transpose.hpp"
           "batmat/include/batmat/ops/rotate.hpp"
           "batmat/include/batmat/ops/rsqrt.hpp"
+          "batmat/include/batmat/platform/platform.hpp"
+          "batmat/include/batmat/platform/avx-512.hpp"
+          "batmat/include/batmat/platform/avx2.hpp"
+          "batmat/include/batmat/platform/generic.hpp"
+          "batmat/include/batmat/platform/neon.hpp"
 )
 target_link_libraries(batmat PUBLIC batmat::config guanaqo::guanaqo)
 batmat_configure_library(batmat)
@@ -53,22 +67,30 @@ endif()
 
 # Linear algebra routines for compact batches of matrices
 # ------------------------------------------------------------------------------
-add_library(linalg-headers INTERFACE)
-target_sources(linalg-headers INTERFACE FILE_SET headers TYPE HEADERS
+target_sources(batmat PUBLIC FILE_SET headers TYPE HEADERS
     BASE_DIRS "batmat/include"
     FILES "batmat/include/batmat/linalg/micro-kernels/gemm.hpp"
-            "batmat/include/batmat/linalg/micro-kernels/gemm.tpp"
+          "batmat/include/batmat/linalg/micro-kernels/trsm.hpp"
+          "batmat/include/batmat/linalg/micro-kernels/potrf.hpp"
+          "batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp"
+          "batmat/include/batmat/linalg/micro-kernels/trtri.hpp"
+          "batmat/include/batmat/linalg/shift.hpp"
+          "batmat/include/batmat/linalg/structure.hpp"
+          "batmat/include/batmat/linalg/trsm.hpp"
+          "batmat/include/batmat/linalg/compress.hpp"
+          "batmat/include/batmat/linalg/simdify.hpp"
+          "batmat/include/batmat/linalg/potrf.hpp"
+          "batmat/include/batmat/linalg/gemm-diag.hpp"
+          "batmat/include/batmat/linalg/triangular.hpp"
+          "batmat/include/batmat/linalg/trtri.hpp"
+          "batmat/include/batmat/linalg/uview.hpp"
+          "batmat/include/batmat/linalg/copy.hpp"
+          "batmat/include/batmat/linalg/gemm.hpp"
 )
-target_link_libraries(linalg-headers INTERFACE batmat::batmat)
-target_compile_features(linalg-headers INTERFACE cxx_std_20)
 
 include("batmat/src/linalg/micro-kernels/Codegen.cmake")
-batmat_codegen_micro_kernels(linalg linalg-headers)
-
-add_library(linalg "batmat/src/linalg/linalg.cpp")
-target_link_libraries(linalg PRIVATE linalg-micro-kernels)
-target_link_libraries(linalg PUBLIC linalg-headers)
-batmat_configure_library(linalg EXPORT_PREFIX batmat)
+batmat_codegen_micro_kernels(batmat-linalg batmat)
+target_link_libraries(batmat PRIVATE batmat-linalg-micro-kernels)
 
 # ==============================================================================
 
