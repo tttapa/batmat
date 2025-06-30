@@ -6,7 +6,7 @@ include(GoogleTest)
 # Dependencies
 find_package(GTest REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(guanaqo REQUIRED COMPONENTS BLAS)
+find_package(guanaqo REQUIRED)
 if (NOT TARGET batmat::batmat)
     find_package(batmat REQUIRED COMPONENTS Extra) # TODO
 endif()
@@ -28,7 +28,6 @@ target_include_directories(tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(tests PRIVATE _CRT_SECURE_NO_WARNINGS)
 target_link_libraries(tests PRIVATE
     batmat::batmat batmat::warnings
-    guanaqo::blas
     GTest::gtest_main GTest::gmock
     Eigen3::Eigen)
 if (MSVC)
