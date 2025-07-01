@@ -26,8 +26,15 @@ struct simd_view_types {
     static constexpr auto simd_stride = simd_stride_t::value;
     static constexpr auto simd_align  = simd_align_t::value;
     static_assert(simd_align <= simd_stride * sizeof(T));
+    using one_t = std::integral_constant<index_t, 1>;
     template <class S = T, StorageOrder O = StorageOrder::ColMajor>
     using view = matrix::View<S, index_t, simd_stride_t, simd_stride_t, matrix::DefaultStride, O>;
+    template <class S = T, StorageOrder O = StorageOrder::ColMajor>
+    using multi_view = matrix::View<S, index_t, simd_stride_t, index_t, index_t, O>;
+    template <class S = T, StorageOrder O = StorageOrder::ColMajor>
+    using scalar_view = matrix::View<S, index_t, one_t, simd_stride_t, matrix::DefaultStride, O>;
+    template <class S = T, StorageOrder O = StorageOrder::ColMajor>
+    using multi_scalar_view = matrix::View<S, index_t, one_t, index_t, index_t, O>;
     template <class S = T, StorageOrder O = StorageOrder::ColMajor>
     using matrix = matrix::Matrix<S, index_t, simd_stride_t, index_t, O, simd_align_t>;
 
