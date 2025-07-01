@@ -8,7 +8,7 @@
 
 namespace batmat::linalg {
 
-template <class Abi, index_t N>
+template <class Abi, index_t N = 8>
 index_t compress_masks(real_view<Abi> A_in, real_view<Abi> S_in, mut_real_view<Abi> A_out,
                        mut_real_view<Abi> S_out) {
     GUANAQO_TRACE("compress_masks", 0, (A_in.rows() + 1) * A_in.cols() * A_in.depth());
@@ -105,7 +105,7 @@ index_t compress_masks(real_view<Abi> A_in, real_view<Abi> S_in, mut_real_view<A
     return j;
 }
 
-template <class Abi, index_t N>
+template <class Abi, index_t N = 8>
 index_t compress_masks_count(real_view<Abi> S_in) {
     GUANAQO_TRACE("compress_masks_count", 0, S_in.rows() * S_in.depth());
     const auto C = S_in.rows();

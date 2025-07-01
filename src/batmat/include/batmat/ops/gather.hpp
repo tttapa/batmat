@@ -12,7 +12,7 @@ template <class T, class Abi>
     return x >= datapar::simd<T, Abi>{};
 }
 
-template <int Scale, class T, class AbiT, class I, class AbiI>
+template <class T, class AbiT, class I, class AbiI>
 [[gnu::always_inline]] inline datapar::simd<T, AbiT>
 gather(datapar::simd<T, AbiT> src, typename datapar::simd<I, AbiI>::mask_type mask,
        datapar::simd<I, AbiI> vindex, const T *base_addr) {
