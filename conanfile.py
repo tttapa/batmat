@@ -86,6 +86,7 @@ class BatmatRecipe(ConanFile):
             self.options.rm_safe("with_openblas")
         if self.options.get_safe("with_openblas"):
             self.options.rm_safe("dense_index_type")
+        self.options["guanaqo/*"].with_blas = True
 
     def layout(self):
         cmake_layout(self)
