@@ -62,6 +62,59 @@ struct simdified_view_type<const batmat::matrix::Matrix<T, I, S, S, O, A>> {
     static_assert(A{} >= alignment::value);
 };
 
+// For multiple batches
+
+template <class V>
+struct simdified_multi_view_type;
+
+template <class T, class S, class L, StorageOrder O>
+struct simdified_multi_view_type<batmat::matrix::View<T, index_t, S, index_t, L, O>> {
+    using value_type   = std::remove_const_t<T>;
+    using abi_type     = datapar::deduced_abi<value_type, S{}>;
+    using simd_type    = datapar::simd<value_type, abi_type>;
+    using stride       = datapar::simd_size<value_type, abi_type>;
+    using alignment    = datapar::simd_align<value_type, abi_type>;
+    using layer_stride = L;
+    using type         = batmat::matrix::View<T, index_t, stride, index_t, layer_stride, O>;
+    static_assert(stride::value * sizeof(value_type) >= alignment::value);
+};
+
+template <class T, class S, class L, StorageOrder O>
+struct simdified_multi_view_type<const batmat::matrix::View<T, index_t, S, index_t, L, O>> {
+    using value_type   = std::remove_const_t<T>;
+    using abi_type     = datapar::deduced_abi<value_type, S{}>;
+    using simd_type    = datapar::simd<value_type, abi_type>;
+    using stride       = datapar::simd_size<value_type, abi_type>;
+    using alignment    = datapar::simd_align<value_type, abi_type>;
+    using layer_stride = L;
+    using type         = batmat::matrix::View<T, index_t, stride, index_t, layer_stride, O>;
+    static_assert(stride::value * sizeof(value_type) >= alignment::value);
+};
+
+template <class T, class I, class S, StorageOrder O, class A>
+struct simdified_multi_view_type<batmat::matrix::Matrix<T, I, S, I, O, A>> {
+    using value_type   = T;
+    using abi_type     = datapar::deduced_abi<value_type, S{}>;
+    using simd_type    = datapar::simd<value_type, abi_type>;
+    using stride       = datapar::simd_size<value_type, abi_type>;
+    using alignment    = datapar::simd_align<value_type, abi_type>;
+    using layer_stride = batmat::matrix::DefaultStride;
+    using type         = batmat::matrix::View<T, index_t, stride, index_t, layer_stride, O>;
+    static_assert(A{} >= alignment::value);
+};
+
+template <class T, class I, class S, class A, StorageOrder O>
+struct simdified_multi_view_type<const batmat::matrix::Matrix<T, I, S, I, O, A>> {
+    using value_type   = T;
+    using abi_type     = datapar::deduced_abi<value_type, S{}>;
+    using simd_type    = datapar::simd<value_type, abi_type>;
+    using stride       = datapar::simd_size<value_type, abi_type>;
+    using alignment    = datapar::simd_align<value_type, abi_type>;
+    using layer_stride = batmat::matrix::DefaultStride;
+    using type         = batmat::matrix::View<const T, index_t, stride, index_t, layer_stride, O>;
+    static_assert(A{} >= alignment::value);
+};
+
 } // namespace detail
 
 /// Convert the given view or matrix type @p V (batmat::matrix::View or batmat::matrix::Matrix) to
@@ -96,6 +149,35 @@ constexpr auto simdify(simdifiable auto &&a) -> simdified_view_t<decltype(a)> {
     else
         return simdified_view_t<decltype(a)>{{
             .data         = a.data,
+            .rows         = a.rows(),
+            .cols         = a.cols(),
+            .outer_stride = a.outer_stride(),
+        }};
+}
+
+template <class V>
+using simdified_multi_view_type = detail::simdified_multi_view_type<std::remove_reference_t<V>>;
+
+template <class V>
+concept simdifiable_multi =
+    requires { typename simdified_multi_view_type<std::remove_reference_t<V>>::type; };
+
+template <simdifiable_multi V>
+using simdified_multi_view_t = typename simdified_multi_view_type<V>::type;
+
+constexpr auto simdify(simdifiable_multi auto &&a) -> simdified_multi_view_t<decltype(a)> {
+    if constexpr (requires { a.data(); }) // TODO: can we make this consistent?
+        return simdified_multi_view_t<decltype(a)>{{
+            .data         = a.data(),
+            .depth        = a.depth(),
+            .rows         = a.rows(),
+            .cols         = a.cols(),
+            .outer_stride = a.outer_stride(),
+        }};
+    else
+        return simdified_multi_view_t<decltype(a)>{{
+            .data         = a.data,
+            .depth        = a.depth(),
             .rows         = a.rows(),
             .cols         = a.cols(),
             .outer_stride = a.outer_stride(),

@@ -6,6 +6,7 @@
 #include <batmat/linalg/copy.hpp>
 #include <batmat/linalg/gemm.hpp>
 #include <batmat/linalg/simdify.hpp>
+#include <batmat/linalg/syomv.hpp>
 #include <batmat/linalg/trsm.hpp>
 
 namespace cyclocp::ocp::cyclocp {
@@ -17,7 +18,7 @@ auto CyclicOCPSolver<VL, T>::mul_A(batch_view<> p, mut_batch_view<> Ap, batch_vi
     copy(p, Ap);
     trmm(tril(L).transposed(), Ap);
     trmm(tril(L), Ap);
-    compact_blas::xsyomv(simdify(B), simdify(p), simdify(Ap));
+    syomv(tril(B), p, Ap);
     return compact_blas::xdot(simdify(p), simdify(Ap));
 }
 
@@ -29,7 +30,7 @@ auto CyclicOCPSolver<VL, T>::mul_precond(batch_view<> r, mut_batch_view<> z, mut
         copy(r, w);
         trsm(tril(L), w);
         trsm(tril(L).transposed(), w);
-        compact_blas::xsyomv_neg(simdify(B), simdify(w), simdify(z));
+        syomv_neg(tril(B), w, z);
     }
     trsm(tril(L), z);
     trsm(tril(L).transposed(), z);

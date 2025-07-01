@@ -212,35 +212,36 @@ struct cached_uview {
 
 template <index_t Rows, index_t Cols, class T, class Abi, StorageOrder Order>
     requires(Rows > 0 && Cols > 0)
-[[gnu::always_inline]] cached_uview<Order == StorageOrder::ColMajor ? Cols : Rows, T, Abi, Order>
+[[gnu::always_inline]] inline cached_uview<Order == StorageOrder::ColMajor ? Cols : Rows, T, Abi,
+                                           Order>
 with_cached_access(const uview<T, Abi, Order> &o) noexcept {
     return {o};
 }
 
 template <index_t Rows, index_t Cols, class T, class Abi>
     requires(Rows == 0 && Cols > 0)
-[[gnu::always_inline]] cached_uview<Cols, T, Abi, StorageOrder::ColMajor>
+[[gnu::always_inline]] inline cached_uview<Cols, T, Abi, StorageOrder::ColMajor>
 with_cached_access(const uview<T, Abi, StorageOrder::ColMajor> &o) noexcept {
     return {o};
 }
 
 template <index_t Rows, index_t Cols, class T, class Abi>
     requires(Rows == 0 && Cols > 0)
-[[gnu::always_inline]] uview<T, Abi, StorageOrder::RowMajor>
+[[gnu::always_inline]] inline uview<T, Abi, StorageOrder::RowMajor>
 with_cached_access(const uview<T, Abi, StorageOrder::RowMajor> &o) noexcept {
     return o;
 }
 
 template <index_t Rows, index_t Cols, class T, class Abi>
     requires(Rows > 0 && Cols == 0)
-[[gnu::always_inline]] cached_uview<Rows, T, Abi, StorageOrder::RowMajor>
+[[gnu::always_inline]] inline cached_uview<Rows, T, Abi, StorageOrder::RowMajor>
 with_cached_access(const uview<T, Abi, StorageOrder::RowMajor> &o) noexcept {
     return {o};
 }
 
 template <index_t Rows, index_t Cols, class T, class Abi>
     requires(Rows > 0 && Cols == 0)
-[[gnu::always_inline]] uview<T, Abi, StorageOrder::ColMajor>
+[[gnu::always_inline]] inline uview<T, Abi, StorageOrder::ColMajor>
 with_cached_access(const uview<T, Abi, StorageOrder::ColMajor> &o) noexcept {
     return o;
 }

@@ -21,6 +21,7 @@ add_executable(tests
     "linalg/test-trsm.cpp"
     "linalg/test-potrf.cpp"
     "linalg/test-trtri.cpp"
+    "cyclocp/test-cyclocp.cpp"
 )
 target_compile_definitions(tests PRIVATE
     $<$<BOOL:${BATMAT_EXTENSIVE_TESTS}>:BATMAT_EXTENSIVE_TESTS>)
@@ -28,6 +29,7 @@ target_include_directories(tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(tests PRIVATE _CRT_SECURE_NO_WARNINGS)
 target_link_libraries(tests PRIVATE
     batmat::batmat batmat::warnings
+    cyclocp
     GTest::gtest_main GTest::gmock
     Eigen3::Eigen)
 if (MSVC)

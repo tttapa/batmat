@@ -95,7 +95,10 @@ target_link_libraries(batmat PRIVATE batmat-linalg-micro-kernels)
 # ==============================================================================
 
 # OCP solver
-add_library(cyclocp "cyclocp/src/cyclocp.cpp")
+add_library(cyclocp
+    "cyclocp/src/cyclocp.cpp"
+    "cyclocp/src/cyclocp-storage.cpp"
+)
 target_sources(cyclocp PUBLIC FILE_SET headers TYPE HEADERS
     BASE_DIRS "cyclocp/include"
     FILES "cyclocp/include/cyclocp/cyclocp.hpp"
@@ -110,7 +113,7 @@ target_sources(cyclocp PUBLIC FILE_SET headers TYPE HEADERS
           "cyclocp/include/cyclocp/implementation/pcg.tpp"
           "cyclocp/include/cyclocp/implementation/solve.tpp")
 target_link_libraries(cyclocp PUBLIC batmat)
-find_package(guanaqo REQUIRED COMPONENTS BLAS)
+find_package(guanaqo REQUIRED COMPONENTS BLAS)  # TODO
 target_link_libraries(cyclocp PUBLIC guanaqo::blas)
 
 # ==============================================================================

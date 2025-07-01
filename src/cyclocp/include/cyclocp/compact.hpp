@@ -31,17 +31,12 @@ struct CompactBLAS {
     static void unpack_L(single_batch_view A, mut_batch_view_scalar B);
     static void unpack_L(batch_view A, mut_batch_view_scalar B);
 
-    static void xsyomv(single_batch_view A, single_batch_view x, mut_single_batch_view v);
-    static void xsyomv_neg(single_batch_view A, single_batch_view x, mut_single_batch_view v);
-
     /// Cholesky downdate
     static void xshh(mut_single_batch_view L, mut_single_batch_view A);
     static void xshh(mut_batch_view L, mut_batch_view A);
     static void xshh_ref(mut_single_batch_view L, mut_single_batch_view A);
 
     /// Cholesky up/downdate
-    static void xshhud_diag(mut_single_batch_view L, mut_single_batch_view A, single_batch_view D);
-    static void xshhud_diag(mut_batch_view L, mut_batch_view A, batch_view D);
     static void xshhud_diag_ref(mut_single_batch_view L, mut_single_batch_view A,
                                 single_batch_view D);
     static void xshhud_diag_2_ref(mut_single_batch_view L, mut_single_batch_view A,
@@ -210,3 +205,4 @@ struct CompactBLAS {
 
 #include "compact/elementwise.tpp"
 #include "compact/pack.tpp"
+#include "compact/update.tpp"
