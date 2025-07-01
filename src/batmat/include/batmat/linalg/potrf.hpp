@@ -19,7 +19,7 @@ template <class T, class Abi, micro_kernels::potrf::KernelConfig Conf, StorageOr
 void potrf(view<const T, Abi, OA> A, view<const T, Abi, OCD> C, view<T, Abi, OCD> D) {
     GUANAQO_TRACE("potrf", 0, 0); // TODO
     // Check dimensions
-    BATMAT_ASSERT(D.rows() == D.cols()); // TODO: could be relaxed
+    BATMAT_ASSERT(D.rows() >= D.cols());
     BATMAT_ASSERT(A.cols() == 0 || A.rows() == D.rows());
     BATMAT_ASSERT(C.rows() == D.rows());
     BATMAT_ASSERT(C.cols() == D.cols());
