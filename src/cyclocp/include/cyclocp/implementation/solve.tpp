@@ -203,7 +203,7 @@ void CyclicOCPSolver<VL, T>::solve_reverse_active(index_t l, index_t bi, mut_vie
     const bool x_lanes       = diY == 0;
     GUANAQO_TRACE("Solve coupling reverse", bi);
     x_lanes ? gemm_sub(coupling_Y.batch(bi).transposed(), λ.batch(diY), λ.batch(di), {},
-                       with_rotate_C<1>, with_rotate_D<1>, with_mask_D<1>)
+                       with_shift_B<1>)
             : gemm_sub(coupling_Y.batch(bi).transposed(), λ.batch(diY), λ.batch(di));
     gemm_sub(coupling_U.batch(bi).transposed(), λ.batch(diU), λ.batch(di));
     trsm(tril(coupling_D.batch(bi)).transposed(), λ.batch(di));

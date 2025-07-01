@@ -107,8 +107,8 @@ void CyclicOCPSolver<VL, T>::factor_l0(const index_t ti) {
         // Top block is I → column index is row index of I (biI)
         // Target block in cyclic part is Y in column λ(kI)
         GUANAQO_TRACE("Compute first Y", biI);
-        x_lanes ? trmm_neg(Âi, Q̂i_inv.transposed(), coupling_Y.batch(biI), with_rotate_C<1>,
-                           with_rotate_D<1>, with_mask_D<1>)
+        x_lanes ? trmm_neg(Âi, Q̂i_inv.transposed(), coupling_Y.batch(biI), with_rotate_C<-1>,
+                           with_rotate_D<-1>, with_mask_D<-1>)
                 : trmm_neg(Âi, Q̂i_inv.transposed(), coupling_Y.batch(biI));
     }
     // Each column of the cyclic part with coupling equations is updated by
@@ -117,8 +117,8 @@ void CyclicOCPSolver<VL, T>::factor_l0(const index_t ti) {
     // first forward in time ...
     {
         GUANAQO_TRACE("Compute L⁻ᵀL⁻¹", biI);
-        x_lanes ? trmm(Q̂i_inv, Q̂i_inv.transposed(), DiI, with_rotate_C<1>, with_rotate_D<1>,
-                       with_mask_D<1>)
+        x_lanes ? trmm(Q̂i_inv, Q̂i_inv.transposed(), DiI, with_rotate_C<-1>, with_rotate_D<-1>,
+                       with_mask_D<-1>)
                 : trmm(Q̂i_inv, Q̂i_inv.transposed(), DiI);
     }
     // Then synchronize to make sure there are no two threads updating the
