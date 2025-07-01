@@ -11,8 +11,8 @@ template <class M, MatrixStructure S = MatrixStructure::General>
 struct Structured {
     static constexpr MatrixStructure structure = S;
     explicit(S != MatrixStructure::General) Structured(M &&m) : value{std::forward<M>(m)} {}
-    explicit(!std::is_reference_v<M>) Structured(const Structured &) = default;
-    Structured(Structured &&)                                        = default;
+    Structured(const Structured &) = default;
+    Structured(Structured &&)      = default;
     M value;
     [[nodiscard]] constexpr auto transposed() const &
         requires requires { value.transposed(); }

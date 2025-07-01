@@ -40,6 +40,12 @@ void syrk_add_potrf(VA &&A, Structured<VC, SC> C, Structured<VD, SC> D) {
     detail::potrf<simdified_value_t<VA>, simdified_abi_t<VA>, {.negate_A = false, .struc_C = SC}>(
         simdify(A).as_const(), simdify(C.value).as_const(), simdify(D.value));
 }
+/// D = chol(D + AAᵀ) with D symmetric/triangular
+template <MatrixStructure SC, simdifiable VA, simdifiable VD>
+    requires simdify_compatible<VA, VD>
+void syrk_add_potrf(VA &&A, Structured<VD, SC> D) {
+    syrk_add_potrf(A, D.ref(), D.ref());
+}
 
 /// D = chol(C - AAᵀ) with C symmetric, D triangular
 template <MatrixStructure SC, simdifiable VA, simdifiable VC, simdifiable VD>
@@ -47,6 +53,12 @@ template <MatrixStructure SC, simdifiable VA, simdifiable VC, simdifiable VD>
 void syrk_sub_potrf(VA &&A, Structured<VC, SC> C, Structured<VD, SC> D) {
     detail::potrf<simdified_value_t<VA>, simdified_abi_t<VA>, {.negate_A = true, .struc_C = SC}>(
         simdify(A).as_const(), simdify(C.value).as_const(), simdify(D.value));
+}
+/// D = chol(D - AAᵀ) with D symmetric/triangular
+template <MatrixStructure SC, simdifiable VA, simdifiable VD>
+    requires simdify_compatible<VA, VD>
+void syrk_sub_potrf(VA &&A, Structured<VD, SC> D) {
+    syrk_sub_potrf(A, D.ref(), D.ref());
 }
 
 /// D = chol(C) with C symmetric, D triangular

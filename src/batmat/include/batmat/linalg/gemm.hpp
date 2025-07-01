@@ -52,7 +52,7 @@ void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
         if (C)
             detail::copy::copy<T, Abi, rot>(*C, D);
         else
-            detail::copy::copy<T, Abi, msk>(T{}, D);
+            detail::copy::fill<T, Abi, msk>(T{}, D);
         return;
     }
 
@@ -167,7 +167,7 @@ void gemmt(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
         if (C)
             detail::copy::copy<T, Abi, rot>(*C, D);
         else
-            detail::copy::copy<T, Abi, msk>(T{}, D);
+            detail::copy::fill<T, Abi, msk>(T{}, D);
         return;
     }
     // TODO: cache blocking
@@ -205,7 +205,7 @@ void trmm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
         if (C)
             detail::copy::copy<T, Abi, rot>(*C, D);
         else
-            detail::copy::copy<T, Abi, msk>(T{}, D);
+            detail::copy::fill<T, Abi, msk>(T{}, D);
         return;
     }
     // TODO: cache blocking
@@ -261,7 +261,7 @@ void gemm_add(VA &&A, VB &&B, VC &&C, VD &&D, TilingOptions packing = {}, Opts..
 /// D += A B
 template <simdifiable VA, simdifiable VB, simdifiable VD, shift_opt... Opts>
 void gemm_add(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts... opts) {
-    return gemm_add(A, B, D, D, opts..., packing);
+    return gemm_add(A, B, D, D, packing, opts...);
 }
 
 /// D = C - A B
@@ -276,7 +276,7 @@ void gemm_sub(VA &&A, VB &&B, VC &&C, VD &&D, TilingOptions packing = {}, Opts..
 /// D -= A B
 template <simdifiable VA, simdifiable VB, simdifiable VD, shift_opt... Opts>
 void gemm_sub(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts... opts) {
-    return gemm_sub(A, B, D, D, opts..., packing);
+    return gemm_sub(A, B, D, D, packing, opts...);
 }
 
 /// D = A Aᵀ with D symmetric
@@ -353,6 +353,16 @@ template <class TA, class TB, class TD, class... Opts>
 void trmm(TA &&A, TB &&B, TD &&D, Opts &&...opts) {
     return trmm(Structured{std::forward<TA>(A)}, Structured{std::forward<TB>(B)},
                 Structured{std::forward<TD>(D)}, std::forward<Opts>(opts)...);
+}
+/// D = A D with A triangular
+template <MatrixStructure SA, simdifiable VA, simdifiable VD, class... Opts>
+void trmm(Structured<VA, SA> A, VD &&D, Opts &&...opts) {
+    return trmm(A.ref(), Structured{D}, Structured{D}, std::forward<Opts>(opts)...);
+}
+/// D = D B with B triangular
+template <MatrixStructure SB, simdifiable VB, simdifiable VD, class... Opts>
+void trmm(VD &&D, Structured<VB, SB> B, Opts &&...opts) {
+    return trmm(Structured{D}, B.ref(), Structured{D}, std::forward<Opts>(opts)...);
 }
 
 /// D = -A B with A and/or B triangular

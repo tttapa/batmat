@@ -24,7 +24,7 @@ struct FillConfig {
 };
 
 template <class T, class Abi, FillConfig Conf = {}, StorageOrder OB>
-[[gnu::flatten, gnu::noinline]] void copy(T a, view<T, Abi, OB> B) {
+[[gnu::flatten, gnu::noinline]] void fill(T a, view<T, Abi, OB> B) {
     using std::max;
     using std::min;
     using enum MatrixStructure;
@@ -190,17 +190,15 @@ void copy(Structured<VA, S> A, Structured<VB, S> B, Opts... opts) {
 }
 
 /// B = a
-template <class T, simdifiable VB>
-    requires(!simdifiable<T>)
+template <simdifiable VB>
 void fill(simdified_value_t<VB> a, VB &&B) {
-    detail::copy::copy<simdified_value_t<VB>, simdified_abi_t<VB>, {}>(a, simdify(B));
+    detail::copy::fill<simdified_value_t<VB>, simdified_abi_t<VB>, {}>(a, simdify(B));
 }
 
 /// B = a
-template <class T, MatrixStructure S, simdifiable VB>
-    requires(!simdifiable<T>)
+template <MatrixStructure S, simdifiable VB>
 void fill(simdified_value_t<VB> a, Structured<VB, S> B) {
-    detail::copy::copy<simdified_value_t<VB>, simdified_abi_t<VB>, {.struc = S}>(a,
+    detail::copy::fill<simdified_value_t<VB>, simdified_abi_t<VB>, {.struc = S}>(a,
                                                                                  simdify(B.value));
 }
 

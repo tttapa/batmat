@@ -44,7 +44,7 @@ void trsm(Structured<VA, SA> A, VB &&B, VD &&D) {
 template <MatrixStructure SA, simdifiable VA, simdifiable VD>
     requires simdify_compatible<VA, VD>
 void trsm(Structured<VA, SA> A, VD &&D) {
-    trsm(A, D, D);
+    trsm(A.ref(), D, D);
 }
 
 /// D = A B⁻¹ with B triangular
@@ -60,7 +60,7 @@ void trsm(VA &&A, Structured<VB, SB> B, VD &&D) {
 template <MatrixStructure SB, simdifiable VB, simdifiable VD>
     requires simdify_compatible<VB, VD>
 void trsm(VD &&D, Structured<VB, SB> B) {
-    trsm(D, B, D);
+    trsm(D, B.ref(), D);
 }
 
 } // namespace batmat::linalg
