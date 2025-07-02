@@ -1,6 +1,7 @@
 #pragma once
 
 #include <batmat/assume.hpp>
+#include <batmat/linalg/simdify.hpp>
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
 #include <batmat/ops/gather.hpp>
@@ -8,9 +9,11 @@
 
 namespace batmat::linalg {
 
-template <class Abi, index_t N = 8>
-index_t compress_masks(real_view<Abi> A_in, real_view<Abi> S_in, mut_real_view<Abi> A_out,
-                       mut_real_view<Abi> S_out) {
+namespace detail {
+
+template <class T, class Abi, index_t N = 8, StorageOrder OAi, StorageOrder OAo>
+index_t compress_masks(view<const T, Abi, OAi> A_in, view<const T, Abi> S_in,
+                       view<T, Abi, OAo> A_out, view<T, Abi> S_out) {
     GUANAQO_TRACE("compress_masks", 0, (A_in.rows() + 1) * A_in.cols() * A_in.depth());
     using batmat::ops::gather;
     assert(A_in.rows() == A_out.rows());
@@ -44,7 +47,8 @@ index_t compress_masks(real_view<Abi> A_in, real_view<Abi> S_in, mut_real_view<A
         }
         for (index_t r = 0; r < R; ++r) {
             const auto bs       = static_cast<index_t>(A_in.batch_size());
-            const isimd offsets = h_commit * bs * A_in.outer_stride() + iota;
+            const auto stride   = (OAi == StorageOrder::ColMajor ? bs * A_in.outer_stride() : bs);
+            const isimd offsets = h_commit * stride + iota;
             auto gather_A       = gather<real_t, VL>(&A_in(0, r, 0), offsets);
             types::aligned_store(gather_A, &A_out(0, r, j));
         }
@@ -105,8 +109,8 @@ index_t compress_masks(real_view<Abi> A_in, real_view<Abi> S_in, mut_real_view<A
     return j;
 }
 
-template <class Abi, index_t N = 8>
-index_t compress_masks_count(real_view<Abi> S_in) {
+template <class T, class Abi, index_t N = 8>
+index_t compress_masks_count(view<const T, Abi> S_in) {
     GUANAQO_TRACE("compress_masks_count", 0, S_in.rows() * S_in.depth());
     const auto C = S_in.rows();
     if (C == 0)
@@ -167,6 +171,20 @@ index_t compress_masks_count(real_view<Abi> S_in) {
     if (any_of(hist[0] != 0))
         ++j;
     return j;
+}
+
+} // namespace detail
+
+template <index_t N = 8, simdifiable VA, simdifiable VS, simdifiable VAo, simdifiable VSo>
+index_t compress_masks(VA &&Ain, VS &&Sin, VAo &&Aout, VSo &&Sout) {
+    return detail::compress_masks<simdified_value_t<VA>, simdified_abi_t<VA>, N>(
+        simdify(Ain).as_const(), simdify(Sin).as_const(), simdify(Aout), simdify(Sout));
+}
+
+template <index_t N = 8, simdifiable VS>
+index_t compress_masks_count(VS &&Sin) {
+    return detail::compress_masks_count<simdified_value_t<VS>, simdified_abi_t<VS>, N>(
+        simdify(Sin).as_const());
 }
 
 } // namespace batmat::linalg

@@ -75,8 +75,8 @@ TEST(linalg, compress) {
     ASSERT_EQ(std::ranges::ssize(S_in_data), VL * ny);
     std::ranges::copy(S_in_data, S_in.data());
 
-    auto nj  = compress_masks<abi, 4>(A_in.batch(0), S_in.batch(0), A_out.batch(0), S_out.batch(0));
-    auto njc = compress_masks_count<abi, 4>(S_in.batch(0));
+    auto nj  = compress_masks<4>(A_in.batch(0), S_in.batch(0), A_out.batch(0), S_out.batch(0));
+    auto njc = compress_masks_count<4>(S_in.batch(0));
 
     EXPECT_EQ(nj, njc);
 
