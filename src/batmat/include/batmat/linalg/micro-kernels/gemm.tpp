@@ -239,7 +239,7 @@ void gemm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi,
         const auto Ail = Ai.middle_cols(l0);
         const auto Blj = Bj.middle_rows(l0);
 
-        if (l1 == l0)
+        if (l1 == l0) // TODO: this is wrong.
             return;
         if constexpr (Conf.struc_A == LowerTriangular && Conf.struc_B == UpperTriangular) { // LU
             if (l1A > l1B) {
