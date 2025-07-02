@@ -125,7 +125,6 @@ TEST(CyclOCP, factor) {
         const std::string_view pcg = "stair";
 #endif
         out_dir /= *batmat_commit_hash ? batmat_commit_hash : "unknown";
-        out_dir /= BATMAT_MKL_IF_ELSE("mkl", "openblas");
         out_dir /= std::format("nx={}-nu={}-ny={}-N={}-thr={}-vl={}-pcg={}{}", solver.nx, solver.nu,
                                solver.ny, N, 1 << log_n_threads, VL, pcg, alt ? "-alt" : "");
         std::filesystem::create_directories(out_dir);
