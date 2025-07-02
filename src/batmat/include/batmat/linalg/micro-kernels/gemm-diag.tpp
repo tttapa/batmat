@@ -160,11 +160,11 @@ void gemm_diag_copy_register(const view<const T, Abi, OA> A, const view<const T,
             else if (C->data == D.data && C->outer_stride() == D.outer_stride())
                 BATMAT_ASSUME(C->storage_order == D.storage_order); // Nothing to do
             else if constexpr (OC == StorageOrder::ColMajor)
-                for (index_t jj = j0; jj < j1; ++jj) // TODO: suboptimal
+                for (index_t jj = j0; jj < j1; ++jj) // TODO: suboptimal when transpose required
                     for (index_t ii = i; ii < i + ni; ++ii)
                         D_.store(C_->load(ii, jj), ii, jj);
             else
-                for (index_t ii = i; ii < i + ni; ++ii) // TODO: suboptimal
+                for (index_t ii = i; ii < i + ni; ++ii) // TODO: suboptimal when transpose required
                     for (index_t jj = j0; jj < j1; ++jj)
                         D_.store(C_->load(ii, jj), ii, jj);
             return;
