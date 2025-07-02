@@ -1,6 +1,7 @@
 #pragma once
 
 #include <batmat/config.hpp>
+#include <batmat/unroll.h>
 
 #if BATMAT_WITH_GSI_HPC_SIMD
 
@@ -65,6 +66,23 @@ using simd_size = std::remove_cvref_t<decltype(simd<Tp, Abi>::size)>;
 template <class Tp, class Abi>
 using simd_align = std::datapar::alignment<simd<Tp, Abi>>;
 
+template <class V>
+auto hmax(V v) { // TODO
+    using value_type = V::value_type;
+    value_type m     = v[0];
+    BATMAT_FULLY_UNROLLED_FOR (int i = 1; i < v.size(); ++i)
+        m = std::max(v[i], m);
+    return m;
+}
+template <class V>
+auto hmin(V v) { // TODO
+    using value_type = V::value_type;
+    value_type m     = v[0];
+    BATMAT_FULLY_UNROLLED_FOR (int i = 1; i < v.size(); ++i)
+        m = std::min(v[i], m);
+    return m;
+}
+
 } // namespace batmat::datapar
 
 #else
@@ -121,6 +139,9 @@ template <class T, class V>
 using rebind_simd_t = stdx::rebind_simd_t<T, V>;
 template <class Tp>
 using scalar_abi = deduced_abi<Tp, 1>;
+
+using stdx::hmax;
+using stdx::hmin;
 
 } // namespace batmat::datapar
 

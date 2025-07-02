@@ -272,6 +272,7 @@ real_t CompactBLAS<T, Abi>::xnrminf(batch_view x) {
     using std::fma;
     using std::isfinite;
     using std::max;
+    using datapar::hmax;
     auto [inf_nrm, l1_norm] = xreduce(
         std::array<simd, 2>{0, 0},
         [](auto accum, auto xi) { return std::array{max(abs(xi), accum[0]), abs(xi) + accum[1]}; },
