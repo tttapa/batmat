@@ -28,7 +28,7 @@ index_t compress_masks(view<const T, Abi, OAi> A_in, view<const T, Abi> S_in,
     if (C == 0)
         return 0;
     BATMAT_ASSUME(R > 0);
-    using types              = simd_view_types<real_t, Abi>;
+    using types              = simd_view_types<T, Abi>;
     using simd               = typename types::simd;
     using isimd              = typename types::isimd;
     static constexpr auto VL = simd::size();
@@ -42,14 +42,14 @@ index_t compress_masks(view<const T, Abi, OAi> A_in, view<const T, Abi> S_in,
         {
             const auto bs       = static_cast<index_t>(S_in.batch_size());
             const isimd offsets = h_commit * bs + iota;
-            auto gather_S       = gather<real_t, VL>(&S_in(0, 0, 0), offsets);
+            auto gather_S       = gather<T, VL>(&S_in(0, 0, 0), offsets);
             types::aligned_store(gather_S, &S_out(0, j, 0));
         }
         for (index_t r = 0; r < R; ++r) {
             const auto bs       = static_cast<index_t>(A_in.batch_size());
             const auto stride   = (OAi == StorageOrder::ColMajor ? bs * A_in.outer_stride() : bs);
             const isimd offsets = h_commit * stride + iota;
-            auto gather_A       = gather<real_t, VL>(&A_in(0, r, 0), offsets);
+            auto gather_A       = gather<T, VL>(&A_in(0, r, 0), offsets);
             types::aligned_store(gather_A, &A_out(0, r, j));
         }
         ++j;
@@ -115,7 +115,7 @@ index_t compress_masks_count(view<const T, Abi> S_in) {
     const auto C = S_in.rows();
     if (C == 0)
         return 0;
-    using types = simd_view_types<real_t, Abi>;
+    using types = simd_view_types<T, Abi>;
     using simd  = typename types::simd;
     using isimd = typename types::isimd;
     isimd hist[N]{};

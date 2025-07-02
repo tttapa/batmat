@@ -12,7 +12,7 @@ namespace cyclocp::ocp::cyclocp {
 using namespace batmat::linalg;
 
 template <index_t VL, class T, StorageOrder DefaultOrder>
-auto CyclicOCPSolver<VL, T, DefaultOrder>::build_sparse(const CyclicOCPStorage &ocp,
+auto CyclicOCPSolver<VL, T, DefaultOrder>::build_sparse(const CyclicOCPStorage<value_type> &ocp,
                                                         std::span<const value_type> Σ) const
     -> std::vector<std::tuple<index_t, index_t, value_type>> {
     using std::sqrt;

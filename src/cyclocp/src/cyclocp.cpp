@@ -18,4 +18,7 @@ template class CyclicOCPSolver<1, real_t, StorageOrder::RowMajor>;
 template class CyclicOCPSolver<4, real_t, StorageOrder::RowMajor>;
 template class CyclicOCPSolver<8, real_t, StorageOrder::RowMajor>;
 
+template class CyclicOCPSolver<16, float, StorageOrder::ColMajor>;
+template class CyclicOCPSolver<16, float, StorageOrder::RowMajor>;
+
 } // namespace cyclocp::ocp::cyclocp

@@ -13,14 +13,15 @@ namespace batmat::linalg::compact {
 
 template <class T, class Abi, StorageOrder O>
 struct CompactBLAS {
-    using simd_types                     = simd_view_types<T, Abi>;
-    using simd                           = typename simd_types::simd;
-    using single_batch_view              = typename simd_types::template view<const T, O>;
-    using mut_single_batch_view          = typename simd_types::template view<T, O>;
-    using mut_single_batch_view_scalar   = typename simd_types::template scalar_view<T, O>;
-    using mut_batch_view_scalar          = typename simd_types::template multi_scalar_view<T, O>;
-    using batch_view                     = typename simd_types::template multi_view<const T, O>;
-    using mut_batch_view                 = typename simd_types::template multi_view<T, O>;
+    using value_type                   = T;
+    using simd_types                   = simd_view_types<value_type, Abi>;
+    using simd                         = typename simd_types::simd;
+    using single_batch_view            = typename simd_types::template view<const value_type, O>;
+    using mut_single_batch_view        = typename simd_types::template view<value_type, O>;
+    using mut_single_batch_view_scalar = typename simd_types::template scalar_view<value_type, O>;
+    using mut_batch_view_scalar = typename simd_types::template multi_scalar_view<value_type, O>;
+    using batch_view            = typename simd_types::template multi_view<const value_type, O>;
+    using mut_batch_view        = typename simd_types::template multi_view<value_type, O>;
     static constexpr index_t simd_stride = simd_types::simd_stride_t();
 
     static void unpack(single_batch_view A, mut_single_batch_view_scalar B);
@@ -45,12 +46,12 @@ struct CompactBLAS {
     static void xneg(mut_batch_view A);
 
     /// y += a x
-    static void xaxpy(real_t a, single_batch_view x, mut_single_batch_view y);
-    static void xaxpy(real_t a, batch_view x, mut_batch_view y);
+    static void xaxpy(value_type a, single_batch_view x, mut_single_batch_view y);
+    static void xaxpy(value_type a, batch_view x, mut_batch_view y);
 
     /// y ← a x + b y
-    static void xaxpby(real_t a, single_batch_view x, real_t b, mut_single_batch_view y);
-    static void xaxpby(real_t a, batch_view x, real_t b, mut_batch_view y);
+    static void xaxpby(value_type a, single_batch_view x, value_type b, mut_single_batch_view y);
+    static void xaxpby(value_type a, batch_view x, value_type b, mut_batch_view y);
 
     /// L += A
     static void xadd_L(single_batch_view A, mut_single_batch_view B);
@@ -103,13 +104,13 @@ struct CompactBLAS {
     }
 
     /// Dot product
-    static real_t xdot(single_batch_view x, single_batch_view y);
-    static real_t xdot(batch_view x, batch_view y);
+    static value_type xdot(single_batch_view x, single_batch_view y);
+    static value_type xdot(batch_view x, batch_view y);
     /// Square of the 2-norm
-    static real_t xnrm2sq(batch_view x);
+    static value_type xnrm2sq(batch_view x);
     /// Infinity/max norm
-    static real_t xnrminf(single_batch_view x);
-    static real_t xnrminf(batch_view x);
+    static value_type xnrminf(single_batch_view x);
+    static value_type xnrminf(batch_view x);
 
     template <class T0, class F, class R, class... Args>
     static auto xreduce(T0 init, F fun, R reduce, single_batch_view x0, const Args &...xs) {

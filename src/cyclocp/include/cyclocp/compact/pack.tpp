@@ -11,8 +11,9 @@ template <class T, class Abi, StorageOrder O>
 void CompactBLAS<T, Abi, O>::unpack(single_batch_view A, mut_single_batch_view_scalar B) {
     BATMAT_ASSERT(O == StorageOrder::ColMajor); // TODO: verify these routines for row major
     GUANAQO_TRACE("unpack", 0, A.rows() * A.cols() * A.depth());
-    static constexpr auto lut = make_1d_lut<simd_stride>(
-        []<index_t R>(index_constant<R>) { return ops::transpose<simd_stride, R + 1, real_t>; });
+    static constexpr auto lut = make_1d_lut<simd_stride>([]<index_t R>(index_constant<R>) {
+        return ops::transpose<simd_stride, R + 1, value_type>;
+    });
     for (index_t c = 0; c < A.cols(); ++c)
         foreach_chunked(
             0, A.rows(), simd_stride,
@@ -31,7 +32,7 @@ void CompactBLAS<T, Abi, O>::unpack(single_batch_view A, mut_batch_view_scalar B
     BATMAT_ASSERT(O == StorageOrder::ColMajor); // TODO: verify these routines for row major
     GUANAQO_TRACE("unpack", 0, A.rows() * A.cols() * A.depth());
     static constexpr auto lut = make_1d_lut<simd_stride>([]<index_t R>(index_constant<R>) {
-        return ops::transpose_dyn<simd_stride, R + 1, real_t>;
+        return ops::transpose_dyn<simd_stride, R + 1, value_type>;
     });
     for (index_t c = 0; c < A.cols(); ++c)
         foreach_chunked(
@@ -61,8 +62,9 @@ void CompactBLAS<T, Abi, O>::unpack_L(single_batch_view A, mut_single_batch_view
     BATMAT_ASSERT(O == StorageOrder::ColMajor); // TODO: verify these routines for row major
     [[maybe_unused]] auto [m, M] = std::minmax({A.rows(), A.cols()});
     GUANAQO_TRACE("unpack_L", 0, (m * (m + 1) / 2 + (M - m) * m) * A.depth());
-    static constexpr auto lut = make_1d_lut<simd_stride>(
-        []<index_t R>(index_constant<R>) { return ops::transpose<simd_stride, R + 1, real_t>; });
+    static constexpr auto lut = make_1d_lut<simd_stride>([]<index_t R>(index_constant<R>) {
+        return ops::transpose<simd_stride, R + 1, value_type>;
+    });
     for (index_t c = 0; c < A.cols(); ++c)
         foreach_chunked(
             c, A.rows(), simd_stride,
@@ -83,7 +85,7 @@ void CompactBLAS<T, Abi, O>::unpack_L(single_batch_view A, mut_batch_view_scalar
     GUANAQO_TRACE("unpack_L", 0, (m * (m + 1) / 2 + (M - m) * m) * A.depth());
     constexpr auto S   = simd_stride;
     constexpr auto lut = make_1d_lut<S>(
-        []<index_t R>(index_constant<R>) { return ops::transpose_dyn<S, R + 1, real_t>; });
+        []<index_t R>(index_constant<R>) { return ops::transpose_dyn<S, R + 1, value_type>; });
 #if 1
     const auto colstrA = A.outer_stride() * S;
     const auto colstrB = B.outer_stride();
@@ -91,11 +93,11 @@ void CompactBLAS<T, Abi, O>::unpack_L(single_batch_view A, mut_batch_view_scalar
     const auto d       = B.depth();
     auto pA            = A.data;
     const auto pAend   = pA + A.cols() * colstrA;
-    real_t *pB         = B.data;
+    value_type *pB     = B.data;
     auto rowcnt        = A.rows();
     while (pA < pAend) {
-        const real_t *pA_ = pA;
-        real_t *pB_       = pB;
+        const value_type *pA_ = pA;
+        value_type *pB_       = pB;
         index_t r;
         for (r = 0; r + S <= rowcnt; r += S) {
             ops::transpose_dyn<S, S>(pA_, S, pB_, laystrB, d);

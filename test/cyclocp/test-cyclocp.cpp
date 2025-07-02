@@ -48,7 +48,7 @@ TEST(CyclOCP, factor) {
     std::ranges::generate(b_eq_lin, [&] { return uni(rng); });
     std::ranges::generate(b_lb_lin, [&] { return uni(rng); });
     std::ranges::generate(b_ub_lin, [&] { return uni(rng); });
-    auto cocp     = CyclicOCPStorage::build(ocp, qr_lin, b_eq_lin, b_lb_lin, b_ub_lin);
+    auto cocp     = CyclicOCPStorage<real_t>::build(ocp, qr_lin, b_eq_lin, b_lb_lin, b_ub_lin);
     Solver solver = Solver::build(cocp, lP);
 
     const index_t nyM = std::max(ny, ny_0 + ny_N);
@@ -110,8 +110,12 @@ TEST(CyclOCP, factor) {
 
     using std::pow;
     const auto ε = pow(std::numeric_limits<real_t>::epsilon(), 0.6);
-    EXPECT_LE(Solver::compact_blas::xnrminf(simdify(Mxb)), ε);
     Solver::compact_blas::xadd_copy(simdify(grad), simdify(grad), simdify(DCᵀΣDCux), simdify(Mᵀλ));
+    std::cout << "dynamics constraints: "
+              << guanaqo::float_to_str(Solver::compact_blas::xnrminf(simdify(Mxb)))
+              << "\nstationarity:         "
+              << guanaqo::float_to_str(Solver::compact_blas::xnrminf(simdify(grad))) << "\n";
+    EXPECT_LE(Solver::compact_blas::xnrminf(simdify(Mxb)), ε);
     EXPECT_LE(Solver::compact_blas::xnrminf(simdify(grad)), ε);
 
 #if GUANAQO_WITH_TRACING

@@ -61,7 +61,7 @@ void CompactBLAS<T, Abi, O>::xadd_L(single_batch_view A, mut_single_batch_view B
 }
 
 template <class T, class Abi, StorageOrder O>
-void CompactBLAS<T, Abi, O>::xaxpy(real_t a, single_batch_view x, mut_single_batch_view y) {
+void CompactBLAS<T, Abi, O>::xaxpy(value_type a, single_batch_view x, mut_single_batch_view y) {
     GUANAQO_TRACE("xaxpy", 0, x.rows() * x.cols() * x.depth());
     assert(x.rows() == y.rows());
     assert(x.cols() == y.cols());
@@ -77,7 +77,7 @@ void CompactBLAS<T, Abi, O>::xaxpy(real_t a, single_batch_view x, mut_single_bat
 }
 
 template <class T, class Abi, StorageOrder O>
-void CompactBLAS<T, Abi, O>::xaxpy(real_t a, batch_view x, mut_batch_view y) {
+void CompactBLAS<T, Abi, O>::xaxpy(value_type a, batch_view x, mut_batch_view y) {
     assert(x.ceil_depth() == y.ceil_depth());
     BATMAT_OMP(parallel for)
     for (index_t i = 0; i < x.num_batches(); ++i)
@@ -85,7 +85,7 @@ void CompactBLAS<T, Abi, O>::xaxpy(real_t a, batch_view x, mut_batch_view y) {
 }
 
 template <class T, class Abi, StorageOrder O>
-void CompactBLAS<T, Abi, O>::xaxpby(real_t a, single_batch_view x, real_t b,
+void CompactBLAS<T, Abi, O>::xaxpby(value_type a, single_batch_view x, value_type b,
                                     mut_single_batch_view y) {
     assert(x.rows() == y.rows());
     assert(x.cols() == y.cols());
@@ -113,7 +113,7 @@ void CompactBLAS<T, Abi, O>::xaxpby(real_t a, single_batch_view x, real_t b,
 }
 
 template <class T, class Abi, StorageOrder O>
-void CompactBLAS<T, Abi, O>::xaxpby(real_t a, batch_view x, real_t b, mut_batch_view y) {
+void CompactBLAS<T, Abi, O>::xaxpby(value_type a, batch_view x, value_type b, mut_batch_view y) {
     assert(x.ceil_depth() == y.ceil_depth());
     BATMAT_OMP(parallel for)
     for (index_t i = 0; i < x.num_batches(); ++i)
@@ -228,7 +228,7 @@ void CompactBLAS<T, Abi, O>::xadd_neg_copy_impl(OutView out, View x1, Views... x
 }
 
 template <class T, class Abi, StorageOrder O>
-real_t CompactBLAS<T, Abi, O>::xdot(single_batch_view x, single_batch_view y) {
+auto CompactBLAS<T, Abi, O>::xdot(single_batch_view x, single_batch_view y) -> value_type {
     GUANAQO_TRACE("xdot", 0, x.rows() * x.cols() * x.depth());
     using std::fma;
     // TODO: why does fma(xi, yi, accum) give such terrible code gen?
@@ -238,7 +238,7 @@ real_t CompactBLAS<T, Abi, O>::xdot(single_batch_view x, single_batch_view y) {
 }
 
 template <class T, class Abi, StorageOrder O>
-real_t CompactBLAS<T, Abi, O>::xdot(batch_view x, batch_view y) {
+auto CompactBLAS<T, Abi, O>::xdot(batch_view x, batch_view y) -> value_type {
     using std::fma;
     // TODO: why does fma(xi, yi, accum) give such terrible code gen?
     return xreduce(
@@ -247,7 +247,7 @@ real_t CompactBLAS<T, Abi, O>::xdot(batch_view x, batch_view y) {
 }
 
 template <class T, class Abi, StorageOrder O>
-real_t CompactBLAS<T, Abi, O>::xnrm2sq(batch_view x) {
+auto CompactBLAS<T, Abi, O>::xnrm2sq(batch_view x) -> value_type {
     using std::fma;
     return xreduce(
         simd{0}, [](auto accum, auto xi) { return xi * xi + accum; },
@@ -255,7 +255,7 @@ real_t CompactBLAS<T, Abi, O>::xnrm2sq(batch_view x) {
 }
 
 template <class T, class Abi, StorageOrder O>
-real_t CompactBLAS<T, Abi, O>::xnrminf(single_batch_view x) {
+auto CompactBLAS<T, Abi, O>::xnrminf(single_batch_view x) -> value_type {
     using std::abs;
     using std::fma;
     using std::isfinite;
@@ -268,7 +268,7 @@ real_t CompactBLAS<T, Abi, O>::xnrminf(single_batch_view x) {
 }
 
 template <class T, class Abi, StorageOrder O>
-real_t CompactBLAS<T, Abi, O>::xnrminf(batch_view x) {
+auto CompactBLAS<T, Abi, O>::xnrminf(batch_view x) -> value_type {
     using datapar::hmax;
     using std::abs;
     using std::fma;

@@ -232,10 +232,11 @@ struct CyclicOCPSolver {
     ///
     /// Since ocp.D(0) and ocp.C(N) will be merged, the top ny₀ rows of ocp.C(N)
     /// should be zero.
-    static CyclicOCPSolver build(const CyclicOCPStorage &ocp, index_t lP);
-    void initialize_rhs(const CyclicOCPStorage &ocp, mut_view<> rhs) const;
-    void initialize_gradient(const CyclicOCPStorage &ocp, mut_view<> grad) const;
-    void initialize_bounds(const CyclicOCPStorage &ocp, mut_view<> b_min, mut_view<> b_max) const;
+    static CyclicOCPSolver build(const CyclicOCPStorage<value_type> &ocp, index_t lP);
+    void initialize_rhs(const CyclicOCPStorage<value_type> &ocp, mut_view<> rhs) const;
+    void initialize_gradient(const CyclicOCPStorage<value_type> &ocp, mut_view<> grad) const;
+    void initialize_bounds(const CyclicOCPStorage<value_type> &ocp, mut_view<> b_min,
+                           mut_view<> b_max) const;
     void pack_variables(std::span<const value_type> ux_lin, mut_view<> ux) const;
     void unpack_variables(view<> ux, std::span<value_type> ux_lin) const;
     void pack_dynamics(std::span<const value_type> λ_lin, mut_view<> λ) const;
@@ -355,7 +356,7 @@ struct CyclicOCPSolver {
     void update_riccati(index_t ti, view<> Σ);
 
     std::vector<std::tuple<index_t, index_t, value_type>>
-    build_sparse(const CyclicOCPStorage &ocp, std::span<const value_type> Σ) const;
+    build_sparse(const CyclicOCPStorage<value_type> &ocp, std::span<const value_type> Σ) const;
     std::vector<value_type> build_rhs(view<> ux, view<> λ) const;
     std::vector<std::tuple<index_t, index_t, value_type>> build_sparse_factor() const;
     std::vector<std::tuple<index_t, index_t, value_type>> build_sparse_diag() const;

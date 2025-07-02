@@ -3,6 +3,7 @@
 #include <batmat/assume.hpp>
 #include <batmat/linalg/simdify.hpp>
 #include <guanaqo/blas/hl-blas-interface.hpp>
+#include <cmath>
 #include <limits>
 
 namespace cyclocp::ocp::cyclocp {
@@ -10,7 +11,7 @@ using batmat::linalg::simdify;
 
 template <index_t VL, class T, StorageOrder DefaultOrder>
 CyclicOCPSolver<VL, T, DefaultOrder>
-CyclicOCPSolver<VL, T, DefaultOrder>::build(const CyclicOCPStorage &ocp, index_t lP) {
+CyclicOCPSolver<VL, T, DefaultOrder>::build(const CyclicOCPStorage<value_type> &ocp, index_t lP) {
     CyclicOCPSolver<VL, T, DefaultOrder> res{
         .N_horiz = ocp.N_horiz,
         .nx      = ocp.nx,
@@ -40,9 +41,10 @@ CyclicOCPSolver<VL, T, DefaultOrder>::build(const CyclicOCPStorage &ocp, index_t
                                      res.data_DCᵀ.batch(di)(vi).left_cols(res.ny));
                     }
                 } else {
-                    const auto ε = std::numeric_limits<value_type>::epsilon();
+                    using std::pow;
+                    const auto ε = pow(std::numeric_limits<value_type>::min(), value_type(0.25));
                     res.data_RSQ.batch(di)(vi).top_left(res.nu, res.nu).add_to_diagonal(1);
-                    res.data_RSQ.batch(di)(vi).bottom_right(res.nx, res.nx).add_to_diagonal(ε * ε);
+                    res.data_RSQ.batch(di)(vi).bottom_right(res.nx, res.nx).add_to_diagonal(ε);
                     res.data_BA.batch(di)(vi).right_cols(res.nx).add_to_diagonal(1);
                 }
             }
@@ -52,7 +54,7 @@ CyclicOCPSolver<VL, T, DefaultOrder>::build(const CyclicOCPStorage &ocp, index_t
 }
 
 template <index_t VL, class T, StorageOrder DefaultOrder>
-void CyclicOCPSolver<VL, T, DefaultOrder>::initialize_rhs(const CyclicOCPStorage &ocp,
+void CyclicOCPSolver<VL, T, DefaultOrder>::initialize_rhs(const CyclicOCPStorage<value_type> &ocp,
                                                           mut_view<> rhs) const {
     BATMAT_ASSERT(rhs.depth() == ceil_N);
     BATMAT_ASSERT(rhs.rows() == nx);
@@ -78,8 +80,8 @@ void CyclicOCPSolver<VL, T, DefaultOrder>::initialize_rhs(const CyclicOCPStorage
 }
 
 template <index_t VL, class T, StorageOrder DefaultOrder>
-void CyclicOCPSolver<VL, T, DefaultOrder>::initialize_gradient(const CyclicOCPStorage &ocp,
-                                                               mut_view<> grad) const {
+void CyclicOCPSolver<VL, T, DefaultOrder>::initialize_gradient(
+    const CyclicOCPStorage<value_type> &ocp, mut_view<> grad) const {
     BATMAT_ASSERT(grad.depth() == ceil_N);
     BATMAT_ASSERT(grad.rows() == nu + nx);
     BATMAT_ASSERT(grad.cols() == 1);
@@ -103,9 +105,8 @@ void CyclicOCPSolver<VL, T, DefaultOrder>::initialize_gradient(const CyclicOCPSt
 }
 
 template <index_t VL, class T, StorageOrder DefaultOrder>
-void CyclicOCPSolver<VL, T, DefaultOrder>::initialize_bounds(const CyclicOCPStorage &ocp,
-                                                             mut_view<> b_min,
-                                                             mut_view<> b_max) const {
+void CyclicOCPSolver<VL, T, DefaultOrder>::initialize_bounds(
+    const CyclicOCPStorage<value_type> &ocp, mut_view<> b_min, mut_view<> b_max) const {
     const index_t nyM = std::max(ny, ny_0 + ny_N);
     BATMAT_ASSERT(b_min.depth() == ceil_N);
     BATMAT_ASSERT(b_min.rows() == nyM);

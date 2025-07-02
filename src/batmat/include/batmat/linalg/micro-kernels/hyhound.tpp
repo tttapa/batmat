@@ -283,7 +283,7 @@ void xshhud_diag_ref(view<T, Abi, OL> L, view<T, Abi, OA> A, view<const T, Abi> 
         return;
 
     using W_t = triangular_accessor<T, Abi, R>;
-    alignas(W_t::alignment()) real_t W[W_t::size()];
+    alignas(W_t::alignment()) T W[W_t::size()];
 
     // Process all diagonal blocks (in multiples of R, except the last).
     if (L.rows() == L.cols()) {
@@ -357,7 +357,7 @@ void xshhud_diag_2_ref(view<T, Abi, OL1> L11, view<T, Abi, OA1> A1, view<T, Abi,
         return;
 
     using W_t = triangular_accessor<T, Abi, R>;
-    alignas(W_t::alignment()) real_t W[W_t::size()];
+    alignas(W_t::alignment()) T W[W_t::size()];
 
     // Process all diagonal blocks (in multiples of R, except the last).
     foreach_chunked_merged(0, L11.cols(), R, [&](index_t k, auto rem_k) {
@@ -433,7 +433,7 @@ void xshhud_diag_cyclic(view<T, Abi, OL> L11,      // D
         return;
 
     using W_t = triangular_accessor<T, Abi, R>;
-    alignas(W_t::alignment()) real_t W[W_t::size()];
+    alignas(W_t::alignment()) T W[W_t::size()];
 
     // Process all diagonal blocks (in multiples of R, except the last).
     foreach_chunked_merged(0, L11.cols(), R, [&](index_t k, auto rem_k) {
@@ -519,7 +519,7 @@ void xshhud_diag_riccati(view<T, Abi, OL> L11, view<T, Abi, OA> A1, view<T, Abi,
         return;
 
     using W_t = triangular_accessor<T, Abi, R>;
-    alignas(W_t::alignment()) real_t W[W_t::size()];
+    alignas(W_t::alignment()) T W[W_t::size()];
 
     // Process all diagonal blocks (in multiples of R, except the last).
     foreach_chunked_merged(0, L11.cols(), R, [&](index_t k, auto rem_k) {

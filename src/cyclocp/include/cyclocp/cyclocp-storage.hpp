@@ -29,7 +29,9 @@ using batmat::real_t;
 ///                 lᵢ   ≤ Cᵢ xᵢ + Dᵢ uᵢ ≤ uᵢ
 ///                 l₀ - C₀ x₀ ≤ D₀ U₀ ≤ u₀ - C₀ x₀
 ///                 lₙ   ≤ Cₙ xₙ ≤ uₙ
+template <class T = real_t>
 struct CyclicOCPStorage {
+    using value_type = T;
     index_t N_horiz;
     index_t nx, nu, ny, ny_0, ny_N;
     /// Storage layout:         size                 offset
@@ -38,7 +40,7 @@ struct CyclicOCPStorage {
     ///     N × [ B  A ]        nx(nu+nx)            N (nu+nx)²
     /// (N-1) × [ D  C ]        ny(nu+nx)            N (nu+nx)² + N nx(nu+nx)
     ///     1 × [ D  C ]        (ny_0+ny_N)(nu+nx)   N (nu+nx)² + N nx(nu+nx) + (N-1)ny(nu+nx)
-    using matrix  = batmat::matrix::Matrix<real_t, index_t>;
+    using matrix  = batmat::matrix::Matrix<value_type, index_t>;
     matrix data_H = [this] {
         return matrix{{.depth = N_horiz, .rows = nu + nx, .cols = nu + nx}};
     }();
@@ -57,12 +59,13 @@ struct CyclicOCPStorage {
     matrix data_ub0N = [this] { return matrix{{.depth = 1, .rows = ny_0 + ny_N, .cols = 1}}; }();
     std::vector<index_t> indices_G0 = std::vector<index_t>(ny_0);
 
-    static CyclicOCPStorage build(const LinearOCPStorage &ocp, std::span<const real_t> qr,
-                                  std::span<const real_t> b_eq, std::span<const real_t> b_lb,
-                                  std::span<const real_t> b_ub);
+    static CyclicOCPStorage build(const LinearOCPStorage &ocp, std::span<const value_type> qr,
+                                  std::span<const value_type> b_eq,
+                                  std::span<const value_type> b_lb,
+                                  std::span<const value_type> b_ub);
     static void reconstruct_ineq_multipliers(const LinearOCPStorage &ocp,
-                                             std::span<const real_t> y_compressed,
-                                             std::span<real_t> y);
+                                             std::span<const value_type> y_compressed,
+                                             std::span<value_type> y);
 };
 
 } // namespace cyclocp::ocp::cyclocp

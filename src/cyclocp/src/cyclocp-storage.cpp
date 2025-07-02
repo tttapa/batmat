@@ -3,9 +3,10 @@
 
 namespace cyclocp::ocp::cyclocp {
 
-void CyclicOCPStorage::reconstruct_ineq_multipliers(const LinearOCPStorage &ocp,
-                                                    std::span<const real_t> y_compressed,
-                                                    std::span<real_t> y) {
+template <class T>
+void CyclicOCPStorage<T>::reconstruct_ineq_multipliers(const LinearOCPStorage &ocp,
+                                                       std::span<const value_type> y_compressed,
+                                                       std::span<value_type> y) {
     const auto [N, nx, nu, ny, ny_N] = ocp.dim;
     // Count the number of input constraints in the first stage
     std::vector<bool> Ju0(ny);
@@ -24,10 +25,12 @@ void CyclicOCPStorage::reconstruct_ineq_multipliers(const LinearOCPStorage &ocp,
     std::ranges::copy(y_compressed.subspan(ny_0), y.begin() + ny);
 }
 
-CyclicOCPStorage CyclicOCPStorage::build(const LinearOCPStorage &ocp, std::span<const real_t> qr,
-                                         std::span<const real_t> b_eq, std::span<const real_t> b_lb,
-                                         std::span<const real_t> b_ub) {
-    using vw                         = guanaqo::MatrixView<const real_t, index_t>;
+template <class T>
+CyclicOCPStorage<T>
+CyclicOCPStorage<T>::build(const LinearOCPStorage &ocp, std::span<const value_type> qr,
+                           std::span<const value_type> b_eq, std::span<const value_type> b_lb,
+                           std::span<const value_type> b_ub) {
+    using vw                         = guanaqo::MatrixView<const value_type, index_t>;
     const auto [N, nx, nu, ny, ny_N] = ocp.dim;
     const auto nux                   = nu + nx;
     // Count the number of input constraints in the first stage
@@ -37,7 +40,7 @@ CyclicOCPStorage CyclicOCPStorage::build(const LinearOCPStorage &ocp, std::span<
             if (ocp.D(0)(r, c) != 0)
                 Ju0[r] = true;
     const auto ny_0 = static_cast<index_t>(std::ranges::count(Ju0, true));
-    CyclicOCPStorage res{.N_horiz = N, .nx = nx, .nu = nu, .ny = ny, .ny_0 = ny_0, .ny_N = ny_N};
+    CyclicOCPStorage<T> res{.N_horiz = N, .nx = nx, .nu = nu, .ny = ny, .ny_0 = ny_0, .ny_N = ny_N};
     // H₀ = [ R₀ 0 ]
     //      [ 0  Qₙ]
     res.data_H(0).top_left(nu, nu)     = ocp.R(0);
@@ -54,7 +57,7 @@ CyclicOCPStorage CyclicOCPStorage::build(const LinearOCPStorage &ocp, std::span<
     for (index_t r = 0, j = 0; r < ny; ++r) {
         if (Ju0[r]) {
             res.data_G0N(0).block(j, 0, 1, nu) = ocp.D(0).middle_rows(r, 1);
-            real_t t                           = 0;
+            value_type t                       = 0;
             for (index_t c = 0; c < nx; ++c) // lb - C₀ x₀
                 t += ocp.C(0)(r, c) * b_eq[c];
             res.data_lb0N(0, j, 0) = b_lb[r] - t;
@@ -94,5 +97,8 @@ CyclicOCPStorage CyclicOCPStorage::build(const LinearOCPStorage &ocp, std::span<
     }
     return res;
 }
+
+template struct CyclicOCPStorage<double>;
+template struct CyclicOCPStorage<float>;
 
 } // namespace cyclocp::ocp::cyclocp
