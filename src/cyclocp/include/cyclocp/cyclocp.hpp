@@ -295,13 +295,13 @@ struct CyclicOCPSolver {
     [[nodiscard]] bool is_U_below_Y(index_t l, index_t bi) const;
 
 #if !BATMAT_WITH_OPENMP
-    mutable std::barrier<> std_barrier{1 << (lP - lvl)};
+    std::unique_ptr<std::barrier<>> std_barrier = std::make_unique<std::barrier<>>(1 << (lP - lvl));
 #endif
 
     void barrier() const {
         BATMAT_OMP(barrier);
 #if !BATMAT_WITH_OPENMP
-        std_barrier.arrive_and_wait();
+        std_barrier->arrive_and_wait();
 #endif
     }
 
