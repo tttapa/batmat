@@ -75,6 +75,7 @@ target_sources(batmat PUBLIC FILE_SET headers TYPE HEADERS
           "batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp"
           "batmat/include/batmat/linalg/micro-kernels/trtri.hpp"
           "batmat/include/batmat/linalg/shift.hpp"
+          "batmat/include/batmat/linalg/flops.hpp"
           "batmat/include/batmat/linalg/structure.hpp"
           "batmat/include/batmat/linalg/trsm.hpp"
           "batmat/include/batmat/linalg/compress.hpp"

@@ -2,6 +2,7 @@
 
 #include <batmat/kib.hpp>
 #include <batmat/linalg/copy.hpp>
+#include <batmat/linalg/flops.hpp>
 #include <batmat/linalg/micro-kernels/gemm-diag.hpp>
 #include <batmat/linalg/shift.hpp>
 #include <batmat/linalg/simdify.hpp>
@@ -19,7 +20,6 @@ template <class T, class Abi, micro_kernels::gemm_diag::KernelConfig Conf = {}, 
           StorageOrder OB, StorageOrder OC, StorageOrder OD>
 void gemm_diag(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
                std::optional<view<const T, Abi, OC>> C, view<T, Abi, OD> D, view<const T, Abi> d) {
-    GUANAQO_TRACE("gemm_diag", 0, A.rows() * A.cols() * B.cols() * A.depth());
     // Check dimensions
     BATMAT_ASSERT(!C || C->rows() == D.rows());
     BATMAT_ASSERT(!C || C->cols() == D.cols());
@@ -29,6 +29,8 @@ void gemm_diag(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
     BATMAT_ASSERT(d.cols() == 1);
     BATMAT_ASSERT(B.cols() == D.cols());
     const index_t M = D.rows(), N = D.cols(), K = A.cols();
+    [[maybe_unused]] const auto fc = flops::gemmt_diag(M, N, K, Conf.struc_C);
+    GUANAQO_TRACE("gemm_diag", 0, total(fc) * A.depth());
 
     // Degenerate case
     if (M == 0 || N == 0) [[unlikely]]

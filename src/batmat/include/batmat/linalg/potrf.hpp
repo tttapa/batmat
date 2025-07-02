@@ -1,6 +1,7 @@
 #pragma once
 
 #include <batmat/linalg/copy.hpp>
+#include <batmat/linalg/flops.hpp>
 #include <batmat/linalg/micro-kernels/potrf.hpp>
 #include <batmat/linalg/shift.hpp>
 #include <batmat/linalg/simdify.hpp>
@@ -17,18 +18,16 @@ template <class T, class Abi, micro_kernels::potrf::KernelConfig Conf, StorageOr
           StorageOrder OCD>
     requires(Conf.struc_C != MatrixStructure::General)
 void potrf(view<const T, Abi, OA> A, view<const T, Abi, OCD> C, view<T, Abi, OCD> D) {
-    GUANAQO_TRACE("potrf", 0, 0); // TODO
     // Check dimensions
     BATMAT_ASSERT(D.rows() >= D.cols());
     BATMAT_ASSERT(A.cols() == 0 || A.rows() == D.rows());
     BATMAT_ASSERT(C.rows() == D.rows());
     BATMAT_ASSERT(C.cols() == D.cols());
     const index_t M = D.rows(), N = D.cols();
-
+    GUANAQO_TRACE("potrf", 0, total(flops::syrk_potrf(M, N, A.cols())) * C.depth());
     // Degenerate case
     if (M == 0 || N == 0) [[unlikely]]
         return;
-
     return micro_kernels::potrf::potrf_copy_register<T, Abi, Conf>(A, C, D);
 }
 } // namespace detail

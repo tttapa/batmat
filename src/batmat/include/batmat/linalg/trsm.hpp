@@ -8,6 +8,7 @@
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
 #include <batmat/matrix/storage.hpp>
+#include "batmat/linalg/flops.hpp"
 #include <guanaqo/trace.hpp>
 
 namespace batmat::linalg {
@@ -17,18 +18,17 @@ template <class T, class Abi, micro_kernels::trsm::KernelConfig Conf, StorageOrd
           StorageOrder OB, StorageOrder OD>
     requires(Conf.struc_A != MatrixStructure::General)
 void trsm(view<const T, Abi, OA> A, view<const T, Abi, OB> B, view<T, Abi, OD> D) {
-    GUANAQO_TRACE("trsm", 0, 0); // TODO
     // Check dimensions
     BATMAT_ASSERT(A.rows() == A.cols()); // TODO: could be relaxed
     BATMAT_ASSERT(A.cols() == B.rows());
     BATMAT_ASSERT(B.rows() == D.rows());
     BATMAT_ASSERT(B.cols() == D.cols());
     const index_t M = A.rows(), K = A.cols(), N = B.cols();
-
+    [[maybe_unused]] const auto fc = flops::trsm(M, N);
+    GUANAQO_TRACE("trsm", 0, total(fc) * D.depth());
     // Degenerate case
     if (M == 0 || N == 0 || K == 0) [[unlikely]]
         return;
-
     return micro_kernels::trsm::trsm_copy_register<T, Abi, Conf>(A, B, D);
 }
 } // namespace detail

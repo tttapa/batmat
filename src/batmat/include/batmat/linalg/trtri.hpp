@@ -5,6 +5,7 @@
 #include <batmat/linalg/simdify.hpp>
 #include <batmat/linalg/triangular.hpp>
 #include <batmat/linalg/uview.hpp>
+#include "batmat/linalg/flops.hpp"
 #include <guanaqo/trace.hpp>
 
 namespace batmat::linalg {
@@ -14,17 +15,16 @@ template <class T, class Abi, micro_kernels::trtri::KernelConfig Conf, StorageOr
           StorageOrder OD>
     requires(Conf.struc != MatrixStructure::General)
 void trtri(view<const T, Abi, OA> A, view<T, Abi, OD> D) {
-    GUANAQO_TRACE("trtri", 0, 0); // TODO
     // Check dimensions
     BATMAT_ASSERT(D.rows() == D.cols()); // TODO: could be relaxed
     BATMAT_ASSERT(A.rows() == D.rows());
     BATMAT_ASSERT(A.cols() == D.cols());
     const index_t M = D.rows(), N = D.cols();
-
+    [[maybe_unused]] const auto fc = flops::trtri(M);
+    GUANAQO_TRACE("trtri", 0, total(fc) * D.depth());
     // Degenerate case
     if (M == 0 || N == 0) [[unlikely]]
         return;
-
     return micro_kernels::trtri::trtri_copy_register<T, Abi, Conf>(A, D);
 }
 } // namespace detail

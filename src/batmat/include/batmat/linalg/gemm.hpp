@@ -2,6 +2,7 @@
 
 #include <batmat/kib.hpp>
 #include <batmat/linalg/copy.hpp>
+#include <batmat/linalg/flops.hpp>
 #include <batmat/linalg/micro-kernels/gemm.hpp>
 #include <batmat/linalg/shift.hpp>
 #include <batmat/linalg/simdify.hpp>
@@ -30,7 +31,6 @@ template <class T, class Abi, micro_kernels::gemm::KernelConfig Conf = {}, Stora
              Conf.struc_C == MatrixStructure::General)
 void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
           std::optional<view<const T, Abi, OC>> C, view<T, Abi, OD> D, TilingOptions packing = {}) {
-    GUANAQO_TRACE("gemm", 0, A.rows() * A.cols() * B.cols() * A.depth());
     // Check dimensions
     BATMAT_ASSERT(!C || C->rows() == D.rows());
     BATMAT_ASSERT(!C || C->cols() == D.cols());
@@ -38,6 +38,7 @@ void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
     BATMAT_ASSERT(A.cols() == B.rows());
     BATMAT_ASSERT(B.cols() == D.cols());
     const index_t M = D.rows(), N = D.cols(), K = A.cols();
+    GUANAQO_TRACE("gemm", 0, total(flops::gemm(M, N, K)) * D.depth());
     static const index_t N_reg = micro_kernels::gemm::ColsReg<T, Abi>;
     static const index_t M_reg = micro_kernels::gemm::RowsReg<T, Abi>;
 
@@ -149,7 +150,6 @@ template <class T, class Abi, micro_kernels::gemm::KernelConfig Conf = {}, Stora
              Conf.struc_C != MatrixStructure::General)
 void gemmt(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
            std::optional<view<const T, Abi, OC>> C, view<T, Abi, OD> D) {
-    GUANAQO_TRACE("gemmt", 0, A.rows() * A.cols() * (B.cols() + 1) * A.depth() / 2);
     BATMAT_ASSERT(D.rows() == D.cols()); // TODO: could be relaxed
     BATMAT_ASSERT(!C || C->rows() == D.rows());
     BATMAT_ASSERT(!C || C->cols() == D.cols());
@@ -157,6 +157,8 @@ void gemmt(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
     BATMAT_ASSERT(A.cols() == B.rows());
     BATMAT_ASSERT(B.cols() == D.cols());
     const index_t M = D.rows(), N = D.cols(), K = A.cols();
+    [[maybe_unused]] const auto fc = flops::trmm(M, N, K, Conf.struc_A, Conf.struc_B, Conf.struc_C);
+    GUANAQO_TRACE("gemmt", 0, total(fc) * D.depth());
     if (M == 0 || N == 0) [[unlikely]]
         return;
     if (K == 0) [[unlikely]] {
@@ -179,8 +181,6 @@ template <class T, class Abi, micro_kernels::gemm::KernelConfig Conf = {}, Stora
     requires(Conf.struc_A != MatrixStructure::General || Conf.struc_B != MatrixStructure::General)
 void trmm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
           std::optional<view<const T, Abi, OC>> C, view<T, Abi, OD> D) {
-    [[maybe_unused]] index_t flop_count = Conf.struc_A == Conf.struc_B ? 0 : 0; // TODO
-    GUANAQO_TRACE("trmm", 0, flop_count * A.depth());
     static_assert(Conf.struc_A != MatrixStructure::General ||
                   Conf.struc_B != MatrixStructure::General);
     static_assert(Conf.struc_A != Conf.struc_B,
@@ -195,6 +195,8 @@ void trmm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
     BATMAT_ASSERT(A.cols() == B.rows());
     BATMAT_ASSERT(B.cols() == D.cols());
     const index_t M = D.rows(), N = D.cols(), K = A.cols();
+    [[maybe_unused]] const auto fc = flops::trmm(M, N, K, Conf.struc_A, Conf.struc_B, Conf.struc_C);
+    GUANAQO_TRACE("trmm", 0, total(fc) * D.depth());
     if (M == 0 || N == 0) [[unlikely]]
         return;
     if (K == 0) [[unlikely]] {
