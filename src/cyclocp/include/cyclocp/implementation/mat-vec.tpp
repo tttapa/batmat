@@ -9,8 +9,9 @@
 namespace cyclocp::ocp::cyclocp {
 using batmat::linalg::simdify;
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::residual_dynamics_constr(view<> x, view<> b, mut_view<> Mxb) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::residual_dynamics_constr(view<> x, view<> b,
+                                                                    mut_view<> Mxb) const {
     const index_t P = 1 << (lP - lvl);
     batmat::foreach_thread(P, [&](index_t ti, index_t) {
         const index_t num_stages = ceil_N >> lP;    // number of stages per thread
@@ -45,8 +46,9 @@ void CyclicOCPSolver<VL, T>::residual_dynamics_constr(view<> x, view<> b, mut_vi
     });
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::transposed_dynamics_constr(view<> λ, mut_view<> Mᵀλ) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::transposed_dynamics_constr(view<> λ,
+                                                                      mut_view<> Mᵀλ) const {
     const index_t P = 1 << (lP - lvl);
     batmat::foreach_thread(P, [&](index_t ti, index_t) {
         const index_t num_stages = ceil_N >> lP;    // number of stages per thread
@@ -75,8 +77,8 @@ void CyclicOCPSolver<VL, T>::transposed_dynamics_constr(view<> λ, mut_view<> M�
     });
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::general_constr(view<> ux, mut_view<> DCux) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::general_constr(view<> ux, mut_view<> DCux) const {
     const index_t P = 1 << (lP - lvl);
     batmat::foreach_thread(P, [&](index_t ti, index_t) {
         const index_t num_stages = ceil_N >> lP;    // number of stages per thread
@@ -91,8 +93,9 @@ void CyclicOCPSolver<VL, T>::general_constr(view<> ux, mut_view<> DCux) const {
     });
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::transposed_general_constr(view<> y, mut_view<> DCᵀy) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::transposed_general_constr(view<> y,
+                                                                     mut_view<> DCᵀy) const {
     const index_t P = 1 << (lP - lvl);
     batmat::foreach_thread(P, [&](index_t ti, index_t) {
         const index_t num_stages = ceil_N >> lP;    // number of stages per thread
@@ -107,9 +110,9 @@ void CyclicOCPSolver<VL, T>::transposed_general_constr(view<> y, mut_view<> DC�
     });
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::cost_gradient(view<> ux, value_type a, view<> q, value_type b,
-                                           mut_view<> grad_f) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::cost_gradient(view<> ux, value_type a, view<> q,
+                                                         value_type b, mut_view<> grad_f) const {
     const index_t P = 1 << (lP - lvl);
     batmat::foreach_thread(P, [&](index_t ti, index_t) {
         const index_t num_stages = ceil_N >> lP;    // number of stages per thread
@@ -126,9 +129,10 @@ void CyclicOCPSolver<VL, T>::cost_gradient(view<> ux, value_type a, view<> q, va
     });
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::cost_gradient_regularized(value_type S, view<> ux, view<> ux0,
-                                                       view<> q, mut_view<> grad_f) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::cost_gradient_regularized(value_type S, view<> ux,
+                                                                     view<> ux0, view<> q,
+                                                                     mut_view<> grad_f) const {
     const index_t P = 1 << (lP - lvl);
     batmat::foreach_thread(P, [&](index_t ti, index_t) {
         using abi        = batmat::linalg::simdified_abi_t<decltype(ux.batch(0))>;
@@ -156,10 +160,9 @@ void CyclicOCPSolver<VL, T>::cost_gradient_regularized(value_type S, view<> ux, 
     });
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::cost_gradient_remove_regularization(value_type S, view<> ux,
-                                                                 view<> ux0,
-                                                                 mut_view<> grad_f) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::cost_gradient_remove_regularization(
+    value_type S, view<> ux, view<> ux0, mut_view<> grad_f) const {
     const index_t P = 1 << (lP - lvl);
     batmat::foreach_thread(P, [&](index_t ti, index_t) {
         using abi        = batmat::linalg::simdified_abi_t<decltype(ux.batch(0))>;

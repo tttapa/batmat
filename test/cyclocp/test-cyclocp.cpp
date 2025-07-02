@@ -10,7 +10,9 @@
 #include <guanaqo/trace.hpp>
 #include <batmat-version.h>
 
+#if GUANAQO_WITH_TRACING
 #include <filesystem>
+#endif
 #include <fstream>
 #include <iostream>
 #include <limits>
@@ -30,7 +32,7 @@ TEST(CyclOCP, factor) {
     GUANAQO_IF_ITT(batmat::foreach_thread(
         [](index_t i, index_t) { __itt_thread_set_name(std::format("OMP({})", i).c_str()); }));
 
-    using Solver     = CyclicOCPSolver<4>;
+    using Solver     = CyclicOCPSolver<4, real_t, StorageOrder::RowMajor>;
     const index_t lP = log_n_threads + Solver::lvl;
     const index_t ny = 50, ny_0 = 25, ny_N = 25;
     OCPDim dim{.N_horiz = 91, .nx = 40, .nu = 30, .ny = ny, .ny_N = ny_N};
@@ -125,14 +127,16 @@ TEST(CyclOCP, factor) {
         const std::string_view pcg = "stair";
 #endif
         out_dir /= *batmat_commit_hash ? batmat_commit_hash : "unknown";
-        out_dir /= std::format("nx={}-nu={}-ny={}-N={}-thr={}-vl={}-pcg={}{}", solver.nx, solver.nu,
-                               solver.ny, N, 1 << log_n_threads, VL, pcg, alt ? "-alt" : "");
+        out_dir /=
+            std::format("nx={}-nu={}-ny={}-N={}-thr={}-vl={}-pcg={}{}-{}", solver.nx, solver.nu,
+                        solver.ny, N, 1 << log_n_threads, VL, pcg, alt ? "-alt" : "",
+                        solver.default_order == StorageOrder::RowMajor ? "rm" : "cm");
         std::filesystem::create_directories(out_dir);
         std::ofstream csv{out_dir / name};
         guanaqo::TraceLogger::write_column_headings(csv) << '\n';
         for (const auto &log : guanaqo::trace_logger.get_logs())
             csv << log << '\n';
-        std::cout << out_dir << std::endl;
+        std::cout << (out_dir / name) << std::endl;
     }
 #endif
 

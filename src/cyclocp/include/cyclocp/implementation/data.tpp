@@ -8,9 +8,10 @@
 namespace cyclocp::ocp::cyclocp {
 using batmat::linalg::simdify;
 
-template <index_t VL, class T>
-CyclicOCPSolver<VL, T> CyclicOCPSolver<VL, T>::build(const CyclicOCPStorage &ocp, index_t lP) {
-    CyclicOCPSolver<VL, T> res{
+template <index_t VL, class T, StorageOrder DefaultOrder>
+CyclicOCPSolver<VL, T, DefaultOrder>
+CyclicOCPSolver<VL, T, DefaultOrder>::build(const CyclicOCPStorage &ocp, index_t lP) {
+    CyclicOCPSolver<VL, T, DefaultOrder> res{
         .N_horiz = ocp.N_horiz,
         .nx      = ocp.nx,
         .nu      = ocp.nu,
@@ -29,14 +30,14 @@ CyclicOCPSolver<VL, T> CyclicOCPSolver<VL, T>::build(const CyclicOCPStorage &ocp
             for (index_t vi = 0; vi < vl; ++vi) {
                 auto k = res.sub_wrap_N(k0 + vi * vstride, i);
                 if (k < res.N_horiz) {
-                    res.data_BA.batch(di)(vi)  = ocp.data_F(k);
-                    res.data_RSQ.batch(di)(vi) = ocp.data_H(k);
+                    detail::copy(ocp.data_F(k), res.data_BA.batch(di)(vi));
+                    detail::copy(ocp.data_H(k), res.data_RSQ.batch(di)(vi));
                     if (k == 0) {
-                        detail::copy_T(ocp.data_G0N(0),
-                                       res.data_DCᵀ.batch(di)(vi).left_cols(res.ny_0 + res.ny_N));
+                        detail::copy(ocp.data_G0N(0).transposed(),
+                                     res.data_DCᵀ.batch(di)(vi).left_cols(res.ny_0 + res.ny_N));
                     } else {
-                        detail::copy_T(ocp.data_G(k - 1),
-                                       res.data_DCᵀ.batch(di)(vi).left_cols(res.ny));
+                        detail::copy(ocp.data_G(k - 1).transposed(),
+                                     res.data_DCᵀ.batch(di)(vi).left_cols(res.ny));
                     }
                 } else {
                     const auto ε = std::numeric_limits<value_type>::epsilon();
@@ -50,8 +51,9 @@ CyclicOCPSolver<VL, T> CyclicOCPSolver<VL, T>::build(const CyclicOCPStorage &ocp
     return res;
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::initialize_rhs(const CyclicOCPStorage &ocp, mut_view<> rhs) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::initialize_rhs(const CyclicOCPStorage &ocp,
+                                                          mut_view<> rhs) const {
     BATMAT_ASSERT(rhs.depth() == ceil_N);
     BATMAT_ASSERT(rhs.rows() == nx);
     BATMAT_ASSERT(rhs.cols() == 1);
@@ -75,9 +77,9 @@ void CyclicOCPSolver<VL, T>::initialize_rhs(const CyclicOCPStorage &ocp, mut_vie
     }
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::initialize_gradient(const CyclicOCPStorage &ocp,
-                                                 mut_view<> grad) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::initialize_gradient(const CyclicOCPStorage &ocp,
+                                                               mut_view<> grad) const {
     BATMAT_ASSERT(grad.depth() == ceil_N);
     BATMAT_ASSERT(grad.rows() == nu + nx);
     BATMAT_ASSERT(grad.cols() == 1);
@@ -100,9 +102,10 @@ void CyclicOCPSolver<VL, T>::initialize_gradient(const CyclicOCPStorage &ocp,
     }
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::initialize_bounds(const CyclicOCPStorage &ocp, mut_view<> b_min,
-                                               mut_view<> b_max) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::initialize_bounds(const CyclicOCPStorage &ocp,
+                                                             mut_view<> b_min,
+                                                             mut_view<> b_max) const {
     const index_t nyM = std::max(ny, ny_0 + ny_N);
     BATMAT_ASSERT(b_min.depth() == ceil_N);
     BATMAT_ASSERT(b_min.rows() == nyM);
@@ -140,9 +143,9 @@ void CyclicOCPSolver<VL, T>::initialize_bounds(const CyclicOCPStorage &ocp, mut_
     }
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::pack_variables(std::span<const value_type> ux_lin,
-                                            mut_view<> ux) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::pack_variables(std::span<const value_type> ux_lin,
+                                                          mut_view<> ux) const {
     const index_t nux = nu + nx;
     BATMAT_ASSERT(static_cast<index_t>(ux_lin.size()) == nux * N_horiz);
     BATMAT_ASSERT(ux.depth() == ceil_N);
@@ -174,8 +177,9 @@ void CyclicOCPSolver<VL, T>::pack_variables(std::span<const value_type> ux_lin,
     }
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::unpack_variables(view<> ux, std::span<value_type> ux_lin) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::unpack_variables(view<> ux,
+                                                            std::span<value_type> ux_lin) const {
     const index_t nux = nu + nx;
     BATMAT_ASSERT(static_cast<index_t>(ux_lin.size()) == nux * N_horiz);
     BATMAT_ASSERT(ux.depth() == ceil_N);
@@ -205,8 +209,9 @@ void CyclicOCPSolver<VL, T>::unpack_variables(view<> ux, std::span<value_type> u
     }
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::pack_dynamics(std::span<const value_type> λ_lin, mut_view<> λ) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::pack_dynamics(std::span<const value_type> λ_lin,
+                                                         mut_view<> λ) const {
     const index_t nλ = nx;
     BATMAT_ASSERT(static_cast<index_t>(λ_lin.size()) == nλ * N_horiz);
     BATMAT_ASSERT(λ.depth() == ceil_N);
@@ -232,8 +237,9 @@ void CyclicOCPSolver<VL, T>::pack_dynamics(std::span<const value_type> λ_lin, m
     }
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::unpack_dynamics(view<> λ, std::span<value_type> λ_lin) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::unpack_dynamics(view<> λ,
+                                                           std::span<value_type> λ_lin) const {
     const index_t nλ = nx;
     BATMAT_ASSERT(static_cast<index_t>(λ_lin.size()) == nλ * N_horiz);
     BATMAT_ASSERT(λ.depth() == ceil_N);
@@ -257,9 +263,9 @@ void CyclicOCPSolver<VL, T>::unpack_dynamics(view<> λ, std::span<value_type> λ
     }
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::pack_constraints(std::span<const value_type> y_lin, mut_view<> y,
-                                              value_type fill) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::pack_constraints(std::span<const value_type> y_lin,
+                                                            mut_view<> y, value_type fill) const {
     BATMAT_ASSERT(static_cast<index_t>(y_lin.size()) == ny * (N_horiz - 1) + ny_0 + ny_N);
     BATMAT_ASSERT(y.depth() == ceil_N);
     BATMAT_ASSERT(y.rows() == std::max(ny, ny_0 + ny_N));
@@ -293,8 +299,9 @@ void CyclicOCPSolver<VL, T>::pack_constraints(std::span<const value_type> y_lin,
     }
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::unpack_constraints(view<> y, std::span<value_type> y_lin) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::unpack_constraints(view<> y,
+                                                              std::span<value_type> y_lin) const {
     BATMAT_ASSERT(static_cast<index_t>(y_lin.size()) == ny * (N_horiz - 1) + ny_0 + ny_N);
     BATMAT_ASSERT(y.depth() == ceil_N);
     BATMAT_ASSERT(y.rows() == std::max(ny, ny_0 + ny_N));

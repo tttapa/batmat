@@ -4,6 +4,7 @@
 #include <batmat/linalg/compress.hpp>
 #include <batmat/linalg/gemm-diag.hpp>
 #include <batmat/linalg/gemm.hpp>
+#include <batmat/linalg/hyhound.hpp>
 #include <batmat/linalg/simdify.hpp>
 #include <batmat/loop.hpp>
 
@@ -12,8 +13,8 @@
 namespace cyclocp::ocp::cyclocp {
 using namespace batmat::linalg;
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::update_level(index_t l, index_t biY) {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::update_level(index_t l, index_t biY) {
     GUANAQO_TRACE("update_level", biY);
     const index_t offset = 1 << l;
     const index_t i      = biY >> (l + 1);
@@ -22,31 +23,27 @@ void CyclicOCPSolver<VL, T>::update_level(index_t l, index_t biY) {
     constexpr index_t w3_out_lut[]{1, 0, 0, 1};
     const index_t w3_out = w3_out_lut[i & 3];
     if (i & 1) {
-        compact_blas::xshhud_diag_cyclic(
-            simdify(coupling_D.batch(biY)), simdify(work_update.batch(l & 3).middle_cols(j0, nj)),
-            simdify(coupling_Y.batch(biY)),
-            simdify(work_update.batch((l + 2) % 4).middle_cols(j0, nj)),
-            simdify(work_update.batch((l + 2 + w3_out) % 4).middle_cols(j0, nj)),
-            simdify(coupling_U.batch(biY)),
-            simdify(work_update.batch((l + 1) % 4).middle_cols(j0, nj)),
-            simdify(work_update.batch((l + 1) % 4).middle_cols(j0, nj)),
-            simdify(work_update_Σ.batch(0).middle_rows(j0, nj)), jsplit, 0);
+        hyhound_diag_cyclic(
+            tril(coupling_D.batch(biY)), work_update.batch(l & 3).middle_cols(j0, nj),
+            coupling_Y.batch(biY), work_update.batch((l + 2) % 4).middle_cols(j0, nj),
+            work_update.batch((l + 2 + w3_out) % 4).middle_cols(j0, nj), coupling_U.batch(biY),
+            work_update.batch((l + 1) % 4).middle_cols(j0, nj),
+            work_update.batch((l + 1) % 4).middle_cols(j0, nj),
+            work_update_Σ.batch(0).middle_rows(j0, nj), jsplit, 0);
     } else {
         const bool x_lanes = l + 1 == lP - lvl && 0; // TODO
-        compact_blas::xshhud_diag_cyclic(
-            simdify(coupling_D.batch(biY)), simdify(work_update.batch(l & 3).middle_cols(j0, nj)),
-            simdify(coupling_Y.batch(biY)),
-            simdify(work_update.batch((l + 1) % 4).middle_cols(j0, nj)),
-            simdify(work_update.batch((l + 1) % 4).middle_cols(j0, nj)),
-            simdify(coupling_U.batch(biY)),
-            simdify(work_update.batch((l + 2) % 4).middle_cols(j0, nj)),
-            simdify(work_update.batch((l + 2 + w3_out) % 4).middle_cols(j0, nj)),
-            simdify(work_update_Σ.batch(0).middle_rows(j0, nj)), jsplit, x_lanes ? 1 : 0);
+        hyhound_diag_cyclic(
+            tril(coupling_D.batch(biY)), work_update.batch(l & 3).middle_cols(j0, nj),
+            coupling_Y.batch(biY), work_update.batch((l + 1) % 4).middle_cols(j0, nj),
+            work_update.batch((l + 1) % 4).middle_cols(j0, nj), coupling_U.batch(biY),
+            work_update.batch((l + 2) % 4).middle_cols(j0, nj),
+            work_update.batch((l + 2 + w3_out) % 4).middle_cols(j0, nj),
+            work_update_Σ.batch(0).middle_rows(j0, nj), jsplit, x_lanes ? 1 : 0);
     }
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::update(view<> ΔΣ) {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::update(view<> ΔΣ) {
     const index_t P = 1 << (lP - lvl);
     batmat::foreach_thread(P, [this, ΔΣ](index_t ti, index_t) {
         update_riccati(ti, ΔΣ);
@@ -67,19 +64,17 @@ void CyclicOCPSolver<VL, T>::update(view<> ΔΣ) {
             gemm_diag_add(work_update.batch(l & 3).middle_cols(j0, nj),
                           work_update.batch((l + 2) & 3).middle_cols(j0, nj).transposed(),
                           coupling_Y.batch(0), work_update_Σ.batch(0).middle_rows(j0, nj));
-            compact_blas::xshhud_diag_ref(
-                simdify(coupling_D.batch(biY)),
-                simdify(work_update.batch((l + 2) & 3).middle_cols(j0, nj)),
-                simdify(work_update_Σ.batch(0).middle_rows(j0, nj)));
+            hyhound_diag(tril(coupling_D.batch(biY)),
+                         work_update.batch((l + 2) & 3).middle_cols(j0, nj),
+                         work_update_Σ.batch(0).middle_rows(j0, nj));
             compact_blas::template xadd_copy<1>(
                 simdify(work_update_Σ.batch(0).middle_rows(j0, nj)),
                 simdify(work_update_Σ.batch(0).middle_rows(j0, nj)));
-            compact_blas::template xadd_copy<1>( // TODO
+            compact_blas_default::template xadd_copy<1>( // TODO
                 simdify(work_update.batch(l & 3).middle_cols(j0, nj)),
                 simdify(work_update.batch(l & 3).middle_cols(j0, nj)));
-            compact_blas::xshhud_diag_ref(simdify(coupling_D.batch(biY)),
-                                          simdify(work_update.batch(l & 3).middle_cols(j0, nj)),
-                                          simdify(work_update_Σ.batch(0).middle_rows(j0, nj)));
+            hyhound_diag(tril(coupling_D.batch(biY)), work_update.batch(l & 3).middle_cols(j0, nj),
+                         work_update_Σ.batch(0).middle_rows(j0, nj));
             // TODO: we should actually merge these two xshhud calls to
             //       make sure that the intermediate matrix does not become
             //       indefinite (although this shouldn't be an issue for
@@ -89,9 +84,8 @@ void CyclicOCPSolver<VL, T>::update(view<> ΔΣ) {
     this->alt = true;
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::update_riccati(index_t ti, view<> Σ) {
-    using abi                = simdified_abi_t<decltype(Σ.batch(0))>;
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::update_riccati(index_t ti, view<> Σ) {
     const index_t nyM        = std::max(ny, ny_0 + ny_N);
     const index_t num_stages = ceil_N >> lP;    // number of stages per thread
     const index_t di0        = ti * num_stages; // data batch index
@@ -108,8 +102,7 @@ void CyclicOCPSolver<VL, T>::update_riccati(index_t ti, view<> Σ) {
     {
         GUANAQO_TRACE("Riccati update compress", k0);
         auto DC0 = ΥΓ2.top_left(nu + nx, nyM);
-        nJ = compress_masks<abi>(simdify(data_DCᵀ.batch(di0)), simdify(Σ.batch(di0)), simdify(DC0),
-                                 simdify(wΣ.top_rows(nyM)));
+        nJ       = compress_masks(data_DCᵀ.batch(di0), Σ.batch(di0), DC0, wΣ.top_rows(nyM));
         ΥΓ2.bottom_left(nx, nJ).set_constant(0);
     }
 
@@ -125,9 +118,8 @@ void CyclicOCPSolver<VL, T>::update_riccati(index_t ti, view<> Σ) {
         auto ΥΓi    = ((i & 1) ? ΥΓ1 : ΥΓ2).left_cols(nJi);
         if (nJi > 0) {
             GUANAQO_TRACE("Riccati update R", k);
-            compact_blas::xshhud_diag_2_ref(simdify(R̂Ŝi), simdify(ΥΓi.top_rows(nu + nx)),
-                                            simdify(B̂i), simdify(ΥΓi.bottom_rows(nx)),
-                                            simdify(wΣ.top_rows(nJi)));
+            hyhound_diag_2(tril(R̂Ŝi), ΥΓi.top_rows(nu + nx), B̂i, ΥΓi.bottom_rows(nx),
+                           wΣ.top_rows(nJi));
         }
         if (i + 1 < num_stages) {
             [[maybe_unused]] const auto k_next = sub_wrap_N(k, 1);
@@ -142,17 +134,15 @@ void CyclicOCPSolver<VL, T>::update_riccati(index_t ti, view<> Σ) {
             {
                 GUANAQO_TRACE("Riccati update compress", k_next);
                 auto DC_next = ΥΓ_next.block(0, nJi, nu + nx, nyM);
-                nJ +=
-                    compress_masks<abi>(simdify(data_DCᵀ.batch(di_next)), simdify(Σ.batch(di_next)),
-                                        simdify(DC_next), simdify(wΣ.middle_rows(nJi, nyM)));
+                nJ += compress_masks(data_DCᵀ.batch(di_next), Σ.batch(di_next), DC_next,
+                                     wΣ.middle_rows(nJi, nyM));
                 ΥΓ_next.block(nu + nx, nJi, nx, nJ - nJi).set_constant(0);
             }
             if (nJi > 0) {
                 GUANAQO_TRACE("Riccati update Q", k);
                 gemm_diag_add(ΥΓi.bottom_rows(nx), ΥΓi.middle_rows(nu, nx).transposed(), Âi,
                               wΣ.top_rows(nJi));
-                compact_blas::xshhud_diag_ref(simdify(Q̂i), simdify(ΥΓi.middle_rows(nu, nx)),
-                                              simdify(wΣ.top_rows(nJi)));
+                hyhound_diag(tril(Q̂i), ΥΓi.middle_rows(nu, nx), wΣ.top_rows(nJi));
             }
         } else {
             const auto bi_upd = sub_wrap_PmV(ti, 1);
@@ -170,13 +160,12 @@ void CyclicOCPSolver<VL, T>::update_riccati(index_t ti, view<> Σ) {
             if (nJi > 0) {
                 GUANAQO_TRACE("Riccati update Q", k);
                 auto Q̂i_inv = R̂ŜQ̂i.block(nu - 1, nu, nx, nx);
-                compact_blas::xshhud_diag_riccati(
-                    simdify(Q̂i), simdify(ΥΓi.middle_rows(nu, nx)), simdify(Âi),
-                    simdify(ΥΓi.bottom_rows(nx)),
-                    simdify(work_update.batch(wiA).middle_cols(j0, nJi)), simdify(Q̂i_inv),
-                    simdify(work_update.batch(wiI).middle_cols(j0, nJi)), simdify(wΣ.top_rows(nJi)),
-                    ti == 0); // TODO: optimize
-                compact_blas::xneg(simdify(work_update.batch(wiI).middle_cols(j0, nJi))); // TODO
+                hyhound_diag_riccati(tril(Q̂i), ΥΓi.middle_rows(nu, nx), Âi, ΥΓi.bottom_rows(nx),
+                                     work_update.batch(wiA).middle_cols(j0, nJi), Q̂i_inv,
+                                     work_update.batch(wiI).middle_cols(j0, nJi), wΣ.top_rows(nJi),
+                                     ti == 0); // TODO: optimize
+                compact_blas_default::xneg(
+                    simdify(work_update.batch(wiI).middle_cols(j0, nJi))); // TODO
                 ti == 0 ? compact_blas::template xadd_neg_copy<-1>(
                               simdify(work_update_Σ.batch(0).middle_rows(j0, nJi)),
                               simdify(wΣ.top_rows(nJi)))

@@ -10,8 +10,12 @@
 
 namespace cyclocp::ocp::cyclocp {
 
-template class CyclicOCPSolver<1>;
-template class CyclicOCPSolver<4>;
-template class CyclicOCPSolver<8>;
+template class CyclicOCPSolver<1, real_t, StorageOrder::ColMajor>;
+template class CyclicOCPSolver<4, real_t, StorageOrder::ColMajor>;
+template class CyclicOCPSolver<8, real_t, StorageOrder::ColMajor>;
+
+template class CyclicOCPSolver<1, real_t, StorageOrder::RowMajor>;
+template class CyclicOCPSolver<4, real_t, StorageOrder::RowMajor>;
+template class CyclicOCPSolver<8, real_t, StorageOrder::RowMajor>;
 
 } // namespace cyclocp::ocp::cyclocp

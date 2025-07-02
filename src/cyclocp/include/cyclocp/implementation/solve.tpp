@@ -10,14 +10,16 @@
 namespace cyclocp::ocp::cyclocp {
 using namespace batmat::linalg;
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::solve_active([[maybe_unused]] index_t l, [[maybe_unused]] index_t biY,
-                                          [[maybe_unused]] mut_view<> λ) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::solve_active([[maybe_unused]] index_t l,
+                                                        [[maybe_unused]] index_t biY,
+                                                        [[maybe_unused]] mut_view<> λ) const {
     // TODO: nothing?
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::solve_active_secondary(index_t l, index_t biU, mut_view<> λ) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::solve_active_secondary(index_t l, index_t biU,
+                                                                  mut_view<> λ) const {
     const index_t num_stages = ceil_N >> lP;
     const index_t offset     = 1 << l;
     const index_t biD        = sub_wrap_PmV(biU, offset);
@@ -42,8 +44,9 @@ void CyclicOCPSolver<VL, T>::solve_active_secondary(index_t l, index_t biU, mut_
     }
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::solve_riccati_forward(index_t ti, mut_view<> ux, mut_view<> λ) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::solve_riccati_forward(index_t ti, mut_view<> ux,
+                                                                 mut_view<> λ) const {
     const index_t num_stages = ceil_N >> lP;    // number of stages per thread
     const index_t di0        = ti * num_stages; // data batch index
     const index_t biI        = sub_wrap_PmV(ti, 1);
@@ -102,9 +105,10 @@ void CyclicOCPSolver<VL, T>::solve_riccati_forward(index_t ti, mut_view<> ux, mu
         trsm(tril(coupling_D.batch(biI)), λI);
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::solve_riccati_forward_alt(index_t ti, mut_view<> ux, mut_view<> λ,
-                                                       mut_view<> work) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::solve_riccati_forward_alt(index_t ti, mut_view<> ux,
+                                                                     mut_view<> λ,
+                                                                     mut_view<> work) const {
     const index_t num_stages = ceil_N >> lP;    // number of stages per thread
     const index_t di0        = ti * num_stages; // data batch index
     const index_t biI        = sub_wrap_PmV(ti, 1);
@@ -173,8 +177,9 @@ void CyclicOCPSolver<VL, T>::solve_riccati_forward_alt(index_t ti, mut_view<> ux
         trsm(tril(coupling_D.batch(biI)), λI);
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::solve_forward(mut_view<> ux, mut_view<> λ, mut_view<> work) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::solve_forward(mut_view<> ux, mut_view<> λ,
+                                                         mut_view<> work) const {
     const index_t P = 1 << (lP - lvl);
     batmat::foreach_thread(P, [this, &ux, &λ, &work](index_t ti, index_t) {
         alt ? solve_riccati_forward_alt(ti, ux, λ, work) : solve_riccati_forward(ti, ux, λ);
@@ -191,8 +196,9 @@ void CyclicOCPSolver<VL, T>::solve_forward(mut_view<> ux, mut_view<> λ, mut_vie
     });
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::solve_reverse_active(index_t l, index_t bi, mut_view<> λ) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::solve_reverse_active(index_t l, index_t bi,
+                                                                mut_view<> λ) const {
     const index_t offset     = 1 << l;
     const index_t num_stages = ceil_N >> lP;
     const index_t biY        = add_wrap_PmV(bi, offset);
@@ -209,9 +215,10 @@ void CyclicOCPSolver<VL, T>::solve_reverse_active(index_t l, index_t bi, mut_vie
     trsm(tril(coupling_D.batch(bi)).transposed(), λ.batch(di));
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::solve_riccati_reverse(index_t ti, mut_view<> ux, mut_view<> λ,
-                                                   mut_view<> work) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::solve_riccati_reverse(index_t ti, mut_view<> ux,
+                                                                 mut_view<> λ,
+                                                                 mut_view<> work) const {
     const index_t num_stages = ceil_N >> lP;    // number of stages per thread
     const index_t di0        = ti * num_stages; // data batch index
     const index_t biI        = sub_wrap_PmV(ti, 1);
@@ -280,9 +287,10 @@ void CyclicOCPSolver<VL, T>::solve_riccati_reverse(index_t ti, mut_view<> ux, mu
     }
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::solve_riccati_reverse_alt(index_t ti, mut_view<> ux, mut_view<> λ,
-                                                       mut_view<> work) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::solve_riccati_reverse_alt(index_t ti, mut_view<> ux,
+                                                                     mut_view<> λ,
+                                                                     mut_view<> work) const {
     const index_t num_stages = ceil_N >> lP;    // number of stages per thread
     const index_t di0        = ti * num_stages; // data batch index
     const index_t biI        = sub_wrap_PmV(ti, 1);
@@ -352,8 +360,9 @@ void CyclicOCPSolver<VL, T>::solve_riccati_reverse_alt(index_t ti, mut_view<> ux
     }
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::solve_reverse(mut_view<> ux, mut_view<> λ, mut_view<> work) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::solve_reverse(mut_view<> ux, mut_view<> λ,
+                                                         mut_view<> work) const {
     const index_t P = 1 << (lP - lvl);
     batmat::foreach_thread(P, [this, &ux, &λ, &work](index_t ti, index_t) {
         for (index_t l = lP - lvl; l-- > 0;) {
@@ -367,9 +376,10 @@ void CyclicOCPSolver<VL, T>::solve_reverse(mut_view<> ux, mut_view<> λ, mut_vie
     });
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::solve(mut_view<> ux, mut_view<> λ, mut_batch_view<> work_pcg,
-                                   mut_view<> work_riccati) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::solve(mut_view<> ux, mut_view<> λ,
+                                                 mut_batch_view<> work_pcg,
+                                                 mut_view<> work_riccati) const {
     solve_forward(ux, λ, work_riccati);
     solve_pcg(λ.batch(0), work_pcg);
     solve_reverse(ux, λ, work_riccati);

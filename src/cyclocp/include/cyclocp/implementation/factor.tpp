@@ -14,8 +14,8 @@ namespace cyclocp::ocp::cyclocp {
 
 using namespace batmat::linalg;
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::factor_schur_Y(index_t l, index_t biY) {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::factor_schur_Y(index_t l, index_t biY) {
     const index_t offset = 1 << l;
     { // Compute Y[bi]
         GUANAQO_TRACE("Trsm Y", biY);
@@ -40,8 +40,8 @@ void CyclicOCPSolver<VL, T>::factor_schur_Y(index_t l, index_t biY) {
     }
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::factor_schur_U(index_t l, index_t biU) {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::factor_schur_U(index_t l, index_t biU) {
     const index_t offset = 1 << l;
     const index_t biD    = sub_wrap_PmV(biU, offset);
     const index_t biY    = sub_wrap_PmV(biD, offset);
@@ -74,8 +74,8 @@ void CyclicOCPSolver<VL, T>::factor_schur_U(index_t l, index_t biU) {
     }
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::factor_l0(const index_t ti) {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::factor_l0(const index_t ti) {
     const index_t num_stages = ceil_N >> lP; // number of stages per thread
     const index_t biI        = sub_wrap_PmV(ti, 1);
     const index_t biA        = ti;
@@ -138,8 +138,9 @@ void CyclicOCPSolver<VL, T>::factor_l0(const index_t ti) {
 
 // Performs Riccati recursion and then factors level l=0 of
 // coupling equations + propagates the subdiagonal blocks to level l=1.
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::factor_riccati(index_t ti, bool alt, value_type S, view<> Σ) {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::factor_riccati(index_t ti, bool alt, value_type S,
+                                                          view<> Σ) {
     const index_t num_stages = ceil_N >> lP;    // number of stages per thread
     const index_t di0        = ti * num_stages; // data batch index
     const index_t k0         = ti * num_stages; // stage index
@@ -214,8 +215,8 @@ void CyclicOCPSolver<VL, T>::factor_riccati(index_t ti, bool alt, value_type S, 
     }
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::factor(value_type S, view<> Σ, bool alt) {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::factor(value_type S, view<> Σ, bool alt) {
     this->alt       = alt;
     const index_t P = 1 << (lP - lvl);
     batmat::foreach_thread(P, [this, alt, S, Σ](index_t ti, index_t) {

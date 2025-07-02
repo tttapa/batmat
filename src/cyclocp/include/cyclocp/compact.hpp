@@ -11,16 +11,16 @@
 
 namespace batmat::linalg::compact {
 
-template <class T, class Abi>
+template <class T, class Abi, StorageOrder O>
 struct CompactBLAS {
     using simd_types                     = simd_view_types<T, Abi>;
     using simd                           = typename simd_types::simd;
-    using single_batch_view              = typename simd_types::template view<const T>;
-    using mut_single_batch_view          = typename simd_types::template view<T>;
-    using mut_single_batch_view_scalar   = typename simd_types::template scalar_view<T>;
-    using mut_batch_view_scalar          = typename simd_types::template multi_scalar_view<T>;
-    using batch_view                     = typename simd_types::template multi_view<const T>;
-    using mut_batch_view                 = typename simd_types::template multi_view<T>;
+    using single_batch_view              = typename simd_types::template view<const T, O>;
+    using mut_single_batch_view          = typename simd_types::template view<T, O>;
+    using mut_single_batch_view_scalar   = typename simd_types::template scalar_view<T, O>;
+    using mut_batch_view_scalar          = typename simd_types::template multi_scalar_view<T, O>;
+    using batch_view                     = typename simd_types::template multi_view<const T, O>;
+    using mut_batch_view                 = typename simd_types::template multi_view<T, O>;
     static constexpr index_t simd_stride = simd_types::simd_stride_t();
 
     static void unpack(single_batch_view A, mut_single_batch_view_scalar B);
@@ -35,23 +35,6 @@ struct CompactBLAS {
     static void xshh(mut_single_batch_view L, mut_single_batch_view A);
     static void xshh(mut_batch_view L, mut_batch_view A);
     static void xshh_ref(mut_single_batch_view L, mut_single_batch_view A);
-
-    /// Cholesky up/downdate
-    static void xshhud_diag_ref(mut_single_batch_view L, mut_single_batch_view A,
-                                single_batch_view D);
-    static void xshhud_diag_2_ref(mut_single_batch_view L, mut_single_batch_view A,
-                                  mut_single_batch_view L2, mut_single_batch_view A2,
-                                  single_batch_view D);
-    static void xshhud_diag_cyclic(mut_single_batch_view L11, mut_single_batch_view A1,
-                                   mut_single_batch_view L21, single_batch_view A2,
-                                   mut_single_batch_view A2_out, mut_single_batch_view L31,
-                                   single_batch_view A3, mut_single_batch_view A3_out,
-                                   single_batch_view D, index_t split, int rot_A2);
-    static void xshhud_diag_riccati(mut_single_batch_view L11, mut_single_batch_view A1,
-                                    mut_single_batch_view L21, single_batch_view A2,
-                                    mut_single_batch_view A2_out, mut_single_batch_view Lu1,
-                                    mut_single_batch_view Au_out, single_batch_view D,
-                                    bool shift_A_out);
 
     /// B ← A ⊙ B
     static void xhadamard(single_batch_view A, mut_single_batch_view B);
@@ -190,12 +173,6 @@ struct CompactBLAS {
         return accum_scal;
     }
 
-    template <index_t N = 8>
-    static index_t compress_masks(single_batch_view A_in, single_batch_view S_in,
-                                  mut_single_batch_view A_out, mut_single_batch_view S_out);
-    template <index_t N = 8>
-    static index_t compress_masks_count(single_batch_view S_in);
-
     /// y = x - clamp(x, l, u)
     static void proj_diff(single_batch_view x, single_batch_view l, single_batch_view u,
                           mut_single_batch_view y);
@@ -205,4 +182,3 @@ struct CompactBLAS {
 
 #include "compact/elementwise.tpp"
 #include "compact/pack.tpp"
-#include "compact/update.tpp"

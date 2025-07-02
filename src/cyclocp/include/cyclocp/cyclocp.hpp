@@ -45,7 +45,7 @@ using batmat::matrix::StorageOrder;
     return i >> (l + 1);
 }
 
-template <index_t VL = 4, class T = real_t>
+template <index_t VL = 4, class T = real_t, StorageOrder DefaultOrder = StorageOrder::ColMajor>
 struct CyclicOCPSolver {
     using value_type             = T;
     using vl_t                   = std::integral_constant<index_t, VL>;
@@ -83,8 +83,14 @@ struct CyclicOCPSolver {
     template <StorageOrder O = StorageOrder::ColMajor>
     using mut_batch_view = batmat::matrix::View<value_type, index_t, vl_t, vl_t, layer_stride, O>;
 
+    static constexpr auto default_order = DefaultOrder;
+
     using compact_blas =
-        batmat::linalg::compact::CompactBLAS<T, batmat::datapar::deduced_abi<T, VL>>; // TODO
+        batmat::linalg::compact::CompactBLAS<T, batmat::datapar::deduced_abi<T, VL>,
+                                             StorageOrder::ColMajor>; // TODO
+    using compact_blas_default =
+        batmat::linalg::compact::CompactBLAS<T, batmat::datapar::deduced_abi<T, VL>,
+                                             default_order>; // TODO
 
     bool alt                      = true;
     bool use_stair_preconditioner = true;
@@ -92,29 +98,29 @@ struct CyclicOCPSolver {
     value_type pcg_tolerance      = std::numeric_limits<value_type>::epsilon() / 10;
     bool pcg_print_resid          = false;
 
-    matrix<StorageOrder::ColMajor> coupling_D = [this] {
-        return matrix<StorageOrder::ColMajor>{{
+    matrix<default_order> coupling_D = [this] {
+        return matrix<default_order>{{
             .depth = 1 << lP,
             .rows  = nx,
             .cols  = nx,
         }};
     }();
-    matrix<StorageOrder::ColMajor> coupling_U = [this] {
-        return matrix<StorageOrder::ColMajor>{{
+    matrix<default_order> coupling_U = [this] {
+        return matrix<default_order>{{
             .depth = 1 << lP,
             .rows  = nx,
             .cols  = nx,
         }};
     }();
-    matrix<StorageOrder::ColMajor> coupling_Y = [this] {
-        return matrix<StorageOrder::ColMajor>{{
+    matrix<default_order> coupling_Y = [this] {
+        return matrix<default_order>{{
             .depth = 1 << lP,
             .rows  = nx,
             .cols  = nx,
         }};
     }();
-    matrix<StorageOrder::ColMajor> work_update = [this] {
-        return matrix<StorageOrder::ColMajor>{{
+    matrix<default_order> work_update = [this] {
+        return matrix<default_order>{{
             .depth = 4 << lvl,
             .rows  = nx,
             .cols  = (ceil_N >> lvl) * ny,
@@ -127,50 +133,50 @@ struct CyclicOCPSolver {
             .cols  = 1,
         }};
     }();
-    matrix<StorageOrder::ColMajor> riccati_ÂB̂ = [this] {
-        return matrix<StorageOrder::ColMajor>{{
+    matrix<default_order> riccati_ÂB̂ = [this] {
+        return matrix<default_order>{{
             .depth = 1 << lP,
             .rows  = nx,
             .cols  = (ceil_N >> lP) * (nu + nx),
         }};
     }();
-    matrix<StorageOrder::ColMajor> riccati_BAᵀ = [this] {
-        return matrix<StorageOrder::ColMajor>{{
+    matrix<default_order> riccati_BAᵀ = [this] {
+        return matrix<default_order>{{
             .depth = 1 << lP,
             .rows  = nu + nx,
             .cols  = ((ceil_N >> lP) - 1) * nx,
         }};
     }();
-    matrix<StorageOrder::ColMajor> riccati_R̂ŜQ̂ = [this] {
-        return matrix<StorageOrder::ColMajor>{{
+    matrix<default_order> riccati_R̂ŜQ̂ = [this] {
+        return matrix<default_order>{{
             .depth = 1 << lP,
             .rows  = nu + nx,
             .cols  = (ceil_N >> lP) * (nu + nx),
         }};
     }();
-    matrix<StorageOrder::ColMajor> riccati_ΥΓ1 = [this] {
-        return matrix<StorageOrder::ColMajor>{{
+    matrix<default_order> riccati_ΥΓ1 = [this] {
+        return matrix<default_order>{{
             .depth = 1 << lP,
             .rows  = nu + nx + nx,
             .cols  = (ceil_N >> lP) * std::max(ny, ny_0 + ny_N),
         }};
     }();
-    matrix<StorageOrder::ColMajor> riccati_ΥΓ2 = [this] {
-        return matrix<StorageOrder::ColMajor>{{
+    matrix<default_order> riccati_ΥΓ2 = [this] {
+        return matrix<default_order>{{
             .depth = 1 << lP,
             .rows  = nu + nx + nx,
             .cols  = (ceil_N >> lP) * std::max(ny, ny_0 + ny_N),
         }};
     }();
-    matrix<StorageOrder::ColMajor> data_BA = [this] {
-        return matrix<StorageOrder::ColMajor>{{
+    matrix<default_order> data_BA = [this] {
+        return matrix<default_order>{{
             .depth = ceil_N,
             .rows  = nx,
             .cols  = nu + nx,
         }};
     }();
-    matrix<StorageOrder::ColMajor> data_DCᵀ = [this] {
-        return matrix<StorageOrder::ColMajor>{{
+    matrix<default_order> data_DCᵀ = [this] {
+        return matrix<default_order>{{
             .depth = ceil_N,
             .rows  = nu + nx,
             .cols  = std::max(ny, ny_0 + ny_N),
@@ -190,8 +196,8 @@ struct CyclicOCPSolver {
             .cols  = 1,
         }};
     }();
-    matrix<StorageOrder::ColMajor> data_RSQ = [this] {
-        return matrix<StorageOrder::ColMajor>{{
+    matrix<default_order> data_RSQ = [this] {
+        return matrix<default_order>{{
             .depth = ceil_N,
             .rows  = nu + nx,
             .cols  = nu + nx,
@@ -329,9 +335,10 @@ struct CyclicOCPSolver {
     void solve_riccati_forward_alt(index_t ti, mut_view<> ux, mut_view<> λ, mut_view<> work) const;
     void solve_forward(mut_view<> ux, mut_view<> λ, mut_view<> work) const;
 
-    value_type mul_A(batch_view<> p, mut_batch_view<> Ap, batch_view<> L, batch_view<> B) const;
-    value_type mul_precond(batch_view<> r, mut_batch_view<> z, mut_batch_view<> w, batch_view<> L,
-                           batch_view<> B) const;
+    value_type mul_A(batch_view<> p, mut_batch_view<> Ap, batch_view<default_order> L,
+                     batch_view<default_order> B) const;
+    value_type mul_precond(batch_view<> r, mut_batch_view<> z, mut_batch_view<> w,
+                           batch_view<default_order> L, batch_view<default_order> B) const;
     void solve_pcg(mut_batch_view<> λ, mut_batch_view<> work_pcg) const;
     void solve_pcg(mut_batch_view<> λ) { solve_pcg(λ, work_pcg.batch(0)); }
 
@@ -355,13 +362,14 @@ struct CyclicOCPSolver {
 };
 
 namespace detail {
-template <class T1, class I1, class S1, class T2, class I2, class S2>
-void copy_T(guanaqo::MatrixView<T1, I1, S1> src, guanaqo::MatrixView<T2, I2, S2> dst) {
-    assert(src.rows == dst.cols);
-    assert(src.cols == dst.rows);
+template <class T1, class I1, class S1, guanaqo::StorageOrder O1, class T2, class I2, class S2,
+          guanaqo::StorageOrder O2>
+void copy(guanaqo::MatrixView<T1, I1, S1, O1> src, guanaqo::MatrixView<T2, I2, S2, O2> dst) {
+    assert(src.rows == dst.rows);
+    assert(src.cols == dst.cols);
     for (index_t r = 0; r < src.rows; ++r) // TODO: optimize
         for (index_t c = 0; c < src.cols; ++c)
-            dst(c, r) = src(r, c);
+            dst(r, c) = src(r, c);
 }
 } // namespace detail
 

@@ -12,9 +12,10 @@
 namespace cyclocp::ocp::cyclocp {
 using namespace batmat::linalg;
 
-template <index_t VL, class T>
-auto CyclicOCPSolver<VL, T>::mul_A(batch_view<> p, mut_batch_view<> Ap, batch_view<> L,
-                                   batch_view<> B) const -> value_type {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+auto CyclicOCPSolver<VL, T, DefaultOrder>::mul_A(batch_view<> p, mut_batch_view<> Ap,
+                                                 batch_view<default_order> L,
+                                                 batch_view<default_order> B) const -> value_type {
     copy(p, Ap);
     trmm(tril(L).transposed(), Ap);
     trmm(tril(L), Ap);
@@ -22,9 +23,12 @@ auto CyclicOCPSolver<VL, T>::mul_A(batch_view<> p, mut_batch_view<> Ap, batch_vi
     return compact_blas::xdot(simdify(p), simdify(Ap));
 }
 
-template <index_t VL, class T>
-auto CyclicOCPSolver<VL, T>::mul_precond(batch_view<> r, mut_batch_view<> z, mut_batch_view<> w,
-                                         batch_view<> L, batch_view<> B) const -> value_type {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+auto CyclicOCPSolver<VL, T, DefaultOrder>::mul_precond(batch_view<> r, mut_batch_view<> z,
+                                                       mut_batch_view<> w,
+                                                       batch_view<default_order> L,
+                                                       batch_view<default_order> B) const
+    -> value_type {
     copy(r, z);
     if (use_stair_preconditioner) {
         copy(r, w);
@@ -37,8 +41,9 @@ auto CyclicOCPSolver<VL, T>::mul_precond(batch_view<> r, mut_batch_view<> z, mut
     return compact_blas::xdot(simdify(r), simdify(z));
 }
 
-template <index_t VL, class T>
-void CyclicOCPSolver<VL, T>::solve_pcg(mut_batch_view<> λ, mut_batch_view<> work_pcg) const {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+void CyclicOCPSolver<VL, T, DefaultOrder>::solve_pcg(mut_batch_view<> λ,
+                                                     mut_batch_view<> work_pcg) const {
     auto r = work_pcg.middle_cols(0, 1), z = work_pcg.middle_cols(1, 1),
          p = work_pcg.middle_cols(2, 1), Ap = work_pcg.middle_cols(3, 1);
     auto A = coupling_D.batch(0), B = coupling_Y.batch(0);

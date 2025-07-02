@@ -11,9 +11,9 @@
 namespace cyclocp::ocp::cyclocp {
 using namespace batmat::linalg;
 
-template <index_t VL, class T>
-auto CyclicOCPSolver<VL, T>::build_sparse(const CyclicOCPStorage &ocp,
-                                          std::span<const value_type> Σ) const
+template <index_t VL, class T, StorageOrder DefaultOrder>
+auto CyclicOCPSolver<VL, T, DefaultOrder>::build_sparse(const CyclicOCPStorage &ocp,
+                                                        std::span<const value_type> Σ) const
     -> std::vector<std::tuple<index_t, index_t, value_type>> {
     using std::sqrt;
     std::vector<std::tuple<index_t, index_t, value_type>> tuples;
@@ -126,8 +126,8 @@ auto CyclicOCPSolver<VL, T>::build_sparse(const CyclicOCPStorage &ocp,
     return tuples;
 }
 
-template <index_t VL, class T>
-auto CyclicOCPSolver<VL, T>::build_rhs(view<> ux, view<> λ) const -> std::vector<T> {
+template <index_t VL, class T, StorageOrder DefaultOrder>
+auto CyclicOCPSolver<VL, T, DefaultOrder>::build_rhs(view<> ux, view<> λ) const -> std::vector<T> {
     const index_t nux = nu + nx, nuxx = nux + nx;
     std::vector<value_type> tuples(nuxx * ceil_N);
     std::ranges::fill(tuples, std::numeric_limits<value_type>::quiet_NaN());
@@ -175,8 +175,8 @@ auto CyclicOCPSolver<VL, T>::build_rhs(view<> ux, view<> λ) const -> std::vecto
     return tuples;
 }
 
-template <index_t VL, class T>
-auto CyclicOCPSolver<VL, T>::build_sparse_factor() const
+template <index_t VL, class T, StorageOrder DefaultOrder>
+auto CyclicOCPSolver<VL, T, DefaultOrder>::build_sparse_factor() const
     -> std::vector<std::tuple<index_t, index_t, value_type>> {
     std::vector<std::tuple<index_t, index_t, value_type>> tuples;
     const index_t nux = nu + nx, nuxx = nux + nx;
@@ -340,8 +340,8 @@ auto CyclicOCPSolver<VL, T>::build_sparse_factor() const
     return tuples;
 }
 
-template <index_t VL, class T>
-auto CyclicOCPSolver<VL, T>::build_sparse_diag() const
+template <index_t VL, class T, StorageOrder DefaultOrder>
+auto CyclicOCPSolver<VL, T, DefaultOrder>::build_sparse_diag() const
     -> std::vector<std::tuple<index_t, index_t, value_type>> {
     std::vector<std::tuple<index_t, index_t, value_type>> tuples;
     const index_t nux = nu + nx, nuxx = nux + nx;

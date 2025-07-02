@@ -7,8 +7,9 @@
 
 namespace batmat::linalg::compact {
 
-template <class T, class Abi>
-void CompactBLAS<T, Abi>::unpack(single_batch_view A, mut_single_batch_view_scalar B) {
+template <class T, class Abi, StorageOrder O>
+void CompactBLAS<T, Abi, O>::unpack(single_batch_view A, mut_single_batch_view_scalar B) {
+    BATMAT_ASSERT(O == StorageOrder::ColMajor); // TODO: verify these routines for row major
     GUANAQO_TRACE("unpack", 0, A.rows() * A.cols() * A.depth());
     static constexpr auto lut = make_1d_lut<simd_stride>(
         []<index_t R>(index_constant<R>) { return ops::transpose<simd_stride, R + 1, real_t>; });
@@ -25,8 +26,9 @@ void CompactBLAS<T, Abi>::unpack(single_batch_view A, mut_single_batch_view_scal
             });
 }
 
-template <class T, class Abi>
-void CompactBLAS<T, Abi>::unpack(single_batch_view A, mut_batch_view_scalar B) {
+template <class T, class Abi, StorageOrder O>
+void CompactBLAS<T, Abi, O>::unpack(single_batch_view A, mut_batch_view_scalar B) {
+    BATMAT_ASSERT(O == StorageOrder::ColMajor); // TODO: verify these routines for row major
     GUANAQO_TRACE("unpack", 0, A.rows() * A.cols() * A.depth());
     static constexpr auto lut = make_1d_lut<simd_stride>([]<index_t R>(index_constant<R>) {
         return ops::transpose_dyn<simd_stride, R + 1, real_t>;
@@ -44,8 +46,9 @@ void CompactBLAS<T, Abi>::unpack(single_batch_view A, mut_batch_view_scalar B) {
             });
 }
 
-template <class T, class Abi>
-void CompactBLAS<T, Abi>::unpack(batch_view A, mut_batch_view_scalar B) {
+template <class T, class Abi, StorageOrder O>
+void CompactBLAS<T, Abi, O>::unpack(batch_view A, mut_batch_view_scalar B) {
+    BATMAT_ASSERT(O == StorageOrder::ColMajor); // TODO: verify these routines for row major
     assert(A.depth() == B.depth());
     foreach_chunked(
         0, B.depth(), simd_stride,
@@ -53,8 +56,9 @@ void CompactBLAS<T, Abi>::unpack(batch_view A, mut_batch_view_scalar B) {
         [&](index_t l, index_t nl) { unpack(A.batch(l / simd_stride), B.middle_layers(l, nl)); });
 }
 
-template <class T, class Abi>
-void CompactBLAS<T, Abi>::unpack_L(single_batch_view A, mut_single_batch_view_scalar B) {
+template <class T, class Abi, StorageOrder O>
+void CompactBLAS<T, Abi, O>::unpack_L(single_batch_view A, mut_single_batch_view_scalar B) {
+    BATMAT_ASSERT(O == StorageOrder::ColMajor); // TODO: verify these routines for row major
     [[maybe_unused]] auto [m, M] = std::minmax({A.rows(), A.cols()});
     GUANAQO_TRACE("unpack_L", 0, (m * (m + 1) / 2 + (M - m) * m) * A.depth());
     static constexpr auto lut = make_1d_lut<simd_stride>(
@@ -72,8 +76,9 @@ void CompactBLAS<T, Abi>::unpack_L(single_batch_view A, mut_single_batch_view_sc
             });
 }
 
-template <class T, class Abi>
-void CompactBLAS<T, Abi>::unpack_L(single_batch_view A, mut_batch_view_scalar B) {
+template <class T, class Abi, StorageOrder O>
+void CompactBLAS<T, Abi, O>::unpack_L(single_batch_view A, mut_batch_view_scalar B) {
+    BATMAT_ASSERT(O == StorageOrder::ColMajor); // TODO: verify these routines for row major
     [[maybe_unused]] auto [m, M] = std::minmax({A.rows(), A.cols()});
     GUANAQO_TRACE("unpack_L", 0, (m * (m + 1) / 2 + (M - m) * m) * A.depth());
     constexpr auto S   = simd_stride;
@@ -116,8 +121,9 @@ void CompactBLAS<T, Abi>::unpack_L(single_batch_view A, mut_batch_view_scalar B)
 #endif
 }
 
-template <class T, class Abi>
-void CompactBLAS<T, Abi>::unpack_L(batch_view A, mut_batch_view_scalar B) {
+template <class T, class Abi, StorageOrder O>
+void CompactBLAS<T, Abi, O>::unpack_L(batch_view A, mut_batch_view_scalar B) {
+    BATMAT_ASSERT(O == StorageOrder::ColMajor); // TODO: verify these routines for row major
     assert(A.depth() >= B.depth());
     foreach_chunked_merged(0, B.depth(), simd_stride, [&](index_t l, index_t nl) {
         unpack_L(A.batch(l / simd_stride), B.middle_layers(l, nl));
