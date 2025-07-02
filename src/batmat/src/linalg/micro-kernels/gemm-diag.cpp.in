@@ -29,19 +29,20 @@ const auto wrap = V;
 } // namespace
 
 extern const auto gemm_diag_copy_register_inst_gemm =
-    guanaqo::make_lut<FalseTrue, ColRowMajor, ColRowMajor, ColRowMajor>(
-        []<auto OA, auto OB, auto OC>(auto tz, CStorageOrder<OA>, CStorageOrder<OB>,
-                                      CStorageOrder<OC>) -> const void * {
+    guanaqo::make_lut<FalseTrue, ColRowMajor, ColRowMajor, ColRowMajor, ColRowMajor>(
+        []<auto OA, auto OB, auto OC, auto OD>(auto tz, CStorageOrder<OA>, CStorageOrder<OB>,
+                                               CStorageOrder<OC>,
+                                               CStorageOrder<OD>) -> const void * {
             constexpr KernelConfig Conf{.negate = Negate, .track_zeros = tz};
-            return &wrap<gemm_diag_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
+            return &wrap<gemm_diag_copy_register<DType, Abi, Conf, OA, OB, OC, OD>>;
         });
 extern const auto gemm_diag_copy_register_inst_syrk =
-    guanaqo::make_lut<FalseTrue, ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
-        []<auto OA, auto OB, auto OC, auto SC>(auto tz, CStorageOrder<OA>, CStorageOrder<OB>,
-                                               CStorageOrder<OC>,
-                                               CMatrixStructure<SC>) -> const void * {
+    guanaqo::make_lut<FalseTrue, ColRowMajor, ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
+        []<auto OA, auto OB, auto OC, auto OD, auto SC>(
+            auto tz, CStorageOrder<OA>, CStorageOrder<OB>, CStorageOrder<OC>, CStorageOrder<OD>,
+            CMatrixStructure<SC>) -> const void * {
             constexpr KernelConfig Conf{.negate = Negate, .track_zeros = tz, .struc_C = SC};
-            return &wrap<gemm_diag_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
+            return &wrap<gemm_diag_copy_register<DType, Abi, Conf, OA, OB, OC, OD>>;
         });
 
 } // namespace batmat::linalg::micro_kernels::gemm_diag

@@ -28,11 +28,12 @@ const auto wrap = V;
 } // namespace
 
 extern const auto gemm_copy_register_inst_gemm =
-    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor>(
-        []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>,
-                                      CStorageOrder<OC>) -> const void * {
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, ColRowMajor>(
+        []<auto OA, auto OB, auto OC, auto OD>(CStorageOrder<OA>, CStorageOrder<OB>,
+                                               CStorageOrder<OC>,
+                                               CStorageOrder<OD>) -> const void * {
             constexpr KernelConfig Conf{.negate = Negate};
-            return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
+            return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OD>>;
         });
 extern const auto gemm_copy_register_inst_gemm_sA =
     guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, 2>(
@@ -106,12 +107,12 @@ extern const auto gemm_copy_register_inst_trtrtr =
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
 extern const auto gemm_copy_register_inst_syrk_C =
-    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
-        []<auto OA, auto OB, auto OC, auto SC>(CStorageOrder<OA>, CStorageOrder<OB>,
-                                               CStorageOrder<OC>,
-                                               CMatrixStructure<SC>) -> const void * {
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
+        []<auto OA, auto OB, auto OC, auto OD, auto SC>(CStorageOrder<OA>, CStorageOrder<OB>,
+                                                        CStorageOrder<OC>, CStorageOrder<OD>,
+                                                        CMatrixStructure<SC>) -> const void * {
             constexpr KernelConfig Conf{.negate = Negate, .struc_C = SC};
-            return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
+            return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OD>>;
         });
 extern const auto gemm_copy_register_inst_trtrsyrk =
     guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
