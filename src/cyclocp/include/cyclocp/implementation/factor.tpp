@@ -61,14 +61,18 @@ void CyclicOCPSolver<VL, T, DefaultOrder>::factor_schur_U(index_t l, index_t biU
         GUANAQO_TRACE("Subtract UUᵀ", biD);
         syrk_sub(coupling_U.batch(biU), tril(coupling_D.batch(biD)));
     }
-    { // D -= YYᵀ
+    if (is_active(l + 1, biD)) { // chol(D - YYᵀ)
+        BATMAT_ASSUME(biD != 0);
+        GUANAQO_TRACE("Factor D", biD);
+        syrk_sub_potrf(coupling_Y.batch(biY), tril(coupling_D.batch(biD)));
+    } else { // D -= YYᵀ
         GUANAQO_TRACE("Subtract YYᵀ", biD);
         biD == 0 ? syrk_sub(coupling_Y.batch(biY), tril(coupling_D.batch(biD)), with_rotate_C<1>,
                             with_rotate_D<1>, with_mask_D<1>)
                  : syrk_sub(coupling_Y.batch(biY), tril(coupling_D.batch(biD)));
     }
     // chol(D)
-    if (is_active(l + 1, biD) || (l + 1 == lP - lvl && biD == 0)) {
+    if (l + 1 == lP - lvl && biD == 0) {
         GUANAQO_TRACE("Factor D", biD);
         potrf(tril(coupling_D.batch(biD)));
     }
@@ -126,13 +130,12 @@ void CyclicOCPSolver<VL, T, DefaultOrder>::factor_l0(const index_t ti) {
     barrier();
     // And finally backward in time, optionally merged with factorization.
     const bool do_factor = (biA & 1) == 1 || (lP - lvl == 0 && biA == 0);
-    {
-        GUANAQO_TRACE("Compute (BA)(BA)ᵀ", biA);
-        syrk_add(ÂB̂i, DiA);
-    }
     if (do_factor) {
         GUANAQO_TRACE("Factor D", biA);
-        potrf(DiA);
+        syrk_add_potrf(ÂB̂i, DiA);
+    } else {
+        GUANAQO_TRACE("Compute (BA)(BA)ᵀ", biA);
+        syrk_add(ÂB̂i, DiA);
     }
 }
 
@@ -199,6 +202,7 @@ void CyclicOCPSolver<VL, T, DefaultOrder>::factor_riccati(index_t ti, bool alt, 
             auto R̂ŜQ̂_next = R̂ŜQ̂.middle_cols((i + 1) * nux, nux);
             trmm(data_BA.batch(di_next).transposed(), tril(Q̂i), BAᵀi);
 #if 1
+            // TODO: merge with next potrf
             syrk_add(BAᵀi, tril(data_RSQ.batch(di_next)), tril(R̂ŜQ̂_next));
             syrk_diag_add(data_DCᵀ.batch(di_next), tril(R̂ŜQ̂_next), Σ.batch(di_next));
 #else
