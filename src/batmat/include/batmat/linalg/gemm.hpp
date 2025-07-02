@@ -214,7 +214,7 @@ void trmm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
     return micro_kernels::gemm::gemm_copy_register<T, Abi, Conf>(A, B, C, D);
 }
 
-template <class... Opts>
+template <shift_opt... Opts>
 constexpr micro_kernels::gemm::KernelConfig apply_options(micro_kernels::gemm::KernelConfig conf,
                                                           Opts...) {
     if (auto s = shift_A<Opts...>)
@@ -351,20 +351,20 @@ void trmm(Structured<VA, SA> A, Structured<VB, SB> B, Structured<VD, SD> D, Opts
         simdify(A.value).as_const(), simdify(B.value).as_const(), null, simdify(D.value));
 }
 /// D = A B with A and/or B triangular
-template <class TA, class TB, class TD, class... Opts>
-void trmm(TA &&A, TB &&B, TD &&D, Opts &&...opts) {
+template <class TA, class TB, class TD, shift_opt... Opts>
+void trmm(TA &&A, TB &&B, TD &&D, Opts... opts) {
     return trmm(Structured{std::forward<TA>(A)}, Structured{std::forward<TB>(B)},
-                Structured{std::forward<TD>(D)}, std::forward<Opts>(opts)...);
+                Structured{std::forward<TD>(D)}, opts...);
 }
 /// D = A D with A triangular
-template <MatrixStructure SA, simdifiable VA, simdifiable VD, class... Opts>
-void trmm(Structured<VA, SA> A, VD &&D, Opts &&...opts) {
-    return trmm(A.ref(), Structured{D}, Structured{D}, std::forward<Opts>(opts)...);
+template <MatrixStructure SA, simdifiable VA, simdifiable VD, shift_opt... Opts>
+void trmm(Structured<VA, SA> A, VD &&D, Opts... opts) {
+    return trmm(A.ref(), Structured{D}, Structured{D}, opts...);
 }
 /// D = D B with B triangular
-template <MatrixStructure SB, simdifiable VB, simdifiable VD, class... Opts>
-void trmm(VD &&D, Structured<VB, SB> B, Opts &&...opts) {
-    return trmm(Structured{D}, B.ref(), Structured{D}, std::forward<Opts>(opts)...);
+template <MatrixStructure SB, simdifiable VB, simdifiable VD, shift_opt... Opts>
+void trmm(VD &&D, Structured<VB, SB> B, Opts... opts) {
+    return trmm(Structured{D}, B.ref(), Structured{D}, opts...);
 }
 
 /// D = -A B with A and/or B triangular
@@ -379,10 +379,10 @@ void trmm_neg(Structured<VA, SA> A, Structured<VB, SB> B, Structured<VD, SD> D, 
         simdify(A.value).as_const(), simdify(B.value).as_const(), null, simdify(D.value));
 }
 /// D = -A B with A and/or B triangular
-template <class TA, class TB, class TD, class... Opts>
-void trmm_neg(TA &&A, TB &&B, TD &&D, Opts &&...opts) {
+template <class TA, class TB, class TD, shift_opt... Opts>
+void trmm_neg(TA &&A, TB &&B, TD &&D, Opts... opts) {
     return trmm_neg(Structured{std::forward<TA>(A)}, Structured{std::forward<TB>(B)},
-                    Structured{std::forward<TD>(D)}, std::forward<Opts>(opts)...);
+                    Structured{std::forward<TD>(D)}, opts...);
 }
 
 /// D = C + A B with A and/or B triangular
@@ -398,11 +398,10 @@ void trmm_add(Structured<VA, SA> A, Structured<VB, SB> B, Structured<VC, SD> C,
         std::make_optional(simdify(C.value).as_const()), simdify(D.value));
 }
 /// D = C + A B with A and/or B triangular
-template <class TA, class TB, class TC, class TD, class... Opts>
-void trmm_add(TA &&A, TB &&B, TC &&C, TD &&D, Opts &&...opts) {
+template <class TA, class TB, class TC, class TD, shift_opt... Opts>
+void trmm_add(TA &&A, TB &&B, TC &&C, TD &&D, Opts... opts) {
     return trmm_add(Structured{std::forward<TA>(A)}, Structured{std::forward<TB>(B)},
-                    Structured{std::forward<TC>(C)}, Structured{std::forward<TD>(D)},
-                    std::forward<Opts>(opts)...);
+                    Structured{std::forward<TC>(C)}, Structured{std::forward<TD>(D)}, opts...);
 }
 
 /// D = C - A B with A and/or B triangular
@@ -418,11 +417,10 @@ void trmm_sub(Structured<VA, SA> A, Structured<VB, SB> B, Structured<VC, SD> C,
         std::make_optional(simdify(C.value).as_const()), simdify(D.value));
 }
 /// D = C - A B with A and/or B triangular
-template <class TA, class TB, class TC, class TD, class... Opts>
-void trmm_sub(TA &&A, TB &&B, TC &&C, TD &&D, Opts &&...opts) {
+template <class TA, class TB, class TC, class TD, shift_opt... Opts>
+void trmm_sub(TA &&A, TB &&B, TC &&C, TD &&D, Opts... opts) {
     return trmm_sub(Structured{std::forward<TA>(A)}, Structured{std::forward<TB>(B)},
-                    Structured{std::forward<TC>(C)}, Structured{std::forward<TD>(D)},
-                    std::forward<Opts>(opts)...);
+                    Structured{std::forward<TC>(C)}, Structured{std::forward<TD>(D)}, opts...);
 }
 
 } // namespace batmat::linalg
