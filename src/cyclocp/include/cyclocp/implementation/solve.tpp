@@ -324,7 +324,7 @@ void CyclicOCPSolver<VL, T>::solve_riccati_reverse_alt(index_t ti, mut_view<> ux
             copy(ux.batch(di).bottom_rows(nx), λ.batch(di_next));
             trmm(tril(Q̂i).transposed(), λ.batch(di_next));
             trmm(tril(Q̂i), λ.batch(di_next));
-            gemm_add(Âi, λ.batch(di0), λ.batch(di_next));
+            gemm_add(Âi.transposed(), λ.batch(di0), λ.batch(di_next));
             compact_blas::xsub_copy(simdify(λ.batch(di_next)), simdify(λ.batch(di_next)),
                                     simdify(w));
         } else {
