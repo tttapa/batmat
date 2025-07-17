@@ -10,3 +10,5 @@ add_executable(benchmark-trtri "trtri.cpp")
 target_link_libraries(benchmark-trtri PRIVATE benchmark-main batmat::warnings)
 add_executable(benchmark-potrf "potrf.cpp")
 target_link_libraries(benchmark-potrf PRIVATE benchmark-main batmat::warnings)
+
+add_subdirectory(ocp-solve)
