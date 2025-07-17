@@ -33,7 +33,7 @@ xshhud_diag_diag_microkernel(index_t colsA, triangular_accessor<T, Abi, SizeR<T,
         // Energy condition and Householder coefficients
         const simd α2 = bb[k], Lkk = L_cached.load(k, k);
         const simd L̃kk = copysign(sqrt(Lkk * Lkk + α2), Lkk), β = Lkk + L̃kk;
-        simd γoβ = 2 * β / (β * β + α2), γ = β * γoβ, inv_β = 1 / β;
+        simd γoβ = simd{2} * β / (β * β + α2), γ = β * γoβ, inv_β = simd{1} / β;
         L_cached.store(L̃kk, k, k);
         // Compute L̃
         UNROLL_FOR (index_t i = k + 1; i < R; ++i) {
@@ -83,7 +83,7 @@ xshhud_diag_full_microkernel(index_t colsA, uview<T, Abi, OL> L, uview<T, Abi, O
         // Energy condition and Householder coefficients
         const simd α2 = bb[k], Lkk = L_cached.load(k, k);
         const simd L̃kk = copysign(sqrt(Lkk * Lkk + α2), Lkk), β = Lkk + L̃kk;
-        simd γoβ = 2 * β / (β * β + α2), γ = β * γoβ, inv_β = 1 / β;
+        simd γoβ = simd{2} * β / (β * β + α2), γ = β * γoβ, inv_β = simd{1} / β;
         L_cached.store(L̃kk, k, k);
         // Compute L̃
         UNROLL_FOR (index_t i = k + 1; i < R; ++i) {
