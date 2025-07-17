@@ -74,7 +74,11 @@ template <class T, index_t N>
 using OrderConfigs1 = ::testing::Types<TestConfig<T, N, ColMajor>, TestConfig<T, N, RowMajor>>;
 
 template <template <class T, index_t N> class OrderConfigs>
+#if BATMAT_WITH_SINGLE
 using TestConfigs = typename CatTypes<OrderConfigs<double, 1>, OrderConfigs<double, 4>,
                                       OrderConfigs<float, 1>, OrderConfigs<float, 8>>::type;
+#else
+using TestConfigs = typename CatTypes<OrderConfigs<double, 1>, OrderConfigs<double, 4>>::type;
+#endif
 
 } // namespace batmat::tests

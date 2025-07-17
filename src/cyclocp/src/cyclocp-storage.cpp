@@ -99,6 +99,8 @@ CyclicOCPStorage<T>::build(const LinearOCPStorage &ocp, std::span<const value_ty
 }
 
 template struct CyclicOCPStorage<double>;
+#if BATMAT_WITH_SINGLE
 template struct CyclicOCPStorage<float>;
+#endif
 
 } // namespace cyclocp::ocp::cyclocp

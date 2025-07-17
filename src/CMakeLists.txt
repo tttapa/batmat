@@ -22,6 +22,7 @@ target_compile_definitions(config INTERFACE
     $<$<BOOL:${BATMAT_WITH_MKL}>:BATMAT_WITH_MKL>
     $<$<BOOL:${BATMAT_WITH_OPENMP}>:BATMAT_WITH_OPENMP>
     $<$<BOOL:${BATMAT_WITH_GSI_HPC_SIMD}>:BATMAT_WITH_GSI_HPC_SIMD>
+    $<$<BOOL:${BATMAT_WITH_SINGLE}>:BATMAT_WITH_SINGLE>
 )
 batmat_configure_interface_library(config)
 
@@ -116,6 +117,7 @@ target_sources(cyclocp PUBLIC FILE_SET headers TYPE HEADERS
 target_link_libraries(cyclocp PUBLIC batmat)
 find_package(guanaqo REQUIRED COMPONENTS BLAS)  # TODO
 target_link_libraries(cyclocp PUBLIC guanaqo::blas)
+batmat_configure_library(cyclocp)
 
 # ==============================================================================
 

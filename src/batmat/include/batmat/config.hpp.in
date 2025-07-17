@@ -29,6 +29,9 @@ using index_t = @BATMAT_DENSE_INDEX_TYPE@;
 #ifndef BATMAT_WITH_GSI_HPC_SIMD
 #cmakedefine01 BATMAT_WITH_GSI_HPC_SIMD
 #endif
+#ifndef BATMAT_WITH_SINGLE
+#cmakedefine01 BATMAT_WITH_SINGLE
+#endif
 
 #ifdef __clangd__
 #undef BATMAT_WITH_OPENMP // clangd sometimes crashes on OpenMP constructs

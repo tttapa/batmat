@@ -14,12 +14,16 @@ option(BATMAT_WITH_OPENBLAS
     "Use the OpenBLAS library" Off)
 option(BATMAT_WITH_OPENMP
     "Enable parallelization using OpenMP" Off)
+option(BATMAT_WITH_SINGLE
+    "Compile the routines for the single-precision float datatype" Off)
 set(BATMAT_DENSE_REAL_TYPE "double" CACHE STRING
     "The main floating point type for representing real numbers")
 set(BATMAT_DENSE_INDEX_TYPE "long long" CACHE STRING
     "The main integer type for indices and sizes")
 option(BATMAT_WITH_GSI_HPC_SIMD
     "If enabled, use the GSI-HPC/simd library instead of GCC's <experimental/simd>" Off)
+option(BATMAT_WITH_BLASFEO
+    "Benchmarks comparing to BLASFEO Riccati recursion" Off)
 # Target options
 option(BATMAT_HAVE_TWO_512_FMA_UNITS
     "Does the CPU have 0.5 CPI 512-bit FMA" Off)
