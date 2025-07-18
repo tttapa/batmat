@@ -24,7 +24,7 @@ struct DefaultStride {
     DefaultStride(index_t) {} // TODO: this is error prone
 };
 
-template <class I = ptrdiff_t, class S = std::integral_constant<I, 1>, class D = I,
+template <class I = index_t, class S = std::integral_constant<I, 1>, class D = I,
           class L = DefaultStride, StorageOrder O = StorageOrder::ColMajor>
 struct Layout {
     using index_type                            = I;

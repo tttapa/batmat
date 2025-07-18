@@ -1,13 +1,15 @@
+#include <batmat/config.hpp>
 #include <batmat/matrix/view.hpp>
 #include <gtest/gtest.h>
 #include <iomanip>
 #include <numeric>
 
+using batmat::index_t;
 using batmat::matrix::DefaultStride;
 
-template <ptrdiff_t N, bool R>
+template <index_t N, bool R>
 struct ViewTypeConfig {
-    using size                         = std::integral_constant<ptrdiff_t, N>;
+    using size                         = std::integral_constant<index_t, N>;
     static constexpr bool is_row_major = R;
 };
 
@@ -15,7 +17,7 @@ template <typename Config>
 class ViewParamTest : public ::testing::Test {
   protected:
     using T                             = float;
-    using I                             = ptrdiff_t;
+    using I                             = index_t;
     using S                             = typename Config::size;
     static constexpr auto storage_order = Config::is_row_major
                                               ? batmat::matrix::StorageOrder::RowMajor
@@ -47,14 +49,14 @@ class ViewParamTest : public ::testing::Test {
 TYPED_TEST_SUITE_P(ViewParamTest);
 
 TYPED_TEST_P(ViewParamTest, TransposeMatchesOriginal) {
-    constexpr ptrdiff_t D = TestFixture::depth;
-    constexpr ptrdiff_t R = TestFixture::rows;
-    constexpr ptrdiff_t C = TestFixture::cols;
+    constexpr index_t D = TestFixture::depth;
+    constexpr index_t R = TestFixture::rows;
+    constexpr index_t C = TestFixture::cols;
 
     auto trans = this->view.transposed();
-    for (ptrdiff_t l = 0; l < D; ++l) {
-        for (ptrdiff_t r = 0; r < R; ++r) {
-            for (ptrdiff_t c = 0; c < C; ++c) {
+    for (index_t l = 0; l < D; ++l) {
+        for (index_t r = 0; r < R; ++r) {
+            for (index_t c = 0; c < C; ++c) {
                 std::cout << std::setw(5) << this->view(l, r, c);
                 EXPECT_EQ(trans(l, c, r), this->view(l, r, c));
             }
@@ -68,9 +70,9 @@ TYPED_TEST_P(ViewParamTest, TransposeMatchesOriginalBlock) {
     const auto bs    = this->batch_size;
     const auto depth = bs * 3;
     auto trans       = this->view.block(1, 2, 3, 4).middle_layers(bs, depth).transposed();
-    for (ptrdiff_t l = 0; l < depth; ++l) {
-        for (ptrdiff_t r = 0; r < 3; ++r) {
-            for (ptrdiff_t c = 0; c < 4; ++c) {
+    for (index_t l = 0; l < depth; ++l) {
+        for (index_t r = 0; r < 3; ++r) {
+            for (index_t c = 0; c < 4; ++c) {
                 std::cout << std::setw(5) << trans(l, c, r);
                 EXPECT_EQ(trans(l, c, r), this->view(l + bs, r + 1, c + 2));
             }

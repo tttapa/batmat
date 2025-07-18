@@ -18,7 +18,7 @@ namespace batmat::matrix {
 ///         Layer stride type.
 /// @tparam O
 ///         Storage order (column or row major).
-template <class T, class I = ptrdiff_t, class S = std::integral_constant<I, 1>, class D = I,
+template <class T, class I = index_t, class S = std::integral_constant<I, 1>, class D = I,
           class L = DefaultStride, StorageOrder O = StorageOrder::ColMajor>
 struct View {
     using layout_type                           = Layout<I, S, D, L, O>;

@@ -41,7 +41,7 @@ static_assert(default_alignment_t<double, int, int>::value == 0);
 ///         Batch alignment type.
 /// @tparam O
 ///         Storage order (column or row major).
-template <class T, class I = ptrdiff_t, class S = std::integral_constant<I, 1>, class D = I,
+template <class T, class I = index_t, class S = std::integral_constant<I, 1>, class D = I,
           StorageOrder O = StorageOrder::ColMajor, class A = detail::default_alignment_t<T, I, S>>
 struct Matrix {
     static_assert(!std::is_const_v<T>);
