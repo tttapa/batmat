@@ -34,11 +34,15 @@ using guanaqo::timed;
 
 namespace guanaqo {
 
-/// RAII class for measuring wall and CPU time.
+/// RAII class for measuring wall time.
 template <>
 struct BATMAT_EXPORT Timed<batmat::DefaultTimings> {
-    Timed(batmat::DefaultTimings &time);
-    ~Timed();
+    Timed(batmat::DefaultTimings &time) : time(time) { wall_start_time = clock::now(); }
+    ~Timed() {
+        auto wall_end_time = clock::now();
+        ++time.num_invocations;
+        time.wall_time += wall_end_time - wall_start_time;
+    }
     Timed(const Timed &)            = delete;
     Timed &operator=(const Timed &) = delete;
 
