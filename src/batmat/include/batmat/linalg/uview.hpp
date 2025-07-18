@@ -49,7 +49,7 @@ struct simd_view_types {
             typename simd::mask_type m{[&](size_t i) { return i >= MaskL; }};
 #else
             typename simd::mask_type m{};
-            for (int i = 0; i < m.size(); ++i)
+            for (int i = 0; i < static_cast<int>(m.size()); ++i)
                 m[i] = i >= MaskL;
 #endif
             datapar::masked_aligned_store(x, m, p);
@@ -58,7 +58,7 @@ struct simd_view_types {
             typename simd::mask_type m{[&](size_t i) { return i < m.size() - MaskL; }};
 #else
             typename simd::mask_type m{};
-            for (int i = 0; i < m.size(); ++i)
+            for (int i = 0; i < static_cast<int>(m.size()); ++i)
                 m[i] = i < m.size() - MaskL;
 #endif
             datapar::masked_aligned_store(x, m, p);
