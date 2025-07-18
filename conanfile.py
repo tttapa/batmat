@@ -28,7 +28,6 @@ class BatmatRecipe(ConanFile):
         "with_benchmarks": False,
         "with_cpu_time": False,
         "with_gsi_hpc_simd": False,
-        "with_blasfeo": False,
         "with_single": False,
     }
     options = {
@@ -65,15 +64,12 @@ class BatmatRecipe(ConanFile):
     generators = ("CMakeDeps",)
 
     def requirements(self):
-        self.requires("guanaqo/1.0.0-alpha.15", transitive_headers=True, transitive_libs=True, override=True)
+        self.requires("guanaqo/1.0.0-alpha.15", transitive_headers=True, transitive_libs=True, force=True)
         if self.options.get_safe("with_openblas"):
             self.requires("openblas/0.3.27")
-        if self.options.get_safe("with_blasfeo"):
-            self.requires("blasfeo/0.1.4.1")
         if self.options.get_safe("with_benchmarks"):
             self.requires("benchmark/1.8.4")
-            self.requires("hyhound/1.0.0")
-        self.test_requires("eigen/tttapa.20240516", force=True)
+        self.test_requires("eigen/tttapa.20250504", force=True)
         self.test_requires("gtest/1.15.0")
         if self.options.get_safe("with_openmp") and self.settings.compiler == "clang":
             self.requires(f"llvm-openmp/[~{self.settings.compiler.version}]")
@@ -91,8 +87,6 @@ class BatmatRecipe(ConanFile):
             self.options.rm_safe("with_openblas")
         if self.options.get_safe("with_openblas"):
             self.options.rm_safe("dense_index_type")
-        self.options["guanaqo/*"].with_blas = True
-        self.options["hyhound/*"].with_ocp = True
 
     def layout(self):
         cmake_layout(self)

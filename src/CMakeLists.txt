@@ -96,31 +96,6 @@ target_link_libraries(batmat PRIVATE batmat-linalg-micro-kernels)
 
 # ==============================================================================
 
-# OCP solver
-add_library(cyclocp
-    "cyclocp/src/cyclocp.cpp"
-    "cyclocp/src/cyclocp-storage.cpp"
-)
-target_sources(cyclocp PUBLIC FILE_SET headers TYPE HEADERS
-    BASE_DIRS "cyclocp/include"
-    FILES "cyclocp/include/cyclocp/cyclocp.hpp"
-          "cyclocp/include/cyclocp/cyclocp-storage.hpp"
-          "cyclocp/include/cyclocp/ocp.hpp"
-          "cyclocp/include/cyclocp/implementation/data.tpp"
-          "cyclocp/include/cyclocp/implementation/factor.tpp"
-          "cyclocp/include/cyclocp/implementation/mat-vec.tpp"
-          "cyclocp/include/cyclocp/implementation/indexing.tpp"
-          "cyclocp/include/cyclocp/implementation/sparse.tpp"
-          "cyclocp/include/cyclocp/implementation/update.tpp"
-          "cyclocp/include/cyclocp/implementation/pcg.tpp"
-          "cyclocp/include/cyclocp/implementation/solve.tpp")
-target_link_libraries(cyclocp PUBLIC batmat)
-find_package(guanaqo REQUIRED COMPONENTS BLAS)  # TODO
-target_link_libraries(cyclocp PUBLIC guanaqo::blas)
-batmat_configure_library(cyclocp)
-
-# ==============================================================================
-
 # Save the project version to a generated file
 configure_file("cmake/batmat-version.h.in"
     "${CMAKE_CURRENT_BINARY_DIR}/include/batmat-version.h" @ONLY)

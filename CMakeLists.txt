@@ -22,8 +22,6 @@ set(BATMAT_DENSE_INDEX_TYPE "long long" CACHE STRING
     "The main integer type for indices and sizes")
 option(BATMAT_WITH_GSI_HPC_SIMD
     "If enabled, use the GSI-HPC/simd library instead of GCC's <experimental/simd>" Off)
-option(BATMAT_WITH_BLASFEO
-    "Benchmarks comparing to BLASFEO Riccati recursion" Off)
 # Target options
 option(BATMAT_HAVE_TWO_512_FMA_UNITS
     "Does the CPU have 0.5 CPI 512-bit FMA" Off)
