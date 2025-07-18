@@ -69,7 +69,7 @@ if (BATMAT_CORE_TARGETS)
             NAMELINK_COMPONENT dev
         ARCHIVE DESTINATION "${BATMAT_INSTALL_LIBDIR}"
             COMPONENT dev
-        FILE_SET headers DESTINATION "${BATMAT_INSTALL_INCLUDEDIR}"
+        FILE_SET HEADERS DESTINATION "${BATMAT_INSTALL_INCLUDEDIR}"
             COMPONENT dev)
     batmat_install_config(Core dev)
     list(JOIN BATMAT_CORE_TARGETS ", " TGTS)
@@ -80,7 +80,7 @@ endif()
 # Install the extra targets
 set(BATMAT_EXTRA_TARGETS)
 if (BATMAT_EXTRA_TARGETS)
-    install(TARGETS warnings common_options ${BATMAT_EXTRA_TARGETS}
+    install(TARGETS ${BATMAT_EXTRA_TARGETS}
         EXPORT batmatExtraTargets
         RUNTIME DESTINATION "${BATMAT_INSTALL_BINDIR}"
             COMPONENT lib
@@ -89,7 +89,7 @@ if (BATMAT_EXTRA_TARGETS)
             NAMELINK_COMPONENT dev
         ARCHIVE DESTINATION "${BATMAT_INSTALL_LIBDIR}"
             COMPONENT dev
-        FILE_SET headers DESTINATION "${BATMAT_INSTALL_INCLUDEDIR}"
+        FILE_SET HEADERS DESTINATION "${BATMAT_INSTALL_INCLUDEDIR}"
             COMPONENT dev)
     batmat_install_config(Extra dev)
     list(JOIN BATMAT_EXTRA_TARGETS ", " TGTS)

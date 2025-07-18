@@ -32,17 +32,12 @@ function(batmat_configure_library tgt)
     set_property(TARGET ${tgt} PROPERTY OUTPUT_NAME "${name_prefix}${tgt}")
     generate_export_header(${tgt} BASE_NAME "${name_prefix}${tgt}"
         EXPORT_FILE_NAME export/${export_path}/${tgt}/export.h)
-    target_sources(${tgt} PUBLIC FILE_SET headers TYPE HEADERS
+    target_sources(${tgt} PUBLIC FILE_SET HEADERS
         BASE_DIRS   ${CMAKE_CURRENT_BINARY_DIR}/export
         FILES       ${CMAKE_CURRENT_BINARY_DIR}/export/${export_path}/${tgt}/export.h)
     set_target_properties(${tgt} PROPERTIES SOVERSION ${PROJECT_VERSION})
     batmat_configure_visibility(${tgt})
-    target_compile_features(${tgt} PUBLIC cxx_std_20)
-    if (BATMAT_WITH_CXX_23)
-        # Use C++23 to build everything, but don't require C++23 for installed
-        # versions of the library (see cmake/CoreConfig.cmake.in)
-        target_compile_features(${tgt} PUBLIC $<BUILD_INTERFACE:cxx_std_23>)
-    endif()
+    target_compile_features(${tgt} PUBLIC cxx_std_23)
     target_link_libraries(${tgt} PRIVATE batmat::warnings
                                  PUBLIC batmat::common_options)
     add_library(batmat::${tgt} ALIAS ${tgt})
@@ -51,12 +46,7 @@ endfunction()
 # Configure the given interface library target with some sensible default
 # options: C++ standard version, platform-specific flags
 function(batmat_configure_interface_library tgt)
-    target_compile_features(${tgt} INTERFACE cxx_std_20)
-    if (BATMAT_WITH_CXX_23)
-        # Use C++23 to build everything, but don't require C++23 for installed
-        # versions of the library (see cmake/CoreConfig.cmake.in)
-        target_compile_features(${tgt} INTERFACE $<BUILD_INTERFACE:cxx_std_23>)
-    endif()
+    target_compile_features(${tgt} INTERFACE cxx_std_23)
     target_link_libraries(${tgt} INTERFACE batmat::common_options)
     add_library(batmat::${tgt} ALIAS ${tgt})
 endfunction()

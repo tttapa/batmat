@@ -13,7 +13,7 @@ endif()
 add_library(config INTERFACE)
 configure_file("batmat/include/batmat/config.hpp.in"
     "${CMAKE_CURRENT_BINARY_DIR}/include/batmat/config.hpp" @ONLY)
-target_sources(config INTERFACE FILE_SET headers TYPE HEADERS
+target_sources(config INTERFACE FILE_SET HEADERS
     BASE_DIRS "${CMAKE_CURRENT_BINARY_DIR}/include"
     FILES "${CMAKE_CURRENT_BINARY_DIR}/include/batmat/config.hpp"
 )
@@ -31,8 +31,9 @@ batmat_configure_interface_library(config)
 add_library(batmat
     "batmat/src/batmat.cpp"
     "batmat/src/thread-pool.cpp"
+    "batmat/src/timing.cpp"
 )
-target_sources(batmat PUBLIC FILE_SET headers TYPE HEADERS
+target_sources(batmat PUBLIC FILE_SET HEADERS
     BASE_DIRS "batmat/include"
     FILES "batmat/include/batmat/assume.hpp"
           "batmat/include/batmat/kib.hpp"
@@ -69,7 +70,7 @@ endif()
 
 # Linear algebra routines for compact batches of matrices
 # ------------------------------------------------------------------------------
-target_sources(batmat PUBLIC FILE_SET headers TYPE HEADERS
+target_sources(batmat PUBLIC FILE_SET HEADERS
     BASE_DIRS "batmat/include"
     FILES "batmat/include/batmat/linalg/micro-kernels/gemm.hpp"
           "batmat/include/batmat/linalg/micro-kernels/trsm.hpp"
@@ -113,7 +114,7 @@ target_link_libraries(batmat PRIVATE batmat-linalg-micro-kernels)
 # Save the project version to a generated file
 configure_file("cmake/batmat-version.h.in"
     "${CMAKE_CURRENT_BINARY_DIR}/include/batmat-version.h" @ONLY)
-target_sources(batmat PUBLIC FILE_SET headers TYPE HEADERS
+target_sources(batmat PUBLIC FILE_SET HEADERS
     BASE_DIRS "${CMAKE_CURRENT_BINARY_DIR}/include"
     FILES "${CMAKE_CURRENT_BINARY_DIR}/include/batmat-version.h"
 )

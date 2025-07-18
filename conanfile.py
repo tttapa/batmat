@@ -64,7 +64,7 @@ class BatmatRecipe(ConanFile):
     generators = ("CMakeDeps",)
 
     def requirements(self):
-        self.requires("guanaqo/1.0.0-alpha.15", transitive_headers=True, transitive_libs=True, force=True)
+        self.requires("guanaqo/1.0.0-alpha.16", transitive_headers=True, transitive_libs=True, force=True)
         if self.options.get_safe("with_openblas"):
             self.requires("openblas/0.3.27")
         if self.options.get_safe("with_benchmarks"):
@@ -82,11 +82,11 @@ class BatmatRecipe(ConanFile):
 
     def configure(self):
         # There is currently no 64-bit indices option for OpenBLAS using Conan
+        if self.options.get_safe("with_openblas"):
+            self.options.rm_safe("dense_index_type")
         if not self.options.get_safe("with_benchmarks"):
             self.options.rm_safe("with_mkl")
             self.options.rm_safe("with_openblas")
-        if self.options.get_safe("with_openblas"):
-            self.options.rm_safe("dense_index_type")
 
     def layout(self):
         cmake_layout(self)
@@ -97,7 +97,7 @@ class BatmatRecipe(ConanFile):
         index_t = self.options.get_safe("dense_index_type", default="int")
         tc.variables["BATMAT_DENSE_INDEX_TYPE"] = index_t
         for k in self.bool_batmat_options:
-            value = getattr(self.options, k, None)
+            value = self.options.get_safe(k, None)
             if value is not None and value.value is not None:
                 tc.variables["BATMAT_" + k.upper()] = bool(value)
         if can_run(self):
