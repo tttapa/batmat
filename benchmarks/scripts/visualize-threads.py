@@ -166,6 +166,7 @@ labels = {
 
 labels = {
     "Riccati init": "Modified Riccati",
+    "Riccati update AB": None,
     "Riccati QRS": None,
     "Riccati last": None,
     "Invert Q": None,
@@ -359,6 +360,7 @@ def visualize_scheduling(
     xlim_margin=0.1,
     exclude_legends=None,
     n_threads=1,
+    gflops_peak=20,
 ):
     """
     Visualizes the scheduling of a parallel algorithm using Plotly within a subplot.
@@ -423,9 +425,9 @@ def visualize_scheduling(
         # Add rectangle to the subplot
         bar = go.Bar(
             **v,
-            offset=0,
+            offset=0.05,
             textfont_size=8.5,
-            width=0.75,
+            width=0.7,
             orientation="h",
             marker=dict(color=color, line=dict(color="black", width=0.5)),
             name=label,
@@ -474,7 +476,7 @@ def visualize_scheduling(
     #     start_time /= 1000
     #     duration /= 1000
 
-    #     color = f"rgba({255 - int(255 * gflops / 20)}, {int(255 * gflops / 20)}, 0, 0.9)"
+    #     color = f"rgba({255 - int(255 * gflops / gflops_peak)}, {int(255 * gflops / gflops_peak)}, 0, 0.9)"
     #     bar_data["x"] += [duration]
     #     bar_data["y"] += [thread_id - 0.35]
     #     bar_data["base"] += [start_time]
@@ -490,13 +492,13 @@ def visualize_scheduling(
     #         marker=dict(color=color, line=dict(color="black", width=0.5)),
     #     )
     #     fig.add_trace(bar, row=row, col=col)
-    map_gflops_color = (
-        lambda gflops: f"rgba({255 - int(255 * gflops / 20)}, {int(255 * gflops / 20)}, 0, 0.9)"
-    )
-    map_gflops_color = lambda gflops: f"hsla({120 * gflops / 20:.2f},100,45,0.9)"
+    # map_gflops_color = (
+    #     lambda gflops: f"rgba({255 - int(255 * gflops / gflops_peak)}, {int(255 * gflops / gflops_peak)}, 0, 0.9)"
+    # )
+    # map_gflops_color = lambda gflops: f"hsla({120 * gflops / gflops_peak:.2f},100,45,0.9)"
 
     def map_gflops_color(gflops):
-        r, g, b, _ = plt.cm.RdYlGn(gflops / 20)
+        r, g, b, _ = plt.cm.RdYlGn(gflops / gflops_peak)
         return f"rgba({255 * r}, {255 * g}, {255 * b}, 0.9)"
 
     colors_list = [
@@ -516,7 +518,7 @@ def visualize_scheduling(
         x=durations,
         y=thread_ids,
         base=start_times,
-        width=0.15,
+        width=0.20,
         orientation="h",
         marker=dict(color=colors_list, line=dict(color="black", width=0.5)),
         textposition="inside",
@@ -551,17 +553,20 @@ def visualize_scheduling(
 
 project_dir = Path(__file__).parent.parent.parent
 data_to_plot= {
-    "CyclOCP": (
+    "Cyqlone-blasfeo-128": (
         (
-            "traces/36ea2dd026325546f1eaaa99ff01457e79f50034/nx=68-nu=20-ny=50-N=256-thr=8-vl=16-pcg=stair-alt-rm/factor_cyclic_new.csv",
-            "traces/36ea2dd026325546f1eaaa99ff01457e79f50034/nx=68-nu=20-ny=50-N=256-thr=4-vl=16-pcg=stair-alt-rm/factor_cyclic_new.csv",
+            "traces/991d78aeb8dc6e68d49a930783ae7db35effeb33/nx=25-nu=15-ny=15-N=128-thr=8-vl=8-pcg=stair-cm/factor_cyqlone.csv",
+            "traces/991d78aeb8dc6e68d49a930783ae7db35effeb33/nx=25-nu=15-ny=15-N=128-thr=1/factor_riccati_blasfeo.csv"
         ),
-        dict(n_threads=4, xlim_margin=0.15, title="Thread-level execution traces of KKT factorization methods"),
+        dict(n_threads=8, xlim_margin=0.02, title="Thread-level execution traces of KKT factorization methods", gflops_peak=20),
     )
 }
 
 # Human-readable titles of the different data files
-subtitles = {}
+subtitles = {
+    "traces/991d78aeb8dc6e68d49a930783ae7db35effeb33/nx=25-nu=15-ny=15-N=128-thr=8-vl=8-pcg=stair-cm/factor_cyqlone.csv": "C<span style=\"font-size: 0.75em;\">YQLONE</span>",
+    "traces/991d78aeb8dc6e68d49a930783ae7db35effeb33/nx=25-nu=15-ny=15-N=128-thr=1/factor_riccati_blasfeo.csv": "Riccati <span style=\"font-size: 0.75em;\">(BLASFEO)</span>"
+}
 # Vector lengths
 batch_sizes = {}
 
@@ -622,8 +627,8 @@ for name, opts in data_to_plot.items():
 
     fig.update_layout(
         autosize=False,
-        width=1200 * 0.9,
-        height=680 * 0.9,
+        width=1200 * 1.43,
+        height=660 * 1.43,
         legend=dict(
             yanchor="top",
             y=1,
