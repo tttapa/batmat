@@ -48,7 +48,8 @@ class thread_pool {
         : signals(num_threads), funcs(num_threads), exceptions(num_threads) {
         threads.reserve(num_threads);
         for (size_t i = 0; i < num_threads; ++i)
-            threads.emplace_back(&thread_pool::work, this, i);
+            threads.emplace_back(
+                [this, i](std::stop_token stop) { this->work(std::move(stop), i); });
     }
 
     thread_pool(const thread_pool &)            = delete;

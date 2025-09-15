@@ -12,6 +12,7 @@ if (NOT TARGET batmat::batmat)
 endif()
 
 add_executable(tests
+    "test-thread-pool.cpp"
     "ops/test-rotate.cpp"
     "matrix/test-view.cpp"
     "linalg/test-compress.cpp"
