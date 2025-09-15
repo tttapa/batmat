@@ -3,7 +3,6 @@
 #include <batmat/config.hpp>
 #include <batmat/ops/rotate.hpp>
 #include <batmat/simd.hpp>
-#include <print>
 
 using batmat::real_t;
 using batmat::ops::rot;

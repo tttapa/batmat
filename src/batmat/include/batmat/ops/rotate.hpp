@@ -54,9 +54,27 @@ template <int S, class F, class Abi>
             indices_lut[i] = static_cast<int64_t>((i + 1) % N);
         return indices_lut;
     }();
+    // rot(+1, [0, 1, 2, 3, 4, 5, 6, 7]) == [7, 0, 1, 2, 3, 4, 5, 6]
+    // rot(+2, [0, 1, 2, 3, 4, 5, 6, 7]) == [6, 7, 0, 1, 2, 3, 4, 5]
+    // rot(+7, [0, 1, 2, 3, 4, 5, 6, 7]) == [1, 2, 3, 4, 5, 6, 7, 0]
+    //
+    // rot(-1, [0, 1, 2, 3, 4, 5, 6, 7]) == [1, 2, 3, 4, 5, 6, 7, 0]
+    // rot(-2, [0, 1, 2, 3, 4, 5, 6, 7]) == [2, 3, 4, 5, 6, 7, 0, 1]
+    // rot(-7, [0, 1, 2, 3, 4, 5, 6, 7]) == [7, 0, 1, 2, 3, 4, 5, 6]
+    //
+    // [1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7]
+    //                       0
+    //                    1
+    //                   -7
+    //                 2
+    //                -6
+    //  7
+    // -1
     static constinit const int64_t *p = indices_lut.data() + N - 1;
-    const __m512i indices             = _mm512_loadu_epi64(p - s);
-    __m512d y                         = _mm512_permutexvar_pd(indices, static_cast<__m512d>(x));
+    if (s < 0)
+        s += N;
+    const __m512i indices = _mm512_loadu_epi64(p - s);
+    __m512d y             = _mm512_permutexvar_pd(indices, static_cast<__m512d>(x));
     return decltype(x){y};
 }
 
@@ -71,8 +89,10 @@ template <int S, class F, class Abi>
         return indices_lut;
     }();
     static constinit const int64_t *p = indices_lut.data() + N - 1;
-    const __m256i indices             = _mm256_loadu_epi64(p - s);
-    __m256d y                         = _mm256_permutexvar_pd(indices, static_cast<__m256d>(x));
+    if (s < 0)
+        s += N;
+    const __m256i indices = _mm256_loadu_epi64(p - s);
+    __m256d y             = _mm256_permutexvar_pd(indices, static_cast<__m256d>(x));
     return decltype(x){y};
 }
 
