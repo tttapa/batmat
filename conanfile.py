@@ -9,7 +9,7 @@ from conan.tools.scm import Git
 
 class BatmatRecipe(ConanFile):
     name = "batmat"
-    version = "0.0.2"
+    version = "0.0.3"
 
     license = "LGPL-3.0-or-later"
     author = "Pieter P <pieter.p.dev@outlook.com>"
@@ -30,12 +30,10 @@ class BatmatRecipe(ConanFile):
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
-        "dense_index_type": ["int", "long", "long long"],
     } | {k: [True, False] for k in bool_batmat_options}
     default_options = {
         "shared": False,
         "fPIC": True,
-        "dense_index_type": "long long",
     } | bool_batmat_options
 
     # Sources are located in the same place as this recipe, copy them to the recipe
