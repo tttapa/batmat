@@ -13,13 +13,15 @@ using batmat::index_t;
 using batmat::linalg::MatrixStructure;
 using batmat::matrix::StorageOrder;
 
-template <ptrdiff_t N, StorageOrder OA, StorageOrder OB, MatrixStructure S>
+template <ptrdiff_t N, StorageOrder OA, StorageOrder OB, MatrixStructure S, bool G = false>
 struct CopyConfig {
     using type                             = batmat::real_t;
     using abi                              = batmat::datapar::deduced_abi<type, N>;
     static constexpr StorageOrder order_A  = OA;
     static constexpr StorageOrder order_B  = OB;
     static constexpr MatrixStructure struc = S;
+    static constexpr bool Guanaqo          = G;
+    static_assert(!G || N == 1);
 };
 
 template <class Conf>
@@ -41,8 +43,12 @@ class CopyTest : public ::testing::Test {
         auto A = pad_A.block(padding, padding, rows, cols).as_const();
         auto B = pad_B.block(padding, padding, rows, cols);
 
-        batmat::linalg::copy(batmat::linalg::make_structured<Conf::struc>(A.batch(0)),
-                             batmat::linalg::make_structured<Conf::struc>(B.batch(0)));
+        if constexpr (Conf::Guanaqo)
+            batmat::linalg::copy(batmat::linalg::make_structured<Conf::struc>(A(0)),
+                                 batmat::linalg::make_structured<Conf::struc>(B(0)));
+        else
+            batmat::linalg::copy(batmat::linalg::make_structured<Conf::struc>(A.batch(0)),
+                                 batmat::linalg::make_structured<Conf::struc>(B.batch(0)));
 
         const index_t JI_adif = std::max<index_t>(0, cols - rows);
         const index_t IJ_adif = std::max<index_t>(0, rows - cols);
@@ -85,16 +91,22 @@ using enum MatrixStructure;
 // clang-format off
 using TestConfigs = ::testing::Types<
     // Rectangular
+    CopyConfig<1, ColMajor, ColMajor, General, true>, CopyConfig<1, RowMajor, ColMajor, General, true>,
+    CopyConfig<1, ColMajor, RowMajor, General, true>, CopyConfig<1, RowMajor, RowMajor, General, true>,
     CopyConfig<1, ColMajor, ColMajor, General>, CopyConfig<1, RowMajor, ColMajor, General>,
     CopyConfig<1, ColMajor, RowMajor, General>, CopyConfig<1, RowMajor, RowMajor, General>,
     CopyConfig<4, ColMajor, ColMajor, General>, CopyConfig<4, RowMajor, ColMajor, General>,
     CopyConfig<4, ColMajor, RowMajor, General>, CopyConfig<4, RowMajor, RowMajor, General>,
     // Lower trapezoidal
+    CopyConfig<1, ColMajor, ColMajor, LowerTriangular, true>, CopyConfig<1, RowMajor, ColMajor, LowerTriangular, true>,
+    CopyConfig<1, ColMajor, RowMajor, LowerTriangular, true>, CopyConfig<1, RowMajor, RowMajor, LowerTriangular, true>,
     CopyConfig<1, ColMajor, ColMajor, LowerTriangular>, CopyConfig<1, RowMajor, ColMajor, LowerTriangular>,
     CopyConfig<1, ColMajor, RowMajor, LowerTriangular>, CopyConfig<1, RowMajor, RowMajor, LowerTriangular>,
     CopyConfig<4, ColMajor, ColMajor, LowerTriangular>, CopyConfig<4, RowMajor, ColMajor, LowerTriangular>,
     CopyConfig<4, ColMajor, RowMajor, LowerTriangular>, CopyConfig<4, RowMajor, RowMajor, LowerTriangular>,
     // Upper trapezoidal
+    CopyConfig<1, ColMajor, ColMajor, UpperTriangular, true>, CopyConfig<1, RowMajor, ColMajor, UpperTriangular, true>,
+    CopyConfig<1, ColMajor, RowMajor, UpperTriangular, true>, CopyConfig<1, RowMajor, RowMajor, UpperTriangular, true>,
     CopyConfig<1, ColMajor, ColMajor, UpperTriangular>, CopyConfig<1, RowMajor, ColMajor, UpperTriangular>,
     CopyConfig<1, ColMajor, RowMajor, UpperTriangular>, CopyConfig<1, RowMajor, RowMajor, UpperTriangular>,
     CopyConfig<4, ColMajor, ColMajor, UpperTriangular>, CopyConfig<4, RowMajor, ColMajor, UpperTriangular>,

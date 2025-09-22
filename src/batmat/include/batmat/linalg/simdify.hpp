@@ -3,6 +3,7 @@
 #include <batmat/matrix/matrix.hpp>
 #include <batmat/matrix/view.hpp>
 #include <batmat/simd.hpp>
+#include <functional>
 #include <type_traits>
 
 namespace batmat::linalg {
@@ -30,6 +31,30 @@ template <class T, class S, class L, StorageOrder O>
 struct simdified_view_type<const batmat::matrix::View<T, index_t, S, S, L, O>> {
     using value_type   = std::remove_const_t<T>;
     using abi_type     = datapar::deduced_abi<value_type, S{}>;
+    using simd_type    = datapar::simd<value_type, abi_type>;
+    using stride       = datapar::simd_size<value_type, abi_type>;
+    using alignment    = datapar::simd_align<value_type, abi_type>;
+    using layer_stride = batmat::matrix::DefaultStride;
+    using type         = batmat::matrix::View<T, index_t, stride, stride, layer_stride, O>;
+    static_assert(stride::value * sizeof(value_type) >= alignment::value);
+};
+
+template <class T, class I, StorageOrder O>
+struct simdified_view_type<guanaqo::MatrixView<T, I, std::integral_constant<I, 1>, O>> {
+    using value_type   = std::remove_const_t<T>;
+    using abi_type     = datapar::scalar_abi<value_type>;
+    using simd_type    = datapar::simd<value_type, abi_type>;
+    using stride       = datapar::simd_size<value_type, abi_type>;
+    using alignment    = datapar::simd_align<value_type, abi_type>;
+    using layer_stride = batmat::matrix::DefaultStride;
+    using type         = batmat::matrix::View<T, index_t, stride, stride, layer_stride, O>;
+    static_assert(stride::value * sizeof(value_type) >= alignment::value);
+};
+
+template <class T, class I, StorageOrder O>
+struct simdified_view_type<const guanaqo::MatrixView<T, I, std::integral_constant<I, 1>, O>> {
+    using value_type   = std::remove_const_t<T>;
+    using abi_type     = datapar::scalar_abi<value_type>;
     using simd_type    = datapar::simd<value_type, abi_type>;
     using stride       = datapar::simd_size<value_type, abi_type>;
     using alignment    = datapar::simd_align<value_type, abi_type>;
@@ -139,19 +164,20 @@ inline constexpr bool simdify_compatible =
     (std::is_same_v<simdified_abi_t<V>, simdified_abi_t<Vs>> && ...);
 
 constexpr auto simdify(simdifiable auto &&a) -> simdified_view_t<decltype(a)> {
+    using T = std::remove_cvref_t<decltype(a)>;
     if constexpr (requires { a.data(); }) // TODO: can we make this consistent?
         return simdified_view_t<decltype(a)>{{
             .data         = a.data(),
-            .rows         = a.rows(),
-            .cols         = a.cols(),
-            .outer_stride = a.outer_stride(),
+            .rows         = std::invoke(&T::rows, a),
+            .cols         = std::invoke(&T::cols, a),
+            .outer_stride = std::invoke(&T::outer_stride, a),
         }};
     else
         return simdified_view_t<decltype(a)>{{
             .data         = a.data,
-            .rows         = a.rows(),
-            .cols         = a.cols(),
-            .outer_stride = a.outer_stride(),
+            .rows         = std::invoke(&T::rows, a),
+            .cols         = std::invoke(&T::cols, a),
+            .outer_stride = std::invoke(&T::outer_stride, a),
         }};
 }
 
