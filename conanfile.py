@@ -1,7 +1,6 @@
 import os
 
 from conan import ConanFile
-from conan.errors import ConanInvalidConfiguration
 from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
 from conan.tools.build import can_run
 from conan.tools.files import save
@@ -12,11 +11,10 @@ class BatmatRecipe(ConanFile):
     name = "batmat"
     version = "0.0.2"
 
-    # Optional metadata
-    license = "LGPLv3"
+    license = "LGPL-3.0-or-later"
     author = "Pieter P <pieter.p.dev@outlook.com>"
     url = "https://github.com/tttapa/batmat"
-    description = "Linear solvers and adapters for solving KKT systems."
+    description = "Fast linear algebra routines for batches of small matrices."
     topics = "scientific software"
 
     # Binary configuration
@@ -66,26 +64,19 @@ class BatmatRecipe(ConanFile):
         self.requires("guanaqo/1.0.0-alpha.17", transitive_headers=True, transitive_libs=True)
         if self.options.get_safe("with_benchmarks"):
             self.requires("benchmark/1.9.4")
-        self.test_requires("eigen/tttapa.20240516")
-        self.test_requires("gtest/1.17.0")
         if self.options.get_safe("with_openmp") and self.settings.compiler == "clang":
             self.requires(f"llvm-openmp/[~{self.settings.compiler.version}]")
         if self.options.get_safe("with_gsi_hpc_simd"):
             self.requires("gsi-hpc-simd/tttapa.20250625", transitive_headers=True)
 
+    def build_requirements(self):
+        self.test_requires("eigen/3.4.0")
+        self.test_requires("gtest/1.17.0")
+        self.tool_requires("cmake/[>=3.24 <5]")
+
     def config_options(self):
         if self.settings.get_safe("os") == "Windows":
             self.options.rm_safe("fPIC")
-
-    def validate(self):
-        guanaqo_options = self.dependencies["guanaqo"].options
-        index_t = guanaqo_options.get_safe("blas_index_type")
-        if index_t and index_t != self.options.dense_index_type:
-            msg = "guanaqo and batmat blas_index_type/dense_index_type mismatch"
-            raise ConanInvalidConfiguration(msg)
-        if index_t is None and self.options.dense_index_type != "int":
-            msg = "dense_index_type should be int when using OpenBLAS"
-            raise ConanInvalidConfiguration(msg)
 
     def layout(self):
         cmake_layout(self)
@@ -93,12 +84,13 @@ class BatmatRecipe(ConanFile):
 
     def generate(self):
         tc = CMakeToolchain(self)
-        index_t = self.options.get_safe("dense_index_type", default="int")
-        tc.variables["BATMAT_DENSE_INDEX_TYPE"] = index_t
         for k in self.bool_batmat_options:
             value = self.options.get_safe(k, None)
             if value is not None and value.value is not None:
                 tc.variables["BATMAT_" + k.upper()] = bool(value)
+        guanaqo = self.dependencies["guanaqo"]
+        index_type = guanaqo.options.get_safe("blas_index_type", default="int")
+        tc.variables["BATMAT_DENSE_INDEX_TYPE"] = index_type
         if can_run(self):
             tc.variables["BATMAT_FORCE_TEST_DISCOVERY"] = True
         tc.generate()
