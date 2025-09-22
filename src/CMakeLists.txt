@@ -1,5 +1,4 @@
 include(cmake/Library.cmake)
-include(cmake/BLAS.cmake)
 find_package(guanaqo REQUIRED)
 if (BATMAT_WITH_OPENMP)
     find_package(OpenMP REQUIRED COMPONENTS CXX)

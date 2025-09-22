@@ -1,6 +1,7 @@
 import os
 
 from conan import ConanFile
+from conan.errors import ConanInvalidConfiguration
 from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
 from conan.tools.build import can_run
 from conan.tools.files import save
@@ -22,8 +23,6 @@ class BatmatRecipe(ConanFile):
     package_type = "library"
     settings = "os", "compiler", "build_type", "arch"
     bool_batmat_options = {
-        "with_openblas": True,
-        "with_mkl": False,
         "with_openmp": False,
         "with_benchmarks": False,
         "with_cpu_time": False,
@@ -64,13 +63,11 @@ class BatmatRecipe(ConanFile):
     generators = ("CMakeDeps",)
 
     def requirements(self):
-        self.requires("guanaqo/1.0.0-alpha.16", transitive_headers=True, transitive_libs=True, force=True)
-        if self.options.get_safe("with_openblas"):
-            self.requires("openblas/0.3.27")
+        self.requires("guanaqo/1.0.0-alpha.17", transitive_headers=True, transitive_libs=True)
         if self.options.get_safe("with_benchmarks"):
-            self.requires("benchmark/1.8.4")
-        self.test_requires("eigen/tttapa.20250504", force=True)
-        self.test_requires("gtest/1.15.0")
+            self.requires("benchmark/1.9.4")
+        self.test_requires("eigen/tttapa.20240516")
+        self.test_requires("gtest/1.17.0")
         if self.options.get_safe("with_openmp") and self.settings.compiler == "clang":
             self.requires(f"llvm-openmp/[~{self.settings.compiler.version}]")
         if self.options.get_safe("with_gsi_hpc_simd"):
@@ -80,13 +77,15 @@ class BatmatRecipe(ConanFile):
         if self.settings.get_safe("os") == "Windows":
             self.options.rm_safe("fPIC")
 
-    def configure(self):
-        # There is currently no 64-bit indices option for OpenBLAS using Conan
-        if self.options.get_safe("with_openblas"):
-            self.options.rm_safe("dense_index_type")
-        if not self.options.get_safe("with_benchmarks"):
-            self.options.rm_safe("with_mkl")
-            self.options.rm_safe("with_openblas")
+    def validate(self):
+        guanaqo_options = self.dependencies["guanaqo"].options
+        index_t = guanaqo_options.get_safe("blas_index_type")
+        if index_t and index_t != self.options.dense_index_type:
+            msg = "guanaqo and batmat blas_index_type/dense_index_type mismatch"
+            raise ConanInvalidConfiguration(msg)
+        if index_t is None and self.options.dense_index_type != "int":
+            msg = "dense_index_type should be int when using OpenBLAS"
+            raise ConanInvalidConfiguration(msg)
 
     def layout(self):
         cmake_layout(self)
