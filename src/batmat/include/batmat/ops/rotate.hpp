@@ -7,39 +7,43 @@ namespace batmat::ops {
 
 namespace detail {
 
+/*
+ * Note: The return types -> F are crucial to avoid a bug in GCC. https://godbolt.org/z/Phfvsq7hY
+ */
+
 template <class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> rot(datapar::simd<F, Abi> x, int s) {
     assert(s <= 0 || static_cast<size_t>(+s) < x.size());
     assert(s >= 0 || static_cast<size_t>(-s) < x.size());
     const int n = x.size();
-    return datapar::simd<F, Abi>{[&](int j) { return x[(n + j - s) % n]; }};
+    return datapar::simd<F, Abi>{[&](int j) -> F { return x[(n + j - s) % n]; }};
 }
 
 template <int S, class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> rotl(datapar::simd<F, Abi> x) {
     static_assert(S > 0 && S < x.size());
     const int n = x.size();
-    return datapar::simd<F, Abi>{[&](int j) { return x[(j + S) % n]; }};
+    return datapar::simd<F, Abi>{[&](int j) -> F { return x[(j + S) % n]; }};
 }
 
 template <int S, class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> rotr(datapar::simd<F, Abi> x) {
     static_assert(S > 0 && S < x.size());
     const int n = x.size();
-    return datapar::simd<F, Abi>{[&](int j) { return x[(n + j - S) % n]; }};
+    return datapar::simd<F, Abi>{[&](int j) -> F { return x[(n + j - S) % n]; }};
 }
 
 template <int S, class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> shiftl(datapar::simd<F, Abi> x) {
     static_assert(S > 0 && S < x.size());
     const int n = x.size();
-    return datapar::simd<F, Abi>{[&](int j) { return j + S < n ? x[j + S] : F{}; }};
+    return datapar::simd<F, Abi>{[&](int j) -> F { return j + S < n ? x[j + S] : F{}; }};
 }
 
 template <int S, class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> shiftr(datapar::simd<F, Abi> x) {
     static_assert(S > 0 && S < x.size());
-    return datapar::simd<F, Abi>{[&](int j) { return j >= S ? x[j - S] : F(0); }};
+    return datapar::simd<F, Abi>{[&](int j) -> F { return j >= S ? x[j - S] : F{}; }};
 }
 
 #if defined(__AVX512F__)

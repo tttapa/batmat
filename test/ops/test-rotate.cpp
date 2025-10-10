@@ -13,64 +13,64 @@ using batmat::ops::shiftr;
 
 TEST(Rotate, rotl4) {
     using simd      = batmat::datapar::deduced_simd<real_t, 4>;
-    simd x          = batmat::datapar::from_values<simd>(1., 2., 3., 4.);
-    simd y_expected = batmat::datapar::from_values<simd>(2., 3., 4., 1.);
+    simd x          = batmat::datapar::from_values<simd>(1.1, 2.2, 3.3, 4.4);
+    simd y_expected = batmat::datapar::from_values<simd>(2.2, 3.3, 4.4, 1.1);
     simd y          = rotl<1>(x);
     EXPECT_TRUE(all_of(y == y_expected));
 }
 
 TEST(Rotate, rotl4var) {
     using simd      = batmat::datapar::deduced_simd<real_t, 4>;
-    simd x          = batmat::datapar::from_values<simd>(1., 2., 3., 4.);
-    simd y_expected = batmat::datapar::from_values<simd>(2., 3., 4., 1.);
+    simd x          = batmat::datapar::from_values<simd>(1.1, 2.2, 3.3, 4.4);
+    simd y_expected = batmat::datapar::from_values<simd>(2.2, 3.3, 4.4, 1.1);
     simd y          = rot(x, -1);
     EXPECT_TRUE(all_of(y == y_expected));
 }
 
 TEST(Rotate, rotl8var) {
     using simd      = batmat::datapar::deduced_simd<real_t, 8>;
-    simd x          = batmat::datapar::from_values<simd>(1., 2., 3., 4., 5., 6., 7., 8.);
-    simd y_expected = batmat::datapar::from_values<simd>(2., 3., 4., 5., 6., 7., 8., 1.);
+    simd x          = batmat::datapar::from_values<simd>(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8);
+    simd y_expected = batmat::datapar::from_values<simd>(2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 1.1);
     simd y          = rot(x, -1);
     EXPECT_TRUE(all_of(y == y_expected));
 }
 
 TEST(Rotate, rotl8var2) {
     using simd      = batmat::datapar::deduced_simd<real_t, 8>;
-    simd x          = batmat::datapar::from_values<simd>(1., 2., 3., 4., 5., 6., 7., 8.);
-    simd y_expected = batmat::datapar::from_values<simd>(2., 3., 4., 5., 6., 7., 8., 1.);
+    simd x          = batmat::datapar::from_values<simd>(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8);
+    simd y_expected = batmat::datapar::from_values<simd>(2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 1.1);
     simd y          = rot(x, -1);
     EXPECT_TRUE(all_of(y == y_expected));
 }
 
 TEST(Rotate, rotr4) {
     using simd      = batmat::datapar::deduced_simd<real_t, 4>;
-    simd x          = batmat::datapar::from_values<simd>(1., 2., 3., 4.);
-    simd y_expected = batmat::datapar::from_values<simd>(4., 1., 2., 3.);
+    simd x          = batmat::datapar::from_values<simd>(1.1, 2.2, 3.3, 4.4);
+    simd y_expected = batmat::datapar::from_values<simd>(4.4, 1.1, 2.2, 3.3);
     simd y          = rotr<1>(x);
     EXPECT_TRUE(all_of(y == y_expected));
 }
 
 TEST(Rotate, rotr4var) {
     using simd      = batmat::datapar::deduced_simd<real_t, 4>;
-    simd x          = batmat::datapar::from_values<simd>(1., 2., 3., 4.);
-    simd y_expected = batmat::datapar::from_values<simd>(4., 1., 2., 3.);
+    simd x          = batmat::datapar::from_values<simd>(1.1, 2.2, 3.3, 4.4);
+    simd y_expected = batmat::datapar::from_values<simd>(4.4, 1.1, 2.2, 3.3);
     simd y          = rot(x, 1);
     EXPECT_TRUE(all_of(y == y_expected));
 }
 
 TEST(Rotate, rotr8var) {
     using simd      = batmat::datapar::deduced_simd<real_t, 8>;
-    simd x          = batmat::datapar::from_values<simd>(1., 2., 3., 4., 5., 6., 7., 8.);
-    simd y_expected = batmat::datapar::from_values<simd>(8., 1., 2., 3., 4., 5., 6., 7.);
+    simd x          = batmat::datapar::from_values<simd>(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8);
+    simd y_expected = batmat::datapar::from_values<simd>(8.8, 1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7);
     simd y          = rot(x, 1);
     EXPECT_TRUE(all_of(y == y_expected));
 }
 
 TEST(Rotate, rotr8var2) {
     using simd      = batmat::datapar::deduced_simd<real_t, 8>;
-    simd x          = batmat::datapar::from_values<simd>(1., 2., 3., 4., 5., 6., 7., 8.);
-    simd y_expected = batmat::datapar::from_values<simd>(7., 8., 1., 2., 3., 4., 5., 6.);
+    simd x          = batmat::datapar::from_values<simd>(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8);
+    simd y_expected = batmat::datapar::from_values<simd>(7.7, 8.8, 1.1, 2.2, 3.3, 4.4, 5.5, 6.6);
     simd y          = rot(x, 2);
     EXPECT_TRUE(all_of(y == y_expected));
 }
@@ -130,10 +130,10 @@ TYPED_TEST(RotateTest, rotl) {
     using simd      = batmat::datapar::simd<real_t, typename TypeParam::abi>;
     constexpr int N = simd::size();
     constexpr int S = TypeParam::shift;
-    simd x{[&](int i) { return static_cast<real_t>(i + 1); }};
+    simd x{[&](int i) { return static_cast<real_t>((i + 1) * 1.1); }};
 
     simd y = rotl<S>(x);
-    simd y_expected{[&](int i) { return x[(i + S) % N]; }};
+    simd y_expected{[&](int i) -> real_t { return x[(i + S) % N]; }};
 
     EXPECT_TRUE(all_of(y == y_expected));
 }
@@ -142,10 +142,10 @@ TYPED_TEST(RotateTest, rotr) {
     using simd      = batmat::datapar::simd<real_t, typename TypeParam::abi>;
     constexpr int N = simd::size();
     constexpr int S = TypeParam::shift;
-    simd x{[&](int i) { return static_cast<real_t>(i + 1); }};
+    simd x{[&](int i) { return static_cast<real_t>((i + 1) * 1.1); }};
 
     simd y = rotr<S>(x);
-    simd y_expected{[&](int i) { return x[(i + N - S) % N]; }};
+    simd y_expected{[&](int i) -> real_t { return x[(i + N - S) % N]; }};
 
     EXPECT_TRUE(all_of(y == y_expected));
 }
@@ -154,10 +154,10 @@ TYPED_TEST(RotateTest, shiftl) {
     using simd      = batmat::datapar::simd<real_t, typename TypeParam::abi>;
     constexpr int N = simd::size();
     constexpr int S = TypeParam::shift;
-    simd x{[&](int i) { return static_cast<real_t>(i + 1); }};
+    simd x{[&](int i) { return static_cast<real_t>((i + 1) * 1.1); }};
 
     simd y = shiftl<S>(x);
-    simd y_expected{[&](int i) { return (i + S < N) ? x[i + S] : 0.0; }};
+    simd y_expected{[&](int i) -> real_t { return (i + S < N) ? x[i + S] : real_t{}; }};
 
     EXPECT_TRUE(all_of(y == y_expected));
 }
@@ -165,10 +165,10 @@ TYPED_TEST(RotateTest, shiftl) {
 TYPED_TEST(RotateTest, shiftr) {
     using simd      = batmat::datapar::simd<real_t, typename TypeParam::abi>;
     constexpr int S = TypeParam::shift;
-    simd x{[&](int i) { return static_cast<real_t>(i + 1); }};
+    simd x{[&](int i) { return static_cast<real_t>((i + 1) * 1.1); }};
 
     simd y = shiftr<S>(x);
-    simd y_expected{[&](int i) { return (i >= S) ? x[i - S] : 0.0; }};
+    simd y_expected{[&](int i) -> real_t { return (i >= S) ? x[i - S] : real_t{}; }};
 
     EXPECT_TRUE(all_of(y == y_expected));
 }
