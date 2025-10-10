@@ -94,7 +94,7 @@ enum class LoopDir {
         }
     }
 #else
-    pool->sync_run_all<index_t>(func);
+    pool_sync_run_all<index_t>(func);
 #endif
 }
 
@@ -111,7 +111,7 @@ enum class LoopDir {
         }
     }
 #else
-    pool->sync_run_n<index_t>(num_threads, func);
+    pool_sync_run_n<index_t>(num_threads, func);
 #endif
 }
 

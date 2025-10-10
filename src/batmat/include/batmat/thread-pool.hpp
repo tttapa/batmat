@@ -99,8 +99,27 @@ class thread_pool {
     [[nodiscard]] size_t size() const { return threads.size(); }
 };
 
+namespace detail {
+extern std::mutex pool_mtx;
 extern std::optional<thread_pool> pool;
+} // namespace detail
 
 void pool_set_num_threads(size_t num_threads);
+
+template <class I = size_t, class F>
+void pool_sync_run_all(F &&f) {
+    std::lock_guard<std::mutex> lck(detail::pool_mtx);
+    if (!detail::pool)
+        return;
+    detail::pool->sync_run_all(std::forward<F>(f));
+}
+
+template <class I = size_t, class F>
+void pool_sync_run_n(I n, F &&f) {
+    std::lock_guard<std::mutex> lck(detail::pool_mtx);
+    if (!detail::pool || detail::pool->size() < static_cast<size_t>(n))
+        detail::pool.emplace(static_cast<size_t>(n));
+    detail::pool->sync_run_n(n, std::forward<F>(f));
+}
 
 } // namespace batmat
