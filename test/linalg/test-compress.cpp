@@ -2,9 +2,14 @@
 #include <algorithm>
 #include <cassert>
 #include <print>
+#include <random>
 
 #include <batmat/linalg/compress.hpp>
+#include <batmat/linalg/gemm-diag.hpp>
+#include <batmat/linalg/gemm.hpp>
 #include <batmat/linalg/uview.hpp>
+
+#include "eigen-matchers.hpp"
 
 TEST(linalg, compress) {
     using namespace batmat;
@@ -289,4 +294,58 @@ TEST(linalg, compress2) {
     EXPECT_TRUE(std::ranges::equal(S_expected_data, S_out));
 
     // TODO: check A_out
+}
+
+using I4 = std::integral_constant<batmat::index_t, 4>;
+
+TEST(linalg, compressSqrt) {
+    using namespace batmat;
+    using namespace batmat::linalg;
+    using Mat = batmat::matrix::Matrix<real_t, index_t, I4, I4>;
+    Mat A{{.rows = 19, .cols = 231}}, Acompact{{.rows = 19, .cols = 231}};
+    Mat S{{.rows = 231, .cols = 1}};
+    std::mt19937_64 rng{12345};
+    std::uniform_real_distribution<real_t> dist{0, 1};
+    std::ranges::generate(A.begin(), A.end(), [&]() { return dist(rng); });
+    std::ranges::generate(S.begin(), S.end(), [&]() { return dist(rng); });
+    std::bernoulli_distribution bdist{0.333};
+    for (auto &s : S)
+        if (bdist(rng))
+            s = 0;
+    Mat ASAᵀ{{.rows = 19, .cols = 19}}, ASAᵀcompact{{.rows = 19, .cols = 19}};
+    syrk_diag_add(A, tril(ASAᵀ), S);
+    auto m_compact = compress_masks_sqrt(A, S, Acompact);
+    syrk_add(Acompact.left_cols(m_compact), tril(ASAᵀcompact));
+
+    const auto ε = std::numeric_limits<real_t>::epsilon() * 100;
+    for (index_t l = 0; l < ASAᵀ.depth(); ++l) {
+        EXPECT_THAT(as_eigen(ASAᵀcompact(l)), EigenAlmostEqual(as_eigen(ASAᵀ(l)), ε))
+            << "at layer " << l;
+    }
+}
+
+TEST(linalg, compressSqrtInplace) {
+    using namespace batmat;
+    using namespace batmat::linalg;
+    using Mat = batmat::matrix::Matrix<real_t, index_t, I4, I4>;
+    Mat A{{.rows = 19, .cols = 231}};
+    Mat S{{.rows = 231, .cols = 1}};
+    std::mt19937_64 rng{12345};
+    std::uniform_real_distribution<real_t> dist{0, 1};
+    std::ranges::generate(A.begin(), A.end(), [&]() { return dist(rng); });
+    std::ranges::generate(S.begin(), S.end(), [&]() { return dist(rng); });
+    std::bernoulli_distribution bdist{0.333};
+    for (auto &s : S)
+        if (bdist(rng))
+            s = 0;
+    Mat ASAᵀ{{.rows = 19, .cols = 19}}, ASAᵀcompact{{.rows = 19, .cols = 19}};
+    syrk_diag_add(A, tril(ASAᵀ), S);
+    auto m_compact = compress_masks_sqrt(A, S, A);
+    syrk_add(A.left_cols(m_compact), tril(ASAᵀcompact));
+
+    const auto ε = std::numeric_limits<real_t>::epsilon() * 100;
+    for (index_t l = 0; l < ASAᵀ.depth(); ++l) {
+        EXPECT_THAT(as_eigen(ASAᵀcompact(l)), EigenAlmostEqual(as_eigen(ASAᵀ(l)), ε))
+            << "at layer " << l;
+    }
 }
