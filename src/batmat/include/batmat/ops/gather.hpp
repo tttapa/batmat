@@ -275,17 +275,17 @@ datapar::deduced_simd<T, N> gather(const T *p, datapar::deduced_simd<I, N> idx) 
 
 #if __AVX2__ // TODO: write optimized intrinsic variants
 template <>
-datapar::deduced_simd<double, 8> gather<double, 8, int>(const double *p,
-                                                        datapar::deduced_simd<int, 8> idx) {
+inline datapar::deduced_simd<double, 8> gather<double, 8, int>(const double *p,
+                                                               datapar::deduced_simd<int, 8> idx) {
     return datapar::deduced_simd<double, 8>{[=](auto i) { return idx[i] >= 0 ? p[idx[i]] : 0.0; }};
 }
 template <>
-datapar::deduced_simd<double, 2> gather<double, 2, int>(const double *p,
-                                                        datapar::deduced_simd<int, 2> idx) {
+inline datapar::deduced_simd<double, 2> gather<double, 2, int>(const double *p,
+                                                               datapar::deduced_simd<int, 2> idx) {
     return datapar::deduced_simd<double, 2>{[=](auto i) { return idx[i] >= 0 ? p[idx[i]] : 0.0; }};
 }
 template <>
-datapar::deduced_simd<float, 4>
+inline datapar::deduced_simd<float, 4>
 gather<float, 4, long long>(const float *p, datapar::deduced_simd<long long, 4> idx) {
     return datapar::deduced_simd<float, 4>{[=](auto i) { return idx[i] >= 0 ? p[idx[i]] : 0.0f; }};
 }
