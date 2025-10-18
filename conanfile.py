@@ -68,13 +68,17 @@ class BatmatRecipe(ConanFile):
             self.requires("gsi-hpc-simd/tttapa.20250625", transitive_headers=True)
 
     def build_requirements(self):
-        self.test_requires("eigen/3.4.0")
+        self.test_requires("eigen/5.0.0")
         self.test_requires("gtest/1.17.0")
         self.tool_requires("cmake/[>=3.24 <5]")
 
     def config_options(self):
         if self.settings.get_safe("os") == "Windows":
             self.options.rm_safe("fPIC")
+
+    def configure(self):
+        if self.options.get_safe("with_benchmarks"):
+            self.options["guanaqo/*"].with_blas = True
 
     def layout(self):
         cmake_layout(self)

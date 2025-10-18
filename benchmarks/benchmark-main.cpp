@@ -1,6 +1,5 @@
 #include <benchmark/benchmark.h>
 #include <batmat-version.h>
-#include <cstdlib>
 #include <string>
 
 #include <batmat/openmp.h>

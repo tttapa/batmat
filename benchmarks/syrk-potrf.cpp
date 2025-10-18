@@ -1,38 +1,43 @@
 #include <batmat/linalg/copy.hpp>
-#include <batmat/linalg/trtri.hpp>
+#include <batmat/linalg/potrf.hpp>
 #include <benchmark/benchmark.h>
 #include <guanaqo/blas/hl-blas-interface.hpp>
-#include <guanaqo/mat-view.hpp>
 #include <random>
 
 using namespace batmat::linalg;
 using batmat::index_t;
 using batmat::real_t;
 
-template <class Abi, StorageOrder OA = StorageOrder::ColMajor, StorageOrder OB = OA>
-void trtri(benchmark::State &state) {
+template <class Abi, StorageOrder OA, StorageOrder OC = OA>
+void syrk(benchmark::State &state) {
     std::mt19937 rng{12345};
     std::uniform_real_distribution<real_t> uni{-1, 1};
 
     const index_t d = BATMAT_BENCHMARK_DEPTH;
     const auto n    = static_cast<index_t>(state.range(0));
     matrix<real_t, Abi, OA> A{{.depth = d, .rows = n, .cols = n}};
-    matrix<real_t, Abi, OB> D{{.depth = d, .rows = n, .cols = n}};
+    matrix<real_t, Abi, OC> C{{.depth = d, .rows = n, .cols = n}};
+    matrix<real_t, Abi, OC> D{{.depth = d, .rows = n, .cols = n}};
     std::ranges::generate(A, [&] { return uni(rng); });
+    std::ranges::generate(C, [&] { return uni(rng); });
     std::ranges::generate(D, [&] { return uni(rng); });
-    A.view().add_to_diagonal(10 * static_cast<real_t>(n));
+    C.view().add_to_diagonal(10 * static_cast<real_t>(n));
     for (auto _ : state)
-        for (index_t l = 0; l < A.num_batches(); ++l)
-            if constexpr (decltype(A)::batch_size_type::value == 1) {
+        for (index_t l = 0; l < C.num_batches(); ++l)
+            if constexpr (decltype(C)::batch_size_type::value == 1) {
                 state.PauseTiming();
-                copy(tril(A.batch(l)), tril(D.batch(l)));
+                copy(tril(C.batch(l)), tril(D.batch(l)));
                 state.ResumeTiming();
-                guanaqo::blas::xtrtri_LN(D(l));
+                if constexpr (OA == StorageOrder::ColMajor)
+                    guanaqo::blas::xsyrk_LN<real_t>(1, A(l), 1, D(l));
+                else
+                    guanaqo::blas::xsyrk_LT<real_t>(1, A(l).transposed(), 1, D(l));
+                guanaqo::blas::xpotrf_L(D(l));
             } else {
-                trtri(tril(A.batch(l)), tril(D.batch(l)));
+                syrk_add_potrf(A.batch(l), tril(C.batch(l)), tril(D.batch(l)));
             }
     const auto nd = static_cast<double>(n), dd = static_cast<double>(d);
-    auto flop_cnt                 = dd * std::pow(nd, 3) / 6;
+    auto flop_cnt                 = 2 * dd * std::pow(nd, 3) / 3;
     state.counters["GFLOP count"] = {1e-9 * flop_cnt};
     state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
     state.counters["depth"]  = {dd};
@@ -56,6 +61,9 @@ using default_abi = deduced_abi<real_t, 8>;
 using default_abi = deduced_abi<real_t, 4>;
 #endif
 
-BENCHMARK(trtri<default_abi, RowMajor>)->BM_RANGES();
-BENCHMARK(trtri<default_abi, ColMajor>)->BM_RANGES();
-BENCHMARK(trtri<scalar_abi, ColMajor>)->BM_RANGES();
+BENCHMARK(syrk<default_abi, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(syrk<default_abi, ColMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(syrk<default_abi, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(syrk<default_abi, RowMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(syrk<scalar_abi, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(syrk<scalar_abi, RowMajor, ColMajor>)->BM_RANGES();

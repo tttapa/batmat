@@ -1,52 +1,41 @@
 #include <batmat/linalg/gemm.hpp>
 #include <benchmark/benchmark.h>
+#include <guanaqo/blas/hl-blas-interface.hpp>
 #include <random>
-
-#ifndef KQT_BENCHMARK_DEPTH
-#define KQT_BENCHMARK_DEPTH 64
-#endif
 
 using namespace batmat::linalg;
 using batmat::index_t;
 using batmat::real_t;
 
-template <class Abi, StorageOrder OA, StorageOrder OB, PackingSelector PA, PackingSelector PB,
-          bool Tiling>
-void dgemm(benchmark::State &state) {
+template <class Abi, StorageOrder OA, StorageOrder OB,
+          PackingSelector PA = PackingSelector::Transpose,
+          PackingSelector PB = PackingSelector::Transpose, bool Tiling = true>
+void gemm(benchmark::State &state) {
     std::mt19937 rng{12345};
     std::normal_distribution<real_t> nrml{0, 1};
 
-    const index_t d = KQT_BENCHMARK_DEPTH;
+    const index_t d = BATMAT_BENCHMARK_DEPTH;
     const auto n    = static_cast<index_t>(state.range(0));
-    matrix<real_t, Abi, OA> A{{
-        .depth = d,
-        .rows  = n,
-        .cols  = n,
-    }};
-    matrix<real_t, Abi, OB> B{{
-        .depth = d,
-        .rows  = n,
-        .cols  = n,
-    }};
-    matrix<real_t, Abi> C{{
-        .depth = d,
-        .rows  = n,
-        .cols  = n,
-    }};
+    matrix<real_t, Abi, OA> A{{.depth = d, .rows = n, .cols = n}};
+    matrix<real_t, Abi, OB> B{{.depth = d, .rows = n, .cols = n}};
+    matrix<real_t, Abi> C{{.depth = d, .rows = n, .cols = n}};
     std::ranges::generate(A, [&] { return nrml(rng); });
     std::ranges::generate(B, [&] { return nrml(rng); });
     std::ranges::generate(C, [&] { return nrml(rng); });
-    if constexpr (Tiling) {
-        for (auto _ : state)
-            for (index_t l = 0; l < A.num_batches(); ++l)
+    for (auto _ : state)
+        for (index_t l = 0; l < A.num_batches(); ++l)
+            if constexpr (decltype(A)::batch_size_type::value == 1) {
+                namespace blas = guanaqo::blas;
+                if constexpr (OA == StorageOrder::ColMajor && OB == StorageOrder::ColMajor)
+                    blas::xgemm_NN<real_t>(1, A(l), B(l), 0, C(l));
+                else if constexpr (OA == StorageOrder::ColMajor && OB == StorageOrder::RowMajor)
+                    blas::xgemm_NT<real_t>(1, A(l), B(l).transposed(), 0, C(l));
+                else if constexpr (OA == StorageOrder::RowMajor && OB == StorageOrder::ColMajor)
+                    blas::xgemm_TN<real_t>(1, A(l).transposed(), B(l), 0, C(l));
+                else // if constexpr (OA == StorageOrder::RowMajor && OB == StorageOrder::RowMajor)
+                    blas::xgemm_TT<real_t>(1, A(l).transposed(), B(l).transposed(), 0, C(l));
+            } else
                 gemm(A.batch(l), B.batch(l), C.batch(l), {!Tiling, PA, PB});
-    } else {
-        for (auto _ : state)
-            for (index_t l = 0; l < A.num_batches(); ++l)
-                micro_kernels::gemm::gemm_copy_register<real_t, Abi, {}>(
-                    A.batch(l).as_const(), B.batch(l).as_const(),
-                    std::optional<view<const real_t, Abi>>{}, C.batch(l));
-    }
     const auto nd = static_cast<double>(n), dd = static_cast<double>(d);
     auto flop_cnt                 = dd * std::pow(nd, 3);
     state.counters["GFLOP count"] = {1e-9 * flop_cnt};
@@ -55,6 +44,7 @@ void dgemm(benchmark::State &state) {
 }
 
 using batmat::datapar::deduced_abi;
+using scalar_abi = batmat::datapar::scalar_abi<real_t>;
 
 using enum StorageOrder;
 using enum PackingSelector;
@@ -62,7 +52,8 @@ using enum PackingSelector;
     DenseRange(1, 63, 1)                                                                           \
         ->DenseRange(64, 127, 4)                                                                   \
         ->DenseRange(128, 255, 16)                                                                 \
-        ->DenseRange(256, 512, 32)                                                                 \
+        ->DenseRange(256, 511, 32)                                                                 \
+        ->DenseRange(512, 1024, 128)                                                               \
         ->MeasureProcessCPUTime()                                                                  \
         ->UseRealTime()
 #ifdef __AVX512F__
@@ -70,29 +61,36 @@ using default_abi = deduced_abi<real_t, 8>;
 #else
 using default_abi = deduced_abi<real_t, 4>;
 #endif
-BENCHMARK(dgemm<default_abi, RowMajor, ColMajor, Transpose, Transpose, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, RowMajor, RowMajor, Transpose, Transpose, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, ColMajor, ColMajor, Transpose, Transpose, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, ColMajor, RowMajor, Transpose, Transpose, true>)->BM_RANGES();
 
-BENCHMARK(dgemm<default_abi, RowMajor, ColMajor, Never, Never, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, RowMajor, RowMajor, Never, Never, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, ColMajor, ColMajor, Never, Never, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, ColMajor, RowMajor, Never, Never, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, RowMajor, ColMajor, Always, Always, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, RowMajor, RowMajor, Always, Always, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, ColMajor, ColMajor, Always, Always, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, ColMajor, RowMajor, Always, Always, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, RowMajor, ColMajor, Never, Always, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, RowMajor, RowMajor, Never, Always, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, ColMajor, ColMajor, Never, Always, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, ColMajor, RowMajor, Never, Always, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, RowMajor, ColMajor, Always, Never, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, RowMajor, RowMajor, Always, Never, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, ColMajor, ColMajor, Always, Never, true>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, ColMajor, RowMajor, Always, Never, true>)->BM_RANGES();
 
-BENCHMARK(dgemm<default_abi, RowMajor, ColMajor, Never, Never, false>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, RowMajor, RowMajor, Never, Never, false>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, ColMajor, ColMajor, Never, Never, false>)->BM_RANGES();
-BENCHMARK(dgemm<default_abi, ColMajor, RowMajor, Never, Never, false>)->BM_RANGES();
+BENCHMARK(gemm<default_abi, RowMajor, ColMajor, Transpose, Always, true>)->BM_RANGES();
+BENCHMARK(gemm<default_abi, RowMajor, RowMajor, Transpose, Always, true>)->BM_RANGES();
+BENCHMARK(gemm<default_abi, ColMajor, ColMajor, Transpose, Always, true>)->BM_RANGES();
+BENCHMARK(gemm<default_abi, ColMajor, RowMajor, Transpose, Always, true>)->BM_RANGES();
+
+BENCHMARK(gemm<default_abi, RowMajor, ColMajor, Never, Never, true>)->BM_RANGES();
+BENCHMARK(gemm<default_abi, RowMajor, RowMajor, Never, Never, true>)->BM_RANGES();
+BENCHMARK(gemm<default_abi, ColMajor, ColMajor, Never, Never, true>)->BM_RANGES();
+BENCHMARK(gemm<default_abi, ColMajor, RowMajor, Never, Never, true>)->BM_RANGES();
+
+BENCHMARK(gemm<default_abi, RowMajor, ColMajor, Transpose, Always, false>)->BM_RANGES();
+BENCHMARK(gemm<default_abi, RowMajor, RowMajor, Transpose, Always, false>)->BM_RANGES();
+BENCHMARK(gemm<default_abi, ColMajor, ColMajor, Transpose, Always, false>)->BM_RANGES();
+BENCHMARK(gemm<default_abi, ColMajor, RowMajor, Transpose, Always, false>)->BM_RANGES();
+
+BENCHMARK(gemm<scalar_abi, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(gemm<scalar_abi, RowMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(gemm<scalar_abi, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(gemm<scalar_abi, ColMajor, RowMajor>)->BM_RANGES();
+
+#if 0
+BENCHMARK(gemm<default_abi, RowMajor, ColMajor, Transpose, Transpose, true>)->BM_RANGES();
+BENCHMARK(gemm<default_abi, RowMajor, RowMajor, Transpose, Transpose, true>)->BM_RANGES();
+BENCHMARK(gemm<default_abi, ColMajor, ColMajor, Transpose, Transpose, true>)->BM_RANGES();
+BENCHMARK(gemm<default_abi, ColMajor, RowMajor, Transpose, Transpose, true>)->BM_RANGES();
+
+BENCHMARK(gemm<default_abi, RowMajor, ColMajor, Always, Always, true>)->BM_RANGES();
+BENCHMARK(gemm<default_abi, RowMajor, RowMajor, Always, Always, true>)->BM_RANGES();
+BENCHMARK(gemm<default_abi, ColMajor, ColMajor, Always, Always, true>)->BM_RANGES();
+BENCHMARK(gemm<default_abi, ColMajor, RowMajor, Always, Always, true>)->BM_RANGES();
+#endif
