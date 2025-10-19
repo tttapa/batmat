@@ -71,7 +71,7 @@ void symm_add(Structured<VA, SA> A, VB &&B, VC &&C, VD &&D) {
     detail::symm<simdified_value_t<VA>, simdified_abi_t<VA>, SA>(
         simdify(A.value).as_const(), simdify(B).as_const(), simdify(C).as_const(), simdify(D));
 }
-/// D = C + A B with A symmetric
+/// D = D + A B with A symmetric
 template <MatrixStructure SA, simdifiable VA, simdifiable VB, simdifiable VD>
     requires simdify_compatible<VA, VB, VD>
 void symm_add(Structured<VA, SA> A, VB &&B, VD &&D) {
