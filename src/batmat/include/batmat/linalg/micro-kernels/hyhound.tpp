@@ -4,17 +4,19 @@
 #include <batmat/linalg/micro-kernels/hyhound.hpp>
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
+#include <batmat/ops/cneg.hpp>
 #include <batmat/ops/rotate.hpp>
 
 #define UNROLL_FOR(...) BATMAT_FULLY_UNROLLED_FOR (__VA_ARGS__)
 
 namespace batmat::linalg::micro_kernels::hyhound {
 
-template <class T, class Abi, index_t R, StorageOrder OL, StorageOrder OA>
+template <class T, class Abi, index_t R, StorageOrder OL, StorageOrder OA, bool SignOnly>
 [[gnu::hot, gnu::flatten]] void
 xshhud_diag_diag_microkernel(index_t colsA, triangular_accessor<T, Abi, SizeR<T, Abi>> W,
                              uview<T, Abi, OL> L, uview<T, Abi, OA> A,
                              uview<const T, Abi, StorageOrder::ColMajor> diag) noexcept {
+    using batmat::ops::cneg;
     using std::copysign;
     using std::sqrt;
     using simd = datapar::simd<T, Abi>;
@@ -26,7 +28,8 @@ xshhud_diag_diag_microkernel(index_t colsA, triangular_accessor<T, Abi, SizeR<T,
         // Compute all inner products between A and a
         simd bb[R]{};
         for (index_t j = 0; j < colsA; ++j) {
-            simd Akj = A.load(k, j) * diag.load(j, 0);
+            simd Akj = SignOnly ? cneg(A.load(k, j), diag.load(j, 0)) //
+                                : A.load(k, j) * diag.load(j, 0);
             UNROLL_FOR (index_t i = 0; i < R; ++i)
                 bb[i] += A.load(i, j) * Akj;
         }
@@ -61,10 +64,11 @@ xshhud_diag_diag_microkernel(index_t colsA, triangular_accessor<T, Abi, SizeR<T,
     }
 }
 
-template <class T, class Abi, index_t R, StorageOrder OL, StorageOrder OA>
+template <class T, class Abi, index_t R, StorageOrder OL, StorageOrder OA, bool SignOnly>
 [[gnu::hot, gnu::flatten]] void
 xshhud_diag_full_microkernel(index_t colsA, uview<T, Abi, OL> L, uview<T, Abi, OA> A,
                              uview<const T, Abi, StorageOrder::ColMajor> diag) noexcept {
+    using batmat::ops::cneg;
     using std::copysign;
     using std::sqrt;
     using simd = datapar::simd<T, Abi>;
@@ -76,7 +80,8 @@ xshhud_diag_full_microkernel(index_t colsA, uview<T, Abi, OL> L, uview<T, Abi, O
         // Compute some inner products between A and a
         simd bb[R]{};
         for (index_t j = 0; j < colsA; ++j) {
-            simd Akj = A.load(k, j) * diag.load(j, 0);
+            simd Akj = SignOnly ? cneg(A.load(k, j), diag.load(j, 0)) //
+                                : A.load(k, j) * diag.load(j, 0);
             UNROLL_FOR (index_t i = k; i < R; ++i)
                 bb[i] += A.load(i, j) * Akj;
         }
@@ -120,12 +125,13 @@ template <class T, class Abi>
 
 } // namespace detail
 
-template <class T, class Abi, index_t R, index_t S, StorageOrder OL, StorageOrder OA>
+template <class T, class Abi, index_t R, index_t S, StorageOrder OL, StorageOrder OA, bool SignOnly>
 [[gnu::hot, gnu::flatten]] void xshhud_diag_tail_microkernel(
     index_t kA_nonzero_start, index_t kA_nonzero_end, index_t colsA,
     triangular_accessor<const T, Abi, SizeR<T, Abi>> W, uview<T, Abi, OL> L,
     uview<const T, Abi, OA> A_in, uview<T, Abi, OA> A_out, uview<const T, Abi, OA> B,
     uview<const T, Abi, StorageOrder::ColMajor> diag, Structure struc_L, int rotate_A) noexcept {
+    using batmat::ops::cneg;
     using simd = datapar::simd<T, Abi>;
     BATMAT_ASSUME(colsA > 0);
 
@@ -133,7 +139,8 @@ template <class T, class Abi, index_t R, index_t S, StorageOrder OL, StorageOrde
     simd V[S][R]{};
     for (index_t j = kA_nonzero_start; j < kA_nonzero_end; ++j) {
         UNROLL_FOR (index_t k = 0; k < R; ++k) {
-            auto Akj = B.load(k, j) * diag.load(j, 0);
+            auto Akj = SignOnly ? cneg(B.load(k, j), diag.load(j, 0)) //
+                                : B.load(k, j) * diag.load(j, 0);
             UNROLL_FOR (index_t i = 0; i < S; ++i)
                 V[i][k] += A_in.load(i, j) * Akj;
         }
@@ -269,7 +276,7 @@ template <class T, class Abi, index_t R, index_t S, StorageOrder OL, StorageOrde
 #endif
 }
 
-template <class T, class Abi, StorageOrder OL, StorageOrder OA>
+template <class T, class Abi, bool SignOnly = false, StorageOrder OL, StorageOrder OA>
 void xshhud_diag_ref(view<T, Abi, OL> L, view<T, Abi, OA> A, view<const T, Abi> D) {
     static constexpr index_constant<SizeR<T, Abi>> R;
     static constexpr index_constant<SizeS<T, Abi>> S;
@@ -295,14 +302,14 @@ void xshhud_diag_ref(view<T, Abi, OL> L, view<T, Abi, OA> A, view<const T, Abi> 
                 auto Ad = A.middle_rows(k, R);
                 auto Ld = L.block(k, k, R, R);
                 // Process the diagonal block itself
-                xshhud_diag_diag_microkernel<T, Abi, R, OL, OA>(A.cols(), W, Ld, Ad, D);
+                xshhud_diag_diag_microkernel<T, Abi, R, OL, OA, SignOnly>(A.cols(), W, Ld, Ad, D);
                 // Process all rows below the diagonal block (in multiples of S).
                 foreach_chunked_merged(
                     k + R, L.rows(), S,
                     [&](index_t i, auto rem_i) {
                         auto As = A.middle_rows(i, rem_i);
                         auto Ls = L.block(i, k, rem_i, R);
-                        microkernel_tail_lut<T, Abi, OL, OA>[rem_i - 1](
+                        microkernel_tail_lut<T, Abi, OL, OA, SignOnly>[rem_i - 1](
                             0, A.cols(), A.cols(), W, Ls, As, As, Ad, D, Structure::General, 0);
                     },
                     LoopDir::Backward); // TODO: decide on order
@@ -310,7 +317,7 @@ void xshhud_diag_ref(view<T, Abi, OL> L, view<T, Abi, OA> A, view<const T, Abi> 
             [&](index_t k, index_t rem_k) {
                 auto Ad = A.middle_rows(k, rem_k);
                 auto Ld = L.block(k, k, rem_k, rem_k);
-                microkernel_full_lut<T, Abi, OL, OA>[rem_k - 1](A.cols(), Ld, Ad, D);
+                microkernel_full_lut<T, Abi, OL, OA, SignOnly>[rem_k - 1](A.cols(), Ld, Ad, D);
             });
     } else {
         foreach_chunked_merged(0, L.cols(), R, [&](index_t k, auto rem_k) {
@@ -319,14 +326,14 @@ void xshhud_diag_ref(view<T, Abi, OL> L, view<T, Abi, OA> A, view<const T, Abi> 
             auto Ad = A.middle_rows(k, rem_k);
             auto Ld = L.block(k, k, rem_k, rem_k);
             // Process the diagonal block itself
-            microkernel_diag_lut<T, Abi, OL, OA>[rem_k - 1](A.cols(), W, Ld, Ad, D);
+            microkernel_diag_lut<T, Abi, OL, OA, SignOnly>[rem_k - 1](A.cols(), W, Ld, Ad, D);
             // Process all rows below the diagonal block (in multiples of S).
             foreach_chunked_merged(
                 k + rem_k, L.rows(), S,
                 [&](index_t i, auto rem_i) {
                     auto As = A.middle_rows(i, rem_i);
                     auto Ls = L.block(i, k, rem_i, rem_k);
-                    microkernel_tail_lut_2<T, Abi, OL, OA>[rem_k - 1][rem_i - 1](
+                    microkernel_tail_lut_2<T, Abi, OL, OA, SignOnly>[rem_k - 1][rem_i - 1](
                         0, A.cols(), A.cols(), W, Ls, As, As, Ad, D, Structure::General, 0);
                 },
                 LoopDir::Backward); // TODO: decide on order
@@ -335,7 +342,7 @@ void xshhud_diag_ref(view<T, Abi, OL> L, view<T, Abi, OA> A, view<const T, Abi> 
 }
 
 template <class T, class Abi, StorageOrder OL1, StorageOrder OA1, StorageOrder OL2,
-          StorageOrder OA2>
+          StorageOrder OA2, bool SignOnly = false>
 void xshhud_diag_2_ref(view<T, Abi, OL1> L11, view<T, Abi, OA1> A1, view<T, Abi, OL2> L21,
                        view<T, Abi, OA2> A2, view<const T, Abi> D) {
     BATMAT_ASSERT(L11.rows() >= L11.cols());
@@ -366,14 +373,14 @@ void xshhud_diag_2_ref(view<T, Abi, OL1> L11, view<T, Abi, OA1> A1, view<T, Abi,
         auto Ad = A1.middle_rows(k, rem_k);
         auto Ld = L11.block(k, k, rem_k, rem_k);
         // Process the diagonal block itself
-        microkernel_diag_lut<T, Abi, OL1, OA1>[rem_k - 1](A1.cols(), W, Ld, Ad, D);
+        microkernel_diag_lut<T, Abi, OL1, OA1, SignOnly>[rem_k - 1](A1.cols(), W, Ld, Ad, D);
         // Process all rows below the diagonal block (in multiples of S).
         foreach_chunked_merged(
             k + rem_k, L11.rows(), S,
             [&](index_t i, auto rem_i) {
                 auto As = A1.middle_rows(i, rem_i);
                 auto Ls = L11.block(i, k, rem_i, rem_k);
-                microkernel_tail_lut_2<T, Abi, OL1, OA1>[rem_k - 1][rem_i - 1](
+                microkernel_tail_lut_2<T, Abi, OL1, OA1, SignOnly>[rem_k - 1][rem_i - 1](
                     0, A1.cols(), A1.cols(), W, Ls, As, As, Ad, D, Structure::General, 0);
             },
             LoopDir::Backward); // TODO: decide on order
@@ -382,7 +389,7 @@ void xshhud_diag_2_ref(view<T, Abi, OL1> L11, view<T, Abi, OA1> A1, view<T, Abi,
             [&](index_t i, auto rem_i) {
                 auto As = A2.middle_rows(i, rem_i);
                 auto Ls = L21.block(i, k, rem_i, rem_k);
-                microkernel_tail_lut_2<T, Abi, OL2, OA2>[rem_k - 1][rem_i - 1](
+                microkernel_tail_lut_2<T, Abi, OL2, OA2, SignOnly>[rem_k - 1][rem_i - 1](
                     0, A1.cols(), A1.cols(), W, Ls, As, As, Ad, D, Structure::General, 0);
             },
             LoopDir::Backward); // TODO: decide on order
@@ -397,7 +404,8 @@ void xshhud_diag_2_ref(view<T, Abi, OL1> L11, view<T, Abi, OA1> A1, view<T, Abi,
  *     [ A31  0  | L31 ]     [ Ã31 Ã32 | L̃31 ]
  *           ↑ split_A
  */
-template <class T, class Abi, StorageOrder OL, StorageOrder OW, StorageOrder OY, StorageOrder OU>
+template <class T, class Abi, StorageOrder OL, StorageOrder OW, StorageOrder OY, StorageOrder OU,
+          bool SignOnly = false>
 void xshhud_diag_cyclic(view<T, Abi, OL> L11,      // D
                         view<T, Abi, OW> A1,       // work
                         view<T, Abi, OY> L21,      // Y
@@ -442,14 +450,14 @@ void xshhud_diag_cyclic(view<T, Abi, OL> L11,      // D
         auto Ad = A1.middle_rows(k, rem_k);
         auto Ld = L11.block(k, k, rem_k, rem_k);
         // Process the diagonal block itself
-        microkernel_diag_lut<T, Abi, OL, OW>[rem_k - 1](C, W, Ld, Ad, D);
+        microkernel_diag_lut<T, Abi, OL, OW, SignOnly>[rem_k - 1](C, W, Ld, Ad, D);
         // Process all rows below the diagonal block (in multiples of S).
         foreach_chunked_merged(
             k + rem_k, L11.rows(), S,
             [&](index_t i, auto rem_i) {
                 auto As = A1.middle_rows(i, rem_i);
                 auto Ls = L11.block(i, k, rem_i, rem_k);
-                microkernel_tail_lut_2<T, Abi, OL, OW>[rem_k - 1][rem_i - 1](
+                microkernel_tail_lut_2<T, Abi, OL, OW, SignOnly>[rem_k - 1][rem_i - 1](
                     0, C, C, W, Ls, As, As, Ad, D, Structure::General, 0);
             },
             LoopDir::Backward); // TODO: decide on order
@@ -460,7 +468,7 @@ void xshhud_diag_cyclic(view<T, Abi, OL> L11,      // D
                 auto As_out = A2_out.middle_rows(i, rem_i);
                 auto As     = k == 0 ? A2.middle_rows(i, rem_i) : As_out;
                 auto Ls     = L21.block(i, k, rem_i, rem_k);
-                microkernel_tail_lut_2<T, Abi, OY, OW>[rem_k - 1][rem_i - 1](
+                microkernel_tail_lut_2<T, Abi, OY, OW, SignOnly>[rem_k - 1][rem_i - 1](
                     k == 0 ? split_A : 0, C, C, W, Ls, As, As_out, Ad, D, Structure::General, rot);
                 // First half of A2 is implicitly zero in first pass
             },
@@ -471,7 +479,7 @@ void xshhud_diag_cyclic(view<T, Abi, OL> L11,      // D
                 auto As_out = A3_out.middle_rows(i, rem_i);
                 auto As     = k == 0 ? A3.middle_rows(i, rem_i) : As_out;
                 auto Ls     = L31.block(i, k, rem_i, rem_k);
-                microkernel_tail_lut_2<T, Abi, OU, OW>[rem_k - 1][rem_i - 1](
+                microkernel_tail_lut_2<T, Abi, OU, OW, SignOnly>[rem_k - 1][rem_i - 1](
                     0, k == 0 ? split_A : C, C, W, Ls, As, As_out, Ad, D, Structure::General, 0);
                 // Second half of A3 is implicitly zero in first pass
             },
@@ -487,7 +495,8 @@ void xshhud_diag_cyclic(view<T, Abi, OL> L11,      // D
  *     [  0 | Lu1 ]     [ Ãu | L̃u1 ]
  * where Lu1 and L̃u1 are upper triangular
  */
-template <class T, class Abi, StorageOrder OL, StorageOrder OA, StorageOrder OLu, StorageOrder OAu>
+template <class T, class Abi, StorageOrder OL, StorageOrder OA, StorageOrder OLu, StorageOrder OAu,
+          bool SignOnly = false>
 void xshhud_diag_riccati(view<T, Abi, OL> L11, view<T, Abi, OA> A1, view<T, Abi, OL> L21,
                          view<const T, Abi, OA> A2, view<T, Abi, OA> A2_out, view<T, Abi, OLu> Lu1,
                          view<T, Abi, OAu> Au_out, view<const T, Abi> D, bool shift_A_out) {
@@ -529,14 +538,14 @@ void xshhud_diag_riccati(view<T, Abi, OL> L11, view<T, Abi, OA> A1, view<T, Abi,
         auto Ad = A1.middle_rows(k, rem_k);
         auto Ld = L11.block(k, k, rem_k, rem_k);
         // Process the diagonal block itself
-        microkernel_diag_lut<T, Abi, OL, OA>[rem_k - 1](C, W, Ld, Ad, D);
+        microkernel_diag_lut<T, Abi, OL, OA, SignOnly>[rem_k - 1](C, W, Ld, Ad, D);
         // Process all rows below the diagonal block (in multiples of S).
         foreach_chunked_merged(
             k + rem_k, L11.rows(), S,
             [&](index_t i, auto rem_i) {
                 auto As = A1.middle_rows(i, rem_i);
                 auto Ls = L11.block(i, k, rem_i, rem_k);
-                microkernel_tail_lut_2<T, Abi, OL, OA>[rem_k - 1][rem_i - 1](
+                microkernel_tail_lut_2<T, Abi, OL, OA, SignOnly>[rem_k - 1][rem_i - 1](
                     0, C, C, W, Ls, As, As, Ad, D, Structure::General, 0);
             },
             LoopDir::Backward); // TODO: decide on order
@@ -546,7 +555,7 @@ void xshhud_diag_riccati(view<T, Abi, OL> L11, view<T, Abi, OA> A1, view<T, Abi,
                 auto As_out = A2_out.middle_rows(i, rem_i);
                 auto As     = k == 0 ? A2.middle_rows(i, rem_i) : As_out;
                 auto Ls     = L21.block(i, k, rem_i, rem_k);
-                microkernel_tail_lut_2<T, Abi, OL, OA>[rem_k - 1][rem_i - 1](
+                microkernel_tail_lut_2<T, Abi, OL, OA, SignOnly>[rem_k - 1][rem_i - 1](
                     0, C, C, W, Ls, As, As_out, Ad, D, Structure::General, do_shift ? -1 : 0);
             },
             LoopDir::Backward); // TODO: decide on order
@@ -560,7 +569,7 @@ void xshhud_diag_riccati(view<T, Abi, OL> L11, view<T, Abi, OA> A1, view<T, Abi,
                 const auto struc = i == k  ? Structure::Upper
                                    : i < k ? Structure::General
                                            : Structure::Zero;
-                microkernel_tail_lut_2<T, Abi, OLu, OAu>[rem_k - 1][rem_i - 1](
+                microkernel_tail_lut_2<T, Abi, OLu, OAu, SignOnly>[rem_k - 1][rem_i - 1](
                     0, k == 0 ? 0 : C, C, W, Ls, As, As_out, Ad, D, struc, do_shift ? -1 : 0);
                 // TODO: rotate +1 or -1
             },

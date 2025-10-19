@@ -21,6 +21,15 @@ void hyhound_diag(Structured<VL, SL> L, VA &&A, Vd &&d) {
         simdify(L.value), simdify(A), simdify(d).as_const());
 }
 
+/// Update Cholesky factor L using low-rank term A diag(copysign(1, d)) Aᵀ,
+/// where d contains only ±0 values.
+template <MatrixStructure SL, simdifiable VL, simdifiable VA, simdifiable Vd>
+    requires simdify_compatible<VL, VA, Vd>
+void hyhound_sign(Structured<VL, SL> L, VA &&A, Vd &&d) {
+    micro_kernels::hyhound::xshhud_diag_ref<simdified_value_t<VL>, simdified_abi_t<VL>, true>(
+        simdify(L.value), simdify(A), simdify(d).as_const());
+}
+
 /// Update Cholesky factor L using low-rank term A diag(d) Aᵀ, where L and A are stored as two
 /// separate block rows.
 template <MatrixStructure SL, simdifiable VL1, simdifiable VA1, simdifiable VL2, simdifiable VA2,
