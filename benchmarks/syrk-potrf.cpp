@@ -9,7 +9,7 @@ using batmat::index_t;
 using batmat::real_t;
 
 template <class Abi, StorageOrder OA, StorageOrder OC = OA>
-void syrk(benchmark::State &state) {
+void syrk_potrf(benchmark::State &state) {
     std::mt19937 rng{12345};
     std::uniform_real_distribution<real_t> uni{-1, 1};
 
@@ -61,9 +61,9 @@ using default_abi = deduced_abi<real_t, 8>;
 using default_abi = deduced_abi<real_t, 4>;
 #endif
 
-BENCHMARK(syrk<default_abi, ColMajor, ColMajor>)->BM_RANGES();
-BENCHMARK(syrk<default_abi, ColMajor, RowMajor>)->BM_RANGES();
-BENCHMARK(syrk<default_abi, RowMajor, ColMajor>)->BM_RANGES();
-BENCHMARK(syrk<default_abi, RowMajor, RowMajor>)->BM_RANGES();
-BENCHMARK(syrk<scalar_abi, ColMajor, ColMajor>)->BM_RANGES();
-BENCHMARK(syrk<scalar_abi, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(syrk_potrf<default_abi, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(syrk_potrf<default_abi, ColMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(syrk_potrf<default_abi, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(syrk_potrf<default_abi, RowMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(syrk_potrf<scalar_abi, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(syrk_potrf<scalar_abi, RowMajor, ColMajor>)->BM_RANGES();
