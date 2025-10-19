@@ -166,6 +166,12 @@ separate_figs = {
         ("RowMajor",): "POTRF $D_r = \\operatorname{chol}(A_r)$",
         ("ColMajor",): "POTRF $D_c = \\operatorname{chol}(A_c)$",
     },
+    "hyh": {
+        ("RowMajor", "ColMajor"): "Hyhound $(\\tilde L_r \\; 0) = (L_r \\; A_c) \\breve Q$",
+        ("RowMajor", "RowMajor"): "Hyhound $(\\tilde L_r \\; 0) = (L_r \\; A_r) \\breve Q$",
+        ("ColMajor", "ColMajor"): "Hyhound $(\\tilde L_c \\; 0) = (L_c \\; A_c) \\breve Q$",
+        ("ColMajor", "RowMajor"): "Hyhound $(\\tilde L_c \\; 0) = (L_c \\; A_r) \\breve Q$",
+    },
 }
 
 def make_subplots_grid(n):

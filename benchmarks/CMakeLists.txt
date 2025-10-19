@@ -1,4 +1,5 @@
 find_package(benchmark REQUIRED)
+find_package(hyhound REQUIRED)
 find_package(guanaqo REQUIRED COMPONENTS BLAS)
 find_package(Python3 COMPONENTS Interpreter)
 
@@ -21,7 +22,7 @@ function(setup_benchmark_target name)
             $<TARGET_FILE:${target_name}>
             --benchmark_min_time=0.05s
             --benchmark_min_warmup_time=0.01
-            --benchmark_repetitions=5
+            --benchmark_repetitions=2
             --benchmark_enable_random_interleaving
             --benchmark_out=${CMAKE_CURRENT_BINARY_DIR}/results/${target_name}.json
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -46,3 +47,6 @@ setup_benchmark_target(syrk)
 setup_benchmark_target(trtri)
 setup_benchmark_target(potrf)
 setup_benchmark_target(syrk-potrf)
+setup_benchmark_target(hyh)
+
+target_link_libraries(benchmark-hyh PRIVATE hyhound::hyhound)
