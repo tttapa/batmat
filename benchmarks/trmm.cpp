@@ -1,4 +1,5 @@
 #include <batmat/linalg/copy.hpp>
+#include <batmat/linalg/flops.hpp>
 #include <batmat/linalg/gemm.hpp>
 #include <benchmark/benchmark.h>
 #include <guanaqo/blas/hl-blas-interface.hpp>
@@ -17,9 +18,9 @@ void trmm(benchmark::State &state) {
 
     const index_t d = BATMAT_BENCHMARK_DEPTH;
     const auto n    = static_cast<index_t>(state.range(0));
-    matrix<real_t, Abi, OA> A{{.depth = d, .rows  = n, .cols  = n}};
-    matrix<real_t, Abi, OB> B{{.depth = d, .rows  = n, .cols  = n}};
-    matrix<real_t, Abi, S == Left ? OB : OA> C{{.depth = d, .rows  = n, .cols  = n}};
+    matrix<real_t, Abi, OA> A{{.depth = d, .rows = n, .cols = n}};
+    matrix<real_t, Abi, OB> B{{.depth = d, .rows = n, .cols = n}};
+    matrix<real_t, Abi, S == Left ? OB : OA> C{{.depth = d, .rows = n, .cols = n}};
     std::ranges::generate(A, [&] { return uni(rng); });
     std::ranges::generate(B, [&] { return uni(rng); });
     std::ranges::generate(C, [&] { return uni(rng); });
@@ -69,11 +70,15 @@ void trmm(benchmark::State &state) {
                 else
                     trmm(A.batch(l), tril(B.batch(l)), C.batch(l));
             }
-    const auto nd = static_cast<double>(n), dd = static_cast<double>(d);
-    auto flop_cnt                 = dd * std::pow(nd, 3) / 2;
+    auto flop_cnt = static_cast<double>(
+        d * total(flops::trmm(
+                A.rows(), B.cols(), A.cols(),
+                S == Side::Left ? MatrixStructure::LowerTriangular : MatrixStructure::General,
+                S == Side::Left ? MatrixStructure::General : MatrixStructure::LowerTriangular,
+                MatrixStructure::General)));
     state.counters["GFLOP count"] = {1e-9 * flop_cnt};
     state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
-    state.counters["depth"]  = {dd};
+    state.counters["depth"]  = {static_cast<double>(d)};
 }
 
 using batmat::datapar::deduced_abi;

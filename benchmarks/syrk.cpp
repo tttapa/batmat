@@ -1,3 +1,4 @@
+#include <batmat/linalg/flops.hpp>
 #include <batmat/linalg/copy.hpp>
 #include <batmat/linalg/gemm.hpp>
 #include <benchmark/benchmark.h>
@@ -35,11 +36,10 @@ void syrk(benchmark::State &state) {
             } else {
                 syrk_add(A.batch(l), tril(C.batch(l)), tril(D.batch(l)));
             }
-    const auto nd = static_cast<double>(n), dd = static_cast<double>(d);
-    auto flop_cnt                 = dd * std::pow(nd, 3) / 2;
+    auto flop_cnt                 = static_cast<double>(d * total(flops::syrk(A.rows(), A.cols())));
     state.counters["GFLOP count"] = {1e-9 * flop_cnt};
     state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
-    state.counters["depth"]  = {dd};
+    state.counters["depth"]  = {static_cast<double>(d)};
 }
 
 using batmat::datapar::deduced_abi;

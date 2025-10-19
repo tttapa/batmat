@@ -1,3 +1,4 @@
+#include <batmat/linalg/flops.hpp>
 #include <batmat/linalg/gemm.hpp>
 #include <benchmark/benchmark.h>
 #include <guanaqo/blas/hl-blas-interface.hpp>
@@ -36,11 +37,10 @@ void gemm(benchmark::State &state) {
                     blas::xgemm_TT<real_t>(1, A(l).transposed(), B(l).transposed(), 0, C(l));
             } else
                 gemm(A.batch(l), B.batch(l), C.batch(l), {!Tiling, PA, PB});
-    const auto nd = static_cast<double>(n), dd = static_cast<double>(d);
-    auto flop_cnt                 = dd * std::pow(nd, 3);
+    auto flop_cnt = static_cast<double>(d * total(flops::gemm(A.rows(), B.cols(), A.cols())));
     state.counters["GFLOP count"] = {1e-9 * flop_cnt};
     state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
-    state.counters["depth"]  = {dd};
+    state.counters["depth"]  = {static_cast<double>(d)};
 }
 
 using batmat::datapar::deduced_abi;
@@ -61,7 +61,6 @@ using default_abi = deduced_abi<real_t, 8>;
 #else
 using default_abi = deduced_abi<real_t, 4>;
 #endif
-
 
 BENCHMARK(gemm<default_abi, RowMajor, ColMajor, Transpose, Always, true>)->BM_RANGES();
 BENCHMARK(gemm<default_abi, RowMajor, RowMajor, Transpose, Always, true>)->BM_RANGES();

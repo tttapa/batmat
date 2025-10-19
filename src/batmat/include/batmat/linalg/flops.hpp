@@ -86,6 +86,11 @@ constexpr FlopCount gemmt(index_t m, index_t n, index_t k, MatrixStructure sA, M
     return trmm(m, n, k, sA, sB, sC);
 }
 
+constexpr FlopCount syrk(index_t n, index_t k) {
+    return gemmt(n, n, k, MatrixStructure::General, MatrixStructure::General,
+                 MatrixStructure::LowerTriangular);
+}
+
 constexpr FlopCount gemmt_diag(index_t m, index_t n, index_t k, MatrixStructure sC) {
     constexpr auto sA = MatrixStructure::General, sB = sA;
     return trmm(m, n, k, sA, sB, sC) + FlopCount{.mul = std::min(m, n) * k};
@@ -100,6 +105,21 @@ constexpr FlopCount potrf(index_t m, index_t n) {
                + (m - n) * n,               //                                 (bottom)
         .div  = n,                          // inverting pivot
         .sqrt = n,                          // square root pivot
+    };
+}
+
+constexpr FlopCount hyh(index_t nr, index_t nc, index_t m) {
+    BATMAT_ASSUME(nr >= nc);
+    auto n1 = nc, n2 = nr - n1;
+    return {
+        .fma = (m + 1) * n1 * n1          // L11, A1 (square)
+               + 2 * m * n1 * n2,         // L21, A2 (bottom)
+        .mul = m * n1 + (n1 + 1) * n1 / 2 // L11, A1 (square)
+               + n1 * n2,                 // L21, A2(bottom)
+        .add = (n1 - 1) * n1 / 2 +        // L11 (square)
+               n1 * n2,                   // L21 (bottom)
+        .div  = 2 * n1,
+        .sqrt = n1,
     };
 }
 

@@ -1,3 +1,4 @@
+#include <batmat/linalg/flops.hpp>
 #include <batmat/linalg/hyhound.hpp>
 #include <benchmark/benchmark.h>
 #include <hyhound/householder-updowndate.hpp>
@@ -39,12 +40,10 @@ void hyh(benchmark::State &state) {
                 hyhound_sign(tril(L̃.batch(l)), Ã.batch(l), S.batch(l));
             }
         }
-    const auto nd = static_cast<double>(n), dd = static_cast<double>(d),
-               md                 = static_cast<double>(m);
-    auto flop_cnt                 = md * dd * std::pow(nd, 2);
+    auto flop_cnt = static_cast<double>(d * total(flops::hyh(L.rows(), L.cols(), A.cols())));
     state.counters["GFLOP count"] = {1e-9 * flop_cnt};
     state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
-    state.counters["depth"]  = {dd};
+    state.counters["depth"]  = {static_cast<double>(d)};
 }
 
 using batmat::datapar::deduced_abi;

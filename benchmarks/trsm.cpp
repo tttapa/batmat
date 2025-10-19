@@ -1,4 +1,5 @@
 #include <batmat/linalg/copy.hpp>
+#include <batmat/linalg/flops.hpp>
 #include <batmat/linalg/trsm.hpp>
 #include <benchmark/benchmark.h>
 #include <guanaqo/blas/hl-blas-interface.hpp>
@@ -71,11 +72,12 @@ void trsm(benchmark::State &state) {
                 else
                     trsm(A.batch(l), tril(B.batch(l)), C.batch(l));
             }
-    const auto nd = static_cast<double>(n), dd = static_cast<double>(d);
-    auto flop_cnt                 = dd * std::pow(nd, 3) / 2;
+    auto flop_cnt =
+        static_cast<double>(d * total(flops::trsm(S == Side::Left ? B.rows() : A.cols(),
+                                                  S == Side::Left ? B.cols() : A.rows())));
     state.counters["GFLOP count"] = {1e-9 * flop_cnt};
     state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
-    state.counters["depth"]  = {dd};
+    state.counters["depth"]  = {static_cast<double>(d)};
 }
 
 using batmat::datapar::deduced_abi;

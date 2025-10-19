@@ -1,3 +1,4 @@
+#include <batmat/linalg/flops.hpp>
 #include <batmat/linalg/copy.hpp>
 #include <batmat/linalg/potrf.hpp>
 #include <benchmark/benchmark.h>
@@ -36,11 +37,10 @@ void syrk_potrf(benchmark::State &state) {
             } else {
                 syrk_add_potrf(A.batch(l), tril(C.batch(l)), tril(D.batch(l)));
             }
-    const auto nd = static_cast<double>(n), dd = static_cast<double>(d);
-    auto flop_cnt                 = 2 * dd * std::pow(nd, 3) / 3;
+    auto flop_cnt = static_cast<double>(d * total(flops::syrk_potrf(C.rows(), C.cols(), A.cols())));
     state.counters["GFLOP count"] = {1e-9 * flop_cnt};
     state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
-    state.counters["depth"]  = {dd};
+    state.counters["depth"]  = {static_cast<double>(d)};
 }
 
 using batmat::datapar::deduced_abi;
