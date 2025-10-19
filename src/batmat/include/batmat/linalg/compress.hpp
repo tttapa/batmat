@@ -12,9 +12,9 @@ namespace batmat::linalg {
 namespace detail {
 
 template <class T, class Abi, index_t N = 8, StorageOrder OAi>
-[[gnu::always_inline]] index_t compress_masks_impl(view<const T, Abi, OAi> A_in,
-                                                   view<const T, Abi> S_in, auto writeS,
-                                                   auto writeA) {
+[[gnu::always_inline]] inline index_t compress_masks_impl(view<const T, Abi, OAi> A_in,
+                                                          view<const T, Abi> S_in, auto writeS,
+                                                          auto writeA) {
     using batmat::ops::gather;
     BATMAT_ASSERT(A_in.depth() == S_in.depth());
     BATMAT_ASSERT(A_in.cols() == S_in.rows());
