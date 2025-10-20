@@ -7,6 +7,24 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 
+plt.rcParams.update(
+    {
+        "text.usetex": True,
+        "text.latex.preamble": r"\renewcommand{\sfdefault}{phv}\renewcommand{\rmdefault}{ptm}",
+        "font.family": "ptm",
+        "font.size": 14,
+        "figure.titlesize": 16,
+        "axes.titlesize": 15,
+        "legend.fontsize": 13,
+        "xtick.labelsize": 12,
+        "ytick.labelsize": 12,
+        "lines.linewidth": 1.2,
+        "lines.markersize": 4,
+        "legend.borderpad": 0.25,
+        "legend.labelspacing": 0.25,
+    }
+)
+
 filename = Path("benchmarks/results/benchmark-gemm.json")
 with contextlib.suppress(IndexError):
     filename = Path(sys.argv[1])
@@ -29,6 +47,7 @@ metric = "real_time"
 gflops_max = {
     "Nutella": 40,
     "blacksad.esat.kuleuven.be": 20,
+    "ketelbuik.esat.kuleuven.be": 39.2,
 }.get(data["context"]["host_name"])
 
 isa = data["context"]["arch"]
@@ -61,7 +80,7 @@ def parse_run_name(name):
 df[["func", "args"]] = df["run_name"].apply(parse_run_name).apply(pd.Series)
 
 def generate_ref_name_from_parts(func, args, existing_names):
-    args = tuple("scalar_abi" if "abi" in a else a for a in args)
+    args = ("scalar",) + args[1:]
     for i in range(len(args), 0, -1):  # Try progressively shorter templates
         candidate = f"{func}<{', '.join(args[:i])}>"
         if candidate in existing_names:
@@ -95,10 +114,13 @@ def add_reference_columns(df: pd.DataFrame, metrics):
 
 def benchmark_label(func_name: str, args: tuple[str]) -> str:
     # Map ABI
-    if args[0] == "scalar_abi":
-        abi_label = "MKL AVX2" if isa == "avx2" else "MKL AVX-512"
-    elif args[0] == "default_abi":
-        abi_label = "Batmat AVX2 (4)" if isa == "avx2" else "Batmat AVX-512 (8)"
+    impl = "hyhound" if func_name == "hyh" else "MKL"
+    if args[0] == "scalar":
+        abi_label = f"{impl} AVX2" if isa == "avx2" else f"{impl} AVX-512"
+    elif args[0] == "simd4":
+        abi_label = "batmat AVX2 (4)" if isa == "avx2" else "batmat AVX-512 (4)"
+    elif args[0] == "simd8":
+        abi_label = "batmat AVX2 (8)" if isa == "avx2" else "batmat AVX-512 (8)"
     else:
         abi_label = "unknown"
 
@@ -110,67 +132,83 @@ def benchmark_label(func_name: str, args: tuple[str]) -> str:
         elif len(args) > 4:
             if args[3].lower() == args[4].lower() == "never":
                 tiling_label = " (no packing)"
+                return None
             elif args[3].lower() == args[4].lower() == "always":
                 tiling_label = " (full packing)"
+                return None
             elif args[3].lower() == args[4].lower() == "transpose":
                 tiling_label = " (transpose packing)"
+                return None
             elif args[3].lower() == "always" and args[4].lower() == "transpose":
                 tiling_label = " ($A$ full, $B$ transpose packing)"
+                return None
             elif args[3].lower() == "transpose" and args[4].lower() == "always":
                 tiling_label = " ($A$ transpose, $B$ full packing)"
+                tiling_label = " (with packing)"
         return f"{abi_label}{tiling_label}"
     return abi_label
 
 # Plot the data
 df["label"] = df.apply(lambda r: benchmark_label(r["func"].item(), r["args"].item()), axis=1)
+df = df[df["label"].notna()]
 df: pd.DataFrame = add_reference_columns(df, ["GFLOPS", metric])
 functions = df["run_name"].unique()
 title = filename.stem.replace("benchmark-", "").replace("-", " ").upper()
+title = {
+    "GEMM": "Matrix Multiplication (\\texttt{gemm})",
+    "POTRF": "Cholesky Factorization (\\texttt{potrf})",
+    "SYRK": "Symmetric Rank-$k$ Update (\\texttt{syrk})",
+    "SYRK POTRF": "Merged Symmetric Rank-$k$ Update and Cholesky Factorization (\\texttt{syrk+potrf})",
+    "TRTRI": "Triangular Inverse (\\texttt{trtri})",
+    "TRMM": "Triangular Matrix Multiplication (\\texttt{trmm})",
+    "TRSM": "Triangular Matrix Solve (\\texttt{trsm})",
+    "HYH": "Cholesky Factorization Update (\\texttt{hyhound})",
+}.get(title, title)
 
 separate_figs = {
     "gemm": {
         ("RowMajor", "ColMajor"): "GEMM $D_c = A_r B_c$",
-        ("RowMajor", "RowMajor"): "GEMM $D_c = A_r B_r$",
         ("ColMajor", "ColMajor"): "GEMM $D_c = A_c B_c$",
+        ("RowMajor", "RowMajor"): "GEMM $D_c = A_r B_r$",
         ("ColMajor", "RowMajor"): "GEMM $D_c = A_c B_r$",
     },
     "trmm": {
         ("Right", "RowMajor", "ColMajor"): "TRMM $D_r = A_r L_c$",
-        ("Right", "RowMajor", "RowMajor"): "TRMM $D_r = A_r L_r$",
         ("Right", "ColMajor", "ColMajor"): "TRMM $D_c = A_c L_c$",
+        ("Right", "RowMajor", "RowMajor"): "TRMM $D_r = A_r L_r$",
         ("Right", "ColMajor", "RowMajor"): "TRMM $D_c = A_c L_r$",
     },
     "trsm": {
         ("Right", "RowMajor", "ColMajor"): "TRSM $D_r = A_r L_c^{-1}$",
-        ("Right", "RowMajor", "RowMajor"): "TRSM $D_r = A_r L_r^{-1}$",
         ("Right", "ColMajor", "ColMajor"): "TRSM $D_c = A_c L_c^{-1}$",
+        ("Right", "RowMajor", "RowMajor"): "TRSM $D_r = A_r L_r^{-1}$",
         ("Right", "ColMajor", "RowMajor"): "TRSM $D_c = A_c L_r^{-1}$",
     },
     "syrk": {
         ("RowMajor", "ColMajor"): "SYRK $D_c = C_c + A_r A_r^\\top$",
-        # ("RowMajor", "RowMajor"): "SYRK $D_r = C_r + A_r A_r^\\top$",
         ("ColMajor", "ColMajor"): "SYRK $D_c = C_c + A_c A_c^\\top$",
+        # ("RowMajor", "RowMajor"): "SYRK $D_r = C_r + A_r A_r^\\top$",
         # ("ColMajor", "RowMajor"): "SYRK $D_r = C_r + A_c A_c^\\top$",
     },
     "syrk_potrf": {
-        ("RowMajor", "ColMajor"): "SYRK+POTRF $D_c = \\operatorname{chol}(C_c + A_r A_r^\\top)$",
-        ("RowMajor", "RowMajor"): "SYRK+POTRF $D_r = \\operatorname{chol}(C_r + A_r A_r^\\top)$",
-        ("ColMajor", "ColMajor"): "SYRK+POTRF $D_c = \\operatorname{chol}(C_c + A_c A_c^\\top)$",
-        ("ColMajor", "RowMajor"): "SYRK+POTRF $D_r = \\operatorname{chol}(C_r + A_c A_c^\\top)$",
+        ("RowMajor", "ColMajor"): "SYRK+POTRF $D_c = \\mathrm{chol}(C_c + A_r A_r^\\top)$",
+        ("ColMajor", "ColMajor"): "SYRK+POTRF $D_c = \\mathrm{chol}(C_c + A_c A_c^\\top)$",
+        ("RowMajor", "RowMajor"): "SYRK+POTRF $D_r = \\mathrm{chol}(C_r + A_r A_r^\\top)$",
+        ("ColMajor", "RowMajor"): "SYRK+POTRF $D_r = \\mathrm{chol}(C_r + A_c A_c^\\top)$",
     },
     "trtri": {
         ("RowMajor",): "TRTRI $D_r = L_r^{-1}$",
         ("ColMajor",): "TRTRI $D_c = L_c^{-1}$",
     },
     "potrf": {
-        ("RowMajor",): "POTRF $D_r = \\operatorname{chol}(A_r)$",
-        ("ColMajor",): "POTRF $D_c = \\operatorname{chol}(A_c)$",
+        ("RowMajor",): "POTRF $D_r = \\mathrm{chol}(A_r)$",
+        ("ColMajor",): "POTRF $D_c = \\mathrm{chol}(A_c)$",
     },
     "hyh": {
-        ("RowMajor", "ColMajor"): "Hyhound $(\\tilde L_r \\; 0) = (L_r \\; A_c) \\breve Q$",
-        ("RowMajor", "RowMajor"): "Hyhound $(\\tilde L_r \\; 0) = (L_r \\; A_r) \\breve Q$",
+        # ("RowMajor", "ColMajor"): "Hyhound $(\\tilde L_r \\; 0) = (L_r \\; A_c) \\breve Q$",
         ("ColMajor", "ColMajor"): "Hyhound $(\\tilde L_c \\; 0) = (L_c \\; A_c) \\breve Q$",
-        ("ColMajor", "RowMajor"): "Hyhound $(\\tilde L_c \\; 0) = (L_c \\; A_r) \\breve Q$",
+        ("RowMajor", "RowMajor"): "Hyhound $(\\tilde L_r \\; 0) = (L_r \\; A_r) \\breve Q$",
+        # ("ColMajor", "RowMajor"): "Hyhound $(\\tilde L_c \\; 0) = (L_c \\; A_r) \\breve Q$",
     },
 }
 
@@ -200,16 +238,16 @@ def plot_partitioned(df: pd.DataFrame, metric, stat, title, ylabel, relative=Fal
 
         n_subplots = len(partitions)
         nrows, ncols = make_subplots_grid(n_subplots)
-        fig, axes = plt.subplots(nrows, ncols, figsize=(5*ncols, 4*nrows), squeeze=False, sharex="all", sharey="all")
-        axes = axes.flatten()
+        fig, axes = plt.subplots(nrows, ncols, figsize=(5*ncols, 4*nrows + 0.8), squeeze=False, sharex="all", sharey="all")
 
-        for ax, (args_tuple, subtitle) in zip(axes, partitions.items()):
+        for ax, (args_tuple, subtitle) in zip(axes.flatten(), partitions.items()):
             # Select rows whose args start with the tuple args_tuple
             mask = func_df["args"].apply(lambda a: a[1:1 + len(args_tuple)] == args_tuple)
             sub_df = func_df[mask]
             if sub_df.empty:
                 print("No data for", func_name, args_tuple)
                 continue
+            sub_df = sub_df.sort_values(by="label", kind="stable", key=lambda x: x.str.lower())
 
             for run in sub_df["run_name"].unique():
                 run_df = sub_df[sub_df["run_name"] == run]
@@ -242,19 +280,23 @@ def plot_partitioned(df: pd.DataFrame, metric, stat, title, ylabel, relative=Fal
                     (pl,) = ax.loglog(run_df["version"], run_df[metric][stat], ".-", label=run_df["label"].iloc[0])
 
             ax.set_title(subtitle)
-            ax.set_xlabel("Matrix size")
-            ax.set_ylabel(ylabel)
-            ax.legend()
+            ax.legend(loc="lower right")
             ax.grid(True, which="both", ls=":")
+        
+        for r in range(nrows):
+            axes[r, 0].set_ylabel(ylabel)
 
-        fig.suptitle(title)
+        for c in range(ncols):
+            axes[-1, c].set_xlabel("Matrix size")
+
+        fig.suptitle(title, fontsize=15)
         plt.tight_layout()
 
 
 def plot_absolute():
     plot_partitioned(
         df, metric, stat,
-        f"Benchmark results {title} (absolute)",
+        f"Absolute Run Times of {title}",
         "Time (ns)",
         relative=False
     )
@@ -263,7 +305,7 @@ def plot_absolute():
 def plot_relative():
     plot_partitioned(
         df, metric, stat,
-        f"Benchmark results {title} (relative)",
+        f"Relative Run Times of {title}",
         "Time relative to MKL",
         relative=True
     )
@@ -272,8 +314,8 @@ def plot_relative():
 def plot_gflops(log=False, x_lim_max=None):
     plot_partitioned(
         df, metric, stat,
-        f"Benchmark results {title} (performance)",
-        "Useful GFLOPS",
+        f"Performance of {title}",
+        "Performance [GFLOPS]",
         gflops=True,
         logx=log,
         x_lim_max=x_lim_max
