@@ -46,9 +46,6 @@ void hyh(benchmark::State &state) {
     state.counters["depth"]  = {static_cast<double>(d)};
 }
 
-using batmat::datapar::deduced_abi;
-using scalar_abi = batmat::datapar::scalar_abi<real_t>;
-
 using enum StorageOrder;
 #define BM_RANGES()                                                                                \
     DenseRange(1, 63, 1)                                                                           \
@@ -58,14 +55,19 @@ using enum StorageOrder;
         ->DenseRange(512, 1024, 128)                                                               \
         ->MeasureProcessCPUTime()                                                                  \
         ->UseRealTime()
-#ifdef __AVX512F__
-using default_abi = deduced_abi<real_t, 8>;
-#else
-using default_abi = deduced_abi<real_t, 4>;
-#endif
 
-BENCHMARK(hyh<default_abi, RowMajor, ColMajor>)->BM_RANGES();
-BENCHMARK(hyh<default_abi, RowMajor, RowMajor>)->BM_RANGES();
-BENCHMARK(hyh<default_abi, ColMajor, ColMajor>)->BM_RANGES();
-BENCHMARK(hyh<default_abi, ColMajor, RowMajor>)->BM_RANGES();
-BENCHMARK(hyh<scalar_abi, ColMajor, ColMajor>)->BM_RANGES();
+using scalar = batmat::datapar::scalar_abi<real_t>;
+using simd8  = batmat::datapar::deduced_abi<real_t, 8>;
+using simd4  = batmat::datapar::deduced_abi<real_t, 4>;
+
+#ifdef __AVX512F__
+BENCHMARK(hyh<simd8, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(hyh<simd8, RowMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(hyh<simd8, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(hyh<simd8, ColMajor, RowMajor>)->BM_RANGES();
+#endif
+BENCHMARK(hyh<simd4, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(hyh<simd4, RowMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(hyh<simd4, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(hyh<simd4, ColMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(hyh<scalar, ColMajor, ColMajor>)->BM_RANGES();

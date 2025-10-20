@@ -81,9 +81,6 @@ void trmm(benchmark::State &state) {
     state.counters["depth"]  = {static_cast<double>(d)};
 }
 
-using batmat::datapar::deduced_abi;
-using scalar_abi = batmat::datapar::scalar_abi<real_t>;
-
 using enum StorageOrder;
 #define BM_RANGES()                                                                                \
     DenseRange(1, 63, 1)                                                                           \
@@ -93,25 +90,34 @@ using enum StorageOrder;
         ->DenseRange(512, 1024, 128)                                                               \
         ->MeasureProcessCPUTime()                                                                  \
         ->UseRealTime()
-#ifdef __AVX512F__
-using default_abi = deduced_abi<real_t, 8>;
-#else
-using default_abi = deduced_abi<real_t, 4>;
-#endif
 
-BENCHMARK(trmm<default_abi, Left, ColMajor, ColMajor>)->BM_RANGES();
-BENCHMARK(trmm<default_abi, Left, ColMajor, RowMajor>)->BM_RANGES();
-BENCHMARK(trmm<default_abi, Left, RowMajor, ColMajor>)->BM_RANGES();
-BENCHMARK(trmm<default_abi, Left, RowMajor, RowMajor>)->BM_RANGES();
-BENCHMARK(trmm<default_abi, Right, ColMajor, ColMajor>)->BM_RANGES();
-BENCHMARK(trmm<default_abi, Right, ColMajor, RowMajor>)->BM_RANGES();
-BENCHMARK(trmm<default_abi, Right, RowMajor, ColMajor>)->BM_RANGES();
-BENCHMARK(trmm<default_abi, Right, RowMajor, RowMajor>)->BM_RANGES();
-BENCHMARK(trmm<scalar_abi, Left, ColMajor, ColMajor>)->BM_RANGES();
-BENCHMARK(trmm<scalar_abi, Left, ColMajor, RowMajor>)->BM_RANGES();
-BENCHMARK(trmm<scalar_abi, Left, RowMajor, ColMajor>)->BM_RANGES();
-BENCHMARK(trmm<scalar_abi, Left, RowMajor, RowMajor>)->BM_RANGES();
-BENCHMARK(trmm<scalar_abi, Right, ColMajor, ColMajor>)->BM_RANGES();
-BENCHMARK(trmm<scalar_abi, Right, ColMajor, RowMajor>)->BM_RANGES();
-BENCHMARK(trmm<scalar_abi, Right, RowMajor, ColMajor>)->BM_RANGES();
-BENCHMARK(trmm<scalar_abi, Right, RowMajor, RowMajor>)->BM_RANGES();
+using scalar = batmat::datapar::scalar_abi<real_t>;
+using simd8  = batmat::datapar::deduced_abi<real_t, 8>;
+using simd4  = batmat::datapar::deduced_abi<real_t, 4>;
+
+#ifdef __AVX512F__
+BENCHMARK(trmm<simd8, Left, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trmm<simd8, Left, ColMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(trmm<simd8, Left, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trmm<simd8, Left, RowMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(trmm<simd8, Right, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trmm<simd8, Right, ColMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(trmm<simd8, Right, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trmm<simd8, Right, RowMajor, RowMajor>)->BM_RANGES();
+#endif
+BENCHMARK(trmm<simd4, Left, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trmm<simd4, Left, ColMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(trmm<simd4, Left, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trmm<simd4, Left, RowMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(trmm<simd4, Right, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trmm<simd4, Right, ColMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(trmm<simd4, Right, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trmm<simd4, Right, RowMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(trmm<scalar, Left, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trmm<scalar, Left, ColMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(trmm<scalar, Left, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trmm<scalar, Left, RowMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(trmm<scalar, Right, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trmm<scalar, Right, ColMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(trmm<scalar, Right, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trmm<scalar, Right, RowMajor, RowMajor>)->BM_RANGES();

@@ -1,5 +1,5 @@
-#include <batmat/linalg/flops.hpp>
 #include <batmat/linalg/copy.hpp>
+#include <batmat/linalg/flops.hpp>
 #include <batmat/linalg/potrf.hpp>
 #include <benchmark/benchmark.h>
 #include <guanaqo/blas/hl-blas-interface.hpp>
@@ -37,9 +37,6 @@ void potrf(benchmark::State &state) {
     state.counters["depth"]  = {static_cast<double>(d)};
 }
 
-using batmat::datapar::deduced_abi;
-using scalar_abi = batmat::datapar::scalar_abi<real_t>;
-
 using enum StorageOrder;
 #define BM_RANGES()                                                                                \
     DenseRange(1, 63, 1)                                                                           \
@@ -49,12 +46,15 @@ using enum StorageOrder;
         ->DenseRange(512, 1024, 128)                                                               \
         ->MeasureProcessCPUTime()                                                                  \
         ->UseRealTime()
-#ifdef __AVX512F__
-using default_abi = deduced_abi<real_t, 8>;
-#else
-using default_abi = deduced_abi<real_t, 4>;
-#endif
 
-BENCHMARK(potrf<default_abi, ColMajor>)->BM_RANGES();
-BENCHMARK(potrf<default_abi, RowMajor>)->BM_RANGES();
-BENCHMARK(potrf<scalar_abi, ColMajor>)->BM_RANGES();
+using scalar = batmat::datapar::scalar_abi<real_t>;
+using simd8  = batmat::datapar::deduced_abi<real_t, 8>;
+using simd4  = batmat::datapar::deduced_abi<real_t, 4>;
+
+#ifdef __AVX512F__
+BENCHMARK(potrf<simd8, ColMajor>)->BM_RANGES();
+BENCHMARK(potrf<simd8, RowMajor>)->BM_RANGES();
+#endif
+BENCHMARK(potrf<simd4, ColMajor>)->BM_RANGES();
+BENCHMARK(potrf<simd4, RowMajor>)->BM_RANGES();
+BENCHMARK(potrf<scalar, ColMajor>)->BM_RANGES();
