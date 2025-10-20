@@ -6,6 +6,7 @@ project(batmat
     LANGUAGES CXX
 )
 include(CTest)
+include(CMakeDependentOption)
 
 # Options
 option(BATMAT_WITH_MKL
@@ -30,6 +31,8 @@ option(BATMAT_WITH_TESTS
     "Build the tests" ${BUILD_TESTING})
 option(BATMAT_WITH_BENCHMARKS
     "Build the benchmarks" Off)
+cmake_dependent_option(BATMAT_WITH_BLASFEO
+    "Enable the comparisons to BLASFEO in the benchmarks" Off BATMAT_WITH_BENCHMARKS Off)
 # Developer options
 option(BATMAT_WARNINGS_AS_ERRORS
     "Enable -Werror or /WX" Off)

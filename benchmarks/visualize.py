@@ -117,6 +117,8 @@ def benchmark_label(func_name: str, args: tuple[str]) -> str:
     impl = "hyhound" if func_name == "hyh" else "MKL"
     if args[0] == "scalar":
         abi_label = f"{impl} AVX2" if isa == "avx2" else f"{impl} AVX-512"
+    elif args[0] == "blasfeo":
+        abi_label = f"BLASFEO AVX2" if isa == "avx2" else f"BLASFEO AVX-512"
     elif args[0] == "simd4":
         abi_label = "batmat AVX2 (4)" if isa == "avx2" else "batmat AVX-512 (4)"
     elif args[0] == "simd8":

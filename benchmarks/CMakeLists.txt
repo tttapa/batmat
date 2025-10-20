@@ -2,6 +2,9 @@ find_package(benchmark REQUIRED)
 find_package(hyhound REQUIRED)
 find_package(guanaqo REQUIRED COMPONENTS BLAS)
 find_package(Python3 COMPONENTS Interpreter)
+if (BATMAT_WITH_BLASFEO)
+    find_package(blasfeo REQUIRED)
+endif()
 
 set(BATMAT_BENCHMARK_DEPTH 8 CACHE STRING "Batch depth used in benchmarks")
 
@@ -14,6 +17,11 @@ function(setup_benchmark_target name)
     set(target_name benchmark-${name})
     add_executable(${target_name} "${name}.cpp")
     target_link_libraries(${target_name} PRIVATE benchmark-main guanaqo::blas batmat::warnings)
+    if (BATMAT_WITH_BLASFEO)
+        target_compile_definitions(${target_name} PRIVATE BATMAT_WITH_BLASFEO)
+        target_link_libraries(${target_name} PRIVATE blasfeo)
+        target_include_directories(${target_name} PRIVATE include)
+    endif()
     add_custom_command(
         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/results/${target_name}.json
         COMMAND ${CMAKE_COMMAND} -E env
