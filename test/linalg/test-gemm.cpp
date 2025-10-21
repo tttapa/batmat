@@ -368,13 +368,60 @@ TYPED_TEST_P(GemmTest, trmmLLLinplace) {
 }
 #endif
 
+template <class Config>
+struct SyrkTest : batmat::tests::LinalgTest<Config> {};
+TYPED_TEST_SUITE_P(SyrkTest);
+
+TYPED_TEST_P(SyrkTest, syrkL) {
+    using batmat::linalg::syrk_add;
+    for (auto m : batmat::tests::sizes)
+        for (auto k : batmat::tests::sizes) {
+            const auto A  = this->template get_matrix<0>(m, k);
+            const auto C0 = this->template get_matrix<1>(m, m);
+            auto C        = C0;
+            syrk_add(A, batmat::linalg::tril(C));
+            this->check(
+                [&](auto &&Al, auto &&Cl) { return Cl + Al * Al.transpose(); },
+                [&](auto l, auto &&res, auto &&ref, auto &&, auto &&C0) {
+                    const auto resL = tri<Lower>(res), resU = tri<StrictlyUpper>(res);
+                    EXPECT_THAT(resU, EigenAlmostEqual(tri<StrictlyUpper>(C0), this->tolerance))
+                        << l << "    (" << m << "×" << m << "×" << m << ")";
+                    EXPECT_THAT(resL, EigenAlmostEqual(tri<Lower>(ref), this->tolerance))
+                        << l << "    (" << m << "×" << m << "×" << m << ")";
+                },
+                C, A, C0);
+        }
+}
+TYPED_TEST_P(SyrkTest, syrkU) {
+    using batmat::linalg::syrk_add;
+    for (auto m : batmat::tests::sizes)
+        for (auto k : batmat::tests::sizes) {
+            const auto A  = this->template get_matrix<0>(m, k);
+            const auto C0 = this->template get_matrix<1>(m, m);
+            auto C        = C0;
+            syrk_add(A, batmat::linalg::triu(C));
+            this->check(
+                [&](auto &&Al, auto &&Cl) { return Cl + Al * Al.transpose(); },
+                [&](auto l, auto &&res, auto &&ref, auto &&, auto &&C0) {
+                    const auto resL = tri<StrictlyLower>(res), resU = tri<Upper>(res);
+                    EXPECT_THAT(resU, EigenAlmostEqual(tri<Upper>(ref), this->tolerance))
+                        << l << "    (" << m << "×" << m << "×" << m << ")";
+                    EXPECT_THAT(resL, EigenAlmostEqual(tri<StrictlyLower>(C0), this->tolerance))
+                        << l << "    (" << m << "×" << m << "×" << m << ")";
+                },
+                C, A, C0);
+        }
+}
+
 REGISTER_TYPED_TEST_SUITE_P(GemmTest, gemm, gemmNeg, gemmAdd, gemmSub, gemmSubShiftA, gemmShiftCD,
                             gemmSubShiftCD, gemmShiftCDNeg, gemmSubShiftCDNeg);
 REGISTER_TYPED_TEST_SUITE_P(TrmmInplaceTest, trmmLGinplace, trmmUGinplace, trmmGLinplace,
                             trmmGUinplace);
 REGISTER_TYPED_TEST_SUITE_P(TrtrsyrkInplaceTest, trmmULLinplace, trmmLUUinplace);
+REGISTER_TYPED_TEST_SUITE_P(SyrkTest, syrkL, syrkU);
 
 using namespace batmat::tests;
 INSTANTIATE_TYPED_TEST_SUITE_P(linalg, GemmTest, TestConfigs<OrderConfigs3>);
 INSTANTIATE_TYPED_TEST_SUITE_P(linalg, TrmmInplaceTest, TestConfigs<OrderConfigs2>);
 INSTANTIATE_TYPED_TEST_SUITE_P(linalg, TrtrsyrkInplaceTest, TestConfigs<OrderConfigs1>);
+INSTANTIATE_TYPED_TEST_SUITE_P(linalg, SyrkTest, TestConfigs<OrderConfigs2>);

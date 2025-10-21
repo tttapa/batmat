@@ -271,16 +271,28 @@ void gemm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi,
     constexpr auto dir_i = Conf.struc_A == LowerTriangular ? LoopDir::Backward : LoopDir::Forward,
                    dir_j = Conf.struc_B == UpperTriangular ? LoopDir::Backward : LoopDir::Forward;
     // Loop over block rows of A and block columns of B
-    foreach_chunked_merged(
-        0, J, index_constant<Cols>(),
-        [&](index_t j, auto nj) {
-            const auto i0 = Conf.struc_C == LowerTriangular ? j : 0,
-                       i1 = Conf.struc_C == UpperTriangular ? j + nj : I;
-            foreach_chunked_merged(
-                i0, i1, index_constant<Rows>(), [&](index_t i, auto ni) { run(i, ni, j, nj); },
-                dir_i);
-        },
-        dir_j);
+    if constexpr (OB == StorageOrder::ColMajor)
+        foreach_chunked_merged(
+            0, J, index_constant<Cols>(),
+            [&](index_t j, auto nj) {
+                const auto i0 = Conf.struc_C == LowerTriangular ? j : 0,
+                           i1 = Conf.struc_C == UpperTriangular ? j + nj : I;
+                foreach_chunked_merged(
+                    i0, i1, index_constant<Rows>(), [&](index_t i, auto ni) { run(i, ni, j, nj); },
+                    dir_i);
+            },
+            dir_j);
+    else // swap the loops for row-major B
+        foreach_chunked_merged(
+            0, I, index_constant<Rows>(),
+            [&](index_t i, auto ni) {
+                const auto j0 = Conf.struc_C == UpperTriangular ? i : 0,
+                           j1 = Conf.struc_C == LowerTriangular ? i + ni : J;
+                foreach_chunked_merged(
+                    j0, j1, index_constant<Cols>(), [&](index_t j, auto nj) { run(i, ni, j, nj); },
+                    dir_j);
+            },
+            dir_i);
 }
 
 } // namespace batmat::linalg::micro_kernels::gemm
