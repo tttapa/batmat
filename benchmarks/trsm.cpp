@@ -5,14 +5,16 @@
 #include <guanaqo/blas/hl-blas-interface.hpp>
 #include <random>
 
-using namespace batmat::linalg;
 using batmat::index_t;
 using batmat::real_t;
+using batmat::linalg::StorageOrder;
+namespace flops = batmat::linalg::flops;
 
 enum Side { Left, Right };
 
 template <class Abi, Side S, StorageOrder OA, StorageOrder OB = OA>
-void trsm(benchmark::State &state) {
+constexpr auto trsm = [](benchmark::State &state) {
+    using namespace batmat::linalg;
     std::mt19937 rng{12345};
     std::uniform_real_distribution<real_t> uni{-1, 1};
 
@@ -68,9 +70,9 @@ void trsm(benchmark::State &state) {
                 }
             } else {
                 if constexpr (S == Side::Left)
-                    trsm(tril(A.batch(l)), B.batch(l), C.batch(l));
+                    batmat::linalg::trsm(tril(A.batch(l)), B.batch(l), C.batch(l));
                 else
-                    trsm(A.batch(l), tril(B.batch(l)), C.batch(l));
+                    batmat::linalg::trsm(A.batch(l), tril(B.batch(l)), C.batch(l));
             }
     auto flop_cnt =
         static_cast<double>(d * total(flops::trsm(S == Side::Left ? B.rows() : A.cols(),
@@ -78,7 +80,61 @@ void trsm(benchmark::State &state) {
     state.counters["GFLOP count"] = {1e-9 * flop_cnt};
     state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
     state.counters["depth"]  = {static_cast<double>(d)};
-}
+};
+
+#ifdef BATMAT_WITH_BLASFEO
+#include <blasfeo.hpp>
+
+template <Side S, StorageOrder OA, StorageOrder OB>
+constexpr auto trsm<struct blasfeo, S, OA, OB> = [](benchmark::State &state) {
+    using namespace batmat::linalg;
+    std::mt19937 rng{12345};
+    std::uniform_real_distribution<real_t> uni{-1, 1};
+
+    const index_t d = BATMAT_BENCHMARK_DEPTH;
+    const auto n    = static_cast<index_t>(state.range(0));
+    auto A          = batmat::blasfeo::dmat::random_batch_pos_def(d, n, n, rng);
+    auto B          = batmat::blasfeo::dmat::random_batch_pos_def(d, n, n, rng);
+    auto D          = batmat::blasfeo::dmat::random_batch(d, n, n, rng);
+    for (auto _ : state)
+        for (index_t l = 0; l < d; ++l) {
+            auto pA = A[l].get(), pB = B[l].get(), pD = D[l].get();
+            if constexpr (S == Side::Left) {
+                if constexpr (OB == StorageOrder::ColMajor) {
+                    // B ← tril(A) B
+                    if constexpr (OA == StorageOrder::ColMajor)
+                        blasfeo_dtrsm_llnn(pA->m, pB->n, 1, pA, 0, 0, pB, 0, 0, pD, 0, 0);
+                    else
+                        blasfeo_dtrsm_lltn(pA->n, pB->n, 1, pA, 0, 0, pB, 0, 0, pD, 0, 0);
+                } else {
+                    // Bᵀ ← Bᵀ tril(A)ᵀ
+                    if constexpr (OA == StorageOrder::ColMajor)
+                        blasfeo_dtrsm_rltn(pA->n, pB->m, 1, pA, 0, 0, pB, 0, 0, pD, 0, 0);
+                    else
+                        blasfeo_dtrsm_rlnn(pA->m, pB->m, 1, pA, 0, 0, pB, 0, 0, pD, 0, 0);
+                }
+            } else {
+                if constexpr (OA == StorageOrder::ColMajor) {
+                    // A ← A tril(B)
+                    if constexpr (OB == StorageOrder::ColMajor)
+                        blasfeo_dtrsm_rlnn(pB->m, pA->n, 1, pB, 0, 0, pA, 0, 0, pD, 0, 0);
+                    else
+                        blasfeo_dtrsm_rltn(pB->n, pA->n, 1, pB, 0, 0, pA, 0, 0, pD, 0, 0);
+                } else {
+                    // Aᵀ ← tril(B)ᵀ Aᵀ
+                    if constexpr (OB == StorageOrder::ColMajor)
+                        blasfeo_dtrsm_lltn(pB->n, pA->m, 1, pB, 0, 0, pA, 0, 0, pD, 0, 0);
+                    else
+                        blasfeo_dtrsm_llnn(pB->m, pA->m, 1, pB, 0, 0, pA, 0, 0, pD, 0, 0);
+                }
+            }
+        }
+    auto flop_cnt                 = static_cast<double>(d * total(flops::trsm(n, n)));
+    state.counters["GFLOP count"] = {1e-9 * flop_cnt};
+    state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
+    state.counters["depth"]  = {static_cast<double>(d)};
+};
+#endif
 
 using enum StorageOrder;
 #define BM_RANGES()                                                                                \
@@ -119,3 +175,14 @@ BENCHMARK(trsm<scalar, Right, ColMajor, ColMajor>)->BM_RANGES();
 BENCHMARK(trsm<scalar, Right, ColMajor, RowMajor>)->BM_RANGES();
 BENCHMARK(trsm<scalar, Right, RowMajor, ColMajor>)->BM_RANGES();
 BENCHMARK(trsm<scalar, Right, RowMajor, RowMajor>)->BM_RANGES();
+
+#ifdef BATMAT_WITH_BLASFEO
+BENCHMARK(trsm<blasfeo, Left, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trsm<blasfeo, Left, ColMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(trsm<blasfeo, Left, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trsm<blasfeo, Left, RowMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(trsm<blasfeo, Right, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trsm<blasfeo, Right, ColMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(trsm<blasfeo, Right, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trsm<blasfeo, Right, RowMajor, RowMajor>)->BM_RANGES();
+#endif
