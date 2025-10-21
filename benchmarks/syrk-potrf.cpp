@@ -74,8 +74,7 @@ constexpr auto syrk_potrf<struct blasfeo, OA, OC> = [](benchmark::State &state) 
 
 using enum StorageOrder;
 #define BM_RANGES()                                                                                \
-    DenseRange(1, 63, 1)                                                                           \
-        ->DenseRange(64, 127, 4)                                                                   \
+    DenseRange(1, 127, 1)                                                                          \
         ->DenseRange(128, 255, 16)                                                                 \
         ->DenseRange(256, 511, 32)                                                                 \
         ->DenseRange(512, 1024, 128)                                                               \

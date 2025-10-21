@@ -28,7 +28,7 @@ function(setup_benchmark_target name)
             OMP_NUM_THREADS=1
             taskset -c 0
             $<TARGET_FILE:${target_name}>
-            --benchmark_min_time=0.02s
+            --benchmark_min_time=0.1s
             --benchmark_min_warmup_time=0.01
             --benchmark_repetitions=3
             --benchmark_enable_random_interleaving
