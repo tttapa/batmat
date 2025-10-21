@@ -15,11 +15,11 @@ plt.rcParams.update(
         "font.size": 14,
         "figure.titlesize": 16,
         "axes.titlesize": 15,
-        "legend.fontsize": 13,
+        "legend.fontsize": 12,
         "xtick.labelsize": 12,
         "ytick.labelsize": 12,
         "lines.linewidth": 1.2,
-        "lines.markersize": 4,
+        "lines.markersize": 3,
         "legend.borderpad": 0.25,
         "legend.labelspacing": 0.25,
     }
@@ -183,42 +183,42 @@ title = {
 
 separate_figs = {
     "gemm": {
-        ("RowMajor", "ColMajor"): "GEMM $D_c = A_r B_c$",
-        ("ColMajor", "ColMajor"): "GEMM $D_c = A_c B_c$",
-        ("RowMajor", "RowMajor"): "GEMM $D_c = A_r B_r$",
-        ("ColMajor", "RowMajor"): "GEMM $D_c = A_c B_r$",
+        ("RowMajor", "ColMajor"): "\\textsc{gemm} $D_c = A_r B_c$",
+        ("ColMajor", "ColMajor"): "\\textsc{gemm} $D_c = A_c B_c$",
+        ("RowMajor", "RowMajor"): "\\textsc{gemm} $D_c = A_r B_r$",
+        ("ColMajor", "RowMajor"): "\\textsc{gemm} $D_c = A_c B_r$",
     },
     "trmm": {
-        ("Right", "RowMajor", "ColMajor"): "TRMM $D_r = A_r L_c$",
-        ("Right", "ColMajor", "ColMajor"): "TRMM $D_c = A_c L_c$",
-        ("Right", "RowMajor", "RowMajor"): "TRMM $D_r = A_r L_r$",
-        ("Right", "ColMajor", "RowMajor"): "TRMM $D_c = A_c L_r$",
+        ("Right", "RowMajor", "ColMajor"): "\\textsc{trmm} $D_r = A_r L_c$",
+        ("Right", "ColMajor", "ColMajor"): "\\textsc{trmm} $D_c = A_c L_c$",
+        ("Right", "RowMajor", "RowMajor"): "\\textsc{trmm} $D_r = A_r L_r$",
+        ("Right", "ColMajor", "RowMajor"): "\\textsc{trmm} $D_c = A_c L_r$",
     },
     "trsm": {
-        ("Right", "RowMajor", "ColMajor"): "TRSM $D_r = A_r L_c^{-1}$",
-        ("Right", "ColMajor", "ColMajor"): "TRSM $D_c = A_c L_c^{-1}$",
-        ("Right", "RowMajor", "RowMajor"): "TRSM $D_r = A_r L_r^{-1}$",
-        ("Right", "ColMajor", "RowMajor"): "TRSM $D_c = A_c L_r^{-1}$",
+        ("Right", "RowMajor", "ColMajor"): "\\textsc{trsm} $D_r = A_r L_c^{-1}$",
+        ("Right", "ColMajor", "ColMajor"): "\\textsc{trsm} $D_c = A_c L_c^{-1}$",
+        ("Right", "RowMajor", "RowMajor"): "\\textsc{trsm} $D_r = A_r L_r^{-1}$",
+        ("Right", "ColMajor", "RowMajor"): "\\textsc{trsm} $D_c = A_c L_r^{-1}$",
     },
     "syrk": {
-        ("RowMajor", "ColMajor"): "SYRK $D_c = C_c + A_r A_r^\\top$",
-        ("ColMajor", "ColMajor"): "SYRK $D_c = C_c + A_c A_c^\\top$",
-        # ("RowMajor", "RowMajor"): "SYRK $D_r = C_r + A_r A_r^\\top$",
-        # ("ColMajor", "RowMajor"): "SYRK $D_r = C_r + A_c A_c^\\top$",
+        ("RowMajor", "ColMajor"): "\\textsc{syrk} $D_c = C_c + A_r A_r^\\top$",
+        ("ColMajor", "ColMajor"): "\\textsc{syrk} $D_c = C_c + A_c A_c^\\top$",
+        # ("RowMajor", "RowMajor"): "\\textsc{syrk} $D_r = C_r + A_r A_r^\\top$",
+        # ("ColMajor", "RowMajor"): "\\textsc{syrk} $D_r = C_r + A_c A_c^\\top$",
     },
     "syrk_potrf": {
-        ("RowMajor", "ColMajor"): "SYRK+POTRF $D_c = \\mathrm{chol}(C_c + A_r A_r^\\top)$",
-        ("ColMajor", "ColMajor"): "SYRK+POTRF $D_c = \\mathrm{chol}(C_c + A_c A_c^\\top)$",
-        ("RowMajor", "RowMajor"): "SYRK+POTRF $D_r = \\mathrm{chol}(C_r + A_r A_r^\\top)$",
-        ("ColMajor", "RowMajor"): "SYRK+POTRF $D_r = \\mathrm{chol}(C_r + A_c A_c^\\top)$",
+        ("RowMajor", "ColMajor"): "\\textsc{syrk+potrf} $D_c = \\mathrm{chol}(C_c + A_r A_r^\\top)$",
+        ("ColMajor", "ColMajor"): "\\textsc{syrk+potrf} $D_c = \\mathrm{chol}(C_c + A_c A_c^\\top)$",
+        ("RowMajor", "RowMajor"): "\\textsc{syrk+potrf} $D_r = \\mathrm{chol}(C_r + A_r A_r^\\top)$",
+        ("ColMajor", "RowMajor"): "\\textsc{syrk+potrf} $D_r = \\mathrm{chol}(C_r + A_c A_c^\\top)$",
     },
     "trtri": {
-        ("RowMajor",): "TRTRI $D_r = L_r^{-1}$",
-        ("ColMajor",): "TRTRI $D_c = L_c^{-1}$",
+        ("RowMajor",): "\\textsc{trtri} $D_r = L_r^{-1}$",
+        ("ColMajor",): "\\textsc{trtri} $D_c = L_c^{-1}$",
     },
     "potrf": {
-        ("RowMajor",): "POTRF $D_r = \\mathrm{chol}(A_r)$",
-        ("ColMajor",): "POTRF $D_c = \\mathrm{chol}(A_c)$",
+        ("RowMajor",): "\\textsc{potrf} $D_r = \\mathrm{chol}(A_r)$",
+        ("ColMajor",): "\\textsc{potrf} $D_c = \\mathrm{chol}(A_c)$",
     },
     "hyh": {
         # ("RowMajor", "ColMajor"): "Hyhound $(\\tilde L_r \\; 0) = (L_r \\; A_c) \\breve Q$",
@@ -255,7 +255,7 @@ def plot_partitioned(df: pd.DataFrame, metric, stat, title, ylabel, relative=Fal
 
         n_subplots = len(partitions)
         nrows, ncols = make_subplots_grid(n_subplots)
-        fig, axes = plt.subplots(nrows, ncols, figsize=(5*ncols, 4*nrows + 0.8), squeeze=False, sharex="all", sharey="all")
+        fig, axes = plt.subplots(nrows, ncols, figsize=(5*ncols, 3*nrows + 0.6), squeeze=False, sharex="all", sharey="all")
 
         for ax, (args_tuple, subtitle) in zip(axes.flatten(), partitions.items()):
             # Select rows whose args start with the tuple args_tuple
@@ -309,7 +309,7 @@ def plot_partitioned(df: pd.DataFrame, metric, stat, title, ylabel, relative=Fal
         for c in range(ncols):
             axes[-1, c].set_xlabel("Matrix size")
 
-        fig.suptitle(title, fontsize=15)
+        # fig.suptitle(title, fontsize=15)
         plt.tight_layout()
 
 
