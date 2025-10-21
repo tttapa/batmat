@@ -150,9 +150,23 @@ def benchmark_label(func_name: str, args: tuple[str]) -> str:
         return f"{abi_label}{tiling_label}"
     return abi_label
 
+def benchmark_color(func_name: str, args: tuple[str], label: str) -> str:
+    if args[0] == "blasfeo":
+        return "tab:pink"
+    elif args[0] == "simd4":
+        if "no tiling" in label:
+            return "tab:blue"
+        return "tab:green"
+    elif args[0] == "simd8":
+        if "no tiling" in label:
+            return "tab:orange"
+        return "tab:red"
+    return "tab:purple"
+
 # Plot the data
 df["label"] = df.apply(lambda r: benchmark_label(r["func"].item(), r["args"].item()), axis=1)
 df = df[df["label"].notna()]
+df["color"] = df.apply(lambda r: benchmark_color(r["func"].item(), r["args"].item(), r["label"].item()), axis=1)
 df: pd.DataFrame = add_reference_columns(df, ["GFLOPS", metric])
 functions = df["run_name"].unique()
 title = filename.stem.replace("benchmark-", "").replace("-", " ").upper()
@@ -230,6 +244,7 @@ def make_subplots_grid(n):
         rows = int(np.ceil(np.sqrt(n)))
         return rows, int(np.ceil(n / rows))
 
+DO_FILL_BETWEEN = False
 
 def plot_partitioned(df: pd.DataFrame, metric, stat, title, ylabel, relative=False, gflops=False, logx=False, x_lim_max=None):
     """Generic helper for all plots with subplots per partition."""
@@ -253,33 +268,36 @@ def plot_partitioned(df: pd.DataFrame, metric, stat, title, ylabel, relative=Fal
 
             for run in sub_df["run_name"].unique():
                 run_df = sub_df[sub_df["run_name"] == run]
+                opts = dict(label=run_df["label"].iloc[0], color=run_df["color"].iloc[0])
 
                 if relative:
                     y_ref = run_df[f"{metric}_ref"][stat].array
                     y_val = run_df[metric][stat].array / y_ref
-                    (pl,) = ax.loglog(run_df["version"], y_val, ".-", label=run_df["label"].iloc[0])
-                    ax.fill_between(
-                        run_df["version"],
-                        run_df[metric]["min"].array / y_ref,
-                        run_df[metric]["max"].array / y_ref,
-                        color=pl.get_color(),
-                        alpha=0.25,
-                    )
+                    (pl,) = ax.loglog(run_df["version"], y_val, ".-", **opts)
+                    if DO_FILL_BETWEEN:
+                        ax.fill_between(
+                            run_df["version"],
+                            run_df[metric]["min"].array / y_ref,
+                            run_df[metric]["max"].array / y_ref,
+                            color=pl.get_color(),
+                            alpha=0.25,
+                        )
                 elif gflops:
                     plotfun = ax.semilogx if logx else ax.plot
-                    (pl,) = plotfun(run_df["version"], run_df["GFLOPS"][stat].array, ".-", label=run_df["label"].iloc[0])
-                    ax.fill_between(
-                        run_df["version"],
-                        run_df["GFLOPS"]["min"].array,
-                        run_df["GFLOPS"]["max"].array,
-                        color=pl.get_color(),
-                        alpha=0.25,
-                    )
+                    (pl,) = plotfun(run_df["version"], run_df["GFLOPS"][stat].array, ".-", **opts)
+                    if DO_FILL_BETWEEN:
+                        ax.fill_between(
+                            run_df["version"],
+                            run_df["GFLOPS"]["min"].array,
+                            run_df["GFLOPS"]["max"].array,
+                            color=pl.get_color(),
+                            alpha=0.25,
+                        )
                     ax.set_ylim(0, gflops_max)
                     if x_lim_max:
                         ax.set_xlim(1 if logx else 0, x_lim_max)
                 else:
-                    (pl,) = ax.loglog(run_df["version"], run_df[metric][stat], ".-", label=run_df["label"].iloc[0])
+                    (pl,) = ax.loglog(run_df["version"], run_df[metric][stat], ".-", **opts)
 
             ax.set_title(subtitle)
             ax.legend(loc="lower right")
