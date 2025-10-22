@@ -53,6 +53,7 @@ potrf_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T, Ab
                 Cij -= Ail * Blj;
             }
         }
+#if 1
     // Actual Cholesky kernel (Cholesky–Crout)
     UNROLL_FOR (index_t j = 0; j < RowsReg; ++j) {
         UNROLL_FOR (index_t k = 0; k < j; ++k)
@@ -66,6 +67,36 @@ potrf_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T, Ab
             C_reg[index(i, j)] = inv_pivot * C_reg[index(i, j)];
         }
     }
+#elif 0
+    // Actual Cholesky kernel (naive, sqrt/rsqrt in critical path)
+    UNROLL_FOR (index_t j = 0; j < RowsReg; ++j) {
+        simd inv_pivot     = rsqrt(C_reg[index(j, j)]);
+        C_reg[index(j, j)] = sqrt(C_reg[index(j, j)]);
+        datapar::aligned_store(inv_pivot, invD + j * simd::size());
+        UNROLL_FOR (index_t i = j + 1; i < RowsReg; ++i)
+            C_reg[index(i, j)] *= inv_pivot;
+        UNROLL_FOR (index_t i = j + 1; i < RowsReg; ++i)
+            UNROLL_FOR (index_t k = j + 1; k <= i; ++k)
+                C_reg[index(i, k)] -= C_reg[index(i, j)] * C_reg[index(k, j)];
+    }
+#else
+    // Actual Cholesky kernel (naive, but hiding the latency of sqrt/rsqrt)
+    simd inv_pivot     = rsqrt(C_reg[index(0, 0)]);
+    C_reg[index(0, 0)] = sqrt(C_reg[index(0, 0)]);
+    UNROLL_FOR (index_t j = 0; j < RowsReg; ++j) {
+        datapar::aligned_store(inv_pivot, invD + j * simd::size());
+        UNROLL_FOR (index_t i = j + 1; i < RowsReg; ++i)
+            C_reg[index(i, j)] *= inv_pivot;
+        UNROLL_FOR (index_t i = j + 1; i < RowsReg; ++i)
+            UNROLL_FOR (index_t k = j + 1; k <= i; ++k) {
+                C_reg[index(i, k)] -= C_reg[index(i, j)] * C_reg[index(k, j)];
+                if (k == j + 1 && i == j + 1) {
+                    inv_pivot                  = rsqrt(C_reg[index(j + 1, j + 1)]);
+                    C_reg[index(j + 1, j + 1)] = sqrt(C_reg[index(j + 1, j + 1)]);
+                }
+            }
+    }
+#endif
     // Store result to memory
     auto D_cached = with_cached_access<RowsReg, RowsReg>(D);
     UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
