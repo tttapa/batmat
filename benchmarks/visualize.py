@@ -131,6 +131,7 @@ def benchmark_label(func_name: str, args: tuple[str]) -> str:
         tiling_label = ""
         if len(args) > 5 and args[5].lower() == "false":
             tiling_label = " (no tiling)"
+            return None
         elif len(args) > 4:
             if args[3].lower() == args[4].lower() == "never":
                 tiling_label = " (no packing)"
