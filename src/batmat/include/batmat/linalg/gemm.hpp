@@ -146,11 +146,14 @@ void gemm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
 
 template <class T, class Abi, micro_kernels::gemm::KernelConfig Conf = {}, StorageOrder OA,
           StorageOrder OB, StorageOrder OC, StorageOrder OD>
-    requires(Conf.struc_A == MatrixStructure::General && Conf.struc_B == MatrixStructure::General &&
-             Conf.struc_C != MatrixStructure::General)
+    requires(Conf.struc_C != MatrixStructure::General)
 void gemmt(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
            std::optional<view<const T, Abi, OC>> C, view<T, Abi, OD> D) {
-    BATMAT_ASSERT(D.rows() == D.cols()); // TODO: could be relaxed
+    if (Conf.struc_A != MatrixStructure::General)
+        BATMAT_ASSERT(A.rows() == A.cols()); // TODO: could be relaxed
+    if (Conf.struc_B != MatrixStructure::General)
+        BATMAT_ASSERT(B.rows() == B.cols()); // TODO: could be relaxed
+    BATMAT_ASSERT(D.rows() == D.cols());     // TODO: could be relaxed
     BATMAT_ASSERT(!C || C->rows() == D.rows());
     BATMAT_ASSERT(!C || C->cols() == D.cols());
     BATMAT_ASSERT(A.rows() == D.rows());
@@ -181,8 +184,6 @@ template <class T, class Abi, micro_kernels::gemm::KernelConfig Conf = {}, Stora
     requires(Conf.struc_A != MatrixStructure::General || Conf.struc_B != MatrixStructure::General)
 void trmm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
           std::optional<view<const T, Abi, OC>> C, view<T, Abi, OD> D) {
-    static_assert(Conf.struc_A != MatrixStructure::General ||
-                  Conf.struc_B != MatrixStructure::General);
     static_assert(Conf.struc_A != Conf.struc_B,
                   "lower times lower or upper times upper currently not supported"); // TODO
     if (Conf.struc_A != MatrixStructure::General)
@@ -282,27 +283,69 @@ void gemm_sub(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts... opts) 
 }
 
 /// D = A Aᵀ with D symmetric
-template <MatrixStructure SD, simdifiable VA, simdifiable VD, shift_opt... Opts>
+template <MatrixStructure SA, MatrixStructure SD, simdifiable VA, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VD>
-void syrk(VA &&A, Structured<VD, SD> D, Opts... opts) {
+void syrk(Structured<VA, SA> A, Structured<VD, SD> D, Opts... opts) {
     using enum MatrixStructure;
     static_assert(SD != General);
     std::optional<decltype(simdify(D.value).as_const())> null;
-    constexpr auto conf = detail::apply_options({.negate = false, .struc_C = SD}, opts...);
+    constexpr auto conf = detail::apply_options(
+        {.negate = false, .struc_A = SA, .struc_B = transpose(SA), .struc_C = SD}, opts...);
     detail::gemmt<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
-        simdify(A).as_const(), simdify(A).as_const().transposed(), null, simdify(D.value));
+        simdify(A.value).as_const(), simdify(A.value).as_const().transposed(), null,
+        simdify(D.value));
+}
+
+/// D = A Aᵀ with D symmetric
+template <MatrixStructure SD, class TA, simdifiable VD, shift_opt... Opts>
+void syrk(TA &&A, Structured<VD, SD> D, Opts... opts) {
+    syrk(Structured{std::forward<TA>(A)}, std::move(D), std::forward<Opts>(opts)...);
+}
+
+/// D = D Dᵀ with D triangular on input and symmetric on output
+template <MatrixStructure SD, simdifiable VD, shift_opt... Opts>
+void syrk(Structured<VD, SD> D, Opts... opts) {
+    using enum MatrixStructure;
+    static_assert(SD != General);
+    std::optional<decltype(simdify(D.value).as_const())> null;
+    constexpr auto conf = detail::apply_options(
+        {.negate = false, .struc_A = SD, .struc_B = transpose(SD), .struc_C = SD}, opts...);
+    detail::gemmt<simdified_value_t<VD>, simdified_abi_t<VD>, conf>(
+        simdify(D.value).as_const(), simdify(D.value).as_const().transposed(), null,
+        simdify(D.value));
 }
 
 /// D = -A Aᵀ with D symmetric
-template <MatrixStructure SD, simdifiable VA, simdifiable VD, shift_opt... Opts>
+template <MatrixStructure SA, MatrixStructure SD, simdifiable VA, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VD>
-void syrk_neg(VA &&A, Structured<VD, SD> D, Opts... opts) {
+void syrk_neg(Structured<VA, SA> A, Structured<VD, SD> D, Opts... opts) {
     using enum MatrixStructure;
     static_assert(SD != General);
     std::optional<decltype(simdify(D.value).as_const())> null;
-    constexpr auto conf = detail::apply_options({.negate = true, .struc_C = SD}, opts...);
+    constexpr auto conf = detail::apply_options(
+        {.negate = true, .struc_A = SA, .struc_B = transpose(SA), .struc_C = SD}, opts...);
     detail::gemmt<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
-        simdify(A).as_const(), simdify(A).as_const().transposed(), null, simdify(D.value));
+        simdify(A.value).as_const(), simdify(A.value).as_const().transposed(), null,
+        simdify(D.value));
+}
+
+/// D = A Aᵀ with D symmetric
+template <MatrixStructure SD, class TA, simdifiable VD, shift_opt... Opts>
+void syrk_neg(TA &&A, Structured<VD, SD> D, Opts... opts) {
+    syrk_neg(Structured{std::forward<TA>(A)}, std::move(D), std::forward<Opts>(opts)...);
+}
+
+/// D = -D Dᵀ with D triangular on input and symmetric on output
+template <MatrixStructure SD, simdifiable VD, shift_opt... Opts>
+void syrk_neg(Structured<VD, SD> D, Opts... opts) {
+    using enum MatrixStructure;
+    static_assert(SD != General);
+    std::optional<decltype(simdify(D.value).as_const())> null;
+    constexpr auto conf = detail::apply_options(
+        {.negate = true, .struc_A = SD, .struc_B = transpose(SD), .struc_C = SD}, opts...);
+    detail::gemmt<simdified_value_t<VD>, simdified_abi_t<VD>, conf>(
+        simdify(D.value).as_const(), simdify(D.value).as_const().transposed(), null,
+        simdify(D.value));
 }
 
 /// D = C + A Aᵀ with C, D symmetric

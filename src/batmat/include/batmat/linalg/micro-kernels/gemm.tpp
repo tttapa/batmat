@@ -66,10 +66,10 @@ gemm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
     if constexpr (Conf.struc_A == UpperTriangular && Conf.struc_B == LowerTriangular) {
         l += std::max(RowsReg, ColsReg);
         UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
-            UNROLL_FOR (index_t ll = ii; ll < std::max(RowsReg, ColsReg); ++ll) {
-                simd Ail = shiftl<Conf.shift_A>(A_cached.load(ii, ll));
-                UNROLL_FOR (index_t jj = min_col(ii); jj <= std::min(ll, max_col(ii)); ++jj) {
+            UNROLL_FOR (index_t jj = min_col(ii); jj <= max_col(ii); ++jj) {
+                UNROLL_FOR (index_t ll = std::max(ii, jj); ll < std::max(RowsReg, ColsReg); ++ll) {
                     simd &Cij = C_reg[ii][jj];
+                    simd Ail  = shiftl<Conf.shift_A>(A_cached.load(ii, ll));
                     simd Blj  = shiftl<Conf.shift_B>(B_cached.load(ll, jj));
                     Conf.negate ? (Cij -= Ail * Blj) : (Cij += Ail * Blj);
                 }
@@ -118,12 +118,11 @@ gemm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
     // Triangular matrix multiplication kernel
     if constexpr (Conf.struc_A == LowerTriangular && Conf.struc_B == UpperTriangular) {
         UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
-            UNROLL_FOR (index_t ll = 0; ll <= ii + std::max(ColsReg, RowsReg) - RowsReg; ++ll) {
-                simd Ail = shiftl<Conf.shift_A>(A_cached.load(ii, l + ll));
-                static_assert(std::is_signed_v<index_t>);
-                const index_t j0 = ll - (std::max(RowsReg, ColsReg) - ColsReg);
-                UNROLL_FOR (index_t jj = std::max(j0, min_col(ii)); jj <= max_col(ii); ++jj) {
+            UNROLL_FOR (index_t jj = min_col(ii); jj <= max_col(ii); ++jj) {
+                const index_t lmax = std::min(ii, jj) + std::max(ColsReg, RowsReg) - RowsReg;
+                UNROLL_FOR (index_t ll = 0; ll <= lmax; ++ll) {
                     simd &Cij = C_reg[ii][jj];
+                    simd Ail  = shiftl<Conf.shift_A>(A_cached.load(ii, l + ll));
                     simd Blj  = shiftl<Conf.shift_B>(B_cached.load(l + ll, jj));
                     Conf.negate ? (Cij -= Ail * Blj) : (Cij += Ail * Blj);
                 }

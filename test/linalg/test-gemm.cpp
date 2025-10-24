@@ -292,48 +292,100 @@ TYPED_TEST_P(TrtrsyrkInplaceTest, trmmULLinplace) {
     using batmat::linalg::tril;
     using batmat::linalg::triu;
     using batmat::linalg::trmm;
-    for (auto m : batmat::tests::sizes) {
-        const auto A0 = this->template get_matrix<0>(m, m);
-        auto A        = A0;
-        trmm(triu(A), tril(A.transposed()), tril(A));
-        this->check(
-            [&](auto &&Al) {
-                auto Alu = tri<Upper>(Al);
-                return tri<Lower>(Alu * Alu.transpose());
-            },
-            [&](auto l, auto &&res, auto &&ref, auto &&A0) {
-                const auto resL = tri<Lower>(res), resU = tri<StrictlyUpper>(res);
-                EXPECT_THAT(resL, EigenAlmostEqual(ref, this->tolerance))
-                    << l << "    (" << m << "×" << m << "×" << m << ")";
-                EXPECT_THAT(resU, EigenAlmostEqual(tri<StrictlyUpper>(A0), this->tolerance))
-                    << l << "    (" << m << "×" << m << "×" << m << ")";
-            },
-            A, A0);
-    }
+    for (auto use_syrk : {0, 1})
+        for (auto m : batmat::tests::sizes) {
+            const auto A0 = this->template get_matrix<0>(m, m);
+            auto A        = A0;
+            use_syrk ? syrk(triu(A), tril(A)) : trmm(triu(A), tril(A.transposed()), tril(A));
+            this->check(
+                [&](auto &&Al) {
+                    auto Alu = tri<Upper>(Al);
+                    return tri<Lower>(Alu * Alu.transpose());
+                },
+                [&](auto l, auto &&res, auto &&ref, auto &&A0) {
+                    const auto resL = tri<Lower>(res), resU = tri<StrictlyUpper>(res);
+                    EXPECT_THAT(resL, EigenAlmostEqual(ref, this->tolerance))
+                        << l << "    (" << m << "×" << m << "×" << m << ")";
+                    EXPECT_THAT(resU, EigenAlmostEqual(tri<StrictlyUpper>(A0), this->tolerance))
+                        << l << "    (" << m << "×" << m << "×" << m << ")";
+                },
+                A, A0);
+        }
+}
+
+TYPED_TEST_P(TrtrsyrkInplaceTest, trmmULUinplace) {
+    using batmat::linalg::tril;
+    using batmat::linalg::triu;
+    using batmat::linalg::trmm;
+    for (auto use_syrk : {0, 1})
+        for (auto m : batmat::tests::sizes) {
+            const auto A0 = this->template get_matrix<0>(m, m);
+            auto A        = A0;
+            use_syrk ? syrk(triu(A)) : trmm(triu(A), tril(A.transposed()), triu(A));
+            this->check(
+                [&](auto &&Al) {
+                    auto Alu = tri<Upper>(Al);
+                    return tri<Upper>(Alu * Alu.transpose());
+                },
+                [&](auto l, auto &&res, auto &&ref, auto &&A0) {
+                    const auto resL = tri<StrictlyLower>(res), resU = tri<Upper>(res);
+                    EXPECT_THAT(resU, EigenAlmostEqual(ref, this->tolerance))
+                        << l << "    (" << m << "×" << m << "×" << m << ")";
+                    EXPECT_THAT(resL, EigenAlmostEqual(tri<StrictlyLower>(A0), this->tolerance))
+                        << l << "    (" << m << "×" << m << "×" << m << ")";
+                },
+                A, A0);
+        }
 }
 
 TYPED_TEST_P(TrtrsyrkInplaceTest, trmmLUUinplace) {
     using batmat::linalg::tril;
     using batmat::linalg::triu;
     using batmat::linalg::trmm;
-    for (auto m : batmat::tests::sizes) {
-        const auto A0 = this->template get_matrix<0>(m, m);
-        auto A        = A0;
-        trmm(tril(A), triu(A.transposed()), triu(A));
-        this->check(
-            [&](auto &&Al) {
-                auto All = tri<Lower>(Al);
-                return tri<Upper>(All * All.transpose());
-            },
-            [&](auto l, auto &&res, auto &&ref, auto &&A0) {
-                const auto resL = tri<StrictlyLower>(res), resU = tri<Upper>(res);
-                EXPECT_THAT(resU, EigenAlmostEqual(ref, this->tolerance))
-                    << l << "    (" << m << "×" << m << "×" << m << ")";
-                EXPECT_THAT(resL, EigenAlmostEqual(tri<StrictlyLower>(A0), this->tolerance))
-                    << l << "    (" << m << "×" << m << "×" << m << ")";
-            },
-            A, A0);
-    }
+    for (auto use_syrk : {0, 1})
+        for (auto m : batmat::tests::sizes) {
+            const auto A0 = this->template get_matrix<0>(m, m);
+            auto A        = A0;
+            use_syrk ? syrk(tril(A), triu(A)) : trmm(tril(A), triu(A.transposed()), triu(A));
+            this->check(
+                [&](auto &&Al) {
+                    auto All = tri<Lower>(Al);
+                    return tri<Upper>(All * All.transpose());
+                },
+                [&](auto l, auto &&res, auto &&ref, auto &&A0) {
+                    const auto resL = tri<StrictlyLower>(res), resU = tri<Upper>(res);
+                    EXPECT_THAT(resU, EigenAlmostEqual(ref, this->tolerance))
+                        << l << "    (" << m << "×" << m << "×" << m << ")";
+                    EXPECT_THAT(resL, EigenAlmostEqual(tri<StrictlyLower>(A0), this->tolerance))
+                        << l << "    (" << m << "×" << m << "×" << m << ")";
+                },
+                A, A0);
+        }
+}
+
+TYPED_TEST_P(TrtrsyrkInplaceTest, trmmLULinplace) {
+    using batmat::linalg::tril;
+    using batmat::linalg::triu;
+    using batmat::linalg::trmm;
+    for (auto use_syrk : {0, 1})
+        for (auto m : batmat::tests::sizes) {
+            const auto A0 = this->template get_matrix<0>(m, m);
+            auto A        = A0;
+            use_syrk ? syrk(tril(A)) : trmm(tril(A), triu(A.transposed()), tril(A));
+            this->check(
+                [&](auto &&Al) {
+                    auto All = tri<Lower>(Al);
+                    return tri<Lower>(All * All.transpose());
+                },
+                [&](auto l, auto &&res, auto &&ref, auto &&A0) {
+                    const auto resL = tri<Lower>(res), resU = tri<StrictlyUpper>(res);
+                    EXPECT_THAT(resL, EigenAlmostEqual(ref, this->tolerance))
+                        << l << "    (" << m << "×" << m << "×" << m << ")";
+                    EXPECT_THAT(resU, EigenAlmostEqual(tri<StrictlyUpper>(A0), this->tolerance))
+                        << l << "    (" << m << "×" << m << "×" << m << ")";
+                },
+                A, A0);
+        }
 }
 
 #if 0 // TODO
@@ -417,7 +469,8 @@ REGISTER_TYPED_TEST_SUITE_P(GemmTest, gemm, gemmNeg, gemmAdd, gemmSub, gemmSubSh
                             gemmSubShiftCD, gemmShiftCDNeg, gemmSubShiftCDNeg);
 REGISTER_TYPED_TEST_SUITE_P(TrmmInplaceTest, trmmLGinplace, trmmUGinplace, trmmGLinplace,
                             trmmGUinplace);
-REGISTER_TYPED_TEST_SUITE_P(TrtrsyrkInplaceTest, trmmULLinplace, trmmLUUinplace);
+REGISTER_TYPED_TEST_SUITE_P(TrtrsyrkInplaceTest, trmmULLinplace, trmmULUinplace, trmmLUUinplace,
+                            trmmLULinplace);
 REGISTER_TYPED_TEST_SUITE_P(SyrkTest, syrkL, syrkU);
 
 using namespace batmat::tests;

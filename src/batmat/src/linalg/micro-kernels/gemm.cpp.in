@@ -114,12 +114,20 @@ extern const auto gemm_copy_register_inst_syrk_C =
             constexpr KernelConfig Conf{.negate = Negate, .struc_C = SC};
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OD>>;
         });
-extern const auto gemm_copy_register_inst_trtrsyrk =
+extern const auto gemm_copy_register_inst_lauum =
     guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
         []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>, CStorageOrder<OC>,
                                       auto S) -> const void * {
             constexpr KernelConfig Conf{
                 .negate = Negate, .struc_A = transpose(S), .struc_B = S, .struc_C = S};
+            return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
+        });
+extern const auto gemm_copy_register_inst_lauum_trans =
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, Triangular>(
+        []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>, CStorageOrder<OC>,
+                                      auto S) -> const void * {
+            constexpr KernelConfig Conf{
+                .negate = Negate, .struc_A = S, .struc_B = transpose(S), .struc_C = S};
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
 extern const auto gemm_copy_register_inst_trtrsyrk_sC =

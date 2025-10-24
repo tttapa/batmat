@@ -46,4 +46,7 @@ template <MatrixStructure S, class M>
     return Structured<M, S>{std::forward<M>(m)};
 }
 
+template <class M, MatrixStructure S>
+void simdify(const Structured<M, S> &) = delete;
+
 } // namespace batmat::linalg
