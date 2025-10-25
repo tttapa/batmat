@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/batmat-small.png" alt="batmat logo" style="max-width:200px;"></p>
+<p align="center"><img src="docs/batmat-small.png" alt="batmat logo" width=160></p>
 
 # batmat
 
@@ -6,6 +6,9 @@ Fast linear algebra routines for batches of small matrices.
 
 Batmat is used as the linear algebra backend for the [Cyqlone](https://github.com/kul-optec/cyqlone) solver,
 where it is used to perform vectorized operations across multiple stages in an optimal control problem.
+
+To enable vectorization, batmat stores batches of small matrices in an interleaved “compact” format in memory, where the corresponding elements of all matrices in a batch are stored together, as shown in the figure below (for a batch size of two).
+Custom linear algebra routines then operate on all matrices in a batch simultaneously using SIMD instructions. These routines are built on top of highly optimized micro-kernels.
 
 <p align="center">
 <picture>
@@ -42,6 +45,8 @@ where it is used to perform vectorized operations across multiple stages in an o
 | `symm_add(A, B, C, D)`         | $D_i = C_i + A_i B_i$                            | $A_i$ symmetric                                                          |
 | `copy(A, B)`                   | $B_i = A_i$                                      |                                                                          |
 | `fill(a, B)`                   | $B_i = \mathrm{broadcast}(a)$                    |                                                                          |
+
+A selection of these routines also support masking, shifting, or rotating the arguments (for example, $D_{i+1} = C_i + A_i B_i$).
 
 ## Example usage
 
@@ -119,6 +124,8 @@ cmake --build --preset conan-release
 > See [scripts/dev/profiles/laptop](scripts/dev/profiles/laptop) for an example.
 
 ## Benchmarks
+
+Batmat performs exceptionally well on matrices smaller than around 100×100 (that fit in the L2 cache), where it outperforms traditional scalar linear algebra libraries such as Intel MKL, OpenBLAS, and BLASFEO (especially for triangular or symmetric matrices).
 
 ```sh
 . ~/intel/oneapi/setvars.sh  # For the Intel MKL
