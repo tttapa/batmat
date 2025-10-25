@@ -59,7 +59,7 @@ template <class T, class Abi>
 #endif
     using flt_simd = datapar::simd<T, Abi>;
     using int_type = floating_point_to_int_t<T>;
-    using int_simd = datapar::rebind_simd_t<int_type, flt_simd>;
+    using int_simd = datapar::deduced_simd<int_type, flt_simd::size()>;
     auto r         = std::bit_cast<int_simd>(x) ^ std::bit_cast<int_simd>(signs);
     return std::bit_cast<flt_simd>(r);
 }

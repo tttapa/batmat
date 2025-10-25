@@ -34,7 +34,7 @@ template <class T, class Abi, index_t N = 8, StorageOrder OAi>
     static const isimd iota{[](auto i) { return i; }};
 
     const auto commit_no_shift = [&](auto h_commit) {
-        h_commit -= 1;
+        h_commit -= isimd{1};
         auto gather_S = [&] {
             const auto bs       = static_cast<index_t>(S_in.batch_size());
             const isimd offsets = h_commit * bs + iota;
@@ -60,14 +60,14 @@ template <class T, class Abi, index_t N = 8, StorageOrder OAi>
 
     isimd c1_simd{0};
     for (index_t c = 0; c < C; ++c) {
-        c1_simd += 1; // current column index + 1
+        c1_simd += isimd{1}; // current column index + 1
         const simd Sc = types::aligned_load(&S_in(0, c, 0));
-        auto Sc_msk   = Sc != 0;
+        auto Sc_msk   = !(Sc == 0);
         BATMAT_FULLY_UNROLLED_FOR (auto &h : hist) {
-#if BATMAT_WITH_GSI_HPC_SIMD
-            const auto msk = (h == 0) && Sc_msk;
-            h              = isimd{[&](int i) { return msk[i] ? c1_simd[i] : h[i]; }}; // TODO
-            Sc_msk         = Sc_msk && (!msk);
+#if BATMAT_WITH_GSI_HPC_SIMD // TODO
+            auto h_ = h;
+            h = isimd{[&](int i) -> index_t { return h[i] == 0 && Sc_msk[i] ? c1_simd[i] : h[i]; }};
+            Sc_msk = decltype(Sc_msk){[&](int i) -> bool { return Sc_msk[i] && h_[i] != 0; }};
 #else
             const auto msk = (h == 0) && Sc_msk.__cvt();
             where(msk, h)  = c1_simd;
@@ -75,21 +75,20 @@ template <class T, class Abi, index_t N = 8, StorageOrder OAi>
 #endif
         }
         // Masks of all ones can already be written to memory
-        while (none_of(hist[0] == 0) || (c + 1 == C && any_of(hist[0] != 0)))
+        if (none_of(hist[0] == 0))
             commit();
+        assert(any_of(hist[0] == 0)); // at most one commit per iteration is possible
         // If there are still bits set in the mask.
         if (any_of(Sc_msk)) {
             // Check if there's an empty slot (always at the end)
-            if (any_of(hist[N - 1] != 0))
-                // If not, commit the first slot to make room.
-                commit();
-            // Find the first empty slot, and add the remaining bits.
-            BATMAT_FULLY_UNROLLED_FOR (auto &h : hist)
-                if (all_of(h == 0))
-#if BATMAT_WITH_GSI_HPC_SIMD
-                    h = isimd{[&](int i) { return Sc_msk[i] ? c1_simd[i] : h[i]; }}; // TODO
+            auto &h = hist[N - 1];
+            if (any_of(h != 0))
+                commit(); // If not, commit the first slot to make room.
+            assert(all_of(h == 0));
+#if BATMAT_WITH_GSI_HPC_SIMD // TODO
+            h = isimd{[&](int i) -> index_t { return Sc_msk[i] ? c1_simd[i] : h[i]; }};
 #else
-                    where(Sc_msk.__cvt(), h) = c1_simd;
+            where(Sc_msk.__cvt(), h) = c1_simd;
 #endif
         }
         // Invariant: first registers in the buffer contain fewest zeros
@@ -100,8 +99,9 @@ template <class T, class Abi, index_t N = 8, StorageOrder OAi>
             assert(popcount(hist[i] != 0) <= popcount(hist[i - 1] != 0));
 #endif
     }
-    if (any_of(hist[0] != 0))
-        commit_no_shift(hist[0]);
+    BATMAT_FULLY_UNROLLED_FOR (auto &h : hist)
+        if (any_of(h != 0))
+            commit_no_shift(h);
     return j;
 }
 
@@ -126,12 +126,12 @@ index_t compress_masks_count(view<const T, Abi> S_in) {
 
     for (index_t c = 0; c < C; ++c) {
         const simd Sc = types::aligned_load(&S_in(0, c, 0));
-        auto Sc_msk   = Sc != 0;
+        auto Sc_msk   = !(Sc == 0);
         BATMAT_FULLY_UNROLLED_FOR (auto &h : hist) {
-#if BATMAT_WITH_GSI_HPC_SIMD
-            const auto msk = (h == 0) && Sc_msk;
-            h              = isimd{[&](int i) { return msk[i] ? 1 : h[i]; }}; // TODO
-            Sc_msk         = Sc_msk && (!msk);
+#if BATMAT_WITH_GSI_HPC_SIMD // TODO
+            auto h_ = h;
+            h       = isimd{[&](int i) -> index_t { return h[i] == 0 && Sc_msk[i] ? 1 : h[i]; }};
+            Sc_msk  = decltype(Sc_msk){[&](int i) -> bool { return Sc_msk[i] && h_[i] != 0; }};
 #else
             const auto msk = (h == 0) && Sc_msk.__cvt();
             where(msk, h)  = 1;
@@ -139,21 +139,20 @@ index_t compress_masks_count(view<const T, Abi> S_in) {
 #endif
         }
         // Masks of all ones can already be written to memory
-        while (none_of(hist[0] == 0) || (c + 1 == C && any_of(hist[0] != 0)))
+        if (none_of(hist[0] == 0))
             commit();
+        assert(any_of(hist[0] == 0)); // at most one commit per iteration is possible
         // If there are still bits set in the mask.
         if (any_of(Sc_msk)) {
             // Check if there's an empty slot (always at the end)
-            if (any_of(hist[N - 1] != 0))
-                // If not, commit the first slot to make room.
-                commit();
-            // Find the first empty slot, and add the remaining bits.
-            BATMAT_FULLY_UNROLLED_FOR (auto &h : hist)
-                if (all_of(h == 0))
-#if BATMAT_WITH_GSI_HPC_SIMD
-                    h = isimd{[&](int i) { return Sc_msk[i] ? 1 : h[i]; }}; // TODO
+            auto &h = hist[N - 1];
+            if (any_of(h != 0))
+                commit(); // If not, commit the first slot to make room.
+            assert(all_of(h == 0));
+#if BATMAT_WITH_GSI_HPC_SIMD // TODO
+            h = isimd{[&](int i) -> index_t { return Sc_msk[i] ? 1 : h[i]; }};
 #else
-                    where(Sc_msk.__cvt(), h) = 1;
+            where(Sc_msk.__cvt(), h) = 1;
 #endif
         }
         // Invariant: first registers in the buffer contain fewest zeros
@@ -164,8 +163,9 @@ index_t compress_masks_count(view<const T, Abi> S_in) {
             assert(popcount(hist[i] != 0) <= popcount(hist[i - 1] != 0));
 #endif
     }
-    if (any_of(hist[0] != 0))
-        ++j;
+    BATMAT_FULLY_UNROLLED_FOR (auto &h : hist)
+        if (any_of(h != 0))
+            ++j;
     return j;
 }
 
@@ -204,7 +204,7 @@ index_t compress_masks_sqrt(view<const T, Abi, OAi> A_in, view<const T, Abi> S_i
     using std::sqrt;
     auto writeS = [S_sign_out] [[gnu::always_inline]] (auto gather_S, index_t j) {
         if (S_sign_out.rows() > 0)
-            datapar::aligned_store(copysign({0}, gather_S), &S_sign_out(0, j, 0));
+            datapar::aligned_store(copysign(decltype(gather_S){0}, gather_S), &S_sign_out(0, j, 0));
     };
     auto writeA = [A_out] [[gnu::always_inline]] (auto gather_A, auto gather_S, index_t r,
                                                   index_t j) {
