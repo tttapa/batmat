@@ -123,6 +123,10 @@ cmake --build --preset conan-release
 > compiler flags for the best performance.
 > See [scripts/dev/profiles/laptop](scripts/dev/profiles/laptop) for an example.
 
+GCC 14 or later is required (and can be installed through Conan).
+Clang is also supported, but this requires the `-o\&:with_gsi_hpc_simd=True` option to be passed to Conan
+to enable support for the GSI-HPC SIMD library (Clang does not support libstdc++'s `<experimental/simd>` header).
+
 ## Benchmarks
 
 Batmat performs exceptionally well on matrices smaller than around 100×100 (that fit in the L2 cache), where it outperforms traditional scalar linear algebra libraries such as Intel MKL, OpenBLAS, and BLASFEO (especially for triangular or symmetric matrices).
