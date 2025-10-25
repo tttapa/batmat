@@ -41,7 +41,7 @@ function(setup_benchmark_target name)
     add_dependencies(run-benchmarks run-${target_name})
     if (Python3_EXECUTABLE)
         add_custom_target(viz-${target_name}
-            ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/visualize.py
+            ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/scripts/visualize.py
             ${CMAKE_CURRENT_BINARY_DIR}/results/${target_name}.json
             DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/results/${target_name}.json
             USES_TERMINAL)
