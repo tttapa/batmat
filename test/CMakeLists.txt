@@ -19,6 +19,7 @@ add_executable(tests
     "linalg/test-copy.cpp"
     "linalg/test-gemm.cpp"
     "linalg/test-gemm-diag.cpp"
+    "linalg/test-gemv.cpp"
     "linalg/test-trsm.cpp"
     "linalg/test-potrf.cpp"
     "linalg/test-trtri.cpp"

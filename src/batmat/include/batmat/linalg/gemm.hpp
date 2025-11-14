@@ -216,8 +216,8 @@ void trmm(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
 }
 
 template <shift_opt... Opts>
-constexpr micro_kernels::gemm::KernelConfig apply_options(micro_kernels::gemm::KernelConfig conf,
-                                                          Opts...) {
+constexpr micro_kernels::gemm::KernelConfig
+apply_gemm_options(micro_kernels::gemm::KernelConfig conf, Opts...) {
     if (auto s = shift_A<Opts...>)
         conf.shift_A = *s;
     if (auto s = shift_B<Opts...>)
@@ -230,6 +230,7 @@ constexpr micro_kernels::gemm::KernelConfig apply_options(micro_kernels::gemm::K
         conf.mask_D = *s;
     return conf;
 }
+
 } // namespace detail
 
 /// D = A B
@@ -237,7 +238,7 @@ template <simdifiable VA, simdifiable VB, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VB, VD>
 void gemm(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts... opts) {
     std::optional<decltype(simdify(D).as_const())> null;
-    constexpr auto conf = detail::apply_options({.negate = false}, opts...);
+    constexpr auto conf = detail::apply_gemm_options({.negate = false}, opts...);
     detail::gemm<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A).as_const(), simdify(B).as_const(), null, simdify(D), packing);
 }
@@ -247,7 +248,7 @@ template <simdifiable VA, simdifiable VB, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VB, VD>
 void gemm_neg(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts... opts) {
     std::optional<decltype(simdify(D).as_const())> null;
-    constexpr auto conf = detail::apply_options({.negate = true}, opts...);
+    constexpr auto conf = detail::apply_gemm_options({.negate = true}, opts...);
     detail::gemm<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A).as_const(), simdify(B).as_const(), null, simdify(D), packing);
 }
@@ -256,7 +257,7 @@ void gemm_neg(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts... opts) 
 template <simdifiable VA, simdifiable VB, simdifiable VC, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VB, VC, VD>
 void gemm_add(VA &&A, VB &&B, VC &&C, VD &&D, TilingOptions packing = {}, Opts... opts) {
-    constexpr auto conf = detail::apply_options({.negate = false}, opts...);
+    constexpr auto conf = detail::apply_gemm_options({.negate = false}, opts...);
     detail::gemm<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A).as_const(), simdify(B).as_const(), std::make_optional(simdify(C).as_const()),
         simdify(D), packing);
@@ -271,7 +272,7 @@ void gemm_add(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts... opts) 
 template <simdifiable VA, simdifiable VB, simdifiable VC, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VB, VC, VD>
 void gemm_sub(VA &&A, VB &&B, VC &&C, VD &&D, TilingOptions packing = {}, Opts... opts) {
-    constexpr auto conf = detail::apply_options({.negate = true}, opts...);
+    constexpr auto conf = detail::apply_gemm_options({.negate = true}, opts...);
     detail::gemm<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A).as_const(), simdify(B).as_const(), std::make_optional(simdify(C).as_const()),
         simdify(D), packing);
@@ -289,7 +290,7 @@ void syrk(Structured<VA, SA> A, Structured<VD, SD> D, Opts... opts) {
     using enum MatrixStructure;
     static_assert(SD != General);
     std::optional<decltype(simdify(D.value).as_const())> null;
-    constexpr auto conf = detail::apply_options(
+    constexpr auto conf = detail::apply_gemm_options(
         {.negate = false, .struc_A = SA, .struc_B = transpose(SA), .struc_C = SD}, opts...);
     detail::gemmt<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A.value).as_const(), simdify(A.value).as_const().transposed(), null,
@@ -308,7 +309,7 @@ void syrk(Structured<VD, SD> D, Opts... opts) {
     using enum MatrixStructure;
     static_assert(SD != General);
     std::optional<decltype(simdify(D.value).as_const())> null;
-    constexpr auto conf = detail::apply_options(
+    constexpr auto conf = detail::apply_gemm_options(
         {.negate = false, .struc_A = SD, .struc_B = transpose(SD), .struc_C = SD}, opts...);
     detail::gemmt<simdified_value_t<VD>, simdified_abi_t<VD>, conf>(
         simdify(D.value).as_const(), simdify(D.value).as_const().transposed(), null,
@@ -322,7 +323,7 @@ void syrk_neg(Structured<VA, SA> A, Structured<VD, SD> D, Opts... opts) {
     using enum MatrixStructure;
     static_assert(SD != General);
     std::optional<decltype(simdify(D.value).as_const())> null;
-    constexpr auto conf = detail::apply_options(
+    constexpr auto conf = detail::apply_gemm_options(
         {.negate = true, .struc_A = SA, .struc_B = transpose(SA), .struc_C = SD}, opts...);
     detail::gemmt<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A.value).as_const(), simdify(A.value).as_const().transposed(), null,
@@ -341,7 +342,7 @@ void syrk_neg(Structured<VD, SD> D, Opts... opts) {
     using enum MatrixStructure;
     static_assert(SD != General);
     std::optional<decltype(simdify(D.value).as_const())> null;
-    constexpr auto conf = detail::apply_options(
+    constexpr auto conf = detail::apply_gemm_options(
         {.negate = true, .struc_A = SD, .struc_B = transpose(SD), .struc_C = SD}, opts...);
     detail::gemmt<simdified_value_t<VD>, simdified_abi_t<VD>, conf>(
         simdify(D.value).as_const(), simdify(D.value).as_const().transposed(), null,
@@ -354,7 +355,7 @@ template <MatrixStructure SD, simdifiable VA, simdifiable VC, simdifiable VD, sh
 void syrk_add(VA &&A, Structured<VC, SD> C, Structured<VD, SD> D, Opts... opts) {
     using enum MatrixStructure;
     static_assert(SD != General);
-    constexpr auto conf = detail::apply_options({.negate = false, .struc_C = SD}, opts...);
+    constexpr auto conf = detail::apply_gemm_options({.negate = false, .struc_C = SD}, opts...);
     detail::gemmt<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A).as_const(), simdify(A).as_const().transposed(),
         std::make_optional(simdify(C.value).as_const()), simdify(D.value));
@@ -371,7 +372,7 @@ template <MatrixStructure SD, simdifiable VA, simdifiable VC, simdifiable VD, sh
 void syrk_sub(VA &&A, Structured<VC, SD> C, Structured<VD, SD> D, Opts... opts) {
     using enum MatrixStructure;
     static_assert(SD != General);
-    constexpr auto conf = detail::apply_options({.negate = true, .struc_C = SD}, opts...);
+    constexpr auto conf = detail::apply_gemm_options({.negate = true, .struc_C = SD}, opts...);
     detail::gemmt<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A).as_const(), simdify(A).as_const().transposed(),
         std::make_optional(simdify(C.value).as_const()), simdify(D.value));
@@ -388,7 +389,7 @@ template <MatrixStructure SA, MatrixStructure SB, MatrixStructure SD, simdifiabl
     requires simdify_compatible<VA, VB, VD>
 void trmm(Structured<VA, SA> A, Structured<VB, SB> B, Structured<VD, SD> D, Opts... opts) {
     std::optional<decltype(simdify(D.value).as_const())> null;
-    constexpr auto conf = detail::apply_options(
+    constexpr auto conf = detail::apply_gemm_options(
         {.negate = false, .struc_A = SA, .struc_B = SB, .struc_C = SD}, opts...);
     detail::trmm<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A.value).as_const(), simdify(B.value).as_const(), null, simdify(D.value));
@@ -416,7 +417,7 @@ template <MatrixStructure SA, MatrixStructure SB, MatrixStructure SD, simdifiabl
     requires simdify_compatible<VA, VB, VD>
 void trmm_neg(Structured<VA, SA> A, Structured<VB, SB> B, Structured<VD, SD> D, Opts... opts) {
     std::optional<decltype(simdify(D.value).as_const())> null;
-    constexpr auto conf = detail::apply_options(
+    constexpr auto conf = detail::apply_gemm_options(
         {.negate = true, .struc_A = SA, .struc_B = SB, .struc_C = SD}, opts...);
     detail::trmm<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A.value).as_const(), simdify(B.value).as_const(), null, simdify(D.value));
@@ -434,7 +435,7 @@ template <MatrixStructure SA, MatrixStructure SB, MatrixStructure SD, simdifiabl
     requires simdify_compatible<VA, VB, VD>
 void trmm_add(Structured<VA, SA> A, Structured<VB, SB> B, Structured<VC, SD> C,
               Structured<VD, SD> D, Opts... opts) {
-    constexpr auto conf = detail::apply_options(
+    constexpr auto conf = detail::apply_gemm_options(
         {.negate = false, .struc_A = SA, .struc_B = SB, .struc_C = SD}, opts...);
     detail::trmm<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A.value).as_const(), simdify(B.value).as_const(),
@@ -453,7 +454,7 @@ template <MatrixStructure SA, MatrixStructure SB, MatrixStructure SD, simdifiabl
     requires simdify_compatible<VA, VB, VD>
 void trmm_sub(Structured<VA, SA> A, Structured<VB, SB> B, Structured<VC, SD> C,
               Structured<VD, SD> D, Opts... opts) {
-    constexpr auto conf = detail::apply_options(
+    constexpr auto conf = detail::apply_gemm_options(
         {.negate = true, .struc_A = SA, .struc_B = SB, .struc_C = SD}, opts...);
     detail::trmm<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A.value).as_const(), simdify(B.value).as_const(),

@@ -38,6 +38,8 @@ class LinalgTest : public ::testing::Test {
         return get_matrix<Config::orders[O]>(r, c);
     }
 
+    auto get_vector(index_t r) { return get_matrix<StorageOrder::ColMajor>(r, 1); }
+
     auto get_sparse_vector(index_t r, double sparsity = 0.5) {
         Matrix<StorageOrder::ColMajor> a{{.rows = r, .cols = 1}};
         std::bernoulli_distribution brnl{sparsity};
