@@ -9,7 +9,7 @@ from conan.tools.scm import Git
 
 class BatmatRecipe(ConanFile):
     name = "batmat"
-    version = "0.0.6"
+    version = "0.0.7"
 
     license = "LGPL-3.0-or-later"
     author = "Pieter P <pieter.p.dev@outlook.com>"
@@ -60,7 +60,7 @@ class BatmatRecipe(ConanFile):
     generators = ("CMakeDeps",)
 
     def requirements(self):
-        self.requires("guanaqo/1.0.0-alpha.20", transitive_headers=True, transitive_libs=True)
+        self.requires("guanaqo/1.0.0-alpha.21", transitive_headers=True, transitive_libs=True)
         if self.options.get_safe("with_benchmarks"):
             self.requires("benchmark/1.9.4")
             self.requires("hyhound/1.0.2-alpha.2")
