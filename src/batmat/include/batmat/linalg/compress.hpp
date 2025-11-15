@@ -31,7 +31,7 @@ template <class T, class Abi, index_t N = 8, StorageOrder OAi>
 
     isimd hist[N]{};
     index_t j = 0;
-    static const isimd iota{[](auto i) { return i; }};
+    static constexpr isimd iota{[](auto i) { return i; }};
 
     const auto commit_no_shift = [&](auto h_commit) {
         h_commit -= isimd{1};
@@ -43,8 +43,8 @@ template <class T, class Abi, index_t N = 8, StorageOrder OAi>
         writeS(gather_S, j);
         for (index_t r = 0; r < R; ++r) {
             const auto bs       = static_cast<index_t>(A_in.batch_size());
-            const auto stride   = (OAi == StorageOrder::ColMajor ? bs * A_in.outer_stride() : bs);
-            const isimd offsets = h_commit * stride + iota;
+            const auto stride   = OAi == StorageOrder::ColMajor ? A_in.outer_stride() : 1;
+            const isimd offsets = h_commit * bs * stride + iota;
             auto gather_A       = gather<T, VL>(&A_in(0, r, 0), offsets);
             writeA(gather_A, gather_S, r, j);
         }
@@ -75,21 +75,22 @@ template <class T, class Abi, index_t N = 8, StorageOrder OAi>
 #endif
         }
         // Masks of all ones can already be written to memory
-        if (none_of(hist[0] == 0))
+        bool first_full = none_of(hist[0] == 0);
+        // If there are nonzero elements in the mask left, we need to make room in the buffer
+        bool mask_left = any_of(Sc_msk);
+        if (first_full || mask_left) {
             commit();
-        assert(any_of(hist[0] == 0)); // at most one commit per iteration is possible
-        // If there are still bits set in the mask.
-        if (any_of(Sc_msk)) {
-            // Check if there's an empty slot (always at the end)
-            auto &h = hist[N - 1];
-            if (any_of(h != 0))
-                commit(); // If not, commit the first slot to make room.
-            assert(all_of(h == 0));
+            assert(any_of(hist[0] == 0)); // at most one commit per iteration is possible
+            // If there are still bits set in the mask.
+            if (mask_left) {
+                // Check if there's an empty slot (always at the end)
+                auto &h = hist[N - 1];
 #if BATMAT_WITH_GSI_HPC_SIMD // TODO
-            h = isimd{[&](int i) -> index_t { return Sc_msk[i] ? c1_simd[i] : h[i]; }};
+                h = isimd{[&](int i) -> index_t { return Sc_msk[i] ? c1_simd[i] : h[i]; }};
 #else
-            where(Sc_msk.__cvt(), h) = c1_simd;
+                where(Sc_msk.__cvt(), h) = c1_simd;
 #endif
+            }
         }
         // Invariant: first registers in the buffer contain fewest zeros
         BATMAT_FULLY_UNROLLED_FOR (index_t i = 1; i < N; ++i)
