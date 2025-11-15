@@ -22,6 +22,7 @@ add_executable(tests
     "linalg/test-gemv.cpp"
     "linalg/test-trsm.cpp"
     "linalg/test-potrf.cpp"
+    "linalg/test-symv.cpp"
     "linalg/test-trtri.cpp"
 )
 target_compile_definitions(tests PRIVATE
