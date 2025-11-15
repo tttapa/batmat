@@ -5,6 +5,7 @@
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
 #include <batmat/ops/gather.hpp>
+#include "batmat/unroll.h"
 #include <guanaqo/trace.hpp>
 
 namespace batmat::linalg {
@@ -33,6 +34,14 @@ template <class T, class Abi, index_t N = 8, StorageOrder OAi>
     index_t j = 0;
     static constexpr isimd iota{[](auto i) { return i; }};
 
+    [[maybe_unused]] const auto commit_fast = [&](auto Sc, index_t c) {
+        writeS(Sc, j);
+        for (index_t r = 0; r < R; ++r) {
+            auto Ac = types::aligned_load(&A_in(0, r, c));
+            writeA(Ac, Sc, r, j);
+        }
+        ++j;
+    };
     const auto commit_no_shift = [&](auto h_commit) {
         h_commit -= isimd{1};
         auto gather_S = [&] {
@@ -41,11 +50,11 @@ template <class T, class Abi, index_t N = 8, StorageOrder OAi>
             return gather<T, VL>(&S_in(0, 0, 0), offsets);
         }();
         writeS(gather_S, j);
+        const auto bs       = static_cast<index_t>(A_in.batch_size());
+        const auto stride   = OAi == StorageOrder::ColMajor ? A_in.outer_stride() : 1;
+        const isimd offsets = h_commit * bs * stride + iota;
         for (index_t r = 0; r < R; ++r) {
-            const auto bs       = static_cast<index_t>(A_in.batch_size());
-            const auto stride   = OAi == StorageOrder::ColMajor ? A_in.outer_stride() : 1;
-            const isimd offsets = h_commit * bs * stride + iota;
-            auto gather_A       = gather<T, VL>(&A_in(0, r, 0), offsets);
+            auto gather_A = gather<T, VL>(&A_in(0, r, 0), offsets);
             writeA(gather_A, gather_S, r, j);
         }
         ++j;
@@ -63,6 +72,12 @@ template <class T, class Abi, index_t N = 8, StorageOrder OAi>
         c1_simd += isimd{1}; // current column index + 1
         const simd Sc = types::aligned_load(&S_in(0, c, 0));
         auto Sc_msk   = !(Sc == 0);
+#if 0
+        if (all_of(Sc_msk)) {
+            commit_fast(Sc, c);
+            continue; // fast path: all nonzero, no gather needed
+        }
+#endif
         BATMAT_FULLY_UNROLLED_FOR (auto &h : hist) {
 #if BATMAT_WITH_GSI_HPC_SIMD // TODO
             auto h_ = h;
