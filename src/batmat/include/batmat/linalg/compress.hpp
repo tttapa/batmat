@@ -12,13 +12,13 @@ namespace batmat::linalg {
 namespace detail {
 
 template <class T, class Abi, index_t N = 8, StorageOrder OAi>
-[[gnu::always_inline]] inline index_t compress_masks_impl(view<const T, Abi, OAi> A_in,
-                                                          view<const T, Abi> S_in, auto writeS,
-                                                          auto writeA) {
+[[gnu::always_inline, gnu::flatten]] inline index_t
+compress_masks_impl(view<const T, Abi, OAi> A_in, view<const T, Abi> S_in, auto writeS,
+                    auto writeA) noexcept {
     using batmat::ops::gather;
-    BATMAT_ASSERT(A_in.depth() == S_in.depth());
-    BATMAT_ASSERT(A_in.cols() == S_in.rows());
-    BATMAT_ASSERT(S_in.cols() == 1);
+    BATMAT_ASSUME(A_in.depth() == S_in.depth());
+    BATMAT_ASSUME(A_in.cols() == S_in.rows());
+    BATMAT_ASSUME(S_in.cols() == 1);
     const auto C = A_in.cols();
     const auto R = A_in.rows();
     if (C == 0)
@@ -30,66 +30,57 @@ template <class T, class Abi, index_t N = 8, StorageOrder OAi>
     static constexpr auto VL = simd::size();
 
     isimd hist[N]{};
+    simd Shist[N]{};
     index_t j = 0;
     static const isimd iota{[](auto i) { return i; }};
 
-    const auto commit_no_shift = [&](auto h_commit) {
-        h_commit -= isimd{1};
-        auto gather_S = [&] {
-            const auto bs       = static_cast<index_t>(S_in.batch_size());
-            const isimd offsets = h_commit * bs + iota;
-            return gather<T, VL>(&S_in(0, 0, 0), offsets);
-        }();
-        writeS(gather_S, j);
+    const auto commit_no_shift = [&](isimd h_commit, simd S_commit) {
+        writeS(S_commit, j);
+        const auto bs       = static_cast<index_t>(A_in.batch_size());
+        const auto stride   = (OAi == StorageOrder::ColMajor ? bs * A_in.outer_stride() : bs);
+        const isimd offsets = h_commit * stride + iota;
         for (index_t r = 0; r < R; ++r) {
-            const auto bs       = static_cast<index_t>(A_in.batch_size());
-            const auto stride   = (OAi == StorageOrder::ColMajor ? bs * A_in.outer_stride() : bs);
-            const isimd offsets = h_commit * stride + iota;
-            auto gather_A       = gather<T, VL>(&A_in(0, r, 0), offsets);
-            writeA(gather_A, gather_S, r, j);
+            auto gather_A                  = gather<T, VL>(&A_in(0, r, 0), offsets);
+            where(S_commit == 0, gather_A) = simd{}; // TODO: masked gather
+            writeA(gather_A, S_commit, r, j);
         }
         ++j;
     };
     const auto commit = [&] [[gnu::always_inline]] () {
         const isimd h = hist[0];
-        BATMAT_FULLY_UNROLLED_FOR (index_t k = 1; k < N; ++k)
-            hist[k - 1] = hist[k];
-        hist[N - 1] = 0;
-        commit_no_shift(h);
+        const simd S  = Shist[0];
+        BATMAT_FULLY_UNROLLED_FOR (index_t k = 1; k < N; ++k) {
+            hist[k - 1]  = hist[k];
+            Shist[k - 1] = Shist[k];
+        }
+        hist[N - 1]  = {};
+        Shist[N - 1] = {};
+        commit_no_shift(h, S);
     };
 
-    isimd c1_simd{0};
+    isimd c_simd{0};
     for (index_t c = 0; c < C; ++c) {
-        c1_simd += isimd{1}; // current column index + 1
-        const simd Sc = types::aligned_load(&S_in(0, c, 0));
-        auto Sc_msk   = !(Sc == 0);
-        BATMAT_FULLY_UNROLLED_FOR (auto &h : hist) {
-#if BATMAT_WITH_GSI_HPC_SIMD // TODO
-            auto h_ = h;
-            h = isimd{[&](int i) -> index_t { return h[i] == 0 && Sc_msk[i] ? c1_simd[i] : h[i]; }};
-            Sc_msk = decltype(Sc_msk){[&](int i) -> bool { return Sc_msk[i] && h_[i] != 0; }};
-#else
-            const auto msk = (h == 0) && Sc_msk.__cvt();
-            where(msk, h)  = c1_simd;
-            Sc_msk         = Sc_msk && (!msk).__cvt();
-#endif
+        simd Sc = types::aligned_load(&S_in(0, c, 0));
+        BATMAT_FULLY_UNROLLED_FOR (index_t i = 0; i < N; ++i) {
+            auto &h               = hist[i];
+            auto &Sh              = Shist[i];
+            const auto msk        = (Sh == 0) && !(Sc == 0);
+            where(msk, Sh)        = Sc;
+            where(msk.__cvt(), h) = c_simd;
+            where(msk, Sc)        = simd{};
         }
         // Masks of all ones can already be written to memory
-        if (none_of(hist[0] == 0))
+        if (none_of(Shist[0] == 0) || !all_of(Sc == 0)) {
             commit();
-        assert(any_of(hist[0] == 0)); // at most one commit per iteration is possible
-        // If there are still bits set in the mask.
-        if (any_of(Sc_msk)) {
-            // Check if there's an empty slot (always at the end)
-            auto &h = hist[N - 1];
-            if (any_of(h != 0))
-                commit(); // If not, commit the first slot to make room.
-            assert(all_of(h == 0));
-#if BATMAT_WITH_GSI_HPC_SIMD // TODO
-            h = isimd{[&](int i) -> index_t { return Sc_msk[i] ? c1_simd[i] : h[i]; }};
-#else
-            where(Sc_msk.__cvt(), h) = c1_simd;
-#endif
+            assert(any_of(Shist[0] == 0)); // at most one commit per iteration is possible
+            if (!all_of(Sc == 0)) {
+                // We now have room for any remaining bits
+                auto &h               = hist[N - 1];
+                auto &Sh              = Shist[N - 1];
+                const auto msk        = !(Sc == 0);
+                where(msk, Sh)        = Sc;
+                where(msk.__cvt(), h) = c_simd;
+            }
         }
         // Invariant: first registers in the buffer contain fewest zeros
         BATMAT_FULLY_UNROLLED_FOR (index_t i = 1; i < N; ++i)
@@ -98,10 +89,14 @@ template <class T, class Abi, index_t N = 8, StorageOrder OAi>
 #else
             assert(popcount(hist[i] != 0) <= popcount(hist[i - 1] != 0));
 #endif
+        c_simd += isimd{1};
     }
-    BATMAT_FULLY_UNROLLED_FOR (auto &h : hist)
-        if (any_of(h != 0))
-            commit_no_shift(h);
+    BATMAT_FULLY_UNROLLED_FOR (index_t i = 0; i < N; ++i) {
+        auto &h = hist[i];
+        auto &S = Shist[i];
+        if (!all_of(S != 0))
+            commit_no_shift(h, S);
+    }
     return j;
 }
 
@@ -169,9 +164,9 @@ index_t compress_masks_count(view<const T, Abi> S_in) {
     return j;
 }
 
-template <class T, class Abi, index_t N = 8, StorageOrder OAi, StorageOrder OAo>
+template <class T, class Abi, index_t N = 4, StorageOrder OAi, StorageOrder OAo>
 index_t compress_masks(view<const T, Abi, OAi> A_in, view<const T, Abi> S_in,
-                       view<T, Abi, OAo> A_out, view<T, Abi> S_out) {
+                       view<T, Abi, OAo> A_out, view<T, Abi> S_out) noexcept {
     GUANAQO_TRACE("compress_masks", 0, (A_in.rows() + 1) * A_in.cols() * A_in.depth());
     BATMAT_ASSERT(A_in.rows() == A_out.rows());
     BATMAT_ASSERT(A_in.cols() == A_out.cols());
@@ -189,7 +184,7 @@ index_t compress_masks(view<const T, Abi, OAi> A_in, view<const T, Abi> S_in,
     return compress_masks_impl<T, Abi, N, OAi>(A_in, S_in, writeS, writeA);
 }
 
-template <class T, class Abi, index_t N = 8, StorageOrder OAi, StorageOrder OAo>
+template <class T, class Abi, index_t N = 4, StorageOrder OAi, StorageOrder OAo>
 index_t compress_masks_sqrt(view<const T, Abi, OAi> A_in, view<const T, Abi> S_in,
                             view<T, Abi, OAo> A_out, view<T, Abi> S_sign_out = {}) {
     GUANAQO_TRACE("compress_masks_sqrt", 0, (A_in.rows() + 1) * A_in.cols() * A_in.depth());
