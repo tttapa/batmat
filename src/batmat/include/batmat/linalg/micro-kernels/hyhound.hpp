@@ -17,9 +17,9 @@ struct triangular_accessor {
     static constexpr ptrdiff_t inner_stride =
         datapar::simd_size<std::remove_const_t<T>, Abi>::value;
 
+    static constexpr index_t num_elem_per_layer() { return R * (R + 1) / 2; }
     static constexpr size_t size() {
-        auto r = static_cast<size_t>(R);
-        return simd::size() * (r * (r + 1) / 2);
+        return simd::size() * static_cast<size_t>(num_elem_per_layer());
     }
     static constexpr size_t alignment() {
         return datapar::simd_align<std::remove_const_t<T>, Abi>::value;
@@ -39,6 +39,7 @@ struct triangular_accessor {
     }
 
     [[gnu::always_inline]] triangular_accessor(value_type *data) noexcept : data{data} {}
+    operator triangular_accessor<const T, Abi, R>() const noexcept { return {data}; }
 };
 
 template <class T, class Abi>

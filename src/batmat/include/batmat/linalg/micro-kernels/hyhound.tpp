@@ -6,6 +6,8 @@
 #include <batmat/loop.hpp>
 #include <batmat/ops/cneg.hpp>
 #include <batmat/ops/rotate.hpp>
+#include <type_traits>
+#include <utility>
 
 #define UNROLL_FOR(...) BATMAT_FULLY_UNROLLED_FOR (__VA_ARGS__)
 
@@ -339,6 +341,89 @@ void xshhud_diag_ref(view<T, Abi, OL> L, view<T, Abi, OA> A, view<const T, Abi> 
                 LoopDir::Backward); // TODO: decide on order
         });
     }
+}
+
+template <class T, class Abi, StorageOrder OL>
+constexpr std::pair<index_t, index_t> xshhud_W_size(view<T, Abi, OL> L) {
+    static constexpr index_constant<SizeR<std::remove_const_t<T>, Abi>> R;
+    using W_t = triangular_accessor<std::remove_const_t<T>, Abi, R>;
+    return {W_t::num_elem_per_layer(), (L.cols() + R - 1) / R};
+}
+
+template <class T, class Abi, bool SignOnly = false, StorageOrder OL, StorageOrder OA>
+void xshhud_diag_ref(view<T, Abi, OL> L, view<T, Abi, OA> A, view<const T, Abi> D, view<T, Abi> W) {
+    static constexpr index_constant<SizeR<T, Abi>> R;
+    static constexpr index_constant<SizeS<T, Abi>> S;
+    const index_t C = A.cols();
+    auto n1 = L.cols(), n2 = L.rows() - n1;
+    auto flop_count_diag_11             = (C + 1) * n1 * n1 + 2 * C * n1;
+    auto flop_count_tail_11             = 2 * (C + 1) * n2 * n1 + C * n2;
+    [[maybe_unused]] index_t flop_count = flop_count_diag_11 + flop_count_tail_11;
+    GUANAQO_TRACE("xshhud_diag", 0, flop_count * L.depth());
+    if (C == 0)
+        return;
+
+    BATMAT_ASSERT(std::make_pair(W.rows(), W.cols()) == (xshhud_W_size<T, Abi>)(L));
+    using W_t = triangular_accessor<T, Abi, R>;
+
+    // Process all diagonal blocks (in multiples of R, except the last).
+    foreach_chunked_merged(0, L.cols(), R, [&](index_t k, auto nk) {
+        // Part of A corresponding to this diagonal block
+        // TODO: packing
+        auto Ad = A.middle_rows(k, nk);
+        auto Ld = L.block(k, k, nk, nk);
+        auto Wd = W_t{&W(0, 0, k / R)};
+        // Process the diagonal block itself
+        microkernel_diag_lut<T, Abi, OL, OA, SignOnly>[nk - 1](A.cols(), Wd, Ld, Ad, D);
+        // Process all rows below the diagonal block (in multiples of S).
+        foreach_chunked_merged(
+            k + nk, L.rows(), S,
+            [&](index_t i, auto ni) {
+                auto As = A.middle_rows(i, ni);
+                auto Ls = L.block(i, k, ni, nk);
+                microkernel_tail_lut_2<T, Abi, OL, OA, SignOnly>[nk - 1][ni - 1](
+                    0, A.cols(), A.cols(), Wd, Ls, As, As, Ad, D, Structure::General, 0);
+            },
+            LoopDir::Backward); // TODO: decide on order
+    });
+}
+
+template <class T, class Abi, bool SignOnly = false, StorageOrder OL, StorageOrder OA>
+void xshh_apply_diag_ref(view<T, Abi, OL> L, view<const T, Abi, OA> Ain, view<T, Abi, OA> Aout,
+                         view<const T, Abi, OA> B, view<const T, Abi> D, view<const T, Abi> W,
+                         index_t kA_nonzero_start = 0, index_t kA_nonzero_end = -1) {
+    static constexpr index_constant<SizeR<T, Abi>> R;
+    static constexpr index_constant<SizeS<T, Abi>> S;
+    const index_t C = Ain.cols();
+    kA_nonzero_end  = (kA_nonzero_end == -1) ? C : kA_nonzero_end;
+    auto n1 = L.cols(), n2 = L.rows();
+    [[maybe_unused]] index_t flop_count = 2 * (C + 1) * n2 * n1 + C * n2;
+    GUANAQO_TRACE("xshh_apply_diag", 0, flop_count * L.depth());
+    if (C == 0)
+        return;
+
+    BATMAT_ASSERT(std::make_pair(W.rows(), W.cols()) == (xshhud_W_size<T, Abi>)(L));
+    using W_t = triangular_accessor<const T, Abi, R>;
+
+    // Process all diagonal blocks (in multiples of R, except the last).
+    foreach_chunked_merged(0, L.cols(), R, [&](index_t k, auto nk) {
+        // Part of A corresponding to this diagonal block
+        // TODO: packing
+        auto Ad = B.middle_rows(k, nk);
+        auto Wd = W_t{&W(0, 0, k / R)};
+        // Process all rows (in multiples of S).
+        foreach_chunked_merged( // TODO: swap loop order?
+            0, L.rows(), S,
+            [&](index_t i, auto ni) {
+                auto Aini  = k == 0 ? Ain.middle_rows(i, ni) : Aout.middle_rows(i, ni);
+                auto Aouti = Aout.middle_rows(i, ni);
+                auto Ls    = L.block(i, k, ni, nk);
+                microkernel_tail_lut_2<T, Abi, OL, OA, SignOnly>[nk - 1][ni - 1](
+                    k == 0 ? kA_nonzero_start : 0, k == 0 ? kA_nonzero_end : C, C, Wd, Ls, Aini,
+                    Aouti, Ad, D, Structure::General, 0);
+            },
+            LoopDir::Backward); // TODO: decide on order
+    });
 }
 
 template <class T, class Abi, StorageOrder OL1, StorageOrder OA1, StorageOrder OL2,
