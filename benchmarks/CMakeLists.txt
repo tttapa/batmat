@@ -56,5 +56,6 @@ setup_benchmark_target(trtri)
 setup_benchmark_target(potrf)
 setup_benchmark_target(syrk-potrf)
 setup_benchmark_target(hyh)
+setup_benchmark_target(compress)
 
 target_link_libraries(benchmark-hyh PRIVATE hyhound::hyhound)
