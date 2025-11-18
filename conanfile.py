@@ -69,7 +69,7 @@ class BatmatRecipe(ConanFile):
         if self.options.get_safe("with_gsi_hpc_simd"):
             self.requires("gsi-hpc-simd/tttapa.20250625", transitive_headers=True)
         if self.options.get_safe("with_blasfeo"):
-            self.requires("blasfeo/0.1.4.1")
+            self.requires("blasfeo/0.1.4.2")
 
     def build_requirements(self):
         self.test_requires("eigen/5.0.0")
