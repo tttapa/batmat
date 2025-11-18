@@ -19,7 +19,7 @@ template <class T, class Abi, KernelConfig Conf, index_t RowsReg, StorageOrder O
 [[gnu::hot, gnu::flatten]] void
 potrf_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T, Abi, O2> A2,
                        const uview<const T, Abi, O2> C, const uview<T, Abi, O2> D, T *const invD,
-                       const index_t k1, const index_t k2) noexcept {
+                       const index_t k1, const index_t k2, real_t regularization) noexcept {
     static_assert(Conf.struc_C == MatrixStructure::LowerTriangular); // TODO
     static_assert(RowsReg > 0);
     using ops::rsqrt;
@@ -29,9 +29,11 @@ potrf_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T, Ab
     // Load matrix into registers
     simd C_reg[RowsReg * (RowsReg + 1) / 2]; // NOLINT(*-c-arrays)
     const auto index = [](index_t r, index_t c) { return c * (2 * RowsReg - 1 - c) / 2 + r; };
-    UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
-        UNROLL_FOR (index_t jj = 0; jj <= ii; ++jj)
+    UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
+        UNROLL_FOR (index_t jj = 0; jj < ii; ++jj)
             C_reg[index(ii, jj)] = C_cached.load(ii, jj);
+        C_reg[index(ii, ii)] = C_cached.load(ii, ii) + simd(regularization);
+    }
     // Perform syrk operation of A
     const auto A1_cached = with_cached_access<RowsReg, 0>(A1);
     for (index_t l = 0; l < k1; ++l)
@@ -174,7 +176,7 @@ void trsm_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T
 
 template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OCD>
 void potrf_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi, OCD> C,
-                         const view<T, Abi, OCD> D) noexcept {
+                         const view<T, Abi, OCD> D, real_t regularization) noexcept {
     using enum MatrixStructure;
     static_assert(Conf.struc_C == LowerTriangular); // TODO
     constexpr auto Rows = RowsReg<T, Abi>, Cols = ColsReg<T, Abi>;
@@ -196,7 +198,7 @@ void potrf_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi
 
     // Optimization for very small matrices
     if (I <= Rows && J <= Cols && I == J)
-        return potrf_microkernel[J - 1](A_, C_, C_, D_, invD, K, 0);
+        return potrf_microkernel[J - 1](A_, C_, C_, D_, invD, K, 0, regularization);
 
     foreach_chunked_merged( // Loop over the diagonal blocks of C
         0, J, Cols, [&](index_t j, auto nj) {
@@ -204,7 +206,7 @@ void potrf_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi
             const auto Dj  = D_.middle_rows(j);
             const auto Djj = D_.block(j, j);
             // Djj = chol(Cjj ± Aj Ajᵀ - Dj Djᵀ)
-            potrf_microkernel[nj - 1](Aj, Dj, C_.block(j, j), Djj, invD, K, j);
+            potrf_microkernel[nj - 1](Aj, Dj, C_.block(j, j), Djj, invD, K, j, regularization);
             foreach_chunked_merged( // Loop over the subdiagonal rows
                 j + nj, I, Rows, [&](index_t i, auto ni) {
                     const auto Ai  = A_.middle_rows(i);
