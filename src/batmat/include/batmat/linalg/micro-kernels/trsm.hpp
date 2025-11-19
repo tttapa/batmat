@@ -9,6 +9,7 @@ namespace batmat::linalg::micro_kernels::trsm {
 
 struct KernelConfig {
     MatrixStructure struc_A = MatrixStructure::LowerTriangular;
+    index_t shift_B         = 0;
 };
 
 template <class T, class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg, StorageOrder OA,
