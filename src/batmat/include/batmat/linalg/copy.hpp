@@ -3,6 +3,7 @@
 #include <batmat/linalg/shift.hpp>
 #include <batmat/linalg/simdify.hpp>
 #include <batmat/linalg/structure.hpp>
+#include <batmat/linalg/triangular.hpp>
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
 #include <batmat/lut.hpp>
@@ -10,7 +11,6 @@
 #include <batmat/ops/transpose.hpp>
 #include <batmat/platform/platform.hpp>
 #include <batmat/unroll.h>
-#include "batmat/linalg/triangular.hpp"
 #include <guanaqo/trace.hpp>
 #include <algorithm>
 #include <concepts>

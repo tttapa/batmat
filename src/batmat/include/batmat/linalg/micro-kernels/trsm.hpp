@@ -3,7 +3,7 @@
 #include <batmat/linalg/uview.hpp>
 #include <batmat/lut.hpp>
 #include <batmat/platform/platform.hpp>
-#include "batmat/linalg/structure.hpp"
+#include <batmat/linalg/structure.hpp>
 
 namespace batmat::linalg::micro_kernels::trsm {
 

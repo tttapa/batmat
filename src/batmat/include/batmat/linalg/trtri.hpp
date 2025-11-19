@@ -1,11 +1,11 @@
 #pragma once
 
 #include <batmat/assume.hpp>
+#include <batmat/linalg/flops.hpp>
 #include <batmat/linalg/micro-kernels/trtri.hpp>
 #include <batmat/linalg/simdify.hpp>
 #include <batmat/linalg/triangular.hpp>
 #include <batmat/linalg/uview.hpp>
-#include "batmat/linalg/flops.hpp"
 #include <guanaqo/trace.hpp>
 
 namespace batmat::linalg {

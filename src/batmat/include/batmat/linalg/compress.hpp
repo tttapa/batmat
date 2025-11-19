@@ -5,7 +5,7 @@
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
 #include <batmat/ops/gather.hpp>
-#include "batmat/unroll.h"
+#include <batmat/unroll.h>
 #include <guanaqo/trace.hpp>
 
 namespace batmat::linalg {
