@@ -353,7 +353,6 @@ constexpr std::pair<index_t, index_t> xshhud_W_size(view<T, Abi, OL> L) {
 template <class T, class Abi, bool SignOnly = false, StorageOrder OL, StorageOrder OA>
 void xshhud_diag_ref(view<T, Abi, OL> L, view<T, Abi, OA> A, view<const T, Abi> D, view<T, Abi> W) {
     static constexpr index_constant<SizeR<T, Abi>> R;
-    static constexpr index_constant<SizeS<T, Abi>> S;
     const index_t C = A.cols();
     auto n1 = L.cols(), n2 = L.rows() - n1;
     auto flop_count_diag_11             = (C + 1) * n1 * n1 + 2 * C * n1;
@@ -368,6 +367,7 @@ void xshhud_diag_ref(view<T, Abi, OL> L, view<T, Abi, OA> A, view<const T, Abi> 
 
     // Process all diagonal blocks (in multiples of R, except the last).
     foreach_chunked_merged(0, L.cols(), R, [&](index_t k, auto nk) {
+        static constexpr index_constant<SizeS<T, Abi>> S;
         // Part of A corresponding to this diagonal block
         // TODO: packing
         auto Ad = A.middle_rows(k, nk);
@@ -393,7 +393,6 @@ void xshh_apply_diag_ref(view<T, Abi, OL> L, view<const T, Abi, OA> Ain, view<T,
                          view<const T, Abi, OA> B, view<const T, Abi> D, view<const T, Abi> W,
                          index_t kA_nonzero_start = 0, index_t kA_nonzero_end = -1) {
     static constexpr index_constant<SizeR<T, Abi>> R;
-    static constexpr index_constant<SizeS<T, Abi>> S;
     const index_t C = Ain.cols();
     kA_nonzero_end  = (kA_nonzero_end == -1) ? C : kA_nonzero_end;
     auto n1 = L.cols(), n2 = L.rows();
@@ -407,6 +406,7 @@ void xshh_apply_diag_ref(view<T, Abi, OL> L, view<const T, Abi, OA> Ain, view<T,
 
     // Process all diagonal blocks (in multiples of R, except the last).
     foreach_chunked_merged(0, L.cols(), R, [&](index_t k, auto nk) {
+        static constexpr index_constant<SizeS<T, Abi>> S;
         // Part of A corresponding to this diagonal block
         // TODO: packing
         auto Ad = B.middle_rows(k, nk);
@@ -436,7 +436,6 @@ void xshhud_diag_2_ref(view<T, Abi, OL1> L11, view<T, Abi, OA1> A1, view<T, Abi,
     BATMAT_ASSERT(A2.cols() == A1.cols());
     BATMAT_ASSERT(L21.cols() == L11.cols());
     static constexpr index_constant<SizeR<T, Abi>> R;
-    static constexpr index_constant<SizeS<T, Abi>> S;
     const index_t C = A1.cols();
     auto n1 = L11.cols(), n2 = L11.rows() - n1;
     auto flop_count_diag_11 = (C + 1) * n1 * n1 + 2 * C * n1;
@@ -453,6 +452,7 @@ void xshhud_diag_2_ref(view<T, Abi, OL1> L11, view<T, Abi, OA1> A1, view<T, Abi,
 
     // Process all diagonal blocks (in multiples of R, except the last).
     foreach_chunked_merged(0, L11.cols(), R, [&](index_t k, auto rem_k) {
+        static constexpr index_constant<SizeS<T, Abi>> S;
         // Part of A corresponding to this diagonal block
         // TODO: packing
         auto Ad = A1.middle_rows(k, rem_k);
@@ -510,7 +510,6 @@ void xshhud_diag_cyclic(view<T, Abi, OL> L11,      // D
     BATMAT_ASSERT(L21.cols() == L11.cols());
     BATMAT_ASSERT(L31.cols() == L11.cols());
     static constexpr index_constant<SizeR<T, Abi>> R;
-    static constexpr index_constant<SizeS<T, Abi>> S;
     const index_t C = A1.cols();
     auto n1 = L11.cols(), n2 = L11.rows() - n1;
     auto flop_count_diag_11 = (C + 1) * n1 * n1 + 2 * C * n1;
@@ -530,6 +529,7 @@ void xshhud_diag_cyclic(view<T, Abi, OL> L11,      // D
 
     // Process all diagonal blocks (in multiples of R, except the last).
     foreach_chunked_merged(0, L11.cols(), R, [&](index_t k, auto rem_k) {
+        static constexpr index_constant<SizeS<T, Abi>> S;
         // Part of A corresponding to this diagonal block
         // TODO: packing
         auto Ad = A1.middle_rows(k, rem_k);
@@ -656,7 +656,6 @@ void xshhud_diag_riccati(view<T, Abi, OL> L11, view<T, Abi, OA> A1, view<T, Abi,
                                            : Structure::Zero;
                 microkernel_tail_lut_2<T, Abi, OLu, OAu, SignOnly>[rem_k - 1][rem_i - 1](
                     0, k == 0 ? 0 : C, C, W, Ls, As, As_out, Ad, D, struc, do_shift ? -1 : 0);
-                // TODO: rotate +1 or -1
             },
             LoopDir::Backward); // TODO: decide on order
     });

@@ -94,12 +94,14 @@ convert_mask<double, datapar::deduced_abi<double, 2>, typename datapar::deduced_
     return _mm_cmpneq_epi64_mask(static_cast<__m128i>(mask), _mm_setzero_si128());
 }
 
+#if !BATMAT_WITH_GSI_HPC_SIMD // TODO
 template <>
 [[gnu::always_inline]] inline __mmask8
 convert_mask<double, datapar::deduced_abi<double, 2>, typename datapar::deduced_simd<int32_t, 2>>(
     typename datapar::deduced_simd<int32_t, 2> mask) {
     return _mm_cmpneq_epi32_mask(static_cast<__m128i>(mask), _mm_setzero_si128());
 }
+#endif
 
 template <>
 [[gnu::always_inline]] inline __mmask16
@@ -147,6 +149,13 @@ convert_mask<double, datapar::deduced_abi<double, 2>, typename datapar::deduced_
     return _mm_cmp_epi32_mask(static_cast<__m128i>(x), static_cast<__m128i>(decltype(x){}),
                               _MM_CMPINT_NLT);
 }
+
+#if !BATMAT_WITH_GSI_HPC_SIMD // TODO
+[[gnu::always_inline]] inline __mmask8 compare_ge_0(datapar::deduced_simd<int32_t, 2> x) {
+    return _mm_cmp_epi32_mask(static_cast<__m128i>(x), static_cast<__m128i>(decltype(x){}),
+                              _MM_CMPINT_NLT);
+}
+#endif
 
 [[gnu::always_inline]] inline __mmask8 compare_ge_0(datapar::deduced_simd<int32_t, 8> x) {
     return _mm256_cmp_epi32_mask(static_cast<__m256i>(x), static_cast<__m256i>(decltype(x){}),

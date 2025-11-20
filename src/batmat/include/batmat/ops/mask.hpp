@@ -19,7 +19,11 @@ using mask_type_t = typename mask_type<T, AbiT>::type;
 ///         intrinsic types, so I'm not using simd_mask for now.
 template <class T, class AbiT, class M>
 [[gnu::always_inline]] inline mask_type_t<T, AbiT> convert_mask(M mask) {
+#if BATMAT_WITH_GSI_HPC_SIMD // TODO
+    return mask != M{0};
+#else
     return (mask != 0).__cvt();
+#endif
 }
 
 template <class T, class Abi>

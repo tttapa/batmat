@@ -65,6 +65,8 @@ template <class Tp, class Abi>
 using simd_size = std::remove_cvref_t<decltype(simd<Tp, Abi>::size)>;
 template <class Tp, class Abi>
 using simd_align = std::datapar::alignment<simd<Tp, Abi>>;
+template <class T, class V>
+using rebind_simd_t = deduced_simd<T, V::size()>;
 
 template <class V>
 auto hmax(V v) { // TODO

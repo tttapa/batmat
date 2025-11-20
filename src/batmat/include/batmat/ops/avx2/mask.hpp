@@ -145,6 +145,8 @@ convert_mask<double, datapar::deduced_abi<double, 2>, typename datapar::deduced_
     return _mm_castsi128_pd(_mm_xor_si128(
         _mm_cmpeq_epi64(static_cast<__m128i>(mask), _mm_setzero_si128()), _mm_set1_epi64x(-1)));
 }
+
+#if !BATMAT_WITH_GSI_HPC_SIMD // TODO
 template <>
 [[gnu::always_inline]] inline __m128d
 convert_mask<double, datapar::deduced_abi<double, 2>, typename datapar::deduced_simd<int32_t, 2>>(
@@ -152,6 +154,7 @@ convert_mask<double, datapar::deduced_abi<double, 2>, typename datapar::deduced_
     return _mm_castsi128_pd(_mm_cvtepi32_epi64(_mm_xor_si128(
         _mm_cmpeq_epi32(static_cast<__m128i>(mask), _mm_setzero_si128()), _mm_set1_epi32(-1))));
 }
+#endif
 
 template <>
 [[gnu::always_inline]] inline __m256

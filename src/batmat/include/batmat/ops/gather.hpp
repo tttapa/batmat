@@ -46,11 +46,16 @@ namespace batmat::ops {
 template <class T, class AbiT, class I, class AbiI, class M>
 [[gnu::always_inline]] inline datapar::simd<T, AbiT> gather(const T *p, datapar::simd<I, AbiI> idx,
                                                             M mask) {
-    using simd      = datapar::simd<T, AbiT>;
-    using isimd     = datapar::rebind_simd_t<detail::convert_int_t<I>, simd>;
-    using msimd     = datapar::rebind_simd_t<detail::convert_int_t<typename M::value_type>, simd>;
+    using simd  = datapar::simd<T, AbiT>;
+    using isimd = datapar::rebind_simd_t<detail::convert_int_t<I>, simd>;
+    using msimd = datapar::rebind_simd_t<detail::convert_int_t<typename M::value_type>, simd>;
+#if BATMAT_WITH_GSI_HPC_SIMD // TODO
+    auto mask_      = detail::convert_mask<T, AbiT>(std::bit_cast<msimd>(mask));
+    const auto idx_ = std::bit_cast<isimd>(idx);
+#else
     auto mask_      = detail::convert_mask<T, AbiT>(simd_cast<msimd>(mask));
     const auto idx_ = simd_cast<isimd>(idx);
+#endif
     return detail::gather(simd{}, mask_, idx_, p);
 }
 
