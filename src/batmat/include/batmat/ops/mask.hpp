@@ -1,7 +1,6 @@
 #pragma once
 
 #include <batmat/simd.hpp>
-#include <immintrin.h>
 
 namespace batmat::ops::detail {
 
