@@ -89,31 +89,34 @@ struct uview {
     using simd                              = typename types::simd;
     static constexpr ptrdiff_t inner_stride = typename types::simd_stride_t();
 
-    [[gnu::always_inline]] value_type &operator()(index_t r, index_t c) const noexcept {
+    [[gnu::always_inline]] value_type *get(index_t r, index_t c) const noexcept {
         ptrdiff_t i0 = Order == StorageOrder::RowMajor ? c : r;
         ptrdiff_t i1 = Order == StorageOrder::RowMajor ? r : c;
-        return data[inner_stride * (i0 + i1 * static_cast<ptrdiff_t>(outer_stride))];
+        return data + inner_stride * (i0 + i1 * static_cast<ptrdiff_t>(outer_stride));
+    }
+    [[gnu::always_inline]] value_type &operator()(index_t r, index_t c) const noexcept {
+        return *get(r, c);
     }
     [[gnu::always_inline]] simd load(index_t r, index_t c) const noexcept {
-        return types::aligned_load(&operator()(r, c));
+        return types::aligned_load(get(r, c));
     }
     template <int MaskL = 0>
     [[gnu::always_inline]] void store(simd x, index_t r, index_t c) const noexcept
         requires(!std::is_const_v<T>)
     {
-        types::template aligned_store<MaskL>(x, &operator()(r, c));
+        types::template aligned_store<MaskL>(x, get(r, c));
     }
     template <class Self>
     [[gnu::always_inline]] Self block(this const Self &self, index_t r, index_t c) noexcept {
-        return {&self(r, c), self.outer_stride};
+        return {self.get(r, c), self.outer_stride};
     }
     template <class Self>
     [[gnu::always_inline]] Self middle_rows(this const Self &self, index_t r) noexcept {
-        return {&self(r, 0), self.outer_stride};
+        return {self.get(r, 0), self.outer_stride};
     }
     template <class Self>
     [[gnu::always_inline]] Self middle_cols(this const Self &self, index_t c) noexcept {
-        return {&self(0, c), self.outer_stride};
+        return {self.get(0, c), self.outer_stride};
     }
 
     [[gnu::always_inline]] uview(value_type *data, index_t outer_stride) noexcept
