@@ -31,7 +31,7 @@ trsm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
     simd B_reg[RowsReg][ColsReg]; // NOLINT(*-c-arrays)
     UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
         UNROLL_FOR (index_t jj = 0; jj < ColsReg; ++jj)
-            B_reg[ii][jj] = shiftl<Conf.shift_B>(B_cached.load(ii, jj));
+            B_reg[ii][jj] = rotl<Conf.rotate_B>(B_cached.load(ii, jj));
     // Matrix multiplication
     const auto D_cached = with_cached_access<0, ColsReg>(D);
     const index_t l0 = lower ? 0 : RowsReg, l1 = lower ? k : k + RowsReg;

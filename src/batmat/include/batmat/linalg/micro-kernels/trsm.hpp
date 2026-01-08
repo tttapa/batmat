@@ -1,15 +1,15 @@
 #pragma once
 
+#include <batmat/linalg/structure.hpp>
 #include <batmat/linalg/uview.hpp>
 #include <batmat/lut.hpp>
 #include <batmat/platform/platform.hpp>
-#include <batmat/linalg/structure.hpp>
 
 namespace batmat::linalg::micro_kernels::trsm {
 
 struct KernelConfig {
     MatrixStructure struc_A = MatrixStructure::LowerTriangular;
-    index_t shift_B         = 0;
+    index_t rotate_B        = 0;
 };
 
 template <class T, class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg, StorageOrder OA,
