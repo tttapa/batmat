@@ -72,7 +72,7 @@ class BatmatRecipe(ConanFile):
             self.requires("blasfeo/0.1.4.2")
 
     def build_requirements(self):
-        self.test_requires("eigen/5.0.0")
+        self.test_requires("eigen/[~5.0]")
         self.test_requires("gtest/1.17.0")
         self.tool_requires("cmake/[>=3.24 <5]")
 
