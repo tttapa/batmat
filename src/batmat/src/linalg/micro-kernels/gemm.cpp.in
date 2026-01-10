@@ -57,10 +57,10 @@ extern const auto gemm_copy_register_inst_gemm_sB =
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
 extern const auto gemm_copy_register_inst_gemm_sC_no_mask =
-    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, 2>(
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, 2, get_depth_or_one(VL)>(
         []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>, CStorageOrder<OC>,
-                                      auto S) -> const void * {
-            constexpr int sC = S ? 1 : -1;
+                                      auto Ssign, auto S) -> const void * {
+            constexpr int sC = Ssign ? (1 << S) : -(1 << S);
             constexpr KernelConfig Conf{
                 .negate = Negate, .rotate_C = sC, .rotate_D = sC, .mask_D = 0};
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
@@ -75,26 +75,26 @@ extern const auto gemm_copy_register_inst_gemm_sC_mask =
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
 extern const auto gemm_copy_register_inst_trmm_sC =
-    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, 2>(
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, 2, 2>(
         []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>, CStorageOrder<OC>,
-                                      auto S) -> const void * {
+                                      auto S, auto M) -> const void * {
             constexpr int sC = S ? 1 : -1;
             constexpr KernelConfig Conf{.negate   = Negate,
                                         .rotate_C = sC,
                                         .rotate_D = sC,
-                                        .mask_D   = sC,
+                                        .mask_D   = M ? sC : 0,
                                         .struc_B  = MatrixStructure::LowerTriangular};
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
 extern const auto gemm_copy_register_inst_syrk_sC =
-    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, 2, get_depth_or_one(VL)>(
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, 2, get_depth_or_one(VL), 2>(
         []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>, CStorageOrder<OC>,
-                                      auto Ssign, auto S) -> const void * {
+                                      auto Ssign, auto S, auto M) -> const void * {
             constexpr int sC = Ssign ? (1 << S) : -(1 << S);
             constexpr KernelConfig Conf{.negate   = Negate,
                                         .rotate_C = sC,
                                         .rotate_D = sC,
-                                        .mask_D   = sC,
+                                        .mask_D   = M ? sC : 0,
                                         .struc_C  = MatrixStructure::LowerTriangular};
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
@@ -147,15 +147,15 @@ extern const auto gemm_copy_register_inst_lauum_trans =
             return &wrap<gemm_copy_register<DType, Abi, Conf, OA, OB, OC, OC>>;
         });
 extern const auto gemm_copy_register_inst_trtrsyrk_sC =
-    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, 2>(
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, 2, 2>(
         []<auto OA, auto OB, auto OC>(CStorageOrder<OA>, CStorageOrder<OB>, CStorageOrder<OC>,
-                                      auto S) -> const void * {
+                                      auto S, auto M) -> const void * {
             constexpr int sC     = S ? 1 : -1;
             constexpr auto struc = MatrixStructure::LowerTriangular;
             constexpr KernelConfig Conf{.negate   = Negate,
                                         .rotate_C = sC,
                                         .rotate_D = sC,
-                                        .mask_D   = sC,
+                                        .mask_D   = M ? sC : 0,
                                         .struc_A  = transpose(struc),
                                         .struc_B  = struc,
                                         .struc_C  = struc};
