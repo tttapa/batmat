@@ -15,7 +15,7 @@ struct KernelConfig {
 template <class T, class Abi, KernelConfig Conf, index_t RowsReg, StorageOrder O1, StorageOrder O2>
 void potrf_copy_microkernel(uview<const T, Abi, O1> A1, uview<const T, Abi, O2> A2,
                             uview<const T, Abi, O2> C, uview<T, Abi, O2> D, T *invD, index_t k1,
-                            index_t k2, real_t regularization) noexcept;
+                            index_t k2, T regularization) noexcept;
 
 template <class T, class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg, StorageOrder O1,
           StorageOrder O2>
@@ -26,7 +26,7 @@ void trsm_copy_microkernel(uview<const T, Abi, O1> A1, uview<const T, Abi, O1> B
 
 template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OCD>
 void potrf_copy_register(view<const T, Abi, OA> A, view<const T, Abi, OCD> C, view<T, Abi, OCD> D,
-                         real_t regularization) noexcept;
+                         T regularization) noexcept;
 
 // Square block sizes greatly simplify handling of triangular matrices.
 using gemm::RowsReg;

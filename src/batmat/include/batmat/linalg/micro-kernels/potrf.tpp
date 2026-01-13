@@ -19,7 +19,7 @@ template <class T, class Abi, KernelConfig Conf, index_t RowsReg, StorageOrder O
 [[gnu::hot, gnu::flatten]] void
 potrf_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T, Abi, O2> A2,
                        const uview<const T, Abi, O2> C, const uview<T, Abi, O2> D, T *const invD,
-                       const index_t k1, const index_t k2, real_t regularization) noexcept {
+                       const index_t k1, const index_t k2, T regularization) noexcept {
     static_assert(Conf.struc_C == MatrixStructure::LowerTriangular); // TODO
     static_assert(RowsReg > 0);
     using ops::rsqrt;
@@ -176,7 +176,7 @@ void trsm_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T
 
 template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OCD>
 void potrf_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi, OCD> C,
-                         const view<T, Abi, OCD> D, real_t regularization) noexcept {
+                         const view<T, Abi, OCD> D, T regularization) noexcept {
     using enum MatrixStructure;
     static_assert(Conf.struc_C == LowerTriangular); // TODO
     constexpr auto Rows = RowsReg<T, Abi>, Cols = ColsReg<T, Abi>;
