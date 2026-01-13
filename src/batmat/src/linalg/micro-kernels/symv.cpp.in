@@ -5,7 +5,7 @@
 #include <batmat/linalg/micro-kernels/symv.tpp>
 
 // clang-format off
-namespace batmat::linalg::micro_kernels::symv::@DType@_@VL@_@Negate@ {
+namespace batmat::linalg::micro_kernels::symv::@Namespace@_@Negate@ {
 using DType = @DType@;
 using Abi   = datapar::deduced_abi<DType, @VL@>;
 static constexpr bool Negate = @Negate@;

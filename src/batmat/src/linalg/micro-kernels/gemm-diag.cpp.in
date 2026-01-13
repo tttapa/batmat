@@ -5,7 +5,7 @@
 #include <batmat/linalg/micro-kernels/gemm-diag.tpp>
 
 // clang-format off
-namespace batmat::linalg::micro_kernels::gemm_diag::@DType@_@VL@_@Negate@ {
+namespace batmat::linalg::micro_kernels::gemm_diag::@Namespace@_@Negate@ {
 using DType = @DType@;
 using Abi   = datapar::deduced_abi<DType, @VL@>;
 static constexpr bool Negate = @Negate@;

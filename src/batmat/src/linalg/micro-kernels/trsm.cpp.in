@@ -6,7 +6,7 @@
 #include <bit>
 
 // clang-format off
-namespace batmat::linalg::micro_kernels::trsm::@DType@_@VL@ {
+namespace batmat::linalg::micro_kernels::trsm::@Namespace@ {
 constexpr static index_t VL = @VL@;
 using DType = @DType@;
 using Abi   = datapar::deduced_abi<DType, VL>;

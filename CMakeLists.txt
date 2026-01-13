@@ -15,12 +15,16 @@ option(BATMAT_WITH_OPENBLAS
     "Use the OpenBLAS library" Off)
 option(BATMAT_WITH_OPENMP
     "Enable parallelization using OpenMP" Off)
-option(BATMAT_WITH_SINGLE
-    "Compile the routines for the single-precision float datatype" Off)
 set(BATMAT_DENSE_REAL_TYPE "double" CACHE STRING
     "The main floating point type for representing real numbers")
 set(BATMAT_DENSE_INDEX_TYPE "long long" CACHE STRING
     "The main integer type for indices and sizes")
+set(BATMAT_DTYPES "double" CACHE STRING
+    "The data types to instantiate batmat for (semicolon-separated, e.g., 'double;float')")
+set(BATMAT_VECTOR_LENGTHS_DOUBLE "1;4;8" CACHE STRING
+    "Vector lengths to instantiate for double precision")
+set(BATMAT_VECTOR_LENGTHS_FLOAT "1;4;8;16" CACHE STRING
+    "Vector lengths to instantiate for single precision")
 option(BATMAT_WITH_GSI_HPC_SIMD
     "If enabled, use the GSI-HPC/simd library instead of GCC's <experimental/simd>" Off)
 # Target options

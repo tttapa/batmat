@@ -10,6 +10,25 @@ endif()
 # Configuration options
 # ------------------------------------------------------------------------------
 add_library(config INTERFACE)
+set(BATMAT_VL_MACROS "")
+set(BATMAT_FOREACH_DTYPE_MACRO "")
+set(BATMAT_FOREACH_DTYPE_VL_MACRO "")
+foreach (DType_ IN LISTS BATMAT_DTYPES)
+    string(TOUPPER "${DType_}" DTypeU)
+    string(REPLACE "std_" "std::" DType "${DType_}")
+    string(APPEND BATMAT_FOREACH_DTYPE_MACRO " \\\n    X(${DType})")
+    set(BATMAT_FOREACH_VL_MACRO "")
+    foreach (VL IN LISTS BATMAT_VECTOR_LENGTHS_${DTypeU})
+        string(APPEND BATMAT_VL_MACROS "#define BATMAT_HAS_${DTypeU}_VL_${VL} 1\n")
+        string(APPEND BATMAT_FOREACH_DTYPE_VL_MACRO " \\\n    X(${DType}, ${VL})")
+        string(APPEND BATMAT_FOREACH_VL_MACRO " \\\n    X(${VL})")
+    endforeach()
+    string(PREPEND BATMAT_FOREACH_VL_MACRO "#define BATMAT_FOREACH_VL_${DTypeU}(X)")
+    string(APPEND BATMAT_VL_MACROS "\n${BATMAT_FOREACH_VL_MACRO}\n")
+endforeach()
+string(PREPEND BATMAT_FOREACH_DTYPE_MACRO "#define BATMAT_FOREACH_DTYPE(X)")
+string(PREPEND BATMAT_FOREACH_DTYPE_VL_MACRO "#define BATMAT_FOREACH_DTYPE_VL(X)")
+string(APPEND BATMAT_VL_MACROS "\n${BATMAT_FOREACH_DTYPE_MACRO}\n\n${BATMAT_FOREACH_DTYPE_VL_MACRO}\n")
 configure_file("batmat/include/batmat/config.hpp.in"
     "${CMAKE_CURRENT_BINARY_DIR}/include/batmat/config.hpp" @ONLY)
 target_sources(config INTERFACE FILE_SET HEADERS
@@ -21,7 +40,6 @@ target_compile_definitions(config INTERFACE
     $<$<BOOL:${BATMAT_WITH_MKL}>:BATMAT_WITH_MKL>
     $<$<BOOL:${BATMAT_WITH_OPENMP}>:BATMAT_WITH_OPENMP>
     $<$<BOOL:${BATMAT_WITH_GSI_HPC_SIMD}>:BATMAT_WITH_GSI_HPC_SIMD>
-    $<$<BOOL:${BATMAT_WITH_SINGLE}>:BATMAT_WITH_SINGLE>
 )
 batmat_configure_interface_library(config)
 

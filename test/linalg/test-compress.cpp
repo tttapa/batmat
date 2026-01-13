@@ -299,6 +299,7 @@ TEST(linalg, compress2) {
 using I4 = std::integral_constant<batmat::index_t, 4>;
 
 TEST(linalg, compressSqrt) {
+#if BATMAT_HAS_DOUBLE_VL_4
     using namespace batmat;
     using namespace batmat::linalg;
     using Mat = batmat::matrix::Matrix<real_t, index_t, I4, I4>;
@@ -322,9 +323,13 @@ TEST(linalg, compressSqrt) {
         EXPECT_THAT(as_eigen(ASAᵀcompact(l)), EigenAlmostEqual(as_eigen(ASAᵀ(l)), ε))
             << "at layer " << l;
     }
+#else
+    GTEST_SKIP() << "VL=4 not supported for double";
+#endif
 }
 
 TEST(linalg, compressSqrtInplace) {
+#if BATMAT_HAS_DOUBLE_VL_4
     using namespace batmat;
     using namespace batmat::linalg;
     using Mat = batmat::matrix::Matrix<real_t, index_t, I4, I4>;
@@ -348,4 +353,7 @@ TEST(linalg, compressSqrtInplace) {
         EXPECT_THAT(as_eigen(ASAᵀcompact(l)), EigenAlmostEqual(as_eigen(ASAᵀ(l)), ε))
             << "at layer " << l;
     }
+#else
+    GTEST_SKIP() << "VL=4 not supported for double";
+#endif
 }

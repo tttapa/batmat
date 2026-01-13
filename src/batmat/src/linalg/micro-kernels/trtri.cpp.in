@@ -5,7 +5,7 @@
 #include <batmat/linalg/micro-kernels/trtri.tpp>
 
 // clang-format off
-namespace batmat::linalg::micro_kernels::trtri::@DType@_@VL@ {
+namespace batmat::linalg::micro_kernels::trtri::@Namespace@ {
 using DType = @DType@;
 using Abi   = datapar::deduced_abi<DType, @VL@>;
 // clang-format on

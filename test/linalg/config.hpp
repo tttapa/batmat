@@ -73,12 +73,52 @@ using OrderConfigs2 =
 template <class T, index_t N>
 using OrderConfigs1 = ::testing::Types<TestConfig<T, N, ColMajor>, TestConfig<T, N, RowMajor>>;
 
+#if BATMAT_HAS_DOUBLE_VL_4
 template <template <class T, index_t N> class OrderConfigs>
-#if BATMAT_WITH_SINGLE
-using TestConfigs = typename CatTypes<OrderConfigs<double, 1>, OrderConfigs<double, 4>,
-                                      OrderConfigs<float, 1>, OrderConfigs<float, 8>>::type;
+using TestConfigsDoubleSIMD = OrderConfigs<double, 4>;
+#elif BATMAT_HAS_DOUBLE_VL_8
+template <template <class T, index_t N> class OrderConfigs>
+using TestConfigsDoubleSIMD = OrderConfigs<double, 8>;
+#elif BATMAT_HAS_DOUBLE_VL_2
+template <template <class T, index_t N> class OrderConfigs>
+using TestConfigsDoubleSIMD = OrderConfigs<double, 2>;
 #else
-using TestConfigs = typename CatTypes<OrderConfigs<double, 1>, OrderConfigs<double, 4>>::type;
+template <template <class T, index_t N> class OrderConfigs>
+using TestConfigsDoubleSIMD = ::testing::Types<>;
 #endif
+#if BATMAT_HAS_DOUBLE_VL_1
+template <template <class T, index_t N> class OrderConfigs>
+using TestConfigsDoubleScalar = OrderConfigs<double, 1>;
+#else
+template <template <class T, index_t N> class OrderConfigs>
+using TestConfigsDoubleScalar = ::testing::Types<>;
+#endif
+
+#if BATMAT_HAS_FLOAT_VL_8
+template <template <class T, index_t N> class OrderConfigs>
+using TestConfigsFloatSIMD = OrderConfigs<float, 8>;
+#elif BATMAT_HAS_FLOAT_VL_16
+template <template <class T, index_t N> class OrderConfigs>
+using TestConfigsFloatSIMD = OrderConfigs<float, 16>;
+#elif BATMAT_HAS_FLOAT_VL_4
+template <template <class T, index_t N> class OrderConfigs>
+using TestConfigsFloatSIMD = OrderConfigs<float, 4>;
+#else
+template <template <class T, index_t N> class OrderConfigs>
+using TestConfigsFloatSIMD = ::testing::Types<>;
+#endif
+#if BATMAT_HAS_FLOAT_VL_1
+template <template <class T, index_t N> class OrderConfigs>
+using TestConfigsFloatScalar = OrderConfigs<float, 1>;
+#else
+template <template <class T, index_t N> class OrderConfigs>
+using TestConfigsFloatScalar = ::testing::Types<>;
+#endif
+
+template <template <class T, index_t N> class OrderConfigs>
+using TestConfigs = typename CatTypes<TestConfigsDoubleSIMD<OrderConfigs>,   //
+                                      TestConfigsDoubleScalar<OrderConfigs>, //
+                                      TestConfigsFloatSIMD<OrderConfigs>,
+                                      TestConfigsFloatScalar<OrderConfigs>>::type;
 
 } // namespace batmat::tests
