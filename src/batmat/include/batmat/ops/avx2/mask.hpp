@@ -146,13 +146,23 @@ convert_mask<double, datapar::deduced_abi<double, 2>, typename datapar::deduced_
         _mm_cmpeq_epi64(static_cast<__m128i>(mask), _mm_setzero_si128()), _mm_set1_epi64x(-1)));
 }
 
-#if !BATMAT_WITH_GSI_HPC_SIMD // TODO
+#if !BATMAT_WITH_GSI_HPC_SIMD
 template <>
 [[gnu::always_inline]] inline __m128d
 convert_mask<double, datapar::deduced_abi<double, 2>, typename datapar::deduced_simd<int32_t, 2>>(
     typename datapar::deduced_simd<int32_t, 2> mask) {
     return _mm_castsi128_pd(_mm_cvtepi32_epi64(_mm_xor_si128(
         _mm_cmpeq_epi32(static_cast<__m128i>(mask), _mm_setzero_si128()), _mm_set1_epi32(-1))));
+}
+#else
+template <>
+[[gnu::always_inline]] inline __m128d
+convert_mask<double, datapar::deduced_abi<double, 2>, typename datapar::deduced_simd<int32_t, 2>>(
+    typename datapar::deduced_simd<int32_t, 2> mask) {
+    // TODO: cannot cast 64-bit std::datapar::simd to __m128i, so we need to extend manually
+    auto w = static_cast<__m128i>(cat(mask, decltype(mask){}));
+    return _mm_castsi128_pd(_mm_cvtepi32_epi64(
+        _mm_xor_si128(_mm_cmpeq_epi32(w, _mm_setzero_si128()), _mm_set1_epi32(-1))));
 }
 #endif
 
@@ -196,11 +206,18 @@ convert_mask<double, datapar::deduced_abi<double, 2>, typename datapar::deduced_
                         _mm_cmpeq_epi32(static_cast<__m128i>(x), zero));
 }
 
-#if !BATMAT_WITH_GSI_HPC_SIMD // TODO
+#if !BATMAT_WITH_GSI_HPC_SIMD
 [[gnu::always_inline]] inline __m128i compare_ge_0(datapar::deduced_simd<int32_t, 2> x) {
     __m128i zero = _mm_setzero_si128();
     return _mm_or_si128(_mm_cmpgt_epi64(static_cast<__m128i>(x), zero),
                         _mm_cmpeq_epi64(static_cast<__m128i>(x), zero));
+}
+#else
+[[gnu::always_inline]] inline __m128i compare_ge_0(datapar::deduced_simd<int32_t, 2> x) {
+    __m128i zero = _mm_setzero_si128();
+    // TODO: cannot cast 64-bit std::datapar::simd to __m128i, so we need to extend manually
+    auto w = static_cast<__m128i>(cat(x, decltype(x){-1}));
+    return _mm_or_si128(_mm_cmpgt_epi64(w, zero), _mm_cmpeq_epi64(w, zero));
 }
 #endif
 

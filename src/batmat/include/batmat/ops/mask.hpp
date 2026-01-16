@@ -1,6 +1,7 @@
 #pragma once
 
 #include <batmat/simd.hpp>
+#include <type_traits>
 
 namespace batmat::ops::detail {
 
@@ -18,8 +19,12 @@ using mask_type_t = typename mask_type<T, AbiT>::type;
 ///         intrinsic types, so I'm not using simd_mask for now.
 template <class T, class AbiT, class M>
 [[gnu::always_inline]] inline mask_type_t<T, AbiT> convert_mask(M mask) {
-#if BATMAT_WITH_GSI_HPC_SIMD // TODO
-    return mask != M{0};
+#if BATMAT_WITH_GSI_HPC_SIMD
+    auto m = mask != M{0};
+    if constexpr (std::is_convertible_v<decltype(m), mask_type_t<T, AbiT>>)
+        return mask_type_t<T, AbiT>{m};
+    else
+        return mask_type_t<T, AbiT>{[&](auto i) -> bool { return m[i]; }}; // TODO: suboptimal
 #else
     return (mask != 0).__cvt();
 #endif
