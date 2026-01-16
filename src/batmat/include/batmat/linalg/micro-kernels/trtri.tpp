@@ -138,6 +138,7 @@ void trtri_copy_register(const view<const T, Abi, OA> A, const view<T, Abi, OD> 
     BATMAT_ASSUME(A.cols() == D.cols());
     static const auto trtri_microkernel = trtri_copy_lut<T, Abi, Conf, OA, OD>;
     static const auto trmm_microkernel  = trmm_lut<T, Abi, Conf, OD>;
+    (void)trmm_microkernel; // GCC incorrectly warns about unused variable
     // Sizeless views to partition and pass to the micro-kernels
     const uview<const T, Abi, OA> A_ = A;
     const uview<T, Abi, OD> D_       = D;

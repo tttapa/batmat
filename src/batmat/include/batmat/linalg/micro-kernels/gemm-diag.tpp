@@ -120,6 +120,7 @@ void gemm_diag_copy_register(const view<const T, Abi, OA> A, const view<const T,
     static const auto microkernel       = gemm_diag_copy_lut<T, Abi, Conf, OA, OB, OC, OD>;
     static const auto microkernel_small = gemm_diag_copy_lut<T, Abi, ConfSmall, OA, OB, OC, OD>;
     static const auto microkernel_sub   = gemm_diag_copy_lut<T, Abi, ConfSub, OA, OB, OC, OD>;
+    (void)microkernel_sub; // GCC incorrectly warns about unused variable
     // Sizeless views to partition and pass to the micro-kernels
     const uview<const T, Abi, OA> A_                = A;
     const uview<const T, Abi, OB> B_                = B;

@@ -190,6 +190,7 @@ void potrf_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi
     BATMAT_ASSUME(J > 0);
     static const auto potrf_microkernel = potrf_copy_lut<T, Abi, Conf, OA, OCD>;
     static const auto trsm_microkernel  = trsm_copy_lut<T, Abi, Conf, OA, OCD>;
+    (void)trsm_microkernel; // GCC incorrectly warns about unused variable
     // Sizeless views to partition and pass to the micro-kernels
     const uview<const T, Abi, OA> A_  = A;
     const uview<const T, Abi, OCD> C_ = C;
