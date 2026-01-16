@@ -65,6 +65,11 @@ void hyhound_diag_apply(view<T, Abi, OL> L, view<const T, Abi, OA> Ain, view<T, 
     BATMAT_ASSERT(std::make_pair(W.rows(), W.cols()) ==
                   (micro_kernels::hyhound::xshhud_W_size<T, Abi>)(L));
     const index_t k = Ain.cols();
+    if (kA_nonzero_end == -1)
+        kA_nonzero_end = k;
+    BATMAT_ASSERT(kA_nonzero_start >= 0);
+    BATMAT_ASSERT(kA_nonzero_start <= kA_nonzero_end);
+    BATMAT_ASSERT(kA_nonzero_end <= k);
     auto n1 = L.cols(), n2 = L.rows();
     [[maybe_unused]] index_t flop_count = 2 * (k + 1) * n2 * n1 + k * n2;
     GUANAQO_TRACE("hyhound_diag_apply", 0, flop_count * L.depth());

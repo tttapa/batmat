@@ -287,8 +287,8 @@ void hyhound_diag_register(const view<T, Abi, OL> L, const view<T, Abi, OA> A,
                            const view<const T, Abi> D) noexcept {
     static constexpr index_constant<SizeR<T, Abi>> R;
     static constexpr index_constant<SizeS<T, Abi>> S;
-    const index_t C = A.cols();
-    BATMAT_ASSUME(C > 0);
+    const index_t k = A.cols();
+    BATMAT_ASSUME(k > 0);
     BATMAT_ASSUME(L.rows() >= L.cols());
     BATMAT_ASSUME(L.rows() == A.rows());
     BATMAT_ASSUME(A.cols() == D.rows());
@@ -311,7 +311,7 @@ void hyhound_diag_register(const view<T, Abi, OL> L, const view<T, Abi, OA> A,
                 auto Ad = A_.middle_rows(j);
                 auto Ld = L_.block(j, j);
                 // Process the diagonal block itself
-                hyhound_diag_diag_microkernel<T, Abi, Conf, R, OL, OA>(C, W, Ld, Ad, D_);
+                hyhound_diag_diag_microkernel<T, Abi, Conf, R, OL, OA>(k, W, Ld, Ad, D_);
                 // Process all rows below the diagonal block (in multiples of S).
                 foreach_chunked_merged(
                     j + R, L.rows(), S,
@@ -319,14 +319,14 @@ void hyhound_diag_register(const view<T, Abi, OL> L, const view<T, Abi, OA> A,
                         auto As = A_.middle_rows(i);
                         auto Ls = L_.block(i, j);
                         microkernel_tail_lut<T, Abi, Conf, OL, OA, OA>[rem_i - 1](
-                            0, C, C, W, Ls, As, As, Ad, D_, Structure::General, 0);
+                            0, k, k, W, Ls, As, As, Ad, D_, Structure::General, 0);
                     },
                     LoopDir::Backward); // TODO: decide on order
             },
             [&](index_t j, index_t rem_j) {
                 auto Ad = A_.middle_rows(j);
                 auto Ld = L_.block(j, j);
-                microkernel_full_lut<T, Abi, Conf, OL, OA>[rem_j - 1](C, Ld, Ad, D_);
+                microkernel_full_lut<T, Abi, Conf, OL, OA>[rem_j - 1](k, Ld, Ad, D_);
             });
     } else {
         foreach_chunked_merged(0, L.cols(), R, [&](index_t j, auto rem_j) {
@@ -335,7 +335,7 @@ void hyhound_diag_register(const view<T, Abi, OL> L, const view<T, Abi, OA> A,
             auto Ad = A_.middle_rows(j);
             auto Ld = L_.block(j, j);
             // Process the diagonal block itself
-            microkernel_diag_lut<T, Abi, Conf, OL, OA>[rem_j - 1](C, W, Ld, Ad, D_);
+            microkernel_diag_lut<T, Abi, Conf, OL, OA>[rem_j - 1](k, W, Ld, Ad, D_);
             // Process all rows below the diagonal block (in multiples of S).
             foreach_chunked_merged(
                 j + rem_j, L.rows(), S,
@@ -343,7 +343,7 @@ void hyhound_diag_register(const view<T, Abi, OL> L, const view<T, Abi, OA> A,
                     auto As = A_.middle_rows(i);
                     auto Ls = L_.block(i, j);
                     microkernel_tail_lut_2<T, Abi, Conf, OL, OA, OA>[rem_j - 1][rem_i - 1](
-                        0, C, C, W, Ls, As, As, Ad, D_, Structure::General, 0);
+                        0, k, k, W, Ls, As, As, Ad, D_, Structure::General, 0);
                 },
                 LoopDir::Backward); // TODO: decide on order
         });
@@ -360,7 +360,7 @@ void hyhound_diag_register(const view<T, Abi, OL> L, const view<T, Abi, OA> A,
     BATMAT_ASSUME(L.rows() >= L.cols());
     BATMAT_ASSUME(L.rows() == A.rows());
     BATMAT_ASSUME(D.rows() == k);
-    BATMAT_ASSERT(std::make_pair(W.rows(), W.cols()) == (xshhud_W_size<T, Abi>)(L));
+    BATMAT_ASSUME(std::make_pair(W.rows(), W.cols()) == (xshhud_W_size<T, Abi>)(L));
 
     static constexpr index_constant<SizeR<T, Abi>> R;
     using W_t = triangular_accessor<T, Abi, R>;
@@ -401,7 +401,6 @@ void hyhound_diag_apply_register(const view<T, Abi, OL> L, const view<const T, A
                                  const view<const T, Abi> D, const view<const T, Abi> W,
                                  index_t kA_nonzero_start, index_t kA_nonzero_end) noexcept {
     const index_t k = Ain.cols();
-    kA_nonzero_end  = (kA_nonzero_end == -1) ? k : kA_nonzero_end;
     BATMAT_ASSUME(k > 0);
     BATMAT_ASSUME(Aout.rows() == Ain.rows());
     BATMAT_ASSUME(Aout.cols() == k);
@@ -409,13 +408,13 @@ void hyhound_diag_apply_register(const view<T, Abi, OL> L, const view<const T, A
     BATMAT_ASSUME(B.rows() == L.cols());
     BATMAT_ASSUME(B.cols() == k);
     BATMAT_ASSUME(D.rows() == k);
-    BATMAT_ASSERT(kA_nonzero_start >= 0);
-    BATMAT_ASSERT(kA_nonzero_start <= kA_nonzero_end);
-    BATMAT_ASSERT(kA_nonzero_end <= k);
+    BATMAT_ASSUME(0 <=kA_nonzero_start);
+    BATMAT_ASSUME(kA_nonzero_start <= kA_nonzero_end);
+    BATMAT_ASSUME(kA_nonzero_end <= k);
 
     static constexpr index_constant<SizeR<T, Abi>> R;
     using W_t = triangular_accessor<const T, Abi, R>;
-    BATMAT_ASSERT(std::make_pair(W.rows(), W.cols()) == (xshhud_W_size<T, Abi>)(L));
+    BATMAT_ASSUME(std::make_pair(W.rows(), W.cols()) == (xshhud_W_size<T, Abi>)(L));
 
     // Sizeless views to partition and pass to the micro-kernels
     const uview<T, Abi, OL> L_                           = L;
