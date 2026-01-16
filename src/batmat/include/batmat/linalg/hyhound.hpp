@@ -18,14 +18,11 @@ namespace detail {
 template <class T, class Abi, micro_kernels::hyhound::KernelConfig Conf, StorageOrder OL,
           StorageOrder OA>
 void hyhound_diag(view<T, Abi, OL> L, view<T, Abi, OA> A, view<const T, Abi> D) {
+    const index_t k = A.cols();
     BATMAT_ASSERT(L.rows() >= L.cols());
     BATMAT_ASSERT(L.rows() == A.rows());
     BATMAT_ASSERT(A.cols() == D.rows());
-    const index_t k = A.cols();
-    auto n1 = L.cols(), n2 = L.rows() - n1;
-    auto flop_count_diag_11             = (k + 1) * n1 * n1 + 2 * k * n1;
-    auto flop_count_tail_11             = 2 * (k + 1) * n2 * n1 + k * n2;
-    [[maybe_unused]] index_t flop_count = flop_count_diag_11 + flop_count_tail_11;
+    [[maybe_unused]] const index_t flop_count = total(flops::hyh(L.rows(), L.cols(), k));
     GUANAQO_TRACE("hyhound_diag", 0, flop_count * L.depth());
     if (k == 0) [[unlikely]]
         return;
@@ -35,66 +32,57 @@ void hyhound_diag(view<T, Abi, OL> L, view<T, Abi, OA> A, view<const T, Abi> D) 
 template <class T, class Abi, micro_kernels::hyhound::KernelConfig Conf, StorageOrder OL,
           StorageOrder OA>
 void hyhound_diag(view<T, Abi, OL> L, view<T, Abi, OA> A, view<const T, Abi> D, view<T, Abi> W) {
+    using namespace micro_kernels::hyhound;
+    const index_t k = A.cols();
     BATMAT_ASSERT(L.rows() >= L.cols());
     BATMAT_ASSERT(L.rows() == A.rows());
     BATMAT_ASSERT(A.cols() == D.rows());
-    BATMAT_ASSERT(std::make_pair(W.rows(), W.cols()) ==
-                  (micro_kernels::hyhound::xshhud_W_size<T, Abi>)(L));
-    const index_t k = A.cols();
-    auto n1 = L.cols(), n2 = L.rows() - n1;
-    auto flop_count_diag_11             = (k + 1) * n1 * n1 + 2 * k * n1;
-    auto flop_count_tail_11             = 2 * (k + 1) * n2 * n1 + k * n2;
-    [[maybe_unused]] index_t flop_count = flop_count_diag_11 + flop_count_tail_11;
+    BATMAT_ASSERT(std::make_pair(W.rows(), W.cols()) == (xshhud_W_size<T, Abi>)(L));
+    [[maybe_unused]] const index_t flop_count = total(flops::hyh(L.rows(), L.cols(), k));
     GUANAQO_TRACE("hyhound_diag", 0, flop_count * L.depth());
     if (k == 0) [[unlikely]]
         return;
-    return micro_kernels::hyhound::hyhound_diag_register<T, Abi, Conf>(L, A, D, W);
+    return hyhound_diag_register<T, Abi, Conf>(L, A, D, W);
 }
 
 template <class T, class Abi, micro_kernels::hyhound::KernelConfig Conf, StorageOrder OL,
           StorageOrder OA>
 void hyhound_diag_apply(view<T, Abi, OL> L, view<const T, Abi, OA> Ain, view<T, Abi, OA> Aout,
                         view<const T, Abi, OA> B, view<const T, Abi> D, view<const T, Abi> W,
-                        index_t kA_nonzero_start, index_t kA_nonzero_end) {
+                        index_t k_nonzero_start, index_t k_nonzero_end) {
+    using namespace micro_kernels::hyhound;
+    const index_t k = Ain.cols();
     BATMAT_ASSERT(Ain.rows() == Aout.rows());
     BATMAT_ASSERT(Ain.cols() == Aout.cols());
     BATMAT_ASSERT(Ain.rows() == L.rows());
     BATMAT_ASSERT(B.rows() == L.cols());
     BATMAT_ASSERT(B.cols() == Ain.cols());
     BATMAT_ASSERT(D.rows() == Ain.cols());
-    BATMAT_ASSERT(std::make_pair(W.rows(), W.cols()) ==
-                  (micro_kernels::hyhound::xshhud_W_size<T, Abi>)(L));
-    const index_t k = Ain.cols();
-    if (kA_nonzero_end == -1)
-        kA_nonzero_end = k;
-    BATMAT_ASSERT(kA_nonzero_start >= 0);
-    BATMAT_ASSERT(kA_nonzero_start <= kA_nonzero_end);
-    BATMAT_ASSERT(kA_nonzero_end <= k);
-    auto n1 = L.cols(), n2 = L.rows();
-    [[maybe_unused]] index_t flop_count = 2 * (k + 1) * n2 * n1 + k * n2;
+    BATMAT_ASSERT(std::make_pair(W.rows(), W.cols()) == (xshhud_W_size<T, Abi>)(L));
+    if (k_nonzero_end == -1)
+        k_nonzero_end = k;
+    BATMAT_ASSERT(0 <= k_nonzero_start && k_nonzero_start <= k_nonzero_end && k_nonzero_end <= k);
+    // Note: ignoring initial zero values of A in the FLOP count for simplicity (for large matrices
+    //       this does not matter)
+    [[maybe_unused]] const index_t flop_count = total(flops::hyh_apply(L.rows(), L.cols(), k));
     GUANAQO_TRACE("hyhound_diag_apply", 0, flop_count * L.depth());
     if (k == 0) [[unlikely]]
         return;
-    return micro_kernels::hyhound::hyhound_diag_apply_register<T, Abi, Conf>(
-        L, Ain, Aout, B, D, W, kA_nonzero_start, kA_nonzero_end);
+    return hyhound_diag_apply_register<T, Abi, Conf>(L, Ain, Aout, B, D, W, k_nonzero_start,
+                                                     k_nonzero_end);
 }
 
 template <class T, class Abi, micro_kernels::hyhound::KernelConfig Conf, StorageOrder OL1,
           StorageOrder OA1, StorageOrder OL2, StorageOrder OA2>
 void hyhound_diag_2(view<T, Abi, OL1> L11, view<T, Abi, OA1> A1, view<T, Abi, OL2> L21,
                     view<T, Abi, OA2> A2, view<const T, Abi> D) {
+    const index_t k = A1.cols(), m = L11.rows() + L21.rows();
     BATMAT_ASSERT(L11.rows() >= L11.cols());
     BATMAT_ASSERT(L11.rows() == A1.rows());
     BATMAT_ASSERT(A1.cols() == D.rows());
     BATMAT_ASSERT(A2.cols() == A1.cols());
     BATMAT_ASSERT(L21.cols() == L11.cols());
-    const index_t k = A1.cols();
-    auto n1 = L11.cols(), n2 = L11.rows() - n1;
-    auto flop_count_diag_11 = (k + 1) * n1 * n1 + 2 * k * n1;
-    auto flop_count_tail_11 = 2 * (k + 1) * n2 * n1 + k * n2;
-    auto flop_count_tail_21 = 2 * (k + 1) * L21.rows() * n1 + k * L21.rows();
-    [[maybe_unused]] index_t flop_count =
-        flop_count_diag_11 + flop_count_tail_11 + flop_count_tail_21;
+    [[maybe_unused]] const index_t flop_count = total(flops::hyh(m, L11.cols(), k));
     GUANAQO_TRACE("hyhound_diag_2", 0, flop_count * L11.depth());
     if (k == 0) [[unlikely]]
         return;
@@ -108,6 +96,7 @@ void hyhound_diag_cyclic(view<T, Abi, OL> L11, view<T, Abi, OW> A1, view<T, Abi,
                          view<const T, Abi, OW> A2, view<T, Abi, OW> A2_out, view<T, Abi, OU> L31,
                          view<const T, Abi, OW> A3, view<T, Abi, OW> A3_out, view<const T, Abi> D,
                          index_t split_A) {
+    const index_t k = A1.cols(), m = L11.rows() + L21.rows() + L31.rows();
     BATMAT_ASSERT(L11.rows() >= L11.cols());
     BATMAT_ASSERT(L11.rows() == A1.rows());
     BATMAT_ASSERT(L21.rows() == A2.rows());
@@ -117,16 +106,9 @@ void hyhound_diag_cyclic(view<T, Abi, OL> L11, view<T, Abi, OW> A1, view<T, Abi,
     BATMAT_ASSERT(A3.cols() == A1.cols());
     BATMAT_ASSERT(L21.cols() == L11.cols());
     BATMAT_ASSERT(L31.cols() == L11.cols());
-    const index_t k = A1.cols();
-    auto n1 = L11.cols(), n2 = L11.rows() - n1;
-    auto flop_count_diag_11 = (k + 1) * n1 * n1 + 2 * k * n1;
-    auto flop_count_tail_11 = 2 * (k + 1) * n2 * n1 + k * n2;
-    auto flop_count_tail_21 = 2 * (k + 1) * L21.rows() * n1 + k * L21.rows();
-    auto flop_count_tail_31 = 2 * (k + 1) * L31.rows() * n1 + k * L31.rows();
-    // Note: ignoring initial zero values of A for simplicity (for large matrices this does not
-    //       matter)
-    [[maybe_unused]] index_t flop_count =
-        flop_count_diag_11 + flop_count_tail_11 + flop_count_tail_21 + flop_count_tail_31;
+    // Note: ignoring initial zero values of A in the FLOP count for simplicity (for large matrices
+    //       this does not matter)
+    [[maybe_unused]] const index_t flop_count = total(flops::hyh(m, L11.cols(), k));
     GUANAQO_TRACE("hyhound_diag_cyclic", 0, flop_count * L11.depth());
     if (k == 0) [[unlikely]]
         return;
@@ -139,6 +121,7 @@ template <class T, class Abi, micro_kernels::hyhound::KernelConfig Conf, Storage
 void hyhound_diag_riccati(view<T, Abi, OL> L11, view<T, Abi, OA> A1, view<T, Abi, OL> L21,
                           view<const T, Abi, OA> A2, view<T, Abi, OA> A2_out, view<T, Abi, OLu> Lu1,
                           view<T, Abi, OAu> Au_out, view<const T, Abi> D, bool shift_A_out) {
+    const index_t k = A1.cols(), m = L11.rows() + L21.rows() + Lu1.rows();
     BATMAT_ASSERT(L11.rows() >= L11.cols());
     BATMAT_ASSERT(L11.rows() == A1.rows());
     BATMAT_ASSERT(L21.rows() == A2.rows());
@@ -149,16 +132,9 @@ void hyhound_diag_riccati(view<T, Abi, OL> L11, view<T, Abi, OA> A1, view<T, Abi
     BATMAT_ASSERT(A2.cols() == A1.cols());
     BATMAT_ASSERT(L21.cols() == L11.cols());
     BATMAT_ASSERT(Lu1.cols() == L11.cols());
-    const index_t k = A1.cols();
-    auto n1 = L11.cols(), n2 = L11.rows() - n1;
-    auto flop_count_diag_11 = (k + 1) * n1 * n1 + 2 * k * n1;
-    auto flop_count_tail_11 = 2 * (k + 1) * n2 * n1 + k * n2;
-    auto flop_count_tail_21 = 2 * (k + 1) * L21.rows() * n1 + k * L21.rows();
-    auto flop_count_tail_u1 = 2 * (k + 1) * Lu1.rows() * n1 + k * Lu1.rows();
-    // Note: ignoring upper trapezoidal shape and initial zero value of Au for simplicity (for large
-    //       matrices this does not matter)
-    [[maybe_unused]] index_t flop_count =
-        flop_count_diag_11 + flop_count_tail_11 + flop_count_tail_21 + flop_count_tail_u1;
+    // Note: ignoring upper trapezoidal shape of Lu and initial zero value of Au for simplicity
+    //       (for large matrices this does not matter)
+    [[maybe_unused]] index_t flop_count = total(flops::hyh(m, L11.cols(), k));
     GUANAQO_TRACE("hyhound_diag_riccati", 0, flop_count * L11.depth());
     if (k == 0) [[unlikely]]
         return;
@@ -186,7 +162,8 @@ void hyhound_diag(Structured<VL, SL> L, VA &&A, Vd &&d, VW &&W) {
         simdify(L.value), simdify(A), simdify(d).as_const(), simdify(W));
 }
 
-/// Get the size of matrix W for hyhound_diag.
+/// Get the size of the storage for the matrix W returned by
+/// @ref hyhound_diag(Structured<VL,SL>, VA&&, Vd&&, VW&&).
 template <MatrixStructure SL, simdifiable VL>
 auto hyhound_size_W(Structured<VL, SL> L) {
     return micro_kernels::hyhound::xshhud_W_size<const simdified_value_t<VL>, simdified_abi_t<VL>>(
@@ -194,6 +171,9 @@ auto hyhound_size_W(Structured<VL, SL> L) {
 }
 
 /// Apply Householder transformation generated by hyhound_diag.
+/// Only the part of A between columns @p kA_nonzero_start (inclusive) and
+/// @p kA_nonzero_end (exclusive) is assumed to be non-zero. A value of -1 for @p kA_nonzero_end
+/// indicates that all columns until the end are non-zero.
 template <simdifiable VL, simdifiable VA, simdifiable VD, simdifiable VB, simdifiable Vd,
           simdifiable VW>
     requires simdify_compatible<VL, VA, VD, VB, Vd, VW>
@@ -215,6 +195,10 @@ void hyhound_sign(Structured<VL, SL> L, VA &&A, Vd &&d) {
 
 /// Update Cholesky factor L using low-rank term A diag(d) Aᵀ, where L and A are stored as two
 /// separate block rows.
+/// @f[
+///     L = \begin{pmatrix} L_{11} \\ L_{21} \end{pmatrix}, \quad
+///     A = \begin{pmatrix} A_{1} \\ A_{2} \end{pmatrix}.
+/// @f]
 template <MatrixStructure SL, simdifiable VL1, simdifiable VA1, simdifiable VL2, simdifiable VA2,
           simdifiable Vd>
     requires simdify_compatible<VL1, VA1, VL2, VA2, Vd>
@@ -224,7 +208,14 @@ void hyhound_diag_2(Structured<VL1, SL> L1, VA1 &&A1, VL2 &&L2, VA2 &&A2, Vd &&d
         simdify(L1.value), simdify(A1), simdify(L2), simdify(A2), simdify(d).as_const());
 }
 
-/// @todo Docs
+/// Update structured Cholesky factor L using structured low-rank term A diag(d) Aᵀ,
+/// @f[
+///     L = \begin{pmatrix} L_{11} \\ L_{21} \\ L_{31} \end{pmatrix}, \quad
+///     A = \begin{pmatrix} A_{11} & A_{12} \\ 0 & A_{22} \\ A_{31} & 0 \end{pmatrix}, \quad
+///     \tilde A = \begin{pmatrix} 0 \\ \tilde A_{2} \\ \tilde A_{3} \end{pmatrix}.
+/// @f]
+/// @todo   The matrices A22 and A31 are embedded in A2 and A3 respectively, which are the same
+///         width as A1. This is wasteful. We should consider passing in views for A22 and A31 only.
 template <MatrixStructure SL, simdifiable VL11, simdifiable VA1, simdifiable VL21, simdifiable VA2,
           simdifiable VA2o, simdifiable VU, simdifiable VA3, simdifiable VA3o, simdifiable Vd>
     requires simdify_compatible<VL11, VA1, VL21, VA2, VA2o, VU, VA3, VA3o, Vd>
@@ -237,12 +228,19 @@ void hyhound_diag_cyclic(Structured<VL11, SL> L11, VA1 &&A1, VL21 &&L21, VA2 &&A
         simdify(L31), simdify(A3).as_const(), simdify(A3_out), simdify(d).as_const(), split_A);
 }
 
-/// @todo Docs
+/// Update structured Cholesky factor L using structured low-rank term A diag(d) Aᵀ,
+/// @f[
+///     L = \begin{pmatrix} L_{11} \\ L_{21} \\ L_{u} \end{pmatrix}, \quad
+///     A = \begin{pmatrix} A_{1} \\ A_{2} \\ 0 \end{pmatrix}, \quad
+///     \tilde A = \begin{pmatrix} 0 \\ \tilde A_{2} \\ \tilde A_{u} \end{pmatrix}.
+/// @f]
+/// The @p shift_A_out parameter indicates whether the output matrix A2_out should be shifted along
+/// the batch dimension. This is used in the Cyqlone solver.
 template <MatrixStructure SL, simdifiable VL11, simdifiable VA1, simdifiable VL21, simdifiable VA2,
           simdifiable VA2o, simdifiable VLu1, simdifiable VAuo, simdifiable Vd>
     requires simdify_compatible<VL11, VA1, VL21, VA2, VA2o, VLu1, VAuo, Vd>
 void hyhound_diag_riccati(Structured<VL11, SL> L11, VA1 &&A1, VL21 &&L21, VA2 &&A2, VA2o &&A2_out,
-                          VLu1 &&Lu1, VAuo &&Au_out, Vd &&d, bool shift_A_out) {
+                          VLu1 &&Lu1, VAuo &&Au_out, Vd &&d, bool shift_A_out = false) {
     detail::hyhound_diag_riccati<simdified_value_t<VL11>, simdified_abi_t<VL11>, {},
                                  StorageOrder::ColMajor, StorageOrder::ColMajor,
                                  StorageOrder::ColMajor, StorageOrder::ColMajor>(

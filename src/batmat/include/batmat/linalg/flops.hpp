@@ -96,6 +96,7 @@ constexpr FlopCount gemmt_diag(index_t m, index_t n, index_t k, MatrixStructure 
     return trmm(m, n, k, sA, sB, sC) + FlopCount{.mul = std::min(m, n) * k};
 }
 
+/// Cholesky factorization and triangular solve for an m×n matrix with m≥n.
 constexpr FlopCount potrf(index_t m, index_t n) {
     BATMAT_ASSUME(m >= n);
     return {
@@ -108,19 +109,30 @@ constexpr FlopCount potrf(index_t m, index_t n) {
     };
 }
 
-constexpr FlopCount hyh(index_t nr, index_t nc, index_t m) {
-    BATMAT_ASSUME(nr >= nc);
-    auto n1 = nc, n2 = nr - n1;
+/// Hyperbolic Householder factorization update with L n×n and A nr×k.
+constexpr FlopCount hyh_square(index_t n, index_t k) {
     return {
-        .fma = (m + 1) * n1 * n1          // L11, A1 (square)
-               + 2 * m * n1 * n2,         // L21, A2 (bottom)
-        .mul = m * n1 + (n1 + 1) * n1 / 2 // L11, A1 (square)
-               + n1 * n2,                 // L21, A2(bottom)
-        .add = (n1 - 1) * n1 / 2 +        // L11 (square)
-               n1 * n2,                   // L21 (bottom)
-        .div  = 2 * n1,
-        .sqrt = n1,
+        .fma  = k * n * n + 2 * n,
+        .mul  = k * n + (n + 1) * n / 2 + n,
+        .add  = (n + 1) * n / 2 + n,
+        .div  = 2 * n,
+        .sqrt = n,
     };
+}
+
+/// Hyperbolic Householder factorization application to L2 nr×nc and A2 nr×k.
+constexpr FlopCount hyh_apply(index_t nr, index_t nc, index_t k) {
+    return {
+        .fma = 2 * nr * k * nc,
+        .mul = nr * nc,
+        .add = nr * nc,
+    };
+}
+
+/// Hyperbolic Householder factorization update with L nr×nc and A nr×k.
+constexpr FlopCount hyh(index_t nr, index_t nc, index_t k) {
+    BATMAT_ASSUME(nr >= nc);
+    return hyh_square(nc, k) + hyh_apply(nr - nc, nc, k);
 }
 
 constexpr FlopCount syrk_potrf(index_t m, index_t n, index_t k) {
