@@ -21,8 +21,8 @@ VTUNE_PROFILER_DIR={{ os.getenv("VTUNE_PROFILER_DIR") or os.path.join(os.getenv(
 
 [conf]
 tools.cmake.cmaketoolchain:generator=Ninja Multi-Config
-tools.build:exelinkflags+=["-flto=auto", "-static-libstdc++", "-static-libgcc"]
-tools.build:sharedlinkflags+=["-flto=auto", "-static-libstdc++", "-static-libgcc"]
+tools.build:exelinkflags+=["-flto=auto", "-static-libstdc++", "-static-libgcc", "-lgfortran"]
+tools.build:sharedlinkflags+=["-flto=auto", "-static-libstdc++", "-static-libgcc", "-lgfortran"]
 tools.build:exelinkflags+=["-fuse-ld=mold"]
 tools.build:sharedlinkflags+=["-fuse-ld=mold"]
 
