@@ -1,0 +1,71 @@
+#ifdef __clang__
+#pragma clang fp contract(fast)
+#endif
+
+#include <batmat/linalg/micro-kernels/hyhound.tpp>
+
+// clang-format off
+namespace batmat::linalg::micro_kernels::hyhound::@Namespace@ {
+constexpr static index_t VL = @VL@;
+using DType = @DType@;
+using Abi   = datapar::deduced_abi<DType, VL>;
+constexpr static bool SignOnly = @Negate@;
+// clang-format on
+
+using enum StorageOrder;
+
+template <StorageOrder O>
+using CStorageOrder = std::integral_constant<StorageOrder, O>;
+
+constexpr std::array ColRowMajor{ColMajor, RowMajor};
+
+namespace {
+template <auto V>
+const auto wrap = V;
+} // namespace
+
+extern const auto xshhud_diag_ref_inst = guanaqo::make_lut<ColRowMajor, ColRowMajor>(
+    []<auto OL, auto OA>(CStorageOrder<OL>, CStorageOrder<OA>) -> const void * {
+        constexpr KernelConfig Conf{.sign_only = SignOnly};
+        return &wrap<static_cast<void (*)(view<DType, Abi, OL>, view<DType, Abi, OA>,
+                                          view<const DType, Abi>) noexcept>(
+            xshhud_diag_ref<DType, Abi, Conf, OL, OA>)>;
+    });
+extern const auto xshhud_diag_ref_W_inst = guanaqo::make_lut<ColRowMajor, ColRowMajor>(
+    []<auto OL, auto OA>(CStorageOrder<OL>, CStorageOrder<OA>) -> const void * {
+        constexpr KernelConfig Conf{.sign_only = SignOnly};
+        return &wrap<static_cast<void (*)(view<DType, Abi, OL>, view<DType, Abi, OA>,
+                                          view<const DType, Abi>, view<DType, Abi>) noexcept>(
+            xshhud_diag_ref<DType, Abi, Conf, OL, OA>)>;
+    });
+extern const auto xshh_apply_diag_ref_inst = guanaqo::make_lut<ColRowMajor, ColRowMajor>(
+    []<auto OL, auto OA>(CStorageOrder<OL>, CStorageOrder<OA>) -> const void * {
+        constexpr KernelConfig Conf{.sign_only = SignOnly};
+        return &wrap<xshh_apply_diag_ref<DType, Abi, Conf, OL, OA>>;
+    });
+extern const auto xshhud_diag_2_ref_inst =
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, ColRowMajor>(
+        []<auto OL1, auto OA1, auto OL2, auto OA2>(CStorageOrder<OL1>, CStorageOrder<OA1>,
+                                                   CStorageOrder<OL2>,
+                                                   CStorageOrder<OA2>) -> const void * {
+            constexpr KernelConfig Conf{.sign_only = SignOnly};
+            return &wrap<xshhud_diag_2_ref<DType, Abi, OL1, OA1, OL2, OA2, Conf>>;
+        });
+extern const auto xshhud_diag_cyclic_inst =
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, ColRowMajor>(
+        []<auto OL, auto OW, auto OY, auto OU>(CStorageOrder<OL>, CStorageOrder<OW>,
+                                               CStorageOrder<OY>,
+                                               CStorageOrder<OU>) -> const void * {
+            constexpr KernelConfig Conf{.sign_only = SignOnly};
+            return &wrap<xshhud_diag_cyclic<DType, Abi, OL, OW, OY, OU, Conf>>;
+        });
+extern const auto xshhud_diag_riccati_inst =
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, ColRowMajor>(
+        []<auto OL, auto OA, auto OLu, auto OAu>(CStorageOrder<OL>, CStorageOrder<OA>,
+                                                 CStorageOrder<OLu>,
+                                                 CStorageOrder<OAu>) -> const void * {
+            constexpr KernelConfig Conf{.sign_only = SignOnly};
+            return &wrap<xshhud_diag_riccati<DType, Abi, OL, OA, OLu, OAu, Conf>>;
+        });
+
+} // namespace batmat::linalg::micro_kernels::hyhound::@Namespace@
