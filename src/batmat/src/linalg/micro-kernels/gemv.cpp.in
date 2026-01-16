@@ -18,11 +18,8 @@ using enum MatrixStructure;
 
 template <StorageOrder O>
 using CStorageOrder = std::integral_constant<StorageOrder, O>;
-template <MatrixStructure O>
-using CMatrixStructure = std::integral_constant<MatrixStructure, O>;
 
 constexpr std::array ColRowMajor{ColMajor, RowMajor};
-constexpr std::array Triangular{LowerTriangular, UpperTriangular};
 
 namespace {
 template <auto V>

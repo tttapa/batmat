@@ -35,10 +35,12 @@ function(add_warnings_target tgt_name warnings_as_errors)
         -Wimplicit-fallthrough
         -Wuninitialized
         -Wconversion
+        -Wshadow
         -Wno-sign-conversion
     )
     # GCC
     set(GCC_WARNINGS_CXX
+        -Wshadow=compatible-local
         -Wno-error=unused-but-set-variable
         -Wsuggest-override
         -Wno-error=attributes
@@ -62,6 +64,11 @@ function(add_warnings_target tgt_name warnings_as_errors)
         -Wno-error=self-assign-overloaded
         -Wno-non-c-typedef-for-linkage
         -Wno-return-type-c-linkage
+        -Wno-string-conversion
+        -Wshadow
+        -Wno-shadow-field-in-constructor
+        -Wshadow-field-in-constructor-modified
+        $<$<CONFIG:Debug>:-Wno-exceptions>
     )
     # Flang
     set(FLANG_WARNINGS_Fortran

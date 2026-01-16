@@ -20,17 +20,16 @@ template <MatrixStructure O>
 using CMatrixStructure = std::integral_constant<MatrixStructure, O>;
 
 constexpr std::array ColRowMajor{ColMajor, RowMajor};
-constexpr std::array Triangular{LowerTriangular, UpperTriangular};
+constexpr std::array Triangular{LowerTriangular, /* UpperTriangular */}; // TODO
 
 namespace {
 template <auto V>
 const auto wrap = V;
 } // namespace
 
-// TODO: upper triangular version
-extern const auto symv_copy_register_inst_symv =
-    guanaqo::make_lut<ColRowMajor>([]<auto OA>(CStorageOrder<OA>) -> const void * {
-        constexpr KernelConfig Conf{.negate = Negate, .struc_A = LowerTriangular};
+extern const auto symv_copy_register_inst_symv = guanaqo::make_lut<ColRowMajor, Triangular>(
+    []<auto OA, auto S>(CStorageOrder<OA>, CMatrixStructure<S>) -> const void * {
+        constexpr KernelConfig Conf{.negate = Negate, .struc_A = S};
         return &wrap<symv_copy_register<DType, Abi, Conf, OA>>;
     });
 
