@@ -59,7 +59,7 @@ struct simd_view_types {
 #else
             typename simd::mask_type m{};
             for (int i = 0; i < static_cast<int>(m.size()); ++i)
-                m[i] = i < m.size() + MaskL;
+                m[i] = i < static_cast<int>(m.size()) + MaskL;
 #endif
             datapar::masked_aligned_store(x, m, p);
         }
