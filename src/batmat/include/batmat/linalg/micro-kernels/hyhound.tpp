@@ -14,7 +14,7 @@
 
 namespace batmat::linalg::micro_kernels::hyhound {
 
-template <class T, class Abi, index_t R, StorageOrder OL, StorageOrder OA, KernelConfig Conf>
+template <class T, class Abi, KernelConfig Conf, index_t R, StorageOrder OL, StorageOrder OA>
 [[gnu::hot, gnu::flatten]] void
 hyhound_diag_diag_microkernel(index_t kA, triangular_accessor<T, Abi, SizeR<T, Abi>> W,
                               uview<T, Abi, OL> L, uview<T, Abi, OA> A,
@@ -67,7 +67,7 @@ hyhound_diag_diag_microkernel(index_t kA, triangular_accessor<T, Abi, SizeR<T, A
     }
 }
 
-template <class T, class Abi, index_t R, StorageOrder OL, StorageOrder OA, KernelConfig Conf>
+template <class T, class Abi, KernelConfig Conf, index_t R, StorageOrder OL, StorageOrder OA>
 [[gnu::hot, gnu::flatten]] void
 hyhound_diag_full_microkernel(index_t kA, uview<T, Abi, OL> L, uview<T, Abi, OA> A,
                               uview<const T, Abi, StorageOrder::ColMajor> diag) noexcept {
@@ -128,8 +128,8 @@ template <class T, class Abi>
 
 } // namespace detail
 
-template <class T, class Abi, index_t R, index_t S, StorageOrder OL, StorageOrder OA,
-          StorageOrder OB, KernelConfig Conf>
+template <class T, class Abi, KernelConfig Conf, index_t R, index_t S, StorageOrder OL,
+          StorageOrder OA, StorageOrder OB>
 [[gnu::hot, gnu::flatten]] void hyhound_diag_tail_microkernel(
     index_t kA_nonzero_start, index_t kA_nonzero_end, index_t kA,
     triangular_accessor<const T, Abi, SizeR<T, Abi>> W, uview<T, Abi, OL> L,
@@ -311,14 +311,14 @@ void hyhound_diag_register(const view<T, Abi, OL> L, const view<T, Abi, OA> A,
                 auto Ad = A_.middle_rows(j);
                 auto Ld = L_.block(j, j);
                 // Process the diagonal block itself
-                hyhound_diag_diag_microkernel<T, Abi, R, OL, OA, Conf>(C, W, Ld, Ad, D_);
+                hyhound_diag_diag_microkernel<T, Abi, Conf, R, OL, OA>(C, W, Ld, Ad, D_);
                 // Process all rows below the diagonal block (in multiples of S).
                 foreach_chunked_merged(
                     j + R, L.rows(), S,
                     [&](index_t i, auto rem_i) {
                         auto As = A_.middle_rows(i);
                         auto Ls = L_.block(i, j);
-                        microkernel_tail_lut<T, Abi, OL, OA, OA, Conf>[rem_i - 1](
+                        microkernel_tail_lut<T, Abi, Conf, OL, OA, OA>[rem_i - 1](
                             0, C, C, W, Ls, As, As, Ad, D_, Structure::General, 0);
                     },
                     LoopDir::Backward); // TODO: decide on order
@@ -326,7 +326,7 @@ void hyhound_diag_register(const view<T, Abi, OL> L, const view<T, Abi, OA> A,
             [&](index_t j, index_t rem_j) {
                 auto Ad = A_.middle_rows(j);
                 auto Ld = L_.block(j, j);
-                microkernel_full_lut<T, Abi, OL, OA, Conf>[rem_j - 1](C, Ld, Ad, D_);
+                microkernel_full_lut<T, Abi, Conf, OL, OA>[rem_j - 1](C, Ld, Ad, D_);
             });
     } else {
         foreach_chunked_merged(0, L.cols(), R, [&](index_t j, auto rem_j) {
@@ -335,14 +335,14 @@ void hyhound_diag_register(const view<T, Abi, OL> L, const view<T, Abi, OA> A,
             auto Ad = A_.middle_rows(j);
             auto Ld = L_.block(j, j);
             // Process the diagonal block itself
-            microkernel_diag_lut<T, Abi, OL, OA, Conf>[rem_j - 1](C, W, Ld, Ad, D_);
+            microkernel_diag_lut<T, Abi, Conf, OL, OA>[rem_j - 1](C, W, Ld, Ad, D_);
             // Process all rows below the diagonal block (in multiples of S).
             foreach_chunked_merged(
                 j + rem_j, L.rows(), S,
                 [&](index_t i, auto rem_i) {
                     auto As = A_.middle_rows(i);
                     auto Ls = L_.block(i, j);
-                    microkernel_tail_lut_2<T, Abi, OL, OA, OA, Conf>[rem_j - 1][rem_i - 1](
+                    microkernel_tail_lut_2<T, Abi, Conf, OL, OA, OA>[rem_j - 1][rem_i - 1](
                         0, C, C, W, Ls, As, As, Ad, D_, Structure::General, 0);
                 },
                 LoopDir::Backward); // TODO: decide on order
@@ -380,14 +380,14 @@ void hyhound_diag_register(const view<T, Abi, OL> L, const view<T, Abi, OA> A,
         auto Ld = L_.block(j, j);
         auto Wd = W_t{W_.middle_cols(j / R).data};
         // Process the diagonal block itself
-        microkernel_diag_lut<T, Abi, OL, OA, Conf>[nj - 1](k, Wd, Ld, Ad, D_);
+        microkernel_diag_lut<T, Abi, Conf, OL, OA>[nj - 1](k, Wd, Ld, Ad, D_);
         // Process all rows below the diagonal block (in multiples of S).
         foreach_chunked_merged(
             j + nj, L.rows(), S,
             [&](index_t i, auto ni) {
                 auto As = A_.middle_rows(i);
                 auto Ls = L_.block(i, j);
-                microkernel_tail_lut_2<T, Abi, OL, OA, OA, Conf>[nj - 1][ni - 1](
+                microkernel_tail_lut_2<T, Abi, Conf, OL, OA, OA>[nj - 1][ni - 1](
                     0, k, k, Wd, Ls, As, As, Ad, D_, Structure::General, 0);
             },
             LoopDir::Backward); // TODO: decide on order
@@ -439,7 +439,7 @@ void hyhound_diag_apply_register(const view<T, Abi, OL> L, const view<const T, A
                 auto Aini  = j == 0 ? Ain_.middle_rows(i) : Aout_.middle_rows(i);
                 auto Aouti = Aout_.middle_rows(i);
                 auto Ls    = L_.block(i, j);
-                microkernel_tail_lut_2<T, Abi, OL, OA, OA, Conf>[nj - 1][ni - 1](
+                microkernel_tail_lut_2<T, Abi, Conf, OL, OA, OA>[nj - 1][ni - 1](
                     j == 0 ? kA_nonzero_start : 0, j == 0 ? kA_nonzero_end : k, k, Wd, Ls, Aini,
                     Aouti, Ad, D_, Structure::General, 0);
             },
@@ -480,14 +480,14 @@ void hyhound_diag_2_register(const view<T, Abi, OL1> L11, const view<T, Abi, OA1
         auto Ad = A1_.middle_rows(j);
         auto Ld = L11_.block(j, j);
         // Process the diagonal block itself
-        microkernel_diag_lut<T, Abi, OL1, OA1, Conf>[nj - 1](k, W, Ld, Ad, D_);
+        microkernel_diag_lut<T, Abi, Conf, OL1, OA1>[nj - 1](k, W, Ld, Ad, D_);
         // Process all rows below the diagonal block (in multiples of S).
         foreach_chunked_merged(
             j + nj, L11.rows(), S,
             [&](index_t i, auto ni) {
                 auto As = A1_.middle_rows(i);
                 auto Ls = L11_.block(i, j);
-                microkernel_tail_lut_2<T, Abi, OL1, OA1, OA1, Conf>[nj - 1][ni - 1](
+                microkernel_tail_lut_2<T, Abi, Conf, OL1, OA1, OA1>[nj - 1][ni - 1](
                     0, k, k, W, Ls, As, As, Ad, D_, Structure::General, 0);
             },
             LoopDir::Backward); // TODO: decide on order
@@ -496,7 +496,7 @@ void hyhound_diag_2_register(const view<T, Abi, OL1> L11, const view<T, Abi, OA1
             [&](index_t i, auto ni) {
                 auto As = A2_.middle_rows(i);
                 auto Ls = L21_.block(i, j);
-                microkernel_tail_lut_2<T, Abi, OL2, OA2, OA1, Conf>[nj - 1][ni - 1](
+                microkernel_tail_lut_2<T, Abi, Conf, OL2, OA2, OA1>[nj - 1][ni - 1](
                     0, k, k, W, Ls, As, As, Ad, D_, Structure::General, 0);
             },
             LoopDir::Backward); // TODO: decide on order
@@ -557,14 +557,14 @@ void hyhound_diag_cyclic_register(const view<T, Abi, OL> L11,      // D
         auto Ad = A1_.middle_rows(j);
         auto Ld = L11_.block(j, j);
         // Process the diagonal block itself
-        microkernel_diag_lut<T, Abi, OL, OW, Conf>[nj - 1](k, W, Ld, Ad, D_);
+        microkernel_diag_lut<T, Abi, Conf, OL, OW>[nj - 1](k, W, Ld, Ad, D_);
         // Process all rows below the diagonal block (in multiples of S).
         foreach_chunked_merged(
             j + nj, L11.rows(), S,
             [&](index_t i, auto ni) {
                 auto As = A1_.middle_rows(i);
                 auto Ls = L11_.block(i, j);
-                microkernel_tail_lut_2<T, Abi, OL, OW, OW, Conf>[nj - 1][ni - 1](
+                microkernel_tail_lut_2<T, Abi, Conf, OL, OW, OW>[nj - 1][ni - 1](
                     0, k, k, W, Ls, As, As, Ad, D_, Structure::General, 0);
             },
             LoopDir::Backward); // TODO: decide on order
@@ -574,7 +574,7 @@ void hyhound_diag_cyclic_register(const view<T, Abi, OL> L11,      // D
                 auto As_out = A2_out_.middle_rows(i);
                 auto As     = j == 0 ? A2_.middle_rows(i) : As_out;
                 auto Ls     = L21_.block(i, j);
-                microkernel_tail_lut_2<T, Abi, OY, OW, OW, Conf>[nj - 1][ni - 1](
+                microkernel_tail_lut_2<T, Abi, Conf, OY, OW, OW>[nj - 1][ni - 1](
                     j == 0 ? split_A : 0, k, k, W, Ls, As, As_out, Ad, D_, Structure::General, 0);
                 // First half of A2 is implicitly zero in first pass
             },
@@ -585,7 +585,7 @@ void hyhound_diag_cyclic_register(const view<T, Abi, OL> L11,      // D
                 auto As_out = A3_out_.middle_rows(i);
                 auto As     = j == 0 ? A3_.middle_rows(i) : As_out;
                 auto Ls     = L31_.block(i, j);
-                microkernel_tail_lut_2<T, Abi, OU, OW, OW, Conf>[nj - 1][ni - 1](
+                microkernel_tail_lut_2<T, Abi, Conf, OU, OW, OW>[nj - 1][ni - 1](
                     0, j == 0 ? split_A : k, k, W, Ls, As, As_out, Ad, D_, Structure::General, 0);
                 // Second half of A3 is implicitly zero in first pass
             },
@@ -646,14 +646,14 @@ void hyhound_diag_riccati_register(const view<T, Abi, OL> L11, const view<T, Abi
         auto Ad = A1_.middle_rows(j);
         auto Ld = L11_.block(j, j);
         // Process the diagonal block itself
-        microkernel_diag_lut<T, Abi, OL, OA, Conf>[nj - 1](k, W, Ld, Ad, D_);
+        microkernel_diag_lut<T, Abi, Conf, OL, OA>[nj - 1](k, W, Ld, Ad, D_);
         // Process all rows below the diagonal block (in multiples of S).
         foreach_chunked_merged(
             j + nj, L11.rows(), S,
             [&](index_t i, auto ni) {
                 auto As = A1_.middle_rows(i);
                 auto Ls = L11_.block(i, j);
-                microkernel_tail_lut_2<T, Abi, OL, OA, OA, Conf>[nj - 1][ni - 1](
+                microkernel_tail_lut_2<T, Abi, Conf, OL, OA, OA>[nj - 1][ni - 1](
                     0, k, k, W, Ls, As, As, Ad, D_, Structure::General, 0);
             },
             LoopDir::Backward); // TODO: decide on order
@@ -663,7 +663,7 @@ void hyhound_diag_riccati_register(const view<T, Abi, OL> L11, const view<T, Abi
                 auto As_out = A2_out_.middle_rows(i);
                 auto As     = j == 0 ? A2_.middle_rows(i) : As_out;
                 auto Ls     = L21_.block(i, j);
-                microkernel_tail_lut_2<T, Abi, OL, OA, OA, Conf>[nj - 1][ni - 1](
+                microkernel_tail_lut_2<T, Abi, Conf, OL, OA, OA>[nj - 1][ni - 1](
                     0, k, k, W, Ls, As, As_out, Ad, D_, Structure::General, do_shift ? -1 : 0);
             },
             LoopDir::Backward); // TODO: decide on order
@@ -677,7 +677,7 @@ void hyhound_diag_riccati_register(const view<T, Abi, OL> L11, const view<T, Abi
                 const auto struc = i == j  ? Structure::Upper
                                    : i < j ? Structure::General
                                            : Structure::Zero;
-                microkernel_tail_lut_2<T, Abi, OLu, OAu, OA, Conf>[nj - 1][ni - 1](
+                microkernel_tail_lut_2<T, Abi, Conf, OLu, OAu, OA>[nj - 1][ni - 1](
                     0, j == 0 ? 0 : k, k, W, Ls, As, As_out, Ad, D_, struc, do_shift ? -1 : 0);
             },
             LoopDir::Backward); // TODO: decide on order
