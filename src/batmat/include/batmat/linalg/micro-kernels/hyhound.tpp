@@ -274,7 +274,7 @@ template <class T, class Abi, index_t R, index_t S, StorageOrder OL, StorageOrde
             update_A(std::integral_constant<int, 0>{});
             break;
         case -1: update_A(std::integral_constant<int, -1>{}); break;
-        case 1: update_A(std::integral_constant<int, 1>{}); break;
+        // case 1: update_A(std::integral_constant<int, 1>{}); break;
         default: BATMAT_ASSUME(false);
     }
 #endif
@@ -495,7 +495,7 @@ void xshhud_diag_cyclic(view<T, Abi, OL> L11,      // D
                         view<T, Abi, OU> L31,      // U
                         view<const T, Abi, OW> A3, // work
                         view<T, Abi, OW> A3_out,   // work
-                        view<const T, Abi> D, index_t split_A, int rot_A2) noexcept {
+                        view<const T, Abi> D, index_t split_A) noexcept {
     BATMAT_ASSERT(L11.rows() >= L11.cols());
     BATMAT_ASSERT(L11.rows() == A1.rows());
     BATMAT_ASSERT(L21.rows() == A2.rows());
@@ -542,7 +542,6 @@ void xshhud_diag_cyclic(view<T, Abi, OL> L11,      // D
                     0, C, C, W, Ls, As, As, Ad, D, Structure::General, 0);
             },
             LoopDir::Backward); // TODO: decide on order
-        const auto rot = k + rem_k == L11.cols() ? rot_A2 : 0;
         foreach_chunked_merged(
             0, L21.rows(), S,
             [&](index_t i, auto rem_i) {
@@ -550,7 +549,7 @@ void xshhud_diag_cyclic(view<T, Abi, OL> L11,      // D
                 auto As     = k == 0 ? A2.middle_rows(i, rem_i) : As_out;
                 auto Ls     = L21.block(i, k, rem_i, rem_k);
                 microkernel_tail_lut_2<T, Abi, OY, OW, OW, Conf>[rem_k - 1][rem_i - 1](
-                    k == 0 ? split_A : 0, C, C, W, Ls, As, As_out, Ad, D, Structure::General, rot);
+                    k == 0 ? split_A : 0, C, C, W, Ls, As, As_out, Ad, D, Structure::General, 0);
                 // First half of A2 is implicitly zero in first pass
             },
             LoopDir::Backward); // TODO: decide on order

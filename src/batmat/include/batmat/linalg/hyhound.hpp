@@ -76,13 +76,12 @@ template <MatrixStructure SL, simdifiable VL11, simdifiable VA1, simdifiable VL2
           simdifiable VA2o, simdifiable VU, simdifiable VA3, simdifiable VA3o, simdifiable Vd>
     requires simdify_compatible<VL11, VA1, VL21, VA2, VA2o, VU, VA3, VA3o, Vd>
 void hyhound_diag_cyclic(Structured<VL11, SL> L11, VA1 &&A1, VL21 &&L21, VA2 &&A2, VA2o &&A2_out,
-                         VU &&L31, VA3 &&A3, VA3o &&A3_out, Vd &&d, index_t split_A, int rot_A2) {
+                         VU &&L31, VA3 &&A3, VA3o &&A3_out, Vd &&d, index_t split_A) {
     micro_kernels::hyhound::xshhud_diag_cyclic<simdified_value_t<VL11>, simdified_abi_t<VL11>,
                                                StorageOrder::ColMajor, StorageOrder::ColMajor,
                                                StorageOrder::ColMajor, StorageOrder::ColMajor, {}>(
         simdify(L11.value), simdify(A1), simdify(L21), simdify(A2).as_const(), simdify(A2_out),
-        simdify(L31), simdify(A3).as_const(), simdify(A3_out), simdify(d).as_const(), split_A,
-        rot_A2);
+        simdify(L31), simdify(A3).as_const(), simdify(A3_out), simdify(d).as_const(), split_A);
 }
 
 /// @todo Docs

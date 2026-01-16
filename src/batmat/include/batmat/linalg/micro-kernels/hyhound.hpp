@@ -134,7 +134,7 @@ template <class T, class Abi, StorageOrder OL = StorageOrder::ColMajor,
 void xshhud_diag_cyclic(view<T, Abi, OL> L11, view<T, Abi, OW> A1, view<T, Abi, OY> L21,
                         view<const T, Abi, OW> A2, view<T, Abi, OW> A2_out, view<T, Abi, OU> L31,
                         view<const T, Abi, OW> A3, view<T, Abi, OW> A3_out, view<const T, Abi> D,
-                        index_t split_A, int rot_A2) noexcept;
+                        index_t split_A) noexcept;
 
 template <class T, class Abi, StorageOrder OL = StorageOrder::ColMajor,
           StorageOrder OA = StorageOrder::ColMajor, StorageOrder OLu = StorageOrder::ColMajor,
