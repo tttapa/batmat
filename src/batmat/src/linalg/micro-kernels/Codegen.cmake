@@ -1,3 +1,8 @@
+function(batmat_at_least_O1 tgt)
+    set(GCC_ISH $<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>)
+    target_compile_options(${tgt} PRIVATE "$<$<AND:$<CONFIG:Debug>,${GCC_ISH}>:-O1>")
+endfunction()
+
 function(batmat_codegen_micro_kernels tgt headers)
 
     set(SIGNS_gemm "false" "true")
@@ -15,6 +20,7 @@ function(batmat_codegen_micro_kernels tgt headers)
     set(TPP_DIR "batmat/linalg/micro-kernels")
     foreach(op "gemm" "gemm-diag" "gemv" "symv" "syomv" "trsm" "potrf" "trtri")
         add_library(${tgt}-micro-kernels-${op} STATIC)
+        batmat_at_least_O1(${tgt}-micro-kernels-${op})
         target_link_libraries(${tgt}-micro-kernels-${op} PRIVATE ${headers} warnings)
         target_precompile_headers(${tgt}-micro-kernels-${op} PRIVATE <${TPP_DIR}/${op}.tpp>)
         target_link_libraries(${tgt}-micro-kernels INTERFACE ${tgt}-micro-kernels-${op})
