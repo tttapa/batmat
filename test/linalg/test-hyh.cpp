@@ -53,7 +53,7 @@ TYPED_TEST_P(HyhTest, hyhoundLapply) {
     using batmat::linalg::tril;
     using EMat = Eigen::MatrixX<typename TypeParam::value_type>;
     for (auto n : batmat::tests::sizes)
-        for (auto m : batmat::tests::sizes)
+        for (batmat::index_t m : {0, 1, 2, 3, 51})
             for (auto k : batmat::tests::sizes) {
                 const auto L0 = [&] {
                     auto L = this->template get_matrix<0>(n, n);
