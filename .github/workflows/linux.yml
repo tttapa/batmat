@@ -28,7 +28,7 @@ jobs:
 
     - name: Build
       run: >
-        conan create . --build=missing -pr scripts/dev/profiles/${{ matrix.profile }}
+        conan build . --build=missing -pr scripts/dev/profiles/${{ matrix.profile }}
         -s compiler.version=${{ matrix.gcc }}
         -s build_type=${{ matrix.build_type }}
         -c \*:tools.build:skip_test=True
@@ -38,6 +38,7 @@ jobs:
         -o \&:with_gsi_hpc_simd=${{ matrix.gsi-hpc-simd }}
         -c '&:tools.cmake.cmaketoolchain:extra_variables*={"CMAKE_C_COMPILER_LAUNCHER": "sccache"}'
         -c '&:tools.cmake.cmaketoolchain:extra_variables*={"CMAKE_CXX_COMPILER_LAUNCHER": "sccache"}'
+        -c '&:tools.cmake.cmaketoolchain:extra_variables*={"CMAKE_DISABLE_PRECOMPILE_HEADERS": "On"}'
         -c '&:tools.compilation:verbosity=verbose'
 
     - run: conan cache clean
