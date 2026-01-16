@@ -29,19 +29,19 @@ extern const auto xshhud_diag_ref_inst = guanaqo::make_lut<ColRowMajor, ColRowMa
         constexpr KernelConfig Conf{.sign_only = SignOnly};
         return &wrap<static_cast<void (*)(view<DType, Abi, OL>, view<DType, Abi, OA>,
                                           view<const DType, Abi>) noexcept>(
-            xshhud_diag_ref<DType, Abi, Conf, OL, OA>)>;
+            hyhound_diag_register<DType, Abi, Conf, OL, OA>)>;
     });
 extern const auto xshhud_diag_ref_W_inst = guanaqo::make_lut<ColRowMajor, ColRowMajor>(
     []<auto OL, auto OA>(CStorageOrder<OL>, CStorageOrder<OA>) -> const void * {
         constexpr KernelConfig Conf{.sign_only = SignOnly};
         return &wrap<static_cast<void (*)(view<DType, Abi, OL>, view<DType, Abi, OA>,
                                           view<const DType, Abi>, view<DType, Abi>) noexcept>(
-            xshhud_diag_ref<DType, Abi, Conf, OL, OA>)>;
+            hyhound_diag_register<DType, Abi, Conf, OL, OA>)>;
     });
 extern const auto xshh_apply_diag_ref_inst = guanaqo::make_lut<ColRowMajor, ColRowMajor>(
     []<auto OL, auto OA>(CStorageOrder<OL>, CStorageOrder<OA>) -> const void * {
         constexpr KernelConfig Conf{.sign_only = SignOnly};
-        return &wrap<xshh_apply_diag_ref<DType, Abi, Conf, OL, OA>>;
+        return &wrap<hyhound_diag_apply_register<DType, Abi, Conf, OL, OA>>;
     });
 extern const auto xshhud_diag_2_ref_inst =
     guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, ColRowMajor>(
@@ -49,7 +49,7 @@ extern const auto xshhud_diag_2_ref_inst =
                                                    CStorageOrder<OL2>,
                                                    CStorageOrder<OA2>) -> const void * {
             constexpr KernelConfig Conf{.sign_only = SignOnly};
-            return &wrap<xshhud_diag_2_ref<DType, Abi, OL1, OA1, OL2, OA2, Conf>>;
+            return &wrap<hyhound_diag_2_register<DType, Abi, OL1, OA1, OL2, OA2, Conf>>;
         });
 extern const auto xshhud_diag_cyclic_inst =
     guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, ColRowMajor>(
@@ -57,7 +57,7 @@ extern const auto xshhud_diag_cyclic_inst =
                                                CStorageOrder<OY>,
                                                CStorageOrder<OU>) -> const void * {
             constexpr KernelConfig Conf{.sign_only = SignOnly};
-            return &wrap<xshhud_diag_cyclic<DType, Abi, OL, OW, OY, OU, Conf>>;
+            return &wrap<hyhound_diag_cyclic_register<DType, Abi, OL, OW, OY, OU, Conf>>;
         });
 extern const auto xshhud_diag_riccati_inst =
     guanaqo::make_lut<ColRowMajor, ColRowMajor, ColRowMajor, ColRowMajor>(
@@ -65,7 +65,7 @@ extern const auto xshhud_diag_riccati_inst =
                                                  CStorageOrder<OLu>,
                                                  CStorageOrder<OAu>) -> const void * {
             constexpr KernelConfig Conf{.sign_only = SignOnly};
-            return &wrap<xshhud_diag_riccati<DType, Abi, OL, OA, OLu, OAu, Conf>>;
+            return &wrap<hyhound_diag_riccati_register<DType, Abi, OL, OA, OLu, OAu, Conf>>;
         });
 
 } // namespace batmat::linalg::micro_kernels::hyhound::@Namespace@
