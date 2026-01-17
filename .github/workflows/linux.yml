@@ -24,7 +24,7 @@ jobs:
     - name: Setup Conan and sccache
       uses: ./.github/workflows/setup-conan
       with:
-        cache-key: ${{ matrix.profile }}-${{ matrix.gcc }}-${{ matrix.build_type }}
+        cache-key: ${{ matrix.profile }}-${{ matrix.gcc }}-${{ matrix.build_type }}-${{ matrix.gsi-hpc-simd }}
 
     - name: Build
       run: >
