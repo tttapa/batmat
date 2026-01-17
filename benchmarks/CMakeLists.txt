@@ -24,15 +24,17 @@ function(setup_benchmark_target name)
     endif()
     add_custom_command(
         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/results/${target_name}.json
+        COMMAND ${CMAKE_COMMAND} -E make_directory
+            "${CMAKE_CURRENT_BINARY_DIR}/results"
         COMMAND ${CMAKE_COMMAND} -E env
             OMP_NUM_THREADS=1
             taskset -c 0
-            $<TARGET_FILE:${target_name}>
+            "$<TARGET_FILE:${target_name}>"
             --benchmark_min_time=0.1s
             --benchmark_min_warmup_time=0.01
             --benchmark_repetitions=3
             --benchmark_enable_random_interleaving
-            --benchmark_out=${CMAKE_CURRENT_BINARY_DIR}/results/${target_name}.json
+            --benchmark_out="${CMAKE_CURRENT_BINARY_DIR}/results/${target_name}.json"
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         DEPENDS ${target_name}
         USES_TERMINAL)
