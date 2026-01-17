@@ -408,7 +408,7 @@ void hyhound_diag_apply_register(const view<T, Abi, OL> L, const view<const T, A
     BATMAT_ASSUME(B.rows() == L.cols());
     BATMAT_ASSUME(B.cols() == k);
     BATMAT_ASSUME(D.rows() == k);
-    BATMAT_ASSUME(0 <=kA_nonzero_start);
+    BATMAT_ASSUME(0 <= kA_nonzero_start);
     BATMAT_ASSUME(kA_nonzero_start <= kA_nonzero_end);
     BATMAT_ASSUME(kA_nonzero_end <= k);
 

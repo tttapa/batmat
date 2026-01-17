@@ -77,9 +77,11 @@ def parse_run_name(name):
     args = tuple(a.strip() for a in args_str.split(","))
     return func, args
 
+
 df[["func", "args"]] = df["run_name"].apply(parse_run_name).apply(pd.Series)
 
-def generate_ref_name_from_parts(func, args, existing_names):
+
+def ref_name_from_parts(func, args, existing_names):
     args = ("scalar",) + args[1:]
     for i in range(len(args), 0, -1):  # Try progressively shorter templates
         candidate = f"{func}<{', '.join(args[:i])}>"
@@ -87,12 +89,12 @@ def generate_ref_name_from_parts(func, args, existing_names):
             return candidate
     return None
 
+
 def add_reference_columns(df: pd.DataFrame, metrics):
     # Generate reference names for each run
     existing_names = set(df["run_name"])
     df["ref_name"] = df.apply(
-        lambda r: generate_ref_name_from_parts(r["func"].item(), r["args"].item(), existing_names),
-        axis=1
+        lambda r: ref_name_from_parts(r["func"].item(), r["args"].item(), existing_names), axis=1
     )
 
     # Build the "reference dataframe" (scalar_abi runs)
@@ -101,16 +103,19 @@ def add_reference_columns(df: pd.DataFrame, metrics):
 
     # For MultiIndex columns, rename top-level only
     if isinstance(ref_df.columns, pd.MultiIndex):
-        ref_df.columns = pd.MultiIndex.from_tuples([
-            (f"{a}_ref" if i == 0 and a in metrics else a, b)
-            for i, (a, b) in enumerate(ref_df.columns)
-        ])
+        ref_df.columns = pd.MultiIndex.from_tuples(
+            [
+                (f"{a}_ref" if i == 0 and a in metrics else a, b)
+                for i, (a, b) in enumerate(ref_df.columns)
+            ]
+        )
     else:
         ref_df = ref_df.rename(columns={m: f"{m}_ref" for m in metrics})
 
     # Merge on (ref_name, version)
     df = df.merge(ref_df, on=["ref_name", "version"], how="left", suffixes=("", "_ref"))
     return df.drop(columns="ref_name")
+
 
 def benchmark_label(func_name: str, args: tuple[str]) -> str:
     # Map ABI
@@ -152,7 +157,8 @@ def benchmark_label(func_name: str, args: tuple[str]) -> str:
         return f"{abi_label}{tiling_label}"
     return abi_label
 
-def benchmark_color(func_name: str, args: tuple[str], label: str) -> str:
+
+def benchmark_color(args: tuple[str], label: str) -> str:
     if args[0] == "blasfeo":
         return "tab:pink"
     elif args[0] == "simd4":
@@ -165,10 +171,11 @@ def benchmark_color(func_name: str, args: tuple[str], label: str) -> str:
         return "tab:red"
     return "tab:purple"
 
+
 # Plot the data
 df["label"] = df.apply(lambda r: benchmark_label(r["func"].item(), r["args"].item()), axis=1)
 df = df[df["label"].notna()]
-df["color"] = df.apply(lambda r: benchmark_color(r["func"].item(), r["args"].item(), r["label"].item()), axis=1)
+df["color"] = df.apply(lambda r: benchmark_color(r["args"].item(), r["label"].item()), axis=1)
 df: pd.DataFrame = add_reference_columns(df, ["GFLOPS", metric])
 functions = df["run_name"].unique()
 title = filename.stem.replace("benchmark-", "").replace("-", " ").upper()
@@ -209,10 +216,22 @@ separate_figs = {
         # ("ColMajor", "RowMajor"): "\\textsc{syrk} $D_r = C_r + A_c A_c^\\top$",
     },
     "syrk_potrf": {
-        ("RowMajor", "ColMajor"): "\\textsc{syrk+potrf} $D_c = \\mathrm{chol}(C_c + A_r A_r^\\top)$",
-        ("ColMajor", "ColMajor"): "\\textsc{syrk+potrf} $D_c = \\mathrm{chol}(C_c + A_c A_c^\\top)$",
-        ("RowMajor", "RowMajor"): "\\textsc{syrk+potrf} $D_r = \\mathrm{chol}(C_r + A_r A_r^\\top)$",
-        ("ColMajor", "RowMajor"): "\\textsc{syrk+potrf} $D_r = \\mathrm{chol}(C_r + A_c A_c^\\top)$",
+        (
+            "RowMajor",
+            "ColMajor",
+        ): "\\textsc{syrk+potrf} $D_c = \\mathrm{chol}(C_c + A_r A_r^\\top)$",
+        (
+            "ColMajor",
+            "ColMajor",
+        ): "\\textsc{syrk+potrf} $D_c = \\mathrm{chol}(C_c + A_c A_c^\\top)$",
+        (
+            "RowMajor",
+            "RowMajor",
+        ): "\\textsc{syrk+potrf} $D_r = \\mathrm{chol}(C_r + A_r A_r^\\top)$",
+        (
+            "ColMajor",
+            "RowMajor",
+        ): "\\textsc{syrk+potrf} $D_r = \\mathrm{chol}(C_r + A_c A_c^\\top)$",
     },
     "trtri": {
         ("RowMajor",): "\\textsc{trtri} $D_r = L_r^{-1}$",
@@ -230,6 +249,7 @@ separate_figs = {
     },
 }
 
+
 def make_subplots_grid(n):
     """Return sensible (rows, cols) for n subplots."""
     if n <= 1:
@@ -246,9 +266,21 @@ def make_subplots_grid(n):
         rows = int(np.ceil(np.sqrt(n)))
         return rows, int(np.ceil(n / rows))
 
+
 DO_FILL_BETWEEN = False
 
-def plot_partitioned(df: pd.DataFrame, metric, stat, title, ylabel, relative=False, gflops=False, logx=False, x_lim_max=None):
+
+def plot_partitioned(
+    df: pd.DataFrame,
+    metric,
+    stat,
+    title,
+    ylabel,
+    relative=False,
+    gflops=False,
+    logx=False,
+    x_lim_max=None,
+):
     """Generic helper for all plots with subplots per partition."""
     for func_name, partitions in separate_figs.items():
         func_df = df[df["func"] == func_name]
@@ -257,11 +289,18 @@ def plot_partitioned(df: pd.DataFrame, metric, stat, title, ylabel, relative=Fal
 
         n_subplots = len(partitions)
         nrows, ncols = make_subplots_grid(n_subplots)
-        fig, axes = plt.subplots(nrows, ncols, figsize=(5*ncols, 3*nrows + 0.6), squeeze=False, sharex="all", sharey="all")
+        fig, axes = plt.subplots(
+            nrows,
+            ncols,
+            figsize=(5 * ncols, 3 * nrows + 0.6),
+            squeeze=False,
+            sharex="all",
+            sharey="all",
+        )
 
         for ax, (args_tuple, subtitle) in zip(axes.flatten(), partitions.items()):
             # Select rows whose args start with the tuple args_tuple
-            mask = func_df["args"].apply(lambda a: a[1:1 + len(args_tuple)] == args_tuple)
+            mask = func_df["args"].apply(lambda a: a[1 : 1 + len(args_tuple)] == args_tuple)
             sub_df = func_df[mask]
             if sub_df.empty:
                 print("No data for", func_name, args_tuple)
@@ -288,7 +327,9 @@ def plot_partitioned(df: pd.DataFrame, metric, stat, title, ylabel, relative=Fal
                         ax.set_xlim(1 if logx else 0, x_lim_max)
                 else:
                     y_ref = run_df[f"{metric}_ref"][stat].array if relative else 1.0
-                    (pl,) = ax.loglog(run_df["version"], run_df[metric][stat].array / y_ref, ".-", **opts)
+                    (pl,) = ax.loglog(
+                        run_df["version"], run_df[metric][stat].array / y_ref, ".-", **opts
+                    )
                     if DO_FILL_BETWEEN:
                         ax.fill_between(
                             run_df["version"],
@@ -301,7 +342,7 @@ def plot_partitioned(df: pd.DataFrame, metric, stat, title, ylabel, relative=Fal
             ax.set_title(subtitle)
             ax.legend(loc="lower right")
             ax.grid(True, which="both", ls=":")
-        
+
         for r in range(nrows):
             axes[r, 0].set_ylabel(ylabel)
 
@@ -314,30 +355,26 @@ def plot_partitioned(df: pd.DataFrame, metric, stat, title, ylabel, relative=Fal
 
 def plot_absolute():
     plot_partitioned(
-        df, metric, stat,
-        f"Absolute Run Times of {title}",
-        "Time (ns)",
-        relative=False
+        df, metric, stat, f"Absolute Run Times of {title}", "Time (ns)", relative=False
     )
 
 
 def plot_relative():
     plot_partitioned(
-        df, metric, stat,
-        f"Relative Run Times of {title}",
-        "Time relative to MKL",
-        relative=True
+        df, metric, stat, f"Relative Run Times of {title}", "Time relative to MKL", relative=True
     )
 
 
 def plot_gflops(log=False, x_lim_max=None):
     plot_partitioned(
-        df, metric, stat,
+        df,
+        metric,
+        stat,
         f"Performance of {title}",
         "Performance [GFLOPS]",
         gflops=True,
         logx=log,
-        x_lim_max=x_lim_max
+        x_lim_max=x_lim_max,
     )
 
 

@@ -9,7 +9,7 @@
 namespace batmat::linalg::micro_kernels::symv {
 
 struct KernelConfig {
-    bool negate = false;
+    bool negate             = false;
     MatrixStructure struc_A = MatrixStructure::LowerTriangular;
 };
 

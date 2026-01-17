@@ -25,9 +25,9 @@ template <class T, class Abi, index_t N = 8, StorageOrder OAi>
     if (C == 0)
         return 0;
     BATMAT_ASSUME(R > 0);
-    using types              = simd_view_types<T, Abi>;
-    using simd               = typename types::simd;
-    using isimd              = typename types::isimd;
+    using types = simd_view_types<T, Abi>;
+    using simd  = typename types::simd;
+    using isimd = typename types::isimd;
 
     isimd hist[N]{};
     index_t j = 0;
