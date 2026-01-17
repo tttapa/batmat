@@ -39,6 +39,7 @@ jobs:
         -c '&:tools.cmake.cmaketoolchain:extra_variables*={"CMAKE_C_COMPILER_LAUNCHER": "sccache"}'
         -c '&:tools.cmake.cmaketoolchain:extra_variables*={"CMAKE_CXX_COMPILER_LAUNCHER": "sccache"}'
         -c '&:tools.cmake.cmaketoolchain:extra_variables*={"CMAKE_DISABLE_PRECOMPILE_HEADERS": "On"}'
+        -c '&:tools.cmake.cmaketoolchain:extra_variables*={"CMAKE_COMPILE_WARNING_AS_ERROR": "On"}'
         -c '&:tools.compilation:verbosity=verbose'
 
     - run: conan cache clean
