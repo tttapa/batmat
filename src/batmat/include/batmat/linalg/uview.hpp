@@ -213,6 +213,14 @@ struct cached_uview {
         : cached_uview{o, std::make_integer_sequence<index_t, Size>()} {}
 };
 
+#ifdef __INTEL_LLVM_COMPILER
+// No caching on Intel icx to avoid issues with icpx codegen. See test/icpx-repro.cpp.
+template <index_t Rows, index_t Cols, class T, class Abi, StorageOrder Order>
+[[gnu::always_inline]] inline auto with_cached_access(uview<T, Abi, Order> o) noexcept {
+    return o;
+}
+#else
+
 template <index_t Rows, index_t Cols, class T, class Abi, StorageOrder Order>
     requires(Rows > 0 && Cols > 0)
 [[gnu::always_inline]] inline cached_uview<Order == StorageOrder::ColMajor ? Cols : Rows, T, Abi,
@@ -248,5 +256,7 @@ template <index_t Rows, index_t Cols, class T, class Abi>
 with_cached_access(const uview<T, Abi, StorageOrder::ColMajor> &o) noexcept {
     return o;
 }
+
+#endif
 
 } // namespace batmat::linalg
