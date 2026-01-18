@@ -2,6 +2,12 @@ function(batmat_at_least_O1 tgt)
     set(GCC_ISH $<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>)
     target_compile_options(${tgt} PRIVATE "$<$<AND:$<CONFIG:Debug>,${GCC_ISH}>:-O1>")
 endfunction()
+function(batmat_intel_O1 tgt)
+    # Intel icx 2025.3 tends to produce worse code at higher optimization levels, which is even
+    # incorrect in some cases (it tends to unroll the k loops too aggressively, and messes up
+    # writing part of the GEMM accumulators to memory).
+    target_compile_options(${tgt} PRIVATE "$<$<CXX_COMPILER_ID:IntelLLVM>:-O1>")
+endfunction()
 
 function(batmat_codegen_micro_kernels tgt headers)
 
@@ -22,6 +28,7 @@ function(batmat_codegen_micro_kernels tgt headers)
     foreach(op "gemm" "gemm-diag" "gemv" "symv" "syomv" "trsm" "potrf" "trtri" "hyhound")
         add_library(${tgt}-micro-kernels-${op} STATIC)
         batmat_at_least_O1(${tgt}-micro-kernels-${op})
+        batmat_intel_O1(${tgt}-micro-kernels-${op})
         target_link_libraries(${tgt}-micro-kernels-${op} PRIVATE ${headers} warnings)
         target_precompile_headers(${tgt}-micro-kernels-${op} PRIVATE <${TPP_DIR}/${op}.tpp>)
         target_link_libraries(${tgt}-micro-kernels INTERFACE ${tgt}-micro-kernels-${op})

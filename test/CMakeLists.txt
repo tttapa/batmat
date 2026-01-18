@@ -53,3 +53,10 @@ if (${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.21)
             $<TARGET_RUNTIME_DLLS:tests> $<TARGET_FILE_DIR:tests>
         COMMAND_EXPAND_LISTS)
 endif()
+
+add_executable(simple-gemm "simple-gemm.cpp")
+target_link_libraries(simple-gemm PRIVATE batmat::batmat batmat::warnings)
+target_compile_definitions(simple-gemm PRIVATE BROKEN=1)
+# target_compile_options(simple-gemm PRIVATE -O1)  # Works around Intel icx 2025.3 codegen bug
+# target_compile_options(simple-gemm PRIVATE -fsanitize=address,undefined -UNDEBUG)
+# target_link_options(simple-gemm PRIVATE -fsanitize=address,undefined)
