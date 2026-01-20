@@ -68,7 +68,7 @@ enum class Structure {
 
 template <class T, class Abi, KernelConfig Conf, index_t R, index_t S, StorageOrder OL,
           StorageOrder OA, StorageOrder OB>
-void hyhound_diag_tail_microkernel(index_t kA_nonzero_start, index_t kA_nonzero_end, index_t kA,
+void hyhound_diag_tail_microkernel(index_t kA_in_offset, index_t kA_in, index_t k,
                                    triangular_accessor<const T, Abi, SizeR<T, Abi>> W,
                                    uview<T, Abi, OL> L, uview<const T, Abi, OA> A_in,
                                    uview<T, Abi, OA> A_out, uview<const T, Abi, OB> B,
@@ -123,8 +123,7 @@ template <class T, class Abi, KernelConfig Conf = {}, StorageOrder OL = StorageO
 void hyhound_diag_apply_register(view<T, Abi, OL> L, view<const T, Abi, OA> Ain,
                                  view<T, Abi, OA> Aout, view<const T, Abi, OA> B,
                                  view<const T, Abi> D, view<const T, Abi> W,
-                                 index_t kA_nonzero_start = 0,
-                                 index_t kA_nonzero_end   = -1) noexcept;
+                                 index_t kA_in_offset = 0) noexcept;
 
 template <class T, class Abi, StorageOrder OL1 = StorageOrder::ColMajor,
           StorageOrder OA1 = StorageOrder::ColMajor, StorageOrder OL2 = StorageOrder::ColMajor,
@@ -136,10 +135,9 @@ template <class T, class Abi, StorageOrder OL = StorageOrder::ColMajor,
           StorageOrder OW = StorageOrder::ColMajor, StorageOrder OY = StorageOrder::ColMajor,
           StorageOrder OU = StorageOrder::ColMajor, KernelConfig Conf = {}>
 void hyhound_diag_cyclic_register(view<T, Abi, OL> L11, view<T, Abi, OW> A1, view<T, Abi, OY> L21,
-                                  view<const T, Abi, OW> A2, view<T, Abi, OW> A2_out,
-                                  view<T, Abi, OU> L31, view<const T, Abi, OW> A3,
-                                  view<T, Abi, OW> A3_out, view<const T, Abi> D,
-                                  index_t split_A) noexcept;
+                                  view<const T, Abi, OW> A22, view<T, Abi, OW> A2_out,
+                                  view<T, Abi, OU> L31, view<const T, Abi, OW> A31,
+                                  view<T, Abi, OW> A3_out, view<const T, Abi> D) noexcept;
 
 template <class T, class Abi, StorageOrder OL = StorageOrder::ColMajor,
           StorageOrder OA = StorageOrder::ColMajor, StorageOrder OLu = StorageOrder::ColMajor,

@@ -128,25 +128,29 @@ template <class T, class Abi>
 
 } // namespace detail
 
+// A_out and B have the same size. A_in has the same number of rows but may have a different number
+// of columns, which means that only a part of A_in is nonzero. The nonzero part is defined by kAin
+// and kAin_offset.
 template <class T, class Abi, KernelConfig Conf, index_t R, index_t S, StorageOrder OL,
           StorageOrder OA, StorageOrder OB>
 [[gnu::hot, gnu::flatten]] void hyhound_diag_tail_microkernel(
-    index_t kA_nonzero_start, index_t kA_nonzero_end, index_t kA,
+    index_t kA_in_offset, index_t kA_in, index_t k,
     triangular_accessor<const T, Abi, SizeR<T, Abi>> W, uview<T, Abi, OL> L,
     uview<const T, Abi, OA> A_in, uview<T, Abi, OA> A_out, uview<const T, Abi, OB> B,
     uview<const T, Abi, StorageOrder::ColMajor> diag, Structure struc_L, int rotate_A) noexcept {
     using batmat::ops::cneg;
     using simd = datapar::simd<T, Abi>;
-    BATMAT_ASSUME(kA > 0);
+    BATMAT_ASSUME(k > 0);
 
-    // Compute product U = A B
+    // Compute product W = A B
     simd V[S][R]{};
-    for (index_t l = kA_nonzero_start; l < kA_nonzero_end; ++l) {
+    for (index_t lA = 0; lA < kA_in; ++lA) {
+        index_t lB = lA + kA_in_offset;
         UNROLL_FOR (index_t j = 0; j < R; ++j) {
-            auto Ajl = Conf.sign_only ? cneg(B.load(j, l), diag.load(l, 0)) //
-                                      : B.load(j, l) * diag.load(l, 0);
+            auto Bjl = Conf.sign_only ? cneg(B.load(j, lB), diag.load(lB, 0)) //
+                                      : B.load(j, lB) * diag.load(lB, 0);
             UNROLL_FOR (index_t i = 0; i < S; ++i)
-                V[i][j] += A_in.load(i, l) * Ajl;
+                V[i][j] += A_in.load(i, lA) * Bjl;
         }
     }
 
@@ -207,64 +211,38 @@ template <class T, class Abi, KernelConfig Conf, index_t R, index_t S, StorageOr
     }
     // Update A -= V Bᵀ
     const auto update_A = [&] [[gnu::always_inline]] (auto s) {
-        simd Ajl[R];
-#if 0 // bottom variant generates less code
-        for (index_t j = 0; j < kA_nonzero_start; ++j) [[unlikely]] {
-            UNROLL_FOR (index_t k = 0; k < R; ++k)
-                Ajl[k] = B.load(k, j);
-            UNROLL_FOR (index_t i = 0; i < S; ++i) {
-                simd Aij{0};
-                UNROLL_FOR (index_t k = 0; k < R; ++k)
-                    Aij -= V[i][k] * Ajl[k];
-                A_out.store(detail::rotate(Aij, s), i, j);
-            }
-        }
-        for (index_t j = kA_nonzero_start; j < kA_nonzero_end; ++j) [[likely]] {
-            UNROLL_FOR (index_t k = 0; k < R; ++k)
-                Ajl[k] = B.load(k, j);
-            UNROLL_FOR (index_t i = 0; i < S; ++i) {
-                auto Aij = A_in.load(i, j);
-                UNROLL_FOR (index_t k = 0; k < R; ++k)
-                    Aij -= V[i][k] * Ajl[k];
-                A_out.store(detail::rotate(Aij, s), i, j);
-            }
-        }
-        for (index_t j = kA_nonzero_end; j < kA; ++j) [[unlikely]] {
-            UNROLL_FOR (index_t k = 0; k < R; ++k)
-                Ajl[k] = B.load(k, j);
-            UNROLL_FOR (index_t i = 0; i < S; ++i) {
-                simd Aij{0};
-                UNROLL_FOR (index_t k = 0; k < R; ++k)
-                    Aij -= V[i][k] * Ajl[k];
-                A_out.store(detail::rotate(Aij, s), i, j);
-            }
-        }
-#else
-        for (index_t l = kA_nonzero_start; l < kA_nonzero_end; ++l) [[likely]] {
+        simd Bjl[R];
+        for (index_t lB = 0; lB < kA_in_offset; ++lB) [[unlikely]] {
             UNROLL_FOR (index_t j = 0; j < R; ++j)
-                Ajl[j] = B.load(j, l);
-            UNROLL_FOR (index_t i = 0; i < S; ++i) {
-                auto Ail = A_in.load(i, l);
-                UNROLL_FOR (index_t j = 0; j < R; ++j)
-                    Ail -= V[i][j] * Ajl[j];
-                A_out.store(detail::rotate(Ail, s), i, l);
-            }
-        }
-        for (index_t l = 0; true; ++l) {
-            if (l == kA_nonzero_start)
-                l = kA_nonzero_end;
-            if (l >= kA)
-                break;
-            UNROLL_FOR (index_t j = 0; j < R; ++j)
-                Ajl[j] = B.load(j, l);
+                Bjl[j] = B.load(j, lB);
             UNROLL_FOR (index_t i = 0; i < S; ++i) {
                 simd Ail{0};
                 UNROLL_FOR (index_t j = 0; j < R; ++j)
-                    Ail -= V[i][j] * Ajl[j];
-                A_out.store(detail::rotate(Ail, s), i, l);
+                    Ail -= V[i][j] * Bjl[j];
+                A_out.store(detail::rotate(Ail, s), i, lB);
             }
         }
-#endif
+        for (index_t lB = kA_in_offset + kA_in; lB < k; ++lB) [[unlikely]] {
+            UNROLL_FOR (index_t j = 0; j < R; ++j)
+                Bjl[j] = B.load(j, lB);
+            UNROLL_FOR (index_t i = 0; i < S; ++i) {
+                simd Ail{0};
+                UNROLL_FOR (index_t j = 0; j < R; ++j)
+                    Ail -= V[i][j] * Bjl[j];
+                A_out.store(detail::rotate(Ail, s), i, lB);
+            }
+        }
+        for (index_t lA = 0; lA < kA_in; ++lA) [[likely]] {
+            index_t lB = lA + kA_in_offset;
+            UNROLL_FOR (index_t j = 0; j < R; ++j)
+                Bjl[j] = B.load(j, lB);
+            UNROLL_FOR (index_t i = 0; i < S; ++i) {
+                auto Ail = A_in.load(i, lA);
+                UNROLL_FOR (index_t j = 0; j < R; ++j)
+                    Ail -= V[i][j] * Bjl[j];
+                A_out.store(detail::rotate(Ail, s), i, lB);
+            }
+        }
     };
 #if defined(__AVX512F__) && 0
     update_A(rotate_A);
@@ -399,18 +377,16 @@ template <class T, class Abi, KernelConfig Conf, StorageOrder OL, StorageOrder O
 void hyhound_diag_apply_register(const view<T, Abi, OL> L, const view<const T, Abi, OA> Ain,
                                  const view<T, Abi, OA> Aout, const view<const T, Abi, OA> B,
                                  const view<const T, Abi> D, const view<const T, Abi> W,
-                                 index_t kA_nonzero_start, index_t kA_nonzero_end) noexcept {
-    const index_t k = Ain.cols();
+                                 index_t kA_in_offset) noexcept {
+    const index_t k_in = Ain.cols(), k = Aout.cols();
     BATMAT_ASSUME(k > 0);
     BATMAT_ASSUME(Aout.rows() == Ain.rows());
-    BATMAT_ASSUME(Aout.cols() == k);
     BATMAT_ASSUME(Ain.rows() == L.rows());
     BATMAT_ASSUME(B.rows() == L.cols());
     BATMAT_ASSUME(B.cols() == k);
     BATMAT_ASSUME(D.rows() == k);
-    BATMAT_ASSUME(0 <= kA_nonzero_start);
-    BATMAT_ASSUME(kA_nonzero_start <= kA_nonzero_end);
-    BATMAT_ASSUME(kA_nonzero_end <= k);
+    BATMAT_ASSUME(0 <= kA_in_offset);
+    BATMAT_ASSUME(kA_in_offset + k_in <= k);
 
     static constexpr index_constant<SizeR<T, Abi>> R;
     using W_t = triangular_accessor<const T, Abi, R>;
@@ -439,8 +415,8 @@ void hyhound_diag_apply_register(const view<T, Abi, OL> L, const view<const T, A
                 auto Aouti = Aout_.middle_rows(i);
                 auto Ls    = L_.block(i, j);
                 microkernel_tail_lut_2<T, Abi, Conf, OL, OA, OA>[nj - 1][ni - 1](
-                    j == 0 ? kA_nonzero_start : 0, j == 0 ? kA_nonzero_end : k, k, Wd, Ls, Aini,
-                    Aouti, Ad, D_, Structure::General, 0);
+                    j == 0 ? kA_in_offset : 0, j == 0 ? k_in : k, k, Wd, Ls, Aini, Aouti, Ad, D_,
+                    Structure::General, 0);
             },
             LoopDir::Backward); // TODO: decide on order
     });
@@ -508,30 +484,30 @@ void hyhound_diag_2_register(const view<T, Abi, OL1> L11, const view<T, Abi, OA1
  *     [ A11 A12 | L11 ]     [  0   0  | L̃11 ]
  *     [  0  A22 | L21 ] Q = [ Ã21 Ã22 | L̃21 ]
  *     [ A31  0  | L31 ]     [ Ã31 Ã32 | L̃31 ]
- *           ↑ split_A
  */
 template <class T, class Abi, StorageOrder OL, StorageOrder OW, StorageOrder OY, StorageOrder OU,
           KernelConfig Conf>
-void hyhound_diag_cyclic_register(const view<T, Abi, OL> L11,      // D
-                                  const view<T, Abi, OW> A1,       // work
-                                  const view<T, Abi, OY> L21,      // Y
-                                  const view<const T, Abi, OW> A2, // work
-                                  const view<T, Abi, OW> A2_out,   // work
-                                  const view<T, Abi, OU> L31,      // U
-                                  const view<const T, Abi, OW> A3, // work
-                                  const view<T, Abi, OW> A3_out,   // work
-                                  const view<const T, Abi> D, index_t split_A) noexcept {
-    const index_t k = A1.cols();
+void hyhound_diag_cyclic_register(const view<T, Abi, OL> L11,       // D
+                                  const view<T, Abi, OW> A1,        // work
+                                  const view<T, Abi, OY> L21,       // Y
+                                  const view<const T, Abi, OW> A22, // work
+                                  const view<T, Abi, OW> A2_out,    // work
+                                  const view<T, Abi, OU> L31,       // U
+                                  const view<const T, Abi, OW> A31, // work
+                                  const view<T, Abi, OW> A3_out,    // work
+                                  const view<const T, Abi> D) noexcept {
+    const index_t k = A1.cols(), k1 = A31.cols(), k2 = A22.cols();
     BATMAT_ASSUME(k > 0);
     BATMAT_ASSUME(L11.rows() >= L11.cols());
     BATMAT_ASSUME(L11.rows() == A1.rows());
-    BATMAT_ASSUME(L21.rows() == A2.rows());
-    BATMAT_ASSUME(L31.rows() == A3.rows());
+    BATMAT_ASSUME(L21.rows() == A22.rows());
+    BATMAT_ASSUME(L31.rows() == A31.rows());
+    BATMAT_ASSUME(A22.rows() == A2_out.rows());
+    BATMAT_ASSUME(A31.rows() == A3_out.rows());
     BATMAT_ASSUME(D.rows() == k);
-    BATMAT_ASSUME(A2.cols() == k);
-    BATMAT_ASSUME(A3.cols() == k);
     BATMAT_ASSUME(L21.cols() == L11.cols());
     BATMAT_ASSUME(L31.cols() == L11.cols());
+    BATMAT_ASSUME(k1 + k2 == k);
 
     static constexpr index_constant<SizeR<T, Abi>> R;
     using W_t = triangular_accessor<T, Abi, R>;
@@ -541,10 +517,10 @@ void hyhound_diag_cyclic_register(const view<T, Abi, OL> L11,      // D
     const uview<T, Abi, OL> L11_                         = L11;
     const uview<T, Abi, OW> A1_                          = A1;
     const uview<T, Abi, OY> L21_                         = L21;
-    const uview<const T, Abi, OW> A2_                    = A2;
+    const uview<const T, Abi, OW> A22_                   = A22;
     const uview<T, Abi, OW> A2_out_                      = A2_out;
     const uview<T, Abi, OU> L31_                         = L31;
-    const uview<const T, Abi, OW> A3_                    = A3;
+    const uview<const T, Abi, OW> A31_                   = A31;
     const uview<T, Abi, OW> A3_out_                      = A3_out;
     const uview<const T, Abi, StorageOrder::ColMajor> D_ = D;
 
@@ -571,22 +547,24 @@ void hyhound_diag_cyclic_register(const view<T, Abi, OL> L11,      // D
             0, L21.rows(), S,
             [&](index_t i, auto ni) {
                 auto As_out = A2_out_.middle_rows(i);
-                auto As     = j == 0 ? A2_.middle_rows(i) : As_out;
+                auto As     = j == 0 ? A22_.middle_rows(i) : As_out;
                 auto Ls     = L21_.block(i, j);
-                microkernel_tail_lut_2<T, Abi, Conf, OY, OW, OW>[nj - 1][ni - 1](
-                    j == 0 ? split_A : 0, k, k, W, Ls, As, As_out, Ad, D_, Structure::General, 0);
                 // First half of A2 is implicitly zero in first pass
+                index_t offset_s = j == 0 ? k1 : 0, k_s = j == 0 ? k2 : k;
+                microkernel_tail_lut_2<T, Abi, Conf, OY, OW, OW>[nj - 1][ni - 1](
+                    offset_s, k_s, k, W, Ls, As, As_out, Ad, D_, Structure::General, 0);
             },
             LoopDir::Backward); // TODO: decide on order
         foreach_chunked_merged(
             0, L31.rows(), S,
             [&](index_t i, auto ni) {
                 auto As_out = A3_out_.middle_rows(i);
-                auto As     = j == 0 ? A3_.middle_rows(i) : As_out;
+                auto As     = j == 0 ? A31_.middle_rows(i) : As_out;
                 auto Ls     = L31_.block(i, j);
-                microkernel_tail_lut_2<T, Abi, Conf, OU, OW, OW>[nj - 1][ni - 1](
-                    0, j == 0 ? split_A : k, k, W, Ls, As, As_out, Ad, D_, Structure::General, 0);
                 // Second half of A3 is implicitly zero in first pass
+                index_t offset_s = 0, k_s = j == 0 ? k1 : k;
+                microkernel_tail_lut_2<T, Abi, Conf, OU, OW, OW>[nj - 1][ni - 1](
+                    offset_s, k_s, k, W, Ls, As, As_out, Ad, D_, Structure::General, 0);
             },
             LoopDir::Backward); // TODO: decide on order
     });
