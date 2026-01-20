@@ -338,7 +338,7 @@ void hyhound_diag_register(const view<T, Abi, OL> L, const view<T, Abi, OA> A,
     BATMAT_ASSUME(L.rows() >= L.cols());
     BATMAT_ASSUME(L.rows() == A.rows());
     BATMAT_ASSUME(D.rows() == k);
-    BATMAT_ASSUME(std::make_pair(W.rows(), W.cols()) == (xshhud_W_size<T, Abi>)(L));
+    BATMAT_ASSUME(std::make_pair(W.rows(), W.cols()) == (hyhound_W_size<T, Abi>)(L));
 
     static constexpr index_constant<SizeR<T, Abi>> R;
     using W_t = triangular_accessor<T, Abi, R>;
@@ -390,7 +390,7 @@ void hyhound_diag_apply_register(const view<T, Abi, OL> L, const view<const T, A
 
     static constexpr index_constant<SizeR<T, Abi>> R;
     using W_t = triangular_accessor<const T, Abi, R>;
-    BATMAT_ASSUME(std::make_pair(W.rows(), W.cols()) == (xshhud_W_size<T, Abi>)(L));
+    BATMAT_ASSUME(std::make_pair(W.rows(), W.cols()) == (hyhound_W_size<T, Abi>)(L));
 
     // Sizeless views to partition and pass to the micro-kernels
     const uview<T, Abi, OL> L_                           = L;

@@ -37,7 +37,7 @@ void hyhound_diag(view<T, Abi, OL> L, view<T, Abi, OA> A, view<const T, Abi> D, 
     BATMAT_ASSERT(L.rows() >= L.cols());
     BATMAT_ASSERT(L.rows() == A.rows());
     BATMAT_ASSERT(A.cols() == D.rows());
-    BATMAT_ASSERT(std::make_pair(W.rows(), W.cols()) == (xshhud_W_size<T, Abi>)(L));
+    BATMAT_ASSERT(std::make_pair(W.rows(), W.cols()) == (hyhound_W_size<T, Abi>)(L));
     [[maybe_unused]] const index_t flop_count = total(flops::hyh(L.rows(), L.cols(), k));
     GUANAQO_TRACE("hyhound_diag", 0, flop_count * L.depth());
     if (k == 0) [[unlikely]]
@@ -59,7 +59,7 @@ void hyhound_diag_apply(view<T, Abi, OL> L, view<const T, Abi, OA> Ain, view<T, 
     BATMAT_ASSERT(D.rows() == Aout.cols());
     BATMAT_ASSERT(0 <= kA_in_offset);
     BATMAT_ASSERT(kA_in_offset + Ain.cols() <= Aout.cols());
-    BATMAT_ASSERT(std::make_pair(W.rows(), W.cols()) == (xshhud_W_size<T, Abi>)(L));
+    BATMAT_ASSERT(std::make_pair(W.rows(), W.cols()) == (hyhound_W_size<T, Abi>)(L));
     // Note: ignoring initial zero values of A in the FLOP count for simplicity (for large matrices
     //       this does not matter)
     [[maybe_unused]] const index_t flop_count = total(flops::hyh_apply(L.rows(), L.cols(), k));
@@ -162,7 +162,7 @@ void hyhound_diag(Structured<VL, SL> L, VA &&A, Vd &&d, VW &&W) {
 /// @ref hyhound_diag(Structured<VL,SL>, VA&&, Vd&&, VW&&).
 template <MatrixStructure SL, simdifiable VL>
 auto hyhound_size_W(Structured<VL, SL> L) {
-    return micro_kernels::hyhound::xshhud_W_size<const simdified_value_t<VL>, simdified_abi_t<VL>>(
+    return micro_kernels::hyhound::hyhound_W_size<const simdified_value_t<VL>, simdified_abi_t<VL>>(
         simdify(L.value).as_const());
 }
 

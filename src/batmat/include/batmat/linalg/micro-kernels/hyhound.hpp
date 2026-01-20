@@ -102,7 +102,7 @@ inline const constinit auto microkernel_tail_lut_2 = make_2d_lut<SizeR<T, Abi>, 
 // Helper function to compute size of the storage for the matrix W (part of the hyperbolic
 // Householder representation).
 template <class T, class Abi, StorageOrder OL>
-constexpr std::pair<index_t, index_t> xshhud_W_size(view<T, Abi, OL> L) {
+constexpr std::pair<index_t, index_t> hyhound_W_size(view<T, Abi, OL> L) {
     static constexpr index_constant<SizeR<std::remove_const_t<T>, Abi>> R;
     using W_t = triangular_accessor<std::remove_const_t<T>, Abi, R>;
     return {W_t::num_elem_per_layer(), (L.cols() + R - 1) / R};
