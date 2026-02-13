@@ -49,7 +49,7 @@ struct Layout {
     struct PlainLayout {
         [[no_unique_address]] depth_type depth = guanaqo::default_stride<depth_type>::value;
         index_type rows                        = 0;
-        index_type cols                        = 1;
+        index_type cols                        = rows == 0 ? 0 : 1;
         index_type outer_stride                = is_row_major ? cols : rows;
         [[no_unique_address]] batch_size_type batch_size =
             guanaqo::default_stride<batch_size_type>::value;
@@ -88,9 +88,14 @@ struct Layout {
         else
             return layer_stride;
     }
-    [[nodiscard]] bool has_full_layer_stride() const {
-        return static_cast<index_t>(get_layer_stride()) == outer_stride * outer_size();
+    [[nodiscard]] constexpr bool has_full_layer_stride() const {
+        return static_cast<index_t>(get_layer_stride()) == outer_stride * outer_size() ||
+               depth <= static_cast<I>(batch_size);
     }
+    [[nodiscard]] constexpr bool has_full_outer_stride() const {
+        return outer_stride == inner_size() || outer_size() == 1;
+    }
+    [[nodiscard]] constexpr bool has_full_inner_stride() const { return true; }
     [[nodiscard]] constexpr index_type layer_index(index_type l, index_type s) const {
         assert(0 <= l && l < ceil_depth());
         const auto bs     = static_cast<I>(batch_size);
@@ -127,6 +132,7 @@ struct Layout {
         const auto bs = static_cast<I>(batch_size);
         return *(is_row_major ? p + bs * (c + outer_stride * r) : p + bs * (r + outer_stride * c));
     }
+    /// Total number of elements in the view (excluding padding).
     [[nodiscard]] index_type size() const { return static_cast<I>(depth) * rows * cols; }
     [[nodiscard]] index_type padded_size() const { return ceil_depth() * get_layer_stride(); }
 };
