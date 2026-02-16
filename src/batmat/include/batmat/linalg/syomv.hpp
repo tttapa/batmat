@@ -34,6 +34,12 @@ void syomv(view<const T, Abi, OA> A, view<const T, Abi, OB> B, view<T, Abi, OD> 
 }
 } // namespace detail::syomv
 
+/// @addtogroup topic-linalg
+/// @{
+
+/// @name Symmetric matrix-vector multiplication of a block tridiagonal matrix
+/// @{
+
 /// @todo   Describe the operation in detail.
 template <MatrixStructure SA, simdifiable VA, simdifiable VB, simdifiable VD>
     requires simdify_compatible<VA, VB, VD>
@@ -51,5 +57,9 @@ void syomv_neg(Structured<VA, SA> A, VB &&B, VD &&D) {
     detail::syomv::syomv<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
         simdify(A.value).as_const(), simdify(B).as_const(), simdify(D));
 }
+
+/// @}
+
+/// @}
 
 } // namespace batmat::linalg

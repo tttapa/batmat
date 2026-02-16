@@ -1,5 +1,9 @@
 #pragma once
 
+/// @file
+/// Aligned allocation for matrix storage.
+/// @ingroup topic-matrix-utils
+
 #include <cstddef>
 #include <memory>
 #include <new>
@@ -7,9 +11,6 @@
 #include <type_traits>
 
 namespace batmat::matrix {
-
-struct uninitialized_t {
-} inline constexpr uninitialized;
 
 template <class A>
 constexpr std::align_val_t as_align_val(A a) {
@@ -19,6 +20,13 @@ constexpr std::align_val_t as_align_val(A a) {
         return std::align_val_t{a()};
 }
 
+/// @addtogroup topic-matrix-utils
+/// @{
+
+struct uninitialized_t {
+} inline constexpr uninitialized; ///< Tag type to indicate that memory should not be initialized.
+
+/// Deleter for aligned memory allocated with `operator new(size, align_val)`.
 template <class T, class A>
 struct aligned_deleter {
     size_t size                   = 0;
@@ -35,6 +43,8 @@ struct aligned_deleter<void, A> {
     [[no_unique_address]] A align = {};
     void operator()(void *p) const { ::operator delete(p, size, as_align_val(align)); }
 };
+
+/// @}
 
 namespace detail {
 template <class T, class A, bool Init>
@@ -58,6 +68,9 @@ auto make_aligned_unique_ptr(size_t size, A align) {
 }
 } // namespace detail
 
+/// @addtogroup topic-matrix-utils
+/// @{
+
 /// Returns a smart pointer to an array of @p T that satisfies the given
 /// alignment requirements.
 template <class T, class A>
@@ -71,5 +84,7 @@ template <class T, class A>
 auto make_aligned_unique_ptr(size_t size, A align, uninitialized_t) {
     return detail::make_aligned_unique_ptr<T, A, false>(size, align);
 }
+
+/// @}
 
 } // namespace batmat::matrix

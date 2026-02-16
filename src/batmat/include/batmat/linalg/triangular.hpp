@@ -1,10 +1,12 @@
 #pragma once
 
 #include <batmat/linalg/structure.hpp>
-#include <type_traits>
 #include <utility>
 
 namespace batmat::linalg {
+
+/// @addtogroup topic-linalg
+/// @{
 
 /// Light-weight wrapper class used for overload resolution of triangular and symmetric matrices.
 template <class M, MatrixStructure S = MatrixStructure::General>
@@ -31,20 +33,30 @@ struct Structured {
 template <class M>
 Structured(M &&) -> Structured<M>;
 
+/// @name Triangular views of batches of matrices
+/// @{
+
+/// Lower-triangular view.
 template <class M>
 [[nodiscard]] constexpr auto tril(M &&m) {
     return Structured<M, MatrixStructure::LowerTriangular>{std::forward<M>(m)};
 }
 
+/// Upper-triangular view.
 template <class M>
 [[nodiscard]] constexpr auto triu(M &&m) {
     return Structured<M, MatrixStructure::UpperTriangular>{std::forward<M>(m)};
 }
 
+/// View with the given structure.
 template <MatrixStructure S, class M>
 [[nodiscard]] constexpr auto make_structured(M &&m) {
     return Structured<M, S>{std::forward<M>(m)};
 }
+
+/// @}
+
+/// @}
 
 template <class M, MatrixStructure S>
 void simdify(const Structured<M, S> &) = delete;

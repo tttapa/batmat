@@ -38,6 +38,8 @@ option(BATMAT_WITH_BENCHMARKS
 cmake_dependent_option(BATMAT_WITH_BLASFEO
     "Enable the comparisons to BLASFEO in the benchmarks" Off BATMAT_WITH_BENCHMARKS Off)
 # Developer options
+option(BATMAT_ONLY_DOCS
+    "Only build the documentation" Off)
 option(BATMAT_WARNINGS_AS_ERRORS
     "Enable -Werror or /WX" Off)
 option(BATMAT_WITH_COVERAGE
@@ -106,11 +108,10 @@ if (BATMAT_WITH_COVERAGE)
     add_dependencies(coverage batmat::tests)
 endif()
 
-# Documentation
-find_package(Doxygen)
-if (DOXYGEN_FOUND)
-    add_custom_target(docs Doxygen::doxygen ${BATMAT_DOXYFILE}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/doxygen)
+# Documentation only
+if (BATMAT_ONLY_DOCS)
+    add_subdirectory(docs)
+    return()
 endif()
 
 # Libraries
@@ -125,4 +126,9 @@ endif()
 # Benchmarks
 if (BATMAT_WITH_BENCHMARKS)
     add_subdirectory(benchmarks)
+endif()
+
+# Documentation
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/docs/CMakeLists.txt")
+    add_subdirectory(docs)
 endif()

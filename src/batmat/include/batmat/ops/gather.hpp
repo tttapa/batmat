@@ -5,7 +5,7 @@
 #include <concepts>
 #include <type_traits>
 
-namespace batmat::ops ::detail {
+namespace batmat::ops::detail {
 
 template <class T, class AbiT, class I, class AbiI>
 [[gnu::always_inline]] inline datapar::simd<T, AbiT>
@@ -43,6 +43,15 @@ using convert_int_t = decltype(convert_int(std::declval<I>()));
 
 namespace batmat::ops {
 
+/// @addtogroup topic-low-level-ops
+/// @{
+
+/// @name Gathering elements from memory
+/// @{
+
+/// Gathers elements from memory at the addresses specified by @p idx, which should be an integer
+/// SIMD vector, and returns them in a SIMD vector of type `datapar::simd<T, AbiT>`. The elements
+/// are gathered relative to the base address @p p. The gathering is masked by @p mask,
 template <class T, class AbiT, class I, class AbiI, class M>
 [[gnu::always_inline]] inline datapar::simd<T, AbiT> gather(const T *p, datapar::simd<I, AbiI> idx,
                                                             M mask) {
@@ -58,5 +67,9 @@ template <class T, class AbiT, class I, class AbiI, class M>
 #endif
     return detail::gather(simd{}, mask_, idx_, p);
 }
+
+/// @}
+
+/// @}
 
 } // namespace batmat::ops

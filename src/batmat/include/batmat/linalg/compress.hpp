@@ -230,6 +230,12 @@ index_t compress_masks_sqrt(view<const T, Abi, OAi> A_in, view<const T, Abi> S_i
 
 } // namespace detail
 
+/// @addtogroup topic-linalg
+/// @{
+
+/// @name Compression of masks containing zeros
+/// @{
+
 template <index_t N = 8, simdifiable VA, simdifiable VS, simdifiable VAo, simdifiable VSo>
 index_t compress_masks(VA &&Ain, VS &&Sin, VAo &&Aout, VSo &&Sout) {
     return detail::compress_masks<simdified_value_t<VA>, simdified_abi_t<VA>, N>(
@@ -253,5 +259,9 @@ index_t compress_masks_sqrt(VA &&Ain, VS &&Sin, VAo &&Aout, VSo &&Sout) {
     return detail::compress_masks_sqrt<simdified_value_t<VA>, simdified_abi_t<VA>, N>(
         simdify(Ain).as_const(), simdify(Sin).as_const(), simdify(Aout), simdify(Sout));
 }
+
+/// @}
+
+/// @}
 
 } // namespace batmat::linalg

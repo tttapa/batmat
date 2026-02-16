@@ -8,11 +8,15 @@
 
 namespace batmat {
 
+/// @ingroup topic-utils
 enum class LoopDir {
     Forward,
     Backward,
 };
 
+/// Iterate over the range `[i_begin, i_end)` in chunks of size @p chunk_size, calling @p func_chunk
+/// for each full chunk and @p func_rem for the remaining elements (if any).
+/// @ingroup topic-utils
 [[gnu::always_inline]] inline void foreach_chunked(index_t i_begin, index_t i_end, auto chunk_size,
                                                    auto func_chunk, auto func_rem,
                                                    LoopDir dir = LoopDir::Forward) {
@@ -33,6 +37,9 @@ enum class LoopDir {
     }
 }
 
+/// Iterate over the range `[i_begin, i_end)` in chunks of size @p chunk_size, calling @p func_chunk
+/// for each chunk (including the last chunk, which may be smaller than @p chunk_size).
+/// @ingroup topic-utils
 [[gnu::always_inline]] inline void foreach_chunked_merged(index_t i_begin, index_t i_end,
                                                           auto chunk_size, auto func_chunk,
                                                           LoopDir dir = LoopDir::Forward) {
@@ -53,9 +60,10 @@ enum class LoopDir {
     }
 }
 
-[[gnu::always_inline]] inline void foreach_chunked_merged_parallel(index_t i_begin, index_t i_end,
-                                                                   auto chunk_size, auto func_chunk,
-                                                                   LoopDir dir = LoopDir::Forward) {
+/// @deprecated
+[[deprecated, gnu::always_inline]] inline void
+foreach_chunked_merged_parallel(index_t i_begin, index_t i_end, auto chunk_size, auto func_chunk,
+                                LoopDir dir = LoopDir::Forward) {
     const index_t rem_i = (i_end - i_begin) % chunk_size;
     if (dir == LoopDir::Forward) {
         BATMAT_OMP(parallel) {
@@ -81,7 +89,8 @@ enum class LoopDir {
     }
 }
 
-[[gnu::always_inline]] inline void foreach_thread(auto &&func) {
+/// @deprecated
+[[deprecated, gnu::always_inline]] inline void foreach_thread(auto &&func) {
 #if BATMAT_WITH_OPENMP
     if (omp_get_max_threads() == 1) {
         func(index_t{0}, index_t{1});
@@ -98,7 +107,8 @@ enum class LoopDir {
 #endif
 }
 
-[[gnu::always_inline]] inline void foreach_thread(index_t num_threads, auto &&func) {
+/// @deprecated
+[[deprecated, gnu::always_inline]] inline void foreach_thread(index_t num_threads, auto &&func) {
 #if BATMAT_WITH_OPENMP
     if (num_threads == 1) {
         func(index_t{0}, index_t{1});

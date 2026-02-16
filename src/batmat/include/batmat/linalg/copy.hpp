@@ -175,6 +175,12 @@ constexpr CopyConfig apply_options(CopyConfig conf, Opts...) {
 }
 } // namespace detail::copy
 
+/// @addtogroup topic-linalg
+/// @{
+
+/// @name Copying and filling batches of matrices
+/// @{
+
 /// B = A
 template <simdifiable VA, simdifiable VB, rotate_opt... Opts>
     requires simdify_compatible<VA, VB>
@@ -205,5 +211,9 @@ void fill(simdified_value_t<VB> a, Structured<VB, S> B) {
     detail::copy::fill<simdified_value_t<VB>, simdified_abi_t<VB>, {.struc = S}>(a,
                                                                                  simdify(B.value));
 }
+
+/// @}
+
+/// @}
 
 } // namespace batmat::linalg

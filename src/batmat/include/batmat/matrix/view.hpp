@@ -1,5 +1,9 @@
 #pragma once
 
+/// @file
+/// Non-owning view of a batch of matrices.
+/// @ingroup topic-matrix
+
 #include <batmat/assume.hpp>
 #include <batmat/config.hpp>
 #include <batmat/matrix/layout.hpp>
@@ -7,6 +11,7 @@
 
 namespace batmat::matrix {
 
+/// Non-owning view of a batch of matrices.
 /// @tparam T
 ///         Element value type (possibly const-qualified).
 /// @tparam I
@@ -21,6 +26,7 @@ namespace batmat::matrix {
 ///         Dynamic strides are used for subviews of views with a larger `outer_size()`.
 /// @tparam O
 ///         Storage order (column or row major).
+/// @ingroup topic-matrix
 template <class T, class I = index_t, class S = std::integral_constant<I, 1>, class D = I,
           class L = DefaultStride, StorageOrder O = StorageOrder::ColMajor>
 struct View {

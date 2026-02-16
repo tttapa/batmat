@@ -1,5 +1,9 @@
 #pragma once
 
+/// @file
+/// Class for a batch of matrices that owns its storage.
+/// @ingroup topic-matrix
+
 #include <batmat/matrix/storage.hpp>
 #include <batmat/matrix/view.hpp>
 
@@ -29,6 +33,7 @@ static_assert(default_alignment_t<double, int, int>::value == 0);
 
 } // namespace detail
 
+/// Class for a batch of matrices that owns its storage.
 /// @tparam T
 ///         Element value type.
 /// @tparam I
@@ -41,6 +46,7 @@ static_assert(default_alignment_t<double, int, int>::value == 0);
 ///         Batch alignment type.
 /// @tparam O
 ///         Storage order (column or row major).
+/// @ingroup topic-matrix
 template <class T, class I = index_t, class S = std::integral_constant<I, 1>, class D = I,
           StorageOrder O = StorageOrder::ColMajor, class A = detail::default_alignment_t<T, I, S>>
 struct Matrix {

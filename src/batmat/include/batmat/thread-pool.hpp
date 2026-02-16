@@ -12,6 +12,7 @@
 
 namespace batmat {
 
+/// @ingroup topic-utils
 class thread_pool {
   private:
     struct Signals {
@@ -104,18 +105,28 @@ extern std::mutex pool_mtx;
 extern std::optional<thread_pool> pool;
 } // namespace detail
 
-void pool_set_num_threads(size_t num_threads);
+/// Set the number of threads in the global thread pool.
+/// @ingroup topic-utils
+/// @deprecated
+[[deprecated]] void pool_set_num_threads(size_t num_threads);
 
+/// Run a function on all threads in the global thread pool, synchronously waiting for all threads.
+/// @ingroup topic-utils
+/// @deprecated
 template <class I = size_t, class F>
-void pool_sync_run_all(F &&f) {
+[[deprecated]] void pool_sync_run_all(F &&f) {
     std::lock_guard<std::mutex> lck(detail::pool_mtx);
     if (!detail::pool)
         return;
     detail::pool->sync_run_all(std::forward<F>(f));
 }
 
+/// Run a function on the first @p n threads in the global thread pool, synchronously waiting for
+/// those threads. If @p n is greater than the number of threads in the pool, the pool is expanded.
+/// @ingroup topic-utils
+/// @deprecated
 template <class I = size_t, class F>
-void pool_sync_run_n(I n, F &&f) {
+[[deprecated]] void pool_sync_run_n(I n, F &&f) {
     std::lock_guard<std::mutex> lck(detail::pool_mtx);
     if (!detail::pool || detail::pool->size() < static_cast<size_t>(n))
         detail::pool.emplace(static_cast<size_t>(n));

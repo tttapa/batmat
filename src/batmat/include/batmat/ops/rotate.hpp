@@ -11,6 +11,9 @@ namespace detail {
  * Note: The return types -> F are crucial to avoid a bug in GCC. https://godbolt.org/z/Phfvsq7hY
  */
 
+/// Rotate the elements of @p x to the right by @p s positions.
+/// For example, `rotr<1>([x0, x1, x2, x3]) == [x3, x0, x1, x2]`
+/// and `rotr<-1>([x0, x1, x2, x3]) == [x1, x2, x3, x0]`.
 template <class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> rot(datapar::simd<F, Abi> x, int s) {
     assert(s <= 0 || static_cast<size_t>(+s) < x.size());
@@ -210,6 +213,15 @@ template <int S>
 
 } // namespace detail
 
+/// @addtogroup topic-low-level-ops
+/// @{
+
+/// @name Lane-wise rotations of SIMD vectors
+/// @{
+
+/// Rotates the elements of @p x by @p s positions to the left.
+/// For example, `rotl<1>([x0, x1, x2, x3]) == [x1, x2, x3, x0]`
+/// and `rotl<-1>([x0, x1, x2, x3]) == [x3, x0, x1, x2]`.
 template <int S, class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> rotl(datapar::simd<F, Abi> x) {
     if constexpr (S % x.size() == 0)
@@ -220,6 +232,9 @@ template <int S, class F, class Abi>
         return detail::rotl<S>(x);
 }
 
+/// Rotate the elements of @p x to the right by @p S positions.
+/// For example, `rotr<1>([x0, x1, x2, x3]) == [x3, x0, x1, x2]`
+/// and `rotr<-1>([x0, x1, x2, x3]) == [x1, x2, x3, x0]`.
 template <int S, class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> rotr(datapar::simd<F, Abi> x) {
     if constexpr (S % x.size() == 0)
@@ -230,6 +245,9 @@ template <int S, class F, class Abi>
         return detail::rotr<S>(x);
 }
 
+/// Shift the elements of @p x to the left by @p S positions, shifting in zeros.
+/// For example, `shiftl<1>([x0, x1, x2, x3]) == [x1, x2, x3, 0]`
+/// and `shiftl<-1>([x0, x1, x2, x3]) == [0, x0, x1, x2]`.
 template <int S, class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> shiftl(datapar::simd<F, Abi> x) {
     if constexpr (S == 0)
@@ -242,6 +260,9 @@ template <int S, class F, class Abi>
         return detail::shiftl<S>(x);
 }
 
+/// Shift the elements of @p x to the right by @p S positions, shifting in zeros.
+/// For example, `shiftr<1>([x0, x1, x2, x3]) == [0, x0, x1, x2]`
+/// and `shiftr<-1>([x0, x1, x2, x3]) == [x1, x2, x3, 0]`.
 template <int S, class F, class Abi>
 [[gnu::always_inline]] inline datapar::simd<F, Abi> shiftr(datapar::simd<F, Abi> x) {
     if constexpr (S == 0)
@@ -255,5 +276,9 @@ template <int S, class F, class Abi>
 }
 
 using detail::rot;
+
+/// @}
+
+/// @}
 
 } // namespace batmat::ops

@@ -35,6 +35,12 @@ void symv(view<const T, Abi, OA> A, view<const T, Abi> B, std::optional<view<con
 
 } // namespace detail
 
+/// @addtogroup topic-linalg
+/// @{
+
+/// @name Symmetric matrix-vector multiplication of batches of matrices
+/// @{
+
 /// d = A b where A is symmetric
 template <MatrixStructure SA, simdifiable VA, simdifiable VB, simdifiable VD>
     requires simdify_compatible<VA, VB, VD>
@@ -84,5 +90,9 @@ template <MatrixStructure SA, simdifiable VA, simdifiable VB, simdifiable VD>
 void symv_sub(Structured<VA, SA> A, VB &&B, VD &&D) {
     symv_sub(A.ref(), B, D, D);
 }
+
+/// @}
+
+/// @}
 
 } // namespace batmat::linalg

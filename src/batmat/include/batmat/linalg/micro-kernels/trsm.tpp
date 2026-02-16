@@ -14,6 +14,7 @@ namespace batmat::linalg::micro_kernels::trsm {
 /// @param  A Lower or upper trapezoidal RowsReg×(k+RowsReg).
 /// @param  B RowsReg×ColsReg.
 /// @param  D (k+RowsReg)×ColsReg.
+/// @param  k Number of columns in the non-triangular part of A.
 template <class T, class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg, StorageOrder OA,
           StorageOrder OB, StorageOrder OD>
 [[gnu::hot, gnu::flatten]] void

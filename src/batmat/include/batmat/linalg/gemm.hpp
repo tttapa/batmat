@@ -15,13 +15,23 @@
 
 namespace batmat::linalg {
 
-enum class PackingSelector : int8_t { Never, Always, Transpose };
+/// Decides which matrices to pack during large matrix-matrix multiplication.
+/// @ingroup topic-linalg
+enum class PackingSelector : int8_t {
+    Never,     ///< Access the original matrices directly in the micro-kernels.
+    Always,    ///< Always pack the blocks of the matrix in a contiguous workspace.
+    Transpose, ///< Pack the blocks of the matrix only if it is not in the optimal storage order.
+};
 
+/// Packing and tiling options for matrix-matrix multiplication.
+/// @ingroup topic-linalg
 struct TilingOptions {
-    bool no_tiling         = false;
-    PackingSelector pack_A = PackingSelector::Transpose;
-    PackingSelector pack_B = PackingSelector::Always;
-    index_t n_c = 0, k_c = 0, m_c = 0;
+    bool no_tiling         = false;                      ///< Don't use cache tiling.
+    PackingSelector pack_A = PackingSelector::Transpose; ///< When to pack matrix A.
+    PackingSelector pack_B = PackingSelector::Always;    ///< When to pack matrix B.
+    index_t n_c            = 0; ///< Cache block size in the N dimension (columns of B, C and D).
+    index_t k_c            = 0; ///< Cache block size in the K dimension (columns of A, rows of B).
+    index_t m_c            = 0; ///< Cache block size in the M dimension (rows of A, C and D).
 };
 
 namespace detail {
@@ -233,6 +243,12 @@ apply_gemm_options(micro_kernels::gemm::KernelConfig conf, Opts...) {
 
 } // namespace detail
 
+/// @addtogroup topic-linalg
+/// @{
+
+/// @name Multiplication of batches of general matrices
+/// @{
+
 /// D = A B
 template <simdifiable VA, simdifiable VB, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VB, VD>
@@ -282,6 +298,11 @@ template <simdifiable VA, simdifiable VB, simdifiable VD, shift_opt... Opts>
 void gemm_sub(VA &&A, VB &&B, VD &&D, TilingOptions packing = {}, Opts... opts) {
     return gemm_sub(A, B, D, D, packing, opts...);
 }
+
+/// @}
+
+/// @name Multiplication of batches of matrices with symmetric results
+/// @{
 
 /// D = A Aᵀ with D symmetric
 template <MatrixStructure SA, MatrixStructure SD, simdifiable VA, simdifiable VD, shift_opt... Opts>
@@ -383,6 +404,11 @@ void syrk_sub(VA &&A, Structured<VD, SD> D, Opts... opts) {
     return syrk_sub(A, D.ref(), D.ref(), opts...);
 }
 
+/// @}
+
+/// @name Multiplication of batches of triangular matrices
+/// @{
+
 /// D = A B with A and/or B triangular
 template <MatrixStructure SA, MatrixStructure SB, MatrixStructure SD, simdifiable VA,
           simdifiable VB, simdifiable VD, shift_opt... Opts>
@@ -466,5 +492,9 @@ void trmm_sub(TA &&A, TB &&B, TC &&C, TD &&D, Opts... opts) {
     return trmm_sub(Structured{std::forward<TA>(A)}, Structured{std::forward<TB>(B)},
                     Structured{std::forward<TC>(C)}, Structured{std::forward<TD>(D)}, opts...);
 }
+
+/// @}
+
+/// @}
 
 } // namespace batmat::linalg

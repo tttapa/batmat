@@ -20,6 +20,7 @@ using index_constant = std::integral_constant<index_t, I>;
 ///
 /// The argument @p f should be a function (or callable) that accepts two
 /// arguments of type @ref index_constant.
+/// @ingroup topic-utils
 template <int R, int C, class F>
 consteval auto make_2d_lut(F f) {
     return guanaqo::make_2d_lut<index_t, R, C>(std::forward<F>(f));
@@ -33,6 +34,7 @@ consteval auto make_2d_lut(F f) {
 ///
 /// The argument @p f should be a function (or callable) that accepts an
 /// argument of type @ref index_constant.
+/// @ingroup topic-utils
 template <int N, class F>
 consteval auto make_1d_lut(F f) {
     return guanaqo::make_1d_lut<index_t, N>(std::forward<F>(f));

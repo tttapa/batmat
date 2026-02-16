@@ -33,6 +33,12 @@ void potrf(view<const T, Abi, OA> A, view<const T, Abi, OCD> C, view<T, Abi, OCD
 }
 } // namespace detail
 
+/// @addtogroup topic-linalg
+/// @{
+
+/// @name Cholesky factorization of batches of matrices
+/// @{
+
 /// D = chol(C + AAᵀ) with C symmetric, D triangular
 template <MatrixStructure SC, simdifiable VA, simdifiable VC, simdifiable VD>
     requires simdify_compatible<VA, VC, VD>
@@ -79,5 +85,9 @@ void potrf(Structured<VD, SD> D, simdified_value_t<VD> regularization = 0) {
     detail::potrf<simdified_value_t<VD>, simdified_abi_t<VD>, {.struc_C = SD}>(
         null, simdify(D.value).as_const(), simdify(D.value), regularization);
 }
+
+/// @}
+
+/// @}
 
 } // namespace batmat::linalg

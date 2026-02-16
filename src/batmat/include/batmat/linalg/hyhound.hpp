@@ -140,6 +140,12 @@ void hyhound_diag_riccati(view<T, Abi, OL> L11, view<T, Abi, OA> A1, view<T, Abi
 
 } // namespace detail
 
+/// @addtogroup topic-linalg
+/// @{
+
+/// @name Cholesky factorization updates
+/// @{
+
 /// Update Cholesky factor L using low-rank term A diag(d) Aᵀ.
 template <MatrixStructure SL, simdifiable VL, simdifiable VA, simdifiable Vd>
     requires simdify_compatible<VL, VA, Vd>
@@ -173,8 +179,9 @@ auto hyhound_size_W(Structured<VL, SL> L) {
 /// @param[in]      B   Householder reflector vectors returned by @ref hyhound_diag.
 /// @param[in]      d   Diagonal update matrix.
 /// @param[in]      W   Householder representation returned by @ref hyhound_diag.
-/// If A is smaller than D, A is implicitly padded with zero columns: the offset of the nonzero
-/// part of A in the padded matrix can be specified using @p kA_in_offset.
+/// @param[in]      kA_in_offset    If A is smaller than D, A is implicitly padded with zero
+///                                 columns: the offset of the nonzero part of A in the padded
+///                                 matrix can be specified using @p kA_in_offset.
 template <simdifiable VL, simdifiable VA, simdifiable VD, simdifiable VB, simdifiable Vd,
           simdifiable VW>
     requires simdify_compatible<VL, VA, VD, VB, Vd, VW>
@@ -254,5 +261,9 @@ void hyhound_diag_riccati(Structured<VL11, SL> L11, VA1 &&A1, VL21 &&L21, VA2 &&
         simdify(L11.value), simdify(A1), simdify(L21), simdify(A2).as_const(), simdify(A2_out),
         simdify(Lu1), simdify(Au_out), simdify(d).as_const(), shift_A_out);
 }
+
+/// @}
+
+/// @}
 
 } // namespace batmat::linalg

@@ -7,9 +7,17 @@
 
 namespace batmat::ops {
 
+/// @addtogroup topic-low-level-ops
+/// @{
+
+/// @name Transposition
+/// @{
+
+/// Transposes the @p R × @p C matrix at @p pa with leading dimension @p lda, writing the result to
+/// @p pb with leading dimension @p ldb, writing only the @p d first columns of the result.
 template <index_t R, index_t C, class T>
 [[gnu::always_inline]]
-inline void transpose_dyn(const T *pa, index_t lda, T *pb, index_t ldb, index_t d) {
+inline void transpose_dyn(const T *pa, index_t lda, T *pb, index_t ldb, index_t d = R) {
     BATMAT_ASSUME(d <= R);
     T r[C][R];
     BATMAT_FULLY_UNROLLED_FOR (int i = 0; i < C; ++i)
@@ -48,10 +56,16 @@ inline void transpose_dyn<4, 4>(const double *pa, index_t lda, double *pb, index
 }
 #endif
 
+/// Transposes the @p R × @p C matrix at @p pa with leading dimension @p lda, writing the result to
+/// @p pb with leading dimension @p ldb.
 template <index_t R, index_t C, class T>
 [[gnu::always_inline]]
 inline void transpose(const T *pa, index_t lda, T *pb, index_t ldb) {
     transpose_dyn<R, C>(pa, lda, pb, ldb, R);
 }
+
+/// @}
+
+/// @}
 
 } // namespace batmat::ops

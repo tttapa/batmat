@@ -80,6 +80,12 @@ apply_options(micro_kernels::gemm_diag::KernelConfig conf, Opts...) {
 }
 } // namespace detail::gemm_diag
 
+/// @addtogroup topic-linalg
+/// @{
+
+/// @name Multiplication of batches of matrices with diagonal scaling
+/// @{
+
 /// D = A diag(d) B
 template <simdifiable VA, simdifiable VB, simdifiable VD, simdifiable Vd,
           detail::gemm_diag::track_zeros_opt... Opts>
@@ -128,5 +134,9 @@ template <MatrixStructure SC, simdifiable VA, simdifiable VD, simdifiable Vd,
 void syrk_diag_add(VA &&A, Structured<VD, SC> D, Vd &&d, Opts... opts) {
     syrk_diag_add(A, D, D, d, opts...);
 }
+
+/// @}
+
+/// @}
 
 } // namespace batmat::linalg

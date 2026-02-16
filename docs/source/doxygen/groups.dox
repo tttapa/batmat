@@ -1,0 +1,24 @@
+/** @defgroup topic-matrix Matrix data structures
+ *  Matrix storage and views
+ */
+    /** @defgroup topic-matrix-utils Matrix utilities
+     *  Low-level utilities for matrix storage
+     *  @ingroup topic-matrix
+     */
+
+/** @defgroup topic-linalg Linear algebra
+ *  Batched linear algebra operations
+ */
+    /** @defgroup topic-linalg-flops FLOP counts
+     *  Theoretical floating point operation counts for linear algebra operations
+     *  @ingroup topic-linalg
+     */
+
+/** @defgroup topic-utils Utilities
+ *  Various utilities
+ */
+
+/** @defgroup topic-low-level-ops Low-level operations
+ *  Low-level operations such as gathers, transposes, lane-wise rotations, inverse square roots,
+ *  conditional negations, etc.
+ */

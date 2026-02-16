@@ -42,6 +42,12 @@ void trsm(view<const T, Abi, OA> A, view<const T, Abi, OB> B, view<T, Abi, OD> D
 }
 } // namespace detail
 
+/// @addtogroup topic-linalg
+/// @{
+
+/// @name Triangular solve of batches of matrices
+/// @{
+
 /// D = A⁻¹ B with A triangular
 template <MatrixStructure SA, simdifiable VA, simdifiable VB, simdifiable VD, int RotB = 0>
     requires simdify_compatible<VA, VB, VD>
@@ -72,5 +78,9 @@ template <MatrixStructure SB, simdifiable VB, simdifiable VD, int RotA = 0>
 void trsm(VD &&D, Structured<VB, SB> B, with_rotate_A_t<RotA> shift = {}) {
     trsm(D, B.ref(), D, shift);
 }
+
+/// @}
+
+/// @}
 
 } // namespace batmat::linalg

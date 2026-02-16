@@ -12,6 +12,7 @@ namespace batmat::linalg::micro_kernels::trtri {
 
 /// @param  A k×RowsReg.
 /// @param  D k×RowsReg.
+/// @param  k Number of rows in A and D.
 /// Invert the top block of A and store it in the top block of D. Then multiply the bottom blocks of
 /// D by this block (on the right).
 template <class T, class Abi, KernelConfig Conf, index_t RowsReg, StorageOrder OA, StorageOrder OD>
@@ -90,6 +91,7 @@ template <class T, class Abi, KernelConfig Conf, index_t RowsReg, StorageOrder O
 
 /// @param  Dr RowsReg×k lower trapezoidal
 /// @param  D  k×ColsReg
+/// @param  k  Number of rows in D.
 /// Compute product Dr D and store the result in the bottom block of D
 template <class T, class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg, StorageOrder OD>
 [[gnu::hot, gnu::flatten]]

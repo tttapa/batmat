@@ -4,17 +4,31 @@
 
 namespace batmat::ops {
 
-/// Inverse square root.
-template <class T, class Abi>
-datapar::simd<T, Abi> rsqrt(datapar::simd<T, Abi> x) {
-    return datapar::simd<T, Abi>{1} / sqrt(x);
-}
+/// @addtogroup topic-low-level-ops
+/// @{
 
+/// @name Inverse square root
+/// @{
+
+/// Inverse square root.
 template <std::floating_point T>
 T rsqrt(T x) {
     using std::sqrt;
     return 1 / sqrt(x);
 }
+
+/// Inverse square root. May be implemented using an `rsqrt` instruction followed by Newton
+/// iterations for better performance, depending on the SIMD ABI. This allows it to be performed in
+/// parallel with a normal square root instruction, enabling better performance of the Cholesky
+/// micro-kernels.
+template <class T, class Abi>
+datapar::simd<T, Abi> rsqrt(datapar::simd<T, Abi> x) {
+    return datapar::simd<T, Abi>{1} / sqrt(x);
+}
+
+/// @}
+
+/// @}
 
 namespace detail {
 

@@ -29,6 +29,12 @@ void trtri(view<const T, Abi, OA> A, view<T, Abi, OD> D) {
 }
 } // namespace detail
 
+/// @addtogroup topic-linalg
+/// @{
+
+/// @name Triangular inversion of batches of matrices
+/// @{
+
 /// D = A⁻¹ with A, D lower triangular
 template <simdifiable VA, simdifiable VD>
     requires simdify_compatible<VA, VD>
@@ -60,5 +66,9 @@ template <simdifiable VD>
 void trtri(Structured<VD, MatrixStructure::UpperTriangular> D) {
     trtri(D.transposed());
 }
+
+/// @}
+
+/// @}
 
 } // namespace batmat::linalg

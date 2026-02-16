@@ -1,5 +1,9 @@
 #pragma once
 
+/// @file
+/// Layout description for a batch of matrices, independent of any storage.
+/// @ingroup topic-matrix
+
 #include <batmat/config.hpp>
 #include <guanaqo/mat-view.hpp>
 
@@ -24,9 +28,23 @@ struct DefaultStride {
     DefaultStride(index_t) {} // TODO: this is error prone
 };
 
+/// Shape and strides describing a batch of matrices, independent of any storage.
+/// @tparam I
+///         Index type.
+/// @tparam S
+///         Inner stride (batch size).
+/// @tparam D
+///         Depth type.
+/// @tparam L
+///         Layer stride type.
+/// @tparam O
+///         Storage order (column or row major).
+/// @ingroup topic-matrix
 template <class I = index_t, class S = std::integral_constant<I, 1>, class D = I,
           class L = DefaultStride, StorageOrder O = StorageOrder::ColMajor>
 struct Layout {
+    /// @name Compile-time properties
+    /// @{
     using index_type                            = I;
     using batch_size_type                       = S;
     using depth_type                            = D;
@@ -38,6 +56,10 @@ struct Layout {
     using standard_stride_type = std::conditional_t<requires {
         S::value;
     }, std::integral_constant<index_t, S::value>, index_t>;
+    /// @}
+
+    /// @name Layout description
+    /// @{
 
     [[no_unique_address]] depth_type depth;
     index_type rows;
@@ -45,6 +67,11 @@ struct Layout {
     index_type outer_stride;
     [[no_unique_address]] batch_size_type batch_size;
     [[no_unique_address]] layer_stride_type layer_stride;
+
+    /// @}
+
+    /// @name Initialization
+    /// @{
 
     struct PlainLayout {
         [[no_unique_address]] depth_type depth = guanaqo::default_stride<depth_type>::value;
@@ -56,6 +83,12 @@ struct Layout {
         [[no_unique_address]] layer_stride_type layer_stride =
             outer_stride * (is_row_major ? rows : cols);
     };
+
+    constexpr Layout(PlainLayout p = {})
+        : depth{p.depth}, rows{p.rows}, cols{p.cols}, outer_stride{p.outer_stride},
+          batch_size{p.batch_size}, layer_stride{p.layer_stride} {}
+
+    /// @}
 
     [[nodiscard]] constexpr index_type outer_size() const { return is_row_major ? rows : cols; }
     [[nodiscard]] constexpr index_type inner_size() const { return is_row_major ? cols : rows; }
@@ -105,10 +138,6 @@ struct Layout {
     [[nodiscard]] constexpr index_type layer_index(index_type l) const {
         return layer_index(l, get_layer_stride());
     }
-
-    constexpr Layout(PlainLayout p = {})
-        : depth{p.depth}, rows{p.rows}, cols{p.cols}, outer_stride{p.outer_stride},
-          batch_size{p.batch_size}, layer_stride{p.layer_stride} {}
 
     static standard_stride_type convert_to_standard_stride(auto s) {
         if constexpr (requires { standard_stride_type::value; })

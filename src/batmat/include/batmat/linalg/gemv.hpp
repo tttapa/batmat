@@ -61,6 +61,12 @@ apply_gemv_options(micro_kernels::gemv::KernelConfig conf, Opts...) {
 
 } // namespace detail
 
+/// @addtogroup topic-linalg
+/// @{
+
+/// @name Matrix-vector multiplication of batches of matrices
+/// @{
+
 /// d = A b
 template <simdifiable VA, simdifiable VB, simdifiable VD, shift_opt... Opts>
     requires simdify_compatible<VA, VB, VD>
@@ -110,5 +116,9 @@ template <simdifiable VA, simdifiable VB, simdifiable VD, shift_opt... Opts>
 void gemv_sub(VA &&A, VB &&B, VD &&D, Opts... opts) {
     gemv_sub(A, B, D, D, opts...);
 }
+
+/// @}
+
+/// @}
 
 } // namespace batmat::linalg

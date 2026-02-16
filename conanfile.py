@@ -125,6 +125,7 @@ class BatmatRecipe(ConanFile):
         tc.variables["BATMAT_DENSE_INDEX_TYPE"] = index_type
         if can_run(self):
             tc.variables["BATMAT_FORCE_TEST_DISCOVERY"] = True
+        tc.cache_variables["CYQLONE_DOCS_GUANAQO_VERSION"] = str(guanaqo.ref.version)
         tc.generate()
 
     def build(self):

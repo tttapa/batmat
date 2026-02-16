@@ -29,6 +29,12 @@ struct floating_point_to_int<double> {
 template <class T>
 using floating_point_to_int_t = typename floating_point_to_int<T>::type;
 
+/// @addtogroup topic-low-level-ops
+/// @{
+
+/// @name Conditional negation of floating point numbers
+/// @{
+
 /// Conditionally negates the sign bit of @p x, depending on @p signs, which
 /// should contain only ±0 (i.e. only the sign bit of an IEEE-754 floating point
 /// number).
@@ -38,6 +44,7 @@ T cneg(T x, T signs) {
     return x * copysign(T{1}, signs);
 }
 
+/// @copydoc cneg(T,T)
 template <class T, class Abi>
     requires(requires { typename floating_point_to_int_t<T>; } &&
              std::numeric_limits<T>::is_iec559 && std::is_trivially_copyable_v<T>)
@@ -48,6 +55,7 @@ template <class T, class Abi>
     return std::bit_cast<T>(r);
 }
 
+/// @copydoc cneg(T,T)
 template <class T, class Abi>
     requires(requires {
         typename floating_point_to_int_t<T>;
@@ -63,6 +71,10 @@ template <class T, class Abi>
     auto r         = std::bit_cast<int_simd>(x) ^ std::bit_cast<int_simd>(signs);
     return std::bit_cast<flt_simd>(r);
 }
+
+/// @}
+
+/// @}
 
 } // namespace detail
 

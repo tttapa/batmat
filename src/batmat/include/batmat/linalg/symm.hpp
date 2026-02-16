@@ -64,6 +64,12 @@ void symm(Structured<VA, SA> A, VB &&B, VD &&D) {
 }
 #endif
 
+/// @addtogroup topic-linalg
+/// @{
+
+/// @name Symmetric multiplication of batches of matrices
+/// @{
+
 /// D = C + A B with A symmetric
 template <MatrixStructure SA, simdifiable VA, simdifiable VB, simdifiable VC, simdifiable VD>
     requires simdify_compatible<VA, VB, VC, VD>
@@ -77,5 +83,9 @@ template <MatrixStructure SA, simdifiable VA, simdifiable VB, simdifiable VD>
 void symm_add(Structured<VA, SA> A, VB &&B, VD &&D) {
     symm_add(A.ref(), B, D, D);
 }
+
+/// @}
+
+/// @}
 
 } // namespace batmat::linalg
