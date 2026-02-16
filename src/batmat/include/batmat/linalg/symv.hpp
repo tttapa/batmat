@@ -17,7 +17,7 @@ template <class T, class Abi, micro_kernels::symv::KernelConfig Conf = {}, Stora
 void symv(view<const T, Abi, OA> A, view<const T, Abi> B, std::optional<view<const T, Abi>> C,
           view<T, Abi> D) {
     static_assert(Conf.struc_A == MatrixStructure::LowerTriangular); // TODO
-    GUANAQO_TRACE("symv", 0, A.rows() * A.cols() * B.cols() * A.depth());
+    GUANAQO_TRACE_LINALG("symv", A.rows() * A.cols() * B.cols() * A.depth());
     // Check dimensions
     const index_t M = D.rows();
     BATMAT_ASSERT(!C || C->rows() == D.rows());

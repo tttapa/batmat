@@ -25,7 +25,7 @@ void potrf(view<const T, Abi, OA> A, view<const T, Abi, OCD> C, view<T, Abi, OCD
     BATMAT_ASSERT(C.rows() == D.rows());
     BATMAT_ASSERT(C.cols() == D.cols());
     const index_t M = D.rows(), N = D.cols();
-    GUANAQO_TRACE("potrf", 0, total(flops::syrk_potrf(M, N, A.cols())) * C.depth());
+    GUANAQO_TRACE_LINALG("potrf", total(flops::syrk_potrf(M, N, A.cols())) * C.depth());
     // Degenerate case
     if (M == 0 || N == 0) [[unlikely]]
         return;

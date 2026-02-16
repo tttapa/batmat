@@ -21,7 +21,7 @@ void trtri(view<const T, Abi, OA> A, view<T, Abi, OD> D) {
     BATMAT_ASSERT(A.cols() == D.cols());
     const index_t M = D.rows(), N = D.cols();
     [[maybe_unused]] const auto fc = flops::trtri(M);
-    GUANAQO_TRACE("trtri", 0, total(fc) * D.depth());
+    GUANAQO_TRACE_LINALG("trtri", total(fc) * D.depth());
     // Degenerate case
     if (M == 0 || N == 0) [[unlikely]]
         return;

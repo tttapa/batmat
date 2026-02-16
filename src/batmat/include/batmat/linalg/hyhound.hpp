@@ -23,7 +23,7 @@ void hyhound_diag(view<T, Abi, OL> L, view<T, Abi, OA> A, view<const T, Abi> D) 
     BATMAT_ASSERT(L.rows() == A.rows());
     BATMAT_ASSERT(A.cols() == D.rows());
     [[maybe_unused]] const index_t flop_count = total(flops::hyh(L.rows(), L.cols(), k));
-    GUANAQO_TRACE("hyhound_diag", 0, flop_count * L.depth());
+    GUANAQO_TRACE_LINALG("hyhound_diag", flop_count * L.depth());
     if (k == 0) [[unlikely]]
         return;
     return micro_kernels::hyhound::hyhound_diag_register<T, Abi, Conf>(L, A, D);
@@ -39,7 +39,7 @@ void hyhound_diag(view<T, Abi, OL> L, view<T, Abi, OA> A, view<const T, Abi> D, 
     BATMAT_ASSERT(A.cols() == D.rows());
     BATMAT_ASSERT(std::make_pair(W.rows(), W.cols()) == (hyhound_W_size<T, Abi>)(L));
     [[maybe_unused]] const index_t flop_count = total(flops::hyh(L.rows(), L.cols(), k));
-    GUANAQO_TRACE("hyhound_diag", 0, flop_count * L.depth());
+    GUANAQO_TRACE_LINALG("hyhound_diag", flop_count * L.depth());
     if (k == 0) [[unlikely]]
         return;
     return hyhound_diag_register<T, Abi, Conf>(L, A, D, W);
@@ -63,7 +63,7 @@ void hyhound_diag_apply(view<T, Abi, OL> L, view<const T, Abi, OA> Ain, view<T, 
     // Note: ignoring initial zero values of A in the FLOP count for simplicity (for large matrices
     //       this does not matter)
     [[maybe_unused]] const index_t flop_count = total(flops::hyh_apply(L.rows(), L.cols(), k));
-    GUANAQO_TRACE("hyhound_diag_apply", 0, flop_count * L.depth());
+    GUANAQO_TRACE_LINALG("hyhound_diag_apply", flop_count * L.depth());
     if (k == 0) [[unlikely]]
         return;
     return hyhound_diag_apply_register<T, Abi, Conf>(L, Ain, Aout, B, D, W, kA_in_offset);
@@ -80,7 +80,7 @@ void hyhound_diag_2(view<T, Abi, OL1> L11, view<T, Abi, OA1> A1, view<T, Abi, OL
     BATMAT_ASSERT(A2.cols() == A1.cols());
     BATMAT_ASSERT(L21.cols() == L11.cols());
     [[maybe_unused]] const index_t flop_count = total(flops::hyh(m, L11.cols(), k));
-    GUANAQO_TRACE("hyhound_diag_2", 0, flop_count * L11.depth());
+    GUANAQO_TRACE_LINALG("hyhound_diag_2", flop_count * L11.depth());
     if (k == 0) [[unlikely]]
         return;
     return micro_kernels::hyhound::hyhound_diag_2_register<T, Abi, OL1, OA1, OL2, OA2, Conf>(
@@ -105,7 +105,7 @@ void hyhound_diag_cyclic(view<T, Abi, OL> L11, view<T, Abi, OW> A1, view<T, Abi,
     // Note: ignoring initial zero values of A in the FLOP count for simplicity (for large matrices
     //       this does not matter)
     [[maybe_unused]] const index_t flop_count = total(flops::hyh(m, L11.cols(), k));
-    GUANAQO_TRACE("hyhound_diag_cyclic", 0, flop_count * L11.depth());
+    GUANAQO_TRACE_LINALG("hyhound_diag_cyclic", flop_count * L11.depth());
     if (k == 0) [[unlikely]]
         return;
     return micro_kernels::hyhound::hyhound_diag_cyclic_register<T, Abi, OL, OW, OY, OU, Conf>(
@@ -131,7 +131,7 @@ void hyhound_diag_riccati(view<T, Abi, OL> L11, view<T, Abi, OA> A1, view<T, Abi
     // Note: ignoring upper trapezoidal shape of Lu and initial zero value of Au for simplicity
     //       (for large matrices this does not matter)
     [[maybe_unused]] index_t flop_count = total(flops::hyh(m, L11.cols(), k));
-    GUANAQO_TRACE("hyhound_diag_riccati", 0, flop_count * L11.depth());
+    GUANAQO_TRACE_LINALG("hyhound_diag_riccati", flop_count * L11.depth());
     if (k == 0) [[unlikely]]
         return;
     return micro_kernels::hyhound::hyhound_diag_riccati_register<T, Abi, OL, OA, OLu, OAu, Conf>(

@@ -16,7 +16,7 @@ template <class T, class Abi, micro_kernels::syomv::KernelConfig Conf = {}, Stor
 void syomv(view<const T, Abi, OA> A, view<const T, Abi, OB> B, view<T, Abi, OD> D) {
     // In practice: n² for matrix-vector products, n² for transposed matrix-vector products,
     //              n for subtracting the dot products for the transposed products at the end.
-    GUANAQO_TRACE("syomv", 0, (A.depth() - 1) * 2 * A.rows() * A.rows());
+    GUANAQO_TRACE_LINALG("syomv", (A.depth() - 1) * 2 * A.rows() * A.rows());
     // Check dimensions
     BATMAT_ASSERT(A.rows() == A.cols());
     BATMAT_ASSERT(A.rows() == D.rows());

@@ -34,7 +34,7 @@ void trsm(view<const T, Abi, OA> A, view<const T, Abi, OB> B, view<T, Abi, OD> D
     BATMAT_ASSERT(B.cols() == D.cols());
     const index_t M = A.rows(), K = A.cols(), N = B.cols();
     [[maybe_unused]] const auto fc = flops::trsm(M, N);
-    GUANAQO_TRACE("trsm", 0, total(fc) * D.depth());
+    GUANAQO_TRACE_LINALG("trsm", total(fc) * D.depth());
     // Degenerate case
     if (M == 0 || N == 0 || K == 0) [[unlikely]]
         return;

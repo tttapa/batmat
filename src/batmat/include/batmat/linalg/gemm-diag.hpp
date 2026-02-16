@@ -30,7 +30,7 @@ void gemm_diag(view<const T, Abi, OA> A, view<const T, Abi, OB> B,
     BATMAT_ASSERT(B.cols() == D.cols());
     const index_t M = D.rows(), N = D.cols(), K = A.cols();
     [[maybe_unused]] const auto fc = flops::gemmt_diag(M, N, K, Conf.struc_C);
-    GUANAQO_TRACE("gemm_diag", 0, total(fc) * A.depth());
+    GUANAQO_TRACE_LINALG("gemm_diag", total(fc) * A.depth());
 
     // Degenerate case
     if (M == 0 || N == 0) [[unlikely]]

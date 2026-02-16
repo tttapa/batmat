@@ -16,7 +16,7 @@ namespace detail {
 template <class T, class Abi, micro_kernels::gemv::KernelConfig Conf = {}, StorageOrder OA>
 void gemv(view<const T, Abi, OA> A, view<const T, Abi> B, std::optional<view<const T, Abi>> C,
           view<T, Abi> D) {
-    GUANAQO_TRACE("gemv", 0, A.rows() * A.cols() * B.cols() * A.depth());
+    GUANAQO_TRACE_LINALG("gemv", A.rows() * A.cols() * B.cols() * A.depth());
     // Check dimensions
     BATMAT_ASSERT(!C || C->rows() == D.rows());
     BATMAT_ASSERT(!C || C->cols() == D.cols());

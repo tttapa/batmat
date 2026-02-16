@@ -14,7 +14,7 @@ template <class T, class Abi, MatrixStructure SA, StorageOrder OA>
     requires(SA == MatrixStructure::LowerTriangular)
 void symm(view<const T, Abi, OA> A, view<const T, Abi> B, std::optional<view<const T, Abi>> C,
           view<T, Abi> D) {
-    GUANAQO_TRACE("symm", 0, A.rows() * A.cols() * B.cols() * A.depth());
+    GUANAQO_TRACE_LINALG("symm", A.rows() * A.cols() * B.cols() * A.depth());
     // Check dimensions
     BATMAT_ASSERT(!C || C->rows() == D.rows());
     BATMAT_ASSERT(!C || C->cols() == D.cols());

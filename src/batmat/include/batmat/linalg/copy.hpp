@@ -28,11 +28,13 @@ template <class T, class Abi, FillConfig Conf = {}, StorageOrder OB>
     using std::max;
     using std::min;
     using enum MatrixStructure;
-    GUANAQO_TRACE(Conf.struc == General           ? "fill"
-                  : Conf.struc == LowerTriangular ? "fill(L)"
-                  : Conf.struc == UpperTriangular ? "fill(U)"
-                                                  : "fill(?)",
-                  0, B.rows() * B.cols() * B.depth()); // TODO
+    [[maybe_unused]] static constexpr const auto trace_name =
+        Conf.struc == General           ? GUANAQO_TRACE_STATIC_STR("fill")
+        : Conf.struc == LowerTriangular ? GUANAQO_TRACE_STATIC_STR("fill(L)")
+        : Conf.struc == UpperTriangular ? GUANAQO_TRACE_STATIC_STR("fill(U)")
+                                        : GUANAQO_TRACE_STATIC_STR("fill(?)");
+    GUANAQO_TRACE_LINALG(trace_name,
+                         B.rows() * B.cols() * B.depth()); // TODO
     const auto I = B.rows(), J = B.cols();
     if (I == 0 || J == 0 || B.depth() == 0)
         return;
@@ -71,11 +73,13 @@ template <class T, class Abi, CopyConfig Conf = {}, StorageOrder OA, StorageOrde
     using std::max;
     using std::min;
     using enum MatrixStructure;
-    GUANAQO_TRACE(Conf.struc == General           ? "copy"
-                  : Conf.struc == LowerTriangular ? "copy(L)"
-                  : Conf.struc == UpperTriangular ? "copy(U)"
-                                                  : "copy(?)",
-                  0, A.rows() * A.cols() * A.depth()); // TODO
+    [[maybe_unused]] static constexpr const auto trace_name =
+        Conf.struc == General           ? GUANAQO_TRACE_STATIC_STR("copy")
+        : Conf.struc == LowerTriangular ? GUANAQO_TRACE_STATIC_STR("copy(L)")
+        : Conf.struc == UpperTriangular ? GUANAQO_TRACE_STATIC_STR("copy(U)")
+                                        : GUANAQO_TRACE_STATIC_STR("copy(?)");
+    GUANAQO_TRACE_LINALG(trace_name,
+                         A.rows() * A.cols() * A.depth()); // TODO
     assert(A.rows() == B.rows());
     assert(A.cols() == B.cols());
     const auto I = A.rows(), J = A.cols();
@@ -107,7 +111,7 @@ template <class T, class Abi, CopyConfig Conf = {}, StorageOrder OA, StorageOrde
     requires(std::same_as<Abi, datapar::scalar_abi<T>> && OA == OB &&
              Conf.struc == MatrixStructure::General)
 {
-    GUANAQO_TRACE("copy", 0, A.rows() * A.cols() * A.depth());
+    GUANAQO_TRACE_LINALG("copy", A.rows() * A.cols() * A.depth());
     assert(A.rows() == B.rows());
     assert(A.cols() == B.cols());
     if constexpr (Conf.mask != 0) // Scalar only
@@ -130,7 +134,7 @@ template <class T, class Abi, CopyConfig Conf = {}, StorageOrder OA, StorageOrde
     requires(std::same_as<Abi, datapar::scalar_abi<T>> && OA != OB &&
              Conf.struc == MatrixStructure::General)
 {
-    GUANAQO_TRACE("copy(T)", 0, A.rows() * A.cols() * A.depth());
+    GUANAQO_TRACE_LINALG("copy(T)", A.rows() * A.cols() * A.depth());
     assert(A.rows() == B.rows());
     assert(A.cols() == B.cols());
     if constexpr (Conf.mask != 0) // Scalar only
