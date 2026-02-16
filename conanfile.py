@@ -63,7 +63,7 @@ class BatmatRecipe(ConanFile):
     generators = ("CMakeDeps",)
 
     def requirements(self):
-        self.requires("guanaqo/1.0.0-alpha.22", transitive_headers=True, transitive_libs=True)
+        self.requires("guanaqo/1.0.0-alpha.24", transitive_headers=True, transitive_libs=True)
         if self.options.get_safe("with_benchmarks"):
             self.requires("benchmark/1.9.4")
             self.requires("hyhound/1.1.1")
