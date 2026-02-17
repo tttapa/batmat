@@ -34,5 +34,13 @@ extern const auto potrf_copy_register_inst =
             constexpr KernelConfig Conf{.negate_A = Negate, .struc_C = SC};
             return &wrap<potrf_copy_register<DType, Abi, Conf, OA, OC>>;
         });
+extern const auto potrf_copy_diag_register_inst =
+    guanaqo::make_lut<ColRowMajor, ColRowMajor, Triangular>(
+        []<auto OA, auto OC, auto SC>(CStorageOrder<OA>, CStorageOrder<OC>,
+                                      CMatrixStructure<SC>) -> const void * {
+            constexpr KernelConfig Conf{
+                .negate_A = Negate, .diag_A = KernelConfig::diag, .struc_C = SC};
+            return &wrap<potrf_copy_register<DType, Abi, Conf, OA, OC>>;
+        });
 
 } // namespace batmat::linalg::micro_kernels::potrf

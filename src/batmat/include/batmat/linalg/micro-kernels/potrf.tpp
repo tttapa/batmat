@@ -5,11 +5,31 @@
 #include <batmat/linalg/structure.hpp>
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
+#include <batmat/ops/cneg.hpp>
 #include <batmat/ops/rsqrt.hpp>
 
 #define UNROLL_FOR(...) BATMAT_FULLY_UNROLLED_FOR (__VA_ARGS__)
 
 namespace batmat::linalg::micro_kernels::potrf {
+
+template <KernelConfig Conf>
+auto load_diag(auto diag, index_t l) noexcept {
+    if constexpr (Conf.with_diag())
+        return diag.load(l);
+    else
+        return std::false_type{};
+}
+
+template <KernelConfig Conf>
+auto apply_diag(auto x, auto d) noexcept {
+    using ops::cneg;
+    if constexpr (Conf.diag_A == Conf.diag_sign_only)
+        return cneg(x, d);
+    else if constexpr (Conf.diag_A == Conf.diag)
+        return x * d;
+    else
+        return x;
+}
 
 /// @param  A1 RowsReg×k1.
 /// @param  A2 RowsReg×k2.
@@ -23,7 +43,8 @@ template <class T, class Abi, KernelConfig Conf, index_t RowsReg, StorageOrder O
 [[gnu::hot, gnu::flatten]] void
 potrf_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T, Abi, O2> A2,
                        const uview<const T, Abi, O2> C, const uview<T, Abi, O2> D, T *const invD,
-                       const index_t k1, const index_t k2, T regularization) noexcept {
+                       const index_t k1, const index_t k2, T regularization,
+                       const diag_uview_type<const T, Abi, Conf> diag) noexcept {
     static_assert(Conf.struc_C == MatrixStructure::LowerTriangular); // TODO
     static_assert(RowsReg > 0);
     using ops::rsqrt;
@@ -40,15 +61,17 @@ potrf_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T, Ab
     }
     // Perform syrk operation of A
     const auto A1_cached = with_cached_access<RowsReg, 0>(A1);
-    for (index_t l = 0; l < k1; ++l)
+    for (index_t l = 0; l < k1; ++l) {
+        auto dl = load_diag<Conf>(diag, l);
         UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
-            simd Ail = A1_cached.load(ii, l);
+            simd Ail = apply_diag<Conf>(A1_cached.load(ii, l), dl);
             UNROLL_FOR (index_t jj = 0; jj <= ii; ++jj) {
                 simd &Cij = C_reg[index(ii, jj)];
                 simd Blj  = A1_cached.load(jj, l);
                 Conf.negate_A ? (Cij -= Ail * Blj) : (Cij += Ail * Blj);
             }
         }
+    }
     const auto A2_cached = with_cached_access<RowsReg, 0>(A2);
     for (index_t l = 0; l < k2; ++l)
         UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
@@ -127,7 +150,8 @@ void trsm_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T
                            const uview<const T, Abi, O2> A2, const uview<const T, Abi, O2> B2,
                            const uview<const T, Abi, O2> L, const T *invL,
                            const uview<const T, Abi, O2> C, const uview<T, Abi, O2> D,
-                           const index_t k1, const index_t k2) noexcept {
+                           const index_t k1, const index_t k2,
+                           const diag_uview_type<const T, Abi, Conf> diag) noexcept {
     static_assert(Conf.struc_C == MatrixStructure::LowerTriangular); // TODO
     static_assert(RowsReg > 0 && ColsReg > 0);
     using ops::rsqrt;
@@ -142,15 +166,17 @@ void trsm_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T
     // Perform gemm operation of A and B
     const auto A1_cached = with_cached_access<RowsReg, 0>(A1);
     const auto B1_cached = with_cached_access<ColsReg, 0>(B1);
-    for (index_t l = 0; l < k1; ++l)
+    for (index_t l = 0; l < k1; ++l) {
+        const auto dl = load_diag<Conf>(diag, l);
         UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
-            simd Ail = A1_cached.load(ii, l);
+            simd Ail = apply_diag<Conf>(A1_cached.load(ii, l), dl);
             UNROLL_FOR (index_t jj = 0; jj < ColsReg; ++jj) {
                 simd &Cij = C_reg[ii][jj];
                 simd Blj  = B1_cached.load(jj, l);
                 Conf.negate_A ? (Cij -= Ail * Blj) : (Cij += Ail * Blj);
             }
         }
+    }
     const auto A2_cached = with_cached_access<RowsReg, 0>(A2);
     const auto B2_cached = with_cached_access<ColsReg, 0>(B2);
     for (index_t l = 0; l < k2; ++l)
@@ -183,7 +209,8 @@ void trsm_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T
 
 template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OCD>
 void potrf_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi, OCD> C,
-                         const view<T, Abi, OCD> D, T regularization) noexcept {
+                         const view<T, Abi, OCD> D, T regularization,
+                         const diag_view_type<const T, Abi, Conf> d) noexcept {
     using enum MatrixStructure;
     static_assert(Conf.struc_C == LowerTriangular); // TODO
     constexpr auto Rows = RowsReg<T, Abi>, Cols = ColsReg<T, Abi>;
@@ -193,6 +220,10 @@ void potrf_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi
     BATMAT_ASSUME(A.cols() == 0 || A.rows() == I);
     BATMAT_ASSUME(D.rows() == I);
     BATMAT_ASSUME(D.cols() == J);
+    if constexpr (Conf.with_diag()) {
+        BATMAT_ASSUME(d.rows() == K);
+        BATMAT_ASSUME(d.cols() == 1);
+    }
     BATMAT_ASSUME(I > 0);
     BATMAT_ASSUME(J > 0);
     static const auto potrf_microkernel = potrf_copy_lut<T, Abi, Conf, OA, OCD>;
@@ -202,11 +233,12 @@ void potrf_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi
     const uview<const T, Abi, OA> A_  = A;
     const uview<const T, Abi, OCD> C_ = C;
     const uview<T, Abi, OCD> D_       = D;
+    const diag_uview_type<const T, Abi, Conf> d_{d};
     alignas(datapar::simd_align<T, Abi>::value) T invD[Cols * datapar::simd_size<T, Abi>::value];
 
     // Optimization for very small matrices
     if (I <= Rows && J <= Cols && I == J)
-        return potrf_microkernel[J - 1](A_, C_, C_, D_, invD, K, 0, regularization);
+        return potrf_microkernel[J - 1](A_, C_, C_, D_, invD, K, 0, regularization, d_);
 
     foreach_chunked_merged( // Loop over the diagonal blocks of C
         0, J, Cols, [&](index_t j, auto nj) {
@@ -214,7 +246,7 @@ void potrf_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi
             const auto Dj  = D_.middle_rows(j);
             const auto Djj = D_.block(j, j);
             // Djj = chol(Cjj ± Aj Ajᵀ - Dj Djᵀ)
-            potrf_microkernel[nj - 1](Aj, Dj, C_.block(j, j), Djj, invD, K, j, regularization);
+            potrf_microkernel[nj - 1](Aj, Dj, C_.block(j, j), Djj, invD, K, j, regularization, d_);
             foreach_chunked_merged( // Loop over the subdiagonal rows
                 j + nj, I, Rows, [&](index_t i, auto ni) {
                     const auto Ai  = A_.middle_rows(i);
@@ -222,7 +254,7 @@ void potrf_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi
                     const auto Cij = C_.block(i, j);
                     const auto Dij = D_.block(i, j);
                     // Dij = (Cij ± Ai Ajᵀ - Di Djᵀ) Djj⁻ᵀ
-                    trsm_microkernel[ni - 1][nj - 1](Ai, Aj, Di, Dj, Djj, invD, Cij, Dij, K, j);
+                    trsm_microkernel[ni - 1][nj - 1](Ai, Aj, Di, Dj, Djj, invD, Cij, Dij, K, j, d_);
                 });
         });
 }

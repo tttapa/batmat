@@ -104,8 +104,41 @@ TYPED_TEST_P(SyrkPotrfTest, syrkPotrfLinplace) {
         }
 }
 
+TYPED_TEST_P(SyrkPotrfTest, syrkDiagPotrfLinplace) {
+    using batmat::linalg::syrk_diag_add_potrf;
+    using batmat::linalg::tril;
+    using EMat = Eigen::MatrixX<typename TypeParam::value_type>;
+    for (auto m : batmat::tests::sizes)
+        for (auto n : batmat::tests::sizes) {
+            const auto D0 = [&] {
+                auto D = this->template get_matrix<1>(m, m);
+                D.view().add_to_diagonal(static_cast<TypeParam::value_type>(10 * m));
+                return D;
+            }();
+            const auto A = this->template get_matrix<0>(m, n);
+            const auto d = this->get_vector(n);
+            auto D       = D0;
+            syrk_diag_add_potrf(A, tril(D), tril(D), d);
+            this->check(
+                [&](auto &&A, EMat Dl, EMat dl) {
+                    EMat Ad = A * dl.asDiagonal();
+                    if (A.cols() > 0) // TODO: Eigen crashes if this is zero
+                        Dl += Ad * A.transpose();
+                    auto Dll = Dl.template selfadjointView<Lower>();
+                    return Dll.llt().matrixL().toDenseMatrix();
+                },
+                [&](auto l, auto &&res, auto &&ref, auto &&, auto &&D0, auto &&) {
+                    const auto resL = tri<Lower>(res), resU = tri<StrictlyUpper>(res);
+                    EXPECT_THAT(resL, EigenAlmostEqual(ref, this->tolerance)) << l;
+                    EXPECT_THAT(resU, EigenAlmostEqual(tri<StrictlyUpper>(D0), this->tolerance))
+                        << l;
+                },
+                D, A, D0, d);
+        }
+}
+
 REGISTER_TYPED_TEST_SUITE_P(PotrfTest, potrfLinplace, potrfLinplaceTall);
-REGISTER_TYPED_TEST_SUITE_P(SyrkPotrfTest, syrkPotrfLinplace);
+REGISTER_TYPED_TEST_SUITE_P(SyrkPotrfTest, syrkPotrfLinplace, syrkDiagPotrfLinplace);
 
 using namespace batmat::tests;
 INSTANTIATE_TYPED_TEST_SUITE_P(linalg, PotrfTest, TestConfigs<OrderConfigs1>);

@@ -18,18 +18,23 @@ template <class T, class Abi, micro_kernels::potrf::KernelConfig Conf, StorageOr
           StorageOrder OCD>
     requires(Conf.struc_C != MatrixStructure::General)
 void potrf(view<const T, Abi, OA> A, view<const T, Abi, OCD> C, view<T, Abi, OCD> D,
-           T regularization) {
+           T regularization,
+           micro_kernels::potrf::diag_view_type<const T, Abi, Conf> d = {}) noexcept {
     // Check dimensions
     BATMAT_ASSERT(D.rows() >= D.cols());
     BATMAT_ASSERT(A.cols() == 0 || A.rows() == D.rows());
     BATMAT_ASSERT(C.rows() == D.rows());
     BATMAT_ASSERT(C.cols() == D.cols());
+    if constexpr (Conf.with_diag()) {
+        BATMAT_ASSERT(d.rows() == A.cols());
+        BATMAT_ASSERT(d.cols() == 1);
+    }
     const index_t M = D.rows(), N = D.cols();
     GUANAQO_TRACE_LINALG("potrf", total(flops::syrk_potrf(M, N, A.cols())) * C.depth());
     // Degenerate case
     if (M == 0 || N == 0) [[unlikely]]
         return;
-    return micro_kernels::potrf::potrf_copy_register<T, Abi, Conf>(A, C, D, regularization);
+    return micro_kernels::potrf::potrf_copy_register<T, Abi, Conf>(A, C, D, regularization, d);
 }
 } // namespace detail
 
@@ -67,6 +72,24 @@ template <MatrixStructure SC, simdifiable VA, simdifiable VD>
     requires simdify_compatible<VA, VD>
 void syrk_sub_potrf(VA &&A, Structured<VD, SC> D, simdified_value_t<VA> regularization = 0) {
     syrk_sub_potrf(A, D.ref(), D.ref(), regularization);
+}
+
+/// D = chol(C + A diag(d) Aᵀ) with C symmetric, D triangular
+template <MatrixStructure SC, simdifiable VA, simdifiable VC, simdifiable VD, simdifiable Vd>
+    requires simdify_compatible<VA, VC, VD, Vd>
+void syrk_diag_add_potrf(VA &&A, Structured<VC, SC> C, Structured<VD, SC> D, Vd &&d,
+                         simdified_value_t<VA> regularization = 0) {
+    using micro_kernels::potrf::KernelConfig;
+    detail::potrf<simdified_value_t<VA>, simdified_abi_t<VA>,
+                  {.negate_A = false, .diag_A = KernelConfig::diag, .struc_C = SC}>(
+        simdify(A).as_const(), simdify(C.value).as_const(), simdify(D.value), regularization,
+        simdify(d).as_const());
+}
+/// D = chol(D + A diag(d) Aᵀ) with D symmetric/triangular
+template <MatrixStructure SC, simdifiable VA, simdifiable VD, simdifiable Vd>
+    requires simdify_compatible<VA, VD, Vd>
+void syrk_diag_add_potrf(VA &&A, Structured<VD, SC> D, Vd &&d) {
+    syrk_diag_add_potrf(A, D.ref(), D.ref(), d);
 }
 
 /// D = chol(C) with C symmetric, D triangular
