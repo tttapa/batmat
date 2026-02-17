@@ -70,7 +70,7 @@ struct View {
     using row_slice_view_type = std::conditional_t<is_column_major, View, general_slice_view_type>;
 
     /// Pointer to the first element of the first layer.
-    value_type *data;
+    value_type *data_ptr;
     /// Layout describing the dimensions and strides of the view.
     layout_type layout;
 
@@ -90,18 +90,18 @@ struct View {
     /// Create a new view.
     /// @note It is recommended to use designated initializers for the arguments to avoid mistakes.
     constexpr View(PlainBatchedMatrixView p = {})
-        : data{p.data}, layout{{.depth        = p.depth,
-                                .rows         = p.rows,
-                                .cols         = p.cols,
-                                .outer_stride = p.outer_stride,
-                                .batch_size   = p.batch_size,
-                                .layer_stride = p.layer_stride}} {}
+        : data_ptr{p.data}, layout{{.depth        = p.depth,
+                                    .rows         = p.rows,
+                                    .cols         = p.cols,
+                                    .outer_stride = p.outer_stride,
+                                    .batch_size   = p.batch_size,
+                                    .layer_stride = p.layer_stride}} {}
     /// Create a new view with the given layout, using the given buffer.
-    constexpr View(std::span<T> data, layout_type layout) : data{data.data()}, layout{layout} {
+    constexpr View(std::span<T> data, layout_type layout) : data_ptr{data.data()}, layout{layout} {
         BATMAT_ASSERT(data.size() == layout.padded_size());
     }
     /// Create a new view with the given layout, using the given buffer.
-    constexpr View(value_type *buffer, layout_type layout) : data{buffer}, layout{layout} {}
+    constexpr View(value_type *data, layout_type layout) : data_ptr{data}, layout{layout} {}
 
     /// Copy a view. No data is copied.
     View(const View &) = default;
@@ -110,7 +110,7 @@ struct View {
     operator const_view_type() const
         requires(!std::is_const_v<T>)
     {
-        return {data, layout};
+        return {data_ptr, layout};
     }
     /// Explicit conversion to a const view.
     [[nodiscard]] const_view_type as_const() const { return *this; }
@@ -127,12 +127,12 @@ struct View {
     ///         cannot be used directly with functions that require unit inner stride (e.g. BLAS).
     [[nodiscard]] guanaqo::MatrixView<T, I, standard_stride_type, O>
     operator()(index_type l) const {
-        return layout(data, l);
+        return layout(data_ptr, l);
     }
 
     /// Access a single element at layer @p l, row @p r and column @p c.
     [[nodiscard]] value_type &operator()(index_type l, index_type r, index_type c) const {
-        return layout(data, l, r, c);
+        return layout(data_ptr, l, r, c);
     }
 
     /// @name Batch-wise slicing
@@ -142,7 +142,7 @@ struct View {
     /// layer `b * batch_size()`).
     [[nodiscard]] batch_view_type batch(index_type b) const {
         const auto layer = b * static_cast<index_t>(batch_size());
-        return {{.data         = data + layout.layer_index(layer),
+        return {{.data         = data() + layout.layer_index(layer),
                  .depth        = batch_size(),
                  .rows         = rows(),
                  .cols         = cols(),
@@ -156,7 +156,7 @@ struct View {
         const auto d     = static_cast<I>(depth());
         const auto layer = b * static_cast<index_t>(batch_size());
         const auto last  = b == d / batch_size();
-        return {{.data         = data + layout.layer_index(layer),
+        return {{.data         = data() + layout.layer_index(layer),
                  .depth        = last ? d - layout.floor_depth() : batch_size(),
                  .rows         = rows(),
                  .cols         = cols(),
@@ -169,7 +169,7 @@ struct View {
     template <class N>
     [[nodiscard]] View<T, I, S, N, L, O> first_layers(N n) const {
         BATMAT_ASSERT(n <= depth());
-        return {{.data         = data,
+        return {{.data         = data(),
                  .depth        = n,
                  .rows         = rows(),
                  .cols         = cols(),
@@ -185,7 +185,7 @@ struct View {
     [[nodiscard]] View<T, I, S, N, L, O> middle_layers(index_type l, N n) const {
         BATMAT_ASSERT(l + n <= depth());
         BATMAT_ASSERT(l % static_cast<I>(batch_size()) == 0);
-        return {{.data         = data + layout.layer_index(l),
+        return {{.data         = data() + layout.layer_index(l),
                  .depth        = n,
                  .rows         = rows(),
                  .cols         = cols(),
@@ -198,6 +198,9 @@ struct View {
 
     /// @name Iterators and buffer access
     /// @{
+
+    /// Get a pointer to the first element of the first layer.
+    T *data() const { return data_ptr; }
 
     /// Iterator over all elements of a view.
     struct linear_iterator {
@@ -249,9 +252,9 @@ struct View {
         const auto end            = padded_end * size - padding_layers;
         const auto batch_size     = static_cast<I>(layout.batch_size);
         return {
-            .data         = data,
-            .end          = data + end,
-            .next_jump    = remaining_layers ? data + first_jump : nullptr,
+            .data         = data(),
+            .end          = data() + end,
+            .next_jump    = remaining_layers ? data() + first_jump : nullptr,
             .padding_size = batch_size - remaining_layers,
             .batch_size   = batch_size,
         };
@@ -342,7 +345,7 @@ struct View {
         BATMAT_ASSERT(rows * cols == this->rows() * this->cols());
         BATMAT_ASSERT(has_full_outer_stride());
         return general_slice_view_type{typename general_slice_view_type::PlainBatchedMatrixView{
-            .data         = data,
+            .data         = data(),
             .depth        = depth(),
             .rows         = rows,
             .cols         = cols,
@@ -355,7 +358,7 @@ struct View {
     [[nodiscard]] row_slice_view_type top_rows(index_type n) const {
         BATMAT_ASSERT(0 <= n && n <= rows());
         return row_slice_view_type{typename row_slice_view_type::PlainBatchedMatrixView{
-            .data         = data,
+            .data         = data(),
             .depth        = depth(),
             .rows         = n,
             .cols         = cols(),
@@ -368,7 +371,7 @@ struct View {
     [[nodiscard]] col_slice_view_type left_cols(index_type n) const {
         BATMAT_ASSERT(0 <= n && n <= cols());
         return col_slice_view_type{typename col_slice_view_type::PlainBatchedMatrixView{
-            .data         = data,
+            .data         = data(),
             .depth        = depth(),
             .rows         = rows(),
             .cols         = n,
@@ -383,7 +386,7 @@ struct View {
         const auto bs     = static_cast<I>(batch_size());
         const auto offset = (is_row_major ? outer_stride() : 1) * bs * (rows() - n);
         return row_slice_view_type{typename row_slice_view_type::PlainBatchedMatrixView{
-            .data         = data + offset,
+            .data         = data() + offset,
             .depth        = depth(),
             .rows         = n,
             .cols         = cols(),
@@ -398,7 +401,7 @@ struct View {
         const auto bs     = static_cast<I>(batch_size());
         const auto offset = (is_row_major ? 1 : outer_stride()) * bs * (cols() - n);
         return col_slice_view_type{typename col_slice_view_type::PlainBatchedMatrixView{
-            .data         = data + offset,
+            .data         = data() + offset,
             .depth        = depth(),
             .rows         = rows(),
             .cols         = n,
@@ -452,7 +455,7 @@ struct View {
     /// returned view simply accesses the same data with rows and column indices swapped.
     [[nodiscard]] auto transposed() const {
         using TpBm = View<T, I, S, D, L, transpose(O)>;
-        return TpBm{typename TpBm::PlainBatchedMatrixView{.data         = data,
+        return TpBm{typename TpBm::PlainBatchedMatrixView{.data         = data(),
                                                           .depth        = depth(),
                                                           .rows         = cols(),
                                                           .cols         = rows(),
@@ -470,7 +473,7 @@ struct View {
         const auto bs = static_cast<I>(batch_size());
         const auto n  = std::min(rows(), cols());
         for (index_type b = 0; b < num_batches(); ++b) {
-            auto *p = batch(b).data;
+            auto *p = batch(b).data();
             for (index_type i = 0; i < n; ++i) {
                 for (index_type r = 0; r < bs; ++r)
                     *p++ += t;
@@ -482,7 +485,7 @@ struct View {
     void set_constant(value_type t) {
         const auto bs = static_cast<I>(batch_size());
         for (index_type b = 0; b < num_batches(); ++b) {
-            auto *dst = this->batch(b).data;
+            auto *dst = this->batch(b).data();
             for (index_type c = 0; c < this->outer_size(); ++c) {
                 auto *dst_         = dst;
                 const index_type n = inner_size() * bs;
@@ -496,7 +499,7 @@ struct View {
     void negate() {
         const auto bs = static_cast<I>(batch_size());
         for (index_type b = 0; b < num_batches(); ++b) {
-            auto *dst = this->batch(b).data;
+            auto *dst = this->batch(b).data();
             for (index_type c = 0; c < this->outer_size(); ++c) {
                 auto *dst_         = dst;
                 const index_type n = inner_size() * bs;
@@ -515,8 +518,8 @@ struct View {
         assert(other.batch_size() == this->batch_size());
         const auto bs = static_cast<I>(batch_size());
         for (index_type b = 0; b < num_batches(); ++b) {
-            const auto *src = other.batch(b).data;
-            auto *dst       = this->batch(b).data;
+            const auto *src = other.batch(b).data();
+            auto *dst       = this->batch(b).data();
             for (index_type c = 0; c < this->outer_size(); ++c) {
                 const auto *src_   = src;
                 auto *dst_         = dst;
@@ -553,8 +556,8 @@ struct View {
         assert(other.batch_size() == this->batch_size());
         const auto bs = static_cast<I>(batch_size());
         for (index_type b = 0; b < num_batches(); ++b) {
-            const auto *src = other.batch(b).data;
-            auto *dst       = this->batch(b).data;
+            const auto *src = other.batch(b).data();
+            auto *dst       = this->batch(b).data();
             for (index_type c = 0; c < this->outer_size(); ++c) {
                 const auto *src_   = src;
                 auto *dst_         = dst;
@@ -572,8 +575,8 @@ struct View {
 
     /// Reassign the buffer and layout of this view to those of another view. No data is copied.
     View &reassign(View other) {
-        this->data   = other.data;
-        this->layout = other.layout;
+        this->data_ptr = other.data_ptr;
+        this->layout   = other.layout;
         return *this;
     }
 
@@ -582,7 +585,7 @@ struct View {
         requires(!std::same_as<integral_value_type_t<D>, D>)
     {
         const auto bs = static_cast<integral_value_type_t<D>>(batch_size());
-        return {{.data         = data,
+        return {{.data         = data(),
                  .depth        = depth(),
                  .rows         = rows(),
                  .cols         = cols(),
@@ -595,7 +598,7 @@ struct View {
         requires(!std::is_const_v<T> && !std::same_as<integral_value_type_t<D>, D>)
     {
         const auto bs = static_cast<integral_value_type_t<D>>(batch_size());
-        return {{.data         = data,
+        return {{.data         = data(),
                  .depth        = depth(),
                  .rows         = rows(),
                  .cols         = cols(),
@@ -607,7 +610,7 @@ struct View {
     operator View<T, I, S, D, I, O>() const
         requires(!std::same_as<I, L>)
     {
-        return {{.data         = data,
+        return {{.data         = data(),
                  .depth        = depth(),
                  .rows         = rows(),
                  .cols         = cols(),
@@ -619,7 +622,7 @@ struct View {
     operator View<const T, I, S, D, I, O>() const
         requires(!std::is_const_v<T> && !std::same_as<I, L>)
     {
-        return {{.data         = data,
+        return {{.data         = data(),
                  .depth        = depth(),
                  .rows         = rows(),
                  .cols         = cols(),
@@ -640,6 +643,29 @@ bool operator!=(std::default_sentinel_t s, typename View<T, I, S, D, L, P>::line
 template <class T, class I, class S, class D, class L, StorageOrder P>
 bool operator!=(typename View<T, I, S, D, L, P>::linear_iterator i, std::default_sentinel_t s) {
     return !(i == s);
+}
+
+// TODO: tag-invoke style CPOs instead of free functions with ADL?
+
+template <class T, class I, class S, class D, class L, StorageOrder O>
+constexpr auto data(const View<T, I, S, D, L, O> &v) {
+    return v.data();
+}
+template <class T, class I, class S, class D, class L, StorageOrder O>
+constexpr auto rows(const View<T, I, S, D, L, O> &v) {
+    return v.rows();
+}
+template <class T, class I, class S, class D, class L, StorageOrder O>
+constexpr auto cols(const View<T, I, S, D, L, O> &v) {
+    return v.cols();
+}
+template <class T, class I, class S, class D, class L, StorageOrder O>
+constexpr auto outer_stride(const View<T, I, S, D, L, O> &v) {
+    return v.outer_stride();
+}
+template <class T, class I, class S, class D, class L, StorageOrder O>
+constexpr auto depth(const View<T, I, S, D, L, O> &v) {
+    return v.depth();
 }
 
 } // namespace batmat::matrix

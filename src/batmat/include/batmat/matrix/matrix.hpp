@@ -42,10 +42,10 @@ static_assert(default_alignment_t<double, int, int>::value == 0);
 ///         Inner stride (batch size).
 /// @tparam D
 ///         Depth type.
-/// @tparam A
-///         Batch alignment type.
 /// @tparam O
 ///         Storage order (column or row major).
+/// @tparam A
+///         Batch alignment type.
 /// @ingroup topic-matrix
 template <class T, class I = index_t, class S = std::integral_constant<I, 1>, class D = I,
           StorageOrder O = StorageOrder::ColMajor, class A = detail::default_alignment_t<T, I, S>>
@@ -83,7 +83,7 @@ struct Matrix {
     }
     void clear() {
         const auto alignment = default_alignment(view_.layout);
-        if (auto d = std::exchange(view_.data, nullptr))
+        if (auto d = std::exchange(view_.data_ptr, nullptr))
             aligned_deleter<T, decltype(alignment)>(view_.layout.padded_size(), alignment)(d);
         view_.layout.rows = 0;
     }
@@ -97,7 +97,7 @@ struct Matrix {
     void resize(layout_type new_layout) {
         if (new_layout.padded_size() != layout().padded_size()) {
             clear();
-            view_.data = allocate(new_layout).release();
+            view_.data_ptr = allocate(new_layout).release();
         }
         view_.layout = new_layout;
     }
@@ -128,7 +128,7 @@ struct Matrix {
     Matrix &operator=(Matrix &&o) noexcept {
         using std::swap;
         if (&o != this) {
-            swap(o.view_.data, this->view_.data);
+            swap(o.view_.data_ptr, this->view_.data_ptr);
             swap(o.view_.layout, this->view_.layout);
         }
         return *this;
@@ -218,8 +218,8 @@ struct Matrix {
     [[nodiscard]] index_type size() const { return view().size(); }
     [[nodiscard]] index_type padded_size() const { return view().padded_size(); }
 
-    [[gnu::always_inline]] value_type *data() { return view().data; }
-    [[gnu::always_inline]] const value_type *data() const { return view().data; }
+    [[gnu::always_inline]] value_type *data() { return view().data(); }
+    [[gnu::always_inline]] const value_type *data() const { return view().data(); }
     [[gnu::always_inline]] depth_type depth() const { return view().depth(); }
     [[gnu::always_inline]] index_type ceil_depth() const { return view().ceil_depth(); }
     [[gnu::always_inline]] index_type num_batches() const { return view().num_batches(); }
@@ -228,5 +228,32 @@ struct Matrix {
     [[gnu::always_inline]] index_type outer_stride() const { return view().outer_stride(); }
     [[gnu::always_inline]] batch_size_type batch_size() const { return view().batch_size(); }
 };
+
+template <class T, class I, class S, class D, class A, StorageOrder O>
+constexpr auto data(Matrix<T, I, S, D, O, A> &v) {
+    return v.data();
+}
+template <class T, class I, class S, class D, class A, StorageOrder O>
+constexpr auto data(Matrix<T, I, S, D, O, A> &&v) = delete;
+template <class T, class I, class S, class D, class A, StorageOrder O>
+constexpr auto data(const Matrix<T, I, S, D, O, A> &v) {
+    return v.data();
+}
+template <class T, class I, class S, class D, class A, StorageOrder O>
+constexpr auto rows(const Matrix<T, I, S, D, O, A> &v) {
+    return v.rows();
+}
+template <class T, class I, class S, class D, class A, StorageOrder O>
+constexpr auto cols(const Matrix<T, I, S, D, O, A> &v) {
+    return v.cols();
+}
+template <class T, class I, class S, class D, class A, StorageOrder O>
+constexpr auto outer_stride(const Matrix<T, I, S, D, O, A> &v) {
+    return v.outer_stride();
+}
+template <class T, class I, class S, class D, class A, StorageOrder O>
+constexpr auto depth(const Matrix<T, I, S, D, O, A> &v) {
+    return v.depth();
+}
 
 } // namespace batmat::matrix

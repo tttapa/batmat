@@ -123,9 +123,9 @@ struct uview {
         : data{data}, outer_stride{outer_stride} {}
     [[gnu::always_inline]] uview(const mut_view &v) noexcept
         requires std::is_const_v<T>
-        : data{v.data}, outer_stride{v.outer_stride()} {}
+        : data{v.data()}, outer_stride{v.outer_stride()} {}
     [[gnu::always_inline]] uview(const view &v) noexcept
-        : data{v.data}, outer_stride{v.outer_stride()} {}
+        : data{v.data()}, outer_stride{v.outer_stride()} {}
     [[gnu::always_inline]] uview(const mut_uview &o) noexcept
         requires std::is_const_v<T>
         : data{o.data}, outer_stride{o.outer_stride} {}
@@ -167,11 +167,11 @@ struct uview_vec {
     template <StorageOrder Order>
     [[gnu::always_inline]] explicit uview_vec(const mut_view<Order> &v) noexcept
         requires std::is_const_v<T>
-        : data{v.data} {
+        : data{v.data()} {
         BATMAT_ASSUME(v.outer_size() == 1);
     }
     template <StorageOrder Order>
-    [[gnu::always_inline]] explicit uview_vec(const view<Order> &v) noexcept : data{v.data} {
+    [[gnu::always_inline]] explicit uview_vec(const view<Order> &v) noexcept : data{v.data()} {
         BATMAT_ASSUME(v.outer_size() == 1);
     }
     [[gnu::always_inline]] uview_vec(const mut_uview &o) noexcept

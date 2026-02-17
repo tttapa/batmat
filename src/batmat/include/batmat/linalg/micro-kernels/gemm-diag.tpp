@@ -158,7 +158,7 @@ void gemm_diag_copy_register(const view<const T, Abi, OA> A, const view<const T,
         if (l1 == l0) {
             if (!C)
                 D.block(i, j0, ni, j1 - j0).set_constant(T{});
-            else if (C->data == D.data && C->outer_stride() == D.outer_stride())
+            else if (C->data() == D.data() && C->outer_stride() == D.outer_stride())
                 BATMAT_ASSUME(C->storage_order == D.storage_order); // Nothing to do
             else if constexpr (OC == StorageOrder::ColMajor)
                 for (index_t jj = j0; jj < j1; ++jj) // TODO: suboptimal when transpose required
