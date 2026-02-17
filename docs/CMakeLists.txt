@@ -61,13 +61,15 @@ endfunction()
 
 if (Doxygen_FOUND AND Python3_Interpreter_FOUND)
     include(Doxyfile.cmake)
-    batmat_get_git_ref(GIT_TAG GIT_BRANCH)
-    if (GIT_TAG)
-        set(DOXYGEN_PROJECT_NUMBER "${GIT_TAG}")
-    elseif (GIT_BRANCH)
-        set(DOXYGEN_PROJECT_NUMBER "${GIT_BRANCH}")
-    else()
-        set(DOXYGEN_PROJECT_NUMBER "${PROJECT_VERSION}")
+    if (NOT DEFINED DOXYGEN_PROJECT_NUMBER)
+        batmat_get_git_ref(GIT_TAG GIT_BRANCH)
+        if (GIT_TAG)
+            set(DOXYGEN_PROJECT_NUMBER "${GIT_TAG}")
+        elseif (GIT_BRANCH)
+            set(DOXYGEN_PROJECT_NUMBER "${GIT_BRANCH}")
+        else()
+            set(DOXYGEN_PROJECT_NUMBER "${PROJECT_VERSION}")
+        endif()
     endif()
     batmat_get_tag_files(DOXYGEN_TAGFILES)
     add_custom_target(docs-output-dir
@@ -92,15 +94,7 @@ if (Doxygen_FOUND AND Python3_Interpreter_FOUND)
         endif()
     endforeach()
     add_dependencies(docs-doxygen docs-output-dir)
-    add_custom_target(docs-sphinx
-        COMMAND ${Python3_EXECUTABLE} -m sphinx
-            "${CMAKE_CURRENT_SOURCE_DIR}/source"
-            "${DOXYGEN_OUTPUT_DIRECTORY}/Sphinx"
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-        COMMENT "Generating Sphinx documentation"
-        USES_TERMINAL)
-    add_dependencies(docs-sphinx docs-doxygen)
-    add_custom_target(docs DEPENDS docs-sphinx)
+    add_custom_target(docs DEPENDS docs-doxygen)
 else()
     message(STATUS "Doxygen or Python3 interpreter not found. Skipping docs target.")
 endif()
