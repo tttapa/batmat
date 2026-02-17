@@ -3,12 +3,13 @@
 #include <atomic>
 
 TEST(ThreadPool, syncN) {
+    batmat::thread_pool pool{4};
     std::atomic<int> counter{};
-    batmat::pool_sync_run_n(4, [&](int i, int n) {
+    pool.sync_run_n(4, [&](int i, int n) {
         ASSERT_EQ(n, 4);
         counter.fetch_add(1 + i, std::memory_order_relaxed);
     });
-    batmat::pool_sync_run_n(2, [&](int i, int n) {
+    pool.sync_run_n(2, [&](int i, int n) {
         ASSERT_EQ(n, 2);
         counter.fetch_add(1 + i, std::memory_order_relaxed);
     });
@@ -16,12 +17,13 @@ TEST(ThreadPool, syncN) {
 }
 
 TEST(ThreadPool, syncNlarge) {
+    batmat::thread_pool pool{100};
     std::atomic<int> counter{};
-    batmat::pool_sync_run_n(100, [&](int i, int n) {
+    pool.sync_run_n(100, [&](int i, int n) {
         ASSERT_EQ(n, 100);
         counter.fetch_add(1 + i, std::memory_order_relaxed);
     });
-    batmat::pool_sync_run_n(2, [&](int i, int n) {
+    pool.sync_run_n(2, [&](int i, int n) {
         ASSERT_EQ(n, 2);
         counter.fetch_add(1 + i, std::memory_order_relaxed);
     });
