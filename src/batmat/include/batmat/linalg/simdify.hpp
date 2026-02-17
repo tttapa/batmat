@@ -153,13 +153,37 @@ concept simdifiable = requires { typename simdified_view_type<std::remove_refere
 
 template <simdifiable V>
 using simdified_view_t = typename simdified_view_type<V>::type;
+
+namespace detail {
+
+template <class>
+struct simdified_value;
+
 template <simdifiable V>
-using simdified_value_t = typename simdified_view_type<V>::value_type;
+struct simdified_value<V> {
+    using type = typename simdified_view_type<V>::value_type;
+};
+
+template <class>
+struct simdified_abi;
+
 template <simdifiable V>
-using simdified_abi_t = typename simdified_view_type<V>::abi_type;
+struct simdified_abi<V> {
+    using type = typename simdified_view_type<V>::abi_type;
+};
+
+} // namespace detail
+
+template <class V>
+using simdified_value_t = typename detail::simdified_value<V>::type;
+template <class V>
+using simdified_abi_t = typename detail::simdified_abi<V>::type;
+
+template <class...>
+inline constexpr bool simdify_compatible = false;
 
 template <simdifiable V, simdifiable... Vs>
-inline constexpr bool simdify_compatible =
+inline constexpr bool simdify_compatible<V, Vs...> =
     (std::is_same_v<simdified_value_t<V>, simdified_value_t<Vs>> && ...) &&
     (std::is_same_v<simdified_abi_t<V>, simdified_abi_t<Vs>> && ...);
 
@@ -190,6 +214,25 @@ concept simdifiable_multi =
 
 template <simdifiable_multi V>
 using simdified_multi_view_t = typename simdified_multi_view_type<V>::type;
+
+namespace detail {
+
+template <simdifiable_multi V>
+struct simdified_value<V> {
+    using type = typename simdified_multi_view_type<V>::value_type;
+};
+
+template <simdifiable_multi V>
+struct simdified_abi<V> {
+    using type = typename simdified_multi_view_type<V>::abi_type;
+};
+
+} // namespace detail
+
+template <simdifiable_multi V, simdifiable_multi... Vs>
+inline constexpr bool simdify_compatible<V, Vs...> =
+    (std::is_same_v<simdified_value_t<V>, simdified_value_t<Vs>> && ...) &&
+    (std::is_same_v<simdified_abi_t<V>, simdified_abi_t<Vs>> && ...);
 
 constexpr auto simdify(simdifiable_multi auto &&a) -> simdified_multi_view_t<decltype(a)> {
     if constexpr (requires { a.data(); }) // TODO: can we make this consistent?
