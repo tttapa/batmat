@@ -3,8 +3,32 @@
 #include <batmat/matrix/matrix.hpp>
 #include <batmat/matrix/view.hpp>
 #include <batmat/simd.hpp>
-#include <functional>
+#include <guanaqo/mat-view.hpp>
 #include <type_traits>
+
+// TODO: consistent API for guanaqo::MatrixView
+namespace guanaqo {
+template <class T, class I, class S, StorageOrder O>
+constexpr auto data(const MatrixView<T, I, S, O> &v) {
+    return v.data;
+}
+template <class T, class I, class S, StorageOrder O>
+constexpr auto rows(const MatrixView<T, I, S, O> &v) {
+    return v.rows;
+}
+template <class T, class I, class S, StorageOrder O>
+constexpr auto cols(const MatrixView<T, I, S, O> &v) {
+    return v.cols;
+}
+template <class T, class I, class S, StorageOrder O>
+constexpr auto outer_stride(const MatrixView<T, I, S, O> &v) {
+    return v.outer_stride;
+}
+template <class T, class I, class S, StorageOrder O>
+constexpr auto depth(const MatrixView<T, I, S, O> &) {
+    return std::integral_constant<I, 1>{};
+}
+} // namespace guanaqo
 
 namespace batmat::linalg {
 
@@ -161,7 +185,7 @@ struct simdified_value;
 
 template <simdifiable V>
 struct simdified_value<V> {
-    using type = typename simdified_view_type<V>::value_type;
+    using type = typename batmat::linalg::simdified_view_type<V>::value_type;
 };
 
 template <class>
@@ -169,7 +193,7 @@ struct simdified_abi;
 
 template <simdifiable V>
 struct simdified_abi<V> {
-    using type = typename simdified_view_type<V>::abi_type;
+    using type = typename batmat::linalg::simdified_view_type<V>::abi_type;
 };
 
 } // namespace detail
@@ -188,21 +212,12 @@ inline constexpr bool simdify_compatible<V, Vs...> =
     (std::is_same_v<simdified_abi_t<V>, simdified_abi_t<Vs>> && ...);
 
 constexpr auto simdify(simdifiable auto &&a) -> simdified_view_t<decltype(a)> {
-    using T = std::remove_cvref_t<decltype(a)>;
-    if constexpr (requires { a.data(); }) // TODO: can we make this consistent?
-        return simdified_view_t<decltype(a)>{{
-            .data         = a.data(),
-            .rows         = std::invoke(&T::rows, a),
-            .cols         = std::invoke(&T::cols, a),
-            .outer_stride = std::invoke(&T::outer_stride, a),
-        }};
-    else
-        return simdified_view_t<decltype(a)>{{
-            .data         = a.data,
-            .rows         = std::invoke(&T::rows, a),
-            .cols         = std::invoke(&T::cols, a),
-            .outer_stride = std::invoke(&T::outer_stride, a),
-        }};
+    return simdified_view_t<decltype(a)>{{
+        .data         = data(a),
+        .rows         = rows(a),
+        .cols         = cols(a),
+        .outer_stride = outer_stride(a),
+    }};
 }
 
 template <class V>
@@ -219,12 +234,12 @@ namespace detail {
 
 template <simdifiable_multi V>
 struct simdified_value<V> {
-    using type = typename simdified_multi_view_type<V>::value_type;
+    using type = typename batmat::linalg::simdified_multi_view_type<V>::value_type;
 };
 
 template <simdifiable_multi V>
 struct simdified_abi<V> {
-    using type = typename simdified_multi_view_type<V>::abi_type;
+    using type = typename batmat::linalg::simdified_multi_view_type<V>::abi_type;
 };
 
 } // namespace detail
@@ -235,22 +250,13 @@ inline constexpr bool simdify_compatible<V, Vs...> =
     (std::is_same_v<simdified_abi_t<V>, simdified_abi_t<Vs>> && ...);
 
 constexpr auto simdify(simdifiable_multi auto &&a) -> simdified_multi_view_t<decltype(a)> {
-    if constexpr (requires { a.data(); }) // TODO: can we make this consistent?
-        return simdified_multi_view_t<decltype(a)>{{
-            .data         = a.data(),
-            .depth        = a.depth(),
-            .rows         = a.rows(),
-            .cols         = a.cols(),
-            .outer_stride = a.outer_stride(),
-        }};
-    else
-        return simdified_multi_view_t<decltype(a)>{{
-            .data         = a.data,
-            .depth        = a.depth(),
-            .rows         = a.rows(),
-            .cols         = a.cols(),
-            .outer_stride = a.outer_stride(),
-        }};
+    return simdified_multi_view_t<decltype(a)>{{
+        .data         = data(a),
+        .depth        = depth(a),
+        .rows         = rows(a),
+        .cols         = cols(a),
+        .outer_stride = outer_stride(a),
+    }};
 }
 
 } // namespace batmat::linalg
