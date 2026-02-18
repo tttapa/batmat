@@ -53,6 +53,7 @@ struct Layout {
     static constexpr StorageOrder storage_order = O;
     static constexpr bool is_column_major       = O == StorageOrder::ColMajor;
     static constexpr bool is_row_major          = O == StorageOrder::RowMajor;
+    static constexpr std::integral_constant<index_type, 1> inner_stride{};
 
     using standard_stride_type = std::conditional_t<requires {
         S::value;
@@ -145,7 +146,7 @@ struct Layout {
     [[nodiscard]] constexpr bool has_full_outer_stride() const {
         return outer_stride == inner_size() || outer_size() == 1;
     }
-    [[nodiscard]] constexpr bool has_full_inner_stride() const { return true; }
+    [[nodiscard]] constexpr bool has_full_inner_stride() const { return inner_stride == 1; }
     [[nodiscard]] constexpr index_type layer_index(index_type l, index_type s) const {
         assert(0 <= l && l < ceil_depth());
         const auto bs     = static_cast<I>(batch_size);

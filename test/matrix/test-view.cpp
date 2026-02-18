@@ -24,8 +24,8 @@ class ViewParamTest : public ::testing::Test {
                                               : batmat::matrix::StorageOrder::ColMajor;
 
     static constexpr I depth      = S() * 6;
-    static constexpr I rows       = 5;
-    static constexpr I cols       = 7;
+    static constexpr I rows       = 23;
+    static constexpr I cols       = 29;
     static constexpr I batch_size = S::value;
 
     using View = batmat::matrix::View<T, I, S, I, DefaultStride, storage_order>;
@@ -57,7 +57,7 @@ TYPED_TEST_P(ViewParamTest, TransposeMatchesOriginal) {
     for (index_t l = 0; l < D; ++l) {
         for (index_t r = 0; r < R; ++r) {
             for (index_t c = 0; c < C; ++c) {
-                std::cout << std::setw(5) << this->view(l, r, c);
+                std::cout << std::setw(7) << this->view(l, r, c);
                 EXPECT_EQ(trans(l, c, r), this->view(l, r, c));
             }
             std::cout << '\n';
@@ -73,7 +73,7 @@ TYPED_TEST_P(ViewParamTest, TransposeMatchesOriginalBlock) {
     for (index_t l = 0; l < depth; ++l) {
         for (index_t r = 0; r < 3; ++r) {
             for (index_t c = 0; c < 4; ++c) {
-                std::cout << std::setw(5) << trans(l, c, r);
+                std::cout << std::setw(7) << trans(l, c, r);
                 EXPECT_EQ(trans(l, c, r), this->view(l + bs, r + 1, c + 2));
             }
             std::cout << '\n';
@@ -82,7 +82,38 @@ TYPED_TEST_P(ViewParamTest, TransposeMatchesOriginalBlock) {
     }
 }
 
-REGISTER_TYPED_TEST_SUITE_P(ViewParamTest, TransposeMatchesOriginal, TransposeMatchesOriginalBlock);
+TYPED_TEST_P(ViewParamTest, MiddleRowsCols) {
+    if constexpr (TypeParam::is_row_major) {
+        auto slice = this->view.middle_rows(7, 5, 3);
+        for (index_t l = 0; l < this->depth; ++l) {
+            for (index_t r = 0; r < 5; ++r) {
+                for (index_t c = 0; c < this->cols; ++c) {
+                    std::cout << std::setw(7) << slice(l, r, c);
+                    EXPECT_EQ(slice(l, r, c), this->view(l, 7 + 3 * r, c))
+                        << " at " << l << ", " << r << ", " << c;
+                }
+                std::cout << '\n';
+            }
+            std::cout << '\n';
+        }
+    } else {
+        auto slice = this->view.middle_cols(7, 5, 3);
+        for (index_t l = 0; l < this->depth; ++l) {
+            for (index_t r = 0; r < this->rows; ++r) {
+                for (index_t c = 0; c < 5; ++c) {
+                    std::cout << std::setw(7) << slice(l, r, c);
+                    EXPECT_EQ(slice(l, r, c), this->view(l, r, 7 + 3 * c))
+                        << " at " << l << ", " << r << ", " << c;
+                }
+                std::cout << '\n';
+            }
+            std::cout << '\n';
+        }
+    }
+}
+
+REGISTER_TYPED_TEST_SUITE_P(ViewParamTest, TransposeMatchesOriginal, TransposeMatchesOriginalBlock,
+                            MiddleRowsCols);
 
 using TestConfigs = ::testing::Types<ViewTypeConfig<1, true>, ViewTypeConfig<1, false>,
                                      ViewTypeConfig<4, true>, ViewTypeConfig<4, false>>;

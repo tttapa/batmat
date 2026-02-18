@@ -8,6 +8,7 @@
 #include <batmat/config.hpp>
 #include <batmat/matrix/layout.hpp>
 #include <guanaqo/mat-view.hpp>
+#include <type_traits>
 
 namespace batmat::matrix {
 
@@ -74,6 +75,9 @@ struct View {
     /// Layout describing the dimensions and strides of the view.
     layout_type layout;
 
+    /// @name Constructors
+    /// @{
+
     /// POD helper struct to enable designated initializers during construction.
     struct PlainBatchedMatrixView {
         value_type *data                       = nullptr;
@@ -106,36 +110,24 @@ struct View {
     /// Copy a view. No data is copied.
     View(const View &) = default;
 
-    /// Non-const views implicitly convert to const views.
-    operator const_view_type() const
-        requires(!std::is_const_v<T>)
-    {
-        return {data_ptr, layout};
-    }
-    /// Returns the same view. For consistency with @ref Matrix.
-    [[nodiscard]] View view() const { return *this; }
-    /// Explicit conversion to a const view.
-    [[nodiscard]] const_view_type as_const() const { return *this; }
-
-    /// If we have a single layer at compile time, we can implicitly convert to a non-batched view.
-    operator guanaqo::MatrixView<T, I, standard_stride_type, O>() const
-        requires has_single_layer_at_compile_time
-    {
-        return operator()(0);
+    /// Reassign the buffer and layout of this view to those of another view. No data is copied.
+    View &reassign(View other) {
+        this->data_ptr = other.data_ptr;
+        this->layout   = other.layout;
+        return *this;
     }
 
-    /// Access a single layer @p l as a non-batched view.
-    /// @note   The inner stride of the returned view is equal to the batch size of this view, so it
-    ///         cannot be used directly with functions that require unit inner stride (e.g. BLAS).
-    [[nodiscard]] guanaqo::MatrixView<T, I, standard_stride_type, O>
-    operator()(index_type l) const {
-        return layout(data_ptr, l);
-    }
+    /// @}
+
+    /// @name Element access
+    /// @{
 
     /// Access a single element at layer @p l, row @p r and column @p c.
     [[nodiscard]] value_type &operator()(index_type l, index_type r, index_type c) const {
         return layout(data_ptr, l, r, c);
     }
+
+    /// @}
 
     /// @name Batch-wise slicing
     /// @{
@@ -180,6 +172,19 @@ struct View {
                  .outer_stride = outer_stride(),
                  .batch_size   = batch_size(),
                  .layer_stride = layout.get_layer_stride() * stride}};
+    }
+
+    /// @}
+
+    /// @name Layer-wise slicing
+    /// @{
+
+    /// Access a single layer @p l as a non-batched view.
+    /// @note   The inner stride of the returned view is equal to the batch size of this view, so it
+    ///         cannot be used directly with functions that require unit inner stride (e.g. BLAS).
+    [[nodiscard]] guanaqo::MatrixView<T, I, standard_stride_type, O>
+    operator()(index_type l) const {
+        return layout(data_ptr, l);
     }
 
     /// Get a view of the first @p n layers. Note that @p n can be a compile-time constant.
@@ -279,7 +284,9 @@ struct View {
     /// Sentinel for @ref begin().
     [[nodiscard]] std::default_sentinel_t end() const { return {}; }
 
-    /// @name Dimensions and strides
+    /// @}
+
+    /// @name Dimensions
     /// @{
 
     /// Total number of elements in the view (excluding padding).
@@ -293,6 +300,10 @@ struct View {
     [[nodiscard, gnu::always_inline]] constexpr index_type ceil_depth() const {
         return layout.ceil_depth();
     }
+    /// The batch size, i.e. the number of layers in each batch. Equals the inner stride.
+    [[nodiscard, gnu::always_inline]] constexpr batch_size_type batch_size() const {
+        return layout.batch_size;
+    }
     /// Number of batches in the view, i.e. `ceil_depth() / batch_size()`.
     [[nodiscard, gnu::always_inline]] constexpr index_type num_batches() const {
         return layout.num_batches();
@@ -301,11 +312,6 @@ struct View {
     [[nodiscard, gnu::always_inline]] constexpr index_type rows() const { return layout.rows; }
     /// Number of columns of the matrices.
     [[nodiscard, gnu::always_inline]] constexpr index_type cols() const { return layout.cols; }
-    /// Outer stride of the matrices (leading dimension in BLAS parlance). Should be multiplied by
-    /// the batch size to get the actual number of elements.
-    [[nodiscard, gnu::always_inline]] constexpr index_type outer_stride() const {
-        return layout.outer_stride;
-    }
     /// The size of the outer dimension, i.e. the number of columns for column-major storage, or the
     /// number of rows for row-major storage.
     [[nodiscard, gnu::always_inline]] constexpr index_type outer_size() const {
@@ -316,12 +322,21 @@ struct View {
     [[nodiscard, gnu::always_inline]] constexpr index_type inner_size() const {
         return layout.inner_size();
     }
+
+    /// @}
+
+    /// @name Strides
+    /// @{
+
+    /// Outer stride of the matrices (leading dimension in BLAS parlance). Should be multiplied by
+    /// the batch size to get the actual number of elements.
+    [[nodiscard, gnu::always_inline]] constexpr index_type outer_stride() const {
+        return layout.outer_stride;
+    }
     /// The inner stride of the matrices. Should be multiplied by the batch size to get the actual
     /// number of elements.
-    [[nodiscard, gnu::always_inline]] constexpr index_type inner_stride() const { return 1; }
-    /// The batch size, i.e. the number of layers in each batch. Equals the inner stride.
-    [[nodiscard, gnu::always_inline]] constexpr batch_size_type batch_size() const {
-        return layout.batch_size;
+    [[nodiscard, gnu::always_inline]] constexpr auto inner_stride() const {
+        return layout.inner_stride;
     }
     /// The row stride of the matrices, i.e. the distance between elements in consecutive rows in
     /// a given column. Should be multiplied by the batch size to get the actual number of elements.
@@ -442,9 +457,47 @@ struct View {
         return bottom_rows(rows() - r).top_rows(n);
     }
 
+    /// Get a view of @p n rows starting at row @p r, with stride @p stride.
+    [[nodiscard]] row_slice_view_type middle_rows(index_type r, index_type n,
+                                                  index_type stride) const
+        requires is_row_major
+    {
+        BATMAT_ASSERT(0 <= r);
+        BATMAT_ASSERT(r + (n - 1) * stride < rows());
+        const auto bs     = static_cast<I>(batch_size());
+        const auto offset = outer_stride() * bs * r;
+        return row_slice_view_type{typename row_slice_view_type::PlainBatchedMatrixView{
+            .data         = data() + offset,
+            .depth        = depth(),
+            .rows         = n,
+            .cols         = cols(),
+            .outer_stride = outer_stride() * stride,
+            .batch_size   = batch_size(),
+            .layer_stride = this->get_layer_stride_for<row_slice_view_type>()}};
+    }
+
     /// Get a view of @p n columns starting at column @p c.
     [[nodiscard]] col_slice_view_type middle_cols(index_type c, index_type n) const {
         return right_cols(cols() - c).left_cols(n);
+    }
+
+    /// Get a view of @p n columns starting at column @p c, with stride @p stride.
+    [[nodiscard]] col_slice_view_type middle_cols(index_type c, index_type n,
+                                                  index_type stride) const
+        requires is_column_major
+    {
+        BATMAT_ASSERT(0 <= c);
+        BATMAT_ASSERT(c + (n - 1) * stride < cols());
+        const auto bs     = static_cast<I>(batch_size());
+        const auto offset = outer_stride() * bs * c;
+        return col_slice_view_type{typename col_slice_view_type::PlainBatchedMatrixView{
+            .data         = data() + offset,
+            .depth        = depth(),
+            .rows         = rows(),
+            .cols         = n,
+            .outer_stride = outer_stride() * stride,
+            .batch_size   = batch_size(),
+            .layer_stride = this->get_layer_stride_for<col_slice_view_type>()}};
     }
 
     /// Get a view of the top-left @p nr by @p nc block of the matrices.
@@ -600,11 +653,26 @@ struct View {
 
     /// @}
 
-    /// Reassign the buffer and layout of this view to those of another view. No data is copied.
-    View &reassign(View other) {
-        this->data_ptr = other.data_ptr;
-        this->layout   = other.layout;
-        return *this;
+    /// @name View conversions
+    /// @{
+
+    /// Returns the same view. For consistency with @ref Matrix.
+    [[nodiscard]] View view() const { return *this; }
+    /// Explicit conversion to a const view.
+    [[nodiscard]] const_view_type as_const() const { return *this; }
+
+    /// Non-const views implicitly convert to const views.
+    operator const_view_type() const
+        requires(!std::is_const_v<T>)
+    {
+        return {data_ptr, layout};
+    }
+
+    /// If we have a single layer at compile time, we can implicitly convert to a non-batched view.
+    operator guanaqo::MatrixView<T, I, standard_stride_type, O>() const
+        requires has_single_layer_at_compile_time
+    {
+        return operator()(0);
     }
 
     /// Implicit conversion to a view with a dynamic depth.
@@ -657,6 +725,8 @@ struct View {
                  .batch_size   = batch_size(),
                  .layer_stride = layer_stride()}};
     }
+
+    /// @}
 };
 
 template <class T, class I, class S, class D, class L, StorageOrder P>
