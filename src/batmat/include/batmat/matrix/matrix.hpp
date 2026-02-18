@@ -158,6 +158,28 @@ struct Matrix {
     [[nodiscard]] auto batch(index_type b) const { return view().batch(b); }
     [[nodiscard]] auto batch_dyn(index_type b) { return view().batch_dyn(b); }
     [[nodiscard]] auto batch_dyn(index_type b) const { return view().batch_dyn(b); }
+    [[nodiscard]] auto middle_batches(index_type b, index_type n, index_type stride = 1) {
+        return view().middle_batches(b, n, stride);
+    }
+    [[nodiscard]] auto middle_batches(index_type b, index_type n, index_type stride = 1) const {
+        return view().middle_batches(b, n, stride);
+    }
+    template <class N>
+    [[nodiscard]] auto first_layers(N n) {
+        return view().first_layers(n);
+    }
+    template <class N>
+    [[nodiscard]] auto first_layers(N n) const {
+        return view().first_layers(n);
+    }
+    template <class N>
+    [[nodiscard]] auto middle_layers(index_type l, N n) {
+        return view().middle_layers(l, n);
+    }
+    template <class N>
+    [[nodiscard]] auto middle_layers(index_type l, N n) const {
+        return view().middle_layers(l, n);
+    }
 
     [[nodiscard]] auto reshaped(index_type rows, index_type cols) {
         return view().reshaped(rows, cols);
@@ -218,15 +240,17 @@ struct Matrix {
     [[nodiscard]] index_type size() const { return view().size(); }
     [[nodiscard]] index_type padded_size() const { return view().padded_size(); }
 
-    [[gnu::always_inline]] value_type *data() { return view().data(); }
-    [[gnu::always_inline]] const value_type *data() const { return view().data(); }
-    [[gnu::always_inline]] depth_type depth() const { return view().depth(); }
-    [[gnu::always_inline]] index_type ceil_depth() const { return view().ceil_depth(); }
-    [[gnu::always_inline]] index_type num_batches() const { return view().num_batches(); }
-    [[gnu::always_inline]] index_type rows() const { return view().rows(); }
-    [[gnu::always_inline]] index_type cols() const { return view().cols(); }
-    [[gnu::always_inline]] index_type outer_stride() const { return view().outer_stride(); }
-    [[gnu::always_inline]] batch_size_type batch_size() const { return view().batch_size(); }
+    [[nodiscard]] value_type *data() { return view().data(); }
+    [[nodiscard]] const value_type *data() const { return view().data(); }
+    [[nodiscard]] depth_type depth() const { return view().depth(); }
+    [[nodiscard]] index_type ceil_depth() const { return view().ceil_depth(); }
+    [[nodiscard]] index_type num_batches() const { return view().num_batches(); }
+    [[nodiscard]] index_type rows() const { return view().rows(); }
+    [[nodiscard]] index_type cols() const { return view().cols(); }
+    [[nodiscard]] index_type outer_stride() const { return view().outer_stride(); }
+    [[nodiscard]] constexpr auto row_stride() const { return view().row_stride(); }
+    [[nodiscard]] constexpr auto col_stride() const { return view().col_stride(); }
+    [[nodiscard]] batch_size_type batch_size() const { return view().batch_size(); }
 };
 
 template <class T, class I, class S, class D, class A, StorageOrder O>

@@ -112,6 +112,8 @@ struct View {
     {
         return {data_ptr, layout};
     }
+    /// Returns the same view. For consistency with @ref Matrix.
+    [[nodiscard]] View view() const { return *this; }
     /// Explicit conversion to a const view.
     [[nodiscard]] const_view_type as_const() const { return *this; }
 
@@ -163,6 +165,21 @@ struct View {
                  .outer_stride = outer_stride(),
                  .batch_size   = batch_size(),
                  .layer_stride = layout.layer_stride}};
+    }
+
+    /// Get a view of @p n batches starting at batch @p b, with a stride of @p stride layers.
+    [[nodiscard]] View<T, I, S, I, I, O> middle_batches(index_type b, index_type n,
+                                                        index_type stride = 1) const {
+        const auto bs    = static_cast<I>(batch_size());
+        const auto layer = b * bs;
+        BATMAT_ASSERT(n == 0 || layer + (n - 1) * stride * bs + bs <= depth());
+        return {{.data         = data() + layout.layer_index(layer),
+                 .depth        = n,
+                 .rows         = rows(),
+                 .cols         = cols(),
+                 .outer_stride = outer_stride(),
+                 .batch_size   = batch_size(),
+                 .layer_stride = layout.get_layer_stride() * stride}};
     }
 
     /// Get a view of the first @p n layers. Note that @p n can be a compile-time constant.
@@ -305,6 +322,16 @@ struct View {
     /// The batch size, i.e. the number of layers in each batch. Equals the inner stride.
     [[nodiscard, gnu::always_inline]] constexpr batch_size_type batch_size() const {
         return layout.batch_size;
+    }
+    /// The row stride of the matrices, i.e. the distance between elements in consecutive rows in
+    /// a given column. Should be multiplied by the batch size to get the actual number of elements.
+    [[nodiscard, gnu::always_inline]] constexpr auto row_stride() const {
+        return layout.row_stride();
+    }
+    /// The column stride of the matrices, i.e. the distance between elements in consecutive columns
+    /// in a given row. Should be multiplied by the batch size to get the actual number of elements.
+    [[nodiscard, gnu::always_inline]] constexpr auto col_stride() const {
+        return layout.col_stride();
     }
     /// The layer stride, i.e. the distance between the first layer of one batch and the first layer
     /// of the next batch. Should be multiplied by the batch size to get the actual number of

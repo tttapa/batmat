@@ -6,6 +6,7 @@
 
 #include <batmat/config.hpp>
 #include <guanaqo/mat-view.hpp>
+#include <type_traits>
 
 namespace batmat::matrix {
 
@@ -96,6 +97,22 @@ struct Layout {
         const auto bs = static_cast<I>(batch_size);
         const auto d  = static_cast<I>(depth);
         return (d + bs - 1) / bs;
+    }
+    /// The row stride of the matrices, i.e. the distance between elements in consecutive rows in
+    /// a given column. Should be multiplied by the batch size to get the actual number of elements.
+    [[nodiscard, gnu::always_inline]] constexpr auto row_stride() const {
+        if constexpr (is_column_major)
+            return std::integral_constant<index_type, 1>{};
+        else
+            return outer_stride;
+    }
+    /// The column stride of the matrices, i.e. the distance between elements in consecutive columns
+    /// in a given row. Should be multiplied by the batch size to get the actual number of elements.
+    [[nodiscard, gnu::always_inline]] constexpr auto col_stride() const {
+        if constexpr (is_column_major)
+            return outer_stride;
+        else
+            return std::integral_constant<index_type, 1>{};
     }
     /// Round up the given size @p n to a multiple of @ref batch_size.
     [[nodiscard]] constexpr index_type ceil_depth(index_type n) const {
