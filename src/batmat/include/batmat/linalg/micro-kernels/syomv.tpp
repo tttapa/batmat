@@ -27,7 +27,7 @@ syomv_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi, OB>
     // Column weights for non-transposed block
     simd Bl[RowsReg];
     UNROLL_FOR (index_t l = 0; l < RowsReg; ++l)
-        Bl[l] = ops::shiftr<1>(B.load(l + l0, 0));
+        Bl[l] = ops::rotr<1>(B.load(l + l0, 0));
     // Actual multiplication kernel
     for (index_t i = 0; i < k; ++i) {
         simd Bi = B.load(i, 0);
@@ -35,10 +35,10 @@ syomv_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi, OB>
         UNROLL_FOR (index_t l = 0; l < RowsReg; ++l) {
             // Dot product between first lane of A and second lane of x
             simd Ail = A_cached.load(i, l);
-            accum[l] += Ail * ops::shiftl<1>(Bi);
+            accum[l] += Ail * ops::rotl<1>(Bi);
             // Linear combination of columns of first lane of A, weighted by
             // the rows of the first lane of x, added to the second lane of v
-            Ail = ops::shiftr<1>(Ail); // TODO: rotr?
+            Ail = ops::rotr<1>(Ail); // TODO: rotr?
             Conf.negate ? (Di -= Ail * Bl[l]) : (Di += Ail * Bl[l]);
         }
         D.store(Di, i, 0);

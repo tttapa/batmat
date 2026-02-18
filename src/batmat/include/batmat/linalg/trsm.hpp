@@ -3,6 +3,7 @@
 #include <batmat/linalg/copy.hpp>
 #include <batmat/linalg/flops.hpp>
 #include <batmat/linalg/micro-kernels/trsm.hpp>
+#include <batmat/linalg/shift.hpp>
 #include <batmat/linalg/simdify.hpp>
 #include <batmat/linalg/triangular.hpp>
 #include <batmat/linalg/uview.hpp>
@@ -16,11 +17,7 @@ namespace batmat::linalg {
 template <int I>
 struct with_rotate_A_t : std::integral_constant<int, I> {};
 template <int I>
-struct with_rotate_B_t : std::integral_constant<int, I> {};
-template <int I>
 inline constexpr with_rotate_A_t<I> with_rotate_A;
-template <int I>
-inline constexpr with_rotate_B_t<I> with_rotate_B;
 
 namespace detail {
 template <class T, class Abi, micro_kernels::trsm::KernelConfig Conf, StorageOrder OA,

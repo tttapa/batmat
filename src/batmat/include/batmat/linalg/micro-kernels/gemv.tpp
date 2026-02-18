@@ -38,7 +38,7 @@ gemv_copy_microkernel(const uview<const T, Abi, OA> A,
             UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
                 simd Ail  = shiftl<Conf.shift_A>(A_cached.load(ii, l));
                 simd &Cij = C_reg[ii];
-                simd Blj  = shiftl<Conf.shift_B>(B.load(l, 0));
+                simd Blj  = rotl<Conf.rotate_B>(B.load(l, 0));
                 Conf.negate ? (Cij -= Ail * Blj) : (Cij += Ail * Blj);
             }
         }
@@ -49,7 +49,7 @@ gemv_copy_microkernel(const uview<const T, Abi, OA> A,
         // Load B into registers
         simd B_reg[RowsReg]; // NOLINT(*-c-arrays)
         UNROLL_FOR (index_t l = 0; l < RowsReg; ++l)
-            B_reg[l] = shiftl<Conf.shift_B>(B.load(l, 0));
+            B_reg[l] = rotl<Conf.rotate_B>(B.load(l, 0));
         // Matrix-vector multiplication kernel
         const auto A_cached = with_cached_access<0, RowsReg>(A);
         if (C) [[likely]] {

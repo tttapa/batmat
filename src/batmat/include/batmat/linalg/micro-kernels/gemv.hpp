@@ -11,7 +11,7 @@ namespace batmat::linalg::micro_kernels::gemv {
 struct KernelConfig {
     bool negate  = false;
     int shift_A  = 0;
-    int shift_B  = 0;
+    int rotate_B = 0;
     int rotate_C = 0;
     int rotate_D = rotate_C;
     int mask_D   = rotate_D;

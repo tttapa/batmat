@@ -48,8 +48,8 @@ constexpr micro_kernels::gemv::KernelConfig
 apply_gemv_options(micro_kernels::gemv::KernelConfig conf, Opts...) {
     if (auto s = shift_A<Opts...>)
         conf.shift_A = *s;
-    if (auto s = shift_B<Opts...>)
-        conf.shift_B = *s;
+    if (auto s = rotate_B<Opts...>)
+        conf.rotate_B = *s;
     if (auto s = rotate_C<Opts...>)
         conf.rotate_C = *s;
     if (auto s = rotate_D<Opts...>)

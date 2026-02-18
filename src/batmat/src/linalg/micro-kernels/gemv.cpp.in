@@ -43,7 +43,7 @@ extern const auto gemv_copy_register_inst_gemv_sA =
     });
 extern const auto gemv_copy_register_inst_gemv_sB =
     guanaqo::make_lut<ColRowMajor, 2>([]<auto OA>(CStorageOrder<OA>, auto S) -> const void * {
-        constexpr KernelConfig Conf{.negate = Negate, .shift_B = S ? 1 : -1};
+        constexpr KernelConfig Conf{.negate = Negate, .rotate_B = S ? 1 : -1};
         return &wrap<gemv_copy_register<DType, Abi, Conf, OA>>;
     });
 extern const auto gemv_copy_register_inst_gemv_sC_no_mask =

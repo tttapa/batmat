@@ -70,7 +70,7 @@ gemm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
                 UNROLL_FOR (index_t ll = std::max(ii, jj); ll < std::max(RowsReg, ColsReg); ++ll) {
                     simd &Cij = C_reg[ii][jj];
                     simd Ail  = shiftl<Conf.shift_A>(A_cached.load(ii, ll));
-                    simd Blj  = shiftl<Conf.shift_B>(B_cached.load(ll, jj));
+                    simd Blj  = rotl<Conf.rotate_B>(B_cached.load(ll, jj));
                     Conf.negate ? (Cij -= Ail * Blj) : (Cij += Ail * Blj);
                 }
             }
@@ -82,7 +82,7 @@ gemm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
                 simd Ail = shiftl<Conf.shift_A>(A_cached.load(ii, ll));
                 UNROLL_FOR (index_t jj = min_col(ii); jj <= max_col(ii); ++jj) {
                     simd &Cij = C_reg[ii][jj];
-                    simd Blj  = shiftl<Conf.shift_B>(B_cached.load(ll, jj));
+                    simd Blj  = rotl<Conf.rotate_B>(B_cached.load(ll, jj));
                     Conf.negate ? (Cij -= Ail * Blj) : (Cij += Ail * Blj);
                 }
             }
@@ -94,7 +94,7 @@ gemm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
                 simd Ail = shiftl<Conf.shift_A>(A_cached.load(ii, ll));
                 UNROLL_FOR (index_t jj = min_col(ii); jj <= std::min(ll, max_col(ii)); ++jj) {
                     simd &Cij = C_reg[ii][jj];
-                    simd Blj  = shiftl<Conf.shift_B>(B_cached.load(ll, jj));
+                    simd Blj  = rotl<Conf.rotate_B>(B_cached.load(ll, jj));
                     Conf.negate ? (Cij -= Ail * Blj) : (Cij += Ail * Blj);
                 }
             }
@@ -109,7 +109,7 @@ gemm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
             simd Ail = shiftl<Conf.shift_A>(A_cached.load(ii, l));
             UNROLL_FOR (index_t jj = min_col(ii); jj <= max_col(ii); ++jj) {
                 simd &Cij = C_reg[ii][jj];
-                simd Blj  = shiftl<Conf.shift_B>(B_cached.load(l, jj));
+                simd Blj  = rotl<Conf.rotate_B>(B_cached.load(l, jj));
                 Conf.negate ? (Cij -= Ail * Blj) : (Cij += Ail * Blj);
             }
         }
@@ -123,7 +123,7 @@ gemm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
                 UNROLL_FOR (index_t ll = 0; ll <= lmax; ++ll) {
                     simd &Cij = C_reg[ii][jj];
                     simd Ail  = shiftl<Conf.shift_A>(A_cached.load(ii, l + ll));
-                    simd Blj  = shiftl<Conf.shift_B>(B_cached.load(l + ll, jj));
+                    simd Blj  = rotl<Conf.rotate_B>(B_cached.load(l + ll, jj));
                     Conf.negate ? (Cij -= Ail * Blj) : (Cij += Ail * Blj);
                 }
             }
@@ -134,7 +134,7 @@ gemm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
                 simd Ail = shiftl<Conf.shift_A>(A_cached.load(ii, l + ll));
                 UNROLL_FOR (index_t jj = min_col(ii); jj <= max_col(ii); ++jj) {
                     simd &Cij = C_reg[ii][jj];
-                    simd Blj  = shiftl<Conf.shift_B>(B_cached.load(l + ll, jj));
+                    simd Blj  = rotl<Conf.rotate_B>(B_cached.load(l + ll, jj));
                     Conf.negate ? (Cij -= Ail * Blj) : (Cij += Ail * Blj);
                 }
             }
@@ -145,7 +145,7 @@ gemm_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T, Abi,
                 simd Ail = shiftl<Conf.shift_A>(A_cached.load(ii, l + ll));
                 UNROLL_FOR (index_t jj = std::max(ll, min_col(ii)); jj <= max_col(ii); ++jj) {
                     simd &Cij = C_reg[ii][jj];
-                    simd Blj  = shiftl<Conf.shift_B>(B_cached.load(l + ll, jj));
+                    simd Blj  = rotl<Conf.rotate_B>(B_cached.load(l + ll, jj));
                     Conf.negate ? (Cij -= Ail * Blj) : (Cij += Ail * Blj);
                 }
             }
@@ -184,7 +184,7 @@ void gemm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi,
     // Configurations for the various micro-kernels
     constexpr KernelConfig ConfGXG{.negate   = Conf.negate,
                                    .shift_A  = Conf.shift_A,
-                                   .shift_B  = Conf.shift_B,
+                                   .rotate_B = Conf.rotate_B,
                                    .rotate_C = Conf.rotate_C,
                                    .rotate_D = Conf.rotate_D,
                                    .mask_D   = Conf.mask_D,
@@ -193,7 +193,7 @@ void gemm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi,
                                    .struc_C  = General};
     constexpr KernelConfig ConfXGG{.negate   = Conf.negate,
                                    .shift_A  = Conf.shift_A,
-                                   .shift_B  = Conf.shift_B,
+                                   .rotate_B = Conf.rotate_B,
                                    .rotate_C = Conf.rotate_C,
                                    .rotate_D = Conf.rotate_D,
                                    .mask_D   = Conf.mask_D,
@@ -202,7 +202,7 @@ void gemm_copy_register(const view<const T, Abi, OA> A, const view<const T, Abi,
                                    .struc_C  = General};
     constexpr KernelConfig ConfXXG{.negate   = Conf.negate,
                                    .shift_A  = Conf.shift_A,
-                                   .shift_B  = Conf.shift_B,
+                                   .rotate_B = Conf.rotate_B,
                                    .rotate_C = Conf.rotate_C,
                                    .rotate_D = Conf.rotate_D,
                                    .mask_D   = Conf.mask_D,

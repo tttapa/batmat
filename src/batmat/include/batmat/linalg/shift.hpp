@@ -8,7 +8,7 @@ namespace batmat::linalg {
 template <int I>
 struct with_shift_A_t : std::integral_constant<int, I> {};
 template <int I>
-struct with_shift_B_t : std::integral_constant<int, I> {};
+struct with_rotate_B_t : std::integral_constant<int, I> {};
 template <int I>
 struct with_rotate_C_t : std::integral_constant<int, I> {};
 template <int I>
@@ -19,7 +19,7 @@ struct with_mask_D_t : std::integral_constant<int, I> {};
 template <int I>
 inline constexpr with_shift_A_t<I> with_shift_A;
 template <int I>
-inline constexpr with_shift_B_t<I> with_shift_B;
+inline constexpr with_rotate_B_t<I> with_rotate_B;
 template <int I>
 inline constexpr with_rotate_C_t<I> with_rotate_C;
 template <int I>
@@ -35,11 +35,11 @@ template <int I, class... Ts>
 inline constexpr std::optional<int> shift_A<with_shift_A_t<I>, Ts...> = I;
 
 template <class...>
-inline constexpr std::optional<int> shift_B = std::nullopt;
+inline constexpr std::optional<int> rotate_B = std::nullopt;
 template <class T, class... Ts>
-inline constexpr std::optional<int> shift_B<T, Ts...> = shift_B<Ts...>;
+inline constexpr std::optional<int> rotate_B<T, Ts...> = rotate_B<Ts...>;
 template <int I, class... Ts>
-inline constexpr std::optional<int> shift_B<with_shift_B_t<I>, Ts...> = I;
+inline constexpr std::optional<int> rotate_B<with_rotate_B_t<I>, Ts...> = I;
 
 template <class...>
 inline constexpr std::optional<int> rotate_C = std::nullopt;
@@ -67,7 +67,7 @@ inline constexpr bool is_shift_opt = false;
 template <int I>
 inline constexpr bool is_shift_opt<with_shift_A_t<I>> = true;
 template <int I>
-inline constexpr bool is_shift_opt<with_shift_B_t<I>> = true;
+inline constexpr bool is_shift_opt<with_rotate_B_t<I>> = true;
 template <int I>
 inline constexpr bool is_shift_opt<with_rotate_C_t<I>> = true;
 template <int I>
