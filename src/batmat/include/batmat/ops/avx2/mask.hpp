@@ -106,6 +106,19 @@ convert_mask<double, datapar::deduced_abi<double, 2>,
 
 template <>
 [[gnu::always_inline]] inline __m256
+convert_mask<float, datapar::deduced_abi<float, 8>, typename datapar::deduced_simd<int64_t, 8>>(
+    typename datapar::deduced_simd<int64_t, 8> mask) {
+    auto [lo, hi] = split<4, 4>(mask);
+    auto lo_eq64  = _mm256_cmpeq_epi64(static_cast<__m256i>(lo), _mm256_setzero_si256());
+    auto hi_eq64  = _mm256_cmpeq_epi64(static_cast<__m256i>(hi), _mm256_setzero_si256());
+    auto lo_eq32  = _mm256_permutevar8x32_epi32(lo_eq64, _mm256_setr_epi32(0, 2, 4, 6, 0, 0, 0, 0));
+    auto hi_eq32  = _mm256_permutevar8x32_epi32(hi_eq64, _mm256_setr_epi32(0, 0, 0, 0, 0, 2, 4, 6));
+    auto eq32     = _mm256_blend_epi32(lo_eq32, hi_eq32, 0xf0);
+    return _mm256_castsi256_ps(_mm256_xor_si256(eq32, _mm256_set1_epi32(-1)));
+}
+
+template <>
+[[gnu::always_inline]] inline __m256
 convert_mask<float, datapar::deduced_abi<float, 8>, typename datapar::deduced_simd<int32_t, 8>>(
     typename datapar::deduced_simd<int32_t, 8> mask) {
     return _mm256_castsi256_ps(
@@ -136,6 +149,16 @@ convert_mask<float, datapar::deduced_abi<float, 4>, typename datapar::deduced_si
     typename datapar::deduced_simd<int32_t, 4> mask) {
     return _mm_castsi128_ps(_mm_xor_si128(
         _mm_cmpeq_epi32(static_cast<__m128i>(mask), _mm_setzero_si128()), _mm_set1_epi32(-1)));
+}
+
+template <>
+[[gnu::always_inline]] inline __m128
+convert_mask<float, datapar::deduced_abi<float, 4>, typename datapar::deduced_simd<int64_t, 4>>(
+    typename datapar::deduced_simd<int64_t, 4> mask) {
+    auto eq64    = _mm256_cmpeq_epi64(static_cast<__m256i>(mask), _mm256_setzero_si256());
+    auto eq32    = _mm256_permutevar8x32_epi32(eq64, _mm256_setr_epi32(0, 2, 4, 6, 0, 0, 0, 0));
+    auto eq32_lo = _mm256_castsi256_si128(eq32);
+    return _mm_castsi128_ps(_mm_xor_si128(eq32_lo, _mm_set1_epi32(-1)));
 }
 
 template <>
