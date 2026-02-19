@@ -30,16 +30,20 @@ struct DefaultStride {
 };
 
 /// Shape and strides describing a batch of matrices, independent of any storage.
+///
 /// @tparam I
-///         Index type.
+///         Index and size type. Usually `std::ptrdiff_t` or `int`.
 /// @tparam S
-///         Inner stride (batch size).
+///         Inner stride type (batch size). Usually `std::integral_constant<I, N>` for some `N`.
 /// @tparam D
-///         Depth type.
+///         Batch depth type. Usually equal to @p S for a single batch, or @p I for a dynamic depth.
 /// @tparam L
-///         Layer stride type.
+///         Layer stride type. Usually @ref DefaultStride (which implies that the layer stride is
+///         equal to `outer_stride * outer_size()`), or @p I for a dynamic layer stride.
+///         Dynamic strides are used for subviews of views with a larger `outer_size()`.
 /// @tparam O
-///         Storage order (column or row major).
+///         %Matrix storage order, @ref guanaqo::StorageOrder::RowMajor "RowMajor" or
+///         @ref guanaqo::StorageOrder::ColMajor "ColMajor".
 /// @ingroup topic-matrix
 template <class I = index_t, class S = std::integral_constant<I, 1>, class D = I,
           class L = DefaultStride, StorageOrder O = StorageOrder::ColMajor>

@@ -33,19 +33,26 @@ static_assert(default_alignment_t<double, int, int>::value == 0);
 
 } // namespace detail
 
-/// Class for a batch of matrices that owns its storage.
+/// Owning array of matrices, stored in an efficient batched format.
+///
+/// @see @ref batmat::matrix::View for a detailed description of the layout and the available
+///           operations on arrays or batches of matrices.
+///
 /// @tparam T
 ///         Element value type.
 /// @tparam I
-///         Index type.
+///         Index and size type. Usually `std::ptrdiff_t` or `int`.
 /// @tparam S
-///         Inner stride (batch size).
+///         Inner stride type (batch size). Usually `std::integral_constant<I, N>` for some `N`.
 /// @tparam D
-///         Depth type.
+///         Batch depth type. Usually equal to @p S for a single batch, or @p I for a dynamic depth.
 /// @tparam O
-///         Storage order (column or row major).
+///         %Matrix storage order, @ref guanaqo::StorageOrder::RowMajor "RowMajor" or
+///         @ref guanaqo::StorageOrder::ColMajor "ColMajor".
 /// @tparam A
-///         Batch alignment type.
+///         Batch alignment type. Should be `std::integral_constant<I, N>` for some `N` that is a
+///         multiple of the alignment requirements of @p T. To enable vectorization, this should be
+///         `std::integral_constant<I, alignof(T) * S::value>`, which is the default.
 /// @ingroup topic-matrix
 template <class T, class I = index_t, class S = std::integral_constant<I, 1>, class D = I,
           StorageOrder O = StorageOrder::ColMajor, class A = detail::default_alignment_t<T, I, S>>

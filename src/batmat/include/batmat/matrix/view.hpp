@@ -12,7 +12,32 @@
 
 namespace batmat::matrix {
 
-/// Non-owning view of a batch of matrices.
+/// Non-owning view of an array of matrices, stored in an efficient batched format.
+///
+/// A view is a pointer to a buffer of elements, together with a layout describing how the elements
+/// are arranged in memory. Conceptually, a batmat::matrix::View represents a 3D array of shape
+/// `(depth, rows, cols)`, where `depth` is the number of matrices in the array. We refer to a
+/// single matrix in the batch as a "layer". A single layer can be accessed using
+/// [`view(layer)`](@ref View::operator()(index_type)const), and individual elements can be accessed
+/// using [`view(layer, row, col)`](@ref View::operator()(index_type,index_type,index_type)const).
+/// Each layer is either stored in column-major or row-major order, depending on the storage order
+/// of the view. Slicing and tiling are made possible by dynamic outer strides (_leading dimension_
+/// in BLAS parlance) and layer strides.
+///
+/// To enable efficient vectorization of linear algebra operations on views, the data is not stored
+/// in memory as a 3D array, but rather as a 4D array with an additional "batch" dimension, i.e.
+/// with shape `(batch_size, rows, cols, num_batches)`, where `batch_size` is the number of layers
+/// in each batch, and `num_batches = ceil(depth / batch_size)`. The corresponding strides are
+/// `(1, batch_size, outer_stride, layer_stride)` for the column-major case, and
+/// `(1, outer_stride, batch_size, layer_stride)` for the row-major case.
+///
+/// Batches can be accessed using the @ref batch() method, which returns a view of the batch with
+/// the same layout but with `depth` equal to `batch_size`. If the total depth is not a multiple of
+/// the batch size, the last batch is padded.
+///
+/// @see @ref batmat::matrix::Matrix for an owning array of matrices that handles allocation and
+///      converts to a @ref View.
+///
 /// @tparam T
 ///         Element value type (possibly const-qualified).
 /// @tparam I
@@ -26,7 +51,8 @@ namespace batmat::matrix {
 ///         equal to `outer_stride() * outer_size()`), or @p I for a dynamic layer stride.
 ///         Dynamic strides are used for subviews of views with a larger `outer_size()`.
 /// @tparam O
-///         Storage order (column or row major).
+///         %Matrix storage order, @ref guanaqo::StorageOrder::RowMajor "RowMajor" or
+///         @ref guanaqo::StorageOrder::ColMajor "ColMajor".
 /// @ingroup topic-matrix
 template <class T, class I = index_t, class S = std::integral_constant<I, 1>, class D = I,
           class L = DefaultStride, StorageOrder O = StorageOrder::ColMajor>
