@@ -1,12 +1,16 @@
+#include <batmat/dtypes.hpp>
 #include <batmat/linalg/copy.hpp>
 #include <batmat/linalg/gemm.hpp>
 #include <batmat/linalg/potrf.hpp>
 #include <batmat/matrix/matrix.hpp>
+#include <guanaqo/demangled-typename.hpp>
 #include <guanaqo/print.hpp>
+#include <batmat-version.h>
 #include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <limits>
+#include <print>
 #include <random>
 
 using batmat::index_t;
@@ -14,6 +18,19 @@ using batmat::real_t;
 namespace la = batmat::linalg;
 
 int main() {
+    std::println("{:+<79}", "");
+    std::println("batmat {} ({}:{})", BATMAT_VERSION, batmat_commit_hash, batmat_build_time);
+    std::println("{:+<79}", "");
+    std::println("Index type: {}", guanaqo::demangled_typename(typeid(batmat::index_t)));
+    std::println("Default dtype: {}", guanaqo::demangled_typename(typeid(batmat::real_t)));
+    std::println("Supported dtypes and vector lengths:");
+    batmat::types::foreach_dtype_vl([]<class T>(T) {
+        std::println(" - {} [{}]", guanaqo::demangled_typename(typeid(typename T::dtype)), T::vl);
+    });
+    std::println("{:+<79}", "");
+    // Select an appropriate vector length.
+    constexpr auto v = batmat::types::vl_at_most<real_t, 4>;
+    static_assert(v != 0, "No suitable vector length for real_t");
     using batch_size             = std::integral_constant<index_t, 4>;
     constexpr auto storage_order = batmat::matrix::StorageOrder::ColMajor;
     // Class representing a batch of four matrices.

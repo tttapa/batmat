@@ -1,6 +1,7 @@
 #pragma once
 
 #include <batmat/config.hpp>
+#include <batmat/dtypes.hpp>
 #include <batmat/matrix/layout.hpp>
 #include <batmat/simd.hpp>
 #include <gtest/gtest.h>
@@ -39,20 +40,8 @@ struct TestConfig {
     static constexpr StorageOrder orders[sizeof...(Orders)]{Orders...};
 };
 
-template <class...>
-struct CatTypes;
-
-template <class... T1>
-struct CatTypes<::testing::Types<T1...>> {
-    using type = ::testing::Types<T1...>;
-};
-template <class... T1, class... T2, class... Others>
-struct CatTypes<::testing::Types<T1...>, ::testing::Types<T2...>, Others...> {
-    using type = typename CatTypes<::testing::Types<T1..., T2...>, Others...>::type;
-};
-
 template <class T, index_t N>
-using OrderConfigs3 = ::testing::Types<
+using OrderConfigs3 = types::Types<
     TestConfig<T, N, ColMajor, ColMajor, ColMajor>,
 #if BATMAT_EXTENSIVE_TESTS
     TestConfig<T, N, ColMajor, ColMajor, RowMajor>, TestConfig<T, N, ColMajor, RowMajor, ColMajor>,
@@ -63,62 +52,28 @@ using OrderConfigs3 = ::testing::Types<
 
 template <class T, index_t N>
 using OrderConfigs2 =
-    ::testing::Types<TestConfig<T, N, ColMajor, ColMajor>,
+    types::Types<TestConfig<T, N, ColMajor, ColMajor>,
 #if BATMAT_EXTENSIVE_TESTS
-                     TestConfig<T, N, ColMajor, ColMajor>, TestConfig<T, N, ColMajor, RowMajor>,
-                     TestConfig<T, N, RowMajor, ColMajor>,
+                 TestConfig<T, N, ColMajor, ColMajor>, TestConfig<T, N, ColMajor, RowMajor>,
+                 TestConfig<T, N, RowMajor, ColMajor>,
 #endif
-                     TestConfig<T, N, RowMajor, RowMajor>>;
+                 TestConfig<T, N, RowMajor, RowMajor>>;
 
 template <class T, index_t N>
-using OrderConfigs1 = ::testing::Types<TestConfig<T, N, ColMajor>, TestConfig<T, N, RowMajor>>;
+using OrderConfigs1 = types::Types<TestConfig<T, N, ColMajor>, TestConfig<T, N, RowMajor>>;
 
-#if BATMAT_HAS_DOUBLE_VL_4
-template <template <class T, index_t N> class OrderConfigs>
-using TestConfigsDoubleSIMD = OrderConfigs<double, 4>;
-#elif BATMAT_HAS_DOUBLE_VL_8
-template <template <class T, index_t N> class OrderConfigs>
-using TestConfigsDoubleSIMD = OrderConfigs<double, 8>;
-#elif BATMAT_HAS_DOUBLE_VL_2
-template <template <class T, index_t N> class OrderConfigs>
-using TestConfigsDoubleSIMD = OrderConfigs<double, 2>;
-#else
-template <template <class T, index_t N> class OrderConfigs>
-using TestConfigsDoubleSIMD = ::testing::Types<>;
-#endif
-#if BATMAT_HAS_DOUBLE_VL_1
-template <template <class T, index_t N> class OrderConfigs>
-using TestConfigsDoubleScalar = OrderConfigs<double, 1>;
-#else
-template <template <class T, index_t N> class OrderConfigs>
-using TestConfigsDoubleScalar = ::testing::Types<>;
-#endif
+/// Meta-function that unpacks the dtypes and vector lengths of the given DtVls types,
+/// and applies the given ConfigsForDtVl template to them.
+template <template <class T, index_t N> class ConfigsForDtVl>
+struct UncurryDTypeVL {
+    template <class DtVl>
+    using type = ConfigsForDtVl<typename DtVl::dtype, DtVl::vl>;
+};
 
-#if BATMAT_HAS_FLOAT_VL_8
-template <template <class T, index_t N> class OrderConfigs>
-using TestConfigsFloatSIMD = OrderConfigs<float, 8>;
-#elif BATMAT_HAS_FLOAT_VL_16
-template <template <class T, index_t N> class OrderConfigs>
-using TestConfigsFloatSIMD = OrderConfigs<float, 16>;
-#elif BATMAT_HAS_FLOAT_VL_4
-template <template <class T, index_t N> class OrderConfigs>
-using TestConfigsFloatSIMD = OrderConfigs<float, 4>;
-#else
-template <template <class T, index_t N> class OrderConfigs>
-using TestConfigsFloatSIMD = ::testing::Types<>;
-#endif
-#if BATMAT_HAS_FLOAT_VL_1
-template <template <class T, index_t N> class OrderConfigs>
-using TestConfigsFloatScalar = OrderConfigs<float, 1>;
-#else
-template <template <class T, index_t N> class OrderConfigs>
-using TestConfigsFloatScalar = ::testing::Types<>;
-#endif
-
-template <template <class T, index_t N> class OrderConfigs>
-using TestConfigs = typename CatTypes<TestConfigsDoubleSIMD<OrderConfigs>,   //
-                                      TestConfigsDoubleScalar<OrderConfigs>, //
-                                      TestConfigsFloatSIMD<OrderConfigs>,
-                                      TestConfigsFloatScalar<OrderConfigs>>::type;
+/// Apply the given @p ConfigsForDtVl template to all supported combinations of dtypes and vector
+/// lengths and convert the result to a Google Test type list.
+template <template <class T, index_t N> class ConfigsForDtVl>
+using TestConfigs = types::FlatMap_t<UncurryDTypeVL<ConfigsForDtVl>::template type,
+                                     types::dtype_vl_all>::template into<::testing::Types>;
 
 } // namespace batmat::tests

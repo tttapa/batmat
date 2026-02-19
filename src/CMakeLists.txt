@@ -10,6 +10,7 @@ endif()
 # Configuration options
 # ------------------------------------------------------------------------------
 add_library(config INTERFACE)
+list(GET BATMAT_DTYPES 0 BATMAT_DEFAULT_DTYPE)
 set(BATMAT_VL_MACROS "")
 set(BATMAT_FOREACH_DTYPE_MACRO "")
 set(BATMAT_FOREACH_DTYPE_VL_MACRO "")
@@ -26,6 +27,10 @@ foreach (DType_ IN LISTS BATMAT_DTYPES)
     endforeach()
     string(PREPEND BATMAT_FOREACH_VL_MACRO "#define BATMAT_FOREACH_VL_${DTypeU}(X, ...)")
     string(APPEND BATMAT_VL_MACROS "\n${BATMAT_FOREACH_VL_MACRO}\n")
+    if ("${DType_}" STREQUAL "${BATMAT_DEFAULT_DTYPE}")
+        string(APPEND BATMAT_VL_MACROS "\n#define BATMAT_FOREACH_VL_DEFAULT(X, ...) ")
+        string(APPEND BATMAT_VL_MACROS "BATMAT_FOREACH_VL_${DTypeU}(X, __VA_ARGS__)\n")
+    endif()
 endforeach()
 string(PREPEND BATMAT_FOREACH_DTYPE_MACRO "#define BATMAT_FOREACH_DTYPE(X, ...)")
 string(PREPEND BATMAT_FOREACH_DTYPE_VL_MACRO "#define BATMAT_FOREACH_DTYPE_VL(X, ...)")
@@ -54,6 +59,7 @@ add_library(batmat
 target_sources(batmat PUBLIC FILE_SET HEADERS
     BASE_DIRS "batmat/include"
     FILES "batmat/include/batmat/assume.hpp"
+          "batmat/include/batmat/dtypes.hpp"
           "batmat/include/batmat/kib.hpp"
           "batmat/include/batmat/loop.hpp"
           "batmat/include/batmat/lut.hpp"

@@ -15,9 +15,7 @@ option(BATMAT_WITH_OPENBLAS
     "Use the OpenBLAS library" Off)
 option(BATMAT_WITH_OPENMP
     "Enable parallelization using OpenMP" Off)
-set(BATMAT_DENSE_REAL_TYPE "double" CACHE STRING
-    "The main floating point type for representing real numbers")
-set(BATMAT_DENSE_INDEX_TYPE "long long" CACHE STRING
+set(BATMAT_DEFAULT_INDEX_TYPE "long long" CACHE STRING
     "The main integer type for indices and sizes")
 set(BATMAT_DTYPES "double" CACHE STRING
     "The data types to instantiate batmat for (semicolon-separated, e.g., 'double;float')")

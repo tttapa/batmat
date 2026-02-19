@@ -8,9 +8,9 @@ namespace batmat {
 #ifdef __clangd__
 using real_t = double; // clangd does not support std::float128_t etc.
 #else
-using real_t  = @BATMAT_DENSE_REAL_TYPE@;
+using real_t  = @BATMAT_DEFAULT_DTYPE@;
 #endif
-using index_t = @BATMAT_DENSE_INDEX_TYPE@;
+using index_t = @BATMAT_DEFAULT_INDEX_TYPE@;
 
 } // namespace batmat
 
