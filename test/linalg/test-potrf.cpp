@@ -81,7 +81,7 @@ TYPED_TEST_P(SyrkPotrfTest, syrkPotrfLinplace) {
         for (auto n : batmat::tests::sizes) {
             const auto D0 = [&] {
                 auto D = this->template get_matrix<1>(m, m);
-                D.view().add_to_diagonal(static_cast<TypeParam::value_type>(10 * m));
+                D.view().add_to_diagonal(static_cast<TypeParam::value_type>(10 * m + n));
                 return D;
             }();
             const auto A = this->template get_matrix<0>(m, n);
@@ -112,7 +112,7 @@ TYPED_TEST_P(SyrkPotrfTest, syrkDiagPotrfLinplace) {
         for (auto n : batmat::tests::sizes) {
             const auto D0 = [&] {
                 auto D = this->template get_matrix<1>(m, m);
-                D.view().add_to_diagonal(static_cast<TypeParam::value_type>(10 * m));
+                D.view().add_to_diagonal(static_cast<TypeParam::value_type>(10 * m + n));
                 return D;
             }();
             const auto A = this->template get_matrix<0>(m, n);

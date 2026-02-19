@@ -115,7 +115,7 @@ TYPED_TEST_P(TrsmTest, trsmRLRotateA) {
             const auto C = this->template get_matrix<1>(n, m);
             auto D       = this->template get_matrix<2>(n, m);
             trsm(C, tril(A), D, with_rotate_A<-1>);
-            using EMat = Eigen::MatrixX<batmat::real_t>;
+            using EMat = Eigen::MatrixX<typename TypeParam::value_type>;
             for (batmat::index_t l = 0; l < C.depth(); ++l) {
                 auto Al     = as_eigen(A(l));
                 auto Cl     = as_eigen(C((l + C.depth() - 1) % C.depth()));
@@ -234,7 +234,7 @@ TYPED_TEST_P(TrsmInPlaceTest, trsmRLRotateA) {
             const auto D0 = this->template get_matrix<1>(n, m);
             auto D        = D0;
             trsm(D, tril(A), with_rotate_A<-1>);
-            using EMat = Eigen::MatrixX<batmat::real_t>;
+            using EMat = Eigen::MatrixX<typename TypeParam::value_type>;
             for (batmat::index_t l = 0; l < D.depth(); ++l) {
                 auto Al     = as_eigen(A(l));
                 auto D0l    = as_eigen(D0((l + D.depth() - 1) % D.depth()));
