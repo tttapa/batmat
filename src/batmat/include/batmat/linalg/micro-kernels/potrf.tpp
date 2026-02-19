@@ -39,6 +39,8 @@ auto apply_diag(auto x, auto d) noexcept {
 /// @param  k1 Number of columns in A1.
 /// @param  k2 Number of columns in A2.
 /// @param  regularization Regularization added to the diagonal of C before factorization.
+/// @param  diag k1-vector that scales the columns of A1 before multiplying by its transpose.
+///              Used only if enabled in the kernel config.
 template <class T, class Abi, KernelConfig Conf, index_t RowsReg, StorageOrder O1, StorageOrder O2>
 [[gnu::hot, gnu::flatten]] void
 potrf_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T, Abi, O2> A2,
@@ -143,6 +145,8 @@ potrf_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T, Ab
 /// @param  D RowsReg×ColsReg.
 /// @param  k1 Number of columns in A1 and B1.
 /// @param  k2 Number of columns in A2 and B2.
+/// @param  diag k1-vector that scales the columns of A1 before multiplying by its transpose.
+///              Used only if enabled in the kernel config.
 template <class T, class Abi, KernelConfig Conf, index_t RowsReg, index_t ColsReg, StorageOrder O1,
           StorageOrder O2>
 [[gnu::hot, gnu::flatten]]
