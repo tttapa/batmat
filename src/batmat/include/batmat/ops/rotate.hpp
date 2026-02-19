@@ -56,10 +56,10 @@ template <int S, class F, class Abi>
     assert(s >= 0 || static_cast<size_t>(-s) < x.size());
     constexpr size_t N                                          = x.size();
     static constinit std::array<int64_t, 2 * N - 1> indices_lut = [] {
-        std::array<int64_t, 2 * N - 1> indices_lut{};
+        std::array<int64_t, 2 * N - 1> lut{};
         for (size_t i = 0; i < 2 * N - 1; ++i)
-            indices_lut[i] = static_cast<int64_t>((i + 1) % N);
-        return indices_lut;
+            lut[i] = static_cast<int64_t>((i + 1) % N);
+        return lut;
     }();
     // rot(+1, [0, 1, 2, 3, 4, 5, 6, 7]) == [7, 0, 1, 2, 3, 4, 5, 6]
     // rot(+2, [0, 1, 2, 3, 4, 5, 6, 7]) == [6, 7, 0, 1, 2, 3, 4, 5]
@@ -90,10 +90,10 @@ template <int S, class F, class Abi>
     assert(s >= 0 || static_cast<size_t>(-s) < x.size());
     constexpr size_t N                                          = x.size();
     static constinit std::array<int64_t, 2 * N - 1> indices_lut = [] {
-        std::array<int64_t, 2 * N - 1> indices_lut{};
+        std::array<int64_t, 2 * N - 1> lut{};
         for (size_t i = 0; i < 2 * N - 1; ++i)
-            indices_lut[i] = static_cast<int64_t>((i + 1) % N);
-        return indices_lut;
+            lut[i] = static_cast<int64_t>((i + 1) % N);
+        return lut;
     }();
     static constinit const int64_t *p = indices_lut.data() + N - 1;
     if (s < 0)
