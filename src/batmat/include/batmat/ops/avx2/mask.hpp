@@ -173,25 +173,19 @@ convert_mask<double, datapar::deduced_abi<double, 2>, typename datapar::deduced_
         _mm_cmpeq_epi64(static_cast<__m128i>(mask), _mm_setzero_si128()), _mm_set1_epi64x(-1)));
 }
 
-#if !BATMAT_WITH_GSI_HPC_SIMD
 template <>
 [[gnu::always_inline]] inline __m128d
 convert_mask<double, datapar::deduced_abi<double, 2>, typename datapar::deduced_simd<int32_t, 2>>(
     typename datapar::deduced_simd<int32_t, 2> mask) {
-    return _mm_castsi128_pd(_mm_cvtepi32_epi64(_mm_xor_si128(
-        _mm_cmpeq_epi32(static_cast<__m128i>(mask), _mm_setzero_si128()), _mm_set1_epi32(-1))));
-}
-#else
-template <>
-[[gnu::always_inline]] inline __m128d
-convert_mask<double, datapar::deduced_abi<double, 2>, typename datapar::deduced_simd<int32_t, 2>>(
-    typename datapar::deduced_simd<int32_t, 2> mask) {
+#if BATMAT_WITH_GSI_HPC_SIMD
     // TODO: cannot cast 64-bit std::datapar::simd to __m128i, so we need to extend manually
     auto w = static_cast<__m128i>(cat(mask, decltype(mask){}));
+#else
+    auto w = static_cast<__m128i>(mask);
+#endif
     return _mm_castsi128_pd(_mm_cvtepi32_epi64(
         _mm_xor_si128(_mm_cmpeq_epi32(w, _mm_setzero_si128()), _mm_set1_epi32(-1))));
 }
-#endif
 
 template <>
 [[gnu::always_inline]] inline __m256
@@ -233,20 +227,16 @@ convert_mask<double, datapar::deduced_abi<double, 2>, typename datapar::deduced_
                         _mm_cmpeq_epi32(static_cast<__m128i>(x), zero));
 }
 
-#if !BATMAT_WITH_GSI_HPC_SIMD
 [[gnu::always_inline]] inline __m128i compare_ge_0(datapar::deduced_simd<int32_t, 2> x) {
     __m128i zero = _mm_setzero_si128();
-    return _mm_or_si128(_mm_cmpgt_epi64(static_cast<__m128i>(x), zero),
-                        _mm_cmpeq_epi64(static_cast<__m128i>(x), zero));
-}
-#else
-[[gnu::always_inline]] inline __m128i compare_ge_0(datapar::deduced_simd<int32_t, 2> x) {
-    __m128i zero = _mm_setzero_si128();
+#if BATMAT_WITH_GSI_HPC_SIMD
     // TODO: cannot cast 64-bit std::datapar::simd to __m128i, so we need to extend manually
-    auto w = static_cast<__m128i>(cat(x, decltype(x){-1}));
+    auto w = static_cast<__m128i>(cat(x, decltype(x){-1, -1}));
+#else
+    auto w = static_cast<__m128i>(x);
+#endif
     return _mm_or_si128(_mm_cmpgt_epi64(w, zero), _mm_cmpeq_epi64(w, zero));
 }
-#endif
 
 [[gnu::always_inline]] inline __m256i compare_ge_0(datapar::deduced_simd<int64_t, 4> x) {
     __m256i zero = _mm256_setzero_si256();
