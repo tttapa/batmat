@@ -1,3 +1,4 @@
+#include <batmat/linalg/gemm.hpp>
 #include <batmat/linalg/hyhound.hpp>
 #include <Eigen/Cholesky>
 #include <gtest/gtest.h>
@@ -15,6 +16,7 @@ TYPED_TEST_SUITE_P(HyhTest);
 
 TYPED_TEST_P(HyhTest, hyhoundL) {
     using batmat::linalg::hyhound_diag;
+    using batmat::linalg::syrk;
     using batmat::linalg::tril;
     using EMat = Eigen::MatrixX<typename TypeParam::value_type>;
     for (auto n : batmat::tests::sizes)
@@ -29,18 +31,18 @@ TYPED_TEST_P(HyhTest, hyhoundL) {
             auto L        = L0;
             auto A        = A0;
             hyhound_diag(tril(L), A, d);
+            syrk(tril(L)); // Compute the backward error
 
             this->check(
                 [&](auto &&Al, auto &&dl, auto &&Ll) {
                     EMat LLᵀ = tri<Lower>(Ll) * tri<Lower>(Ll).transpose();
                     LLᵀ += Al * dl.asDiagonal() * Al.transpose();
-                    return LLᵀ.template selfadjointView<Lower>().llt().matrixL().toDenseMatrix();
+                    return tri<Lower>(LLᵀ);
                 },
                 [&](auto l, auto &&res, auto &&ref, auto &&, auto &&, auto &&L0) {
                     const auto resL = tri<Lower>(res), resU = tri<StrictlyUpper>(res);
-                    EXPECT_THAT(resL, EigenAlmostEqual(ref, this->tolerance)) << l;
-                    EXPECT_THAT(resU, EigenAlmostEqual(tri<StrictlyUpper>(L0), this->tolerance))
-                        << l;
+                    EXPECT_THAT(resL, EigenAlmostEqualRel(ref, this->tolerance_n(n))) << l;
+                    EXPECT_THAT(resU, EigenEqual(tri<StrictlyUpper>(L0))) << l;
                 },
                 L, A0, d, L0);
         }

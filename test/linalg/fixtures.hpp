@@ -56,6 +56,10 @@ class LinalgTest : public ::testing::Test {
 
     const value_type tolerance =
         std::pow(std::numeric_limits<value_type>::epsilon(), value_type(0.55));
+    value_type tolerance_n(index_t n) const {
+        return static_cast<value_type>(n) *
+               std::pow(std::numeric_limits<value_type>::epsilon(), value_type(0.6));
+    }
 };
 
 } // namespace batmat::tests
