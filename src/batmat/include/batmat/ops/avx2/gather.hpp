@@ -75,14 +75,17 @@ gather(datapar::deduced_simd<double, 2> src, __m128d mask, datapar::deduced_simd
         static_cast<__m128d>(src), base_addr, static_cast<__m128i>(vindex), mask, Scale)};
 }
 
-#if !BATMAT_WITH_GSI_HPC_SIMD // TODO
 template <int Scale = sizeof(double)>
 [[gnu::always_inline]] inline datapar::deduced_simd<double, 2>
 gather(datapar::deduced_simd<double, 2> src, __m128d mask, datapar::deduced_simd<int32_t, 2> vindex,
        const double *base_addr) {
-    return datapar::deduced_simd<double, 2>{_mm_mask_i32gather_pd(
-        static_cast<__m128d>(src), base_addr, static_cast<__m128i>(vindex), mask, Scale)};
-}
+#if BATMAT_WITH_GSI_HPC_SIMD
+    auto vindex128 = cat(vindex, decltype(vindex){}); // high 128 bits to zero
+#else
+    auto vindex128 = vindex;
 #endif
+    return datapar::deduced_simd<double, 2>{_mm_mask_i32gather_pd(
+        static_cast<__m128d>(src), base_addr, static_cast<__m128i>(vindex128), mask, Scale)};
+}
 
 } // namespace batmat::ops::detail
