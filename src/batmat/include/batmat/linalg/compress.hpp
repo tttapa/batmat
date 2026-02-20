@@ -69,7 +69,7 @@ template <class T, class Abi, index_t N = 8, StorageOrder OAi>
     for (index_t c = 0; c < C; ++c) {
         c1_simd += isimd{1}; // current column index + 1
         const simd Sc = types::aligned_load(&S_in(0, c, 0));
-        auto Sc_msk   = !(Sc == 0);
+        auto Sc_msk   = !(Sc == simd{0});
 #if 0
         if (all_of(Sc_msk)) {
             commit_fast(Sc, c);
@@ -140,7 +140,7 @@ index_t compress_masks_count(view<const T, Abi> S_in) {
 
     for (index_t c = 0; c < C; ++c) {
         const simd Sc = types::aligned_load(&S_in(0, c, 0));
-        auto Sc_msk   = !(Sc == 0);
+        auto Sc_msk   = !(Sc == simd{0});
         BATMAT_FULLY_UNROLLED_FOR (auto &h : hist) {
 #if BATMAT_WITH_GSI_HPC_SIMD // TODO
             auto h_ = h;
@@ -214,8 +214,8 @@ index_t compress_masks_sqrt(view<const T, Abi, OAi> A_in, view<const T, Abi> S_i
     BATMAT_ASSERT(S_sign_out.rows() == 0 || A_in.depth() == S_sign_out.depth());
     BATMAT_ASSERT(S_sign_out.rows() == 0 || A_out.cols() == S_sign_out.rows());
     BATMAT_ASSERT(S_sign_out.rows() == 0 || S_sign_out.cols() == 1);
-    using std::abs;
     using std::copysign;
+    using std::fabs;
     using std::sqrt;
     auto writeS = [S_sign_out] [[gnu::always_inline]] (auto gather_S, index_t j) {
         if (S_sign_out.rows() > 0)
@@ -223,7 +223,7 @@ index_t compress_masks_sqrt(view<const T, Abi, OAi> A_in, view<const T, Abi> S_i
     };
     auto writeA = [A_out] [[gnu::always_inline]] (auto gather_A, auto gather_S, index_t r,
                                                   index_t j) {
-        datapar::aligned_store(sqrt(abs(gather_S)) * gather_A, &A_out(0, r, j));
+        datapar::aligned_store(sqrt(fabs(gather_S)) * gather_A, &A_out(0, r, j));
     };
     return compress_masks_impl<T, Abi, N, OAi>(A_in, S_in, writeS, writeA);
 }

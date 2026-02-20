@@ -14,7 +14,11 @@ gather(datapar::deduced_simd<float, 8> src, __m256 mask, datapar::deduced_simd<i
     __m128 src_lo = _mm256_castps256_ps128(src256), src_hi = _mm256_extractf128_ps(src256, 1);
     __m128 mask_lo = _mm256_castps256_ps128(mask), mask_hi = _mm256_extractf128_ps(mask, 1);
     // split 8 x 64-bit indices into low and high 4 x 64-bit parts
+#if BATMAT_WITH_GSI_HPC_SIMD
+    auto [idx_lo, idx_hi] = chunk<datapar::deduced_simd<int64_t, 4>>(vindex);
+#else
     auto [idx_lo, idx_hi] = split<4, 4>(vindex);
+#endif
     auto idx_lo_256 = static_cast<__m256i>(idx_lo), idx_hi_256 = static_cast<__m256i>(idx_hi);
     // two gathers of 4 floats each using 4 x 64-bit indices
     __m128 g_lo = _mm256_mask_i64gather_ps(src_lo, base_addr, idx_lo_256, mask_lo, Scale);
