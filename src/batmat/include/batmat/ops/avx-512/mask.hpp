@@ -33,6 +33,20 @@ struct mask_type<double, datapar::deduced_abi<double, 2>> {
 
 template <>
 [[gnu::always_inline]] inline __mmask16
+convert_mask<float, datapar::deduced_abi<float, 16>, typename datapar::deduced_simd<int64_t, 16>>(
+    typename datapar::deduced_simd<int64_t, 16> mask) {
+#if BATMAT_WITH_GSI_HPC_SIMD
+    auto [lo, hi] = chunk<datapar::deduced_simd<int64_t, 8>>(mask);
+#else
+    auto [lo, hi] = split<8, 8>(mask);
+#endif
+    __mmask16 mask_lo = _mm512_cmpneq_epi64_mask(static_cast<__m512i>(lo), _mm512_setzero_si512()),
+              mask_hi = _mm512_cmpneq_epi64_mask(static_cast<__m512i>(hi), _mm512_setzero_si512());
+    return static_cast<__mmask16>(mask_lo | (mask_hi << 8));
+}
+
+template <>
+[[gnu::always_inline]] inline __mmask16
 convert_mask<float, datapar::deduced_abi<float, 16>, typename datapar::deduced_simd<int32_t, 16>>(
     typename datapar::deduced_simd<int32_t, 16> mask) {
     return _mm512_cmpneq_epi32_mask(static_cast<__m512i>(mask), _mm512_setzero_si512());
