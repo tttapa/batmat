@@ -1,0 +1,325 @@
+<!-- HTML header for doxygen 1.16.1-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.16.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>batmat: batmat/include/batmat/linalg/gemm.hpp File Reference</title>
+<link rel="icon" href="batmat-small.png" type="image/x-icon" />
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+window.MathJax = {
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  },
+  loader: {
+    load: ['[tex]/ams']
+  },
+  tex: {
+    macros: {    Reals: "{\\mathrm{I\\!R}}",
+    Nats: "{\\mathrm{I\\!N}}",
+    Cplx: "{\\mathbb{C}}",
+    R: "{\\Reals}",
+    N: "{\\Nats}",
+    C: "{\\Cplx}",
+    Rn: "{\\Reals^n}",
+    Rm: "{\\Reals^m}",
+    gph: "{\\operatorname{\\mathbf{gph}}}",
+    zer: "{\\operatorname{\\mathbf{zer}}}",
+    fix: "{\\operatorname{\\mathbf{fix}}}",
+    minimize: "{\\operatorname*{\\mathbf{minimize}}}",
+    st: "{\\operatorname*{\\mathbf{s.\\!t.}}}",
+    argmin: "{\\operatorname*{\\mathbf{arg\\,min}}}",
+    argmax: "{\\operatorname*{\\mathbf{arg\\,max}}}",
+    subjto: "{\\operatorname*{\\mathbf{subject\\;to}}}",
+    prox: "{\\operatorname{\\mathbf{prox}}}",
+    Hilb: "{\\mathcal{H}}",
+    proj: ["{\\operatorname{\\mathbf{\\Pi}_\\mathnormal{#1}}}",1],
+    dist: "{\\operatorname{\\mathbf{dist}}}",
+    Id: "{\\mathrm{Id}}",
+    I: "{\\mathrm{I}}",
+    one: "{\\mathbf{1}}",
+    defeq: "{\\triangleq}",
+    inprod: ["{\\left\\langle {#1} \\,\\middle|\\, {#2} \\right\\rangle}",2],
+    norm: ["{\\left\\| {#1} \\vphantom{X} \\right\\|}",1],
+    normsq: ["{\\norm{#1}^2}",1],
+    defset: ["{\\left\\{ {#1} \\;\\middle|\\; {#2} \\right\\}}",2],
+    tp: ["{#1^\\top}",1],
+    ttp: ["{#1^{\\!\\top\\!}}",1],
+    herm: ["{#1^\\mathrm{H}}",1],
+    invherm: ["{#1^{-\\mathrm{H}}}",1],
+    inv: ["{#1^{-1}}",1],
+    pinv: ["{#1^\\dagger}",1],
+    lconj: "{\\overline}",
+    sconj: ["{#1^*}",1],
+    iddots: "{\\mathinner{\\kern1mu\\raise1pt{.}\\kern2mu\\raise4pt{.}\\kern2mu\\raise7pt{\\Rule{0pt}{7pt}{0pt}.}\\kern1mu}}",
+    imagfun: ["{\\left(#1\\right)\\left(#2\\right)}",2],
+    Lagr: "{\\mathcal{L}}",
+    jac: "{\\mathrm{J}}",
+    dft: "{\\operatorname{\\mathbf{dft}}}",
+    cbrt: ["{\\sqrt[3]{#1}}",1],
+    sgn: "{\\operatorname{\\mathbf{sgn}}}",
+    setmap: "{\\rightrightarrows}",
+    lammin: "{\\lambda_\\text{min}}",
+    lammax: "{\\lambda_\\text{max}}",
+    Sc: "{\\mathcal{S}}",
+    Scstar: "{\\mathcal{S}^*}",
+    diag: "{\\operatorname{\\mathbf{diag}}}",
+    blkdiag: "{\\operatorname{\\mathbf{blkdiag}}}",
+    posdef: "{\\succ}",
+    possdef: "{\\succeq}",
+    half: "{\\tfrac{1}{2}}",
+    hhbar: "{\\hbar}",
+    barxuk: "{\\bar x^k\\!, \\bar u^k}",
+    },
+    packages: ['base','configmacros','newcommand','ams']
+  }
+};
+window.MathJax.tex.tags = 'ams';
+</script>
+<script type="text/javascript" id="MathJax-script" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script type="text/javascript" src="darkmode_toggle.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="batmat-small.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">batmat<span id="projectnumber">&#160;<code><a href="/batmat/index.html">main</a></code></span>
+   </div>
+   <div id="projectbrief">Batched linear algebra routines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.16.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('gemm_8hpp.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">gemm.hpp File Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &lt;<a class="el" href="kib_8hpp_source.html">batmat/kib.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="copy_8hpp_source.html">batmat/linalg/copy.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="flops_8hpp_source.html">batmat/linalg/flops.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="micro-kernels_2gemm_8hpp_source.html">batmat/linalg/micro-kernels/gemm.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="shift_8hpp_source.html">batmat/linalg/shift.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="simdify_8hpp_source.html">batmat/linalg/simdify.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="triangular_8hpp_source.html">batmat/linalg/triangular.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="uview_8hpp_source.html">batmat/linalg/uview.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="loop_8hpp_source.html">batmat/loop.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="storage_8hpp_source.html">batmat/matrix/storage.hpp</a>&gt;</code><br />
+<code>#include &lt;guanaqo/trace.hpp&gt;</code><br />
+<code>#include &lt;optional&gt;</code><br />
+</div>
+<p><a href="gemm_8hpp_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
+Multiplication of batches of general matrices</h2></td></tr>
+<tr class="memitem:ga56b98ed114604544b0806d8b191b119e" id="r_ga56b98ed114604544b0806d8b191b119e"><td class="memTemplParams" colspan="2">template&lt;simdifiable VA, simdifiable VB, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga56b98ed114604544b0806d8b191b119e template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga56b98ed114604544b0806d8b191b119e">batmat::linalg::gemm</a> (VA &amp;&amp;A, VB &amp;&amp;B, VD &amp;&amp;D, <a class="el" href="group__topic-linalg.html#structbatmat_1_1linalg_1_1TilingOptions">TilingOptions</a> packing={}, Opts... opts)</td></tr>
+<tr class="memdesc:ga56b98ed114604544b0806d8b191b119e"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = A B.  <br /></td></tr>
+<tr class="memitem:ga2ecaacbba5614bcbbf95c79023424e64" id="r_ga2ecaacbba5614bcbbf95c79023424e64"><td class="memTemplParams" colspan="2">template&lt;simdifiable VA, simdifiable VB, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga2ecaacbba5614bcbbf95c79023424e64 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga2ecaacbba5614bcbbf95c79023424e64">batmat::linalg::gemm_neg</a> (VA &amp;&amp;A, VB &amp;&amp;B, VD &amp;&amp;D, <a class="el" href="group__topic-linalg.html#structbatmat_1_1linalg_1_1TilingOptions">TilingOptions</a> packing={}, Opts... opts)</td></tr>
+<tr class="memdesc:ga2ecaacbba5614bcbbf95c79023424e64"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = -A B.  <br /></td></tr>
+<tr class="memitem:ga1177461212428f6b96e21abff82af6a3" id="r_ga1177461212428f6b96e21abff82af6a3"><td class="memTemplParams" colspan="2">template&lt;simdifiable VA, simdifiable VB, simdifiable VC, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga1177461212428f6b96e21abff82af6a3 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga1177461212428f6b96e21abff82af6a3">batmat::linalg::gemm_add</a> (VA &amp;&amp;A, VB &amp;&amp;B, VC &amp;&amp;C, VD &amp;&amp;D, <a class="el" href="group__topic-linalg.html#structbatmat_1_1linalg_1_1TilingOptions">TilingOptions</a> packing={}, Opts... opts)</td></tr>
+<tr class="memdesc:ga1177461212428f6b96e21abff82af6a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = C + A B.  <br /></td></tr>
+<tr class="memitem:ga8c44e915ee2cda546e7dc005ab1af1c4" id="r_ga8c44e915ee2cda546e7dc005ab1af1c4"><td class="memTemplParams" colspan="2">template&lt;simdifiable VA, simdifiable VB, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga8c44e915ee2cda546e7dc005ab1af1c4 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga8c44e915ee2cda546e7dc005ab1af1c4">batmat::linalg::gemm_add</a> (VA &amp;&amp;A, VB &amp;&amp;B, VD &amp;&amp;D, <a class="el" href="group__topic-linalg.html#structbatmat_1_1linalg_1_1TilingOptions">TilingOptions</a> packing={}, Opts... opts)</td></tr>
+<tr class="memdesc:ga8c44e915ee2cda546e7dc005ab1af1c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">D += A B.  <br /></td></tr>
+<tr class="memitem:ga6ba27579e2442c5a7689d0577f63478e" id="r_ga6ba27579e2442c5a7689d0577f63478e"><td class="memTemplParams" colspan="2">template&lt;simdifiable VA, simdifiable VB, simdifiable VC, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga6ba27579e2442c5a7689d0577f63478e template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga6ba27579e2442c5a7689d0577f63478e">batmat::linalg::gemm_sub</a> (VA &amp;&amp;A, VB &amp;&amp;B, VC &amp;&amp;C, VD &amp;&amp;D, <a class="el" href="group__topic-linalg.html#structbatmat_1_1linalg_1_1TilingOptions">TilingOptions</a> packing={}, Opts... opts)</td></tr>
+<tr class="memdesc:ga6ba27579e2442c5a7689d0577f63478e"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = C - A B.  <br /></td></tr>
+<tr class="memitem:ga611ecdda112c005fe2d42372a92aea7b" id="r_ga611ecdda112c005fe2d42372a92aea7b"><td class="memTemplParams" colspan="2">template&lt;simdifiable VA, simdifiable VB, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga611ecdda112c005fe2d42372a92aea7b template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga611ecdda112c005fe2d42372a92aea7b">batmat::linalg::gemm_sub</a> (VA &amp;&amp;A, VB &amp;&amp;B, VD &amp;&amp;D, <a class="el" href="group__topic-linalg.html#structbatmat_1_1linalg_1_1TilingOptions">TilingOptions</a> packing={}, Opts... opts)</td></tr>
+<tr class="memdesc:ga611ecdda112c005fe2d42372a92aea7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">D -= A B.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
+Multiplication of batches of matrices with symmetric results</h2></td></tr>
+<tr class="memitem:ga59ec2e76f7d857d495fcc518d19f2a77" id="r_ga59ec2e76f7d857d495fcc518d19f2a77"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SA, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SD, simdifiable VA, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga59ec2e76f7d857d495fcc518d19f2a77 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga59ec2e76f7d857d495fcc518d19f2a77">batmat::linalg::syrk</a> (<a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VA, SA &gt; A, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VD, SD &gt; D, Opts... opts)</td></tr>
+<tr class="memdesc:ga59ec2e76f7d857d495fcc518d19f2a77"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = A Aᵀ with D symmetric.  <br /></td></tr>
+<tr class="memitem:ga51fc97f0f6c6ce55401630c8b57889e9" id="r_ga51fc97f0f6c6ce55401630c8b57889e9"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SD, class TA, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga51fc97f0f6c6ce55401630c8b57889e9 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga51fc97f0f6c6ce55401630c8b57889e9">batmat::linalg::syrk</a> (TA &amp;&amp;A, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VD, SD &gt; D, Opts... opts)</td></tr>
+<tr class="memdesc:ga51fc97f0f6c6ce55401630c8b57889e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = A Aᵀ with D symmetric.  <br /></td></tr>
+<tr class="memitem:ga24000b15cd231d821eb1292ad3631c2b" id="r_ga24000b15cd231d821eb1292ad3631c2b"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SD, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga24000b15cd231d821eb1292ad3631c2b template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga24000b15cd231d821eb1292ad3631c2b">batmat::linalg::syrk</a> (<a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VD, SD &gt; D, Opts... opts)</td></tr>
+<tr class="memdesc:ga24000b15cd231d821eb1292ad3631c2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = D Dᵀ with D triangular on input and symmetric on output.  <br /></td></tr>
+<tr class="memitem:ga038f5f115bd19ed4f3ca205ca4728fc3" id="r_ga038f5f115bd19ed4f3ca205ca4728fc3"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SA, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SD, simdifiable VA, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga038f5f115bd19ed4f3ca205ca4728fc3 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga038f5f115bd19ed4f3ca205ca4728fc3">batmat::linalg::syrk_neg</a> (<a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VA, SA &gt; A, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VD, SD &gt; D, Opts... opts)</td></tr>
+<tr class="memdesc:ga038f5f115bd19ed4f3ca205ca4728fc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = -A Aᵀ with D symmetric.  <br /></td></tr>
+<tr class="memitem:ga8a698c5e4610420a9d7fcf483f41f452" id="r_ga8a698c5e4610420a9d7fcf483f41f452"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SD, class TA, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga8a698c5e4610420a9d7fcf483f41f452 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga8a698c5e4610420a9d7fcf483f41f452">batmat::linalg::syrk_neg</a> (TA &amp;&amp;A, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VD, SD &gt; D, Opts... opts)</td></tr>
+<tr class="memdesc:ga8a698c5e4610420a9d7fcf483f41f452"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = A Aᵀ with D symmetric.  <br /></td></tr>
+<tr class="memitem:ga8d63dfa8eaa22949ca78e2241a608a0f" id="r_ga8d63dfa8eaa22949ca78e2241a608a0f"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SD, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga8d63dfa8eaa22949ca78e2241a608a0f template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga8d63dfa8eaa22949ca78e2241a608a0f">batmat::linalg::syrk_neg</a> (<a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VD, SD &gt; D, Opts... opts)</td></tr>
+<tr class="memdesc:ga8d63dfa8eaa22949ca78e2241a608a0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = -D Dᵀ with D triangular on input and symmetric on output.  <br /></td></tr>
+<tr class="memitem:ga94668e960bcf7b6a7ffe8902d799079a" id="r_ga94668e960bcf7b6a7ffe8902d799079a"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SD, simdifiable VA, simdifiable VC, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga94668e960bcf7b6a7ffe8902d799079a template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga94668e960bcf7b6a7ffe8902d799079a">batmat::linalg::syrk_add</a> (VA &amp;&amp;A, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VC, SD &gt; C, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VD, SD &gt; D, Opts... opts)</td></tr>
+<tr class="memdesc:ga94668e960bcf7b6a7ffe8902d799079a"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = C + A Aᵀ with C, D symmetric.  <br /></td></tr>
+<tr class="memitem:gaaf33c861e820d1d87ca43314e7453bf3" id="r_gaaf33c861e820d1d87ca43314e7453bf3"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SD, simdifiable VA, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:gaaf33c861e820d1d87ca43314e7453bf3 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#gaaf33c861e820d1d87ca43314e7453bf3">batmat::linalg::syrk_add</a> (VA &amp;&amp;A, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VD, SD &gt; D, Opts... opts)</td></tr>
+<tr class="memdesc:gaaf33c861e820d1d87ca43314e7453bf3"><td class="mdescLeft">&#160;</td><td class="mdescRight">D += A Aᵀ with D symmetric.  <br /></td></tr>
+<tr class="memitem:ga19841b227bc4cf6d0949b85b6e201033" id="r_ga19841b227bc4cf6d0949b85b6e201033"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SD, simdifiable VA, simdifiable VC, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga19841b227bc4cf6d0949b85b6e201033 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga19841b227bc4cf6d0949b85b6e201033">batmat::linalg::syrk_sub</a> (VA &amp;&amp;A, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VC, SD &gt; C, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VD, SD &gt; D, Opts... opts)</td></tr>
+<tr class="memdesc:ga19841b227bc4cf6d0949b85b6e201033"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = C - A Aᵀ with C, D symmetric.  <br /></td></tr>
+<tr class="memitem:ga3b3a5785bb0a178c28eb050f5e7ad982" id="r_ga3b3a5785bb0a178c28eb050f5e7ad982"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SD, simdifiable VA, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga3b3a5785bb0a178c28eb050f5e7ad982 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga3b3a5785bb0a178c28eb050f5e7ad982">batmat::linalg::syrk_sub</a> (VA &amp;&amp;A, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VD, SD &gt; D, Opts... opts)</td></tr>
+<tr class="memdesc:ga3b3a5785bb0a178c28eb050f5e7ad982"><td class="mdescLeft">&#160;</td><td class="mdescRight">D -= A Aᵀ with D symmetric.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
+Multiplication of batches of triangular matrices</h2></td></tr>
+<tr class="memitem:ga677da05414c67192ed400e3a0b0a2c51" id="r_ga677da05414c67192ed400e3a0b0a2c51"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SA, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SB, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SD, simdifiable VA, simdifiable VB, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga677da05414c67192ed400e3a0b0a2c51 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga677da05414c67192ed400e3a0b0a2c51">batmat::linalg::trmm</a> (<a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VA, SA &gt; A, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VB, SB &gt; B, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VD, SD &gt; D, Opts... opts)</td></tr>
+<tr class="memdesc:ga677da05414c67192ed400e3a0b0a2c51"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = A B with A and/or B triangular.  <br /></td></tr>
+<tr class="memitem:ga776866b470bf67ecb2f561a7714f6ac8" id="r_ga776866b470bf67ecb2f561a7714f6ac8"><td class="memTemplParams" colspan="2">template&lt;class TA, class TB, class TD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga776866b470bf67ecb2f561a7714f6ac8 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga776866b470bf67ecb2f561a7714f6ac8">batmat::linalg::trmm</a> (TA &amp;&amp;A, TB &amp;&amp;B, TD &amp;&amp;D, Opts... opts)</td></tr>
+<tr class="memdesc:ga776866b470bf67ecb2f561a7714f6ac8"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = A B with A and/or B triangular.  <br /></td></tr>
+<tr class="memitem:ga4bcadac1586aa8f2fd1a8f632c369601" id="r_ga4bcadac1586aa8f2fd1a8f632c369601"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SA, simdifiable VA, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga4bcadac1586aa8f2fd1a8f632c369601 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga4bcadac1586aa8f2fd1a8f632c369601">batmat::linalg::trmm</a> (<a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VA, SA &gt; A, VD &amp;&amp;D, Opts... opts)</td></tr>
+<tr class="memdesc:ga4bcadac1586aa8f2fd1a8f632c369601"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = A D with A triangular.  <br /></td></tr>
+<tr class="memitem:ga9c7791da3ee24263434ba87316ac50e3" id="r_ga9c7791da3ee24263434ba87316ac50e3"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SB, simdifiable VB, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga9c7791da3ee24263434ba87316ac50e3 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga9c7791da3ee24263434ba87316ac50e3">batmat::linalg::trmm</a> (VD &amp;&amp;D, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VB, SB &gt; B, Opts... opts)</td></tr>
+<tr class="memdesc:ga9c7791da3ee24263434ba87316ac50e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = D B with B triangular.  <br /></td></tr>
+<tr class="memitem:ga1474b560ee985d29dad901fec92a6e09" id="r_ga1474b560ee985d29dad901fec92a6e09"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SA, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SB, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SD, simdifiable VA, simdifiable VB, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga1474b560ee985d29dad901fec92a6e09 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga1474b560ee985d29dad901fec92a6e09">batmat::linalg::trmm_neg</a> (<a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VA, SA &gt; A, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VB, SB &gt; B, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VD, SD &gt; D, Opts... opts)</td></tr>
+<tr class="memdesc:ga1474b560ee985d29dad901fec92a6e09"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = -A B with A and/or B triangular.  <br /></td></tr>
+<tr class="memitem:ga41be251a5129e3aa430b4d0685e4f055" id="r_ga41be251a5129e3aa430b4d0685e4f055"><td class="memTemplParams" colspan="2">template&lt;class TA, class TB, class TD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga41be251a5129e3aa430b4d0685e4f055 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga41be251a5129e3aa430b4d0685e4f055">batmat::linalg::trmm_neg</a> (TA &amp;&amp;A, TB &amp;&amp;B, TD &amp;&amp;D, Opts... opts)</td></tr>
+<tr class="memdesc:ga41be251a5129e3aa430b4d0685e4f055"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = -A B with A and/or B triangular.  <br /></td></tr>
+<tr class="memitem:gab8de92b40ec44dc42b8194ca149e2195" id="r_gab8de92b40ec44dc42b8194ca149e2195"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SA, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SB, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SD, simdifiable VA, simdifiable VB, simdifiable VC, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:gab8de92b40ec44dc42b8194ca149e2195 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#gab8de92b40ec44dc42b8194ca149e2195">batmat::linalg::trmm_add</a> (<a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VA, SA &gt; A, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VB, SB &gt; B, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VC, SD &gt; C, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VD, SD &gt; D, Opts... opts)</td></tr>
+<tr class="memdesc:gab8de92b40ec44dc42b8194ca149e2195"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = C + A B with A and/or B triangular.  <br /></td></tr>
+<tr class="memitem:ga5ff4cf9c0cc64e6b59d44a9a7b257d36" id="r_ga5ff4cf9c0cc64e6b59d44a9a7b257d36"><td class="memTemplParams" colspan="2">template&lt;class TA, class TB, class TC, class TD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga5ff4cf9c0cc64e6b59d44a9a7b257d36 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga5ff4cf9c0cc64e6b59d44a9a7b257d36">batmat::linalg::trmm_add</a> (TA &amp;&amp;A, TB &amp;&amp;B, TC &amp;&amp;C, TD &amp;&amp;D, Opts... opts)</td></tr>
+<tr class="memdesc:ga5ff4cf9c0cc64e6b59d44a9a7b257d36"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = C + A B with A and/or B triangular.  <br /></td></tr>
+<tr class="memitem:ga4c466c8c3c49448dbe08d2a69f0dc753" id="r_ga4c466c8c3c49448dbe08d2a69f0dc753"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SA, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SB, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> SD, simdifiable VA, simdifiable VB, simdifiable VC, simdifiable VD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga4c466c8c3c49448dbe08d2a69f0dc753 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga4c466c8c3c49448dbe08d2a69f0dc753">batmat::linalg::trmm_sub</a> (<a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VA, SA &gt; A, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VB, SB &gt; B, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VC, SD &gt; C, <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">Structured</a>&lt; VD, SD &gt; D, Opts... opts)</td></tr>
+<tr class="memdesc:ga4c466c8c3c49448dbe08d2a69f0dc753"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = C - A B with A and/or B triangular.  <br /></td></tr>
+<tr class="memitem:ga6b66dee15a04b53f3f39edc1caa41bb6" id="r_ga6b66dee15a04b53f3f39edc1caa41bb6"><td class="memTemplParams" colspan="2">template&lt;class TA, class TB, class TC, class TD, shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ga6b66dee15a04b53f3f39edc1caa41bb6 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga6b66dee15a04b53f3f39edc1caa41bb6">batmat::linalg::trmm_sub</a> (TA &amp;&amp;A, TB &amp;&amp;B, TC &amp;&amp;C, TD &amp;&amp;D, Opts... opts)</td></tr>
+<tr class="memdesc:ga6b66dee15a04b53f3f39edc1caa41bb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">D = C - A B with A and/or B triangular.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3ATilingOptions_5Fstructbatmat_5F1_5F1linalg_5F1_5F1TilingOptions" id="r_batmat_3A_3Alinalg_3A_3ATilingOptions_5Fstructbatmat_5F1_5F1linalg_5F1_5F1TilingOptions"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#structbatmat_1_1linalg_1_1TilingOptions">batmat::linalg::TilingOptions</a></td></tr>
+<tr class="memdesc:structbatmat_1_1linalg_1_1TilingOptions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Packing and tiling options for matrix-matrix multiplication.  <a href="group__topic-linalg.html#structbatmat_1_1linalg_1_1TilingOptions">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:batmat" id="r_batmat"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat.html">batmat</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg" id="r_batmat_3A_3Alinalg"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg.html">batmat::linalg</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Adetail" id="r_batmat_3A_3Alinalg_3A_3Adetail"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html">batmat::linalg::detail</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ga3526955f82976c2274834e5a69b21b7e" id="r_ga3526955f82976c2274834e5a69b21b7e"><td class="memItemLeft">enum class &#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga3526955f82976c2274834e5a69b21b7e">batmat::linalg::PackingSelector</a> : int8_t { <a class="el" href="group__topic-linalg.html#gga3526955f82976c2274834e5a69b21b7ea6e7b34fa59e1bd229b207892956dc41c">batmat::linalg::PackingSelector::Never</a>
+, <a class="el" href="group__topic-linalg.html#gga3526955f82976c2274834e5a69b21b7ea68eec46437c384d8dad18d5464ebc35c">batmat::linalg::PackingSelector::Always</a>
+, <a class="el" href="group__topic-linalg.html#gga3526955f82976c2274834e5a69b21b7eaaf70b1ac863830a4e1ce6268c8399f54">batmat::linalg::PackingSelector::Transpose</a>
+ }</td></tr>
+<tr class="memdesc:ga3526955f82976c2274834e5a69b21b7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decides which matrices to pack during large matrix-matrix multiplication.  <a href="group__topic-linalg.html#ga3526955f82976c2274834e5a69b21b7e">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:af26685ecf86832d020eeed2c759f1c4a" id="r_af26685ecf86832d020eeed2c759f1c4a"><td class="memTemplParams" colspan="2">template&lt;class T, class Abi, <a class="el" href="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm.html#structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig">micro_kernels::gemm::KernelConfig</a> Conf = {}, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> OA, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> OB, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> OC, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> OD&gt; </td></tr>
+<tr class="memitem:af26685ecf86832d020eeed2c759f1c4a template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#af26685ecf86832d020eeed2c759f1c4a">batmat::linalg::detail::gemm</a> (<a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; const T, Abi, OA &gt; A, <a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; const T, Abi, OB &gt; B, std::optional&lt; <a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; const T, Abi, OC &gt; &gt; C, <a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; T, Abi, OD &gt; D, <a class="el" href="group__topic-linalg.html#structbatmat_1_1linalg_1_1TilingOptions">TilingOptions</a> packing={})</td></tr>
+<tr class="memitem:aafe5abf07c832375ed47675bfc9f5a86" id="r_aafe5abf07c832375ed47675bfc9f5a86"><td class="memTemplParams" colspan="2">template&lt;class T, class Abi, <a class="el" href="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm.html#structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig">micro_kernels::gemm::KernelConfig</a> Conf = {}, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> OA, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> OB, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> OC, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> OD&gt; </td></tr>
+<tr class="memitem:aafe5abf07c832375ed47675bfc9f5a86 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aafe5abf07c832375ed47675bfc9f5a86">batmat::linalg::detail::gemmt</a> (<a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; const T, Abi, OA &gt; A, <a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; const T, Abi, OB &gt; B, std::optional&lt; <a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; const T, Abi, OC &gt; &gt; C, <a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; T, Abi, OD &gt; D)</td></tr>
+<tr class="memitem:a986cbb6d34a89fe9f0a7e475746934e7" id="r_a986cbb6d34a89fe9f0a7e475746934e7"><td class="memTemplParams" colspan="2">template&lt;class T, class Abi, <a class="el" href="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm.html#structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig">micro_kernels::gemm::KernelConfig</a> Conf = {}, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> OA, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> OB, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> OC, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> OD&gt; </td></tr>
+<tr class="memitem:a986cbb6d34a89fe9f0a7e475746934e7 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a986cbb6d34a89fe9f0a7e475746934e7">batmat::linalg::detail::trmm</a> (<a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; const T, Abi, OA &gt; A, <a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; const T, Abi, OB &gt; B, std::optional&lt; <a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; const T, Abi, OC &gt; &gt; C, <a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; T, Abi, OD &gt; D)</td></tr>
+<tr class="memitem:ace93b35f0993d2bcf550c1ea6ed92d96" id="r_ace93b35f0993d2bcf550c1ea6ed92d96"><td class="memTemplParams" colspan="2">template&lt;shift_opt... Opts&gt; </td></tr>
+<tr class="memitem:ace93b35f0993d2bcf550c1ea6ed92d96 template"><td class="memItemLeft">constexpr <a class="el" href="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm.html#structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig">micro_kernels::gemm::KernelConfig</a>&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ace93b35f0993d2bcf550c1ea6ed92d96">batmat::linalg::detail::apply_gemm_options</a> (<a class="el" href="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm.html#structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig">micro_kernels::gemm::KernelConfig</a> conf, Opts...)</td></tr>
+</table>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="dir_fb227e489dae4e94b57f952e55a850cd.html">batmat</a></li><li class="navelem"><a href="dir_72d467c23e78781a791bd9375234cac1.html">include</a></li><li class="navelem"><a href="dir_63a8bd2941168c96d494403d8e78330f.html">batmat</a></li><li class="navelem"><a href="dir_6b3c116c82570f1db015b5f9324a36e3.html">linalg</a></li><li class="navelem"><a href="gemm_8hpp.html">gemm.hpp</a></li>
+    <li class="footer">Generated on <span class="timestamp"></span> for batmat by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
+  </ul>
+</div>
+</body>
+</html>

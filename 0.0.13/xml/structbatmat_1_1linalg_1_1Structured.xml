@@ -1,0 +1,230 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1Structured" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::Structured</compoundname>
+    <includes refid="triangular_8hpp" local="no">batmat/linalg/triangular.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>class M</type>
+      </param>
+      <param>
+        <type><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref></type>
+        <declname>S</declname>
+        <defname>S</defname>
+        <defval><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref></defval>
+      </param>
+    </templateparamlist>
+    <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1Structured_1ae24a0809b596274f8195c3eae3d170ed" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref></type>
+        <definition>MatrixStructure batmat::linalg::Structured&lt; M, S &gt;::structure</definition>
+        <argsstring></argsstring>
+        <name>structure</name>
+        <qualifiedname>batmat::linalg::Structured::structure</qualifiedname>
+        <initializer>= S</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/triangular.hpp" line="14" column="38" bodyfile="batmat/include/batmat/linalg/triangular.hpp" bodystart="14" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" prot="public" static="no" mutable="no">
+        <type>M</type>
+        <definition>M batmat::linalg::Structured&lt; M, S &gt;::value</definition>
+        <argsstring></argsstring>
+        <name>value</name>
+        <qualifiedname>batmat::linalg::Structured::value</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/triangular.hpp" line="18" column="7" bodyfile="batmat/include/batmat/linalg/triangular.hpp" bodystart="18" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1linalg_1_1Structured_1aede8ee78c22f9ea970c97fd679162cfa" compoundref="triangular_8hpp" startline="15" endline="15">batmat::linalg::Structured&lt; M, S &gt;::Structured</referencedby>
+        <referencedby refid="group__topic-linalg_1ga0c62a1596a13149c17223ca93a4de7bd" compoundref="copy_8hpp" startline="196" endline="200">batmat::linalg::copy</referencedby>
+        <referencedby refid="group__topic-linalg_1ga3b16436bd7456f60369fd1db2d67442e" compoundref="copy_8hpp" startline="210" endline="213">batmat::linalg::fill</referencedby>
+        <referencedby refid="group__topic-linalg_1gae6733a70513ebef849110b4842708820" compoundref="hyhound_8hpp" startline="152" endline="156">batmat::linalg::hyhound_diag</referencedby>
+        <referencedby refid="group__topic-linalg_1ga333ab34077b524480da3a9835b51e166" compoundref="hyhound_8hpp" startline="161" endline="165">batmat::linalg::hyhound_diag</referencedby>
+        <referencedby refid="group__topic-linalg_1gae5ae03b84e9ada852009a47cfb1a101b" compoundref="hyhound_8hpp" startline="226" endline="229">batmat::linalg::hyhound_diag_2</referencedby>
+        <referencedby refid="group__topic-linalg_1gaf619c0c15ef61d2dd2eaa585f525a93f" compoundref="hyhound_8hpp" startline="240" endline="245">batmat::linalg::hyhound_diag_cyclic</referencedby>
+        <referencedby refid="group__topic-linalg_1ga623445a546acac724601551447aaef5a" compoundref="hyhound_8hpp" startline="258" endline="263">batmat::linalg::hyhound_diag_riccati</referencedby>
+        <referencedby refid="group__topic-linalg_1ga71aaa795868e76c82b95bdd6230b9519" compoundref="hyhound_8hpp" startline="212" endline="215">batmat::linalg::hyhound_sign</referencedby>
+        <referencedby refid="group__topic-linalg_1gaab95bb8df58e52f0b5c2f156f8c6dea0" compoundref="hyhound_8hpp" startline="170" endline="173">batmat::linalg::hyhound_size_W</referencedby>
+        <referencedby refid="group__topic-linalg_1gaa5a48352d831fa72f651dfb4a53bba9e" compoundref="potrf_8hpp" startline="75" endline="79">batmat::linalg::potrf</referencedby>
+        <referencedby refid="group__topic-linalg_1ga0d94954d9b08608b3d7f3c2bdaec531d" compoundref="potrf_8hpp" startline="83" endline="87">batmat::linalg::potrf</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1Structured_1a81f0feaa9abd00bfa623019877ed7863" compoundref="triangular_8hpp" startline="30" endline="30">batmat::linalg::Structured&lt; M, S &gt;::ref</referencedby>
+        <referencedby refid="group__topic-linalg_1ga86ace4b801d8635578413dafc05539d3" compoundref="symm_8hpp" startline="76" endline="79">batmat::linalg::symm_add</referencedby>
+        <referencedby refid="group__topic-linalg_1gaf56b3f892871b53ff7dc0efedb0eac36" compoundref="symv_8hpp" startline="47" endline="52">batmat::linalg::symv</referencedby>
+        <referencedby refid="group__topic-linalg_1ga6be77cce642739acb04a594098a57ffe" compoundref="symv_8hpp" startline="67" endline="71">batmat::linalg::symv_add</referencedby>
+        <referencedby refid="group__topic-linalg_1ga9577422bc277329e6409043853208764" compoundref="symv_8hpp" startline="57" endline="62">batmat::linalg::symv_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga126f2b74ab3588969d16c1ea34febd99" compoundref="symv_8hpp" startline="82" endline="86">batmat::linalg::symv_sub</referencedby>
+        <referencedby refid="group__topic-linalg_1ga1c157567ed0f419c4136ec2a69dc8a59" compoundref="syomv_8hpp" startline="46" endline="50">batmat::linalg::syomv</referencedby>
+        <referencedby refid="group__topic-linalg_1gae8fed320ade4ba886dfe45d35f31ccc5" compoundref="syomv_8hpp" startline="55" endline="59">batmat::linalg::syomv_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga59ec2e76f7d857d495fcc518d19f2a77" compoundref="gemm_8hpp" startline="310" endline="319">batmat::linalg::syrk</referencedby>
+        <referencedby refid="group__topic-linalg_1ga24000b15cd231d821eb1292ad3631c2b" compoundref="gemm_8hpp" startline="329" endline="338">batmat::linalg::syrk</referencedby>
+        <referencedby refid="group__topic-linalg_1ga94668e960bcf7b6a7ffe8902d799079a" compoundref="gemm_8hpp" startline="376" endline="383">batmat::linalg::syrk_add</referencedby>
+        <referencedby refid="group__topic-linalg_1ga12c3f866950fd1c70288d50280b7fb6b" compoundref="potrf_8hpp" startline="45" endline="49">batmat::linalg::syrk_add_potrf</referencedby>
+        <referencedby refid="group__topic-linalg_1ga958862e903797c035916e22d09f4fcb3" compoundref="gemm-diag_8hpp" startline="122" endline="129">batmat::linalg::syrk_diag_add</referencedby>
+        <referencedby refid="group__topic-linalg_1ga038f5f115bd19ed4f3ca205ca4728fc3" compoundref="gemm_8hpp" startline="343" endline="352">batmat::linalg::syrk_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga8d63dfa8eaa22949ca78e2241a608a0f" compoundref="gemm_8hpp" startline="362" endline="371">batmat::linalg::syrk_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga19841b227bc4cf6d0949b85b6e201033" compoundref="gemm_8hpp" startline="393" endline="400">batmat::linalg::syrk_sub</referencedby>
+        <referencedby refid="group__topic-linalg_1ga9b273b45f515781eb285544bbcca8143" compoundref="potrf_8hpp" startline="60" endline="64">batmat::linalg::syrk_sub_potrf</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1Structured_1acba7e7c24c669f93b6740af376cc3fb6" compoundref="triangular_8hpp" startline="24" endline="29">batmat::linalg::Structured&lt; M, S &gt;::transposed</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1Structured_1a4b7bb6d67bc01e85aeb2f4c5480e6047" compoundref="triangular_8hpp" startline="19" endline="23">batmat::linalg::Structured&lt; M, S &gt;::transposed</referencedby>
+        <referencedby refid="group__topic-linalg_1ga677da05414c67192ed400e3a0b0a2c51" compoundref="gemm_8hpp" startline="416" endline="422">batmat::linalg::trmm</referencedby>
+        <referencedby refid="group__topic-linalg_1gab8de92b40ec44dc42b8194ca149e2195" compoundref="gemm_8hpp" startline="462" endline="469">batmat::linalg::trmm_add</referencedby>
+        <referencedby refid="group__topic-linalg_1ga1474b560ee985d29dad901fec92a6e09" compoundref="gemm_8hpp" startline="444" endline="450">batmat::linalg::trmm_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga4c466c8c3c49448dbe08d2a69f0dc753" compoundref="gemm_8hpp" startline="481" endline="488">batmat::linalg::trmm_sub</referencedby>
+        <referencedby refid="group__topic-linalg_1ga5a6901e33f6891995b0c147814b06230" compoundref="trtri_8hpp" startline="41" endline="46">batmat::linalg::trtri</referencedby>
+        <referencedby refid="group__topic-linalg_1gaa4e16632065fd0d673234b06e71ea4c0" compoundref="trtri_8hpp" startline="58" endline="62">batmat::linalg::trtri</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1Structured_1aede8ee78c22f9ea970c97fd679162cfa" prot="public" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>batmat::linalg::Structured&lt; M, S &gt;::Structured</definition>
+        <argsstring>(M &amp;&amp;m)</argsstring>
+        <name>Structured</name>
+        <qualifiedname>batmat::linalg::Structured::Structured</qualifiedname>
+        <param>
+          <type>M &amp;&amp;</type>
+          <declname>m</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/triangular.hpp" line="15" column="15" bodyfile="batmat/include/batmat/linalg/triangular.hpp" bodystart="15" bodyend="15"/>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" compoundref="structure_8hpp" startline="8">batmat::linalg::General</references>
+        <references refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" compoundref="triangular_8hpp" startline="18">batmat::linalg::Structured&lt; M, S &gt;::value</references>
+        <referencedby refid="structbatmat_1_1linalg_1_1Structured_1ad9a176fb3b45d863096acf053e30b0e2">batmat::linalg::Structured&lt; M, S &gt;::Structured</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1Structured_1a76a579c4f5045b042173a1ad5dce3e5f">batmat::linalg::Structured&lt; M, S &gt;::Structured</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1Structured_1a81f0feaa9abd00bfa623019877ed7863" compoundref="triangular_8hpp" startline="30" endline="30">batmat::linalg::Structured&lt; M, S &gt;::ref</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1Structured_1ad9a176fb3b45d863096acf053e30b0e2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>batmat::linalg::Structured&lt; M, S &gt;::Structured</definition>
+        <argsstring>(const Structured &amp;)=default</argsstring>
+        <name>Structured</name>
+        <qualifiedname>batmat::linalg::Structured::Structured</qualifiedname>
+        <param>
+          <type>const Structured &amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/triangular.hpp" line="16" column="5"/>
+        <references refid="structbatmat_1_1linalg_1_1Structured_1aede8ee78c22f9ea970c97fd679162cfa" compoundref="triangular_8hpp" startline="15" endline="15">batmat::linalg::Structured&lt; M, S &gt;::Structured</references>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1Structured_1a76a579c4f5045b042173a1ad5dce3e5f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>batmat::linalg::Structured&lt; M, S &gt;::Structured</definition>
+        <argsstring>(Structured &amp;&amp;)=default</argsstring>
+        <name>Structured</name>
+        <qualifiedname>batmat::linalg::Structured::Structured</qualifiedname>
+        <param>
+          <type>Structured &amp;&amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/triangular.hpp" line="17" column="5"/>
+        <references refid="structbatmat_1_1linalg_1_1Structured_1aede8ee78c22f9ea970c97fd679162cfa" compoundref="triangular_8hpp" startline="15" endline="15">batmat::linalg::Structured&lt; M, S &gt;::Structured</references>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1Structured_1a4b7bb6d67bc01e85aeb2f4c5480e6047" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" refqual="lvalue" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto batmat::linalg::Structured&lt; M, S &gt;::transposed</definition>
+        <argsstring>() const &amp;</argsstring>
+        <name>transposed</name>
+        <qualifiedname>batmat::linalg::Structured::transposed</qualifiedname>
+    <requiresclause>requires { value.transposed(); }    </requiresclause>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/triangular.hpp" line="19" column="21" bodyfile="batmat/include/batmat/linalg/triangular.hpp" bodystart="19" bodyend="23"/>
+        <references refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" compoundref="triangular_8hpp" startline="18">batmat::linalg::Structured&lt; M, S &gt;::value</references>
+        <referencedby refid="group__topic-linalg_1ga12d76466423aac96d5405fc6ac08ff08" compoundref="trtri_8hpp" startline="51" endline="54">batmat::linalg::trtri</referencedby>
+        <referencedby refid="group__topic-linalg_1ga01d821b394c1ded4bab2042442dcc6b4" compoundref="trtri_8hpp" startline="66" endline="68">batmat::linalg::trtri</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1Structured_1acba7e7c24c669f93b6740af376cc3fb6" prot="public" static="no" nodiscard="yes" constexpr="yes" const="no" explicit="no" inline="yes" refqual="rvalue" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto batmat::linalg::Structured&lt; M, S &gt;::transposed</definition>
+        <argsstring>() &amp;&amp;</argsstring>
+        <name>transposed</name>
+        <qualifiedname>batmat::linalg::Structured::transposed</qualifiedname>
+    <requiresclause>requires { std::forward&lt;M&gt;(<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>).transposed(); }    </requiresclause>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/triangular.hpp" line="24" column="21" bodyfile="batmat/include/batmat/linalg/triangular.hpp" bodystart="24" bodyend="29"/>
+        <references refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" compoundref="triangular_8hpp" startline="18">batmat::linalg::Structured&lt; M, S &gt;::value</references>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1Structured_1a81f0feaa9abd00bfa623019877ed7863" prot="public" static="no" nodiscard="yes" constexpr="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto batmat::linalg::Structured&lt; M, S &gt;::ref</definition>
+        <argsstring>()</argsstring>
+        <name>ref</name>
+        <qualifiedname>batmat::linalg::Structured::ref</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/triangular.hpp" line="30" column="21" bodyfile="batmat/include/batmat/linalg/triangular.hpp" bodystart="30" bodyend="30"/>
+        <references refid="structbatmat_1_1linalg_1_1Structured_1aede8ee78c22f9ea970c97fd679162cfa" compoundref="triangular_8hpp" startline="15" endline="15">batmat::linalg::Structured&lt; M, S &gt;::Structured</references>
+        <references refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" compoundref="triangular_8hpp" startline="18">batmat::linalg::Structured&lt; M, S &gt;::value</references>
+        <referencedby refid="group__topic-linalg_1ga28b7fe55495d3a3c414ce0e43b8a8b2c" compoundref="symm_8hpp" startline="83" endline="85">batmat::linalg::symm_add</referencedby>
+        <referencedby refid="group__topic-linalg_1ga05b276ea72af0939b1b8fbc2a40bcdfb" compoundref="symv_8hpp" startline="75" endline="77">batmat::linalg::symv_add</referencedby>
+        <referencedby refid="group__topic-linalg_1gabb4409c022fa8f42bd3e24191eb8b633" compoundref="symv_8hpp" startline="90" endline="92">batmat::linalg::symv_sub</referencedby>
+        <referencedby refid="group__topic-linalg_1gaaf33c861e820d1d87ca43314e7453bf3" compoundref="gemm_8hpp" startline="386" endline="388">batmat::linalg::syrk_add</referencedby>
+        <referencedby refid="group__topic-linalg_1gac41bc35d00eb8f3efe6db4d3f0deb2c4" compoundref="potrf_8hpp" startline="53" endline="55">batmat::linalg::syrk_add_potrf</referencedby>
+        <referencedby refid="group__topic-linalg_1ga3b3a5785bb0a178c28eb050f5e7ad982" compoundref="gemm_8hpp" startline="403" endline="405">batmat::linalg::syrk_sub</referencedby>
+        <referencedby refid="group__topic-linalg_1ga74ca156ede10af825418293b6eaec901" compoundref="potrf_8hpp" startline="68" endline="70">batmat::linalg::syrk_sub_potrf</referencedby>
+        <referencedby refid="group__topic-linalg_1ga4bcadac1586aa8f2fd1a8f632c369601" compoundref="gemm_8hpp" startline="431" endline="433">batmat::linalg::trmm</referencedby>
+        <referencedby refid="group__topic-linalg_1ga9c7791da3ee24263434ba87316ac50e3" compoundref="gemm_8hpp" startline="436" endline="438">batmat::linalg::trmm</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Light-weight wrapper class used for overload resolution of triangular and symmetric matrices. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::Structured&lt; M, S &gt;</label>
+        <link refid="structbatmat_1_1linalg_1_1Structured"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/triangular.hpp" line="13" column="1" bodyfile="batmat/include/batmat/linalg/triangular.hpp" bodystart="13" bodyend="31"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1linalg_1_1Structured_1a81f0feaa9abd00bfa623019877ed7863" prot="public" virt="non-virtual"><scope>batmat::linalg::Structured</scope><name>ref</name></member>
+      <member refid="structbatmat_1_1linalg_1_1Structured_1ae24a0809b596274f8195c3eae3d170ed" prot="public" virt="non-virtual"><scope>batmat::linalg::Structured</scope><name>structure</name></member>
+      <member refid="structbatmat_1_1linalg_1_1Structured_1aede8ee78c22f9ea970c97fd679162cfa" prot="public" virt="non-virtual"><scope>batmat::linalg::Structured</scope><name>Structured</name></member>
+      <member refid="structbatmat_1_1linalg_1_1Structured_1ad9a176fb3b45d863096acf053e30b0e2" prot="public" virt="non-virtual"><scope>batmat::linalg::Structured</scope><name>Structured</name></member>
+      <member refid="structbatmat_1_1linalg_1_1Structured_1a76a579c4f5045b042173a1ad5dce3e5f" prot="public" virt="non-virtual"><scope>batmat::linalg::Structured</scope><name>Structured</name></member>
+      <member refid="structbatmat_1_1linalg_1_1Structured_1a4b7bb6d67bc01e85aeb2f4c5480e6047" prot="public" virt="non-virtual"><scope>batmat::linalg::Structured</scope><name>transposed</name></member>
+      <member refid="structbatmat_1_1linalg_1_1Structured_1acba7e7c24c669f93b6740af376cc3fb6" prot="public" virt="non-virtual"><scope>batmat::linalg::Structured</scope><name>transposed</name></member>
+      <member refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" prot="public" virt="non-virtual"><scope>batmat::linalg::Structured</scope><name>value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

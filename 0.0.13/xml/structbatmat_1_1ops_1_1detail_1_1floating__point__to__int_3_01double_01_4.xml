@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1ops_1_1detail_1_1floating__point__to__int_3_01double_01_4" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::ops::detail::floating_point_to_int&lt; double &gt;</compoundname>
+    <includes refid="cneg_8hpp" local="no">batmat/ops/cneg.hpp</includes>
+    <templateparamlist>
+    </templateparamlist>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structbatmat_1_1ops_1_1detail_1_1floating__point__to__int_3_01double_01_4_1a2ae5c54eae2939e181420220dbc595fd" prot="public" static="no">
+        <type>std::uint64_t</type>
+        <definition>using batmat::ops::detail::floating_point_to_int&lt; double &gt;::type = std::uint64_t</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>batmat::ops::detail::floating_point_to_int&lt; double &gt;::type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/cneg.hpp" line="25" column="5" bodyfile="batmat/include/batmat/ops/cneg.hpp" bodystart="25" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::ops::detail::floating_point_to_int&lt; double &gt;</label>
+        <link refid="structbatmat_1_1ops_1_1detail_1_1floating__point__to__int_3_01double_01_4"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/ops/cneg.hpp" line="24" column="1" bodyfile="batmat/include/batmat/ops/cneg.hpp" bodystart="24" bodyend="27"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1ops_1_1detail_1_1floating__point__to__int_3_01double_01_4_1a2ae5c54eae2939e181420220dbc595fd" prot="public" virt="non-virtual"><scope>batmat::ops::detail::floating_point_to_int&lt; double &gt;</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

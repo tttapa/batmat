@@ -1,0 +1,226 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="thread-pool_8hpp" kind="file" language="C++">
+    <compoundname>thread-pool.hpp</compoundname>
+    <includes local="no">condition_variable</includes>
+    <includes local="no">exception</includes>
+    <includes local="no">functional</includes>
+    <includes local="no">mutex</includes>
+    <includes local="no">optional</includes>
+    <includes local="no">stdexcept</includes>
+    <includes local="no">thread</includes>
+    <includes local="no">utility</includes>
+    <includes local="no">vector</includes>
+    <includedby refid="thread-pool_8cpp" local="no">batmat/src/thread-pool.cpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>batmat/include/batmat/thread-pool.hpp</label>
+        <link refid="thread-pool_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>condition_variable</label>
+      </node>
+      <node id="3">
+        <label>exception</label>
+      </node>
+      <node id="4">
+        <label>functional</label>
+      </node>
+      <node id="5">
+        <label>mutex</label>
+      </node>
+      <node id="6">
+        <label>optional</label>
+      </node>
+      <node id="7">
+        <label>stdexcept</label>
+      </node>
+      <node id="8">
+        <label>thread</label>
+      </node>
+      <node id="9">
+        <label>utility</label>
+      </node>
+      <node id="10">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>batmat/include/batmat/thread-pool.hpp</label>
+        <link refid="thread-pool_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/src/thread-pool.cpp</label>
+        <link refid="thread-pool_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classbatmat_1_1thread__pool" prot="public">batmat::thread_pool</innerclass>
+    <innerclass refid="structbatmat_1_1thread__pool_1_1Signals" prot="private">batmat::thread_pool::Signals</innerclass>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1detail">batmat::detail</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;condition_variable&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;exception&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;functional&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;mutex&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;optional&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdexcept&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;thread&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;utility&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;vector&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat" kindref="compound">batmat</ref><sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="15"><highlight class="comment">///<sp/>@ingroup<sp/>topic-utils</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="classbatmat_1_1thread__pool" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" kindref="member">thread_pool</ref><sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="18" refid="structbatmat_1_1thread__pool_1_1Signals" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1thread__pool_1_1Signals" kindref="compound">Signals</ref><sp/>{</highlight></codeline>
+<codeline lineno="19" refid="structbatmat_1_1thread__pool_1_1Signals_1a77f6dfd98ebe69ceb1416cadea1faa75" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::mutex<sp/><ref refid="structbatmat_1_1thread__pool_1_1Signals_1a77f6dfd98ebe69ceb1416cadea1faa75" kindref="member">mtx</ref>;</highlight></codeline>
+<codeline lineno="20" refid="structbatmat_1_1thread__pool_1_1Signals_1a8c952637ba7cf88cd63fa3ffb9cf359e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::condition_variable_any<sp/><ref refid="structbatmat_1_1thread__pool_1_1Signals_1a8c952637ba7cf88cd63fa3ffb9cf359e" kindref="member">cv</ref>;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="22" refid="classbatmat_1_1thread__pool_1a6d4274c6b588677b0abe47c30ab0aabd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;Signals&gt;<sp/><ref refid="classbatmat_1_1thread__pool_1a6d4274c6b588677b0abe47c30ab0aabd" kindref="member">signals</ref>;</highlight></codeline>
+<codeline lineno="23" refid="classbatmat_1_1thread__pool_1ae3e3e5088353356b3a68eacb2ab81417" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;std::function&lt;void()&gt;&gt;<sp/><ref refid="classbatmat_1_1thread__pool_1ae3e3e5088353356b3a68eacb2ab81417" kindref="member">funcs</ref>;</highlight></codeline>
+<codeline lineno="24" refid="classbatmat_1_1thread__pool_1a85ab070fec23f9ad68ed1b8c0b13119c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;std::exception_ptr&gt;<sp/><ref refid="classbatmat_1_1thread__pool_1a85ab070fec23f9ad68ed1b8c0b13119c" kindref="member">exceptions</ref>;</highlight></codeline>
+<codeline lineno="25" refid="classbatmat_1_1thread__pool_1ac40cd1232995a61e4fae5fa8a11ea5f5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;std::jthread&gt;<sp/><ref refid="classbatmat_1_1thread__pool_1ac40cd1232995a61e4fae5fa8a11ea5f5" kindref="member">threads</ref>;<sp/></highlight><highlight class="comment">//<sp/>must<sp/>be<sp/>destroyed<sp/>first</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="classbatmat_1_1thread__pool_1af76f63a05a428fdb232d476d29f9fd83" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classbatmat_1_1thread__pool_1af76f63a05a428fdb232d476d29f9fd83" kindref="member">work</ref>(std::stop_token<sp/>stop,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>i)<sp/>{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>&amp;sig<sp/>=<sp/><ref refid="classbatmat_1_1thread__pool_1a6d4274c6b588677b0abe47c30ab0aabd" kindref="member">signals</ref>[i];</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">true</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::unique_lock<sp/>lck{sig.mtx};</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sig.cv.wait(lck,<sp/>stop,<sp/>[&amp;]<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">bool</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(<ref refid="classbatmat_1_1thread__pool_1ae3e3e5088353356b3a68eacb2ab81417" kindref="member">funcs</ref>[i]);<sp/>});</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(stop.stop_requested())<sp/>{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">try</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classbatmat_1_1thread__pool_1ae3e3e5088353356b3a68eacb2ab81417" kindref="member">funcs</ref>[i]();</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">catch</highlight><highlight class="normal"><sp/>(...)<sp/>{</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classbatmat_1_1thread__pool_1a85ab070fec23f9ad68ed1b8c0b13119c" kindref="member">exceptions</ref>[i]<sp/>=<sp/>std::current_exception();</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classbatmat_1_1thread__pool_1ae3e3e5088353356b3a68eacb2ab81417" kindref="member">funcs</ref>[i]<sp/>=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>lck.unlock();</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sig.cv.notify_all();</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="48" refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">explicit</highlight><highlight class="normal"><sp/><ref refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" kindref="member">thread_pool</ref>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>num_threads<sp/>=<sp/>std::thread::hardware_concurrency())</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/><ref refid="classbatmat_1_1thread__pool_1a6d4274c6b588677b0abe47c30ab0aabd" kindref="member">signals</ref>(num_threads),<sp/><ref refid="classbatmat_1_1thread__pool_1ae3e3e5088353356b3a68eacb2ab81417" kindref="member">funcs</ref>(num_threads),<sp/><ref refid="classbatmat_1_1thread__pool_1a85ab070fec23f9ad68ed1b8c0b13119c" kindref="member">exceptions</ref>(num_threads)<sp/>{</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classbatmat_1_1thread__pool_1ac40cd1232995a61e4fae5fa8a11ea5f5" kindref="member">threads</ref>.reserve(num_threads);</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>num_threads;<sp/>++i)</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classbatmat_1_1thread__pool_1ac40cd1232995a61e4fae5fa8a11ea5f5" kindref="member">threads</ref>.emplace_back(</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[</highlight><highlight class="keyword">this</highlight><highlight class="normal">,<sp/>i](std::stop_token<sp/>stop)<sp/>{<sp/>this-&gt;<ref refid="classbatmat_1_1thread__pool_1af76f63a05a428fdb232d476d29f9fd83" kindref="member">work</ref>(std::move(stop),<sp/>i);<sp/>});</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56" refid="classbatmat_1_1thread__pool_1ac097800a6b1736ee04aab5a84db78ed9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classbatmat_1_1thread__pool_1ac097800a6b1736ee04aab5a84db78ed9" kindref="member">thread_pool</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" kindref="member">thread_pool</ref><sp/>&amp;)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="57" refid="classbatmat_1_1thread__pool_1a3532861d79bf11f7664daf44669a8f74" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" kindref="member">thread_pool</ref><sp/>&amp;<ref refid="classbatmat_1_1thread__pool_1a3532861d79bf11f7664daf44669a8f74" kindref="member">operator=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" kindref="member">thread_pool</ref><sp/>&amp;)<sp/>=<sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="58" refid="classbatmat_1_1thread__pool_1ade44e6dcd53aca05cb911a25981d3aaa" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classbatmat_1_1thread__pool_1ade44e6dcd53aca05cb911a25981d3aaa" kindref="member">thread_pool</ref>(<ref refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" kindref="member">thread_pool</ref><sp/>&amp;&amp;)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="59" refid="classbatmat_1_1thread__pool_1ae58df086f8e869d3bb6a9a11bce120a5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" kindref="member">thread_pool</ref><sp/>&amp;<ref refid="classbatmat_1_1thread__pool_1ae58df086f8e869d3bb6a9a11bce120a5" kindref="member">operator=</ref>(<ref refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" kindref="member">thread_pool</ref><sp/>&amp;&amp;)<sp/><sp/><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61" refid="classbatmat_1_1thread__pool_1ab853c1291632bf9716903b814de99add" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classbatmat_1_1thread__pool_1ab853c1291632bf9716903b814de99add" kindref="member">schedule</ref>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>i,<sp/>std::function&lt;</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">()&gt;<sp/>func)<sp/>{</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>&amp;sig<sp/>=<sp/><ref refid="classbatmat_1_1thread__pool_1a6d4274c6b588677b0abe47c30ab0aabd" kindref="member">signals</ref>[i];</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::unique_lock<sp/>lck{sig.mtx};</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classbatmat_1_1thread__pool_1ae3e3e5088353356b3a68eacb2ab81417" kindref="member">funcs</ref>[i]<sp/>=<sp/>std::move(func);</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>lck.unlock();</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sig.cv.notify_all();</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69" refid="classbatmat_1_1thread__pool_1a96d111a17960c65c3a5c92fc00efc12a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classbatmat_1_1thread__pool_1a96d111a17960c65c3a5c92fc00efc12a" kindref="member">wait</ref>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>i)<sp/>{</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>&amp;sig<sp/>=<sp/><ref refid="classbatmat_1_1thread__pool_1a6d4274c6b588677b0abe47c30ab0aabd" kindref="member">signals</ref>[i];</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::unique_lock<sp/>lck{sig.mtx};</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sig.cv.wait(lck,<sp/>[&amp;]<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>!<ref refid="classbatmat_1_1thread__pool_1ae3e3e5088353356b3a68eacb2ab81417" kindref="member">funcs</ref>[i];<sp/>});</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>&amp;e<sp/>=<sp/><ref refid="classbatmat_1_1thread__pool_1a85ab070fec23f9ad68ed1b8c0b13119c" kindref="member">exceptions</ref>[i])</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::rethrow_exception(std::exchange(e,<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77" refid="classbatmat_1_1thread__pool_1ad279eade9b6741d9f6f704813d3da3ee" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classbatmat_1_1thread__pool_1ad279eade9b6741d9f6f704813d3da3ee" kindref="member">wait_all</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="classbatmat_1_1thread__pool_1aeaf61c4492c851d524c403f58e8eb14f" kindref="member">size</ref>();<sp/>++i)</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classbatmat_1_1thread__pool_1a96d111a17960c65c3a5c92fc00efc12a" kindref="member">wait</ref>(i);</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>I<sp/>=<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>F&gt;</highlight></codeline>
+<codeline lineno="83" refid="classbatmat_1_1thread__pool_1a90949f56916900ff5c9d56a411e7d932" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classbatmat_1_1thread__pool_1a90949f56916900ff5c9d56a411e7d932" kindref="member">sync_run_all</ref>(F<sp/>&amp;&amp;f)<sp/>{</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>n<sp/>=<sp/><ref refid="classbatmat_1_1thread__pool_1aeaf61c4492c851d524c403f58e8eb14f" kindref="member">size</ref>();</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>n;<sp/>++i)</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classbatmat_1_1thread__pool_1ab853c1291632bf9716903b814de99add" kindref="member">schedule</ref>(i,<sp/>[&amp;f,<sp/>i,<sp/>n]<sp/>{<sp/>f(</highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">I</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(i),<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">I</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(n));<sp/>});</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classbatmat_1_1thread__pool_1ad279eade9b6741d9f6f704813d3da3ee" kindref="member">wait_all</ref>();</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>I<sp/>=<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>F&gt;</highlight></codeline>
+<codeline lineno="91" refid="classbatmat_1_1thread__pool_1a0040071bd46efdec431f45be24d4dc6a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classbatmat_1_1thread__pool_1a0040071bd46efdec431f45be24d4dc6a" kindref="member">sync_run_n</ref>(I<sp/>n,<sp/>F<sp/>&amp;&amp;f)<sp/>{</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">size_t</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(n)<sp/>&gt;<sp/><ref refid="classbatmat_1_1thread__pool_1aeaf61c4492c851d524c403f58e8eb14f" kindref="member">size</ref>())</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">throw</highlight><highlight class="normal"><sp/>std::invalid_argument(</highlight><highlight class="stringliteral">&quot;Not<sp/>enough<sp/>threads<sp/>in<sp/>pool&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>static_cast&lt;size_t&gt;(n);<sp/>++i)</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classbatmat_1_1thread__pool_1ab853c1291632bf9716903b814de99add" kindref="member">schedule</ref>(i,<sp/>[&amp;f,<sp/>i,<sp/>n]<sp/>{<sp/>f(</highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">I</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(i),<sp/>n);<sp/>});</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>static_cast&lt;size_t&gt;(n);<sp/>++i)</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classbatmat_1_1thread__pool_1a96d111a17960c65c3a5c92fc00efc12a" kindref="member">wait</ref>(i);</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100" refid="classbatmat_1_1thread__pool_1aeaf61c4492c851d524c403f58e8eb14f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="classbatmat_1_1thread__pool_1aeaf61c4492c851d524c403f58e8eb14f" kindref="member">size</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classbatmat_1_1thread__pool_1ac40cd1232995a61e4fae5fa8a11ea5f5" kindref="member">threads</ref>.size();<sp/>}</highlight></codeline>
+<codeline lineno="101"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103" refid="namespacebatmat_1_1detail" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1detail" kindref="compound">detail</ref><sp/>{</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/>std::mutex<sp/><ref refid="namespacebatmat_1_1detail_1af4ebcc103086a296893602f9b5866fb9" kindref="member">pool_mtx</ref>;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/>std::optional&lt;thread_pool&gt;<sp/><ref refid="namespacebatmat_1_1detail_1a20bcf72347bb0bdb2eebbeadcdd5e0b2" kindref="member">pool</ref>;</highlight></codeline>
+<codeline lineno="106"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>detail</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="108"><highlight class="comment">///<sp/>Set<sp/>the<sp/>number<sp/>of<sp/>threads<sp/>in<sp/>the<sp/>global<sp/>thread<sp/>pool.</highlight></codeline>
+<codeline lineno="109"><highlight class="comment">///<sp/>@ingroup<sp/>topic-utils</highlight></codeline>
+<codeline lineno="110"><highlight class="comment">///<sp/>@deprecated</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal">[[deprecated]]<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-utils_1ga9d3db6b0fa567b730dae54e1f1012165" kindref="member">pool_set_num_threads</ref>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>num_threads);</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="113"><highlight class="comment">///<sp/>Run<sp/>a<sp/>function<sp/>on<sp/>all<sp/>threads<sp/>in<sp/>the<sp/>global<sp/>thread<sp/>pool,<sp/>synchronously<sp/>waiting<sp/>for<sp/>all<sp/>threads.</highlight></codeline>
+<codeline lineno="114"><highlight class="comment">///<sp/>@ingroup<sp/>topic-utils</highlight></codeline>
+<codeline lineno="115"><highlight class="comment">///<sp/>@deprecated</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>I<sp/>=<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>F&gt;</highlight></codeline>
+<codeline lineno="117" refid="group__topic-utils_1ga536ae1dd079e87845527154b7f4ecc06" refkind="member"><highlight class="normal">[[deprecated]]<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-utils_1ga536ae1dd079e87845527154b7f4ecc06" kindref="member">pool_sync_run_all</ref>(F<sp/>&amp;&amp;f)<sp/>{</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/>std::lock_guard&lt;std::mutex&gt;<sp/>lck(<ref refid="namespacebatmat_1_1detail_1af4ebcc103086a296893602f9b5866fb9" kindref="member">detail::pool_mtx</ref>);</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="namespacebatmat_1_1detail_1a20bcf72347bb0bdb2eebbeadcdd5e0b2" kindref="member">detail::pool</ref>)</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1detail_1a20bcf72347bb0bdb2eebbeadcdd5e0b2" kindref="member">detail::pool</ref>-&gt;sync_run_all(std::forward&lt;F&gt;(f));</highlight></codeline>
+<codeline lineno="122"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="124"><highlight class="comment">///<sp/>Run<sp/>a<sp/>function<sp/>on<sp/>the<sp/>first<sp/>@p<sp/>n<sp/>threads<sp/>in<sp/>the<sp/>global<sp/>thread<sp/>pool,<sp/>synchronously<sp/>waiting<sp/>for</highlight></codeline>
+<codeline lineno="125"><highlight class="comment">///<sp/>those<sp/>threads.<sp/>If<sp/>@p<sp/>n<sp/>is<sp/>greater<sp/>than<sp/>the<sp/>number<sp/>of<sp/>threads<sp/>in<sp/>the<sp/>pool,<sp/>the<sp/>pool<sp/>is<sp/>expanded.</highlight></codeline>
+<codeline lineno="126"><highlight class="comment">///<sp/>@ingroup<sp/>topic-utils</highlight></codeline>
+<codeline lineno="127"><highlight class="comment">///<sp/>@deprecated</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>I<sp/>=<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>F&gt;</highlight></codeline>
+<codeline lineno="129" refid="group__topic-utils_1ga72f329f3122a76019f71f597fa44bae7" refkind="member"><highlight class="normal">[[deprecated]]<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-utils_1ga72f329f3122a76019f71f597fa44bae7" kindref="member">pool_sync_run_n</ref>(I<sp/>n,<sp/>F<sp/>&amp;&amp;f)<sp/>{</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/>std::lock_guard&lt;std::mutex&gt;<sp/>lck(<ref refid="namespacebatmat_1_1detail_1af4ebcc103086a296893602f9b5866fb9" kindref="member">detail::pool_mtx</ref>);</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="namespacebatmat_1_1detail_1a20bcf72347bb0bdb2eebbeadcdd5e0b2" kindref="member">detail::pool</ref><sp/>||<sp/><ref refid="namespacebatmat_1_1detail_1a20bcf72347bb0bdb2eebbeadcdd5e0b2" kindref="member">detail::pool</ref>-&gt;size()<sp/>&lt;<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">size_t</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(n))</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1detail_1a20bcf72347bb0bdb2eebbeadcdd5e0b2" kindref="member">detail::pool</ref>.emplace(</highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">size_t</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(n));</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1detail_1a20bcf72347bb0bdb2eebbeadcdd5e0b2" kindref="member">detail::pool</ref>-&gt;sync_run_n(n,<sp/>std::forward&lt;F&gt;(f));</highlight></codeline>
+<codeline lineno="134"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/thread-pool.hpp"/>
+  </compounddef>
+</doxygen>

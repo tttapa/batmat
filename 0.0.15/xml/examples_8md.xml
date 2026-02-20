@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="examples_8md" kind="file" language="Markdown">
+    <compoundname>examples.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Examples<sp/>{#examples}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>🚧<sp/>Work<sp/>in<sp/>progress<sp/>🚧</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>@ref<sp/>example.cpp</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">@example<sp/>example.cpp</highlight></codeline>
+<codeline><highlight class="normal">@par<sp/>Basic<sp/>example<sp/>demonstrating<sp/>how<sp/>to<sp/>use<sp/>batmat<sp/>to<sp/>perform<sp/>Cholesky<sp/>factorization<sp/>of<sp/>a<sp/>batch<sp/>of<sp/>matrices.</highlight></codeline>
+    </programlisting>
+    <location file="/home/runner/work/batmat/batmat/docs/source/doxygen/examples.md"/>
+  </compounddef>
+</doxygen>

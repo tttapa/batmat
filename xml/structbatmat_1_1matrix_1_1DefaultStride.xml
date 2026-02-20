@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1matrix_1_1DefaultStride" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::matrix::DefaultStride</compoundname>
+    <includes refid="layout_8hpp" local="no">batmat/matrix/layout.hpp</includes>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1DefaultStride_1a0dc8b06d730831d724e9f5ed7b4fa0d1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>batmat::matrix::DefaultStride::DefaultStride</definition>
+        <argsstring>()=default</argsstring>
+        <name>DefaultStride</name>
+        <qualifiedname>batmat::matrix::DefaultStride::DefaultStride</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="28" column="5"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1DefaultStride_1a78e026aecd748e3253e64c43fd948329" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>batmat::matrix::DefaultStride::DefaultStride</definition>
+        <argsstring>(index_t)</argsstring>
+        <name>DefaultStride</name>
+        <qualifiedname>batmat::matrix::DefaultStride::DefaultStride</qualifiedname>
+        <param>
+          <type>index_t</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="29" column="5" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="29" bodyend="29"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::matrix::DefaultStride</label>
+        <link refid="structbatmat_1_1matrix_1_1DefaultStride"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/matrix/layout.hpp" line="27" column="1" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="27" bodyend="30"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1matrix_1_1DefaultStride_1a0dc8b06d730831d724e9f5ed7b4fa0d1" prot="public" virt="non-virtual"><scope>batmat::matrix::DefaultStride</scope><name>DefaultStride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1DefaultStride_1a78e026aecd748e3253e64c43fd948329" prot="public" virt="non-virtual"><scope>batmat::matrix::DefaultStride</scope><name>DefaultStride</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

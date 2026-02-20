@@ -1,0 +1,231 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="shift_8hpp" kind="file" language="C++">
+    <compoundname>shift.hpp</compoundname>
+    <includes local="no">optional</includes>
+    <includes local="no">type_traits</includes>
+    <includedby refid="copy_8hpp" local="no">batmat/include/batmat/linalg/copy.hpp</includedby>
+    <includedby refid="gemm-diag_8hpp" local="no">batmat/include/batmat/linalg/gemm-diag.hpp</includedby>
+    <includedby refid="gemm_8hpp" local="no">batmat/include/batmat/linalg/gemm.hpp</includedby>
+    <includedby refid="gemv_8hpp" local="no">batmat/include/batmat/linalg/gemv.hpp</includedby>
+    <includedby refid="hyhound_8hpp" local="no">batmat/include/batmat/linalg/hyhound.hpp</includedby>
+    <includedby refid="potrf_8hpp" local="no">batmat/include/batmat/linalg/potrf.hpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/shift.hpp</label>
+        <link refid="shift_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>optional</label>
+      </node>
+      <node id="3">
+        <label>type_traits</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>batmat/include/batmat/linalg/copy.hpp</label>
+        <link refid="copy_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>batmat/include/batmat/linalg/gemm-diag.hpp</label>
+        <link refid="gemm-diag_8hpp"/>
+      </node>
+      <node id="5">
+        <label>batmat/include/batmat/linalg/gemm.hpp</label>
+        <link refid="gemm_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>batmat/include/batmat/linalg/gemv.hpp</label>
+        <link refid="gemv_8hpp"/>
+      </node>
+      <node id="7">
+        <label>batmat/include/batmat/linalg/hyhound.hpp</label>
+        <link refid="hyhound_8hpp"/>
+      </node>
+      <node id="8">
+        <label>batmat/include/batmat/linalg/potrf.hpp</label>
+        <link refid="potrf_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/shift.hpp</label>
+        <link refid="shift_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>batmat/include/batmat/linalg/trsm.hpp</label>
+        <link refid="trsm_8hpp"/>
+      </node>
+      <node id="3">
+        <label>/home/runner/work/batmat/batmat/test_package/src/example.cpp</label>
+        <link refid="example_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structbatmat_1_1linalg_1_1with__shift__A__t" prot="public">batmat::linalg::with_shift_A_t</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1with__shift__B__t" prot="public">batmat::linalg::with_shift_B_t</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1with__rotate__C__t" prot="public">batmat::linalg::with_rotate_C_t</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1with__rotate__D__t" prot="public">batmat::linalg::with_rotate_D_t</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1with__mask__D__t" prot="public">batmat::linalg::with_mask_D_t</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1with__rotate__t" prot="public">batmat::linalg::with_rotate_t</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1with__mask__t" prot="public">batmat::linalg::with_mask_t</innerclass>
+    <innerconcept refid="conceptbatmat_1_1linalg_1_1shift__opt">batmat::linalg::shift_opt</innerconcept>
+    <innerconcept refid="conceptbatmat_1_1linalg_1_1rotate__opt">batmat::linalg::rotate_opt</innerconcept>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg">batmat::linalg</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;optional&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;type_traits&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg" kindref="compound">batmat::linalg</ref><sp/>{</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="9" refid="structbatmat_1_1linalg_1_1with__shift__A__t" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1with__shift__A__t" kindref="compound">with_shift_A_t</ref><sp/>:<sp/>std::integral_constant&lt;int,<sp/>I&gt;<sp/>{};</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="11" refid="structbatmat_1_1linalg_1_1with__shift__B__t" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1with__shift__B__t" kindref="compound">with_shift_B_t</ref><sp/>:<sp/>std::integral_constant&lt;int,<sp/>I&gt;<sp/>{};</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="13" refid="structbatmat_1_1linalg_1_1with__rotate__C__t" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1with__rotate__C__t" kindref="compound">with_rotate_C_t</ref><sp/>:<sp/>std::integral_constant&lt;int,<sp/>I&gt;<sp/>{};</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="15" refid="structbatmat_1_1linalg_1_1with__rotate__D__t" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1with__rotate__D__t" kindref="compound">with_rotate_D_t</ref><sp/>:<sp/>std::integral_constant&lt;int,<sp/>I&gt;<sp/>{};</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="17" refid="structbatmat_1_1linalg_1_1with__mask__D__t" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1with__mask__D__t" kindref="compound">with_mask_D_t</ref><sp/>:<sp/>std::integral_constant&lt;int,<sp/>I&gt;<sp/>{};</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="20" refid="namespacebatmat_1_1linalg_1a19dd80ec8e830706d80326f9d31edd1c" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1with__shift__A__t" kindref="compound">with_shift_A_t&lt;I&gt;</ref><sp/><ref refid="namespacebatmat_1_1linalg_1a19dd80ec8e830706d80326f9d31edd1c" kindref="member">with_shift_A</ref>;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="22" refid="namespacebatmat_1_1linalg_1ae34de8e3d7e12c8e08708720db7e122c" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1with__shift__B__t" kindref="compound">with_shift_B_t&lt;I&gt;</ref><sp/><ref refid="namespacebatmat_1_1linalg_1ae34de8e3d7e12c8e08708720db7e122c" kindref="member">with_shift_B</ref>;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="24" refid="namespacebatmat_1_1linalg_1acb94b9e005e461541acb9ed52f87e8b5" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1with__rotate__C__t" kindref="compound">with_rotate_C_t&lt;I&gt;</ref><sp/><ref refid="namespacebatmat_1_1linalg_1acb94b9e005e461541acb9ed52f87e8b5" kindref="member">with_rotate_C</ref>;</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="26" refid="namespacebatmat_1_1linalg_1a13b33813baa12b55f7746c6987d5f42e" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1with__rotate__D__t" kindref="compound">with_rotate_D_t&lt;I&gt;</ref><sp/><ref refid="namespacebatmat_1_1linalg_1a13b33813baa12b55f7746c6987d5f42e" kindref="member">with_rotate_D</ref>;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="28" refid="namespacebatmat_1_1linalg_1a4b867a52c6cf0fb12da276e972f1fc14" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1with__mask__D__t" kindref="compound">with_mask_D_t&lt;I&gt;</ref><sp/><ref refid="namespacebatmat_1_1linalg_1a4b867a52c6cf0fb12da276e972f1fc14" kindref="member">with_mask_D</ref>;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal">...&gt;</highlight></codeline>
+<codeline lineno="31" refid="namespacebatmat_1_1linalg_1ae3b515432262221f9e530afd77291b7c" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1ae3b515432262221f9e530afd77291b7c" kindref="member">shift_A</ref><sp/>=<sp/>std::nullopt;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>Ts&gt;</highlight></codeline>
+<codeline lineno="33" refid="namespacebatmat_1_1linalg_1af683980060a1b736ec116431256d4463" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1ae3b515432262221f9e530afd77291b7c" kindref="member">shift_A</ref>&lt;T,<sp/>Ts...&gt;<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1ae3b515432262221f9e530afd77291b7c" kindref="member">shift_A</ref>&lt;Ts...&gt;;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>Ts&gt;</highlight></codeline>
+<codeline lineno="35" refid="namespacebatmat_1_1linalg_1ada4a3475e2bb3a3e0140214b1bc642ab" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1ae3b515432262221f9e530afd77291b7c" kindref="member">shift_A&lt;with_shift_A_t&lt;I&gt;</ref>,<sp/>Ts...&gt;<sp/>=<sp/>I;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal">...&gt;</highlight></codeline>
+<codeline lineno="38" refid="namespacebatmat_1_1linalg_1a9e7784af0901e8887da8390a2554f8eb" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1a9e7784af0901e8887da8390a2554f8eb" kindref="member">shift_B</ref><sp/>=<sp/>std::nullopt;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>Ts&gt;</highlight></codeline>
+<codeline lineno="40" refid="namespacebatmat_1_1linalg_1a1fef4fff81bf8391e278bf24c62506fd" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1a9e7784af0901e8887da8390a2554f8eb" kindref="member">shift_B</ref>&lt;T,<sp/>Ts...&gt;<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1a9e7784af0901e8887da8390a2554f8eb" kindref="member">shift_B</ref>&lt;Ts...&gt;;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>Ts&gt;</highlight></codeline>
+<codeline lineno="42" refid="namespacebatmat_1_1linalg_1ad033b51afb3af353752513da2691cb3b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1a9e7784af0901e8887da8390a2554f8eb" kindref="member">shift_B&lt;with_shift_B_t&lt;I&gt;</ref>,<sp/>Ts...&gt;<sp/>=<sp/>I;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal">...&gt;</highlight></codeline>
+<codeline lineno="45" refid="namespacebatmat_1_1linalg_1a46cf975c68ece97777d8e4dfd6b1dadf" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1a46cf975c68ece97777d8e4dfd6b1dadf" kindref="member">rotate_C</ref><sp/>=<sp/>std::nullopt;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>Ts&gt;</highlight></codeline>
+<codeline lineno="47" refid="namespacebatmat_1_1linalg_1ac5c187a20a813fa9c49ff23ffee1f8ce" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1a46cf975c68ece97777d8e4dfd6b1dadf" kindref="member">rotate_C</ref>&lt;T,<sp/>Ts...&gt;<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1a46cf975c68ece97777d8e4dfd6b1dadf" kindref="member">rotate_C</ref>&lt;Ts...&gt;;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>Ts&gt;</highlight></codeline>
+<codeline lineno="49" refid="namespacebatmat_1_1linalg_1acab42f73ebc546c85cc3c31df4a379f1" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1a46cf975c68ece97777d8e4dfd6b1dadf" kindref="member">rotate_C&lt;with_rotate_C_t&lt;I&gt;</ref>,<sp/>Ts...&gt;<sp/>=<sp/>I;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal">...&gt;</highlight></codeline>
+<codeline lineno="52" refid="namespacebatmat_1_1linalg_1ab04a87d2e13b965d6fe2684355159478" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1ab04a87d2e13b965d6fe2684355159478" kindref="member">rotate_D</ref><sp/>=<sp/>std::nullopt;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>Ts&gt;</highlight></codeline>
+<codeline lineno="54" refid="namespacebatmat_1_1linalg_1a674dc08c5efbc90940a8e852cbbd54f5" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1ab04a87d2e13b965d6fe2684355159478" kindref="member">rotate_D</ref>&lt;T,<sp/>Ts...&gt;<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1ab04a87d2e13b965d6fe2684355159478" kindref="member">rotate_D</ref>&lt;Ts...&gt;;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>Ts&gt;</highlight></codeline>
+<codeline lineno="56" refid="namespacebatmat_1_1linalg_1a744b9742b81407ec64ea03a013dfc7ee" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1ab04a87d2e13b965d6fe2684355159478" kindref="member">rotate_D&lt;with_rotate_D_t&lt;I&gt;</ref>,<sp/>Ts...&gt;<sp/>=<sp/>I;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal">...&gt;</highlight></codeline>
+<codeline lineno="59" refid="namespacebatmat_1_1linalg_1a5f3d7bfa8cda00a0b262b6eac578e96e" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1a5f3d7bfa8cda00a0b262b6eac578e96e" kindref="member">mask_D</ref><sp/>=<sp/>std::nullopt;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>Ts&gt;</highlight></codeline>
+<codeline lineno="61" refid="namespacebatmat_1_1linalg_1a857748dba6a3b881ac61e4227c6781a9" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1a5f3d7bfa8cda00a0b262b6eac578e96e" kindref="member">mask_D</ref>&lt;T,<sp/>Ts...&gt;<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1a5f3d7bfa8cda00a0b262b6eac578e96e" kindref="member">mask_D</ref>&lt;Ts...&gt;;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>Ts&gt;</highlight></codeline>
+<codeline lineno="63" refid="namespacebatmat_1_1linalg_1a2b89788a516e3c9e0a71a97d7e306cc5" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1a5f3d7bfa8cda00a0b262b6eac578e96e" kindref="member">mask_D&lt;with_mask_D_t&lt;I&gt;</ref>,<sp/>Ts...&gt;<sp/>=<sp/>I;</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="66" refid="namespacebatmat_1_1linalg_1a64cdc82e29e4a883a1e8c9dc16e01873" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a64cdc82e29e4a883a1e8c9dc16e01873" kindref="member">is_shift_opt</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="68" refid="namespacebatmat_1_1linalg_1a6d6dcba4021b28bb1d2c991795caa9dc" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a64cdc82e29e4a883a1e8c9dc16e01873" kindref="member">is_shift_opt&lt;with_shift_A_t&lt;I&gt;</ref>&gt;<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="70" refid="namespacebatmat_1_1linalg_1a3a35b162b51c4790811e9abb5566af2f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a64cdc82e29e4a883a1e8c9dc16e01873" kindref="member">is_shift_opt&lt;with_shift_B_t&lt;I&gt;</ref>&gt;<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="72" refid="namespacebatmat_1_1linalg_1a68811bb0dc3714b6f0bbb5ca8afc56b9" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a64cdc82e29e4a883a1e8c9dc16e01873" kindref="member">is_shift_opt&lt;with_rotate_C_t&lt;I&gt;</ref>&gt;<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="74" refid="namespacebatmat_1_1linalg_1a0179065f211dc8f8292b15c277298621" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a64cdc82e29e4a883a1e8c9dc16e01873" kindref="member">is_shift_opt&lt;with_rotate_D_t&lt;I&gt;</ref>&gt;<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="76" refid="namespacebatmat_1_1linalg_1a81853ec4616ad5a628ea58e5424e6109" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a64cdc82e29e4a883a1e8c9dc16e01873" kindref="member">is_shift_opt&lt;with_mask_D_t&lt;I&gt;</ref>&gt;<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Opt&gt;</highlight></codeline>
+<codeline lineno="79" refid="conceptbatmat_1_1linalg_1_1shift__opt" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">concept<sp/></highlight><highlight class="normal"><ref refid="conceptbatmat_1_1linalg_1_1shift__opt" kindref="compound">shift_opt</ref><sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1a64cdc82e29e4a883a1e8c9dc16e01873" kindref="member">is_shift_opt&lt;Opt&gt;</ref>;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="82" refid="structbatmat_1_1linalg_1_1with__rotate__t" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1with__rotate__t" kindref="compound">with_rotate_t</ref><sp/>:<sp/>std::integral_constant&lt;int,<sp/>I&gt;<sp/>{};</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="84" refid="structbatmat_1_1linalg_1_1with__mask__t" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1with__mask__t" kindref="compound">with_mask_t</ref><sp/>:<sp/>std::integral_constant&lt;int,<sp/>I&gt;<sp/>{};</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="87" refid="namespacebatmat_1_1linalg_1a18f5c2df0c1ec2ea5038ad05d81946d1" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1with__rotate__t" kindref="compound">with_rotate_t&lt;I&gt;</ref><sp/><ref refid="namespacebatmat_1_1linalg_1a18f5c2df0c1ec2ea5038ad05d81946d1" kindref="member">with_rotate</ref>;</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="89" refid="namespacebatmat_1_1linalg_1a10ff2f21577bfc4d8d96d8104715267b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1with__mask__t" kindref="compound">with_mask_t&lt;I&gt;</ref><sp/><ref refid="namespacebatmat_1_1linalg_1a10ff2f21577bfc4d8d96d8104715267b" kindref="member">with_mask</ref>;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal">...&gt;</highlight></codeline>
+<codeline lineno="92" refid="namespacebatmat_1_1linalg_1a8c727e255c0df5a8041151fd6889b4fc" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1a8c727e255c0df5a8041151fd6889b4fc" kindref="member">get_rotate</ref><sp/>=<sp/>std::nullopt;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>Ts&gt;</highlight></codeline>
+<codeline lineno="94" refid="namespacebatmat_1_1linalg_1abd28ef0011ceef42ba470ded4ec5035e" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1a8c727e255c0df5a8041151fd6889b4fc" kindref="member">get_rotate</ref>&lt;T,<sp/>Ts...&gt;<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1a8c727e255c0df5a8041151fd6889b4fc" kindref="member">get_rotate</ref>&lt;Ts...&gt;;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>Ts&gt;</highlight></codeline>
+<codeline lineno="96" refid="namespacebatmat_1_1linalg_1a859255c62148ba0dbde3c1d7a01a3ceb" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1a8c727e255c0df5a8041151fd6889b4fc" kindref="member">get_rotate&lt;with_rotate_t&lt;I&gt;</ref>,<sp/>Ts...&gt;<sp/>=<sp/>I;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal">...&gt;</highlight></codeline>
+<codeline lineno="99" refid="namespacebatmat_1_1linalg_1a94c3eba4eaabc3dcb64cf1fa7727f802" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1a94c3eba4eaabc3dcb64cf1fa7727f802" kindref="member">get_mask</ref><sp/>=<sp/>std::nullopt;</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>Ts&gt;</highlight></codeline>
+<codeline lineno="101" refid="namespacebatmat_1_1linalg_1a6a6d52eeb2f4d133e251391d3fb5acb7" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1a94c3eba4eaabc3dcb64cf1fa7727f802" kindref="member">get_mask</ref>&lt;T,<sp/>Ts...&gt;<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1a94c3eba4eaabc3dcb64cf1fa7727f802" kindref="member">get_mask</ref>&lt;Ts...&gt;;</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">...<sp/>Ts&gt;</highlight></codeline>
+<codeline lineno="103" refid="namespacebatmat_1_1linalg_1a2a3eadfc27bc5ba985c93f77ec030dc9" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::optional&lt;int&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1a94c3eba4eaabc3dcb64cf1fa7727f802" kindref="member">get_mask&lt;with_mask_t&lt;I&gt;</ref>,<sp/>Ts...&gt;<sp/>=<sp/>I;</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="106" refid="namespacebatmat_1_1linalg_1a025c96e7210b4e290963004865dfa8c4" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a025c96e7210b4e290963004865dfa8c4" kindref="member">is_rotate_opt</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="108" refid="namespacebatmat_1_1linalg_1ad02fd85f6689899b4a41e64c577234d7" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a025c96e7210b4e290963004865dfa8c4" kindref="member">is_rotate_opt&lt;with_rotate_t&lt;I&gt;</ref>&gt;<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>I&gt;</highlight></codeline>
+<codeline lineno="110" refid="namespacebatmat_1_1linalg_1ad21603db0e1689940050857129a7e4fd" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a025c96e7210b4e290963004865dfa8c4" kindref="member">is_rotate_opt&lt;with_mask_t&lt;I&gt;</ref>&gt;<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Opt&gt;</highlight></codeline>
+<codeline lineno="113" refid="conceptbatmat_1_1linalg_1_1rotate__opt" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">concept<sp/></highlight><highlight class="normal"><ref refid="conceptbatmat_1_1linalg_1_1rotate__opt" kindref="compound">rotate_opt</ref><sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1a025c96e7210b4e290963004865dfa8c4" kindref="member">is_rotate_opt&lt;Opt&gt;</ref>;</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::linalg</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/linalg/shift.hpp"/>
+  </compounddef>
+</doxygen>

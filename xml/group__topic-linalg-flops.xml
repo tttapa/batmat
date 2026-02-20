@@ -1,0 +1,572 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="group__topic-linalg-flops" kind="group">
+    <compoundname>topic-linalg-flops</compoundname>
+    <title>FLOP counts</title>
+    <innerclass refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" prot="public">batmat::linalg::flops::FlopCount</innerclass>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group__topic-linalg-flops_1ga837cc287e8d3e7e62cf013aa2c1f58d3" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>FlopCount</type>
+        <definition>FlopCount batmat::linalg::flops::operator+</definition>
+        <argsstring>(FlopCount a, FlopCount b)</argsstring>
+        <name>operator+</name>
+        <qualifiedname>batmat::linalg::flops::operator+</qualifiedname>
+        <param>
+          <type>FlopCount</type>
+          <declname>a</declname>
+        </param>
+        <param>
+          <type>FlopCount</type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+<para>Combine two flop counts by summing the counts of each operation type. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="23" column="21" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="23" bodyend="29"/>
+        <references refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a50d077939e212aaa9b4a1184521cbdbd" compoundref="flops_8hpp" startline="17">batmat::linalg::flops::FlopCount::add</references>
+        <references refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a2dadccf6759992d6143bdd662b25479b" compoundref="flops_8hpp" startline="18">batmat::linalg::flops::FlopCount::div</references>
+        <references refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a28da3437266fe88ae51442fc0d2c8b31" compoundref="flops_8hpp" startline="15">batmat::linalg::flops::FlopCount::fma</references>
+        <references refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a6e018b00e1d427244c2957c78a9ae572" compoundref="flops_8hpp" startline="16">batmat::linalg::flops::FlopCount::mul</references>
+        <references refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1ae62283feb062751c55b8d56e5fdb9b4a" compoundref="flops_8hpp" startline="19">batmat::linalg::flops::FlopCount::sqrt</references>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-linalg-flops_1ga3f5450fd91a87ba9dc28e346bf46bf31" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::flops::total</definition>
+        <argsstring>(FlopCount c)</argsstring>
+        <name>total</name>
+        <qualifiedname>batmat::linalg::flops::total</qualifiedname>
+        <param>
+          <type>FlopCount</type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+<para>Compute the total number of floating point operations by summing the counts of all operation types. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="33" column="19" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="33" bodyend="33"/>
+        <references refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a50d077939e212aaa9b4a1184521cbdbd" compoundref="flops_8hpp" startline="17">batmat::linalg::flops::FlopCount::add</references>
+        <references refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a2dadccf6759992d6143bdd662b25479b" compoundref="flops_8hpp" startline="18">batmat::linalg::flops::FlopCount::div</references>
+        <references refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a28da3437266fe88ae51442fc0d2c8b31" compoundref="flops_8hpp" startline="15">batmat::linalg::flops::FlopCount::fma</references>
+        <references refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a6e018b00e1d427244c2957c78a9ae572" compoundref="flops_8hpp" startline="16">batmat::linalg::flops::FlopCount::mul</references>
+        <references refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1ae62283feb062751c55b8d56e5fdb9b4a" compoundref="flops_8hpp" startline="19">batmat::linalg::flops::FlopCount::sqrt</references>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-linalg-flops_1ga792bf36ee357f56cea635ef9337368b8" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>FlopCount</type>
+        <definition>FlopCount batmat::linalg::flops::gemm</definition>
+        <argsstring>(index_t m, index_t n, index_t k)</argsstring>
+        <name>gemm</name>
+        <qualifiedname>batmat::linalg::flops::gemm</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>m</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>n</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k</declname>
+        </param>
+        <briefdescription>
+<para>Matrix-matrix multiplication of m×k and k×n matrices. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="par"><title>Implementation:</title><para><programlisting filename="/home/runner/work/batmat/batmat/src/batmat/include/batmat/linalg/flops.hpp"><codeline><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="member">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga792bf36ee357f56cea635ef9337368b8" kindref="member">gemm</ref>(index_t<sp/>m,<sp/>index_t<sp/>n,<sp/>index_t<sp/>k)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>m<sp/>*<sp/>k<sp/>*<sp/>n};<sp/>}</highlight></codeline>
+</programlisting> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="38" column="21" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="38" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-linalg-flops_1ga7ab4fbff09383b46ed353e5c8b1cb44a" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>FlopCount</type>
+        <definition>FlopCount batmat::linalg::flops::trmm</definition>
+        <argsstring>(index_t m, index_t n, index_t k, MatrixStructure sA, MatrixStructure sB, MatrixStructure sC)</argsstring>
+        <name>trmm</name>
+        <qualifiedname>batmat::linalg::flops::trmm</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>m</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>n</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k</declname>
+        </param>
+        <param>
+          <type>MatrixStructure</type>
+          <declname>sA</declname>
+        </param>
+        <param>
+          <type>MatrixStructure</type>
+          <declname>sB</declname>
+        </param>
+        <param>
+          <type>MatrixStructure</type>
+          <declname>sC</declname>
+        </param>
+        <briefdescription>
+<para>Matrix-matrix multiplication of m×k and k×n matrices where one or more of the matrices are triangular or trapezoidal. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="par"><title>Implementation:</title><para><programlisting filename="/home/runner/work/batmat/batmat/src/batmat/include/batmat/linalg/flops.hpp"><codeline><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="member">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga7ab4fbff09383b46ed353e5c8b1cb44a" kindref="member">trmm</ref>(index_t<sp/>m,<sp/>index_t<sp/>n,<sp/>index_t<sp/>k,<sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>sA,<sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>sB,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>sC)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">enum<sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref>;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sB<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref><sp/>&amp;&amp;<sp/>sC<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref>)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sA<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">LowerTriangular</ref><sp/>||<sp/>sA<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629cace546798a67931b38dee5a153f9cf688" kindref="member">UpperTriangular</ref>)<sp/>{<sp/></highlight><highlight class="comment">//<sp/>trapezoidal<sp/>A</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(m<sp/>&gt;=<sp/>k)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>tall<sp/>A</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/>x<sp/>x<sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/>x<sp/>x<sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/>x<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/>x<sp/>x<sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>k<sp/>*<sp/>(k<sp/>+<sp/>1)<sp/>/<sp/>2<sp/>*<sp/>n<sp/>+<sp/>(m<sp/>-<sp/>k)<sp/>*<sp/>k<sp/>*<sp/>n};</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">//<sp/>wide<sp/>A</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/>x<sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/>x<sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/>x<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/>x<sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>m<sp/>*<sp/>(m<sp/>+<sp/>1)<sp/>/<sp/>2<sp/>*<sp/>n<sp/>+<sp/>(k<sp/>-<sp/>m)<sp/>*<sp/>(k<sp/>-<sp/>m)<sp/>*<sp/>n};</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sA<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref>)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>m<sp/>*<sp/>k<sp/>*<sp/>n};</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(!</highlight><highlight class="stringliteral">&quot;invalid<sp/>structure&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sA<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref><sp/>&amp;&amp;<sp/>sC<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref>)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sB<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">LowerTriangular</ref><sp/>||<sp/>sB<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629cace546798a67931b38dee5a153f9cf688" kindref="member">UpperTriangular</ref>)<sp/>{<sp/></highlight><highlight class="comment">//<sp/>trapezoidal<sp/>B</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(n<sp/>&gt;=<sp/>k)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>wide<sp/>B</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>k<sp/>*<sp/>(k<sp/>+<sp/>1)<sp/>/<sp/>2<sp/>*<sp/>m<sp/>+<sp/>(n<sp/>-<sp/>k)<sp/>*<sp/>k<sp/>*<sp/>m};</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">//<sp/>tall<sp/>B</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>n<sp/>*<sp/>(n<sp/>+<sp/>1)<sp/>/<sp/>2<sp/>*<sp/>m<sp/>+<sp/>(k<sp/>-<sp/>n)<sp/>*<sp/>(k<sp/>-<sp/>n)<sp/>*<sp/>m};</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(!</highlight><highlight class="stringliteral">&quot;invalid<sp/>structure&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sA<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref><sp/>&amp;&amp;<sp/>sB<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref>)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sC<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">LowerTriangular</ref><sp/>||<sp/>sC<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629cace546798a67931b38dee5a153f9cf688" kindref="member">UpperTriangular</ref>)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(m<sp/>==<sp/>n);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>m<sp/>*<sp/>(m<sp/>+<sp/>1)<sp/>/<sp/>2<sp/>*<sp/>k};</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(!</highlight><highlight class="stringliteral">&quot;invalid<sp/>structure&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sC<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">LowerTriangular</ref><sp/>||<sp/>sC<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629cace546798a67931b38dee5a153f9cf688" kindref="member">UpperTriangular</ref>)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sA<sp/>==<sp/><ref refid="group__topic-linalg_1gaa0bd5dc9f7ed367a2f7fd8b835694d42" kindref="member">transpose</ref>(sB))<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(m<sp/>==<sp/>n);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(m<sp/>==<sp/>k);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>m<sp/>*<sp/>(m<sp/>+<sp/>1)<sp/>*<sp/>(m<sp/>+<sp/>2)<sp/>/<sp/>6};</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(!</highlight><highlight class="stringliteral">&quot;invalid<sp/>structure&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(!</highlight><highlight class="stringliteral">&quot;unsupported<sp/>structure&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{};</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="45" column="21" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="45" bodyend="97"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" compoundref="structure_8hpp" startline="8">batmat::linalg::General</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" compoundref="structure_8hpp" startline="8">batmat::linalg::LowerTriangular</references>
+        <references refid="group__topic-linalg_1gaa0bd5dc9f7ed367a2f7fd8b835694d42" compoundref="structure_8hpp" startline="11" endline="14">batmat::linalg::transpose</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629cace546798a67931b38dee5a153f9cf688" compoundref="structure_8hpp" startline="8">batmat::linalg::UpperTriangular</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1aafe5abf07c832375ed47675bfc9f5a86" compoundref="gemm_8hpp" startline="160" endline="190">batmat::linalg::detail::gemmt</referencedby>
+        <referencedby refid="group__topic-linalg-flops_1gad70c29c07e3f55d4464e001bdfd14da2" compoundref="flops_8hpp" startline="103" endline="106">batmat::linalg::flops::gemmt</referencedby>
+        <referencedby refid="group__topic-linalg-flops_1ga232cc639534f37bf900df45fb929743e" compoundref="flops_8hpp" startline="122" endline="125">batmat::linalg::flops::gemmt_diag</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a986cbb6d34a89fe9f0a7e475746934e7" compoundref="gemm_8hpp" startline="195" endline="226">batmat::linalg::detail::trmm</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-linalg-flops_1gad70c29c07e3f55d4464e001bdfd14da2" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>FlopCount</type>
+        <definition>FlopCount batmat::linalg::flops::gemmt</definition>
+        <argsstring>(index_t m, index_t n, index_t k, MatrixStructure sA, MatrixStructure sB, MatrixStructure sC)</argsstring>
+        <name>gemmt</name>
+        <qualifiedname>batmat::linalg::flops::gemmt</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>m</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>n</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k</declname>
+        </param>
+        <param>
+          <type>MatrixStructure</type>
+          <declname>sA</declname>
+        </param>
+        <param>
+          <type>MatrixStructure</type>
+          <declname>sB</declname>
+        </param>
+        <param>
+          <type>MatrixStructure</type>
+          <declname>sC</declname>
+        </param>
+        <briefdescription>
+<para>Matrix-matrix multiplication of m×k and k×n matrices where the result is symmetric. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="par"><title>Implementation:</title><para><programlisting filename="/home/runner/work/batmat/batmat/src/batmat/include/batmat/linalg/flops.hpp"><codeline><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="member">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1gad70c29c07e3f55d4464e001bdfd14da2" kindref="member">gemmt</ref>(index_t<sp/>m,<sp/>index_t<sp/>n,<sp/>index_t<sp/>k,<sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>sA,<sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>sB,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>sC)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1ga7ab4fbff09383b46ed353e5c8b1cb44a" kindref="member">trmm</ref>(m,<sp/>n,<sp/>k,<sp/>sA,<sp/>sB,<sp/>sC);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="103" column="21" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="103" bodyend="106"/>
+        <references refid="group__topic-linalg-flops_1ga7ab4fbff09383b46ed353e5c8b1cb44a" compoundref="flops_8hpp" startline="45" endline="97">batmat::linalg::flops::trmm</references>
+        <referencedby refid="group__topic-linalg-flops_1gac7a4c106e784546210860c59c3634e5e" compoundref="flops_8hpp" startline="112" endline="115">batmat::linalg::flops::syrk</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-linalg-flops_1gac7a4c106e784546210860c59c3634e5e" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>FlopCount</type>
+        <definition>FlopCount batmat::linalg::flops::syrk</definition>
+        <argsstring>(index_t n, index_t k)</argsstring>
+        <name>syrk</name>
+        <qualifiedname>batmat::linalg::flops::syrk</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>n</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k</declname>
+        </param>
+        <briefdescription>
+<para>Symmetric rank-k update of n×n matrices. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="par"><title>Implementation:</title><para><programlisting filename="/home/runner/work/batmat/batmat/src/batmat/include/batmat/linalg/flops.hpp"><codeline><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="member">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1gac7a4c106e784546210860c59c3634e5e" kindref="member">syrk</ref>(index_t<sp/>n,<sp/>index_t<sp/>k)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1gad70c29c07e3f55d4464e001bdfd14da2" kindref="member">gemmt</ref>(n,<sp/>n,<sp/>k,<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref>,<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref>,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">MatrixStructure::LowerTriangular</ref>);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="112" column="21" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="112" bodyend="115"/>
+        <references refid="group__topic-linalg-flops_1gad70c29c07e3f55d4464e001bdfd14da2" compoundref="flops_8hpp" startline="103" endline="106">batmat::linalg::flops::gemmt</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" compoundref="structure_8hpp" startline="8">batmat::linalg::General</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" compoundref="structure_8hpp" startline="8">batmat::linalg::LowerTriangular</references>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-linalg-flops_1ga232cc639534f37bf900df45fb929743e" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>FlopCount</type>
+        <definition>FlopCount batmat::linalg::flops::gemmt_diag</definition>
+        <argsstring>(index_t m, index_t n, index_t k, MatrixStructure sC)</argsstring>
+        <name>gemmt_diag</name>
+        <qualifiedname>batmat::linalg::flops::gemmt_diag</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>m</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>n</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k</declname>
+        </param>
+        <param>
+          <type>MatrixStructure</type>
+          <declname>sC</declname>
+        </param>
+        <briefdescription>
+<para>Matrix-matrix multiplication of m×k and k×n matrices with a diagonal k×k matrix in the middle, where the result is symmetric. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="par"><title>Implementation:</title><para><programlisting filename="/home/runner/work/batmat/batmat/src/batmat/include/batmat/linalg/flops.hpp"><codeline><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="member">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga232cc639534f37bf900df45fb929743e" kindref="member">gemmt_diag</ref>(index_t<sp/>m,<sp/>index_t<sp/>n,<sp/>index_t<sp/>k,<sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>sC)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>sA<sp/>=<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref>,<sp/>sB<sp/>=<sp/>sA;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1ga7ab4fbff09383b46ed353e5c8b1cb44a" kindref="member">trmm</ref>(m,<sp/>n,<sp/>k,<sp/>sA,<sp/>sB,<sp/>sC)<sp/>+<sp/><ref refid="group__topic-linalg-flops_1structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="member">FlopCount</ref>{.mul<sp/>=<sp/>std::min(m,<sp/>n)<sp/>*<sp/>k};</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="122" column="21" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="122" bodyend="125"/>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" compoundref="structure_8hpp" startline="8">batmat::linalg::General</references>
+        <references refid="group__topic-linalg-flops_1ga7ab4fbff09383b46ed353e5c8b1cb44a" compoundref="flops_8hpp" startline="45" endline="97">batmat::linalg::flops::trmm</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1a2c3d3424f62a8393a28b1d360f411f69" compoundref="gemm-diag_8hpp" startline="21" endline="49">batmat::linalg::detail::gemm_diag::gemm_diag</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-linalg-flops_1ga840f3e725b3e51c181bc4b2961697528" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>FlopCount</type>
+        <definition>FlopCount batmat::linalg::flops::potrf</definition>
+        <argsstring>(index_t m, index_t n)</argsstring>
+        <name>potrf</name>
+        <qualifiedname>batmat::linalg::flops::potrf</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>m</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+<para>Cholesky factorization and triangular solve for an m×n matrix with m≥n. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="par"><title>Implementation:</title><para><programlisting filename="/home/runner/work/batmat/batmat/src/batmat/include/batmat/linalg/flops.hpp"><codeline><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="member">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga840f3e725b3e51c181bc4b2961697528" kindref="member">potrf</ref>(index_t<sp/>m,<sp/>index_t<sp/>n)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(m<sp/>&gt;=<sp/>n);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.fma<sp/>=<sp/>(n<sp/>+<sp/>1)<sp/>*<sp/>n<sp/>*<sp/>(n<sp/>-<sp/>1)<sp/>/<sp/>6<sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Schur<sp/>complement<sp/>(square)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>+<sp/>(m<sp/>-<sp/>n)<sp/>*<sp/>n<sp/>*<sp/>(n<sp/>-<sp/>1)<sp/>/<sp/>2,<sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(bottom)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.mul<sp/>=<sp/>n<sp/>*<sp/>(n<sp/>-<sp/>1)<sp/>/<sp/>2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>multiplication<sp/>by<sp/>inverse<sp/>pivot<sp/>(square)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>+<sp/>(m<sp/>-<sp/>n)<sp/>*<sp/>n,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(bottom)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.div<sp/><sp/>=<sp/>n,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>inverting<sp/>pivot</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.sqrt<sp/>=<sp/>n,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>square<sp/>root<sp/>pivot</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="131" column="21" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="131" bodyend="141"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <referencedby refid="group__topic-linalg-flops_1ga5bc716f7288da381eb1c0120a7d3182c" compoundref="flops_8hpp" startline="182" endline="185">batmat::linalg::flops::syrk_potrf</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-linalg-flops_1ga5c387fb603a544664054bd7db3d363a7" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>FlopCount</type>
+        <definition>FlopCount batmat::linalg::flops::hyh_square</definition>
+        <argsstring>(index_t n, index_t k)</argsstring>
+        <name>hyh_square</name>
+        <qualifiedname>batmat::linalg::flops::hyh_square</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>n</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k</declname>
+        </param>
+        <briefdescription>
+<para>Hyperbolic Householder factorization update with L n×n and A nr×k. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="par"><title>Implementation:</title><para><programlisting filename="/home/runner/work/batmat/batmat/src/batmat/include/batmat/linalg/flops.hpp"><codeline><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="member">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga5c387fb603a544664054bd7db3d363a7" kindref="member">hyh_square</ref>(index_t<sp/>n,<sp/>index_t<sp/>k)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.fma<sp/><sp/>=<sp/>k<sp/>*<sp/>n<sp/>*<sp/>n<sp/>+<sp/>2<sp/>*<sp/>n,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.mul<sp/><sp/>=<sp/>k<sp/>*<sp/>n<sp/>+<sp/>(n<sp/>+<sp/>1)<sp/>*<sp/>n<sp/>/<sp/>2<sp/>+<sp/>n,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.add<sp/><sp/>=<sp/>(n<sp/>+<sp/>1)<sp/>*<sp/>n<sp/>/<sp/>2<sp/>+<sp/>n,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.div<sp/><sp/>=<sp/>2<sp/>*<sp/>n,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.sqrt<sp/>=<sp/>n,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="147" column="21" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="147" bodyend="155"/>
+        <referencedby refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" compoundref="flops_8hpp" startline="173" endline="176">batmat::linalg::flops::hyh</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-linalg-flops_1ga907a77af15c3cba01ac8b66c3388adb4" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>FlopCount</type>
+        <definition>FlopCount batmat::linalg::flops::hyh_apply</definition>
+        <argsstring>(index_t nr, index_t nc, index_t k)</argsstring>
+        <name>hyh_apply</name>
+        <qualifiedname>batmat::linalg::flops::hyh_apply</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>nr</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>nc</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k</declname>
+        </param>
+        <briefdescription>
+<para>Hyperbolic Householder factorization application to L2 nr×nc and A2 nr×k. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="par"><title>Implementation:</title><para><programlisting filename="/home/runner/work/batmat/batmat/src/batmat/include/batmat/linalg/flops.hpp"><codeline><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="member">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga907a77af15c3cba01ac8b66c3388adb4" kindref="member">hyh_apply</ref>(index_t<sp/>nr,<sp/>index_t<sp/>nc,<sp/>index_t<sp/>k)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.fma<sp/>=<sp/>2<sp/>*<sp/>nr<sp/>*<sp/>k<sp/>*<sp/>nc,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.mul<sp/>=<sp/>nr<sp/>*<sp/>nc,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.add<sp/>=<sp/>nr<sp/>*<sp/>nc,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="161" column="21" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="161" bodyend="167"/>
+        <referencedby refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" compoundref="flops_8hpp" startline="173" endline="176">batmat::linalg::flops::hyh</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a02dfdae9c62e6e04a1883300a5596774" compoundref="hyhound_8hpp" startline="50" endline="70">batmat::linalg::detail::hyhound_diag_apply</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>FlopCount</type>
+        <definition>FlopCount batmat::linalg::flops::hyh</definition>
+        <argsstring>(index_t nr, index_t nc, index_t k)</argsstring>
+        <name>hyh</name>
+        <qualifiedname>batmat::linalg::flops::hyh</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>nr</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>nc</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k</declname>
+        </param>
+        <briefdescription>
+<para>Hyperbolic Householder factorization update with L nr×nc and A nr×k. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="par"><title>Implementation:</title><para><programlisting filename="/home/runner/work/batmat/batmat/src/batmat/include/batmat/linalg/flops.hpp"><codeline><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="member">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" kindref="member">hyh</ref>(index_t<sp/>nr,<sp/>index_t<sp/>nc,<sp/>index_t<sp/>k)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(nr<sp/>&gt;=<sp/>nc);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1ga5c387fb603a544664054bd7db3d363a7" kindref="member">hyh_square</ref>(nc,<sp/>k)<sp/>+<sp/><ref refid="group__topic-linalg-flops_1ga907a77af15c3cba01ac8b66c3388adb4" kindref="member">hyh_apply</ref>(nr<sp/>-<sp/>nc,<sp/>nc,<sp/>k);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="173" column="21" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="173" bodyend="176"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="group__topic-linalg-flops_1ga907a77af15c3cba01ac8b66c3388adb4" compoundref="flops_8hpp" startline="161" endline="167">batmat::linalg::flops::hyh_apply</references>
+        <references refid="group__topic-linalg-flops_1ga5c387fb603a544664054bd7db3d363a7" compoundref="flops_8hpp" startline="147" endline="155">batmat::linalg::flops::hyh_square</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a6356ece5808d89381635b59246a158d6" compoundref="hyhound_8hpp" startline="20" endline="30">batmat::linalg::detail::hyhound_diag</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ae9bdcfd57ff8c62767691f16fd19676b" compoundref="hyhound_8hpp" startline="34" endline="46">batmat::linalg::detail::hyhound_diag</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ae08f58a280ea099e7cefd16ac7e2810f" compoundref="hyhound_8hpp" startline="74" endline="88">batmat::linalg::detail::hyhound_diag_2</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a899e19f752b26f44ee94ecb94c7a1c8b" compoundref="hyhound_8hpp" startline="92" endline="113">batmat::linalg::detail::hyhound_diag_cyclic</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a533820c033d4bc11f8969555ab6c47cc" compoundref="hyhound_8hpp" startline="117" endline="139">batmat::linalg::detail::hyhound_diag_riccati</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-linalg-flops_1ga5bc716f7288da381eb1c0120a7d3182c" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>FlopCount</type>
+        <definition>FlopCount batmat::linalg::flops::syrk_potrf</definition>
+        <argsstring>(index_t m, index_t n, index_t k)</argsstring>
+        <name>syrk_potrf</name>
+        <qualifiedname>batmat::linalg::flops::syrk_potrf</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>m</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>n</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k</declname>
+        </param>
+        <briefdescription>
+<para>Fused symmetric rank-k update and Cholesky factorization of an m×n matrix with m≥n. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="par"><title>Implementation:</title><para><programlisting filename="/home/runner/work/batmat/batmat/src/batmat/include/batmat/linalg/flops.hpp"><codeline><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="member">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga5bc716f7288da381eb1c0120a7d3182c" kindref="member">syrk_potrf</ref>(index_t<sp/>m,<sp/>index_t<sp/>n,<sp/>index_t<sp/>k)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(m<sp/>&gt;=<sp/>n);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1ga840f3e725b3e51c181bc4b2961697528" kindref="member">potrf</ref>(m,<sp/>n)<sp/>+<sp/><ref refid="group__topic-linalg-flops_1structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="member">FlopCount</ref>{.fma<sp/>=<sp/>n<sp/>*<sp/>(n<sp/>+<sp/>1)<sp/>*<sp/>k<sp/>/<sp/>2<sp/>+<sp/>(m<sp/>-<sp/>n)<sp/>*<sp/>n<sp/>*<sp/>k};</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="182" column="21" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="182" bodyend="185"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="group__topic-linalg-flops_1ga840f3e725b3e51c181bc4b2961697528" compoundref="flops_8hpp" startline="131" endline="141">batmat::linalg::flops::potrf</references>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-linalg-flops_1ga982c62c85e182a49c333bb2eef903625" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>FlopCount</type>
+        <definition>FlopCount batmat::linalg::flops::trsm</definition>
+        <argsstring>(index_t m, index_t n)</argsstring>
+        <name>trsm</name>
+        <qualifiedname>batmat::linalg::flops::trsm</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>m</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+<para>Triangular solve of m×n matrices. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="par"><title>Implementation:</title><para><programlisting filename="/home/runner/work/batmat/batmat/src/batmat/include/batmat/linalg/flops.hpp"><codeline><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="member">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga982c62c85e182a49c333bb2eef903625" kindref="member">trsm</ref>(index_t<sp/>m,<sp/>index_t<sp/>n)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>m<sp/>*<sp/>(m<sp/>-<sp/>1)<sp/>*<sp/>n<sp/>/<sp/>2,<sp/>.mul<sp/>=<sp/>m<sp/>*<sp/>n,<sp/>.div<sp/>=<sp/>m};</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="191" column="21" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="191" bodyend="193"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1aad5eae1a9a7c923fe97aa8062e74beec" compoundref="trsm_8hpp" startline="26" endline="39">batmat::linalg::detail::trsm</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-linalg-flops_1ga5f151f75e2a3092103903fb8f8f3cae3" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>FlopCount</type>
+        <definition>FlopCount batmat::linalg::flops::trtri</definition>
+        <argsstring>(index_t m)</argsstring>
+        <name>trtri</name>
+        <qualifiedname>batmat::linalg::flops::trtri</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>m</declname>
+        </param>
+        <briefdescription>
+<para>Triangular inversion of an m×m matrix. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="par"><title>Implementation:</title><para><programlisting filename="/home/runner/work/batmat/batmat/src/batmat/include/batmat/linalg/flops.hpp"><codeline><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="member">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga5f151f75e2a3092103903fb8f8f3cae3" kindref="member">trtri</ref>(index_t<sp/>m)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>(m<sp/>+<sp/>1)<sp/>*<sp/>m<sp/>*<sp/>(m<sp/>-<sp/>1)<sp/>/<sp/>6,<sp/>.div<sp/>=<sp/>m};<sp/></highlight><highlight class="comment">//<sp/>TODO</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="199" column="21" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="199" bodyend="201"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a7c0391dc95024cb883f25c65e495ad58" compoundref="trtri_8hpp" startline="17" endline="29">batmat::linalg::detail::trtri</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Theoretical floating point operation counts for linear algebra operations. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

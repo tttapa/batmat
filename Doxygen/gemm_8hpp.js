@@ -1,0 +1,38 @@
+var gemm_8hpp =
+[
+    [ "batmat::linalg::PackingSelector", "group__topic-linalg.html#ga3526955f82976c2274834e5a69b21b7e", [
+      [ "batmat::linalg::PackingSelector::Never", "group__topic-linalg.html#gga3526955f82976c2274834e5a69b21b7ea6e7b34fa59e1bd229b207892956dc41c", null ],
+      [ "batmat::linalg::PackingSelector::Always", "group__topic-linalg.html#gga3526955f82976c2274834e5a69b21b7ea68eec46437c384d8dad18d5464ebc35c", null ],
+      [ "batmat::linalg::PackingSelector::Transpose", "group__topic-linalg.html#gga3526955f82976c2274834e5a69b21b7eaaf70b1ac863830a4e1ce6268c8399f54", null ]
+    ] ],
+    [ "batmat::linalg::detail::gemm", "namespacebatmat_1_1linalg_1_1detail.html#af26685ecf86832d020eeed2c759f1c4a", null ],
+    [ "batmat::linalg::detail::gemmt", "namespacebatmat_1_1linalg_1_1detail.html#aafe5abf07c832375ed47675bfc9f5a86", null ],
+    [ "batmat::linalg::detail::trmm", "namespacebatmat_1_1linalg_1_1detail.html#a986cbb6d34a89fe9f0a7e475746934e7", null ],
+    [ "batmat::linalg::detail::apply_gemm_options", "namespacebatmat_1_1linalg_1_1detail.html#ace93b35f0993d2bcf550c1ea6ed92d96", null ],
+    [ "batmat::linalg::gemm", "group__topic-linalg.html#ga56b98ed114604544b0806d8b191b119e", null ],
+    [ "batmat::linalg::gemm_neg", "group__topic-linalg.html#ga2ecaacbba5614bcbbf95c79023424e64", null ],
+    [ "batmat::linalg::gemm_add", "group__topic-linalg.html#ga1177461212428f6b96e21abff82af6a3", null ],
+    [ "batmat::linalg::gemm_add", "group__topic-linalg.html#ga8c44e915ee2cda546e7dc005ab1af1c4", null ],
+    [ "batmat::linalg::gemm_sub", "group__topic-linalg.html#ga6ba27579e2442c5a7689d0577f63478e", null ],
+    [ "batmat::linalg::gemm_sub", "group__topic-linalg.html#ga611ecdda112c005fe2d42372a92aea7b", null ],
+    [ "batmat::linalg::syrk", "group__topic-linalg.html#ga59ec2e76f7d857d495fcc518d19f2a77", null ],
+    [ "batmat::linalg::syrk", "group__topic-linalg.html#ga51fc97f0f6c6ce55401630c8b57889e9", null ],
+    [ "batmat::linalg::syrk", "group__topic-linalg.html#ga24000b15cd231d821eb1292ad3631c2b", null ],
+    [ "batmat::linalg::syrk_neg", "group__topic-linalg.html#ga038f5f115bd19ed4f3ca205ca4728fc3", null ],
+    [ "batmat::linalg::syrk_neg", "group__topic-linalg.html#ga8a698c5e4610420a9d7fcf483f41f452", null ],
+    [ "batmat::linalg::syrk_neg", "group__topic-linalg.html#ga8d63dfa8eaa22949ca78e2241a608a0f", null ],
+    [ "batmat::linalg::syrk_add", "group__topic-linalg.html#ga94668e960bcf7b6a7ffe8902d799079a", null ],
+    [ "batmat::linalg::syrk_add", "group__topic-linalg.html#gaaf33c861e820d1d87ca43314e7453bf3", null ],
+    [ "batmat::linalg::syrk_sub", "group__topic-linalg.html#ga19841b227bc4cf6d0949b85b6e201033", null ],
+    [ "batmat::linalg::syrk_sub", "group__topic-linalg.html#ga3b3a5785bb0a178c28eb050f5e7ad982", null ],
+    [ "batmat::linalg::trmm", "group__topic-linalg.html#ga677da05414c67192ed400e3a0b0a2c51", null ],
+    [ "batmat::linalg::trmm", "group__topic-linalg.html#ga776866b470bf67ecb2f561a7714f6ac8", null ],
+    [ "batmat::linalg::trmm", "group__topic-linalg.html#ga4bcadac1586aa8f2fd1a8f632c369601", null ],
+    [ "batmat::linalg::trmm", "group__topic-linalg.html#ga9c7791da3ee24263434ba87316ac50e3", null ],
+    [ "batmat::linalg::trmm_neg", "group__topic-linalg.html#ga1474b560ee985d29dad901fec92a6e09", null ],
+    [ "batmat::linalg::trmm_neg", "group__topic-linalg.html#ga41be251a5129e3aa430b4d0685e4f055", null ],
+    [ "batmat::linalg::trmm_add", "group__topic-linalg.html#gab8de92b40ec44dc42b8194ca149e2195", null ],
+    [ "batmat::linalg::trmm_add", "group__topic-linalg.html#ga5ff4cf9c0cc64e6b59d44a9a7b257d36", null ],
+    [ "batmat::linalg::trmm_sub", "group__topic-linalg.html#ga4c466c8c3c49448dbe08d2a69f0dc753", null ],
+    [ "batmat::linalg::trmm_sub", "group__topic-linalg.html#ga6b66dee15a04b53f3f39edc1caa41bb6", null ]
+];

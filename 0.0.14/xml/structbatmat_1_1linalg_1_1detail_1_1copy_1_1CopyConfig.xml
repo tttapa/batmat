@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::detail::copy::CopyConfig</compoundname>
+    <includes refid="copy_8hpp" local="no">batmat/linalg/copy.hpp</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig_1a5cd259cce90a6051d960624bab1569c5" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int batmat::linalg::detail::copy::CopyConfig::rotate</definition>
+        <argsstring></argsstring>
+        <name>rotate</name>
+        <qualifiedname>batmat::linalg::detail::copy::CopyConfig::rotate</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/copy.hpp" line="62" column="9" bodyfile="batmat/include/batmat/linalg/copy.hpp" bodystart="62" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a8769b73dad2efc43ad5032114321f591" compoundref="copy_8hpp" startline="169" endline="175">batmat::linalg::detail::copy::apply_options</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig_1a9ef690d1d341c35f6fa331f17cef1af6" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int batmat::linalg::detail::copy::CopyConfig::mask</definition>
+        <argsstring></argsstring>
+        <name>mask</name>
+        <qualifiedname>batmat::linalg::detail::copy::CopyConfig::mask</qualifiedname>
+        <initializer>= <ref refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig_1a5cd259cce90a6051d960624bab1569c5" kindref="member">rotate</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/copy.hpp" line="63" column="9" bodyfile="batmat/include/batmat/linalg/copy.hpp" bodystart="63" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a8769b73dad2efc43ad5032114321f591" compoundref="copy_8hpp" startline="169" endline="175">batmat::linalg::detail::copy::apply_options</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig_1a19f186e31d7ac6769559737cd2b61d11" prot="public" static="no" mutable="no">
+        <type><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref></type>
+        <definition>MatrixStructure batmat::linalg::detail::copy::CopyConfig::struc</definition>
+        <argsstring></argsstring>
+        <name>struc</name>
+        <qualifiedname>batmat::linalg::detail::copy::CopyConfig::struc</qualifiedname>
+        <initializer>= <ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/copy.hpp" line="64" column="21" bodyfile="batmat/include/batmat/linalg/copy.hpp" bodystart="64" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::detail::copy::CopyConfig</label>
+        <link refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/copy.hpp" line="61" column="1" bodyfile="batmat/include/batmat/linalg/copy.hpp" bodystart="61" bodyend="65"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig_1a9ef690d1d341c35f6fa331f17cef1af6" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::copy::CopyConfig</scope><name>mask</name></member>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig_1a5cd259cce90a6051d960624bab1569c5" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::copy::CopyConfig</scope><name>rotate</name></member>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig_1a19f186e31d7ac6769559737cd2b61d11" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::copy::CopyConfig</scope><name>struc</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,915 @@
+<!-- HTML header for doxygen 1.16.1-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.16.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>batmat: batmat/include/batmat/linalg/simdify.hpp File Reference</title>
+<link rel="icon" href="batmat-small.png" type="image/x-icon" />
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+window.MathJax = {
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  },
+  loader: {
+    load: ['[tex]/ams']
+  },
+  tex: {
+    macros: {    Reals: "{\\mathrm{I\\!R}}",
+    Nats: "{\\mathrm{I\\!N}}",
+    Cplx: "{\\mathbb{C}}",
+    R: "{\\Reals}",
+    N: "{\\Nats}",
+    C: "{\\Cplx}",
+    Rn: "{\\Reals^n}",
+    Rm: "{\\Reals^m}",
+    gph: "{\\operatorname{\\mathbf{gph}}}",
+    zer: "{\\operatorname{\\mathbf{zer}}}",
+    fix: "{\\operatorname{\\mathbf{fix}}}",
+    minimize: "{\\operatorname*{\\mathbf{minimize}}}",
+    st: "{\\operatorname*{\\mathbf{s.\\!t.}}}",
+    argmin: "{\\operatorname*{\\mathbf{arg\\,min}}}",
+    argmax: "{\\operatorname*{\\mathbf{arg\\,max}}}",
+    subjto: "{\\operatorname*{\\mathbf{subject\\;to}}}",
+    prox: "{\\operatorname{\\mathbf{prox}}}",
+    Hilb: "{\\mathcal{H}}",
+    proj: ["{\\operatorname{\\mathbf{\\Pi}_\\mathnormal{#1}}}",1],
+    dist: "{\\operatorname{\\mathbf{dist}}}",
+    Id: "{\\mathrm{Id}}",
+    I: "{\\mathrm{I}}",
+    one: "{\\mathbf{1}}",
+    defeq: "{\\triangleq}",
+    inprod: ["{\\left\\langle {#1} \\,\\middle|\\, {#2} \\right\\rangle}",2],
+    norm: ["{\\left\\| {#1} \\vphantom{X} \\right\\|}",1],
+    normsq: ["{\\norm{#1}^2}",1],
+    defset: ["{\\left\\{ {#1} \\;\\middle|\\; {#2} \\right\\}}",2],
+    tp: ["{#1^\\top}",1],
+    ttp: ["{#1^{\\!\\top\\!}}",1],
+    herm: ["{#1^\\mathrm{H}}",1],
+    invherm: ["{#1^{-\\mathrm{H}}}",1],
+    inv: ["{#1^{-1}}",1],
+    pinv: ["{#1^\\dagger}",1],
+    lconj: "{\\overline}",
+    sconj: ["{#1^*}",1],
+    iddots: "{\\mathinner{\\kern1mu\\raise1pt{.}\\kern2mu\\raise4pt{.}\\kern2mu\\raise7pt{\\Rule{0pt}{7pt}{0pt}.}\\kern1mu}}",
+    imagfun: ["{\\left(#1\\right)\\left(#2\\right)}",2],
+    Lagr: "{\\mathcal{L}}",
+    jac: "{\\mathrm{J}}",
+    dft: "{\\operatorname{\\mathbf{dft}}}",
+    cbrt: ["{\\sqrt[3]{#1}}",1],
+    sgn: "{\\operatorname{\\mathbf{sgn}}}",
+    setmap: "{\\rightrightarrows}",
+    lammin: "{\\lambda_\\text{min}}",
+    lammax: "{\\lambda_\\text{max}}",
+    Sc: "{\\mathcal{S}}",
+    Scstar: "{\\mathcal{S}^*}",
+    diag: "{\\operatorname{\\mathbf{diag}}}",
+    blkdiag: "{\\operatorname{\\mathbf{blkdiag}}}",
+    posdef: "{\\succ}",
+    possdef: "{\\succeq}",
+    half: "{\\tfrac{1}{2}}",
+    hhbar: "{\\hbar}",
+    barxuk: "{\\bar x^k\\!, \\bar u^k}",
+    },
+    packages: ['base','configmacros','newcommand','ams']
+  }
+};
+window.MathJax.tex.tags = 'ams';
+</script>
+<script type="text/javascript" id="MathJax-script" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script type="text/javascript" src="darkmode_toggle.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="batmat-small.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">batmat<span id="projectnumber">&#160;<code><a href="/batmat/index.html">0.0.14</a></code></span>
+   </div>
+   <div id="projectbrief">Batched linear algebra routines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.16.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('simdify_8hpp.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">simdify.hpp File Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &lt;<a class="el" href="matrix_8hpp_source.html">batmat/matrix/matrix.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="view_8hpp_source.html">batmat/matrix/view.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="simd_8hpp_source.html">batmat/simd.hpp</a>&gt;</code><br />
+<code>#include &lt;guanaqo/mat-view.hpp&gt;</code><br />
+<code>#include &lt;type_traits&gt;</code><br />
+</div>
+<p><a href="simdify_8hpp_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fview_5Ftype_3C_20batmat_3A_3Amatrix_3A_3AView_3C_20T_2C_20index_5Ft_2C_20S_2C_20S_2C_20L_2C_20O_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fview_5F_5Ftype_5F3_5F01batmat_5F1_5F1matrix_5F1_5F1View_5F3_5F01T_5F00_5F6c276fa58d30c8a61a58492532979869" id="r_batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fview_5Ftype_3C_20batmat_3A_3Amatrix_3A_3AView_3C_20T_2C_20index_5Ft_2C_20S_2C_20S_2C_20L_2C_20O_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fview_5F_5Ftype_5F3_5F01batmat_5F1_5F1matrix_5F1_5F1View_5F3_5F01T_5F00_5F6c276fa58d30c8a61a58492532979869"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1View_3_01T_00_6c276fa58d30c8a61a58492532979869">batmat::linalg::detail::simdified_view_type&lt; batmat::matrix::View&lt; T, index_t, S, S, L, O &gt; &gt;</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fview_5Ftype_3C_20const_20batmat_3A_3Amatrix_3A_3AView_3C_20T_2C_20index_5Ft_2C_20S_2C_20S_2C_20L_2C_20O_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fview_5F_5Ftype_5F3_5F01const_5F01batmat_5F1_5F1matrix_5F1_5F1View_5F32dba1d643fdf8dda24f3695f783071e9" id="r_batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fview_5Ftype_3C_20const_20batmat_3A_3Amatrix_3A_3AView_3C_20T_2C_20index_5Ft_2C_20S_2C_20S_2C_20L_2C_20O_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fview_5F_5Ftype_5F3_5F01const_5F01batmat_5F1_5F1matrix_5F1_5F1View_5F32dba1d643fdf8dda24f3695f783071e9"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1View_32dba1d643fdf8dda24f3695f783071e9">batmat::linalg::detail::simdified_view_type&lt; const batmat::matrix::View&lt; T, index_t, S, S, L, O &gt; &gt;</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fview_5Ftype_3C_20guanaqo_3A_3AMatrixView_3C_20T_2C_20I_2C_20std_3A_3Aintegral_5Fconstant_3C_20I_2C_201_20_3E_2C_20O_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fview_5F_5Ftype_5F3_5F01guanaqo_5F1_5F1MatrixView_5F3_5F01T_5F00_5F01If7b43d4de87d72ee5b21d1b3c0074753" id="r_batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fview_5Ftype_3C_20guanaqo_3A_3AMatrixView_3C_20T_2C_20I_2C_20std_3A_3Aintegral_5Fconstant_3C_20I_2C_201_20_3E_2C_20O_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fview_5F_5Ftype_5F3_5F01guanaqo_5F1_5F1MatrixView_5F3_5F01T_5F00_5F01If7b43d4de87d72ee5b21d1b3c0074753"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753">batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fview_5Ftype_3C_20const_20guanaqo_3A_3AMatrixView_3C_20T_2C_20I_2C_20std_3A_3Aintegral_5Fconstant_3C_20I_2C_201_20_3E_2C_20O_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fview_5F_5Ftype_5F3_5F01const_5F01guanaqo_5F1_5F1MatrixView_5F3_5F010856bf788b5ff2bc105d0749e18010ef" id="r_batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fview_5Ftype_3C_20const_20guanaqo_3A_3AMatrixView_3C_20T_2C_20I_2C_20std_3A_3Aintegral_5Fconstant_3C_20I_2C_201_20_3E_2C_20O_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fview_5F_5Ftype_5F3_5F01const_5F01guanaqo_5F1_5F1MatrixView_5F3_5F010856bf788b5ff2bc105d0749e18010ef"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01guanaqo_1_1MatrixView_3_010856bf788b5ff2bc105d0749e18010ef">batmat::linalg::detail::simdified_view_type&lt; const guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fview_5Ftype_3C_20batmat_3A_3Amatrix_3A_3AMatrix_3C_20T_2C_20I_2C_20S_2C_20S_2C_20O_2C_20A_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fview_5F_5Ftype_5F3_5F01batmat_5F1_5F1matrix_5F1_5F1Matrix_5F3_5F01T_5F02011ca1015d066513d24349619a4283a" id="r_batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fview_5Ftype_3C_20batmat_3A_3Amatrix_3A_3AMatrix_3C_20T_2C_20I_2C_20S_2C_20S_2C_20O_2C_20A_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fview_5F_5Ftype_5F3_5F01batmat_5F1_5F1matrix_5F1_5F1Matrix_5F3_5F01T_5F02011ca1015d066513d24349619a4283a"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1Matrix_3_01T_02011ca1015d066513d24349619a4283a">batmat::linalg::detail::simdified_view_type&lt; batmat::matrix::Matrix&lt; T, I, S, S, O, A &gt; &gt;</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fview_5Ftype_3C_20const_20batmat_3A_3Amatrix_3A_3AMatrix_3C_20T_2C_20I_2C_20S_2C_20S_2C_20O_2C_20A_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fview_5F_5Ftype_5F3_5F01const_5F01batmat_5F1_5F1matrix_5F1_5F1Matrix2f013e9bf729f69bd71be2becf75521d" id="r_batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fview_5Ftype_3C_20const_20batmat_3A_3Amatrix_3A_3AMatrix_3C_20T_2C_20I_2C_20S_2C_20S_2C_20O_2C_20A_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fview_5F_5Ftype_5F3_5F01const_5F01batmat_5F1_5F1matrix_5F1_5F1Matrix2f013e9bf729f69bd71be2becf75521d"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1Matrix2f013e9bf729f69bd71be2becf75521d">batmat::linalg::detail::simdified_view_type&lt; const batmat::matrix::Matrix&lt; T, I, S, S, O, A &gt; &gt;</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fmulti_5Fview_5Ftype_3C_20batmat_3A_3Amatrix_3A_3AView_3C_20T_2C_20index_5Ft_2C_20S_2C_20index_5Ft_2C_20L_2C_20O_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fmulti_5F_5Fview_5F_5Ftype_5F3_5F01batmat_5F1_5F1matrix_5F1_5F1View_5F3_5F22d8282ba65d154ec9580e6f7da6b8b5" id="r_batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fmulti_5Fview_5Ftype_3C_20batmat_3A_3Amatrix_3A_3AView_3C_20T_2C_20index_5Ft_2C_20S_2C_20index_5Ft_2C_20L_2C_20O_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fmulti_5F_5Fview_5F_5Ftype_5F3_5F01batmat_5F1_5F1matrix_5F1_5F1View_5F3_5F22d8282ba65d154ec9580e6f7da6b8b5"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5">batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fmulti_5Fview_5Ftype_3C_20const_20batmat_3A_3Amatrix_3A_3AView_3C_20T_2C_20index_5Ft_2C_20S_2C_20index_5Ft_2C_20L_2C_20O_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fmulti_5F_5Fview_5F_5Ftype_5F3_5F01const_5F01batmat_5F1_5F1matrix_5F1_5F33bea5f89420c1479536e5641dd6559d" id="r_batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fmulti_5Fview_5Ftype_3C_20const_20batmat_3A_3Amatrix_3A_3AView_3C_20T_2C_20index_5Ft_2C_20S_2C_20index_5Ft_2C_20L_2C_20O_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fmulti_5F_5Fview_5F_5Ftype_5F3_5F01const_5F01batmat_5F1_5F1matrix_5F1_5F33bea5f89420c1479536e5641dd6559d"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_33bea5f89420c1479536e5641dd6559d">batmat::linalg::detail::simdified_multi_view_type&lt; const batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fmulti_5Fview_5Ftype_3C_20batmat_3A_3Amatrix_3A_3AMatrix_3C_20T_2C_20I_2C_20S_2C_20I_2C_20O_2C_20A_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fmulti_5F_5Fview_5F_5Ftype_5F3_5F01batmat_5F1_5F1matrix_5F1_5F1Matrix_5Fa2d75434e5018f0cd47dbc6912dd16bf" id="r_batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fmulti_5Fview_5Ftype_3C_20batmat_3A_3Amatrix_3A_3AMatrix_3C_20T_2C_20I_2C_20S_2C_20I_2C_20O_2C_20A_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fmulti_5F_5Fview_5F_5Ftype_5F3_5F01batmat_5F1_5F1matrix_5F1_5F1Matrix_5Fa2d75434e5018f0cd47dbc6912dd16bf"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1Matrix_a2d75434e5018f0cd47dbc6912dd16bf">batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::Matrix&lt; T, I, S, I, O, A &gt; &gt;</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fmulti_5Fview_5Ftype_3C_20const_20batmat_3A_3Amatrix_3A_3AMatrix_3C_20T_2C_20I_2C_20S_2C_20I_2C_20O_2C_20A_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fmulti_5F_5Fview_5F_5Ftype_5F3_5F01const_5F01batmat_5F1_5F1matrix_5F1_5F68d714009fb08972c65f60674f881d94" id="r_batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fmulti_5Fview_5Ftype_3C_20const_20batmat_3A_3Amatrix_3A_3AMatrix_3C_20T_2C_20I_2C_20S_2C_20I_2C_20O_2C_20A_20_3E_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fmulti_5F_5Fview_5F_5Ftype_5F3_5F01const_5F01batmat_5F1_5F1matrix_5F1_5F68d714009fb08972c65f60674f881d94"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_68d714009fb08972c65f60674f881d94">batmat::linalg::detail::simdified_multi_view_type&lt; const batmat::matrix::Matrix&lt; T, I, S, I, O, A &gt; &gt;</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fvalue_3C_20V_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fvalue_5F3_5F01V_5F01_5F4" id="r_batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fvalue_3C_20V_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fvalue_5F3_5F01V_5F01_5F4"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#structbatmat_1_1linalg_1_1detail_1_1simdified__value_3_01V_01_4">batmat::linalg::detail::simdified_value&lt; V &gt;</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fabi_3C_20V_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fabi_5F3_5F01V_5F01_5F4" id="r_batmat_3A_3Alinalg_3A_3Adetail_3A_3Asimdified_5Fabi_3C_20V_20_3E_5Fstructbatmat_5F1_5F1linalg_5F1_5F1detail_5F1_5F1simdified_5F_5Fabi_5F3_5F01V_5F01_5F4"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#structbatmat_1_1linalg_1_1detail_1_1simdified__abi_3_01V_01_4">batmat::linalg::detail::simdified_abi&lt; V &gt;</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:guanaqo" id="r_guanaqo"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/namespaceguanaqo.html">guanaqo</a></td></tr>
+<tr class="memitem:batmat" id="r_batmat"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat.html">batmat</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg" id="r_batmat_3A_3Alinalg"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg.html">batmat::linalg</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Adetail" id="r_batmat_3A_3Alinalg_3A_3Adetail"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1detail.html">batmat::linalg::detail</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-concepts" class="groupheader"><a id="concepts" name="concepts"></a>
+Concepts</h2></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Asimdifiable" id="r_batmat_3A_3Alinalg_3A_3Asimdifiable"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="conceptbatmat_1_1linalg_1_1simdifiable.html">batmat::linalg::simdifiable</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Asimdifiable_5Fmulti" id="r_batmat_3A_3Alinalg_3A_3Asimdifiable_5Fmulti"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="conceptbatmat_1_1linalg_1_1simdifiable__multi.html">batmat::linalg::simdifiable_multi</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a4be791b0744b45a32676446036a52ccd" id="r_a4be791b0744b45a32676446036a52ccd"><td class="memTemplParams" colspan="2">template&lt;class V&gt; </td></tr>
+<tr class="memitem:a4be791b0744b45a32676446036a52ccd template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg.html#a4be791b0744b45a32676446036a52ccd">batmat::linalg::simdified_view_type</a> = <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#structbatmat_1_1linalg_1_1detail_1_1simdified__view__type">detail::simdified_view_type</a>&lt;std::remove_reference_t&lt;V&gt;&gt;</td></tr>
+<tr class="memdesc:a4be791b0744b45a32676446036a52ccd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the given view or matrix type <code class="param">V</code> (<a class="el" href="structbatmat_1_1matrix_1_1View.html" title="Non-owning view of a batch of matrices.">batmat::matrix::View</a> or <a class="el" href="structbatmat_1_1matrix_1_1Matrix.html" title="Class for a batch of matrices that owns its storage.">batmat::matrix::Matrix</a>) to a batched view type using a deduced SIMD type.  <br /></td></tr>
+<tr class="memitem:a4bd9921eb6500f6c64da965ba4f46050" id="r_a4bd9921eb6500f6c64da965ba4f46050"><td class="memTemplParams" colspan="2">template&lt;simdifiable V&gt; </td></tr>
+<tr class="memitem:a4bd9921eb6500f6c64da965ba4f46050 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg.html#a4bd9921eb6500f6c64da965ba4f46050">batmat::linalg::simdified_view_t</a> = typename <a class="el" href="namespacebatmat_1_1linalg.html#a4be791b0744b45a32676446036a52ccd">simdified_view_type</a>&lt;V&gt;::type</td></tr>
+<tr class="memitem:a06ed92cc4e6bc6418b81329ce5355426" id="r_a06ed92cc4e6bc6418b81329ce5355426"><td class="memTemplParams" colspan="2">template&lt;class V&gt; </td></tr>
+<tr class="memitem:a06ed92cc4e6bc6418b81329ce5355426 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">batmat::linalg::simdified_value_t</a> = typename <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#structbatmat_1_1linalg_1_1detail_1_1simdified__value">detail::simdified_value</a>&lt;V&gt;::type</td></tr>
+<tr class="memitem:a06f216a8a2eeca439dd50bfefa8f00a8" id="r_a06f216a8a2eeca439dd50bfefa8f00a8"><td class="memTemplParams" colspan="2">template&lt;class V&gt; </td></tr>
+<tr class="memitem:a06f216a8a2eeca439dd50bfefa8f00a8 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg.html#a06f216a8a2eeca439dd50bfefa8f00a8">batmat::linalg::simdified_abi_t</a> = typename <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#structbatmat_1_1linalg_1_1detail_1_1simdified__abi">detail::simdified_abi</a>&lt;V&gt;::type</td></tr>
+<tr class="memitem:a3f72f46ab5a64618b0df6098b8540343" id="r_a3f72f46ab5a64618b0df6098b8540343"><td class="memTemplParams" colspan="2">template&lt;class V&gt; </td></tr>
+<tr class="memitem:a3f72f46ab5a64618b0df6098b8540343 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg.html#a3f72f46ab5a64618b0df6098b8540343">batmat::linalg::simdified_multi_view_type</a> = <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type">detail::simdified_multi_view_type</a>&lt;std::remove_reference_t&lt;V&gt;&gt;</td></tr>
+<tr class="memitem:a60b8e9e6e7e0e3ab201e3f71ee1b2670" id="r_a60b8e9e6e7e0e3ab201e3f71ee1b2670"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi V&gt; </td></tr>
+<tr class="memitem:a60b8e9e6e7e0e3ab201e3f71ee1b2670 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg.html#a60b8e9e6e7e0e3ab201e3f71ee1b2670">batmat::linalg::simdified_multi_view_t</a> = typename <a class="el" href="namespacebatmat_1_1linalg.html#a3f72f46ab5a64618b0df6098b8540343">simdified_multi_view_type</a>&lt;V&gt;::type</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a6a2da8a260f8a2561ea691a1f9f92bc6" id="r_a6a2da8a260f8a2561ea691a1f9f92bc6"><td class="memTemplParams" colspan="2">template&lt;class T, class I, class S, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O&gt; </td></tr>
+<tr class="memitem:a6a2da8a260f8a2561ea691a1f9f92bc6 template"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/namespaceguanaqo.html#a6a2da8a260f8a2561ea691a1f9f92bc6">guanaqo::data</a> (const <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/structguanaqo_1_1MatrixView.html">MatrixView</a>&lt; T, I, S, O &gt; &amp;v)</td></tr>
+<tr class="memitem:a8f3fe0b80ce5fbbb1887756dfb4bc308" id="r_a8f3fe0b80ce5fbbb1887756dfb4bc308"><td class="memTemplParams" colspan="2">template&lt;class T, class I, class S, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O&gt; </td></tr>
+<tr class="memitem:a8f3fe0b80ce5fbbb1887756dfb4bc308 template"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/namespaceguanaqo.html#a8f3fe0b80ce5fbbb1887756dfb4bc308">guanaqo::rows</a> (const <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/structguanaqo_1_1MatrixView.html">MatrixView</a>&lt; T, I, S, O &gt; &amp;v)</td></tr>
+<tr class="memitem:a5df7bd16e40b348d9cd035a44292c8a8" id="r_a5df7bd16e40b348d9cd035a44292c8a8"><td class="memTemplParams" colspan="2">template&lt;class T, class I, class S, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O&gt; </td></tr>
+<tr class="memitem:a5df7bd16e40b348d9cd035a44292c8a8 template"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/namespaceguanaqo.html#a5df7bd16e40b348d9cd035a44292c8a8">guanaqo::cols</a> (const <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/structguanaqo_1_1MatrixView.html">MatrixView</a>&lt; T, I, S, O &gt; &amp;v)</td></tr>
+<tr class="memitem:a0ab20c4f2f5f5a6e2201de69ea9553e8" id="r_a0ab20c4f2f5f5a6e2201de69ea9553e8"><td class="memTemplParams" colspan="2">template&lt;class T, class I, class S, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O&gt; </td></tr>
+<tr class="memitem:a0ab20c4f2f5f5a6e2201de69ea9553e8 template"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/namespaceguanaqo.html#a0ab20c4f2f5f5a6e2201de69ea9553e8">guanaqo::outer_stride</a> (const <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/structguanaqo_1_1MatrixView.html">MatrixView</a>&lt; T, I, S, O &gt; &amp;v)</td></tr>
+<tr class="memitem:adb518e3c89317a5fded1a8cf2603c2de" id="r_adb518e3c89317a5fded1a8cf2603c2de"><td class="memTemplParams" colspan="2">template&lt;class T, class I, class S, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O&gt; </td></tr>
+<tr class="memitem:adb518e3c89317a5fded1a8cf2603c2de template"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/namespaceguanaqo.html#adb518e3c89317a5fded1a8cf2603c2de">guanaqo::depth</a> (const <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/structguanaqo_1_1MatrixView.html">MatrixView</a>&lt; T, I, S, O &gt; &amp;)</td></tr>
+<tr class="memitem:a83105b13bb65f22f974c2faffffd40fe" id="r_a83105b13bb65f22f974c2faffffd40fe"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg.html#a83105b13bb65f22f974c2faffffd40fe">batmat::linalg::simdify</a> (simdifiable auto &amp;&amp;a) -&gt; <a class="el" href="namespacebatmat_1_1linalg.html#a4bd9921eb6500f6c64da965ba4f46050">simdified_view_t</a>&lt; decltype(a)&gt;</td></tr>
+<tr class="memitem:aa9e2303717d8e0d49cf3da6d21c5471e" id="r_aa9e2303717d8e0d49cf3da6d21c5471e"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg.html#aa9e2303717d8e0d49cf3da6d21c5471e">batmat::linalg::simdify</a> (simdifiable_multi auto &amp;&amp;a) -&gt; <a class="el" href="namespacebatmat_1_1linalg.html#a60b8e9e6e7e0e3ab201e3f71ee1b2670">simdified_multi_view_t</a>&lt; decltype(a)&gt;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a4d10b3bda16dcb168d1b1e078e637bed" id="r_a4d10b3bda16dcb168d1b1e078e637bed"><td class="memTemplParams" colspan="2">template&lt;class...&gt; </td></tr>
+<tr class="memitem:a4d10b3bda16dcb168d1b1e078e637bed template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg.html#a4d10b3bda16dcb168d1b1e078e637bed">batmat::linalg::simdify_compatible</a> = false</td></tr>
+<tr class="memitem:adc0d6c4d5c8b977cd64010b9b2642223" id="r_adc0d6c4d5c8b977cd64010b9b2642223"><td class="memTemplParams" colspan="2">template&lt;simdifiable V, simdifiable... Vs&gt; </td></tr>
+<tr class="memitem:adc0d6c4d5c8b977cd64010b9b2642223 template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg.html#adc0d6c4d5c8b977cd64010b9b2642223">batmat::linalg::simdify_compatible&lt; V, Vs... &gt;</a></td></tr>
+</table>
+<hr/><h2 id="header-inline_5Fclasses" class="groupheader">Class Documentation</h2>
+<a name="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1View_3_01T_00_6c276fa58d30c8a61a58492532979869" id="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1View_3_01T_00_6c276fa58d30c8a61a58492532979869"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1View_3_01T_00_6c276fa58d30c8a61a58492532979869">&#9670;&#160;</a></span>batmat::linalg::detail::simdified_view_type&lt; batmat::matrix::View&lt; T, index_t, S, S, L, O &gt; &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct batmat::linalg::detail::simdified_view_type&lt; batmat::matrix::View&lt; T, index_t, S, S, L, O &gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="a9f1f5d4c59f0d3cc43f9f58ee00124ce" name="a9f1f5d4c59f0d3cc43f9f58ee00124ce"></a>typedef remove_const_t&lt; T &gt;</td>
+<td class="fieldname">
+value_type std::remove_const_t&lt;T&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a8417863a293ce886024e754731a12142" name="a8417863a293ce886024e754731a12142"></a>typedef deduced_abi&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a9f1f5d4c59f0d3cc43f9f58ee00124ce">value_type</a>, S{}&gt;</td>
+<td class="fieldname">
+abi_type <a class="el" href="namespacebatmat_1_1datapar.html#aa3c7c9554d61e55ae3384b5e4c5ce7af">datapar::deduced_abi</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a9f1f5d4c59f0d3cc43f9f58ee00124ce">value_type</a>, S{}&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a7a96f6b5fcf76fc4b0414ab1727e7b6d" name="a7a96f6b5fcf76fc4b0414ab1727e7b6d"></a>typedef simd&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a9f1f5d4c59f0d3cc43f9f58ee00124ce">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a8417863a293ce886024e754731a12142">abi_type</a> &gt;</td>
+<td class="fieldname">
+simd_type <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a9f1f5d4c59f0d3cc43f9f58ee00124ce">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a8417863a293ce886024e754731a12142">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a7dba19849db15ec6ec627d1c128592c5" name="a7dba19849db15ec6ec627d1c128592c5"></a>typedef simd_size&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a9f1f5d4c59f0d3cc43f9f58ee00124ce">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a8417863a293ce886024e754731a12142">abi_type</a> &gt;</td>
+<td class="fieldname">
+stride <a class="el" href="namespacebatmat_1_1datapar.html#a497d8b4d202d9476ad67782ba4d4feef">datapar::simd_size</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a9f1f5d4c59f0d3cc43f9f58ee00124ce">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a8417863a293ce886024e754731a12142">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="aa0a569bc6f1e073899c74e1095b87dcf" name="aa0a569bc6f1e073899c74e1095b87dcf"></a>typedef simd_align&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a9f1f5d4c59f0d3cc43f9f58ee00124ce">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a8417863a293ce886024e754731a12142">abi_type</a> &gt;</td>
+<td class="fieldname">
+alignment <a class="el" href="namespacebatmat_1_1datapar.html#a3cbb75e6685dbd98807439ac0dca33f0">datapar::simd_align</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a9f1f5d4c59f0d3cc43f9f58ee00124ce">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a8417863a293ce886024e754731a12142">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="adeb2c1abba0bdc5256c7e693438d83b2" name="adeb2c1abba0bdc5256c7e693438d83b2"></a>typedef DefaultStride</td>
+<td class="fieldname">
+layer_stride <a class="el" href="structbatmat_1_1matrix_1_1DefaultStride.html">batmat::matrix::DefaultStride</a></td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a55acb82ca6d2bb553cbbbb3307c62342" name="a55acb82ca6d2bb553cbbbb3307c62342"></a>typedef View&lt; T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a7dba19849db15ec6ec627d1c128592c5">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a7dba19849db15ec6ec627d1c128592c5">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#adeb2c1abba0bdc5256c7e693438d83b2">layer_stride</a>, O &gt;</td>
+<td class="fieldname">
+type <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt;T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a7dba19849db15ec6ec627d1c128592c5">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a7dba19849db15ec6ec627d1c128592c5">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#adeb2c1abba0bdc5256c7e693438d83b2">layer_stride</a>, O&gt;</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1View_32dba1d643fdf8dda24f3695f783071e9" id="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1View_32dba1d643fdf8dda24f3695f783071e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1View_32dba1d643fdf8dda24f3695f783071e9">&#9670;&#160;</a></span>batmat::linalg::detail::simdified_view_type&lt; const batmat::matrix::View&lt; T, index_t, S, S, L, O &gt; &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct batmat::linalg::detail::simdified_view_type&lt; const batmat::matrix::View&lt; T, index_t, S, S, L, O &gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="a229a15ebc8cb556ad3b8458f2d4b0e7e" name="a229a15ebc8cb556ad3b8458f2d4b0e7e"></a>typedef remove_const_t&lt; T &gt;</td>
+<td class="fieldname">
+value_type std::remove_const_t&lt;T&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a88b1e43a6038cf3be1398e105508b18f" name="a88b1e43a6038cf3be1398e105508b18f"></a>typedef deduced_abi&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a229a15ebc8cb556ad3b8458f2d4b0e7e">value_type</a>, S{}&gt;</td>
+<td class="fieldname">
+abi_type <a class="el" href="namespacebatmat_1_1datapar.html#aa3c7c9554d61e55ae3384b5e4c5ce7af">datapar::deduced_abi</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a229a15ebc8cb556ad3b8458f2d4b0e7e">value_type</a>, S{}&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a558be7f2f8919c238368841a3b8ef665" name="a558be7f2f8919c238368841a3b8ef665"></a>typedef simd&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a229a15ebc8cb556ad3b8458f2d4b0e7e">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a88b1e43a6038cf3be1398e105508b18f">abi_type</a> &gt;</td>
+<td class="fieldname">
+simd_type <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a229a15ebc8cb556ad3b8458f2d4b0e7e">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a88b1e43a6038cf3be1398e105508b18f">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a312ea5573ce35d0ccd659aa9e74ddabb" name="a312ea5573ce35d0ccd659aa9e74ddabb"></a>typedef simd_size&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a229a15ebc8cb556ad3b8458f2d4b0e7e">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a88b1e43a6038cf3be1398e105508b18f">abi_type</a> &gt;</td>
+<td class="fieldname">
+stride <a class="el" href="namespacebatmat_1_1datapar.html#a497d8b4d202d9476ad67782ba4d4feef">datapar::simd_size</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a229a15ebc8cb556ad3b8458f2d4b0e7e">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a88b1e43a6038cf3be1398e105508b18f">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="af5d18fb46c0d3c5e2e1d9349e7a115d5" name="af5d18fb46c0d3c5e2e1d9349e7a115d5"></a>typedef simd_align&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a229a15ebc8cb556ad3b8458f2d4b0e7e">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a88b1e43a6038cf3be1398e105508b18f">abi_type</a> &gt;</td>
+<td class="fieldname">
+alignment <a class="el" href="namespacebatmat_1_1datapar.html#a3cbb75e6685dbd98807439ac0dca33f0">datapar::simd_align</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a229a15ebc8cb556ad3b8458f2d4b0e7e">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a88b1e43a6038cf3be1398e105508b18f">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a3631860f2348c98528f04677d6c6a6ed" name="a3631860f2348c98528f04677d6c6a6ed"></a>typedef DefaultStride</td>
+<td class="fieldname">
+layer_stride <a class="el" href="structbatmat_1_1matrix_1_1DefaultStride.html">batmat::matrix::DefaultStride</a></td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a258df33f1f4e86446021ad9435f8f053" name="a258df33f1f4e86446021ad9435f8f053"></a>typedef View&lt; T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a312ea5573ce35d0ccd659aa9e74ddabb">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a312ea5573ce35d0ccd659aa9e74ddabb">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a3631860f2348c98528f04677d6c6a6ed">layer_stride</a>, O &gt;</td>
+<td class="fieldname">
+type <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt;T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a312ea5573ce35d0ccd659aa9e74ddabb">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a312ea5573ce35d0ccd659aa9e74ddabb">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a3631860f2348c98528f04677d6c6a6ed">layer_stride</a>, O&gt;</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753" id="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753">&#9670;&#160;</a></span>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="a32882c347f623419db686d4536336a8e" name="a32882c347f623419db686d4536336a8e"></a>typedef remove_const_t&lt; T &gt;</td>
+<td class="fieldname">
+value_type std::remove_const_t&lt;T&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a5ac82738ce6f718fb0c5ba3a8899023f" name="a5ac82738ce6f718fb0c5ba3a8899023f"></a>typedef scalar_abi&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a32882c347f623419db686d4536336a8e">value_type</a> &gt;</td>
+<td class="fieldname">
+abi_type <a class="el" href="namespacebatmat_1_1datapar.html#a55556a636c771c6e0f5805c2d186f1ec">datapar::scalar_abi</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a32882c347f623419db686d4536336a8e">value_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a7aa6fddac76e40427b6f9022a2784deb" name="a7aa6fddac76e40427b6f9022a2784deb"></a>typedef simd&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a32882c347f623419db686d4536336a8e">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a5ac82738ce6f718fb0c5ba3a8899023f">abi_type</a> &gt;</td>
+<td class="fieldname">
+simd_type <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a32882c347f623419db686d4536336a8e">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a5ac82738ce6f718fb0c5ba3a8899023f">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a8806d41ca1cbf7a37c705af277a8bd2b" name="a8806d41ca1cbf7a37c705af277a8bd2b"></a>typedef simd_size&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a32882c347f623419db686d4536336a8e">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a5ac82738ce6f718fb0c5ba3a8899023f">abi_type</a> &gt;</td>
+<td class="fieldname">
+stride <a class="el" href="namespacebatmat_1_1datapar.html#a497d8b4d202d9476ad67782ba4d4feef">datapar::simd_size</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a32882c347f623419db686d4536336a8e">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a5ac82738ce6f718fb0c5ba3a8899023f">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="aed10ca07cf410c0acff2d5a0cf867032" name="aed10ca07cf410c0acff2d5a0cf867032"></a>typedef simd_align&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a32882c347f623419db686d4536336a8e">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a5ac82738ce6f718fb0c5ba3a8899023f">abi_type</a> &gt;</td>
+<td class="fieldname">
+alignment <a class="el" href="namespacebatmat_1_1datapar.html#a3cbb75e6685dbd98807439ac0dca33f0">datapar::simd_align</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a32882c347f623419db686d4536336a8e">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a5ac82738ce6f718fb0c5ba3a8899023f">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="aeae8eaed743a5538a411a290c2f3b1a6" name="aeae8eaed743a5538a411a290c2f3b1a6"></a>typedef DefaultStride</td>
+<td class="fieldname">
+layer_stride <a class="el" href="structbatmat_1_1matrix_1_1DefaultStride.html">batmat::matrix::DefaultStride</a></td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="af1a7429564116c0bcd9807b3d8339eab" name="af1a7429564116c0bcd9807b3d8339eab"></a>typedef View&lt; T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a8806d41ca1cbf7a37c705af277a8bd2b">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a8806d41ca1cbf7a37c705af277a8bd2b">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aeae8eaed743a5538a411a290c2f3b1a6">layer_stride</a>, O &gt;</td>
+<td class="fieldname">
+type <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt;T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a8806d41ca1cbf7a37c705af277a8bd2b">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a8806d41ca1cbf7a37c705af277a8bd2b">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aeae8eaed743a5538a411a290c2f3b1a6">layer_stride</a>, O&gt;</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01guanaqo_1_1MatrixView_3_010856bf788b5ff2bc105d0749e18010ef" id="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01guanaqo_1_1MatrixView_3_010856bf788b5ff2bc105d0749e18010ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01guanaqo_1_1MatrixView_3_010856bf788b5ff2bc105d0749e18010ef">&#9670;&#160;</a></span>batmat::linalg::detail::simdified_view_type&lt; const guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct batmat::linalg::detail::simdified_view_type&lt; const guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="a1336e93e42e166cb5b19a77ea8ffd131" name="a1336e93e42e166cb5b19a77ea8ffd131"></a>typedef remove_const_t&lt; T &gt;</td>
+<td class="fieldname">
+value_type std::remove_const_t&lt;T&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="aa9ec01dcd870e6ecf70b7384bfbd9fc9" name="aa9ec01dcd870e6ecf70b7384bfbd9fc9"></a>typedef scalar_abi&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a1336e93e42e166cb5b19a77ea8ffd131">value_type</a> &gt;</td>
+<td class="fieldname">
+abi_type <a class="el" href="namespacebatmat_1_1datapar.html#a55556a636c771c6e0f5805c2d186f1ec">datapar::scalar_abi</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a1336e93e42e166cb5b19a77ea8ffd131">value_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a7e1918a830e7fc5609d5baf16d167631" name="a7e1918a830e7fc5609d5baf16d167631"></a>typedef simd&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a1336e93e42e166cb5b19a77ea8ffd131">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aa9ec01dcd870e6ecf70b7384bfbd9fc9">abi_type</a> &gt;</td>
+<td class="fieldname">
+simd_type <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a1336e93e42e166cb5b19a77ea8ffd131">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aa9ec01dcd870e6ecf70b7384bfbd9fc9">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="aaff5c3745f1e79a13a1685556ea42c7e" name="aaff5c3745f1e79a13a1685556ea42c7e"></a>typedef simd_size&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a1336e93e42e166cb5b19a77ea8ffd131">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aa9ec01dcd870e6ecf70b7384bfbd9fc9">abi_type</a> &gt;</td>
+<td class="fieldname">
+stride <a class="el" href="namespacebatmat_1_1datapar.html#a497d8b4d202d9476ad67782ba4d4feef">datapar::simd_size</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a1336e93e42e166cb5b19a77ea8ffd131">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aa9ec01dcd870e6ecf70b7384bfbd9fc9">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ab1a3ca316ceb3f2636c0d74d3cffb77e" name="ab1a3ca316ceb3f2636c0d74d3cffb77e"></a>typedef simd_align&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a1336e93e42e166cb5b19a77ea8ffd131">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aa9ec01dcd870e6ecf70b7384bfbd9fc9">abi_type</a> &gt;</td>
+<td class="fieldname">
+alignment <a class="el" href="namespacebatmat_1_1datapar.html#a3cbb75e6685dbd98807439ac0dca33f0">datapar::simd_align</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a1336e93e42e166cb5b19a77ea8ffd131">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aa9ec01dcd870e6ecf70b7384bfbd9fc9">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a4a91fa18d0601a26ab407fde11b60308" name="a4a91fa18d0601a26ab407fde11b60308"></a>typedef DefaultStride</td>
+<td class="fieldname">
+layer_stride <a class="el" href="structbatmat_1_1matrix_1_1DefaultStride.html">batmat::matrix::DefaultStride</a></td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a3e22a1b9106757f133d903bc2663090f" name="a3e22a1b9106757f133d903bc2663090f"></a>typedef View&lt; T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aaff5c3745f1e79a13a1685556ea42c7e">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aaff5c3745f1e79a13a1685556ea42c7e">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a4a91fa18d0601a26ab407fde11b60308">layer_stride</a>, O &gt;</td>
+<td class="fieldname">
+type <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt;T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aaff5c3745f1e79a13a1685556ea42c7e">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aaff5c3745f1e79a13a1685556ea42c7e">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a4a91fa18d0601a26ab407fde11b60308">layer_stride</a>, O&gt;</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1Matrix_3_01T_02011ca1015d066513d24349619a4283a" id="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1Matrix_3_01T_02011ca1015d066513d24349619a4283a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1Matrix_3_01T_02011ca1015d066513d24349619a4283a">&#9670;&#160;</a></span>batmat::linalg::detail::simdified_view_type&lt; batmat::matrix::Matrix&lt; T, I, S, S, O, A &gt; &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct batmat::linalg::detail::simdified_view_type&lt; batmat::matrix::Matrix&lt; T, I, S, S, O, A &gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="a764bbd7149a3f99331a706938fa30ee9" name="a764bbd7149a3f99331a706938fa30ee9"></a>typedef T</td>
+<td class="fieldname">
+value_type T</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="af27b84610f7df8ef853b63b1574ce1b3" name="af27b84610f7df8ef853b63b1574ce1b3"></a>typedef deduced_abi&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a764bbd7149a3f99331a706938fa30ee9">value_type</a>, S{}&gt;</td>
+<td class="fieldname">
+abi_type <a class="el" href="namespacebatmat_1_1datapar.html#aa3c7c9554d61e55ae3384b5e4c5ce7af">datapar::deduced_abi</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a764bbd7149a3f99331a706938fa30ee9">value_type</a>, S{}&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a8181f30bb9976f8d4b43dcb89559ffa7" name="a8181f30bb9976f8d4b43dcb89559ffa7"></a>typedef simd&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a764bbd7149a3f99331a706938fa30ee9">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#af27b84610f7df8ef853b63b1574ce1b3">abi_type</a> &gt;</td>
+<td class="fieldname">
+simd_type <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a764bbd7149a3f99331a706938fa30ee9">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#af27b84610f7df8ef853b63b1574ce1b3">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a5d74726b6c64d40ee7957255aafa4a40" name="a5d74726b6c64d40ee7957255aafa4a40"></a>typedef simd_size&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a764bbd7149a3f99331a706938fa30ee9">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#af27b84610f7df8ef853b63b1574ce1b3">abi_type</a> &gt;</td>
+<td class="fieldname">
+stride <a class="el" href="namespacebatmat_1_1datapar.html#a497d8b4d202d9476ad67782ba4d4feef">datapar::simd_size</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a764bbd7149a3f99331a706938fa30ee9">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#af27b84610f7df8ef853b63b1574ce1b3">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ae4708e91e6763ce4feed7f164a3bdcfa" name="ae4708e91e6763ce4feed7f164a3bdcfa"></a>typedef simd_align&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a764bbd7149a3f99331a706938fa30ee9">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#af27b84610f7df8ef853b63b1574ce1b3">abi_type</a> &gt;</td>
+<td class="fieldname">
+alignment <a class="el" href="namespacebatmat_1_1datapar.html#a3cbb75e6685dbd98807439ac0dca33f0">datapar::simd_align</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a764bbd7149a3f99331a706938fa30ee9">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#af27b84610f7df8ef853b63b1574ce1b3">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a1f673b2080aa98298603b557c47e8690" name="a1f673b2080aa98298603b557c47e8690"></a>typedef DefaultStride</td>
+<td class="fieldname">
+layer_stride <a class="el" href="structbatmat_1_1matrix_1_1DefaultStride.html">batmat::matrix::DefaultStride</a></td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="abe74295e4fd8675c68bcdde822010aae" name="abe74295e4fd8675c68bcdde822010aae"></a>typedef View&lt; T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a5d74726b6c64d40ee7957255aafa4a40">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a5d74726b6c64d40ee7957255aafa4a40">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a1f673b2080aa98298603b557c47e8690">layer_stride</a>, O &gt;</td>
+<td class="fieldname">
+type <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt;T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a5d74726b6c64d40ee7957255aafa4a40">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a5d74726b6c64d40ee7957255aafa4a40">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a1f673b2080aa98298603b557c47e8690">layer_stride</a>, O&gt;</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1Matrix2f013e9bf729f69bd71be2becf75521d" id="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1Matrix2f013e9bf729f69bd71be2becf75521d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1Matrix2f013e9bf729f69bd71be2becf75521d">&#9670;&#160;</a></span>batmat::linalg::detail::simdified_view_type&lt; const batmat::matrix::Matrix&lt; T, I, S, S, O, A &gt; &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct batmat::linalg::detail::simdified_view_type&lt; const batmat::matrix::Matrix&lt; T, I, S, S, O, A &gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="a55a99023898561b9884311c85ada778b" name="a55a99023898561b9884311c85ada778b"></a>typedef T</td>
+<td class="fieldname">
+value_type T</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ae0b11ce26546e0e7d5f3c24bc0f04fba" name="ae0b11ce26546e0e7d5f3c24bc0f04fba"></a>typedef deduced_abi&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a55a99023898561b9884311c85ada778b">value_type</a>, S{}&gt;</td>
+<td class="fieldname">
+abi_type <a class="el" href="namespacebatmat_1_1datapar.html#aa3c7c9554d61e55ae3384b5e4c5ce7af">datapar::deduced_abi</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a55a99023898561b9884311c85ada778b">value_type</a>, S{}&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a6cb079cc17267f8a908ed741059b7e2c" name="a6cb079cc17267f8a908ed741059b7e2c"></a>typedef simd&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a55a99023898561b9884311c85ada778b">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ae0b11ce26546e0e7d5f3c24bc0f04fba">abi_type</a> &gt;</td>
+<td class="fieldname">
+simd_type <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a55a99023898561b9884311c85ada778b">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ae0b11ce26546e0e7d5f3c24bc0f04fba">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ac268f42d054c8518e0860935ce4b18ea" name="ac268f42d054c8518e0860935ce4b18ea"></a>typedef simd_size&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a55a99023898561b9884311c85ada778b">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ae0b11ce26546e0e7d5f3c24bc0f04fba">abi_type</a> &gt;</td>
+<td class="fieldname">
+stride <a class="el" href="namespacebatmat_1_1datapar.html#a497d8b4d202d9476ad67782ba4d4feef">datapar::simd_size</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a55a99023898561b9884311c85ada778b">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ae0b11ce26546e0e7d5f3c24bc0f04fba">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a276fd3e77aa39eb63f4ac6f67dc15774" name="a276fd3e77aa39eb63f4ac6f67dc15774"></a>typedef simd_align&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a55a99023898561b9884311c85ada778b">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ae0b11ce26546e0e7d5f3c24bc0f04fba">abi_type</a> &gt;</td>
+<td class="fieldname">
+alignment <a class="el" href="namespacebatmat_1_1datapar.html#a3cbb75e6685dbd98807439ac0dca33f0">datapar::simd_align</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a55a99023898561b9884311c85ada778b">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ae0b11ce26546e0e7d5f3c24bc0f04fba">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="aa0fdea0a7b248cb124aec79d6d220fca" name="aa0fdea0a7b248cb124aec79d6d220fca"></a>typedef DefaultStride</td>
+<td class="fieldname">
+layer_stride <a class="el" href="structbatmat_1_1matrix_1_1DefaultStride.html">batmat::matrix::DefaultStride</a></td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a1fe9aef73579a43dab0d35c7479f74cb" name="a1fe9aef73579a43dab0d35c7479f74cb"></a>typedef View&lt; const T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ac268f42d054c8518e0860935ce4b18ea">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ac268f42d054c8518e0860935ce4b18ea">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aa0fdea0a7b248cb124aec79d6d220fca">layer_stride</a>, O &gt;</td>
+<td class="fieldname">
+type <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt;const T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ac268f42d054c8518e0860935ce4b18ea">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ac268f42d054c8518e0860935ce4b18ea">stride</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aa0fdea0a7b248cb124aec79d6d220fca">layer_stride</a>, O&gt;</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5" id="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5">&#9670;&#160;</a></span>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="aec98852e728336499f5d6b1054089874" name="aec98852e728336499f5d6b1054089874"></a>typedef remove_const_t&lt; T &gt;</td>
+<td class="fieldname">
+value_type std::remove_const_t&lt;T&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="aef476382e7fce819e831791018598dab" name="aef476382e7fce819e831791018598dab"></a>typedef deduced_abi&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aec98852e728336499f5d6b1054089874">value_type</a>, S{}&gt;</td>
+<td class="fieldname">
+abi_type <a class="el" href="namespacebatmat_1_1datapar.html#aa3c7c9554d61e55ae3384b5e4c5ce7af">datapar::deduced_abi</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aec98852e728336499f5d6b1054089874">value_type</a>, S{}&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a37e9acf5b1260a7c1c1c516d3b4bc040" name="a37e9acf5b1260a7c1c1c516d3b4bc040"></a>typedef simd&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aec98852e728336499f5d6b1054089874">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aef476382e7fce819e831791018598dab">abi_type</a> &gt;</td>
+<td class="fieldname">
+simd_type <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aec98852e728336499f5d6b1054089874">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aef476382e7fce819e831791018598dab">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a8e7731798e98d3b79f72162f7c101bea" name="a8e7731798e98d3b79f72162f7c101bea"></a>typedef simd_size&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aec98852e728336499f5d6b1054089874">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aef476382e7fce819e831791018598dab">abi_type</a> &gt;</td>
+<td class="fieldname">
+stride <a class="el" href="namespacebatmat_1_1datapar.html#a497d8b4d202d9476ad67782ba4d4feef">datapar::simd_size</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aec98852e728336499f5d6b1054089874">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aef476382e7fce819e831791018598dab">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a229dff70dc489f4137389d3e91f0342b" name="a229dff70dc489f4137389d3e91f0342b"></a>typedef simd_align&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aec98852e728336499f5d6b1054089874">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aef476382e7fce819e831791018598dab">abi_type</a> &gt;</td>
+<td class="fieldname">
+alignment <a class="el" href="namespacebatmat_1_1datapar.html#a3cbb75e6685dbd98807439ac0dca33f0">datapar::simd_align</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aec98852e728336499f5d6b1054089874">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aef476382e7fce819e831791018598dab">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ac18c64e9d6a508112b72b8819161b37d" name="ac18c64e9d6a508112b72b8819161b37d"></a>typedef L</td>
+<td class="fieldname">
+layer_stride L</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ad84661674b890c50128f410a21c4a93f" name="ad84661674b890c50128f410a21c4a93f"></a>typedef View&lt; T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a8e7731798e98d3b79f72162f7c101bea">stride</a>, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ac18c64e9d6a508112b72b8819161b37d">layer_stride</a>, O &gt;</td>
+<td class="fieldname">
+type <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt;T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a8e7731798e98d3b79f72162f7c101bea">stride</a>, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ac18c64e9d6a508112b72b8819161b37d">layer_stride</a>, O&gt;</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_33bea5f89420c1479536e5641dd6559d" id="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_33bea5f89420c1479536e5641dd6559d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_33bea5f89420c1479536e5641dd6559d">&#9670;&#160;</a></span>batmat::linalg::detail::simdified_multi_view_type&lt; const batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct batmat::linalg::detail::simdified_multi_view_type&lt; const batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="aeb020f6107f7b908f648049e812c80fe" name="aeb020f6107f7b908f648049e812c80fe"></a>typedef remove_const_t&lt; T &gt;</td>
+<td class="fieldname">
+value_type std::remove_const_t&lt;T&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a4dcbbc82ef7ba39efa01820ef0c07dac" name="a4dcbbc82ef7ba39efa01820ef0c07dac"></a>typedef deduced_abi&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aeb020f6107f7b908f648049e812c80fe">value_type</a>, S{}&gt;</td>
+<td class="fieldname">
+abi_type <a class="el" href="namespacebatmat_1_1datapar.html#aa3c7c9554d61e55ae3384b5e4c5ce7af">datapar::deduced_abi</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aeb020f6107f7b908f648049e812c80fe">value_type</a>, S{}&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a611882ae4ad9bbc1a5455f15ca7a977b" name="a611882ae4ad9bbc1a5455f15ca7a977b"></a>typedef simd&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aeb020f6107f7b908f648049e812c80fe">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a4dcbbc82ef7ba39efa01820ef0c07dac">abi_type</a> &gt;</td>
+<td class="fieldname">
+simd_type <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aeb020f6107f7b908f648049e812c80fe">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a4dcbbc82ef7ba39efa01820ef0c07dac">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ae3411a7ac00a8a563bb3114a365003da" name="ae3411a7ac00a8a563bb3114a365003da"></a>typedef simd_size&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aeb020f6107f7b908f648049e812c80fe">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a4dcbbc82ef7ba39efa01820ef0c07dac">abi_type</a> &gt;</td>
+<td class="fieldname">
+stride <a class="el" href="namespacebatmat_1_1datapar.html#a497d8b4d202d9476ad67782ba4d4feef">datapar::simd_size</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aeb020f6107f7b908f648049e812c80fe">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a4dcbbc82ef7ba39efa01820ef0c07dac">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a0531b218c698a62ba9e3257976a04a9a" name="a0531b218c698a62ba9e3257976a04a9a"></a>typedef simd_align&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aeb020f6107f7b908f648049e812c80fe">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a4dcbbc82ef7ba39efa01820ef0c07dac">abi_type</a> &gt;</td>
+<td class="fieldname">
+alignment <a class="el" href="namespacebatmat_1_1datapar.html#a3cbb75e6685dbd98807439ac0dca33f0">datapar::simd_align</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aeb020f6107f7b908f648049e812c80fe">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a4dcbbc82ef7ba39efa01820ef0c07dac">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a7d507ebed8d78c49e8290c8ac630cb97" name="a7d507ebed8d78c49e8290c8ac630cb97"></a>typedef L</td>
+<td class="fieldname">
+layer_stride L</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a28aaa3e5c18d5c9790b80c5d4dec1283" name="a28aaa3e5c18d5c9790b80c5d4dec1283"></a>typedef View&lt; T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ae3411a7ac00a8a563bb3114a365003da">stride</a>, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a7d507ebed8d78c49e8290c8ac630cb97">layer_stride</a>, O &gt;</td>
+<td class="fieldname">
+type <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt;T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ae3411a7ac00a8a563bb3114a365003da">stride</a>, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a7d507ebed8d78c49e8290c8ac630cb97">layer_stride</a>, O&gt;</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1Matrix_a2d75434e5018f0cd47dbc6912dd16bf" id="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1Matrix_a2d75434e5018f0cd47dbc6912dd16bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1Matrix_a2d75434e5018f0cd47dbc6912dd16bf">&#9670;&#160;</a></span>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::Matrix&lt; T, I, S, I, O, A &gt; &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::Matrix&lt; T, I, S, I, O, A &gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="aa8289544c5d14d04ca592adf9b5f1343" name="aa8289544c5d14d04ca592adf9b5f1343"></a>typedef T</td>
+<td class="fieldname">
+value_type T</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a05011750bfe65ec247c3425d33e73e32" name="a05011750bfe65ec247c3425d33e73e32"></a>typedef deduced_abi&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aa8289544c5d14d04ca592adf9b5f1343">value_type</a>, S{}&gt;</td>
+<td class="fieldname">
+abi_type <a class="el" href="namespacebatmat_1_1datapar.html#aa3c7c9554d61e55ae3384b5e4c5ce7af">datapar::deduced_abi</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aa8289544c5d14d04ca592adf9b5f1343">value_type</a>, S{}&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="aa5028cf55c9328ae1ab2539977f71296" name="aa5028cf55c9328ae1ab2539977f71296"></a>typedef simd&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aa8289544c5d14d04ca592adf9b5f1343">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a05011750bfe65ec247c3425d33e73e32">abi_type</a> &gt;</td>
+<td class="fieldname">
+simd_type <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aa8289544c5d14d04ca592adf9b5f1343">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a05011750bfe65ec247c3425d33e73e32">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a217a4bac1cd8b43c218b49d28f2b7e30" name="a217a4bac1cd8b43c218b49d28f2b7e30"></a>typedef simd_size&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aa8289544c5d14d04ca592adf9b5f1343">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a05011750bfe65ec247c3425d33e73e32">abi_type</a> &gt;</td>
+<td class="fieldname">
+stride <a class="el" href="namespacebatmat_1_1datapar.html#a497d8b4d202d9476ad67782ba4d4feef">datapar::simd_size</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aa8289544c5d14d04ca592adf9b5f1343">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a05011750bfe65ec247c3425d33e73e32">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a66c3c5d91b733fc0eb0abbf9591e9527" name="a66c3c5d91b733fc0eb0abbf9591e9527"></a>typedef simd_align&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aa8289544c5d14d04ca592adf9b5f1343">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a05011750bfe65ec247c3425d33e73e32">abi_type</a> &gt;</td>
+<td class="fieldname">
+alignment <a class="el" href="namespacebatmat_1_1datapar.html#a3cbb75e6685dbd98807439ac0dca33f0">datapar::simd_align</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#aa8289544c5d14d04ca592adf9b5f1343">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a05011750bfe65ec247c3425d33e73e32">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ae794656df8a3b6301da5a099bf2b4e8b" name="ae794656df8a3b6301da5a099bf2b4e8b"></a>typedef DefaultStride</td>
+<td class="fieldname">
+layer_stride <a class="el" href="structbatmat_1_1matrix_1_1DefaultStride.html">batmat::matrix::DefaultStride</a></td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a3a7e6ef79969ef95f4c8d02efe5f004a" name="a3a7e6ef79969ef95f4c8d02efe5f004a"></a>typedef View&lt; T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a217a4bac1cd8b43c218b49d28f2b7e30">stride</a>, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ae794656df8a3b6301da5a099bf2b4e8b">layer_stride</a>, O &gt;</td>
+<td class="fieldname">
+type <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt;T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a217a4bac1cd8b43c218b49d28f2b7e30">stride</a>, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#ae794656df8a3b6301da5a099bf2b4e8b">layer_stride</a>, O&gt;</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_68d714009fb08972c65f60674f881d94" id="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_68d714009fb08972c65f60674f881d94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_68d714009fb08972c65f60674f881d94">&#9670;&#160;</a></span>batmat::linalg::detail::simdified_multi_view_type&lt; const batmat::matrix::Matrix&lt; T, I, S, I, O, A &gt; &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct batmat::linalg::detail::simdified_multi_view_type&lt; const batmat::matrix::Matrix&lt; T, I, S, I, O, A &gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="a020c41306b6aa32f28695acf7f0177d9" name="a020c41306b6aa32f28695acf7f0177d9"></a>typedef T</td>
+<td class="fieldname">
+value_type T</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a4f5c08cec3a99072d7c98790329e6895" name="a4f5c08cec3a99072d7c98790329e6895"></a>typedef deduced_abi&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a020c41306b6aa32f28695acf7f0177d9">value_type</a>, S{}&gt;</td>
+<td class="fieldname">
+abi_type <a class="el" href="namespacebatmat_1_1datapar.html#aa3c7c9554d61e55ae3384b5e4c5ce7af">datapar::deduced_abi</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a020c41306b6aa32f28695acf7f0177d9">value_type</a>, S{}&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a3b98c8141d1b53be3c0746956e15fc10" name="a3b98c8141d1b53be3c0746956e15fc10"></a>typedef simd&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a020c41306b6aa32f28695acf7f0177d9">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a4f5c08cec3a99072d7c98790329e6895">abi_type</a> &gt;</td>
+<td class="fieldname">
+simd_type <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a020c41306b6aa32f28695acf7f0177d9">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a4f5c08cec3a99072d7c98790329e6895">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a6994528237a20aca70757b0ed8d4c12e" name="a6994528237a20aca70757b0ed8d4c12e"></a>typedef simd_size&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a020c41306b6aa32f28695acf7f0177d9">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a4f5c08cec3a99072d7c98790329e6895">abi_type</a> &gt;</td>
+<td class="fieldname">
+stride <a class="el" href="namespacebatmat_1_1datapar.html#a497d8b4d202d9476ad67782ba4d4feef">datapar::simd_size</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a020c41306b6aa32f28695acf7f0177d9">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a4f5c08cec3a99072d7c98790329e6895">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a43ec353bbb67ec8538ebcb3ed328b83b" name="a43ec353bbb67ec8538ebcb3ed328b83b"></a>typedef simd_align&lt; <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a020c41306b6aa32f28695acf7f0177d9">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a4f5c08cec3a99072d7c98790329e6895">abi_type</a> &gt;</td>
+<td class="fieldname">
+alignment <a class="el" href="namespacebatmat_1_1datapar.html#a3cbb75e6685dbd98807439ac0dca33f0">datapar::simd_align</a>&lt;<a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a020c41306b6aa32f28695acf7f0177d9">value_type</a>, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a4f5c08cec3a99072d7c98790329e6895">abi_type</a>&gt;</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a1d8e0bf71564158936bf255c31fba90a" name="a1d8e0bf71564158936bf255c31fba90a"></a>typedef DefaultStride</td>
+<td class="fieldname">
+layer_stride <a class="el" href="structbatmat_1_1matrix_1_1DefaultStride.html">batmat::matrix::DefaultStride</a></td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ad54415f56e375906e750b4de979eec47" name="ad54415f56e375906e750b4de979eec47"></a>typedef View&lt; const T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a6994528237a20aca70757b0ed8d4c12e">stride</a>, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a1d8e0bf71564158936bf255c31fba90a">layer_stride</a>, O &gt;</td>
+<td class="fieldname">
+type <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt;const T, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a6994528237a20aca70757b0ed8d4c12e">stride</a>, index_t, <a class="el" href="namespacebatmat_1_1linalg_1_1detail.html#a1d8e0bf71564158936bf255c31fba90a">layer_stride</a>, O&gt;</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="structbatmat_1_1linalg_1_1detail_1_1simdified__value_3_01V_01_4" id="structbatmat_1_1linalg_1_1detail_1_1simdified__value_3_01V_01_4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structbatmat_1_1linalg_1_1detail_1_1simdified__value_3_01V_01_4">&#9670;&#160;</a></span>batmat::linalg::detail::simdified_value&lt; V &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct batmat::linalg::detail::simdified_value&lt; V &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="ad2024d4d854679a3647499f8f96ed527" name="ad2024d4d854679a3647499f8f96ed527"></a>typedef typename value_type</td>
+<td class="fieldname">
+type typename <a class="el" href="namespacebatmat_1_1linalg.html#a4be791b0744b45a32676446036a52ccd">batmat::linalg::simdified_view_type</a>&lt;V&gt;::value_type</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a3cbd478efc89c022f04381fe0aabd9f9" name="a3cbd478efc89c022f04381fe0aabd9f9"></a>typedef typename value_type</td>
+<td class="fieldname">
+type typename <a class="el" href="namespacebatmat_1_1linalg.html#a3f72f46ab5a64618b0df6098b8540343">batmat::linalg::simdified_multi_view_type</a>&lt;V&gt;::value_type</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="structbatmat_1_1linalg_1_1detail_1_1simdified__abi_3_01V_01_4" id="structbatmat_1_1linalg_1_1detail_1_1simdified__abi_3_01V_01_4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structbatmat_1_1linalg_1_1detail_1_1simdified__abi_3_01V_01_4">&#9670;&#160;</a></span>batmat::linalg::detail::simdified_abi&lt; V &gt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct batmat::linalg::detail::simdified_abi&lt; V &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="aaf7acd51815c83665738fe8461d42714" name="aaf7acd51815c83665738fe8461d42714"></a>typedef typename abi_type</td>
+<td class="fieldname">
+type typename <a class="el" href="namespacebatmat_1_1linalg.html#a4be791b0744b45a32676446036a52ccd">batmat::linalg::simdified_view_type</a>&lt;V&gt;::abi_type</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a20d874d8ca07af098fb5719bf54083e6" name="a20d874d8ca07af098fb5719bf54083e6"></a>typedef typename abi_type</td>
+<td class="fieldname">
+type typename <a class="el" href="namespacebatmat_1_1linalg.html#a3f72f46ab5a64618b0df6098b8540343">batmat::linalg::simdified_multi_view_type</a>&lt;V&gt;::abi_type</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="dir_fb227e489dae4e94b57f952e55a850cd.html">batmat</a></li><li class="navelem"><a href="dir_72d467c23e78781a791bd9375234cac1.html">include</a></li><li class="navelem"><a href="dir_63a8bd2941168c96d494403d8e78330f.html">batmat</a></li><li class="navelem"><a href="dir_6b3c116c82570f1db015b5f9324a36e3.html">linalg</a></li><li class="navelem"><a href="simdify_8hpp.html">simdify.hpp</a></li>
+    <li class="footer">Generated on <span class="timestamp"></span> for batmat by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
+  </ul>
+</div>
+</body>
+</html>

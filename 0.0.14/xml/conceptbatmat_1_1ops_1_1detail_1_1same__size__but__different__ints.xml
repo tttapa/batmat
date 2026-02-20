@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="conceptbatmat_1_1ops_1_1detail_1_1same__size__but__different__ints" kind="concept">
+    <compoundname>batmat::ops::detail::same_size_but_different_ints</compoundname>
+    <includes refid="gather_8hpp" local="no">batmat/ops/gather.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>class T1</type>
+      </param>
+      <param>
+        <type>class T2</type>
+      </param>
+    </templateparamlist>
+    <initializer>template&lt;class T1, class T2&gt;
+concept <ref refid="conceptbatmat_1_1ops_1_1detail_1_1same__size__but__different__ints" kindref="compound">batmat::ops::detail::same_size_but_different_ints</ref> = 
+    std::integral&lt;T1&gt; &amp;&amp; std::integral&lt;T2&gt; &amp;&amp; sizeof(T1) == sizeof(T2) &amp;&amp; !std::same_as&lt;T1, T2&gt;</initializer>
+    <conceptparts>
+      <codepart line="18">    <programlisting>
+<codeline><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T1,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T2&gt;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">concept<sp/></highlight><highlight class="normal">same_size_but_different_ints<sp/>=</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>std::integral&lt;T1&gt;<sp/>&amp;&amp;<sp/>std::integral&lt;T2&gt;<sp/>&amp;&amp;<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(T1)<sp/>==<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(T2)<sp/>&amp;&amp;<sp/>!std::same_as&lt;T1,<sp/>T2&gt;</highlight></codeline>
+    </programlisting>
+</codepart>
+    </conceptparts>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/ops/gather.hpp" line="18" column="1"/>
+  </compounddef>
+</doxygen>

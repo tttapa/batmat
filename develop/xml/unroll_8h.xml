@@ -1,0 +1,494 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="unroll_8h" kind="file" language="C++">
+    <compoundname>unroll.h</compoundname>
+    <includes local="no">guanaqo/stringify.h</includes>
+    <includedby refid="compress_8hpp" local="no">batmat/include/batmat/linalg/compress.hpp</includedby>
+    <includedby refid="copy_8hpp" local="no">batmat/include/batmat/linalg/copy.hpp</includedby>
+    <includedby refid="uview_8hpp" local="no">batmat/include/batmat/linalg/uview.hpp</includedby>
+    <includedby refid="transpose_8hpp" local="no">batmat/include/batmat/ops/transpose.hpp</includedby>
+    <includedby refid="simd_8hpp" local="no">batmat/include/batmat/simd.hpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>batmat/include/batmat/unroll.h</label>
+        <link refid="unroll_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>guanaqo/stringify.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>batmat/include/batmat/linalg/compress.hpp</label>
+        <link refid="compress_8hpp"/>
+      </node>
+      <node id="3">
+        <label>batmat/include/batmat/linalg/copy.hpp</label>
+        <link refid="copy_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>batmat/include/batmat/linalg/gemm-diag.hpp</label>
+        <link refid="gemm-diag_8hpp"/>
+      </node>
+      <node id="6">
+        <label>batmat/include/batmat/linalg/gemm.hpp</label>
+        <link refid="gemm_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>batmat/include/batmat/linalg/gemv.hpp</label>
+        <link refid="gemv_8hpp"/>
+      </node>
+      <node id="8">
+        <label>batmat/include/batmat/linalg/hyhound.hpp</label>
+        <link refid="hyhound_8hpp"/>
+      </node>
+      <node id="12">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp</label>
+        <link refid="micro-kernels_2gemm-diag_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm-diag.tpp</label>
+        <link refid="gemm-diag_8tpp"/>
+      </node>
+      <node id="14">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm.hpp</label>
+        <link refid="micro-kernels_2gemm_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm.tpp</label>
+        <link refid="gemm_8tpp"/>
+      </node>
+      <node id="16">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemv.hpp</label>
+        <link refid="micro-kernels_2gemv_8hpp"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemv.tpp</label>
+        <link refid="gemv_8tpp"/>
+      </node>
+      <node id="18">
+        <label>batmat/include/batmat/linalg/micro-kernels/hyhound.hpp</label>
+        <link refid="micro-kernels_2hyhound_8hpp"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+      </node>
+      <node id="19">
+        <label>batmat/include/batmat/linalg/micro-kernels/hyhound.tpp</label>
+        <link refid="hyhound_8tpp"/>
+      </node>
+      <node id="20">
+        <label>batmat/include/batmat/linalg/micro-kernels/potrf.hpp</label>
+        <link refid="micro-kernels_2potrf_8hpp"/>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>batmat/include/batmat/linalg/micro-kernels/potrf.tpp</label>
+        <link refid="potrf_8tpp"/>
+      </node>
+      <node id="22">
+        <label>batmat/include/batmat/linalg/micro-kernels/symv.hpp</label>
+        <link refid="micro-kernels_2symv_8hpp"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>batmat/include/batmat/linalg/micro-kernels/symv.tpp</label>
+        <link refid="symv_8tpp"/>
+      </node>
+      <node id="25">
+        <label>batmat/include/batmat/linalg/micro-kernels/syomv.hpp</label>
+        <link refid="micro-kernels_2syomv_8hpp"/>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+      </node>
+      <node id="26">
+        <label>batmat/include/batmat/linalg/micro-kernels/syomv.tpp</label>
+        <link refid="syomv_8tpp"/>
+      </node>
+      <node id="28">
+        <label>batmat/include/batmat/linalg/micro-kernels/trsm.hpp</label>
+        <link refid="micro-kernels_2trsm_8hpp"/>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="29">
+        <label>batmat/include/batmat/linalg/micro-kernels/trsm.tpp</label>
+        <link refid="trsm_8tpp"/>
+      </node>
+      <node id="30">
+        <label>batmat/include/batmat/linalg/micro-kernels/trtri.hpp</label>
+        <link refid="micro-kernels_2trtri_8hpp"/>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+      </node>
+      <node id="31">
+        <label>batmat/include/batmat/linalg/micro-kernels/trtri.tpp</label>
+        <link refid="trtri_8tpp"/>
+      </node>
+      <node id="9">
+        <label>batmat/include/batmat/linalg/potrf.hpp</label>
+        <link refid="potrf_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="36">
+        <label>batmat/include/batmat/linalg/simdify.hpp</label>
+        <link refid="simdify_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+      </node>
+      <node id="33">
+        <label>batmat/include/batmat/linalg/symm.hpp</label>
+        <link refid="symm_8hpp"/>
+      </node>
+      <node id="24">
+        <label>batmat/include/batmat/linalg/symv.hpp</label>
+        <link refid="symv_8hpp"/>
+      </node>
+      <node id="27">
+        <label>batmat/include/batmat/linalg/syomv.hpp</label>
+        <link refid="syomv_8hpp"/>
+      </node>
+      <node id="10">
+        <label>batmat/include/batmat/linalg/trsm.hpp</label>
+        <link refid="trsm_8hpp"/>
+      </node>
+      <node id="32">
+        <label>batmat/include/batmat/linalg/trtri.hpp</label>
+        <link refid="trtri_8hpp"/>
+      </node>
+      <node id="11">
+        <label>batmat/include/batmat/linalg/uview.hpp</label>
+        <link refid="uview_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+      </node>
+      <node id="37">
+        <label>batmat/include/batmat/ops/cneg.hpp</label>
+        <link refid="cneg_8hpp"/>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="38">
+        <label>batmat/include/batmat/ops/gather.hpp</label>
+        <link refid="gather_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="39">
+        <label>batmat/include/batmat/ops/mask.hpp</label>
+        <link refid="mask_8hpp"/>
+        <childnode refid="38" relation="include">
+        </childnode>
+      </node>
+      <node id="40">
+        <label>batmat/include/batmat/ops/rotate.hpp</label>
+        <link refid="rotate_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+      </node>
+      <node id="41">
+        <label>batmat/include/batmat/ops/rsqrt.hpp</label>
+        <link refid="rsqrt_8hpp"/>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="34">
+        <label>batmat/include/batmat/ops/transpose.hpp</label>
+        <link refid="transpose_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="42">
+        <label>batmat/include/batmat/platform/avx-512.hpp</label>
+        <link refid="avx-512_8hpp"/>
+      </node>
+      <node id="43">
+        <label>batmat/include/batmat/platform/avx2.hpp</label>
+        <link refid="avx2_8hpp"/>
+      </node>
+      <node id="44">
+        <label>batmat/include/batmat/platform/neon.hpp</label>
+        <link refid="neon_8hpp"/>
+      </node>
+      <node id="35">
+        <label>batmat/include/batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/unroll.h</label>
+        <link refid="unroll_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>/home/runner/work/batmat/batmat/test_package/src/example.cpp</label>
+        <link refid="example_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="unroll_8h_1a50c6fa4278afd7f4b1900a3c61286d92" prot="public" static="no">
+        <name>BATMAT_FULLY_UNROLL_LOOP</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/unroll.h" line="26" column="9" bodyfile="batmat/include/batmat/unroll.h" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="unroll_8h_1addb39c3474d8e234f06b9ca62ed0bf75" prot="public" static="no">
+        <name>BATMAT_FULLY_UNROLLED_FOR</name>
+        <param><defname>...</defname></param>
+        <initializer>for (__VA_ARGS__)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/unroll.h" line="27" column="9" bodyfile="batmat/include/batmat/unroll.h" bodystart="27" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a86f65f38e1de024143f611d38d6ec764" compoundref="compress_8hpp" startline="123" endline="185">batmat::linalg::detail::compress_masks_count</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a71184afe3c389f21d064930a43a7049c" compoundref="compress_8hpp" startline="16" endline="120">batmat::linalg::detail::compress_masks_impl</referencedby>
+        <referencedby refid="group__topic-low-level-ops_1gaa7e113b52b9b2f919ea0cd6b700c0e40" compoundref="transpose_8hpp" startline="20" endline="29">batmat::ops::transpose_dyn</referencedby>
+      </memberdef>
+      <memberdef kind="define" id="unroll_8h_1a73dd9b450e263421adfef45753671d8e" prot="public" static="no">
+        <name>BATMAT_FULLY_UNROLLED_IVDEP_FOR</name>
+        <param><defname>...</defname></param>
+        <initializer>for (__VA_ARGS__)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/unroll.h" line="28" column="9" bodyfile="batmat/include/batmat/unroll.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="unroll_8h_1a3b47b5e0ab192416373a2afa12ef97cd" prot="public" static="no">
+        <name>BATMAT_UNROLLED_IVDEP_FOR</name>
+        <param><defname>N</defname></param>
+        <param><defname>...</defname></param>
+        <initializer>for (__VA_ARGS__)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/unroll.h" line="29" column="9" bodyfile="batmat/include/batmat/unroll.h" bodystart="29" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1ac74ffd0a7e0af8bcd39fb94b587e66b1" compoundref="copy_8hpp" startline="68" endline="107">batmat::linalg::detail::copy::copy</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a2734a86018fe0537b59c91e9f85c5fbb" compoundref="copy_8hpp" startline="27" endline="59">batmat::linalg::detail::copy::fill</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1aef2ec4540dc4cbc963fd37e80434b020" compoundref="symm_8hpp" startline="15" endline="52">batmat::linalg::detail::symm</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;guanaqo/stringify.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>NDEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>__clang__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_FULLY_UNROLL_LOOP<sp/>_Pragma(&quot;clang<sp/>loop<sp/>unroll(full)&quot;)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_FULLY_UNROLLED_FOR(...)<sp/>BATMAT_FULLY_UNROLL_LOOP<sp/>for<sp/>(__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_FULLY_UNROLLED_IVDEP_FOR(...)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="11"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>BATMAT_FULLY_UNROLL_LOOP<sp/>_Pragma(&quot;clang<sp/>loop<sp/>interleave(enable)&quot;)<sp/>for<sp/>(__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_UNROLLED_IVDEP_FOR(N,<sp/>...)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="13"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>_Pragma(GUANAQO_STRINGIFY(clang<sp/>loop<sp/>unroll_count(N)))<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="14"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>_Pragma(&quot;clang<sp/>loop<sp/>interleave(enable)&quot;)<sp/>for<sp/>(__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_FULLY_UNROLL_LOOP<sp/>_Pragma(&quot;GCC<sp/>unroll<sp/>99&quot;)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_FULLY_UNROLLED_FOR(...)<sp/>BATMAT_FULLY_UNROLL_LOOP<sp/>for<sp/>(__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_FULLY_UNROLLED_IVDEP_FOR(...)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="19"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>BATMAT_FULLY_UNROLL_LOOP<sp/>_Pragma(&quot;GCC<sp/>ivdep&quot;)<sp/>for<sp/>(__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_UNROLLED_IVDEP_FOR(N,<sp/>...)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="21"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>_Pragma(GUANAQO_STRINGIFY(GCC<sp/>unroll<sp/>N))<sp/>_Pragma(&quot;GCC<sp/>ivdep&quot;)<sp/>for<sp/>(__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26" refid="unroll_8h_1a50c6fa4278afd7f4b1900a3c61286d92" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_FULLY_UNROLL_LOOP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="unroll_8h_1addb39c3474d8e234f06b9ca62ed0bf75" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_FULLY_UNROLLED_FOR(...)<sp/>for<sp/>(__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28" refid="unroll_8h_1a73dd9b450e263421adfef45753671d8e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_FULLY_UNROLLED_IVDEP_FOR(...)<sp/>for<sp/>(__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29" refid="unroll_8h_1a3b47b5e0ab192416373a2afa12ef97cd" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_UNROLLED_IVDEP_FOR(N,<sp/>...)<sp/>for<sp/>(__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/unroll.h"/>
+  </compounddef>
+</doxygen>

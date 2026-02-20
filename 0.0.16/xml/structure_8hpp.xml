@@ -1,0 +1,310 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structure_8hpp" kind="file" language="C++">
+    <compoundname>structure.hpp</compoundname>
+    <includes local="no">cstdint</includes>
+    <includedby refid="copy_8hpp" local="no">batmat/include/batmat/linalg/copy.hpp</includedby>
+    <includedby refid="flops_8hpp" local="no">batmat/include/batmat/linalg/flops.hpp</includedby>
+    <includedby refid="micro-kernels_2gemm-diag_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp</includedby>
+    <includedby refid="micro-kernels_2gemm_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/gemm.hpp</includedby>
+    <includedby refid="micro-kernels_2gemv_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/gemv.hpp</includedby>
+    <includedby refid="micro-kernels_2hyhound_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/hyhound.hpp</includedby>
+    <includedby refid="micro-kernels_2potrf_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/potrf.hpp</includedby>
+    <includedby refid="potrf_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/potrf.tpp</includedby>
+    <includedby refid="micro-kernels_2symv_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/symv.hpp</includedby>
+    <includedby refid="micro-kernels_2syomv_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/syomv.hpp</includedby>
+    <includedby refid="micro-kernels_2trsm_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/trsm.hpp</includedby>
+    <includedby refid="trsm_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/trsm.tpp</includedby>
+    <includedby refid="micro-kernels_2trtri_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/trtri.hpp</includedby>
+    <includedby refid="trtri_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/trtri.tpp</includedby>
+    <includedby refid="triangular_8hpp" local="no">batmat/include/batmat/linalg/triangular.hpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/structure.hpp</label>
+        <link refid="structure_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>cstdint</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>batmat/include/batmat/linalg/copy.hpp</label>
+        <link refid="copy_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>batmat/include/batmat/linalg/flops.hpp</label>
+        <link refid="flops_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>batmat/include/batmat/linalg/gemm-diag.hpp</label>
+        <link refid="gemm-diag_8hpp"/>
+      </node>
+      <node id="5">
+        <label>batmat/include/batmat/linalg/gemm.hpp</label>
+        <link refid="gemm_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>batmat/include/batmat/linalg/gemv.hpp</label>
+        <link refid="gemv_8hpp"/>
+      </node>
+      <node id="7">
+        <label>batmat/include/batmat/linalg/hyhound.hpp</label>
+        <link refid="hyhound_8hpp"/>
+      </node>
+      <node id="12">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp</label>
+        <link refid="micro-kernels_2gemm-diag_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm-diag.tpp</label>
+        <link refid="gemm-diag_8tpp"/>
+      </node>
+      <node id="14">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm.hpp</label>
+        <link refid="micro-kernels_2gemm_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm.tpp</label>
+        <link refid="gemm_8tpp"/>
+      </node>
+      <node id="16">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemv.hpp</label>
+        <link refid="micro-kernels_2gemv_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemv.tpp</label>
+        <link refid="gemv_8tpp"/>
+      </node>
+      <node id="18">
+        <label>batmat/include/batmat/linalg/micro-kernels/hyhound.hpp</label>
+        <link refid="micro-kernels_2hyhound_8hpp"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+      </node>
+      <node id="19">
+        <label>batmat/include/batmat/linalg/micro-kernels/hyhound.tpp</label>
+        <link refid="hyhound_8tpp"/>
+      </node>
+      <node id="20">
+        <label>batmat/include/batmat/linalg/micro-kernels/potrf.hpp</label>
+        <link refid="micro-kernels_2potrf_8hpp"/>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>batmat/include/batmat/linalg/micro-kernels/potrf.tpp</label>
+        <link refid="potrf_8tpp"/>
+      </node>
+      <node id="22">
+        <label>batmat/include/batmat/linalg/micro-kernels/symv.hpp</label>
+        <link refid="micro-kernels_2symv_8hpp"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>batmat/include/batmat/linalg/micro-kernels/symv.tpp</label>
+        <link refid="symv_8tpp"/>
+      </node>
+      <node id="25">
+        <label>batmat/include/batmat/linalg/micro-kernels/syomv.hpp</label>
+        <link refid="micro-kernels_2syomv_8hpp"/>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+      </node>
+      <node id="26">
+        <label>batmat/include/batmat/linalg/micro-kernels/syomv.tpp</label>
+        <link refid="syomv_8tpp"/>
+      </node>
+      <node id="28">
+        <label>batmat/include/batmat/linalg/micro-kernels/trsm.hpp</label>
+        <link refid="micro-kernels_2trsm_8hpp"/>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="29">
+        <label>batmat/include/batmat/linalg/micro-kernels/trsm.tpp</label>
+        <link refid="trsm_8tpp"/>
+      </node>
+      <node id="30">
+        <label>batmat/include/batmat/linalg/micro-kernels/trtri.hpp</label>
+        <link refid="micro-kernels_2trtri_8hpp"/>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="31">
+        <label>batmat/include/batmat/linalg/micro-kernels/trtri.tpp</label>
+        <link refid="trtri_8tpp"/>
+      </node>
+      <node id="8">
+        <label>batmat/include/batmat/linalg/potrf.hpp</label>
+        <link refid="potrf_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/structure.hpp</label>
+        <link refid="structure_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+      </node>
+      <node id="33">
+        <label>batmat/include/batmat/linalg/symm.hpp</label>
+        <link refid="symm_8hpp"/>
+      </node>
+      <node id="24">
+        <label>batmat/include/batmat/linalg/symv.hpp</label>
+        <link refid="symv_8hpp"/>
+      </node>
+      <node id="27">
+        <label>batmat/include/batmat/linalg/syomv.hpp</label>
+        <link refid="syomv_8hpp"/>
+      </node>
+      <node id="32">
+        <label>batmat/include/batmat/linalg/triangular.hpp</label>
+        <link refid="triangular_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>batmat/include/batmat/linalg/trsm.hpp</label>
+        <link refid="trsm_8hpp"/>
+      </node>
+      <node id="11">
+        <label>batmat/include/batmat/linalg/trtri.hpp</label>
+        <link refid="trtri_8hpp"/>
+      </node>
+      <node id="3">
+        <label>/home/runner/work/batmat/batmat/test_package/src/example.cpp</label>
+        <link refid="example_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg">batmat::linalg</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstdint&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg" kindref="compound">batmat::linalg</ref><sp/>{</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="7"><highlight class="comment">///<sp/>@ingroup<sp/>topic-linalg</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8" refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum<sp/>class</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>:<sp/>int8_t<sp/>{<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref>,<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">LowerTriangular</ref>,<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629cace546798a67931b38dee5a153f9cf688" kindref="member">UpperTriangular</ref><sp/>};</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="10"><highlight class="comment">///<sp/>@ingroup<sp/>topic-linalg</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11" refid="group__topic-linalg_1gaa0bd5dc9f7ed367a2f7fd8b835694d42" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/><ref refid="group__topic-linalg_1gaa0bd5dc9f7ed367a2f7fd8b835694d42" kindref="member">transpose</ref>(<ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>s)<sp/>{</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">enum<sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref>;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>s<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref><sp/>?<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref><sp/>:<sp/>s<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">LowerTriangular</ref><sp/>?<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629cace546798a67931b38dee5a153f9cf688" kindref="member">UpperTriangular</ref><sp/>:<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">LowerTriangular</ref>;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::linalg</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/linalg/structure.hpp"/>
+  </compounddef>
+</doxygen>

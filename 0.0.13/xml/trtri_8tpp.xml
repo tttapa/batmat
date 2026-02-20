@@ -1,0 +1,426 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="trtri_8tpp" kind="file" language="C++">
+    <compoundname>trtri.tpp</compoundname>
+    <includes refid="assume_8hpp" local="no">batmat/assume.hpp</includes>
+    <includes refid="micro-kernels_2trtri_8hpp" local="no">batmat/linalg/micro-kernels/trtri.hpp</includes>
+    <includes refid="structure_8hpp" local="no">batmat/linalg/structure.hpp</includes>
+    <includes refid="uview_8hpp" local="no">batmat/linalg/uview.hpp</includes>
+    <includes refid="loop_8hpp" local="no">batmat/loop.hpp</includes>
+    <incdepgraph>
+      <node id="2">
+        <label>batmat/assume.hpp</label>
+        <link refid="assume_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>batmat/linalg/micro-kernels/trtri.hpp</label>
+        <link refid="micro-kernels_2trtri_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/micro-kernels/trtri.tpp</label>
+        <link refid="trtri_8tpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>batmat/linalg/structure.hpp</label>
+        <link refid="structure_8hpp"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>batmat/linalg/uview.hpp</label>
+        <link refid="uview_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+      </node>
+      <node id="28">
+        <label>batmat/loop.hpp</label>
+        <link refid="loop_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+      </node>
+      <node id="24">
+        <label>batmat/lut.hpp</label>
+        <link refid="lut_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>batmat/matrix/layout.hpp</label>
+        <link refid="layout_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>batmat/matrix/matrix.hpp</label>
+        <link refid="matrix_8hpp"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>batmat/matrix/storage.hpp</label>
+        <link refid="storage_8hpp"/>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="16">
+        <label>batmat/matrix/view.hpp</label>
+        <link refid="view_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+      </node>
+      <node id="29">
+        <label>batmat/openmp.h</label>
+        <link refid="openmp_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+      </node>
+      <node id="27">
+        <label>generic.hpp</label>
+        <link refid="generic_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="26">
+        <label>batmat/platform/platform.hpp</label>
+        <link refid="platform_8hpp"/>
+        <childnode refid="27" relation="include">
+        </childnode>
+      </node>
+      <node id="20">
+        <label>batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>batmat/unroll.h</label>
+        <link refid="unroll_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>batmat/config.hpp</label>
+      </node>
+      <node id="11">
+        <label>cstddef</label>
+      </node>
+      <node id="7">
+        <label>cstdint</label>
+      </node>
+      <node id="23">
+        <label>experimental/simd</label>
+      </node>
+      <node id="4">
+        <label>guanaqo/assume.hpp</label>
+      </node>
+      <node id="25">
+        <label>guanaqo/lut.hpp</label>
+      </node>
+      <node id="18">
+        <label>guanaqo/mat-view.hpp</label>
+      </node>
+      <node id="22">
+        <label>guanaqo/stringify.h</label>
+      </node>
+      <node id="12">
+        <label>memory</label>
+      </node>
+      <node id="13">
+        <label>new</label>
+      </node>
+      <node id="30">
+        <label>omp.h</label>
+      </node>
+      <node id="14">
+        <label>tuple</label>
+      </node>
+      <node id="15">
+        <label>type_traits</label>
+      </node>
+      <node id="19">
+        <label>utility</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg">batmat::linalg</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels">batmat::linalg::micro_kernels</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri">batmat::linalg::micro_kernels::trtri</innernamespace>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="trtri_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" prot="public" static="no">
+        <name>UNROLL_FOR</name>
+        <param><defname>...</defname></param>
+        <initializer><ref refid="unroll_8h_1addb39c3474d8e234f06b9ca62ed0bf75" kindref="member">BATMAT_FULLY_UNROLLED_FOR</ref> (__VA_ARGS__)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/trtri.tpp" line="9" column="9" bodyfile="batmat/include/batmat/linalg/micro-kernels/trtri.tpp" bodystart="9" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="assume_8hpp" kindref="compound">batmat/assume.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="micro-kernels_2trtri_8hpp" kindref="compound">batmat/linalg/micro-kernels/trtri.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="structure_8hpp" kindref="compound">batmat/linalg/structure.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="uview_8hpp" kindref="compound">batmat/linalg/uview.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="loop_8hpp" kindref="compound">batmat/loop.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9" refid="trtri_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>UNROLL_FOR(...)<sp/>BATMAT_FULLY_UNROLLED_FOR<sp/>(__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri" kindref="compound">batmat::linalg::micro_kernels::trtri</ref><sp/>{</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="13"><highlight class="comment">///<sp/>@param<sp/><sp/>A<sp/>k×RowsReg.</highlight></codeline>
+<codeline lineno="14"><highlight class="comment">///<sp/>@param<sp/><sp/>D<sp/>k×RowsReg.</highlight></codeline>
+<codeline lineno="15"><highlight class="comment">///<sp/>@param<sp/><sp/>k<sp/>Number<sp/>of<sp/>rows<sp/>in<sp/>A<sp/>and<sp/>D.</highlight></codeline>
+<codeline lineno="16"><highlight class="comment">///<sp/>Invert<sp/>the<sp/>top<sp/>block<sp/>of<sp/>A<sp/>and<sp/>store<sp/>it<sp/>in<sp/>the<sp/>top<sp/>block<sp/>of<sp/>D.<sp/>Then<sp/>multiply<sp/>the<sp/>bottom<sp/>blocks<sp/>of</highlight></codeline>
+<codeline lineno="17"><highlight class="comment">///<sp/>D<sp/>by<sp/>this<sp/>block<sp/>(on<sp/>the<sp/>right).</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>index_t<sp/>RowsReg,<sp/>StorageOrder<sp/>OA,<sp/>StorageOrder<sp/>OD&gt;</highlight></codeline>
+<codeline lineno="19" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af85745fbec819255a01a9b9513324512" refkind="member"><highlight class="normal">[[gnu::hot,<sp/>gnu::flatten]]<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af85745fbec819255a01a9b9513324512" kindref="member">trtri_copy_microkernel</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, OA&gt;</ref><sp/>A,</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, OD&gt;</ref><sp/>D,</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>index_t<sp/>k)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(Conf.struc<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">MatrixStructure::LowerTriangular</ref>);<sp/></highlight><highlight class="comment">//<sp/>TODO</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref><sp/>&gt;<sp/>0);</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(k<sp/>&gt;=<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>);</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">simd<sp/>=<sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;T, Abi&gt;</ref>;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Pre-compute<sp/>the<sp/>offsets<sp/>of<sp/>the<sp/>columns<sp/>of<sp/>A</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>A1_cached<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" kindref="member">with_cached_access&lt;RowsReg, RowsReg&gt;</ref>(A);</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>A_cached<sp/><sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" kindref="member">with_cached_access&lt;0, RowsReg&gt;</ref>(A);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Load<sp/>matrix<sp/>into<sp/>registers</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>simd<sp/>A1_reg[<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref><sp/>*<sp/>(<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref><sp/>+<sp/>1)<sp/>/<sp/>2];<sp/></highlight><highlight class="comment">//<sp/>NOLINT(*-c-arrays)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>A1r<sp/>=<sp/>[&amp;A1_reg](index_t<sp/>r,<sp/>index_t<sp/>c)<sp/>-&gt;<sp/>simd<sp/>&amp;<sp/>{</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>A1_reg[c<sp/>*<sp/>(2<sp/>*<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref><sp/>-<sp/>1<sp/>-<sp/>c)<sp/>/<sp/>2<sp/>+<sp/>r];</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>ii<sp/>=<sp/>0;<sp/>ii<sp/>&lt;<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>;<sp/>++ii)</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>jj<sp/>=<sp/>0;<sp/>jj<sp/>&lt;=<sp/>ii;<sp/>++jj)</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>A1r(ii,<sp/>jj)<sp/>=<sp/>A1_cached.load(ii,<sp/>jj);</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Invert<sp/>A₁.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Recursively<sp/>apply<sp/>Fact<sp/>2.17.1<sp/>from<sp/>Bernstein<sp/>2009<sp/>-<sp/>Matrix<sp/>mathematics</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>theory,<sp/>facts,<sp/>and<sp/>formulas.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>[<sp/>L₁₁<sp/><sp/>0<sp/><sp/><sp/>]⁻¹<sp/><sp/>=<sp/><sp/>[<sp/><sp/>L₁₁⁻¹<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0<sp/><sp/><sp/><sp/><sp/>]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>[<sp/>L₂₁<sp/><sp/>L₂₂<sp/>]<sp/><sp/><sp/><sp/><sp/><sp/><sp/>[<sp/>-L₂₂⁻¹<sp/>L₂₁<sp/>L₁₁⁻¹<sp/><sp/><sp/>L₂₂⁻¹<sp/>]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>First<sp/>apply<sp/>it<sp/>to<sp/>the<sp/>last<sp/>column:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>[<sp/>l₁₁<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>[<sp/>l₂₁<sp/><sp/>l₂₂<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>[<sp/>l₃₁<sp/><sp/>l₃₂<sp/><sp/>l₃₃<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>[<sp/>l₄₁<sp/><sp/>l₄₂<sp/><sp/>l₄₃<sp/><sp/>l₄₄⁻¹<sp/>]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Then<sp/>to<sp/>the<sp/>bottom<sp/>right<sp/>2×2<sp/>block:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>[<sp/>l₁₁<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>]<sp/>=<sp/>[<sp/>l₁₁<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>[<sp/>l₂₁<sp/><sp/>l₂₂<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>]<sp/><sp/><sp/>[<sp/>l₂₁<sp/><sp/>l₂₂<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>[<sp/>l₃₁<sp/><sp/>l₃₂<sp/><sp/><sp/>l₃₃⁻¹<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>]<sp/><sp/><sp/>[<sp/>l₃₁<sp/><sp/>l₃₂<sp/><sp/>[<sp/><sp/><sp/><sp/><sp/><sp/><sp/>]<sp/>]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>[<sp/>l₄₁<sp/><sp/>l₄₂<sp/><sp/>-l₄₄⁻¹<sp/>l₄₃<sp/>l₃₃⁻¹<sp/><sp/><sp/>l₄₄⁻¹<sp/>]<sp/><sp/><sp/>[<sp/>l₄₁<sp/><sp/>l₄₂<sp/><sp/>[<sp/>L₃₃⁻¹<sp/>]<sp/>]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Then<sp/>to<sp/>the<sp/>bottom<sp/>right<sp/>3×3<sp/>block,<sp/>and<sp/>so<sp/>on.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>jj<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref><sp/>-<sp/>1;<sp/>jj<sp/>&gt;=<sp/>0;<sp/>--jj)<sp/>{</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Invert<sp/>diagonal<sp/>element.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>A1r(jj,<sp/>jj)<sp/>=<sp/>simd{1}<sp/>/<sp/>A1r(jj,<sp/>jj);</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Multiply<sp/>current<sp/>diagonal<sp/>element<sp/>with<sp/>column<sp/>j.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>-ℓ₂₁<sp/>ℓ₁₁⁻¹</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>ii<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref><sp/>-<sp/>1;<sp/>ii<sp/>&gt;<sp/>jj;<sp/>--ii)</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>A1r(ii,<sp/>jj)<sp/>*=<sp/>-A1r(jj,<sp/>jj);</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Triangular<sp/>matrix-vector<sp/>product<sp/>of<sp/>bottom<sp/>right<sp/>block<sp/>with<sp/>column<sp/>j.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>-L₂₂⁻¹<sp/>ℓ₂₁<sp/>ℓ₁₁⁻¹</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>ll<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref><sp/>-<sp/>1;<sp/>ll<sp/>&gt;<sp/>jj;<sp/>--ll)<sp/>{</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>ii<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref><sp/>-<sp/>1;<sp/>ii<sp/>&gt;<sp/>ll;<sp/>--ii)</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>A1r(ii,<sp/>jj)<sp/>+=<sp/>A1r(ii,<sp/>ll)<sp/>*<sp/>A1r(ll,<sp/>jj);</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>A1r(ll,<sp/>jj)<sp/>*=<sp/>A1r(ll,<sp/>ll);</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Pre-compute<sp/>the<sp/>offsets<sp/>of<sp/>the<sp/>columns<sp/>of<sp/>D</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>D1_cached<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" kindref="member">with_cached_access&lt;RowsReg, RowsReg&gt;</ref>(D);</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>D_cached<sp/><sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" kindref="member">with_cached_access&lt;0, RowsReg&gt;</ref>(D);</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Store<sp/>matrix<sp/>A₁⁻¹<sp/>to<sp/>D₁</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>;<sp/>++i)</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>j<sp/>=<sp/>0;<sp/>j<sp/>&lt;=<sp/>i;<sp/>++j)</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>D1_cached.store(A1r(i,<sp/>j),<sp/>i,<sp/>j);</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Multiply<sp/>A₂<sp/>by<sp/>-A₁⁻¹<sp/>and<sp/>store<sp/>in<sp/>D₂</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(index_t<sp/>l<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>;<sp/>l<sp/>&lt;<sp/>k;<sp/>++l)<sp/>{</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>A2r[<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>];<sp/></highlight><highlight class="comment">//<sp/>NOLINT(*-c-arrays)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>;<sp/>++i)</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>A2r[i]<sp/>=<sp/>A_cached.load(l,<sp/>i);</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>;<sp/>++i)<sp/>{</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>A2r[i]<sp/>*=<sp/>-A1r(i,<sp/>i);</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>j<sp/>=<sp/>i<sp/>+<sp/>1;<sp/>j<sp/>&lt;<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>;<sp/>++j)</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>A2r[i]<sp/>-=<sp/>A2r[j]<sp/>*<sp/>A1r(j,<sp/>i);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>D_cached.store(A2r[i],<sp/>l,<sp/>i);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="90"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="92"><highlight class="comment">///<sp/>@param<sp/><sp/>Dr<sp/>RowsReg×k<sp/>lower<sp/>trapezoidal</highlight></codeline>
+<codeline lineno="93"><highlight class="comment">///<sp/>@param<sp/><sp/>D<sp/><sp/>k×ColsReg</highlight></codeline>
+<codeline lineno="94"><highlight class="comment">///<sp/>@param<sp/><sp/>k<sp/><sp/>Number<sp/>of<sp/>rows<sp/>in<sp/>D.</highlight></codeline>
+<codeline lineno="95"><highlight class="comment">///<sp/>Compute<sp/>product<sp/>Dr<sp/>D<sp/>and<sp/>store<sp/>the<sp/>result<sp/>in<sp/>the<sp/>bottom<sp/>block<sp/>of<sp/>D</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>index_t<sp/>RowsReg,<sp/>index_t<sp/>ColsReg,<sp/>StorageOrder<sp/>OD&gt;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal">[[gnu::hot,<sp/>gnu::flatten]]</highlight></codeline>
+<codeline lineno="98" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a83a92100dec173181dece5d96bf9ca1c" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a83a92100dec173181dece5d96bf9ca1c" kindref="member">trmm_microkernel</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, OD&gt;</ref><sp/>Dr,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, OD&gt;</ref><sp/>D,</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>index_t<sp/>k)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(Conf.struc<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">MatrixStructure::LowerTriangular</ref>);<sp/></highlight><highlight class="comment">//<sp/>TODO</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref><sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af75df864a9e8b9d493afec89b432ef62" kindref="member">ColsReg</ref><sp/>&gt;<sp/>0);</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(k<sp/>&gt;=<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>);</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">simd<sp/>=<sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;T, Abi&gt;</ref>;</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Clear<sp/>accumulator</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/>simd<sp/>D_reg[<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>][<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af75df864a9e8b9d493afec89b432ef62" kindref="member">ColsReg</ref>]{};<sp/></highlight><highlight class="comment">//<sp/>NOLINT(*-c-arrays)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Perform<sp/>gemm</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>A1_cached<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" kindref="member">with_cached_access&lt;RowsReg, 0&gt;</ref>(Dr);</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>B1_cached<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" kindref="member">with_cached_access&lt;0, ColsReg&gt;</ref>(D);</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(index_t<sp/>l<sp/>=<sp/>0;<sp/>l<sp/>&lt;<sp/>k<sp/>-<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>;<sp/>++l)</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>ii<sp/>=<sp/>0;<sp/>ii<sp/>&lt;<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>;<sp/>++ii)<sp/>{</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>Ail<sp/>=<sp/>A1_cached.load(ii,<sp/>l);</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>jj<sp/>=<sp/>0;<sp/>jj<sp/>&lt;<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af75df864a9e8b9d493afec89b432ef62" kindref="member">ColsReg</ref>;<sp/>++jj)<sp/>{</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>&amp;Cij<sp/>=<sp/>D_reg[ii][jj];</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>Blj<sp/><sp/>=<sp/>B1_cached.load(l,<sp/>jj);</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Cij<sp/>+=<sp/>Ail<sp/>*<sp/>Blj;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Perform<sp/>trmm</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>ii<sp/>=<sp/>0;<sp/>ii<sp/>&lt;<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>;<sp/>++ii)<sp/></highlight><highlight class="comment">//<sp/>TODO:<sp/>move<sp/>before<sp/>gemm</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>ll<sp/>=<sp/>0;<sp/>ll<sp/>&lt;=<sp/>ii;<sp/>++ll)<sp/>{</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>Ail<sp/>=<sp/>A1_cached.load(ii,<sp/>k<sp/>-<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref><sp/>+<sp/>ll);</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>jj<sp/>=<sp/>0;<sp/>jj<sp/>&lt;<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af75df864a9e8b9d493afec89b432ef62" kindref="member">ColsReg</ref>;<sp/>++jj)</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>D_reg[ii][jj]<sp/>+=<sp/>Ail<sp/>*<sp/>B1_cached.load(k<sp/>-<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref><sp/>+<sp/>ll,<sp/>jj);</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Store<sp/>result<sp/>to<sp/>memory</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>ii<sp/>=<sp/>0;<sp/>ii<sp/>&lt;<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>;<sp/>++ii)</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(index_t<sp/>jj<sp/>=<sp/>0;<sp/>jj<sp/>&lt;<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af75df864a9e8b9d493afec89b432ef62" kindref="member">ColsReg</ref>;<sp/>++jj)</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>D.store(D_reg[ii][jj],<sp/>k<sp/>-<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref><sp/>+<sp/>ii,<sp/>jj);</highlight></codeline>
+<codeline lineno="129"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>StorageOrder<sp/>OA,<sp/>StorageOrder<sp/>OD&gt;</highlight></codeline>
+<codeline lineno="132" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1abad0e2c032d6297bf7a2f0a68b771d40" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1abad0e2c032d6297bf7a2f0a68b771d40" kindref="member">trtri_copy_register</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OA&gt;</ref><sp/>A,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OD&gt;</ref><sp/>D)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">enum<sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref>;</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(Conf.struc<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">LowerTriangular</ref>);<sp/></highlight><highlight class="comment">//<sp/>TODO</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>Rows<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg&lt;T, Abi&gt;</ref>,<sp/>Cols<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af75df864a9e8b9d493afec89b432ef62" kindref="member">ColsReg&lt;T, Abi&gt;</ref>;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Check<sp/>dimensions</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>index_t<sp/>I<sp/>=<sp/>A.rows();</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(A.rows()<sp/>==<sp/>A.cols());</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(A.rows()<sp/>==<sp/>D.rows());</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(A.cols()<sp/>==<sp/>D.cols());</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>trtri_microkernel<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a66af129bc17c5d94f9fdb76b92edac7b" kindref="member">trtri_copy_lut&lt;T, Abi, Conf, OA, OD&gt;</ref>;</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a83a92100dec173181dece5d96bf9ca1c" kindref="member">trmm_microkernel</ref><sp/><sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a03e2c492eb817c0169071450de2d341f" kindref="member">trmm_lut&lt;T, Abi, Conf, OD&gt;</ref>;</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/>(void)<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a83a92100dec173181dece5d96bf9ca1c" kindref="member">trmm_microkernel</ref>;<sp/></highlight><highlight class="comment">//<sp/>GCC<sp/>incorrectly<sp/>warns<sp/>about<sp/>unused<sp/>variable</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Sizeless<sp/>views<sp/>to<sp/>partition<sp/>and<sp/>pass<sp/>to<sp/>the<sp/>micro-kernels</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, OA&gt;</ref><sp/>A_<sp/>=<sp/>A;</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, OD&gt;</ref><sp/>D_<sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>D;</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Optimization<sp/>for<sp/>very<sp/>small<sp/>matrices</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(I<sp/>&lt;=<sp/>Rows)</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>trtri_microkernel[I<sp/>-<sp/>1](A_,<sp/>D_,<sp/>I);</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Partition:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/>[<sp/>...<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>]<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[<sp/>...<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>A<sp/>=<sp/>[<sp/>...<sp/>Ajj<sp/><sp/><sp/><sp/>]<sp/><sp/><sp/><sp/>D<sp/>=<sp/>[<sp/>...<sp/>Djj<sp/><sp/><sp/><sp/>]<sp/><sp/><sp/>with<sp/>the<sp/>invariant<sp/>Dp<sp/>=<sp/>Ap⁻¹</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/>[<sp/>...<sp/>Aj<sp/><sp/>Ap<sp/>]<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[<sp/>...<sp/>Dj<sp/><sp/>Dp<sp/>]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__topic-utils_1gab76a36340644bbf7c8093caa45aef12f" kindref="member">foreach_chunked_merged</ref>(<sp/></highlight><highlight class="comment">//<sp/>Loop<sp/>over<sp/>the<sp/>diagonal<sp/>blocks<sp/>of<sp/>A,<sp/>in<sp/>reverse</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0,<sp/>I,<sp/>Cols,</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[&amp;](index_t<sp/>j,<sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>nj)<sp/>{</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>jp<sp/><sp/>=<sp/>j<sp/>+<sp/>nj;</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>Ajj<sp/>=<sp/>A_.<ref refid="structbatmat_1_1linalg_1_1uview_1a294edbebb26413734307376578d417d1" kindref="member">block</ref>(j,<sp/>j);</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>Djj<sp/>=<sp/>D_.<ref refid="structbatmat_1_1linalg_1_1uview_1a294edbebb26413734307376578d417d1" kindref="member">block</ref>(j,<sp/>j);</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>Dj<sp/><sp/>=<sp/>D_.<ref refid="structbatmat_1_1linalg_1_1uview_1a294edbebb26413734307376578d417d1" kindref="member">block</ref>(jp,<sp/>j);</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Invert<sp/>Djj<sp/>=<sp/>Ajj⁻¹<sp/>and<sp/>multiply<sp/>Dj<sp/>=<sp/>Aj<sp/>Djj</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>trtri_microkernel[nj<sp/>-<sp/>1](Ajj,<sp/>Djj,<sp/>I<sp/>-<sp/>j);</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Multiply<sp/>Dp<sp/>Dj<sp/>(with<sp/>Dp<sp/>lower<sp/>triangular)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__topic-utils_1gab76a36340644bbf7c8093caa45aef12f" kindref="member">foreach_chunked_merged</ref>(<sp/></highlight><highlight class="comment">//<sp/>Loop<sp/>over<sp/>the<sp/>block<sp/>rows<sp/>of<sp/>Dj,<sp/>in<sp/>reverse</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>jp,<sp/>I,<sp/>Rows,</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[&amp;](index_t<sp/>i,<sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>ni)<sp/>{</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Block<sp/>row<sp/>of<sp/>already<sp/>inverted<sp/>bottom<sp/>right<sp/>corner</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>Dpi<sp/>=<sp/>D_.<ref refid="structbatmat_1_1linalg_1_1uview_1a294edbebb26413734307376578d417d1" kindref="member">block</ref>(i,<sp/>jp);</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Current<sp/>subdiagonal<sp/>column<sp/>to<sp/>be<sp/>multiplied<sp/>by<sp/>Dp</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a83a92100dec173181dece5d96bf9ca1c" kindref="member">trmm_microkernel</ref>[ni<sp/>-<sp/>1][nj<sp/>-<sp/>1](Dpi,<sp/>Dj,<sp/>i<sp/>+<sp/>ni<sp/>-<sp/>jp);</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__topic-utils_1ggaa625a055ebbfa5ba05a1fd8f1f104807ab3263eb38f8903efc271cc7a760da510" kindref="member">LoopDir::Backward</ref>);</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__topic-utils_1ggaa625a055ebbfa5ba05a1fd8f1f104807ab3263eb38f8903efc271cc7a760da510" kindref="member">LoopDir::Backward</ref>);</highlight></codeline>
+<codeline lineno="178"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"></highlight></codeline>
+<codeline lineno="180"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::linalg::micro_kernels::trtri</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/linalg/micro-kernels/trtri.tpp"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="index_8md" kind="file" language="Markdown">
+    <compoundname>index.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">Fast<sp/>linear<sp/>algebra<sp/>routines<sp/>for<sp/>batches<sp/>of<sp/>small<sp/>matrices.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Batmat<sp/>is<sp/>used<sp/>as<sp/>the<sp/>linear<sp/>algebra<sp/>backend<sp/>for<sp/>the<sp/>[Cyqlone](https://github.com/kul-optec/cyqlone)<sp/>solver,</highlight></codeline>
+<codeline><highlight class="normal">where<sp/>it<sp/>is<sp/>used<sp/>to<sp/>perform<sp/>vectorized<sp/>operations<sp/>across<sp/>multiple<sp/>stages<sp/>in<sp/>an<sp/>optimal<sp/>control<sp/>problem.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>enable<sp/>vectorization,<sp/>batmat<sp/>stores<sp/>batches<sp/>of<sp/>small<sp/>matrices<sp/>in<sp/>an<sp/>interleaved<sp/>“compact”<sp/>format<sp/>in<sp/>memory,<sp/>where<sp/>the<sp/>corresponding<sp/>elements<sp/>of<sp/>all<sp/>matrices<sp/>in<sp/>a<sp/>batch<sp/>are<sp/>stored<sp/>together.</highlight></codeline>
+<codeline><highlight class="normal">Custom<sp/>linear<sp/>algebra<sp/>routines<sp/>then<sp/>operate<sp/>on<sp/>all<sp/>matrices<sp/>in<sp/>a<sp/>batch<sp/>simultaneously<sp/>using<sp/>SIMD<sp/>instructions.<sp/>These<sp/>routines<sp/>are<sp/>built<sp/>on<sp/>top<sp/>of<sp/>highly<sp/>optimized<sp/>micro-kernels.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>an<sp/>overview<sp/>of<sp/>the<sp/>supported<sp/>routines,<sp/>see<sp/>@ref<sp/>topic-linalg.<sp/>For<sp/>documentation<sp/>of<sp/>the<sp/>batched</highlight></codeline>
+<codeline><highlight class="normal">matrix<sp/>data<sp/>structures,<sp/>see<sp/>@ref<sp/>topic-matrix.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">---</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;div<sp/>style=&quot;text-align:<sp/>center;&quot;&gt;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&lt;img<sp/>src=&quot;batmat-small.png&quot;<sp/>alt=&quot;batmat<sp/>logo&quot;<sp/>width=160&gt;</highlight></codeline>
+<codeline><highlight class="normal">&lt;/div&gt;</highlight></codeline>
+    </programlisting>
+    <location file="/home/runner/work/batmat/batmat/docs/source/doxygen/index.md"/>
+  </compounddef>
+</doxygen>

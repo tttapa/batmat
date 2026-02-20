@@ -1,0 +1,323 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="flops_8hpp" kind="file" language="C++">
+    <compoundname>flops.hpp</compoundname>
+    <includes refid="assume_8hpp" local="no">batmat/assume.hpp</includes>
+    <includes local="no">batmat/config.hpp</includes>
+    <includes refid="structure_8hpp" local="no">batmat/linalg/structure.hpp</includes>
+    <includes local="no">algorithm</includes>
+    <includedby refid="gemm-diag_8hpp" local="no">batmat/include/batmat/linalg/gemm-diag.hpp</includedby>
+    <includedby refid="gemm_8hpp" local="no">batmat/include/batmat/linalg/gemm.hpp</includedby>
+    <includedby refid="hyhound_8hpp" local="no">batmat/include/batmat/linalg/hyhound.hpp</includedby>
+    <includedby refid="potrf_8hpp" local="no">batmat/include/batmat/linalg/potrf.hpp</includedby>
+    <includedby refid="trsm_8hpp" local="no">batmat/include/batmat/linalg/trsm.hpp</includedby>
+    <includedby refid="trtri_8hpp" local="no">batmat/include/batmat/linalg/trtri.hpp</includedby>
+    <incdepgraph>
+      <node id="2">
+        <label>batmat/assume.hpp</label>
+        <link refid="assume_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/flops.hpp</label>
+        <link refid="flops_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>batmat/linalg/structure.hpp</label>
+        <link refid="structure_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>algorithm</label>
+      </node>
+      <node id="3">
+        <label>batmat/config.hpp</label>
+      </node>
+      <node id="6">
+        <label>cstdint</label>
+      </node>
+      <node id="4">
+        <label>guanaqo/assume.hpp</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/flops.hpp</label>
+        <link refid="flops_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/include/batmat/linalg/gemm-diag.hpp</label>
+        <link refid="gemm-diag_8hpp"/>
+      </node>
+      <node id="3">
+        <label>batmat/include/batmat/linalg/gemm.hpp</label>
+        <link refid="gemm_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>batmat/include/batmat/linalg/hyhound.hpp</label>
+        <link refid="hyhound_8hpp"/>
+      </node>
+      <node id="6">
+        <label>batmat/include/batmat/linalg/potrf.hpp</label>
+        <link refid="potrf_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>batmat/include/batmat/linalg/trsm.hpp</label>
+        <link refid="trsm_8hpp"/>
+      </node>
+      <node id="8">
+        <label>batmat/include/batmat/linalg/trtri.hpp</label>
+        <link refid="trtri_8hpp"/>
+      </node>
+      <node id="4">
+        <label>/home/runner/work/batmat/batmat/test_package/src/example.cpp</label>
+        <link refid="example_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" prot="public">batmat::linalg::flops::FlopCount</innerclass>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg">batmat::linalg</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1flops">batmat::linalg::flops</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="assume_8hpp" kindref="compound">batmat/assume.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;batmat/config.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="structure_8hpp" kindref="compound">batmat/linalg/structure.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;algorithm&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8" refid="namespacebatmat_1_1linalg_1_1flops" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1flops" kindref="compound">batmat::linalg::flops</ref><sp/>{</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="10"><highlight class="comment">///<sp/>@addtogroup<sp/>topic-linalg-flops</highlight></codeline>
+<codeline lineno="11"><highlight class="comment">///<sp/>@{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="13"><highlight class="comment">///<sp/>Count<sp/>of<sp/>individual<sp/>floating<sp/>point<sp/>operations,<sp/>broken<sp/>down<sp/>by<sp/>type.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14" refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/>{</highlight></codeline>
+<codeline lineno="15" refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a28da3437266fe88ae51442fc0d2c8b31" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>index_t<sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a28da3437266fe88ae51442fc0d2c8b31" kindref="member">fma</ref><sp/><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="16" refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a6e018b00e1d427244c2957c78a9ae572" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>index_t<sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a6e018b00e1d427244c2957c78a9ae572" kindref="member">mul</ref><sp/><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="17" refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a50d077939e212aaa9b4a1184521cbdbd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>index_t<sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a50d077939e212aaa9b4a1184521cbdbd" kindref="member">add</ref><sp/><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="18" refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a2dadccf6759992d6143bdd662b25479b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>index_t<sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a2dadccf6759992d6143bdd662b25479b" kindref="member">div</ref><sp/><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="19" refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1ae62283feb062751c55b8d56e5fdb9b4a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>index_t<sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1ae62283feb062751c55b8d56e5fdb9b4a" kindref="member">sqrt</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="22"><highlight class="comment">///<sp/>Combine<sp/>two<sp/>flop<sp/>counts<sp/>by<sp/>summing<sp/>the<sp/>counts<sp/>of<sp/>each<sp/>operation<sp/>type.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23" refid="group__topic-linalg-flops_1ga837cc287e8d3e7e62cf013aa2c1f58d3" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga837cc287e8d3e7e62cf013aa2c1f58d3" kindref="member">operator+</ref>(<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/>a,<sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/>b)<sp/>{</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/><sp/>=<sp/>a.<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a28da3437266fe88ae51442fc0d2c8b31" kindref="member">fma</ref><sp/>+<sp/>b.<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a28da3437266fe88ae51442fc0d2c8b31" kindref="member">fma</ref>,</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.mul<sp/><sp/>=<sp/>a.<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a6e018b00e1d427244c2957c78a9ae572" kindref="member">mul</ref><sp/>+<sp/>b.<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a6e018b00e1d427244c2957c78a9ae572" kindref="member">mul</ref>,</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.add<sp/><sp/>=<sp/>a.<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a50d077939e212aaa9b4a1184521cbdbd" kindref="member">add</ref><sp/>+<sp/>b.<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a50d077939e212aaa9b4a1184521cbdbd" kindref="member">add</ref>,</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.div<sp/><sp/>=<sp/>a.<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a2dadccf6759992d6143bdd662b25479b" kindref="member">div</ref><sp/>+<sp/>b.<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a2dadccf6759992d6143bdd662b25479b" kindref="member">div</ref>,</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.sqrt<sp/>=<sp/>a.<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1ae62283feb062751c55b8d56e5fdb9b4a" kindref="member">sqrt</ref><sp/>+<sp/>b.<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1ae62283feb062751c55b8d56e5fdb9b4a" kindref="member">sqrt</ref>};</highlight></codeline>
+<codeline lineno="29"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="31"><highlight class="comment">///<sp/>Compute<sp/>the<sp/>total<sp/>number<sp/>of<sp/>floating<sp/>point<sp/>operations<sp/>by<sp/>summing<sp/>the<sp/>counts<sp/>of<sp/>all<sp/>operation</highlight></codeline>
+<codeline lineno="32"><highlight class="comment">///<sp/>types.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33" refid="group__topic-linalg-flops_1ga3f5450fd91a87ba9dc28e346bf46bf31" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>index_t<sp/><ref refid="group__topic-linalg-flops_1ga3f5450fd91a87ba9dc28e346bf46bf31" kindref="member">total</ref>(<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/>c)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>c.<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a28da3437266fe88ae51442fc0d2c8b31" kindref="member">fma</ref><sp/>+<sp/>c.<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a6e018b00e1d427244c2957c78a9ae572" kindref="member">mul</ref><sp/>+<sp/>c.<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a50d077939e212aaa9b4a1184521cbdbd" kindref="member">add</ref><sp/>+<sp/>c.<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a2dadccf6759992d6143bdd662b25479b" kindref="member">div</ref><sp/>+<sp/>c.<ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1ae62283feb062751c55b8d56e5fdb9b4a" kindref="member">sqrt</ref>;<sp/>}</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="35"><highlight class="comment">///<sp/>Matrix-matrix<sp/>multiplication<sp/>of<sp/>m×k<sp/>and<sp/>k×n<sp/>matrices.</highlight></codeline>
+<codeline lineno="36"><highlight class="comment">///<sp/>@implementation{flops-gemm}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-gemm]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38" refid="group__topic-linalg-flops_1ga792bf36ee357f56cea635ef9337368b8" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga792bf36ee357f56cea635ef9337368b8" kindref="member">gemm</ref>(index_t<sp/>m,<sp/>index_t<sp/>n,<sp/>index_t<sp/>k)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>m<sp/>*<sp/>k<sp/>*<sp/>n};<sp/>}</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-gemm]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="41"><highlight class="comment">///<sp/>Matrix-matrix<sp/>multiplication<sp/>of<sp/>m×k<sp/>and<sp/>k×n<sp/>matrices<sp/>where<sp/>one<sp/>or<sp/>more<sp/>of<sp/>the<sp/>matrices</highlight></codeline>
+<codeline lineno="42"><highlight class="comment">///<sp/>are<sp/>triangular<sp/>or<sp/>trapezoidal.</highlight></codeline>
+<codeline lineno="43"><highlight class="comment">///<sp/>@implementation{flops-trmm}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-trmm]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45" refid="group__topic-linalg-flops_1ga7ab4fbff09383b46ed353e5c8b1cb44a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga7ab4fbff09383b46ed353e5c8b1cb44a" kindref="member">trmm</ref>(index_t<sp/>m,<sp/>index_t<sp/>n,<sp/>index_t<sp/>k,<sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>sA,<sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>sB,</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>sC)<sp/>{</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">enum<sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref>;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sB<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref><sp/>&amp;&amp;<sp/>sC<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sA<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">LowerTriangular</ref><sp/>||<sp/>sA<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629cace546798a67931b38dee5a153f9cf688" kindref="member">UpperTriangular</ref>)<sp/>{<sp/></highlight><highlight class="comment">//<sp/>trapezoidal<sp/>A</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(m<sp/>&gt;=<sp/>k)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>tall<sp/>A</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/>x<sp/>x<sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/>x<sp/>x<sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/>x<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/>x<sp/>x<sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>k<sp/>*<sp/>(k<sp/>+<sp/>1)<sp/>/<sp/>2<sp/>*<sp/>n<sp/>+<sp/>(m<sp/>-<sp/>k)<sp/>*<sp/>k<sp/>*<sp/>n};</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">//<sp/>wide<sp/>A</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/>x<sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/>x<sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/>x<sp/>x<sp/>x<sp/>x<sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/>x<sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>x<sp/>x</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>m<sp/>*<sp/>(m<sp/>+<sp/>1)<sp/>/<sp/>2<sp/>*<sp/>n<sp/>+<sp/>(k<sp/>-<sp/>m)<sp/>*<sp/>(k<sp/>-<sp/>m)<sp/>*<sp/>n};</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sA<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>m<sp/>*<sp/>k<sp/>*<sp/>n};</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(!</highlight><highlight class="stringliteral">&quot;invalid<sp/>structure&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sA<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref><sp/>&amp;&amp;<sp/>sC<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sB<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">LowerTriangular</ref><sp/>||<sp/>sB<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629cace546798a67931b38dee5a153f9cf688" kindref="member">UpperTriangular</ref>)<sp/>{<sp/></highlight><highlight class="comment">//<sp/>trapezoidal<sp/>B</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(n<sp/>&gt;=<sp/>k)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>wide<sp/>B</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>k<sp/>*<sp/>(k<sp/>+<sp/>1)<sp/>/<sp/>2<sp/>*<sp/>m<sp/>+<sp/>(n<sp/>-<sp/>k)<sp/>*<sp/>k<sp/>*<sp/>m};</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">//<sp/>tall<sp/>B</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>n<sp/>*<sp/>(n<sp/>+<sp/>1)<sp/>/<sp/>2<sp/>*<sp/>m<sp/>+<sp/>(k<sp/>-<sp/>n)<sp/>*<sp/>(k<sp/>-<sp/>n)<sp/>*<sp/>m};</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(!</highlight><highlight class="stringliteral">&quot;invalid<sp/>structure&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sA<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref><sp/>&amp;&amp;<sp/>sB<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">General</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sC<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">LowerTriangular</ref><sp/>||<sp/>sC<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629cace546798a67931b38dee5a153f9cf688" kindref="member">UpperTriangular</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(m<sp/>==<sp/>n);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>m<sp/>*<sp/>(m<sp/>+<sp/>1)<sp/>/<sp/>2<sp/>*<sp/>k};</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(!</highlight><highlight class="stringliteral">&quot;invalid<sp/>structure&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sC<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">LowerTriangular</ref><sp/>||<sp/>sC<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629cace546798a67931b38dee5a153f9cf688" kindref="member">UpperTriangular</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(sA<sp/>==<sp/><ref refid="group__topic-linalg_1gaa0bd5dc9f7ed367a2f7fd8b835694d42" kindref="member">transpose</ref>(sB))<sp/>{</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(m<sp/>==<sp/>n);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(m<sp/>==<sp/>k);</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>m<sp/>*<sp/>(m<sp/>+<sp/>1)<sp/>*<sp/>(m<sp/>+<sp/>2)<sp/>/<sp/>6};</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(!</highlight><highlight class="stringliteral">&quot;invalid<sp/>structure&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(!</highlight><highlight class="stringliteral">&quot;unsupported<sp/>structure&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{};</highlight></codeline>
+<codeline lineno="97"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-trmm]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="100"><highlight class="comment">///<sp/>Matrix-matrix<sp/>multiplication<sp/>of<sp/>m×k<sp/>and<sp/>k×n<sp/>matrices<sp/>where<sp/>the<sp/>result<sp/>is<sp/>symmetric.</highlight></codeline>
+<codeline lineno="101"><highlight class="comment">///<sp/>@implementation{flops-gemmt}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-gemmt]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="103" refid="group__topic-linalg-flops_1gad70c29c07e3f55d4464e001bdfd14da2" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1gad70c29c07e3f55d4464e001bdfd14da2" kindref="member">gemmt</ref>(index_t<sp/>m,<sp/>index_t<sp/>n,<sp/>index_t<sp/>k,<sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>sA,<sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>sB,</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>sC)<sp/>{</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1ga7ab4fbff09383b46ed353e5c8b1cb44a" kindref="member">trmm</ref>(m,<sp/>n,<sp/>k,<sp/>sA,<sp/>sB,<sp/>sC);</highlight></codeline>
+<codeline lineno="106"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-gemmt]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="109"><highlight class="comment">///<sp/>Symmetric<sp/>rank-k<sp/>update<sp/>of<sp/>n×n<sp/>matrices.</highlight></codeline>
+<codeline lineno="110"><highlight class="comment">///<sp/>@implementation{flops-syrk}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-syrk]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="112" refid="group__topic-linalg-flops_1gac7a4c106e784546210860c59c3634e5e" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1gac7a4c106e784546210860c59c3634e5e" kindref="member">syrk</ref>(index_t<sp/>n,<sp/>index_t<sp/>k)<sp/>{</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1gad70c29c07e3f55d4464e001bdfd14da2" kindref="member">gemmt</ref>(n,<sp/>n,<sp/>k,<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref>,<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref>,</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">MatrixStructure::LowerTriangular</ref>);</highlight></codeline>
+<codeline lineno="115"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-syrk]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="118"><highlight class="comment">///<sp/>Matrix-matrix<sp/>multiplication<sp/>of<sp/>m×k<sp/>and<sp/>k×n<sp/>matrices<sp/>with<sp/>a<sp/>diagonal<sp/>k×k<sp/>matrix<sp/>in<sp/>the<sp/>middle,</highlight></codeline>
+<codeline lineno="119"><highlight class="comment">///<sp/>where<sp/>the<sp/>result<sp/>is<sp/>symmetric.</highlight></codeline>
+<codeline lineno="120"><highlight class="comment">///<sp/>@implementation{flops-gemmt-diag}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-gemmt-diag]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="122" refid="group__topic-linalg-flops_1ga232cc639534f37bf900df45fb929743e" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga232cc639534f37bf900df45fb929743e" kindref="member">gemmt_diag</ref>(index_t<sp/>m,<sp/>index_t<sp/>n,<sp/>index_t<sp/>k,<sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>sC)<sp/>{</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>sA<sp/>=<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref>,<sp/>sB<sp/>=<sp/>sA;</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1ga7ab4fbff09383b46ed353e5c8b1cb44a" kindref="member">trmm</ref>(m,<sp/>n,<sp/>k,<sp/>sA,<sp/>sB,<sp/>sC)<sp/>+<sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref>{.mul<sp/>=<sp/>std::min(m,<sp/>n)<sp/>*<sp/>k};</highlight></codeline>
+<codeline lineno="125"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-gemmt-diag]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="128"><highlight class="comment">///<sp/>Cholesky<sp/>factorization<sp/>and<sp/>triangular<sp/>solve<sp/>for<sp/>an<sp/>m×n<sp/>matrix<sp/>with<sp/>m≥n.</highlight></codeline>
+<codeline lineno="129"><highlight class="comment">///<sp/>@implementation{flops-potrf}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-potrf]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="131" refid="group__topic-linalg-flops_1ga840f3e725b3e51c181bc4b2961697528" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga840f3e725b3e51c181bc4b2961697528" kindref="member">potrf</ref>(index_t<sp/>m,<sp/>index_t<sp/>n)<sp/>{</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(m<sp/>&gt;=<sp/>n);</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.fma<sp/>=<sp/>(n<sp/>+<sp/>1)<sp/>*<sp/>n<sp/>*<sp/>(n<sp/>-<sp/>1)<sp/>/<sp/>6<sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Schur<sp/>complement<sp/>(square)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>+<sp/>(m<sp/>-<sp/>n)<sp/>*<sp/>n<sp/>*<sp/>(n<sp/>-<sp/>1)<sp/>/<sp/>2,<sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(bottom)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.mul<sp/>=<sp/>n<sp/>*<sp/>(n<sp/>-<sp/>1)<sp/>/<sp/>2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>multiplication<sp/>by<sp/>inverse<sp/>pivot<sp/>(square)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>+<sp/>(m<sp/>-<sp/>n)<sp/>*<sp/>n,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(bottom)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.div<sp/><sp/>=<sp/>n,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>inverting<sp/>pivot</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.sqrt<sp/>=<sp/>n,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>square<sp/>root<sp/>pivot</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="141"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-potrf]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="143"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="144"><highlight class="comment">///<sp/>Hyperbolic<sp/>Householder<sp/>factorization<sp/>update<sp/>with<sp/>L<sp/>n×n<sp/>and<sp/>A<sp/>nr×k.</highlight></codeline>
+<codeline lineno="145"><highlight class="comment">///<sp/>@implementation{flops-hyh-square}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-hyh-square]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="147" refid="group__topic-linalg-flops_1ga5c387fb603a544664054bd7db3d363a7" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga5c387fb603a544664054bd7db3d363a7" kindref="member">hyh_square</ref>(index_t<sp/>n,<sp/>index_t<sp/>k)<sp/>{</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.fma<sp/><sp/>=<sp/>k<sp/>*<sp/>n<sp/>*<sp/>n<sp/>+<sp/>2<sp/>*<sp/>n,</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.mul<sp/><sp/>=<sp/>k<sp/>*<sp/>n<sp/>+<sp/>(n<sp/>+<sp/>1)<sp/>*<sp/>n<sp/>/<sp/>2<sp/>+<sp/>n,</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.add<sp/><sp/>=<sp/>(n<sp/>+<sp/>1)<sp/>*<sp/>n<sp/>/<sp/>2<sp/>+<sp/>n,</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.div<sp/><sp/>=<sp/>2<sp/>*<sp/>n,</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.sqrt<sp/>=<sp/>n,</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="155"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-hyh-square]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="158"><highlight class="comment">///<sp/>Hyperbolic<sp/>Householder<sp/>factorization<sp/>application<sp/>to<sp/>L2<sp/>nr×nc<sp/>and<sp/>A2<sp/>nr×k.</highlight></codeline>
+<codeline lineno="159"><highlight class="comment">///<sp/>@implementation{flops-hyh-apply}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-hyh-apply]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="161" refid="group__topic-linalg-flops_1ga907a77af15c3cba01ac8b66c3388adb4" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga907a77af15c3cba01ac8b66c3388adb4" kindref="member">hyh_apply</ref>(index_t<sp/>nr,<sp/>index_t<sp/>nc,<sp/>index_t<sp/>k)<sp/>{</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.fma<sp/>=<sp/>2<sp/>*<sp/>nr<sp/>*<sp/>k<sp/>*<sp/>nc,</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.mul<sp/>=<sp/>nr<sp/>*<sp/>nc,</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.add<sp/>=<sp/>nr<sp/>*<sp/>nc,</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="167"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-hyh-apply]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="169"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="170"><highlight class="comment">///<sp/>Hyperbolic<sp/>Householder<sp/>factorization<sp/>update<sp/>with<sp/>L<sp/>nr×nc<sp/>and<sp/>A<sp/>nr×k.</highlight></codeline>
+<codeline lineno="171"><highlight class="comment">///<sp/>@implementation{flops-hyh}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="172"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-hyh]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="173" refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" kindref="member">hyh</ref>(index_t<sp/>nr,<sp/>index_t<sp/>nc,<sp/>index_t<sp/>k)<sp/>{</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(nr<sp/>&gt;=<sp/>nc);</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1ga5c387fb603a544664054bd7db3d363a7" kindref="member">hyh_square</ref>(nc,<sp/>k)<sp/>+<sp/><ref refid="group__topic-linalg-flops_1ga907a77af15c3cba01ac8b66c3388adb4" kindref="member">hyh_apply</ref>(nr<sp/>-<sp/>nc,<sp/>nc,<sp/>k);</highlight></codeline>
+<codeline lineno="176"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-hyh]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="178"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="179"><highlight class="comment">///<sp/>Fused<sp/>symmetric<sp/>rank-k<sp/>update<sp/>and<sp/>Cholesky<sp/>factorization<sp/>of<sp/>an<sp/>m×n<sp/>matrix<sp/>with<sp/>m≥n.</highlight></codeline>
+<codeline lineno="180"><highlight class="comment">///<sp/>@implementation{flops-syrk-potrf}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="181"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-syrk-potrf]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="182" refid="group__topic-linalg-flops_1ga5bc716f7288da381eb1c0120a7d3182c" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga5bc716f7288da381eb1c0120a7d3182c" kindref="member">syrk_potrf</ref>(index_t<sp/>m,<sp/>index_t<sp/>n,<sp/>index_t<sp/>k)<sp/>{</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(m<sp/>&gt;=<sp/>n);</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg-flops_1ga840f3e725b3e51c181bc4b2961697528" kindref="member">potrf</ref>(m,<sp/>n)<sp/>+<sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref>{.fma<sp/>=<sp/>n<sp/>*<sp/>(n<sp/>+<sp/>1)<sp/>*<sp/>k<sp/>/<sp/>2<sp/>+<sp/>(m<sp/>-<sp/>n)<sp/>*<sp/>n<sp/>*<sp/>k};</highlight></codeline>
+<codeline lineno="185"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-syrk-potrf]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="187"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="188"><highlight class="comment">///<sp/>Triangular<sp/>solve<sp/>of<sp/>m×n<sp/>matrices.</highlight></codeline>
+<codeline lineno="189"><highlight class="comment">///<sp/>@implementation{flops-trsm}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="190"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-trsm]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="191" refid="group__topic-linalg-flops_1ga982c62c85e182a49c333bb2eef903625" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga982c62c85e182a49c333bb2eef903625" kindref="member">trsm</ref>(index_t<sp/>m,<sp/>index_t<sp/>n)<sp/>{</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>m<sp/>*<sp/>(m<sp/>-<sp/>1)<sp/>*<sp/>n<sp/>/<sp/>2,<sp/>.mul<sp/>=<sp/>m<sp/>*<sp/>n,<sp/>.div<sp/>=<sp/>m};</highlight></codeline>
+<codeline lineno="193"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-trsm]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="195"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="196"><highlight class="comment">///<sp/>Triangular<sp/>inversion<sp/>of<sp/>an<sp/>m×m<sp/>matrix.</highlight></codeline>
+<codeline lineno="197"><highlight class="comment">///<sp/>@implementation{flops-trtri}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="198"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-trtri]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="199" refid="group__topic-linalg-flops_1ga5f151f75e2a3092103903fb8f8f3cae3" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kindref="compound">FlopCount</ref><sp/><ref refid="group__topic-linalg-flops_1ga5f151f75e2a3092103903fb8f8f3cae3" kindref="member">trtri</ref>(index_t<sp/>m)<sp/>{</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.fma<sp/>=<sp/>(m<sp/>+<sp/>1)<sp/>*<sp/>m<sp/>*<sp/>(m<sp/>-<sp/>1)<sp/>/<sp/>6,<sp/>.div<sp/>=<sp/>m};<sp/></highlight><highlight class="comment">//<sp/>TODO</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="201"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"></highlight><highlight class="comment">//<sp/>[flops-trtri]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="203"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="204"><highlight class="comment">///<sp/>@}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="205"><highlight class="normal"></highlight></codeline>
+<codeline lineno="206"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::linalg::flops</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/linalg/flops.hpp"/>
+  </compounddef>
+</doxygen>

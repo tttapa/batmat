@@ -1,0 +1,229 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv" kind="namespace" language="C++">
+    <compoundname>batmat::linalg::micro_kernels::syomv</compoundname>
+    <innerclass refid="structbatmat_1_1linalg_1_1micro__kernels_1_1syomv_1_1KernelConfig" prot="public">batmat::linalg::micro_kernels::syomv::KernelConfig</innerclass>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1a1532e6b178df89f7e3357ea46a218586" prot="public" static="no" constinit="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>const constinit auto</type>
+        <definition>const constinit auto batmat::linalg::micro_kernels::syomv::syomv_lut</definition>
+        <argsstring></argsstring>
+        <name>syomv_lut</name>
+        <qualifiedname>batmat::linalg::micro_kernels::syomv::syomv_lut</qualifiedname>
+        <initializer>                                  =
+<ref refid="group__topic-utils_1ga91b0a07e3a00c803e9859ace6b86828f" kindref="member">make_1d_lut</ref>&lt;<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>&lt;T, Abi&gt;&gt;([]&lt;index_t Row&gt;(<ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant</ref>&lt;Row&gt;) {
+    return <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1ae86f50db44ab72f6cc46375603241750" kindref="member">syomv_microkernel</ref>&lt;T, Abi, Conf, Row + 1, OA, OB, OD&gt;;
+})</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/syomv.hpp" line="28" column="29" bodyfile="batmat/include/batmat/linalg/micro-kernels/syomv.hpp" bodystart="28" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1af5a554923dce53d14cc5a7a90e5169cb" compoundref="syomv_8tpp" startline="56" endline="84">syomv_register</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1a52c9ed1b17421bb6dbc28e5a7c75fdac" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::micro_kernels::gemm::RowsReg</definition>
+        <argsstring></argsstring>
+        <name>RowsReg</name>
+        <qualifiedname>batmat::linalg::micro_kernels::syomv::RowsReg</qualifiedname>
+        <briefdescription>
+<para>Register block size of the matrix-matrix multiplication micro-kernels. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>AVX-512 has 32 vector registers, we use 25 registers for a 5×5 accumulator block of matrix C (leaving some registers for loading A and B):</para>
+<para>AVX2 has 16 vector registers, we use 9 registers for a 3×3 accumulator block of matrix C (leaving some registers for loading A and B): <simplesect kind="note"><para>A block size of 4×4 is slightly faster than 3×3 for large matrices, because the even block size results in full cache lines being consumed. For small matrices, 3×3 is faster because it does not spill any registers in the micro-kernels. 2×2 is slower than 3×3 for both small and large matrices (tested using GCC 15.1 on an i7-10750H).</para>
+</simplesect>
+Assumes that the platform has at least 16 vector registers, we use 9 registers for a 3×3 accumulator block of matrix C (leaving some registers for loading A and B):</para>
+<para>NEON has 32 vector registers, we use 16 registers for a 4×4 accumulator block of matrix C (leaving plenty of registers for loading A and B):  </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/syomv.hpp" line="25" column="1" bodyfile="batmat/include/batmat/platform/avx-512.hpp" bodystart="13" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1ae86f50db44ab72f6cc46375603241750" compoundref="syomv_8tpp" startline="17" endline="52">syomv_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1af5a554923dce53d14cc5a7a90e5169cb" compoundref="syomv_8tpp" startline="56" endline="84">syomv_register</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1ae86f50db44ab72f6cc46375603241750" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>RowsReg</declname>
+            <defname>RowsReg</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::syomv::syomv_microkernel</definition>
+        <argsstring>(const uview&lt; const T, Abi, OA &gt; A, const uview&lt; const T, Abi, OB &gt; B, const uview&lt; T, Abi, OD &gt; D, const index_t l0, const index_t k) noexcept</argsstring>
+        <name>syomv_microkernel</name>
+        <qualifiedname>batmat::linalg::micro_kernels::syomv::syomv_microkernel</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, OB &gt;</type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>l0</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k</declname>
+        </param>
+        <briefdescription>
+<para>Symmetric off-diagonal block multiply. Single register block. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/syomv.tpp" line="17" column="1" bodyfile="batmat/include/batmat/linalg/micro-kernels/syomv.tpp" bodystart="17" bodyend="52" declfile="batmat/include/batmat/linalg/micro-kernels/syomv.hpp" declline="17" declcolumn="6"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" compoundref="structure_8hpp" startline="8">batmat::linalg::LowerTriangular</references>
+        <references refid="group__topic-low-level-ops_1ga247b1215d2f350a55c60a922efc98e4e" compoundref="rotate_8hpp" startline="226" endline="233">batmat::ops::rotl</references>
+        <references refid="group__topic-low-level-ops_1ga99482a68bf78d2c163dcd663b24131c5" compoundref="rotate_8hpp" startline="239" endline="246">batmat::ops::rotr</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1a52c9ed1b17421bb6dbc28e5a7c75fdac" compoundref="avx-512_8hpp" startline="13">RowsReg</references>
+        <references refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" compoundref="gemm-diag_8tpp" startline="9">UNROLL_FOR</references>
+        <references refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" compoundref="uview_8hpp" startline="228" endline="230">batmat::linalg::with_cached_access</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1af5a554923dce53d14cc5a7a90e5169cb" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::syomv::syomv_register</definition>
+        <argsstring>(const view&lt; const T, Abi, OA &gt; A, const view&lt; const T, Abi, OB &gt; B, const view&lt; T, Abi, OD &gt; D) noexcept</argsstring>
+        <name>syomv_register</name>
+        <qualifiedname>batmat::linalg::micro_kernels::syomv::syomv_register</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OB &gt;</type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <briefdescription>
+<para>Generalized matrix multiplication D = C ± A⁽ᵀ⁾ B⁽ᵀ⁾. Using register blocking. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/syomv.tpp" line="56" column="6" bodyfile="batmat/include/batmat/linalg/micro-kernels/syomv.tpp" bodystart="56" bodyend="84" declfile="batmat/include/batmat/linalg/micro-kernels/syomv.hpp" declline="21" declcolumn="6"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="group__topic-utils_1gab76a36340644bbf7c8093caa45aef12f" compoundref="loop_8hpp" startline="43" endline="61">batmat::foreach_chunked_merged</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a919a6b84f8b5f2aef171276479a784e0" compoundref="uview_8hpp" startline="118" endline="120">batmat::linalg::uview&lt; T, Abi, Order &gt;::middle_cols</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1a52c9ed1b17421bb6dbc28e5a7c75fdac" compoundref="avx-512_8hpp" startline="13">RowsReg</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1a1532e6b178df89f7e3357ea46a218586" compoundref="micro-kernels_2syomv_8hpp" startline="28">syomv_lut</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1syomv_1afc288b1dae62ec92c03b3a5a97723bdc" compoundref="syomv_8hpp" startline="16" endline="34">batmat::linalg::detail::syomv::syomv</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/micro-kernels/syomv.hpp" line="8" column="1"/>
+  </compounddef>
+</doxygen>

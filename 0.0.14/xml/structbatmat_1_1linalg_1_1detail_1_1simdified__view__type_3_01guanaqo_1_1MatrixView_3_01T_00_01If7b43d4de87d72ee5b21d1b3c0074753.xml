@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</compoundname>
+    <includes refid="simdify_8hpp" local="no">batmat/linalg/simdify.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>class T</type>
+      </param>
+      <param>
+        <type>class I</type>
+      </param>
+      <param>
+        <type><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref></type>
+        <declname>O</declname>
+        <defname>O</defname>
+      </param>
+    </templateparamlist>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a32882c347f623419db686d4536336a8e" prot="public" static="no">
+        <type>std::remove_const_t&lt; T &gt;</type>
+        <definition>using batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;::value_type = std::remove_const_t&lt;T&gt;</definition>
+        <argsstring></argsstring>
+        <name>value_type</name>
+        <qualifiedname>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;::value_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="68" column="5" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a5ac82738ce6f718fb0c5ba3a8899023f" prot="public" static="no">
+        <type><ref refid="namespacebatmat_1_1datapar_1a55556a636c771c6e0f5805c2d186f1ec" kindref="member">datapar::scalar_abi</ref>&lt; <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a32882c347f623419db686d4536336a8e" kindref="member">value_type</ref> &gt;</type>
+        <definition>using batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;::abi_type = datapar::scalar_abi&lt;value_type&gt;</definition>
+        <argsstring></argsstring>
+        <name>abi_type</name>
+        <qualifiedname>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;::abi_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="69" column="5" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a7aa6fddac76e40427b6f9022a2784deb" prot="public" static="no">
+        <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a32882c347f623419db686d4536336a8e" kindref="member">value_type</ref>, <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a5ac82738ce6f718fb0c5ba3a8899023f" kindref="member">abi_type</ref> &gt;</type>
+        <definition>using batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;::simd_type = datapar::simd&lt;value_type, abi_type&gt;</definition>
+        <argsstring></argsstring>
+        <name>simd_type</name>
+        <qualifiedname>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;::simd_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="70" column="5" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a8806d41ca1cbf7a37c705af277a8bd2b" prot="public" static="no">
+        <type><ref refid="namespacebatmat_1_1datapar_1a497d8b4d202d9476ad67782ba4d4feef" kindref="member">datapar::simd_size</ref>&lt; <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a32882c347f623419db686d4536336a8e" kindref="member">value_type</ref>, <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a5ac82738ce6f718fb0c5ba3a8899023f" kindref="member">abi_type</ref> &gt;</type>
+        <definition>using batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;::stride = datapar::simd_size&lt;value_type, abi_type&gt;</definition>
+        <argsstring></argsstring>
+        <name>stride</name>
+        <qualifiedname>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;::stride</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="71" column="5" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="71" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1aed10ca07cf410c0acff2d5a0cf867032" prot="public" static="no">
+        <type><ref refid="namespacebatmat_1_1datapar_1a3cbb75e6685dbd98807439ac0dca33f0" kindref="member">datapar::simd_align</ref>&lt; <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a32882c347f623419db686d4536336a8e" kindref="member">value_type</ref>, <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a5ac82738ce6f718fb0c5ba3a8899023f" kindref="member">abi_type</ref> &gt;</type>
+        <definition>using batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;::alignment = datapar::simd_align&lt;value_type, abi_type&gt;</definition>
+        <argsstring></argsstring>
+        <name>alignment</name>
+        <qualifiedname>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;::alignment</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="72" column="5" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1aeae8eaed743a5538a411a290c2f3b1a6" prot="public" static="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1DefaultStride" kindref="compound">batmat::matrix::DefaultStride</ref></type>
+        <definition>using batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;::layer_stride = batmat::matrix::DefaultStride</definition>
+        <argsstring></argsstring>
+        <name>layer_stride</name>
+        <qualifiedname>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;::layer_stride</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="73" column="5" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1af1a7429564116c0bcd9807b3d8339eab" prot="public" static="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1View" kindref="compound">batmat::matrix::View</ref>&lt; T, index_t, <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a8806d41ca1cbf7a37c705af277a8bd2b" kindref="member">stride</ref>, <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a8806d41ca1cbf7a37c705af277a8bd2b" kindref="member">stride</ref>, <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1aeae8eaed743a5538a411a290c2f3b1a6" kindref="member">layer_stride</ref>, O &gt;</type>
+        <definition>using batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;::type = batmat::matrix::View&lt;T, index_t, stride, stride, layer_stride, O&gt;</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;::type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="74" column="5" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="74" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</label>
+        <link refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/simdify.hpp" line="67" column="1" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="67" bodyend="76"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a5ac82738ce6f718fb0c5ba3a8899023f" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</scope><name>abi_type</name></member>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1aed10ca07cf410c0acff2d5a0cf867032" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</scope><name>alignment</name></member>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1aeae8eaed743a5538a411a290c2f3b1a6" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</scope><name>layer_stride</name></member>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a7aa6fddac76e40427b6f9022a2784deb" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</scope><name>simd_type</name></member>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a8806d41ca1cbf7a37c705af277a8bd2b" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</scope><name>stride</name></member>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1af1a7429564116c0bcd9807b3d8339eab" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</scope><name>type</name></member>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a32882c347f623419db686d4536336a8e" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</scope><name>value_type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

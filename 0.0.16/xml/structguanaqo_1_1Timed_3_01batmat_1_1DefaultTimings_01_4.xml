@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4" kind="struct" language="C++" prot="public">
+    <compoundname>guanaqo::Timed&lt; batmat::DefaultTimings &gt;</compoundname>
+    <includes refid="timing_8hpp" local="no">batmat/timing.hpp</includes>
+    <templateparamlist>
+    </templateparamlist>
+    <sectiondef kind="private-type">
+      <memberdef kind="typedef" id="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1abbeecef34105f4eb7451ee1a116ad29b" prot="private" static="no">
+        <type>std::chrono::steady_clock</type>
+        <definition>using guanaqo::Timed&lt; batmat::DefaultTimings &gt;::clock = std::chrono::steady_clock</definition>
+        <argsstring></argsstring>
+        <name>clock</name>
+        <qualifiedname>guanaqo::Timed&lt; batmat::DefaultTimings &gt;::clock</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/timing.hpp" line="50" column="5" bodyfile="batmat/include/batmat/timing.hpp" bodystart="50" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a6c935a737948c580834285f330959be9" prot="private" static="no" mutable="no">
+        <type><ref refid="structbatmat_1_1DefaultTimings" kindref="compound">batmat::DefaultTimings</ref> &amp;</type>
+        <definition>batmat::DefaultTimings&amp; guanaqo::Timed&lt; batmat::DefaultTimings &gt;::time</definition>
+        <argsstring></argsstring>
+        <name>time</name>
+        <qualifiedname>guanaqo::Timed&lt; batmat::DefaultTimings &gt;::time</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/timing.hpp" line="51" column="28" bodyfile="batmat/include/batmat/timing.hpp" bodystart="51" bodyend="-1"/>
+        <referencedby refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a524ce94079d964deeeb2f48c5869708c" compoundref="timing_8hpp" startline="40" endline="40">Timed</referencedby>
+        <referencedby refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a834faa80ce5a071b1bfc4c23c0c4eefa" compoundref="timing_8hpp" startline="41" endline="45">~Timed</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1ab360b8dcf076d8275460105be3e91ceb" prot="private" static="no" mutable="no">
+        <type>clock::time_point</type>
+        <definition>clock::time_point guanaqo::Timed&lt; batmat::DefaultTimings &gt;::wall_start_time</definition>
+        <argsstring></argsstring>
+        <name>wall_start_time</name>
+        <qualifiedname>guanaqo::Timed&lt; batmat::DefaultTimings &gt;::wall_start_time</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/timing.hpp" line="52" column="23" bodyfile="batmat/include/batmat/timing.hpp" bodystart="52" bodyend="-1"/>
+        <referencedby refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a524ce94079d964deeeb2f48c5869708c" compoundref="timing_8hpp" startline="40" endline="40">Timed</referencedby>
+        <referencedby refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a834faa80ce5a071b1bfc4c23c0c4eefa" compoundref="timing_8hpp" startline="41" endline="45">~Timed</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a524ce94079d964deeeb2f48c5869708c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>guanaqo::Timed&lt; batmat::DefaultTimings &gt;::Timed</definition>
+        <argsstring>(batmat::DefaultTimings &amp;time)</argsstring>
+        <name>Timed</name>
+        <qualifiedname>guanaqo::Timed&lt; batmat::DefaultTimings &gt;::Timed</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1DefaultTimings" kindref="compound">batmat::DefaultTimings</ref> &amp;</type>
+          <declname>time</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/timing.hpp" line="40" column="5" bodyfile="batmat/include/batmat/timing.hpp" bodystart="40" bodyend="40"/>
+        <references refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a6c935a737948c580834285f330959be9" compoundref="timing_8hpp" startline="51">time</references>
+        <references refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1ab360b8dcf076d8275460105be3e91ceb" compoundref="timing_8hpp" startline="52">wall_start_time</references>
+        <referencedby refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1ae2627b0cd95df565c95eddaaa541b10a">Timed</referencedby>
+        <referencedby refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1abf7a35c24e8318240b4909205c2e9720">operator=</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a834faa80ce5a071b1bfc4c23c0c4eefa" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>guanaqo::Timed&lt; batmat::DefaultTimings &gt;::~Timed</definition>
+        <argsstring>()</argsstring>
+        <name>~Timed</name>
+        <qualifiedname>guanaqo::Timed&lt; batmat::DefaultTimings &gt;::~Timed</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/timing.hpp" line="41" column="5" bodyfile="batmat/include/batmat/timing.hpp" bodystart="41" bodyend="45"/>
+        <references refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a6c935a737948c580834285f330959be9" compoundref="timing_8hpp" startline="51">time</references>
+        <references refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1ab360b8dcf076d8275460105be3e91ceb" compoundref="timing_8hpp" startline="52">wall_start_time</references>
+      </memberdef>
+      <memberdef kind="function" id="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1ae2627b0cd95df565c95eddaaa541b10a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>guanaqo::Timed&lt; batmat::DefaultTimings &gt;::Timed</definition>
+        <argsstring>(const Timed &amp;)=delete</argsstring>
+        <name>Timed</name>
+        <qualifiedname>guanaqo::Timed&lt; batmat::DefaultTimings &gt;::Timed</qualifiedname>
+        <param>
+          <type>const Timed &amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/timing.hpp" line="46" column="5"/>
+        <references refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a524ce94079d964deeeb2f48c5869708c" compoundref="timing_8hpp" startline="40" endline="40">Timed</references>
+      </memberdef>
+      <memberdef kind="function" id="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1abf7a35c24e8318240b4909205c2e9720" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a524ce94079d964deeeb2f48c5869708c" kindref="member">Timed</ref> &amp;</type>
+        <definition>Timed &amp; guanaqo::Timed&lt; batmat::DefaultTimings &gt;::operator=</definition>
+        <argsstring>(const Timed &amp;)=delete</argsstring>
+        <name>operator=</name>
+        <qualifiedname>guanaqo::Timed&lt; batmat::DefaultTimings &gt;::operator=</qualifiedname>
+        <param>
+          <type>const <ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a524ce94079d964deeeb2f48c5869708c" kindref="member">Timed</ref> &amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/timing.hpp" line="47" column="11"/>
+        <references refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a524ce94079d964deeeb2f48c5869708c" compoundref="timing_8hpp" startline="40" endline="40">Timed</references>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>RAII class for measuring wall time. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="2">
+        <label>batmat::DefaultTimings</label>
+        <link refid="structbatmat_1_1DefaultTimings"/>
+      </node>
+      <node id="1">
+        <label>guanaqo::Timed&lt; batmat::DefaultTimings &gt;</label>
+        <link refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>-time</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/timing.hpp" line="39" column="1" bodyfile="batmat/include/batmat/timing.hpp" bodystart="39" bodyend="53"/>
+    <listofallmembers>
+      <member refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1abbeecef34105f4eb7451ee1a116ad29b" prot="private" virt="non-virtual"><scope>guanaqo::Timed&lt; batmat::DefaultTimings &gt;</scope><name>clock</name></member>
+      <member refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1abf7a35c24e8318240b4909205c2e9720" prot="public" virt="non-virtual"><scope>guanaqo::Timed&lt; batmat::DefaultTimings &gt;</scope><name>operator=</name></member>
+      <member refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a6c935a737948c580834285f330959be9" prot="private" virt="non-virtual"><scope>guanaqo::Timed&lt; batmat::DefaultTimings &gt;</scope><name>time</name></member>
+      <member refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a524ce94079d964deeeb2f48c5869708c" prot="public" virt="non-virtual"><scope>guanaqo::Timed&lt; batmat::DefaultTimings &gt;</scope><name>Timed</name></member>
+      <member refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1ae2627b0cd95df565c95eddaaa541b10a" prot="public" virt="non-virtual"><scope>guanaqo::Timed&lt; batmat::DefaultTimings &gt;</scope><name>Timed</name></member>
+      <member refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1ab360b8dcf076d8275460105be3e91ceb" prot="private" virt="non-virtual"><scope>guanaqo::Timed&lt; batmat::DefaultTimings &gt;</scope><name>wall_start_time</name></member>
+      <member refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a834faa80ce5a071b1bfc4c23c0c4eefa" prot="public" virt="non-virtual"><scope>guanaqo::Timed&lt; batmat::DefaultTimings &gt;</scope><name>~Timed</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

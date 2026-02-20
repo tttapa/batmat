@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="dir_6b3c116c82570f1db015b5f9324a36e3" kind="dir">
+    <compoundname>batmat/include/batmat/linalg</compoundname>
+    <innerdir refid="dir_b8f890d267c2f423150d987ef3045acc">batmat/include/batmat/linalg/micro-kernels</innerdir>
+    <innerfile refid="compress_8hpp">compress.hpp</innerfile>
+    <innerfile refid="copy_8hpp">copy.hpp</innerfile>
+    <innerfile refid="flops_8hpp">flops.hpp</innerfile>
+    <innerfile refid="gemm-diag_8hpp">gemm-diag.hpp</innerfile>
+    <innerfile refid="gemm_8hpp">gemm.hpp</innerfile>
+    <innerfile refid="gemv_8hpp">gemv.hpp</innerfile>
+    <innerfile refid="hyhound_8hpp">hyhound.hpp</innerfile>
+    <innerfile refid="potrf_8hpp">potrf.hpp</innerfile>
+    <innerfile refid="shift_8hpp">shift.hpp</innerfile>
+    <innerfile refid="simdify_8hpp">simdify.hpp</innerfile>
+    <innerfile refid="structure_8hpp">structure.hpp</innerfile>
+    <innerfile refid="symm_8hpp">symm.hpp</innerfile>
+    <innerfile refid="symv_8hpp">symv.hpp</innerfile>
+    <innerfile refid="syomv_8hpp">syomv.hpp</innerfile>
+    <innerfile refid="triangular_8hpp">triangular.hpp</innerfile>
+    <innerfile refid="trsm_8hpp">trsm.hpp</innerfile>
+    <innerfile refid="trtri_8hpp">trtri.hpp</innerfile>
+    <innerfile refid="uview_8hpp">uview.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/"/>
+  </compounddef>
+</doxygen>
