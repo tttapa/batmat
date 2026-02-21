@@ -18,8 +18,7 @@ template <class T, class Abi, micro_kernels::potrf::KernelConfig Conf, StorageOr
           StorageOrder OCD>
     requires(Conf.struc_C != MatrixStructure::General)
 void potrf(view<const T, Abi, OA> A, view<const T, Abi, OCD> C, view<T, Abi, OCD> D,
-           T regularization,
-           micro_kernels::potrf::diag_view_type<const T, Abi, Conf> d = {}) noexcept {
+           T regularization, micro_kernels::potrf::diag_view_type<const T, Abi, Conf> d = {}) {
     // Check dimensions
     BATMAT_ASSERT(D.rows() >= D.cols());
     BATMAT_ASSERT(A.cols() == 0 || A.rows() == D.rows());
