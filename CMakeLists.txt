@@ -9,10 +9,6 @@ include(CTest)
 include(CMakeDependentOption)
 
 # Options
-option(BATMAT_WITH_MKL
-    "Use the Intel MKL" Off)
-option(BATMAT_WITH_OPENBLAS
-    "Use the OpenBLAS library" Off)
 option(BATMAT_WITH_OPENMP
     "Enable parallelization using OpenMP" Off)
 set(BATMAT_DEFAULT_INDEX_TYPE "long long" CACHE STRING
@@ -25,9 +21,6 @@ set(BATMAT_VECTOR_LENGTHS_FLOAT "1;4;8;16" CACHE STRING
     "Vector lengths to instantiate for single precision")
 option(BATMAT_WITH_GSI_HPC_SIMD
     "If enabled, use the GSI-HPC/simd library instead of GCC's <experimental/simd>" Off)
-# Target options
-option(BATMAT_HAVE_TWO_512_FMA_UNITS
-    "Does the CPU have 0.5 CPI 512-bit FMA" Off)
 # Enable/disable optional components
 option(BATMAT_WITH_TESTS
     "Build the tests" ${BUILD_TESTING})
