@@ -4,11 +4,18 @@
 #include <batmat/linalg/micro-kernels/syomv.hpp>
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
+#include <batmat/lut.hpp>
 #include <batmat/ops/rotate.hpp>
 
 #define UNROLL_FOR(...) BATMAT_FULLY_UNROLLED_FOR (__VA_ARGS__)
 
 namespace batmat::linalg::micro_kernels::syomv {
+
+template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OB, StorageOrder OD>
+inline const constinit auto syomv_lut =
+    make_1d_lut<RowsReg<T, Abi>>([]<index_t Row>(index_constant<Row>) {
+        return syomv_microkernel<T, Abi, Conf, Row + 1, OA, OB, OD>;
+    });
 
 /// Symmetric off-diagonal block multiply. Single register block.
 template <class T, class Abi, KernelConfig Conf, index_t RowsReg, StorageOrder OA, StorageOrder OB,

@@ -5,10 +5,23 @@
 #include <batmat/linalg/structure.hpp>
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
+#include <batmat/lut.hpp>
 
 #define UNROLL_FOR(...) BATMAT_FULLY_UNROLLED_FOR (__VA_ARGS__)
 
 namespace batmat::linalg::micro_kernels::trtri {
+
+template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OD>
+inline const constinit auto trtri_copy_lut =
+    make_1d_lut<RowsReg<T, Abi>>([]<index_t Row>(index_constant<Row>) {
+        return trtri_copy_microkernel<T, Abi, Conf, Row + 1, OA, OD>;
+    });
+
+template <class T, class Abi, KernelConfig Conf, StorageOrder OD>
+inline const constinit auto trmm_lut = make_2d_lut<RowsReg<T, Abi>, ColsReg<T, Abi>>(
+    []<index_t Row, index_t Col>(index_constant<Row>, index_constant<Col>) {
+        return trmm_microkernel<T, Abi, Conf, Row + 1, Col + 1, OD>;
+    });
 
 /// @param  A k×RowsReg.
 /// @param  D k×RowsReg.

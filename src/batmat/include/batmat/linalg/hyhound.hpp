@@ -83,7 +83,7 @@ void hyhound_diag_2(view<T, Abi, OL1> L11, view<T, Abi, OA1> A1, view<T, Abi, OL
     GUANAQO_TRACE_LINALG("hyhound_diag_2", flop_count * L11.depth());
     if (k == 0) [[unlikely]]
         return;
-    return micro_kernels::hyhound::hyhound_diag_2_register<T, Abi, OL1, OA1, OL2, OA2, Conf>(
+    return micro_kernels::hyhound::hyhound_diag_2_register<T, Abi, Conf, OL1, OA1, OL2, OA2>(
         L11, A1, L21, A2, D);
 }
 
@@ -108,7 +108,7 @@ void hyhound_diag_cyclic(view<T, Abi, OL> L11, view<T, Abi, OW> A1, view<T, Abi,
     GUANAQO_TRACE_LINALG("hyhound_diag_cyclic", flop_count * L11.depth());
     if (k == 0) [[unlikely]]
         return;
-    return micro_kernels::hyhound::hyhound_diag_cyclic_register<T, Abi, OL, OW, OY, OU, Conf>(
+    return micro_kernels::hyhound::hyhound_diag_cyclic_register<T, Abi, Conf, OL, OW, OY, OU>(
         L11, A1, L21, A22, A2_out, L31, A31, A3_out, D);
 }
 
@@ -134,7 +134,7 @@ void hyhound_diag_riccati(view<T, Abi, OL> L11, view<T, Abi, OA> A1, view<T, Abi
     GUANAQO_TRACE_LINALG("hyhound_diag_riccati", flop_count * L11.depth());
     if (k == 0) [[unlikely]]
         return;
-    return micro_kernels::hyhound::hyhound_diag_riccati_register<T, Abi, OL, OA, OLu, OAu, Conf>(
+    return micro_kernels::hyhound::hyhound_diag_riccati_register<T, Abi, Conf, OL, OA, OLu, OAu>(
         L11, A1, L21, A2, A2_out, Lu1, Au_out, D, shift_A_out);
 }
 

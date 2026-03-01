@@ -1,7 +1,10 @@
 #pragma once
 
 #include <batmat/assume.hpp>
+// Work around GCC bug regarding declarations and explicit instantiations of extern const variables.
+#define BATMAT_LINALG_GEMM_NO_DECLARE_LUT
 #include <batmat/linalg/micro-kernels/gemm.hpp>
+#undef BATMAT_LINALG_GEMM_NO_DECLARE_LUT
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
 #include <batmat/ops/rotate.hpp>
@@ -9,6 +12,12 @@
 #define UNROLL_FOR(...) BATMAT_FULLY_UNROLLED_FOR (__VA_ARGS__)
 
 namespace batmat::linalg::micro_kernels::gemm {
+
+template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OB, StorageOrder OC,
+          StorageOrder OD>
+BATMAT_LINALG_GEMM_EXPORT extern const constinit decltype(detail::gemm_copy_lut<T, Abi, Conf, OA,
+                                                                                OB, OC, OD>)
+    gemm_copy_lut = detail::gemm_copy_lut<T, Abi, Conf, OA, OB, OC, OD>;
 
 template <MatrixStructure Struc>
 inline constexpr auto first_column =

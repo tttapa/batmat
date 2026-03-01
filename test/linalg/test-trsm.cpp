@@ -102,28 +102,30 @@ TYPED_TEST_P(TrsmTest, trsmRL) {
 }
 
 TYPED_TEST_P(TrsmTest, trsmRLRotateA) {
-    using batmat::linalg::tril;
-    using batmat::linalg::trsm;
-    using batmat::linalg::with_rotate_A;
-    for (auto m : batmat::tests::sizes)
-        for (auto n : batmat::tests::sizes) {
-            const auto A = [&] {
-                auto A = this->template get_matrix<0>(m, m);
-                A.view().add_to_diagonal(10);
-                return A;
-            }();
-            const auto C = this->template get_matrix<1>(n, m);
-            auto D       = this->template get_matrix<2>(n, m);
-            trsm(C, tril(A), D, with_rotate_A<-1>);
-            using EMat = Eigen::MatrixX<typename TypeParam::value_type>;
-            for (batmat::index_t l = 0; l < C.depth(); ++l) {
-                auto Al     = as_eigen(A(l));
-                auto Cl     = as_eigen(C((l + C.depth() - 1) % C.depth()));
-                EMat Dl_ref = triv<Lower>(Al).transpose().solve(Cl.transpose()).transpose();
-                EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Dl_ref, this->tolerance))
-                    << l << "    (" << m << "×" << n << ")";
+    if constexpr (typename TypeParam::batch_size() > 1) {
+        using batmat::linalg::tril;
+        using batmat::linalg::trsm;
+        using batmat::linalg::with_rotate_A;
+        for (auto m : batmat::tests::sizes)
+            for (auto n : batmat::tests::sizes) {
+                const auto A = [&] {
+                    auto A = this->template get_matrix<0>(m, m);
+                    A.view().add_to_diagonal(10);
+                    return A;
+                }();
+                const auto C = this->template get_matrix<1>(n, m);
+                auto D       = this->template get_matrix<2>(n, m);
+                trsm(C, tril(A), D, with_rotate_A<-1>);
+                using EMat = Eigen::MatrixX<typename TypeParam::value_type>;
+                for (batmat::index_t l = 0; l < C.depth(); ++l) {
+                    auto Al     = as_eigen(A(l));
+                    auto Cl     = as_eigen(C((l + C.depth() - 1) % C.depth()));
+                    EMat Dl_ref = triv<Lower>(Al).transpose().solve(Cl.transpose()).transpose();
+                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Dl_ref, this->tolerance))
+                        << l << "    (" << m << "×" << n << ")";
+                }
             }
-        }
+    }
 }
 
 template <class Config>
@@ -221,28 +223,30 @@ TYPED_TEST_P(TrsmInPlaceTest, trsmRL) {
 }
 
 TYPED_TEST_P(TrsmInPlaceTest, trsmRLRotateA) {
-    using batmat::linalg::tril;
-    using batmat::linalg::trsm;
-    using batmat::linalg::with_rotate_A;
-    for (auto m : batmat::tests::sizes)
-        for (auto n : batmat::tests::sizes) {
-            const auto A = [&] {
-                auto A = this->template get_matrix<0>(m, m);
-                A.view().add_to_diagonal(10);
-                return A;
-            }();
-            const auto D0 = this->template get_matrix<1>(n, m);
-            auto D        = D0;
-            trsm(D, tril(A), with_rotate_A<-1>);
-            using EMat = Eigen::MatrixX<typename TypeParam::value_type>;
-            for (batmat::index_t l = 0; l < D.depth(); ++l) {
-                auto Al     = as_eigen(A(l));
-                auto D0l    = as_eigen(D0((l + D.depth() - 1) % D.depth()));
-                EMat Dl_ref = triv<Lower>(Al).transpose().solve(D0l.transpose()).transpose();
-                EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Dl_ref, this->tolerance))
-                    << l << "    (" << m << "×" << n << ")";
+    if constexpr (typename TypeParam::batch_size() > 1) {
+        using batmat::linalg::tril;
+        using batmat::linalg::trsm;
+        using batmat::linalg::with_rotate_A;
+        for (auto m : batmat::tests::sizes)
+            for (auto n : batmat::tests::sizes) {
+                const auto A = [&] {
+                    auto A = this->template get_matrix<0>(m, m);
+                    A.view().add_to_diagonal(10);
+                    return A;
+                }();
+                const auto D0 = this->template get_matrix<1>(n, m);
+                auto D        = D0;
+                trsm(D, tril(A), with_rotate_A<-1>);
+                using EMat = Eigen::MatrixX<typename TypeParam::value_type>;
+                for (batmat::index_t l = 0; l < D.depth(); ++l) {
+                    auto Al     = as_eigen(A(l));
+                    auto D0l    = as_eigen(D0((l + D.depth() - 1) % D.depth()));
+                    EMat Dl_ref = triv<Lower>(Al).transpose().solve(D0l.transpose()).transpose();
+                    EXPECT_THAT(as_eigen(D(l)), EigenAlmostEqual(Dl_ref, this->tolerance))
+                        << l << "    (" << m << "×" << n << ")";
+                }
             }
-        }
+    }
 }
 
 REGISTER_TYPED_TEST_SUITE_P(TrsmTest, trsmLL, trsmLU, trsmRU, trsmRL, trsmRLRotateA);

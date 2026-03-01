@@ -4,11 +4,18 @@
 #include <batmat/linalg/micro-kernels/symv.hpp>
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
+#include <batmat/lut.hpp>
 #include <batmat/ops/rotate.hpp>
 
 #define UNROLL_FOR(...) BATMAT_FULLY_UNROLLED_FOR (__VA_ARGS__)
 
 namespace batmat::linalg::micro_kernels::symv {
+
+template <class T, class Abi, KernelConfig Conf, StorageOrder OA>
+inline const constinit auto symv_copy_lut =
+    make_1d_lut<RowsReg<T, Abi>>([]<index_t Row>(index_constant<Row>) {
+        return symv_copy_microkernel<T, Abi, Conf, Row + 1, OA>;
+    });
 
 /// Symmetric matrix-vector multiplication d = c ± A b. Single register block.
 template <class T, class Abi, KernelConfig Conf, index_t RowsReg, StorageOrder OA>

@@ -4,11 +4,19 @@
 #include <batmat/linalg/micro-kernels/gemm-diag.hpp>
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
+#include <batmat/lut.hpp>
 #include <batmat/ops/rotate.hpp>
 
 #define UNROLL_FOR(...) BATMAT_FULLY_UNROLLED_FOR (__VA_ARGS__)
 
 namespace batmat::linalg::micro_kernels::gemm_diag {
+
+template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OB, StorageOrder OC,
+          StorageOrder OD>
+inline const constinit auto gemm_diag_copy_lut = make_2d_lut<RowsReg<T, Abi>, ColsReg<T, Abi>>(
+    []<index_t Row, index_t Col>(index_constant<Row>, index_constant<Col>) {
+        return gemm_diag_copy_microkernel<T, Abi, Conf, Row + 1, Col + 1, OA, OB, OC, OD>;
+    });
 
 template <MatrixStructure Struc>
 inline constexpr auto first_column =

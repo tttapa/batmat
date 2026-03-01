@@ -5,11 +5,18 @@
 #include <batmat/linalg/structure.hpp>
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
+#include <batmat/lut.hpp>
 #include <batmat/ops/rotate.hpp>
 
 #define UNROLL_FOR(...) BATMAT_FULLY_UNROLLED_FOR (__VA_ARGS__)
 
 namespace batmat::linalg::micro_kernels::trsm {
+
+template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OB, StorageOrder OD>
+inline const constinit auto trsm_copy_lut = make_2d_lut<RowsReg<T, Abi>, ColsReg<T, Abi>>(
+    []<index_t Row, index_t Col>(index_constant<Row>, index_constant<Col>) {
+        return trsm_copy_microkernel<T, Abi, Conf, Row + 1, Col + 1, OA, OB, OD>;
+    });
 
 /// @param  A Lower or upper trapezoidal RowsReg×(k+RowsReg).
 /// @param  B RowsReg×ColsReg.

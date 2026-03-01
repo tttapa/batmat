@@ -48,14 +48,14 @@ target_compile_definitions(config INTERFACE
 )
 batmat_configure_interface_library(config)
 
-# Main library
+# Main library (without micro-kernels)
 # ------------------------------------------------------------------------------
-add_library(batmat
+add_library(batmat-core
     "batmat/src/batmat.cpp"
     "batmat/src/thread-pool.cpp"
     "batmat/src/timing.cpp"
 )
-target_sources(batmat PUBLIC FILE_SET HEADERS
+target_sources(batmat-core PUBLIC FILE_SET HEADERS
     BASE_DIRS "batmat/include"
     FILES "batmat/include/batmat/assume.hpp"
           "batmat/include/batmat/dtypes.hpp"
@@ -87,18 +87,19 @@ target_sources(batmat PUBLIC FILE_SET HEADERS
           "batmat/include/batmat/timing.hpp"
           "batmat/include/batmat/unroll.h"
 )
-target_link_libraries(batmat PUBLIC batmat::config guanaqo::guanaqo)
-batmat_configure_library(batmat)
+target_link_libraries(batmat-core PUBLIC batmat::config guanaqo::guanaqo)
+batmat_configure_library(batmat-core BASE_NAME batmat)
+set_target_properties(batmat-core PROPERTIES OUTPUT_NAME "${base_name}")
 if (BATMAT_WITH_OPENMP)
-    target_link_libraries(batmat PUBLIC OpenMP::OpenMP_CXX)
+    target_link_libraries(batmat-core PUBLIC OpenMP::OpenMP_CXX)
 endif()
 if (BATMAT_WITH_GSI_HPC_SIMD)
-    target_link_libraries(batmat PUBLIC gsi-hpc-simd::simd)
+    target_link_libraries(batmat-core PUBLIC gsi-hpc-simd::simd)
 endif()
 
 # Linear algebra routines for compact batches of matrices
 # ------------------------------------------------------------------------------
-target_sources(batmat PUBLIC FILE_SET HEADERS
+target_sources(batmat-core PUBLIC FILE_SET HEADERS
     BASE_DIRS "batmat/include"
     FILES "batmat/include/batmat/linalg/compress.hpp"
           "batmat/include/batmat/linalg/copy.hpp"
@@ -139,15 +140,18 @@ target_sources(batmat PUBLIC FILE_SET HEADERS
 )
 
 include("batmat/src/linalg/micro-kernels/Codegen.cmake")
-batmat_codegen_micro_kernels(batmat-linalg batmat)
-target_link_libraries(batmat PRIVATE batmat-linalg-micro-kernels)
+batmat_codegen_micro_kernels(batmat-linalg batmat-core)
+
+add_library(batmat INTERFACE)
+target_link_libraries(batmat INTERFACE batmat-core batmat-linalg-micro-kernels)
+batmat_configure_interface_library(batmat)
 
 # ==============================================================================
 
 # Save the project version to a generated file
 configure_file("cmake/batmat-version.h.in"
     "${CMAKE_CURRENT_BINARY_DIR}/include/batmat-version.h" @ONLY)
-target_sources(batmat PUBLIC FILE_SET HEADERS
+target_sources(batmat-core PUBLIC FILE_SET HEADERS
     BASE_DIRS "${CMAKE_CURRENT_BINARY_DIR}/include"
     FILES "${CMAKE_CURRENT_BINARY_DIR}/include/batmat-version.h"
 )
@@ -160,14 +164,14 @@ if (BATMAT_WITH_ACCURATE_BUILD_TIME)
         COMMAND ${CMAKE_COMMAND}
             -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/BuildTime.cmake"
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-    target_sources(batmat PRIVATE ${BATMAT_BUILD_TIME_CPP})
-    add_dependencies(batmat batmat-build-time-generate)
+    target_sources(batmat-core PRIVATE ${BATMAT_BUILD_TIME_CPP})
+    add_dependencies(batmat-core batmat-build-time-generate)
 else()
     set(BATMAT_BUILD_TIME_CPP "${CMAKE_CURRENT_BINARY_DIR}/batmat-build-time.cpp")
     if (NOT EXISTS ${BATMAT_BUILD_TIME_CPP})
         include(cmake/BuildTime.cmake)
     endif()
-    target_sources(batmat PRIVATE ${BATMAT_BUILD_TIME_CPP})
+    target_sources(batmat-core PRIVATE ${BATMAT_BUILD_TIME_CPP})
 endif()
 
 # Installation

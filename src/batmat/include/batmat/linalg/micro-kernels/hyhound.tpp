@@ -4,15 +4,39 @@
 #include <batmat/linalg/micro-kernels/hyhound.hpp>
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
+#include <batmat/lut.hpp>
 #include <batmat/ops/cneg.hpp>
 #include <batmat/ops/rotate.hpp>
 #include <guanaqo/trace.hpp>
 #include <type_traits>
-#include <utility>
 
 #define UNROLL_FOR(...) BATMAT_FULLY_UNROLLED_FOR (__VA_ARGS__)
 
 namespace batmat::linalg::micro_kernels::hyhound {
+
+template <class T, class Abi, KernelConfig Conf, StorageOrder OL, StorageOrder OA>
+inline const constinit auto microkernel_diag_lut =
+    make_1d_lut<SizeR<T, Abi>>([]<index_t Row>(index_constant<Row>) {
+        return hyhound_diag_diag_microkernel<T, Abi, Conf, Row + 1, OL, OA>;
+    });
+
+template <class T, class Abi, KernelConfig Conf, StorageOrder OL, StorageOrder OA>
+inline const constinit auto microkernel_full_lut =
+    make_1d_lut<SizeR<T, Abi>>([]<index_t Row>(index_constant<Row>) {
+        return hyhound_diag_full_microkernel<T, Abi, Conf, Row + 1, OL, OA>;
+    });
+
+template <class T, class Abi, KernelConfig Conf, StorageOrder OL, StorageOrder OA, StorageOrder OB>
+inline const constinit auto microkernel_tail_lut =
+    make_1d_lut<SizeS<T, Abi>>([]<index_t Row>(index_constant<Row>) {
+        return hyhound_diag_tail_microkernel<T, Abi, Conf, SizeR<T, Abi>, Row + 1, OL, OA, OB>;
+    });
+
+template <class T, class Abi, KernelConfig Conf, StorageOrder OL, StorageOrder OA, StorageOrder OB>
+inline const constinit auto microkernel_tail_lut_2 = make_2d_lut<SizeR<T, Abi>, SizeS<T, Abi>>(
+    []<index_t NR, index_t NS>(index_constant<NR>, index_constant<NS>) {
+        return hyhound_diag_tail_microkernel<T, Abi, Conf, NR + 1, NS + 1, OL, OA, OB>;
+    });
 
 template <class T, class Abi, KernelConfig Conf, index_t R, StorageOrder OL, StorageOrder OA>
 [[gnu::hot, gnu::flatten]] void
@@ -423,8 +447,8 @@ void hyhound_diag_apply_register(const view<T, Abi, OL> L, const view<const T, A
 }
 
 /// Same as hyhound_diag_register but for two block rows at once.
-template <class T, class Abi, StorageOrder OL1, StorageOrder OA1, StorageOrder OL2,
-          StorageOrder OA2, KernelConfig Conf>
+template <class T, class Abi, KernelConfig Conf, StorageOrder OL1, StorageOrder OA1,
+          StorageOrder OL2, StorageOrder OA2>
 void hyhound_diag_2_register(const view<T, Abi, OL1> L11, const view<T, Abi, OA1> A1,
                              const view<T, Abi, OL2> L21, const view<T, Abi, OA2> A2,
                              const view<const T, Abi> D) noexcept {
@@ -485,8 +509,8 @@ void hyhound_diag_2_register(const view<T, Abi, OL1> L11, const view<T, Abi, OA1
  *     [  0  A22 | L21 ] Q = [ Ã21 Ã22 | L̃21 ]
  *     [ A31  0  | L31 ]     [ Ã31 Ã32 | L̃31 ]
  */
-template <class T, class Abi, StorageOrder OL, StorageOrder OW, StorageOrder OY, StorageOrder OU,
-          KernelConfig Conf>
+template <class T, class Abi, KernelConfig Conf, StorageOrder OL, StorageOrder OW, StorageOrder OY,
+          StorageOrder OU>
 void hyhound_diag_cyclic_register(const view<T, Abi, OL> L11,       // D
                                   const view<T, Abi, OW> A1,        // work
                                   const view<T, Abi, OY> L21,       // Y
@@ -579,8 +603,8 @@ void hyhound_diag_cyclic_register(const view<T, Abi, OL> L11,       // D
  *
  * where Lu1 and L̃u1 are upper triangular
  */
-template <class T, class Abi, StorageOrder OL, StorageOrder OA, StorageOrder OLu, StorageOrder OAu,
-          KernelConfig Conf>
+template <class T, class Abi, KernelConfig Conf, StorageOrder OL, StorageOrder OA, StorageOrder OLu,
+          StorageOrder OAu>
 void hyhound_diag_riccati_register(const view<T, Abi, OL> L11, const view<T, Abi, OA> A1,
                                    const view<T, Abi, OL> L21, const view<const T, Abi, OA> A2,
                                    const view<T, Abi, OA> A2_out, const view<T, Abi, OLu> Lu1,
