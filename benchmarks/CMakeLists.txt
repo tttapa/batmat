@@ -9,7 +9,7 @@ endif()
 set(BATMAT_BENCHMARK_DEPTH 8 CACHE STRING "Batch depth used in benchmarks")
 
 add_compile_definitions(BATMAT_BENCHMARK_DEPTH=${BATMAT_BENCHMARK_DEPTH})
-add_library(benchmark-main "benchmark-main.cpp")
+add_library(benchmark-main STATIC "benchmark-main.cpp")
 target_link_libraries(benchmark-main PUBLIC batmat::batmat benchmark::benchmark)
 add_custom_target(run-benchmarks)
 
