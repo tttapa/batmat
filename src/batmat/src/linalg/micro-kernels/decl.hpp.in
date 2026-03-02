@@ -1,8 +1,6 @@
-#ifdef __clang__
-#pragma clang fp contract(fast)
-#endif
+#pragma once
 
-#include <batmat/linalg/micro-kernels/@op@.tpp>
+#include <batmat/linalg/micro-kernels/@op@.hpp>
 
 // clang-format off
 namespace batmat::linalg::micro_kernels::@op_@ {
@@ -10,8 +8,6 @@ namespace batmat::linalg::micro_kernels::@op_@ {
 using enum StorageOrder;
 using enum MatrixStructure;
 
-@instantiations@
-
-@instantiations_var@
+@declarations@
 } // namespace batmat::linalg::micro_kernels::@op_@
 // clang-format on

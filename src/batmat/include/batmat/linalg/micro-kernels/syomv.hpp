@@ -25,3 +25,5 @@ BATMAT_LINALG_SYOMV_EXPORT void syomv_register(view<const T, Abi, OA> A, view<co
 using gemm::RowsReg;
 
 } // namespace batmat::linalg::micro_kernels::syomv
+
+#include <batmat/linalg/micro-kernels/syomv-decl.hpp>

@@ -31,3 +31,5 @@ template <class T, class Abi>
 constexpr index_t RowsReg = 2 * gemm::RowsReg<T, Abi>;
 
 } // namespace batmat::linalg::micro_kernels::gemv
+
+#include <batmat/linalg/micro-kernels/gemv-decl.hpp>

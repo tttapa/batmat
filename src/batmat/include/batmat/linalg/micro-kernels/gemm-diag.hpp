@@ -36,3 +36,5 @@ template <class T, class Abi>
 constexpr index_t ColsReg = RowsReg<T, Abi>;
 
 } // namespace batmat::linalg::micro_kernels::gemm_diag
+
+#include <batmat/linalg/micro-kernels/gemm-diag-decl.hpp>

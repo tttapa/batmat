@@ -48,3 +48,5 @@ template <class T, class Abi>
 constexpr index_t ColsReg = RowsReg<T, Abi>;
 
 } // namespace batmat::linalg::micro_kernels::potrf
+
+#include <batmat/linalg/micro-kernels/potrf-decl.hpp>
