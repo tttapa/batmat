@@ -130,5 +130,3 @@ hyhound_diag_riccati_register(view<T, Abi, OL> L11, view<T, Abi, OA> A1, view<T,
                               bool shift_A_out) noexcept;
 
 } // namespace batmat::linalg::micro_kernels::hyhound
-
-#include <batmat/linalg/micro-kernels/hyhound-decl.hpp>

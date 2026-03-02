@@ -11,7 +11,5 @@ using enum StorageOrder;
 using enum MatrixStructure;
 
 @instantiations@
-
-@instantiations_var@
 } // namespace batmat::linalg::micro_kernels::@op_@
 // clang-format on

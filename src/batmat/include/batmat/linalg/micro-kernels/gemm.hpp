@@ -59,5 +59,3 @@ BATMAT_LINALG_GEMM_EXPORT extern const constinit decltype(detail::gemm_copy_lut<
 #endif
 
 } // namespace batmat::linalg::micro_kernels::gemm
-
-#include <batmat/linalg/micro-kernels/gemm-decl.hpp>
