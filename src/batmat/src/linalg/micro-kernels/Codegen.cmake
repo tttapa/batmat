@@ -40,7 +40,7 @@ function(batmat_codegen_micro_kernels tgt headers_target)
 
     macro(instantiate_gemm out T Abi Conf OA OB OC OD)
         string(APPEND ${out} "template BATMAT_LINALG_GEMM_EXPORT void gemm_copy_register<${T}, ${Abi}, ${Conf}, ${OA}, ${OB}, ${OC}, ${OD}>(view<const ${T}, ${Abi}, ${OA}> A, view<const ${T}, ${Abi}, ${OB}> B, std::optional<view<const ${T}, ${Abi}, ${OC}>> C, view<${T}, ${Abi}, ${OD}> D) noexcept;\n")
-        string(APPEND ${out} "template BATMAT_LINALG_GEMM_EXPORT extern const constinit decltype(detail::gemm_copy_lut<${T}, ${Abi}, ${Conf}, ${OA}, ${OB}, ${OC}, ${OD}>) gemm_copy_lut<${T}, ${Abi}, ${Conf}, ${OA}, ${OB}, ${OC}, ${OD}>;\n")
+        string(APPEND ${out} "template BATMAT_LINALG_GEMM_EXPORT const constinit decltype(detail::gemm_copy_lut<${T}, ${Abi}, ${Conf}, ${OA}, ${OB}, ${OC}, ${OD}>) gemm_copy_lut<${T}, ${Abi}, ${Conf}, ${OA}, ${OB}, ${OC}, ${OD}>;\n")
     endmacro()
 
     macro(instantiate_gemm_diag out T Abi Conf OA OB OC OD)
