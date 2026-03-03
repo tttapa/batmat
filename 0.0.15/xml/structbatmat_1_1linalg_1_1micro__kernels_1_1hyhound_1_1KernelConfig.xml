@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::micro_kernels::hyhound::KernelConfig</compoundname>
+    <includes refid="micro-kernels_2hyhound_8hpp" local="no">batmat/linalg/micro-kernels/hyhound.hpp</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig_1a31c3bba85790248bed8fb38a1f1f3dfe" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool batmat::linalg::micro_kernels::hyhound::KernelConfig::sign_only</definition>
+        <argsstring></argsstring>
+        <name>sign_only</name>
+        <qualifiedname>batmat::linalg::micro_kernels::hyhound::KernelConfig::sign_only</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/hyhound.hpp" line="12" column="10" bodyfile="batmat/include/batmat/linalg/micro-kernels/hyhound.hpp" bodystart="12" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::micro_kernels::hyhound::KernelConfig</label>
+        <link refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/micro-kernels/hyhound.hpp" line="11" column="1" bodyfile="batmat/include/batmat/linalg/micro-kernels/hyhound.hpp" bodystart="11" bodyend="13"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig_1a31c3bba85790248bed8fb38a1f1f3dfe" prot="public" virt="non-virtual"><scope>batmat::linalg::micro_kernels::hyhound::KernelConfig</scope><name>sign_only</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

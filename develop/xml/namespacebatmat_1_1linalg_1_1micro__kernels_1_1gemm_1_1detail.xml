@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1detail" kind="namespace" language="C++">
+    <compoundname>batmat::linalg::micro_kernels::gemm::detail</compoundname>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1detail_1ad6f9bfa93eaed1655bfd343dcadf25dc" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OC</declname>
+            <defname>OC</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::linalg::micro_kernels::gemm::detail::gemm_copy_lut</definition>
+        <argsstring></argsstring>
+        <name>gemm_copy_lut</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm::detail::gemm_copy_lut</qualifiedname>
+        <initializer>                         = <ref refid="group__topic-utils_1gae259627b9bd8c02e66d1e244c969e2bc" kindref="member">make_2d_lut</ref>&lt;<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>&lt;T, Abi&gt;, <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1af0304c22970e8f8e0fa363dd6330729b" kindref="member">ColsReg</ref>&lt;T, Abi&gt;&gt;(
+[]&lt;index_t Row, index_t Col&gt;(<ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant</ref>&lt;Row&gt;, <ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant</ref>&lt;Col&gt;) {
+    return <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1ac69c39d34745b70589892c7594e29bd6" kindref="member">gemm_copy_microkernel</ref>&lt;T, Abi, Conf, Row + 1, Col + 1, OA, OB, OC, OD&gt;;
+})</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" line="47" column="16" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" bodystart="47" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" line="40" column="1"/>
+  </compounddef>
+</doxygen>

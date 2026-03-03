@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="indexpage" kind="page">
+    <compoundname>index</compoundname>
+    <title>batmat</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="index_1md__2home_2runner_2work_2batmat_2batmat_2docs_2source_2doxygen_2index"/> Fast linear algebra routines for batches of small matrices.</para>
+<para>Batmat is used as the linear algebra backend for the <ulink url="https://github.com/kul-optec/cyqlone">Cyqlone</ulink> solver, where it is used to perform vectorized operations across multiple stages in an optimal control problem.</para>
+<para>To enable vectorization, batmat stores batches of small matrices in an interleaved “compact” format in memory, where the corresponding elements of all matrices in a batch are stored together. Custom linear algebra routines then operate on all matrices in a batch simultaneously using SIMD instructions. These routines are built on top of highly optimized micro-kernels.</para>
+<para>For an overview of the supported routines, see <ref refid="group__topic-linalg" kindref="compound">Linear algebra</ref>. For documentation of the batched matrix data structures, see <ref refid="group__topic-matrix" kindref="compound">Matrix data structures</ref>.</para>
+<para><hruler/>
+</para>
+<para> <image type="html" name="batmat-small.png" alt="batmat logo" inline="yes"></image>
+  </para>
+    </detaileddescription>
+    <location file="/home/runner/work/batmat/batmat/docs/source/doxygen/index.md"/>
+  </compounddef>
+</doxygen>

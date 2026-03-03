@@ -1,0 +1,601 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="simd_8hpp" kind="file" language="C++">
+    <compoundname>simd.hpp</compoundname>
+    <includes local="no">batmat/config.hpp</includes>
+    <includes refid="unroll_8h" local="no">batmat/unroll.h</includes>
+    <includes local="no">experimental/simd</includes>
+    <includes local="no">cstddef</includes>
+    <includedby refid="micro-kernels_2hyhound_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/hyhound.hpp</includedby>
+    <includedby refid="simdify_8hpp" local="no">batmat/include/batmat/linalg/simdify.hpp</includedby>
+    <includedby refid="uview_8hpp" local="no">batmat/include/batmat/linalg/uview.hpp</includedby>
+    <includedby refid="cneg_8hpp" local="no">batmat/include/batmat/ops/cneg.hpp</includedby>
+    <includedby refid="gather_8hpp" local="no">batmat/include/batmat/ops/gather.hpp</includedby>
+    <includedby refid="mask_8hpp" local="no">batmat/include/batmat/ops/mask.hpp</includedby>
+    <includedby refid="rotate_8hpp" local="no">batmat/include/batmat/ops/rotate.hpp</includedby>
+    <includedby refid="rsqrt_8hpp" local="no">batmat/include/batmat/ops/rsqrt.hpp</includedby>
+    <includedby refid="transpose_8hpp" local="no">batmat/include/batmat/ops/transpose.hpp</includedby>
+    <includedby refid="avx-512_8hpp" local="no">batmat/include/batmat/platform/avx-512.hpp</includedby>
+    <includedby refid="avx2_8hpp" local="no">batmat/include/batmat/platform/avx2.hpp</includedby>
+    <includedby refid="neon_8hpp" local="no">batmat/include/batmat/platform/neon.hpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>batmat/include/batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>batmat/unroll.h</label>
+        <link refid="unroll_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/config.hpp</label>
+      </node>
+      <node id="6">
+        <label>cstddef</label>
+      </node>
+      <node id="5">
+        <label>experimental/simd</label>
+      </node>
+      <node id="4">
+        <label>guanaqo/stringify.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="6">
+        <label>batmat/include/batmat/linalg/compress.hpp</label>
+        <link refid="compress_8hpp"/>
+      </node>
+      <node id="7">
+        <label>batmat/include/batmat/linalg/copy.hpp</label>
+        <link refid="copy_8hpp"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>batmat/include/batmat/linalg/gemm-diag.hpp</label>
+        <link refid="gemm-diag_8hpp"/>
+      </node>
+      <node id="10">
+        <label>batmat/include/batmat/linalg/gemm.hpp</label>
+        <link refid="gemm_8hpp"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>batmat/include/batmat/linalg/gemv.hpp</label>
+        <link refid="gemv_8hpp"/>
+      </node>
+      <node id="3">
+        <label>batmat/include/batmat/linalg/hyhound.hpp</label>
+        <link refid="hyhound_8hpp"/>
+      </node>
+      <node id="19">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp</label>
+        <link refid="micro-kernels_2gemm-diag_8hpp"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+      </node>
+      <node id="20">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm-diag.tpp</label>
+        <link refid="gemm-diag_8tpp"/>
+      </node>
+      <node id="21">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm.hpp</label>
+        <link refid="micro-kernels_2gemm_8hpp"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm.tpp</label>
+        <link refid="gemm_8tpp"/>
+      </node>
+      <node id="23">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemv.hpp</label>
+        <link refid="micro-kernels_2gemv_8hpp"/>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+      </node>
+      <node id="24">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemv.tpp</label>
+        <link refid="gemv_8tpp"/>
+      </node>
+      <node id="2">
+        <label>batmat/include/batmat/linalg/micro-kernels/hyhound.hpp</label>
+        <link refid="micro-kernels_2hyhound_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>batmat/include/batmat/linalg/micro-kernels/hyhound.tpp</label>
+        <link refid="hyhound_8tpp"/>
+      </node>
+      <node id="25">
+        <label>batmat/include/batmat/linalg/micro-kernels/potrf.hpp</label>
+        <link refid="micro-kernels_2potrf_8hpp"/>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+      </node>
+      <node id="26">
+        <label>batmat/include/batmat/linalg/micro-kernels/potrf.tpp</label>
+        <link refid="potrf_8tpp"/>
+      </node>
+      <node id="27">
+        <label>batmat/include/batmat/linalg/micro-kernels/symv.hpp</label>
+        <link refid="micro-kernels_2symv_8hpp"/>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="28">
+        <label>batmat/include/batmat/linalg/micro-kernels/symv.tpp</label>
+        <link refid="symv_8tpp"/>
+      </node>
+      <node id="29">
+        <label>batmat/include/batmat/linalg/micro-kernels/syomv.hpp</label>
+        <link refid="micro-kernels_2syomv_8hpp"/>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="30">
+        <label>batmat/include/batmat/linalg/micro-kernels/syomv.tpp</label>
+        <link refid="syomv_8tpp"/>
+      </node>
+      <node id="31">
+        <label>batmat/include/batmat/linalg/micro-kernels/trsm.hpp</label>
+        <link refid="micro-kernels_2trsm_8hpp"/>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="32">
+        <label>batmat/include/batmat/linalg/micro-kernels/trsm.tpp</label>
+        <link refid="trsm_8tpp"/>
+      </node>
+      <node id="33">
+        <label>batmat/include/batmat/linalg/micro-kernels/trtri.hpp</label>
+        <link refid="micro-kernels_2trtri_8hpp"/>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+      </node>
+      <node id="34">
+        <label>batmat/include/batmat/linalg/micro-kernels/trtri.tpp</label>
+        <link refid="trtri_8tpp"/>
+      </node>
+      <node id="12">
+        <label>batmat/include/batmat/linalg/potrf.hpp</label>
+        <link refid="potrf_8hpp"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>batmat/include/batmat/linalg/simdify.hpp</label>
+        <link refid="simdify_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+      </node>
+      <node id="14">
+        <label>batmat/include/batmat/linalg/symm.hpp</label>
+        <link refid="symm_8hpp"/>
+      </node>
+      <node id="15">
+        <label>batmat/include/batmat/linalg/symv.hpp</label>
+        <link refid="symv_8hpp"/>
+      </node>
+      <node id="16">
+        <label>batmat/include/batmat/linalg/syomv.hpp</label>
+        <link refid="syomv_8hpp"/>
+      </node>
+      <node id="13">
+        <label>batmat/include/batmat/linalg/trsm.hpp</label>
+        <link refid="trsm_8hpp"/>
+      </node>
+      <node id="17">
+        <label>batmat/include/batmat/linalg/trtri.hpp</label>
+        <link refid="trtri_8hpp"/>
+      </node>
+      <node id="18">
+        <label>batmat/include/batmat/linalg/uview.hpp</label>
+        <link refid="uview_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+      </node>
+      <node id="35">
+        <label>batmat/include/batmat/ops/cneg.hpp</label>
+        <link refid="cneg_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+      </node>
+      <node id="36">
+        <label>batmat/include/batmat/ops/gather.hpp</label>
+        <link refid="gather_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="37">
+        <label>batmat/include/batmat/ops/mask.hpp</label>
+        <link refid="mask_8hpp"/>
+        <childnode refid="36" relation="include">
+        </childnode>
+      </node>
+      <node id="38">
+        <label>batmat/include/batmat/ops/rotate.hpp</label>
+        <link refid="rotate_8hpp"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+      </node>
+      <node id="39">
+        <label>batmat/include/batmat/ops/rsqrt.hpp</label>
+        <link refid="rsqrt_8hpp"/>
+        <childnode refid="26" relation="include">
+        </childnode>
+      </node>
+      <node id="40">
+        <label>batmat/include/batmat/ops/transpose.hpp</label>
+        <link refid="transpose_8hpp"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="41">
+        <label>batmat/include/batmat/platform/avx-512.hpp</label>
+        <link refid="avx-512_8hpp"/>
+      </node>
+      <node id="42">
+        <label>batmat/include/batmat/platform/avx2.hpp</label>
+        <link refid="avx2_8hpp"/>
+      </node>
+      <node id="43">
+        <label>batmat/include/batmat/platform/neon.hpp</label>
+        <link refid="neon_8hpp"/>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>/home/runner/work/batmat/batmat/test_package/src/example.cpp</label>
+        <link refid="example_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1datapar">batmat::datapar</innernamespace>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="simd_8hpp_1a0533d5b0648899560248b705d45a3b6f" prot="public" static="no">
+        <name>BATMAT_HAVE_SIMD_TO_INTRIN</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="134" column="9" bodyfile="batmat/include/batmat/simd.hpp" bodystart="134" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;batmat/config.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="unroll_8h" kindref="compound">batmat/unroll.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>BATMAT_WITH_GSI_HPC_SIMD</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstddef&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;simd&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar" kindref="compound">batmat::datapar</ref><sp/>{</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Tp,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">simd</ref><sp/>=<sp/>std::datapar::basic_simd&lt;Tp,<sp/>Abi&gt;;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Tp,<sp/>std::</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>Np&gt;</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">deduced_simd</ref><sp/>=<sp/>std::datapar::simd&lt;Tp,<sp/>Np&gt;;</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Tp,<sp/>std::</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>Np&gt;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar_1aa3c7c9554d61e55ae3384b5e4c5ce7af" kindref="member">deduced_abi</ref><sp/>=<sp/><ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">deduced_simd&lt;Tp, Np&gt;::abi_type</ref>;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Tp&gt;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar_1a55556a636c771c6e0f5805c2d186f1ec" kindref="member">scalar_abi</ref><sp/>=<sp/><ref refid="namespacebatmat_1_1datapar_1aa3c7c9554d61e55ae3384b5e4c5ce7af" kindref="member">deduced_abi&lt;Tp, 1&gt;</ref>;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal">V<sp/><ref refid="namespacebatmat_1_1datapar_1a149c22d1c48e31a930932999a6959700" kindref="member">unaligned_load</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::value_type<sp/>*p)<sp/>{</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/>std::span&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::value_type,<sp/>V::size()&gt;<sp/>sp{</highlight><highlight class="keyword">const_cast&lt;</highlight><highlight class="normal">V::value_type<sp/>*</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(p),<sp/>V::size()};</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>std::datapar::unchecked_load&lt;V&gt;(sp);</highlight></codeline>
+<codeline lineno="26"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal">V<sp/><ref refid="namespacebatmat_1_1datapar_1a9e5512aee8f62a9475578de6da9dd666" kindref="member">aligned_load</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::value_type<sp/>*p)<sp/>{</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>std::span&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::value_type,<sp/>V::size()&gt;<sp/>sp{</highlight><highlight class="keyword">const_cast&lt;</highlight><highlight class="normal">V::value_type<sp/>*</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(p),<sp/>V::size()};</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>std::datapar::unchecked_load&lt;V&gt;(sp,<sp/>std::datapar::flag_aligned);</highlight></codeline>
+<codeline lineno="32"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ac0a83627dacddc05ffd7c3bc54716ba5" kindref="member">unaligned_store</ref>(V<sp/>v,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::value_type<sp/>*p)<sp/>{</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/>std::datapar::unchecked_store(v,<sp/>p,<sp/>V::size());</highlight></codeline>
+<codeline lineno="37"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1a37a115c835b05841a7f348320e1e43b6" kindref="member">aligned_store</ref>(V<sp/>v,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::value_type<sp/>*p)<sp/>{</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>std::span&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::value_type,<sp/>V::size()&gt;<sp/>sp{p,<sp/>V::size()};</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>std::datapar::unchecked_store(v,<sp/>sp,<sp/>std::datapar::flag_aligned);</highlight></codeline>
+<codeline lineno="43"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ac9b1641243fc46c499b326c12e68ff4f" kindref="member">masked_aligned_store</ref>(V<sp/>v,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::mask_type<sp/>m,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::value_type<sp/>*p)<sp/>{</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/>std::span&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::value_type,<sp/>V::size()&gt;<sp/>sp{p,<sp/>V::size()};</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>(V::size()<sp/>==<sp/>1)<sp/>{</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(m[0])</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::datapar::unchecked_store(v,<sp/>sp,<sp/>std::datapar::flag_aligned);</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::datapar::unchecked_store(v,<sp/>sp,<sp/>m,<sp/>std::datapar::flag_aligned);</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="54"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(__x86_64__)<sp/>||<sp/>defined(_M_X64)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1a50d5b6b45672aa2c632b8fa168f7908c" kindref="member">to_intrin</ref>(V<sp/>v)<sp/>{</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>std::__detail::__to_x86_intrin(v);</highlight></codeline>
+<codeline lineno="60"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_HAVE_SIMD_TO_INTRIN<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Tp,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar_1a497d8b4d202d9476ad67782ba4d4feef" kindref="member">simd_size</ref><sp/>=<sp/>std::remove_cvref_t&lt;</highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(<ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">simd&lt;Tp, Abi&gt;::size</ref>)&gt;;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Tp,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar_1a3cbb75e6685dbd98807439ac0dca33f0" kindref="member">simd_align</ref><sp/>=<sp/>std::datapar::alignment&lt;simd&lt;Tp,<sp/>Abi&gt;&gt;;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar_1a8c13bd77d282b3132fca8a1273d05488" kindref="member">rebind_simd_t</ref><sp/>=<sp/><ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">deduced_simd</ref>&lt;T,<sp/>V::size()&gt;;</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>hmax(V<sp/>v)<sp/>{<sp/></highlight><highlight class="comment">//<sp/>TODO</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">value_type<sp/>=<sp/>V::value_type;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/>value_type<sp/>m<sp/><sp/><sp/><sp/><sp/>=<sp/>v[0];</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="unroll_8h_1addb39c3474d8e234f06b9ca62ed0bf75" kindref="member">BATMAT_FULLY_UNROLLED_FOR</ref><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>1;<sp/>i<sp/>&lt;<sp/>v.size();<sp/>++i)</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m<sp/>=<sp/>std::max(v[i],<sp/>m);</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>m;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>hmin(V<sp/>v)<sp/>{<sp/></highlight><highlight class="comment">//<sp/>TODO</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">value_type<sp/>=<sp/>V::value_type;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/>value_type<sp/>m<sp/><sp/><sp/><sp/><sp/>=<sp/>v[0];</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="unroll_8h_1addb39c3474d8e234f06b9ca62ed0bf75" kindref="member">BATMAT_FULLY_UNROLLED_FOR</ref><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>1;<sp/>i<sp/>&lt;<sp/>v.size();<sp/>++i)</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m<sp/>=<sp/>std::min(v[i],<sp/>m);</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>m;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::datapar</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;experimental/simd&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstddef&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight></codeline>
+<codeline lineno="95" refid="namespacebatmat_1_1datapar" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar" kindref="compound">batmat::datapar</ref><sp/>{</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">stdx<sp/>=<sp/>std::experimental;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Tp,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="99" refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">simd</ref><sp/>=<sp/>stdx::simd&lt;Tp,<sp/>Abi&gt;;</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Tp,<sp/>std::</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>Np&gt;</highlight></codeline>
+<codeline lineno="101" refid="namespacebatmat_1_1datapar_1aa3c7c9554d61e55ae3384b5e4c5ce7af" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar_1aa3c7c9554d61e55ae3384b5e4c5ce7af" kindref="member">deduced_abi</ref><sp/>=<sp/>stdx::simd_abi::deduce_t&lt;Tp,<sp/>Np&gt;;</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Tp,<sp/>std::</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>Np&gt;</highlight></codeline>
+<codeline lineno="103" refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">deduced_simd</ref><sp/>=<sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">simd&lt;Tp, deduced_abi&lt;Tp, Np&gt;</ref>&gt;;</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="106" refid="namespacebatmat_1_1datapar_1a149c22d1c48e31a930932999a6959700" refkind="member"><highlight class="normal">V<sp/><ref refid="namespacebatmat_1_1datapar_1a149c22d1c48e31a930932999a6959700" kindref="member">unaligned_load</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::value_type<sp/>*p)<sp/>{</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>V{p,<sp/>stdx::element_aligned};</highlight></codeline>
+<codeline lineno="108"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="111" refid="namespacebatmat_1_1datapar_1a9e5512aee8f62a9475578de6da9dd666" refkind="member"><highlight class="normal">V<sp/><ref refid="namespacebatmat_1_1datapar_1a9e5512aee8f62a9475578de6da9dd666" kindref="member">aligned_load</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::value_type<sp/>*p)<sp/>{</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>V{p,<sp/>stdx::vector_aligned};</highlight></codeline>
+<codeline lineno="113"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="116" refid="namespacebatmat_1_1datapar_1ac0a83627dacddc05ffd7c3bc54716ba5" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ac0a83627dacddc05ffd7c3bc54716ba5" kindref="member">unaligned_store</ref>(V<sp/>v,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::value_type<sp/>*p)<sp/>{</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/>v.copy_to(p,<sp/>stdx::element_aligned);</highlight></codeline>
+<codeline lineno="118"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="121" refid="namespacebatmat_1_1datapar_1a37a115c835b05841a7f348320e1e43b6" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1a37a115c835b05841a7f348320e1e43b6" kindref="member">aligned_store</ref>(V<sp/>v,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::value_type<sp/>*p)<sp/>{</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/>v.copy_to(p,<sp/>stdx::vector_aligned);</highlight></codeline>
+<codeline lineno="123"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="126" refid="namespacebatmat_1_1datapar_1ac9b1641243fc46c499b326c12e68ff4f" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ac9b1641243fc46c499b326c12e68ff4f" kindref="member">masked_aligned_store</ref>(V<sp/>v,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::mask_type<sp/>m,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::value_type<sp/>*p)<sp/>{</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/>where(m,<sp/>v).copy_to(p,<sp/>stdx::vector_aligned);</highlight></codeline>
+<codeline lineno="128"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="131" refid="namespacebatmat_1_1datapar_1a50d5b6b45672aa2c632b8fa168f7908c" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1a50d5b6b45672aa2c632b8fa168f7908c" kindref="member">to_intrin</ref>(V<sp/>v)<sp/>{</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">stdx::__intrinsic_type_t&lt;V,<sp/>v.size()</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">&gt;(v);</highlight></codeline>
+<codeline lineno="133"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="134" refid="simd_8hpp_1a0533d5b0648899560248b705d45a3b6f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_HAVE_SIMD_TO_INTRIN<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Tp,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="137" refid="namespacebatmat_1_1datapar_1a497d8b4d202d9476ad67782ba4d4feef" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar_1a497d8b4d202d9476ad67782ba4d4feef" kindref="member">simd_size</ref><sp/>=<sp/>stdx::simd_size&lt;Tp,<sp/>Abi&gt;;</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Tp,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="139" refid="namespacebatmat_1_1datapar_1a3cbb75e6685dbd98807439ac0dca33f0" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar_1a3cbb75e6685dbd98807439ac0dca33f0" kindref="member">simd_align</ref><sp/>=<sp/>stdx::memory_alignment&lt;simd&lt;Tp,<sp/>Abi&gt;&gt;;</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="141" refid="namespacebatmat_1_1datapar_1a8c13bd77d282b3132fca8a1273d05488" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar_1a8c13bd77d282b3132fca8a1273d05488" kindref="member">rebind_simd_t</ref><sp/>=<sp/>stdx::rebind_simd_t&lt;T,<sp/>V&gt;;</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Tp&gt;</highlight></codeline>
+<codeline lineno="143" refid="namespacebatmat_1_1datapar_1a55556a636c771c6e0f5805c2d186f1ec" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar_1a55556a636c771c6e0f5805c2d186f1ec" kindref="member">scalar_abi</ref><sp/>=<sp/><ref refid="namespacebatmat_1_1datapar_1aa3c7c9554d61e55ae3384b5e4c5ce7af" kindref="member">deduced_abi&lt;Tp, 1&gt;</ref>;</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">stdx::hmax;</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">stdx::hmin;</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::datapar</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight></codeline>
+<codeline lineno="150"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight></codeline>
+<codeline lineno="152"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1datapar" kindref="compound">batmat::datapar</ref><sp/>{</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline lineno="155" refid="namespacebatmat_1_1datapar_1adb66c808eb0fedc04313ed3a65838b4a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>V<sp/><ref refid="namespacebatmat_1_1datapar_1adb66c808eb0fedc04313ed3a65838b4a" kindref="member">from_values</ref>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal">...<sp/>values)<sp/>{</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">alignas</highlight><highlight class="normal">(<ref refid="namespacebatmat_1_1datapar_1a3cbb75e6685dbd98807439ac0dca33f0" kindref="member">simd_align&lt;typename V::value_type, typename V::abi_type&gt;::value</ref>)</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>V::value_type<sp/>data[]{values...};</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1a9e5512aee8f62a9475578de6da9dd666" kindref="member">aligned_load&lt;V&gt;</ref>(data);</highlight></codeline>
+<codeline lineno="159"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight></codeline>
+<codeline lineno="161"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::datapar</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/simd.hpp"/>
+  </compounddef>
+</doxygen>
