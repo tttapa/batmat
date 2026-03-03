@@ -12,8 +12,9 @@
 #include <guanaqo/demangled-typename.hpp>
 
 #include "eigen-matchers.hpp"
+#include <real-literal.hpp>
 
-constexpr batmat::real_t operator""_r(long double x) { return static_cast<batmat::real_t>(x); }
+using namespace batmat::literals;
 
 TEST(linalg, compress) {
     using namespace batmat;

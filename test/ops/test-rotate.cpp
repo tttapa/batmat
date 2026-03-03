@@ -4,6 +4,10 @@
 #include <batmat/ops/rotate.hpp>
 #include <batmat/simd.hpp>
 
+#include <real-literal.hpp>
+
+using namespace batmat::literals;
+
 using batmat::real_t;
 using batmat::ops::rot;
 using batmat::ops::rotl;
@@ -12,7 +16,6 @@ using batmat::ops::shiftl;
 using batmat::ops::shiftr;
 
 using batmat::datapar::from_values;
-constexpr batmat::real_t operator""_r(long double x) { return static_cast<batmat::real_t>(x); }
 
 TEST(Rotate, rotl4) {
     using simd      = batmat::datapar::deduced_simd<real_t, 4>;

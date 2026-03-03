@@ -89,7 +89,7 @@ REGISTER_TYPED_TEST_SUITE_P(CopyTest, copy);
 using enum StorageOrder;
 using enum MatrixStructure;
 // clang-format off
-using TestConfigs = ::testing::Types<
+using TestConfigsCopy = ::testing::Types<
     // Rectangular
     CopyConfig<1, ColMajor, ColMajor, General, true>, CopyConfig<1, RowMajor, ColMajor, General, true>,
     CopyConfig<1, ColMajor, RowMajor, General, true>, CopyConfig<1, RowMajor, RowMajor, General, true>,
@@ -114,4 +114,4 @@ using TestConfigs = ::testing::Types<
 >;
 // clang-format on
 
-INSTANTIATE_TYPED_TEST_SUITE_P(linalg, CopyTest, TestConfigs);
+INSTANTIATE_TYPED_TEST_SUITE_P(linalg, CopyTest, TestConfigsCopy);
