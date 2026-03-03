@@ -8,7 +8,6 @@ os=Linux
 
 [tool_requires]
 tttapa-toolchains/1.1.0
-mold/2.32.1
 cmake/3.31.6
 ninja/1.12.1
 
@@ -23,8 +22,6 @@ VTUNE_PROFILER_DIR={{ os.getenv("VTUNE_PROFILER_DIR") or os.path.join(os.getenv(
 tools.cmake.cmaketoolchain:generator=Ninja Multi-Config
 tools.build:exelinkflags+=["-flto=auto", "-static-libstdc++", "-static-libgcc", "-lgfortran"]
 tools.build:sharedlinkflags+=["-flto=auto", "-static-libstdc++", "-static-libgcc", "-lgfortran"]
-tools.build:exelinkflags+=["-fuse-ld=mold"]
-tools.build:sharedlinkflags+=["-fuse-ld=mold"]
 
 [options]
 batmat/*:with_openmp=True
