@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         gcc: ["15"]
-        build_type: ["Debug"]
+        build_type: ["Debug", "Release"]
         profile: ["laptop"]
         gsi-hpc-simd: ["True", "False"]
       fail-fast: false
