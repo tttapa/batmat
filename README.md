@@ -1,3 +1,7 @@
+[![Documentation](https://img.shields.io/badge/Documentation-main-blue)](https://tttapa.github.io/batmat/Doxygen)
+[![CI: Linux](https://github.com/tttapa/batmat/actions/workflows/linux.yml/badge.svg)](https://github.com/tttapa/batmat/actions/workflows/linux.yml)
+[![GitHub License](https://img.shields.io/github/license/tttapa/batmat?label=License&logo=gnu)](https://github.com/tttapa/batmat/blob/main/LICENSE)
+
 <p align="center"><img src="docs/batmat-small.png" alt="batmat logo" width=160></p>
 
 # batmat
@@ -17,6 +21,11 @@ Custom linear algebra routines then operate on all matrices in a batch simultane
   <img src="docs/interleaved-light.svg" alt="visualization of batched matrices">
 </picture>
 </p>
+
+## Documentation
+
+- [Examples](https://tttapa.github.io/batmat/Doxygen/examples.html)
+- [API documentation](https://tttapa.github.io/batmat/Doxygen/topics.html)
 
 ## Supported routines
 
@@ -124,8 +133,10 @@ cmake --build --preset conan-release
 > See [scripts/dev/profiles/laptop](scripts/dev/profiles/laptop) for an example.
 
 GCC 14 or later is required (and can be installed through Conan).
-Clang is also supported, but this requires the `-o\&:with_gsi_hpc_simd=True` option to be passed to Conan
-to enable support for the GSI-HPC SIMD library (Clang does not support libstdc++'s `<experimental/simd>` header).
+Clang is also supported, although older versions of Clang may require the
+`-o\&:with_gsi_hpc_simd=True` option to be passed to Conan to enable support for the
+[GSI-HPC/simd](https://github.com/GSI-HPC/simd) library. Intel's LLVM-based ICX compiler is also
+supported.
 
 ## Benchmarks
 
