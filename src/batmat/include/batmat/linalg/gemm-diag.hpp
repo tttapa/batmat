@@ -115,6 +115,38 @@ void gemm_diag_add(VA &&A, VB &&B, VD &&D, Vd &&d, Opts... opts) {
     gemm_diag_add(A, B, D, D, d, opts...);
 }
 
+/// D = C - A diag(d) B
+template <simdifiable VA, simdifiable VB, simdifiable VC, simdifiable VD, simdifiable Vd,
+          detail::gemm_diag::track_zeros_opt... Opts>
+    requires simdify_compatible<VA, VB, VC, VD, Vd>
+void gemm_diag_sub(VA &&A, VB &&B, VC &&C, VD &&D, Vd &&d, Opts... opts) {
+    constexpr auto conf = detail::gemm_diag::apply_options({.negate = true}, opts...);
+    detail::gemm_diag::gemm_diag<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
+        simdify(A).as_const(), simdify(B).as_const(), std::make_optional(simdify(C).as_const()),
+        simdify(D), simdify(d).as_const());
+}
+/// D -= A diag(d) B
+template <simdifiable VA, simdifiable VB, simdifiable VD, simdifiable Vd,
+          detail::gemm_diag::track_zeros_opt... Opts>
+    requires simdify_compatible<VA, VB, VD, Vd>
+void gemm_diag_sub(VA &&A, VB &&B, VD &&D, Vd &&d, Opts... opts) {
+    gemm_diag_sub(A, B, D, D, d, opts...);
+}
+
+/// D = A diag(d) Aᵀ with D symmetric
+template <MatrixStructure SC, simdifiable VA, simdifiable VD, simdifiable Vd,
+          detail::gemm_diag::track_zeros_opt... Opts>
+    requires simdify_compatible<VA, VD, Vd>
+void syrk_diag(VA &&A, Structured<VD, SC> D, Vd &&d, Opts... opts) {
+    static_assert(SC != MatrixStructure::General);
+    std::optional<decltype(simdify(D.value).as_const())> null;
+    constexpr auto conf =
+        detail::gemm_diag::apply_options({.negate = false, .struc_C = SC}, opts...);
+    detail::gemm_diag::gemm_diag<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
+        simdify(A).as_const(), simdify(A).as_const().transposed(), null, simdify(D.value),
+        simdify(d).as_const());
+}
+
 /// D = C + A diag(d) Aᵀ with C, D symmetric
 template <MatrixStructure SC, simdifiable VA, simdifiable VC, simdifiable VD, simdifiable Vd,
           detail::gemm_diag::track_zeros_opt... Opts>
@@ -133,6 +165,26 @@ template <MatrixStructure SC, simdifiable VA, simdifiable VD, simdifiable Vd,
     requires simdify_compatible<VA, VD, Vd>
 void syrk_diag_add(VA &&A, Structured<VD, SC> D, Vd &&d, Opts... opts) {
     syrk_diag_add(A, D, D, d, opts...);
+}
+
+/// D = C - A diag(d) Aᵀ with C, D symmetric
+template <MatrixStructure SC, simdifiable VA, simdifiable VC, simdifiable VD, simdifiable Vd,
+          detail::gemm_diag::track_zeros_opt... Opts>
+    requires simdify_compatible<VA, VC, VD, Vd>
+void syrk_diag_sub(VA &&A, Structured<VC, SC> C, Structured<VD, SC> D, Vd &&d, Opts... opts) {
+    static_assert(SC != MatrixStructure::General);
+    constexpr auto conf =
+        detail::gemm_diag::apply_options({.negate = true, .struc_C = SC}, opts...);
+    detail::gemm_diag::gemm_diag<simdified_value_t<VA>, simdified_abi_t<VA>, conf>(
+        simdify(A).as_const(), simdify(A).as_const().transposed(),
+        std::make_optional(simdify(C.value).as_const()), simdify(D.value), simdify(d).as_const());
+}
+/// D -= A diag(d) Aᵀ with D symmetric
+template <MatrixStructure SC, simdifiable VA, simdifiable VD, simdifiable Vd,
+          detail::gemm_diag::track_zeros_opt... Opts>
+    requires simdify_compatible<VA, VD, Vd>
+void syrk_diag_sub(VA &&A, Structured<VD, SC> D, Vd &&d, Opts... opts) {
+    syrk_diag_sub(A, D, D, d, opts...);
 }
 
 /// @}
