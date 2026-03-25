@@ -1,0 +1,371 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="micro-kernels_2hyhound_8hpp" kind="file" language="C++">
+    <compoundname>hyhound.hpp</compoundname>
+    <includes refid="structure_8hpp" local="no">batmat/linalg/structure.hpp</includes>
+    <includes refid="uview_8hpp" local="no">batmat/linalg/uview.hpp</includes>
+    <includes refid="lut_8hpp" local="no">batmat/lut.hpp</includes>
+    <includes refid="platform_8hpp" local="no">batmat/platform/platform.hpp</includes>
+    <includes refid="simd_8hpp" local="no">batmat/simd.hpp</includes>
+    <includedby refid="hyhound_8hpp" local="no">batmat/include/batmat/linalg/hyhound.hpp</includedby>
+    <includedby refid="hyhound_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/hyhound.tpp</includedby>
+    <incdepgraph>
+      <node id="5">
+        <label>batmat/assume.hpp</label>
+        <link refid="assume_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/micro-kernels/hyhound.hpp</label>
+        <link refid="micro-kernels_2hyhound_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/linalg/structure.hpp</label>
+        <link refid="structure_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>batmat/linalg/uview.hpp</label>
+        <link refid="uview_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>batmat/lut.hpp</label>
+        <link refid="lut_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+      </node>
+      <node id="16">
+        <label>batmat/matrix/layout.hpp</label>
+        <link refid="layout_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>batmat/matrix/matrix.hpp</label>
+        <link refid="matrix_8hpp"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>batmat/matrix/storage.hpp</label>
+        <link refid="storage_8hpp"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>batmat/matrix/view.hpp</label>
+        <link refid="view_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+      </node>
+      <node id="26">
+        <label>generic.hpp</label>
+        <link refid="generic_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="25">
+        <label>batmat/platform/platform.hpp</label>
+        <link refid="platform_8hpp"/>
+        <childnode refid="26" relation="include">
+        </childnode>
+      </node>
+      <node id="19">
+        <label>batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="20">
+        <label>batmat/unroll.h</label>
+        <link refid="unroll_8h"/>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>batmat/config.hpp</label>
+      </node>
+      <node id="10">
+        <label>cstddef</label>
+      </node>
+      <node id="3">
+        <label>cstdint</label>
+      </node>
+      <node id="22">
+        <label>experimental/simd</label>
+      </node>
+      <node id="7">
+        <label>guanaqo/assume.hpp</label>
+      </node>
+      <node id="24">
+        <label>guanaqo/lut.hpp</label>
+      </node>
+      <node id="17">
+        <label>guanaqo/mat-view.hpp</label>
+      </node>
+      <node id="21">
+        <label>guanaqo/stringify.h</label>
+      </node>
+      <node id="11">
+        <label>memory</label>
+      </node>
+      <node id="12">
+        <label>new</label>
+      </node>
+      <node id="13">
+        <label>tuple</label>
+      </node>
+      <node id="14">
+        <label>type_traits</label>
+      </node>
+      <node id="18">
+        <label>utility</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>batmat/include/batmat/linalg/hyhound.hpp</label>
+        <link refid="hyhound_8hpp"/>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/micro-kernels/hyhound.hpp</label>
+        <link refid="micro-kernels_2hyhound_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>batmat/include/batmat/linalg/micro-kernels/hyhound.tpp</label>
+        <link refid="hyhound_8tpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig" prot="public">batmat::linalg::micro_kernels::hyhound::KernelConfig</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor" prot="public">batmat::linalg::micro_kernels::hyhound::triangular_accessor</innerclass>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg">batmat::linalg</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels">batmat::linalg::micro_kernels</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound">batmat::linalg::micro_kernels::hyhound</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="structure_8hpp" kindref="compound">batmat/linalg/structure.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="uview_8hpp" kindref="compound">batmat/linalg/uview.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="lut_8hpp" kindref="compound">batmat/lut.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="platform_8hpp" kindref="compound">batmat/platform/platform.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="simd_8hpp" kindref="compound">batmat/simd.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound" kindref="compound">batmat::linalg::micro_kernels::hyhound</ref><sp/>{</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig" kindref="compound">KernelConfig</ref><sp/>{</highlight></codeline>
+<codeline lineno="12" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig_1a31c3bba85790248bed8fb38a1f1f3dfe" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig_1a31c3bba85790248bed8fb38a1f1f3dfe" kindref="member">sign_only</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>index_t<sp/>R&gt;</highlight></codeline>
+<codeline lineno="16" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a5995b63560f6b15e30a125b2720b2356" kindref="member">triangular_accessor</ref><sp/>{</highlight></codeline>
+<codeline lineno="17" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1afa8f369fd24e2708c635281a43909a1d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1afa8f369fd24e2708c635281a43909a1d" kindref="member">value_type</ref><sp/>=<sp/>T;</highlight></codeline>
+<codeline lineno="18" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1ab4b3fa290541bb2ac0146cb74f0fdc4e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1afa8f369fd24e2708c635281a43909a1d" kindref="member">value_type</ref><sp/>*<ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1ab4b3fa290541bb2ac0146cb74f0fdc4e" kindref="member">data</ref>;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a262f082a28c9fb852ee9cbbed951946f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a262f082a28c9fb852ee9cbbed951946f" kindref="member">simd</ref><sp/>=<sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;std::remove_const_t&lt;T&gt;</ref>,<sp/>Abi&gt;;</highlight></codeline>
+<codeline lineno="21" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1abbaeef8d7a419bb798becd0be102f8b7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>ptrdiff_t<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1abbaeef8d7a419bb798becd0be102f8b7" kindref="member">inner_stride</ref><sp/>=</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1datapar_1a497d8b4d202d9476ad67782ba4d4feef" kindref="member">datapar::simd_size&lt;std::remove_const_t&lt;T&gt;</ref>,<sp/>Abi&gt;::value;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a36a6f8d50cbda068014b967bb083644c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>index_t<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a36a6f8d50cbda068014b967bb083644c" kindref="member">num_elem_per_layer</ref>()<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>R<sp/>*<sp/>(R<sp/>+<sp/>1)<sp/>/<sp/>2;<sp/>}</highlight></codeline>
+<codeline lineno="25" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1ab095b675ae75c8067d51f54879b89f02" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1ab095b675ae75c8067d51f54879b89f02" kindref="member">size</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>simd::size()<sp/>*<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">size_t</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(<ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a36a6f8d50cbda068014b967bb083644c" kindref="member">num_elem_per_layer</ref>());</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="28" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a7083bc5946791f214dd96a8722220681" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a7083bc5946791f214dd96a8722220681" kindref="member">alignment</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1a3cbb75e6685dbd98807439ac0dca33f0" kindref="member">datapar::simd_align&lt;std::remove_const_t&lt;T&gt;</ref>,<sp/>Abi&gt;::value;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1ab80a561645f64c354895dff50f2a66a6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1afa8f369fd24e2708c635281a43909a1d" kindref="member">value_type</ref><sp/>&amp;<ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1ab80a561645f64c354895dff50f2a66a6" kindref="member">operator()</ref>(index_t<sp/>r,<sp/>index_t<sp/>c)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>assert(r<sp/>&lt;=<sp/>c);</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1ab4b3fa290541bb2ac0146cb74f0fdc4e" kindref="member">data</ref>[(r<sp/>+<sp/>c<sp/>*<sp/>(c<sp/>+<sp/>1)<sp/>/<sp/>2)<sp/>*<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1abbaeef8d7a419bb798becd0be102f8b7" kindref="member">inner_stride</ref>];</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="36" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a23a9f7bb395de61508dec3a814e27047" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a262f082a28c9fb852ee9cbbed951946f" kindref="member">simd</ref><sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a23a9f7bb395de61508dec3a814e27047" kindref="member">load</ref>(index_t<sp/>r,<sp/>index_t<sp/>c)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1a9e5512aee8f62a9475578de6da9dd666" kindref="member">datapar::aligned_load&lt;simd&gt;</ref>(&amp;</highlight><highlight class="keyword">operator</highlight><highlight class="normal">()(r,<sp/>c));</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="39" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a5a83ef79c92e418a4d144662ed103c73" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a5a83ef79c92e418a4d144662ed103c73" kindref="member">store</ref>(<ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a262f082a28c9fb852ee9cbbed951946f" kindref="member">simd</ref><sp/>x,<sp/>index_t<sp/>r,<sp/>index_t<sp/>c)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal">(!std::is_const_v&lt;T&gt;)</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1datapar_1a37a115c835b05841a7f348320e1e43b6" kindref="member">datapar::aligned_store</ref>(x,<sp/>&amp;</highlight><highlight class="keyword">operator</highlight><highlight class="normal">()(r,<sp/>c));</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a5995b63560f6b15e30a125b2720b2356" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a5995b63560f6b15e30a125b2720b2356" kindref="member">triangular_accessor</ref>(<ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1afa8f369fd24e2708c635281a43909a1d" kindref="member">value_type</ref><sp/>*<ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1ab4b3fa290541bb2ac0146cb74f0fdc4e" kindref="member">data</ref>)<sp/>noexcept<sp/>:<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1ab4b3fa290541bb2ac0146cb74f0fdc4e" kindref="member">data</ref>{<ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1ab4b3fa290541bb2ac0146cb74f0fdc4e" kindref="member">data</ref>}<sp/>{}</highlight></codeline>
+<codeline lineno="46" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a1ca072a85d83085c1c6af895a95cc7a2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">operator</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a5995b63560f6b15e30a125b2720b2356" kindref="member">triangular_accessor&lt;const T, Abi, R&gt;</ref>()<sp/>const<sp/>noexcept<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{<ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1ab4b3fa290541bb2ac0146cb74f0fdc4e" kindref="member">data</ref>};<sp/>}</highlight></codeline>
+<codeline lineno="47"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="50" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1af145fe6484342df29f95f704cd780e99" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>index_t<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1af145fe6484342df29f95f704cd780e99" kindref="member">SizeR</ref><sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">gemm::RowsReg&lt;T, Abi&gt;</ref>;<sp/></highlight><highlight class="comment">//<sp/>TODO</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="52" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a58926d525a534c2f5b9c3a74495fc131" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>index_t<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a58926d525a534c2f5b9c3a74495fc131" kindref="member">SizeS</ref><sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">gemm::RowsReg&lt;T, Abi&gt;</ref>;<sp/></highlight><highlight class="comment">//<sp/>TODO</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>index_t<sp/>R,<sp/>StorageOrder<sp/>OL,<sp/>StorageOrder<sp/>OA&gt;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a9c8b334cabf1bbba060325ee859a1c7b" kindref="member">hyhound_diag_diag_microkernel</ref>(index_t<sp/>kA,<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor" kindref="compound">triangular_accessor</ref>&lt;T,<sp/>Abi,<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1af145fe6484342df29f95f704cd780e99" kindref="member">SizeR&lt;T, Abi&gt;</ref>&gt;<sp/>W,</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, OL&gt;</ref><sp/>L,<sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, OA&gt;</ref><sp/>A,</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, StorageOrder::ColMajor&gt;</ref><sp/>diag)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>index_t<sp/>R,<sp/>StorageOrder<sp/>OL,<sp/>StorageOrder<sp/>OA&gt;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a1ceb252ea60212d3273bcd59dcb46ba8" kindref="member">hyhound_diag_full_microkernel</ref>(index_t<sp/>kA,<sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, OL&gt;</ref><sp/>L,<sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, OA&gt;</ref><sp/>A,</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, StorageOrder::ColMajor&gt;</ref><sp/>diag)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87afc4eafa57bfbf59fdc46f9cbfacf2" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">enum<sp/>class</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87afc4eafa57bfbf59fdc46f9cbfacf2" kindref="member">Structure</ref><sp/>{</highlight></codeline>
+<codeline lineno="64" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87afc4eafa57bfbf59fdc46f9cbfacf2a0db377921f4ce762c62526131097968f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87afc4eafa57bfbf59fdc46f9cbfacf2a0db377921f4ce762c62526131097968f" kindref="member">General</ref><sp/>=<sp/>0,</highlight></codeline>
+<codeline lineno="65" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87afc4eafa57bfbf59fdc46f9cbfacf2ad7ed4ee1df437474d005188535f74875" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87afc4eafa57bfbf59fdc46f9cbfacf2ad7ed4ee1df437474d005188535f74875" kindref="member">Zero</ref><sp/><sp/><sp/><sp/>=<sp/>1,</highlight></codeline>
+<codeline lineno="66" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87afc4eafa57bfbf59fdc46f9cbfacf2a19de5b94f7b83900d4b296d9fa491aec" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87afc4eafa57bfbf59fdc46f9cbfacf2a19de5b94f7b83900d4b296d9fa491aec" kindref="member">Upper</ref><sp/><sp/><sp/>=<sp/>2,</highlight></codeline>
+<codeline lineno="67"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/>KernelConfig<sp/>Conf,<sp/>index_t<sp/>R,<sp/>index_t<sp/>S,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OL,</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OA,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OB&gt;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a534cdfdc1e56dcd5573a5fc39eac7176" kindref="member">hyhound_diag_tail_microkernel</ref>(index_t<sp/>kA_in_offset,<sp/>index_t<sp/>kA_in,<sp/>index_t<sp/>k,</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>triangular_accessor&lt;</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>T,<sp/>Abi,<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1af145fe6484342df29f95f704cd780e99" kindref="member">SizeR&lt;T, Abi&gt;</ref>&gt;<sp/>W,</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, OL&gt;</ref><sp/>L,<sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, OA&gt;</ref><sp/>A_in,</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, OA&gt;</ref><sp/>A_out,<sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, OB&gt;</ref><sp/>B,</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, StorageOrder::ColMajor&gt;</ref><sp/>diag,</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87afc4eafa57bfbf59fdc46f9cbfacf2" kindref="member">Structure</ref><sp/>struc_L,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>rotate_A)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>StorageOrder<sp/>OL,<sp/>StorageOrder<sp/>OA&gt;</highlight></codeline>
+<codeline lineno="79" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1ad3da8ec66ed4392d5a8fa58792418319" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constinit</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1ad3da8ec66ed4392d5a8fa58792418319" kindref="member">microkernel_diag_lut</ref><sp/>=</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__topic-utils_1ga91b0a07e3a00c803e9859ace6b86828f" kindref="member">make_1d_lut&lt;SizeR&lt;T, Abi&gt;</ref>&gt;([]&lt;index_t<sp/>Row&gt;(<ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant&lt;Row&gt;</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a9c8b334cabf1bbba060325ee859a1c7b" kindref="member">hyhound_diag_diag_microkernel&lt;T, Abi, Conf, Row + 1, OL, OA&gt;</ref>;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>StorageOrder<sp/>OL,<sp/>StorageOrder<sp/>OA&gt;</highlight></codeline>
+<codeline lineno="85" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a1eeba000f2874ce2b2cb2dcec0364ac5" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constinit</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a1eeba000f2874ce2b2cb2dcec0364ac5" kindref="member">microkernel_full_lut</ref><sp/>=</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__topic-utils_1ga91b0a07e3a00c803e9859ace6b86828f" kindref="member">make_1d_lut&lt;SizeR&lt;T, Abi&gt;</ref>&gt;([]&lt;index_t<sp/>Row&gt;(<ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant&lt;Row&gt;</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a1ceb252ea60212d3273bcd59dcb46ba8" kindref="member">hyhound_diag_full_microkernel&lt;T, Abi, Conf, Row + 1, OL, OA&gt;</ref>;</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>StorageOrder<sp/>OL,<sp/>StorageOrder<sp/>OA,<sp/>StorageOrder<sp/>OB&gt;</highlight></codeline>
+<codeline lineno="91" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1ac6e03ac9e4fdb208e1225bc18b9aaf3a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constinit</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1ac6e03ac9e4fdb208e1225bc18b9aaf3a" kindref="member">microkernel_tail_lut</ref><sp/>=</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__topic-utils_1ga91b0a07e3a00c803e9859ace6b86828f" kindref="member">make_1d_lut&lt;SizeS&lt;T, Abi&gt;</ref>&gt;([]&lt;index_t<sp/>Row&gt;(<ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant&lt;Row&gt;</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a534cdfdc1e56dcd5573a5fc39eac7176" kindref="member">hyhound_diag_tail_microkernel&lt;T, Abi, Conf, SizeR&lt;T, Abi&gt;</ref>,<sp/>Row<sp/>+<sp/>1,<sp/>OL,<sp/>OA,<sp/>OB&gt;;</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>StorageOrder<sp/>OL,<sp/>StorageOrder<sp/>OA,<sp/>StorageOrder<sp/>OB&gt;</highlight></codeline>
+<codeline lineno="97" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1abeb33e38dd44a95e55b5130c05592091" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constinit</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1abeb33e38dd44a95e55b5130c05592091" kindref="member">microkernel_tail_lut_2</ref><sp/>=<sp/><ref refid="group__topic-utils_1gae259627b9bd8c02e66d1e244c969e2bc" kindref="member">make_2d_lut&lt;SizeR&lt;T, Abi&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a58926d525a534c2f5b9c3a74495fc131" kindref="member">SizeS&lt;T, Abi&gt;</ref>&gt;(</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/>[]&lt;index_t<sp/>NR,<sp/>index_t<sp/>NS&gt;(<ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant&lt;NR&gt;</ref>,<sp/><ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant&lt;NS&gt;</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a534cdfdc1e56dcd5573a5fc39eac7176" kindref="member">hyhound_diag_tail_microkernel&lt;T, Abi, Conf, NR + 1, NS + 1, OL, OA, OB&gt;</ref>;</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Helper<sp/>function<sp/>to<sp/>compute<sp/>size<sp/>of<sp/>the<sp/>storage<sp/>for<sp/>the<sp/>matrix<sp/>W<sp/>(part<sp/>of<sp/>the<sp/>hyperbolic</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Householder<sp/>representation).</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>StorageOrder<sp/>OL&gt;</highlight></codeline>
+<codeline lineno="105" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87d65ca6b3a6b9d06c62258aed33fab8" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::pair&lt;index_t,<sp/>index_t&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87d65ca6b3a6b9d06c62258aed33fab8" kindref="member">hyhound_W_size</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL&gt;</ref><sp/>L)<sp/>{</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant&lt;SizeR&lt;std::remove_const_t&lt;T&gt;</ref>,<sp/>Abi&gt;&gt;<sp/>R;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">W_t<sp/>=<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor" kindref="compound">triangular_accessor&lt;std::remove_const_t&lt;T&gt;</ref>,<sp/>Abi,<sp/>R&gt;;</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{W_t::num_elem_per_layer(),<sp/>(L.cols()<sp/>+<sp/>R<sp/>-<sp/>1)<sp/>/<sp/>R};</highlight></codeline>
+<codeline lineno="109"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Low-level<sp/>register-blocked<sp/>routines</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/>KernelConfig<sp/>Conf<sp/>=<sp/>{},<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OL<sp/>=<sp/>StorageOrder::ColMajor,</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OA<sp/>=<sp/>StorageOrder::ColMajor&gt;</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a2c5a2006331870dacb985bf041677d2f" kindref="member">hyhound_diag_register</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL&gt;</ref><sp/>L,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OA&gt;</ref><sp/>A,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>D)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/>KernelConfig<sp/>Conf<sp/>=<sp/>{},<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OL<sp/>=<sp/>StorageOrder::ColMajor,</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OA<sp/>=<sp/>StorageOrder::ColMajor&gt;</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a2c5a2006331870dacb985bf041677d2f" kindref="member">hyhound_diag_register</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL&gt;</ref><sp/>L,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OA&gt;</ref><sp/>A,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>D,</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi&gt;</ref><sp/>W)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/>KernelConfig<sp/>Conf<sp/>=<sp/>{},<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OL<sp/>=<sp/>StorageOrder::ColMajor,</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OA<sp/>=<sp/>StorageOrder::ColMajor&gt;</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1aaf3bb7241f5671570517c0b5a3319741" kindref="member">hyhound_diag_apply_register</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL&gt;</ref><sp/>L,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OA&gt;</ref><sp/>Ain,</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OA&gt;</ref><sp/>Aout,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OA&gt;</ref><sp/>B,</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>D,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>W,</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>index_t<sp/>kA_in_offset<sp/>=<sp/>0)<sp/>noexcept;</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal">template<sp/>&lt;class<sp/>T,<sp/>class<sp/>Abi,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OL1<sp/>=<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref>::ColMajor,</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OA1<sp/>=<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref>::ColMajor,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OL2<sp/>=<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref>::ColMajor,</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OA2<sp/>=<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref>::ColMajor,<sp/>KernelConfig<sp/>Conf<sp/>=<sp/>{}&gt;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1ae92a1b550b2c03dd1a8bc9497d365b64" kindref="member">hyhound_diag_2_register</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL1&gt;</ref><sp/>L11,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OA1&gt;</ref><sp/>A1,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL2&gt;</ref><sp/>L21,</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OA2&gt;</ref><sp/>A2,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>D)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OL<sp/>=<sp/>StorageOrder::ColMajor,</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OW<sp/>=<sp/>StorageOrder::ColMajor,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OY<sp/>=<sp/>StorageOrder::ColMajor,</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OU<sp/>=<sp/>StorageOrder::ColMajor,<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig" kindref="compound">KernelConfig</ref><sp/>Conf<sp/>=<sp/>{}&gt;</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a296680bfcaddeb3c87b4da48edd2c531" kindref="member">hyhound_diag_cyclic_register</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL&gt;</ref><sp/>L11,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OW&gt;</ref><sp/>A1,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OY&gt;</ref><sp/>L21,</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OW&gt;</ref><sp/>A22,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OW&gt;</ref><sp/>A2_out,</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OU&gt;</ref><sp/>L31,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OW&gt;</ref><sp/>A31,</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OW&gt;</ref><sp/>A3_out,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>D)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"></highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OL<sp/>=<sp/>StorageOrder::ColMajor,</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OA<sp/>=<sp/>StorageOrder::ColMajor,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OLu<sp/>=<sp/>StorageOrder::ColMajor,</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OAu<sp/>=<sp/>StorageOrder::ColMajor,<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig" kindref="compound">KernelConfig</ref><sp/>Conf<sp/>=<sp/>{}&gt;</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a5180c328f7daee0ec80eb04fe70a8707" kindref="member">hyhound_diag_riccati_register</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL&gt;</ref><sp/>L11,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OA&gt;</ref><sp/>A1,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL&gt;</ref><sp/>L21,</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OA&gt;</ref><sp/>A2,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OA&gt;</ref><sp/>A2_out,</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OLu&gt;</ref><sp/>Lu1,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OAu&gt;</ref><sp/>Au_out,</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>D,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>shift_A_out)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight></codeline>
+<codeline lineno="150"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::linalg::micro_kernels::hyhound</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/linalg/micro-kernels/hyhound.hpp"/>
+  </compounddef>
+</doxygen>

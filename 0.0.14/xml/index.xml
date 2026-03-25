@@ -1,0 +1,1359 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.16.1" xml:lang="en-US">
+  <compound refid="structbatmat_1_1DefaultTimings" kind="struct"><name>batmat::DefaultTimings</name>
+    <member refid="structbatmat_1_1DefaultTimings_1aff53271edfb6ae2d0298aac409810c3d" kind="variable"><name>num_invocations</name></member>
+    <member refid="structbatmat_1_1DefaultTimings_1aef980ddec7421dc88141f844e8f886c3" kind="variable"><name>wall_time</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1cached__uview" kind="struct"><name>batmat::linalg::cached_uview</name>
+    <member refid="structbatmat_1_1linalg_1_1cached__uview_1a8e2f9db81dff43b91c0edaac613becd8" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1cached__uview_1a36a2f806209fdf679ea23f54474deb2c" kind="typedef"><name>types</name></member>
+    <member refid="structbatmat_1_1linalg_1_1cached__uview_1aa62482ac588c02254c8e9ed8ba45c31f" kind="typedef"><name>simd</name></member>
+    <member refid="structbatmat_1_1linalg_1_1cached__uview_1a21e50d2ee4b95d15fd4571f8386eaf57" kind="variable"><name>data</name></member>
+    <member refid="structbatmat_1_1linalg_1_1cached__uview_1a95a6c418dd1bf524de7746ca3d956257" kind="variable"><name>inner_stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1cached__uview_1a25193968b972a0287a22ac7b38b897a6" kind="function"><name>operator()</name></member>
+    <member refid="structbatmat_1_1linalg_1_1cached__uview_1a9243059b2b9e81a0db1654ea15c66161" kind="function"><name>load</name></member>
+    <member refid="structbatmat_1_1linalg_1_1cached__uview_1ab8195f3eafaaef631fc89df4e7984cb7" kind="function"><name>store</name></member>
+    <member refid="structbatmat_1_1linalg_1_1cached__uview_1a2c204d90b25dc7a0d661c3791748b993" kind="function"><name>cached_uview</name></member>
+    <member refid="structbatmat_1_1linalg_1_1cached__uview_1a6fdf9bb04d18ec5ba460ca105f6714bd" kind="function"><name>cached_uview</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig" kind="struct"><name>batmat::linalg::detail::copy::CopyConfig</name>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig_1a5cd259cce90a6051d960624bab1569c5" kind="variable"><name>rotate</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig_1a9ef690d1d341c35f6fa331f17cef1af6" kind="variable"><name>mask</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig_1a19f186e31d7ac6769559737cd2b61d11" kind="variable"><name>struc</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1FillConfig" kind="struct"><name>batmat::linalg::detail::copy::FillConfig</name>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1FillConfig_1a426f6c59a65766c3ae904f980e15a081" kind="variable"><name>mask</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1FillConfig_1a9257a8791ee3a6a2ec59b1afd5f74f4f" kind="variable"><name>struc</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1simdified__abi" kind="struct"><name>batmat::linalg::detail::simdified_abi</name>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1simdified__abi_3_01V_01_4" kind="struct"><name>batmat::linalg::detail::simdified_abi&lt; V &gt;</name>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__abi_3_01V_01_4_1aaf7acd51815c83665738fe8461d42714" kind="typedef"><name>type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__abi_3_01V_01_4_1a20d874d8ca07af098fb5719bf54083e6" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type" kind="struct"><name>batmat::linalg::detail::simdified_multi_view_type</name>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1Matrix_a2d75434e5018f0cd47dbc6912dd16bf" kind="struct"><name>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::Matrix&lt; T, I, S, I, O, A &gt; &gt;</name>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1Matrix_a2d75434e5018f0cd47dbc6912dd16bf_1aa8289544c5d14d04ca592adf9b5f1343" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1Matrix_a2d75434e5018f0cd47dbc6912dd16bf_1a05011750bfe65ec247c3425d33e73e32" kind="typedef"><name>abi_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1Matrix_a2d75434e5018f0cd47dbc6912dd16bf_1aa5028cf55c9328ae1ab2539977f71296" kind="typedef"><name>simd_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1Matrix_a2d75434e5018f0cd47dbc6912dd16bf_1a217a4bac1cd8b43c218b49d28f2b7e30" kind="typedef"><name>stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1Matrix_a2d75434e5018f0cd47dbc6912dd16bf_1a66c3c5d91b733fc0eb0abbf9591e9527" kind="typedef"><name>alignment</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1Matrix_a2d75434e5018f0cd47dbc6912dd16bf_1ae794656df8a3b6301da5a099bf2b4e8b" kind="typedef"><name>layer_stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1Matrix_a2d75434e5018f0cd47dbc6912dd16bf_1a3a7e6ef79969ef95f4c8d02efe5f004a" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5" kind="struct"><name>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</name>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1aec98852e728336499f5d6b1054089874" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1aef476382e7fce819e831791018598dab" kind="typedef"><name>abi_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1a37e9acf5b1260a7c1c1c516d3b4bc040" kind="typedef"><name>simd_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1a8e7731798e98d3b79f72162f7c101bea" kind="typedef"><name>stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1a229dff70dc489f4137389d3e91f0342b" kind="typedef"><name>alignment</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1ac18c64e9d6a508112b72b8819161b37d" kind="typedef"><name>layer_stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1ad84661674b890c50128f410a21c4a93f" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_68d714009fb08972c65f60674f881d94" kind="struct"><name>batmat::linalg::detail::simdified_multi_view_type&lt; const batmat::matrix::Matrix&lt; T, I, S, I, O, A &gt; &gt;</name>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_68d714009fb08972c65f60674f881d94_1a020c41306b6aa32f28695acf7f0177d9" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_68d714009fb08972c65f60674f881d94_1a4f5c08cec3a99072d7c98790329e6895" kind="typedef"><name>abi_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_68d714009fb08972c65f60674f881d94_1a3b98c8141d1b53be3c0746956e15fc10" kind="typedef"><name>simd_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_68d714009fb08972c65f60674f881d94_1a6994528237a20aca70757b0ed8d4c12e" kind="typedef"><name>stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_68d714009fb08972c65f60674f881d94_1a43ec353bbb67ec8538ebcb3ed328b83b" kind="typedef"><name>alignment</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_68d714009fb08972c65f60674f881d94_1a1d8e0bf71564158936bf255c31fba90a" kind="typedef"><name>layer_stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_68d714009fb08972c65f60674f881d94_1ad54415f56e375906e750b4de979eec47" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_33bea5f89420c1479536e5641dd6559d" kind="struct"><name>batmat::linalg::detail::simdified_multi_view_type&lt; const batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</name>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_33bea5f89420c1479536e5641dd6559d_1aeb020f6107f7b908f648049e812c80fe" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_33bea5f89420c1479536e5641dd6559d_1a4dcbbc82ef7ba39efa01820ef0c07dac" kind="typedef"><name>abi_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_33bea5f89420c1479536e5641dd6559d_1a611882ae4ad9bbc1a5455f15ca7a977b" kind="typedef"><name>simd_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_33bea5f89420c1479536e5641dd6559d_1ae3411a7ac00a8a563bb3114a365003da" kind="typedef"><name>stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_33bea5f89420c1479536e5641dd6559d_1a0531b218c698a62ba9e3257976a04a9a" kind="typedef"><name>alignment</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_33bea5f89420c1479536e5641dd6559d_1a7d507ebed8d78c49e8290c8ac630cb97" kind="typedef"><name>layer_stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_33bea5f89420c1479536e5641dd6559d_1a28aaa3e5c18d5c9790b80c5d4dec1283" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1simdified__value" kind="struct"><name>batmat::linalg::detail::simdified_value</name>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1simdified__value_3_01V_01_4" kind="struct"><name>batmat::linalg::detail::simdified_value&lt; V &gt;</name>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__value_3_01V_01_4_1ad2024d4d854679a3647499f8f96ed527" kind="typedef"><name>type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__value_3_01V_01_4_1a3cbd478efc89c022f04381fe0aabd9f9" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type" kind="struct"><name>batmat::linalg::detail::simdified_view_type</name>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1Matrix_3_01T_02011ca1015d066513d24349619a4283a" kind="struct"><name>batmat::linalg::detail::simdified_view_type&lt; batmat::matrix::Matrix&lt; T, I, S, S, O, A &gt; &gt;</name>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1Matrix_3_01T_02011ca1015d066513d24349619a4283a_1a764bbd7149a3f99331a706938fa30ee9" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1Matrix_3_01T_02011ca1015d066513d24349619a4283a_1af27b84610f7df8ef853b63b1574ce1b3" kind="typedef"><name>abi_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1Matrix_3_01T_02011ca1015d066513d24349619a4283a_1a8181f30bb9976f8d4b43dcb89559ffa7" kind="typedef"><name>simd_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1Matrix_3_01T_02011ca1015d066513d24349619a4283a_1a5d74726b6c64d40ee7957255aafa4a40" kind="typedef"><name>stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1Matrix_3_01T_02011ca1015d066513d24349619a4283a_1ae4708e91e6763ce4feed7f164a3bdcfa" kind="typedef"><name>alignment</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1Matrix_3_01T_02011ca1015d066513d24349619a4283a_1a1f673b2080aa98298603b557c47e8690" kind="typedef"><name>layer_stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1Matrix_3_01T_02011ca1015d066513d24349619a4283a_1abe74295e4fd8675c68bcdde822010aae" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1View_3_01T_00_6c276fa58d30c8a61a58492532979869" kind="struct"><name>batmat::linalg::detail::simdified_view_type&lt; batmat::matrix::View&lt; T, index_t, S, S, L, O &gt; &gt;</name>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1View_3_01T_00_6c276fa58d30c8a61a58492532979869_1a9f1f5d4c59f0d3cc43f9f58ee00124ce" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1View_3_01T_00_6c276fa58d30c8a61a58492532979869_1a8417863a293ce886024e754731a12142" kind="typedef"><name>abi_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1View_3_01T_00_6c276fa58d30c8a61a58492532979869_1a7a96f6b5fcf76fc4b0414ab1727e7b6d" kind="typedef"><name>simd_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1View_3_01T_00_6c276fa58d30c8a61a58492532979869_1a7dba19849db15ec6ec627d1c128592c5" kind="typedef"><name>stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1View_3_01T_00_6c276fa58d30c8a61a58492532979869_1aa0a569bc6f1e073899c74e1095b87dcf" kind="typedef"><name>alignment</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1View_3_01T_00_6c276fa58d30c8a61a58492532979869_1adeb2c1abba0bdc5256c7e693438d83b2" kind="typedef"><name>layer_stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1View_3_01T_00_6c276fa58d30c8a61a58492532979869_1a55acb82ca6d2bb553cbbbb3307c62342" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1Matrix2f013e9bf729f69bd71be2becf75521d" kind="struct"><name>batmat::linalg::detail::simdified_view_type&lt; const batmat::matrix::Matrix&lt; T, I, S, S, O, A &gt; &gt;</name>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1Matrix2f013e9bf729f69bd71be2becf75521d_1a55a99023898561b9884311c85ada778b" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1Matrix2f013e9bf729f69bd71be2becf75521d_1ae0b11ce26546e0e7d5f3c24bc0f04fba" kind="typedef"><name>abi_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1Matrix2f013e9bf729f69bd71be2becf75521d_1a6cb079cc17267f8a908ed741059b7e2c" kind="typedef"><name>simd_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1Matrix2f013e9bf729f69bd71be2becf75521d_1ac268f42d054c8518e0860935ce4b18ea" kind="typedef"><name>stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1Matrix2f013e9bf729f69bd71be2becf75521d_1a276fd3e77aa39eb63f4ac6f67dc15774" kind="typedef"><name>alignment</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1Matrix2f013e9bf729f69bd71be2becf75521d_1aa0fdea0a7b248cb124aec79d6d220fca" kind="typedef"><name>layer_stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1Matrix2f013e9bf729f69bd71be2becf75521d_1a1fe9aef73579a43dab0d35c7479f74cb" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1View_32dba1d643fdf8dda24f3695f783071e9" kind="struct"><name>batmat::linalg::detail::simdified_view_type&lt; const batmat::matrix::View&lt; T, index_t, S, S, L, O &gt; &gt;</name>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1View_32dba1d643fdf8dda24f3695f783071e9_1a229a15ebc8cb556ad3b8458f2d4b0e7e" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1View_32dba1d643fdf8dda24f3695f783071e9_1a88b1e43a6038cf3be1398e105508b18f" kind="typedef"><name>abi_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1View_32dba1d643fdf8dda24f3695f783071e9_1a558be7f2f8919c238368841a3b8ef665" kind="typedef"><name>simd_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1View_32dba1d643fdf8dda24f3695f783071e9_1a312ea5573ce35d0ccd659aa9e74ddabb" kind="typedef"><name>stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1View_32dba1d643fdf8dda24f3695f783071e9_1af5d18fb46c0d3c5e2e1d9349e7a115d5" kind="typedef"><name>alignment</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1View_32dba1d643fdf8dda24f3695f783071e9_1a3631860f2348c98528f04677d6c6a6ed" kind="typedef"><name>layer_stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1View_32dba1d643fdf8dda24f3695f783071e9_1a258df33f1f4e86446021ad9435f8f053" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01guanaqo_1_1MatrixView_3_010856bf788b5ff2bc105d0749e18010ef" kind="struct"><name>batmat::linalg::detail::simdified_view_type&lt; const guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</name>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01guanaqo_1_1MatrixView_3_010856bf788b5ff2bc105d0749e18010ef_1a1336e93e42e166cb5b19a77ea8ffd131" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01guanaqo_1_1MatrixView_3_010856bf788b5ff2bc105d0749e18010ef_1aa9ec01dcd870e6ecf70b7384bfbd9fc9" kind="typedef"><name>abi_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01guanaqo_1_1MatrixView_3_010856bf788b5ff2bc105d0749e18010ef_1a7e1918a830e7fc5609d5baf16d167631" kind="typedef"><name>simd_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01guanaqo_1_1MatrixView_3_010856bf788b5ff2bc105d0749e18010ef_1aaff5c3745f1e79a13a1685556ea42c7e" kind="typedef"><name>stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01guanaqo_1_1MatrixView_3_010856bf788b5ff2bc105d0749e18010ef_1ab1a3ca316ceb3f2636c0d74d3cffb77e" kind="typedef"><name>alignment</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01guanaqo_1_1MatrixView_3_010856bf788b5ff2bc105d0749e18010ef_1a4a91fa18d0601a26ab407fde11b60308" kind="typedef"><name>layer_stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01guanaqo_1_1MatrixView_3_010856bf788b5ff2bc105d0749e18010ef_1a3e22a1b9106757f133d903bc2663090f" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753" kind="struct"><name>batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</name>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a32882c347f623419db686d4536336a8e" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a5ac82738ce6f718fb0c5ba3a8899023f" kind="typedef"><name>abi_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a7aa6fddac76e40427b6f9022a2784deb" kind="typedef"><name>simd_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1a8806d41ca1cbf7a37c705af277a8bd2b" kind="typedef"><name>stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1aed10ca07cf410c0acff2d5a0cf867032" kind="typedef"><name>alignment</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1aeae8eaed743a5538a411a290c2f3b1a6" kind="typedef"><name>layer_stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753_1af1a7429564116c0bcd9807b3d8339eab" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kind="struct"><name>batmat::linalg::flops::FlopCount</name>
+    <member refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a28da3437266fe88ae51442fc0d2c8b31" kind="variable"><name>fma</name></member>
+    <member refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a6e018b00e1d427244c2957c78a9ae572" kind="variable"><name>mul</name></member>
+    <member refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a50d077939e212aaa9b4a1184521cbdbd" kind="variable"><name>add</name></member>
+    <member refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a2dadccf6759992d6143bdd662b25479b" kind="variable"><name>div</name></member>
+    <member refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1ae62283feb062751c55b8d56e5fdb9b4a" kind="variable"><name>sqrt</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig" kind="struct"><name>batmat::linalg::micro_kernels::gemm::KernelConfig</name>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a6937f14081ae940d272c7c464578a43b" kind="variable"><name>negate</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1ac07d69d32b78b4fd372f97c9d68ecad6" kind="variable"><name>shift_A</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1af7c4e1bd5fbdcbaac8a9d59cbcbaf731" kind="variable"><name>shift_B</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a42650cfb9258d04d593659b9990c8126" kind="variable"><name>rotate_C</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a95102697df9e6fda3d450aa887a3da47" kind="variable"><name>rotate_D</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a0f5606d67c564645801e662208877740" kind="variable"><name>mask_D</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a65ca04f142e3f848a91ba61e03672b9b" kind="variable"><name>struc_A</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a6892a56d289ad9c3c75dd2a21d7b2721" kind="variable"><name>struc_B</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1ad5be56833f315fc97ab30fd421e7c804" kind="variable"><name>struc_C</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1_1KernelConfig" kind="struct"><name>batmat::linalg::micro_kernels::gemm_diag::KernelConfig</name>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1_1KernelConfig_1a63008f895200c725ae06a16db50d69f8" kind="variable"><name>negate</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1_1KernelConfig_1a70cdd1a05da1d6764e1591202cf81329" kind="variable"><name>track_zeros</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1_1KernelConfig_1a3ac50215097efdc084e00923a4dbd18e" kind="variable"><name>struc_C</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig" kind="struct"><name>batmat::linalg::micro_kernels::gemv::KernelConfig</name>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig_1a4e3cdabc45fc55b8d4c03b622727c56f" kind="variable"><name>negate</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig_1aa8e49a43c4f99211ea7f3393d2517355" kind="variable"><name>shift_A</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig_1ae342b663e2f3624254fe3d3ab4535c43" kind="variable"><name>shift_B</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig_1a99299a5578f652fcb29f9497fb979b81" kind="variable"><name>rotate_C</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig_1a431afc40aa9c0caba784c811cefc356b" kind="variable"><name>rotate_D</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig_1a293c6e5c7b33f0381f5931f04472e0ff" kind="variable"><name>mask_D</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig" kind="struct"><name>batmat::linalg::micro_kernels::hyhound::KernelConfig</name>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig_1a31c3bba85790248bed8fb38a1f1f3dfe" kind="variable"><name>sign_only</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor" kind="struct"><name>batmat::linalg::micro_kernels::hyhound::triangular_accessor</name>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1afa8f369fd24e2708c635281a43909a1d" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a262f082a28c9fb852ee9cbbed951946f" kind="typedef"><name>simd</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1ab4b3fa290541bb2ac0146cb74f0fdc4e" kind="variable"><name>data</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1abbaeef8d7a419bb798becd0be102f8b7" kind="variable"><name>inner_stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a36a6f8d50cbda068014b967bb083644c" kind="function"><name>num_elem_per_layer</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1ab095b675ae75c8067d51f54879b89f02" kind="function"><name>size</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a7083bc5946791f214dd96a8722220681" kind="function"><name>alignment</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1ab80a561645f64c354895dff50f2a66a6" kind="function"><name>operator()</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a23a9f7bb395de61508dec3a814e27047" kind="function"><name>load</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a5a83ef79c92e418a4d144662ed103c73" kind="function"><name>store</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a5995b63560f6b15e30a125b2720b2356" kind="function"><name>triangular_accessor</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1triangular__accessor_1a1ca072a85d83085c1c6af895a95cc7a2" kind="function"><name>operator triangular_accessor&lt; const T, Abi, R &gt;</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig" kind="struct"><name>batmat::linalg::micro_kernels::potrf::KernelConfig</name>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a3e7683f0ba8402225c7348789af1e099" kind="enum"><name>@251003062227232146206006340175351212340342314017</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a3e7683f0ba8402225c7348789af1e099a154a31ef679d3225faff9555209943ab" kind="enumvalue"><name>none</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a3e7683f0ba8402225c7348789af1e099af0b291977ffe9a05d5456a1efb05554c" kind="enumvalue"><name>diag</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a3e7683f0ba8402225c7348789af1e099a886c4a3a3949d7b84fb8988e7eeda89d" kind="enumvalue"><name>diag_sign_only</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1ada105bb42463d5bbe94ce27ca7ac32a1" kind="variable"><name>negate_A</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a20833ec519481422bd9bc1631fa59868" kind="variable"><name>diag_A</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1ac48c38281b3af8627212821e877ece06" kind="variable"><name>struc_C</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a522fcb6201164793a58462099beb28a9" kind="function"><name>with_diag</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1micro__kernels_1_1symv_1_1KernelConfig" kind="struct"><name>batmat::linalg::micro_kernels::symv::KernelConfig</name>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1symv_1_1KernelConfig_1ad5a2b343f568479a9f1e26a3be0cea18" kind="variable"><name>negate</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1symv_1_1KernelConfig_1a83676632d804a7d416a670982a9e11ed" kind="variable"><name>struc_A</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1micro__kernels_1_1syomv_1_1KernelConfig" kind="struct"><name>batmat::linalg::micro_kernels::syomv::KernelConfig</name>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1syomv_1_1KernelConfig_1ab60c66844a684154501f40e7a2439503" kind="variable"><name>negate</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1syomv_1_1KernelConfig_1a48c2f7343ebcc17d3eb083a0d884787d" kind="variable"><name>struc_A</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1micro__kernels_1_1trsm_1_1KernelConfig" kind="struct"><name>batmat::linalg::micro_kernels::trsm::KernelConfig</name>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1trsm_1_1KernelConfig_1a8e32307e05ca1195474638ebc134ab9f" kind="variable"><name>struc_A</name></member>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1trsm_1_1KernelConfig_1a437cfa8f957dc0ff15a21cdb23888025" kind="variable"><name>rotate_B</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1micro__kernels_1_1trtri_1_1KernelConfig" kind="struct"><name>batmat::linalg::micro_kernels::trtri::KernelConfig</name>
+    <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1trtri_1_1KernelConfig_1aa482bc3e246cdcfb9f2f91376d9e7fc8" kind="variable"><name>struc</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1simd__view__types" kind="struct"><name>batmat::linalg::simd_view_types</name>
+    <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a3e4c25c327e2601ad1b9064219ddd175" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a55758cb5da1d68a5c7725952a85bc5e2" kind="typedef"><name>simd</name></member>
+    <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a19c154e6a5658f01ed58bc60cbebfad4" kind="typedef"><name>mask</name></member>
+    <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a3d993ac48ac2aa24ba37174846a99d5a" kind="typedef"><name>isimd</name></member>
+    <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a42c8cc3abab740150c78041ab96af477" kind="typedef"><name>simd_stride_t</name></member>
+    <member refid="structbatmat_1_1linalg_1_1simd__view__types_1ad69ca1678bb5cf57ac70a816a1455801" kind="typedef"><name>simd_align_t</name></member>
+    <member refid="structbatmat_1_1linalg_1_1simd__view__types_1aa6529f6b6d3cb02cf031e17adeda9e0d" kind="typedef"><name>one_t</name></member>
+    <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a6b4cea60e89e5b26e9780bb5a78f33cf" kind="typedef"><name>view</name></member>
+    <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a877ab4bf950c52ebb43cdb85928e5a86" kind="typedef"><name>multi_view</name></member>
+    <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a8b5cb1385562b1069a6f28123c4e440c" kind="typedef"><name>scalar_view</name></member>
+    <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a3ac560af57195eee28db8b413bfa3cd9" kind="typedef"><name>multi_scalar_view</name></member>
+    <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a811b12ff005bcdf582766586145bc4ba" kind="typedef"><name>matrix</name></member>
+    <member refid="structbatmat_1_1linalg_1_1simd__view__types_1af158ae038bbd6b881088c6425833723c" kind="variable"><name>simd_stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a546e2ba05c974811cb6aedc72f60a144" kind="variable"><name>simd_align</name></member>
+    <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a8783ebeb530f419aaaf36873cdadd876" kind="function"><name>aligned_load</name></member>
+    <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a12f35661aee4a078b8b0b15358c3df5f" kind="function"><name>aligned_store</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1Structured" kind="struct"><name>batmat::linalg::Structured</name>
+    <member refid="structbatmat_1_1linalg_1_1Structured_1ae24a0809b596274f8195c3eae3d170ed" kind="variable"><name>structure</name></member>
+    <member refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kind="variable"><name>value</name></member>
+    <member refid="structbatmat_1_1linalg_1_1Structured_1aede8ee78c22f9ea970c97fd679162cfa" kind="function"><name>Structured</name></member>
+    <member refid="structbatmat_1_1linalg_1_1Structured_1ad9a176fb3b45d863096acf053e30b0e2" kind="function"><name>Structured</name></member>
+    <member refid="structbatmat_1_1linalg_1_1Structured_1a76a579c4f5045b042173a1ad5dce3e5f" kind="function"><name>Structured</name></member>
+    <member refid="structbatmat_1_1linalg_1_1Structured_1a4b7bb6d67bc01e85aeb2f4c5480e6047" kind="function"><name>transposed</name></member>
+    <member refid="structbatmat_1_1linalg_1_1Structured_1acba7e7c24c669f93b6740af376cc3fb6" kind="function"><name>transposed</name></member>
+    <member refid="structbatmat_1_1linalg_1_1Structured_1a81f0feaa9abd00bfa623019877ed7863" kind="function"><name>ref</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1TilingOptions" kind="struct"><name>batmat::linalg::TilingOptions</name>
+    <member refid="structbatmat_1_1linalg_1_1TilingOptions_1ac4052babe5e1cf38480ebb8a9824df2a" kind="variable"><name>no_tiling</name></member>
+    <member refid="structbatmat_1_1linalg_1_1TilingOptions_1aed43d43bbff32aa2c9a388df55a8f21d" kind="variable"><name>pack_A</name></member>
+    <member refid="structbatmat_1_1linalg_1_1TilingOptions_1a570a1f3c2b4bcb38749fa88fc70da36b" kind="variable"><name>pack_B</name></member>
+    <member refid="structbatmat_1_1linalg_1_1TilingOptions_1abb9847e8b17cb93f3a857719a5ad4fc5" kind="variable"><name>n_c</name></member>
+    <member refid="structbatmat_1_1linalg_1_1TilingOptions_1af29d8cefd011b1b8664168eb4e6065f0" kind="variable"><name>k_c</name></member>
+    <member refid="structbatmat_1_1linalg_1_1TilingOptions_1a687685529c73d39f6d3deb88788183b0" kind="variable"><name>m_c</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1track__zeros__t" kind="struct"><name>batmat::linalg::track_zeros_t</name>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1uview" kind="struct"><name>batmat::linalg::uview</name>
+    <member refid="structbatmat_1_1linalg_1_1uview_1a08c194f0c3d89310e1de67b2418e1629" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1abe088c79c02da2d23e44191a5618f1f8" kind="typedef"><name>types</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1a124093dc1c7f0b3ecf7e1d1fa0e02076" kind="typedef"><name>view</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1a3f80ee6e462af097c6a2ed9531233e16" kind="typedef"><name>mut_view</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1a8a22cc99544bb38d717e4776aeebc104" kind="typedef"><name>mut_uview</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1aea334a177c7ae7eecf43ff1b22ba0be4" kind="typedef"><name>simd</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1ab999f5de40cebdc370e44e17d578a8c5" kind="variable"><name>data</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1a692b9e04ee6f1d2765061c8f73971738" kind="variable"><name>outer_stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1a9a4ef75a511e1148d3eb14f30752150f" kind="variable"><name>inner_stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1adc090e9a51c470781c49eb33a2d9d9de" kind="function"><name>get</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1a9584e5bcf040086a92fabad0ad2555d8" kind="function"><name>operator()</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1a84e59bc69f5cb0f4f3dd9da7bf78afdf" kind="function"><name>load</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1a4542c3d6af85ceb8fd44acf1dd3ab5b1" kind="function"><name>store</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1a294edbebb26413734307376578d417d1" kind="function"><name>block</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1a8b369f4dec638935df8ff5ebfb37b6f8" kind="function"><name>middle_rows</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1a919a6b84f8b5f2aef171276479a784e0" kind="function"><name>middle_cols</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1ae22841d71a01ed13b2a6cf632bd2925c" kind="function"><name>uview</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1a402745026da731de3de479f33afd4af7" kind="function"><name>uview</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1a3fc1297ea3f4c94bdd802a55ef042a0e" kind="function"><name>uview</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1aeb3450b71fc7b3bb44251940d1012c31" kind="function"><name>uview</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview_1aa19c47965654852023713266c53984d2" kind="function"><name>uview</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1uview__vec" kind="struct"><name>batmat::linalg::uview_vec</name>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1af87d3d030cee9768a06a42cb999a2d65" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1a10b3f30de2591df56f1519a85bdb253c" kind="typedef"><name>types</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1aa1de2a6ad2423f5ee103c4876c1b5888" kind="typedef"><name>view</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1aabbb3a0f084db323ac96b81609c11dad" kind="typedef"><name>mut_view</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1aa4bb1c17eeea1a14df63453943a3665c" kind="typedef"><name>mut_uview</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1a4ef4af618768ad1152cc7717c919cea0" kind="typedef"><name>simd</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1a203262cac8b7c62dd6234ac9f8f027a3" kind="variable"><name>data</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1a3c028e251a9bb4e9c293b387430c249b" kind="variable"><name>inner_stride</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1a4f610ca76507d8f00ba6e7f0c8f3dee3" kind="function"><name>operator()</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1a7a11a266c4d44facc4b010edf8a7ebad" kind="function"><name>load</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1a43626229fee593d7541affe814b6338f" kind="function"><name>store</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1a6b3b051a61f41e64a7287b99fc57e301" kind="function"><name>segment</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1afb456648e5bd7e368477bdfb1d728530" kind="function"><name>uview_vec</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1a4e574b051bbb7c487162014d05e973df" kind="function"><name>uview_vec</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1a63493e6f49644b207fd61cdcbf8ec689" kind="function"><name>uview_vec</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1ab0dd1c5cb4bc5e0e68eae1e217e85299" kind="function"><name>uview_vec</name></member>
+    <member refid="structbatmat_1_1linalg_1_1uview__vec_1af8c8fa4d9f5c80f7da5e2ec54095d5fc" kind="function"><name>uview_vec</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1with__mask__D__t" kind="struct"><name>batmat::linalg::with_mask_D_t</name>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1with__mask__t" kind="struct"><name>batmat::linalg::with_mask_t</name>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1with__rotate__A__t" kind="struct"><name>batmat::linalg::with_rotate_A_t</name>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1with__rotate__B__t" kind="struct"><name>batmat::linalg::with_rotate_B_t</name>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1with__rotate__C__t" kind="struct"><name>batmat::linalg::with_rotate_C_t</name>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1with__rotate__D__t" kind="struct"><name>batmat::linalg::with_rotate_D_t</name>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1with__rotate__t" kind="struct"><name>batmat::linalg::with_rotate_t</name>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1with__shift__A__t" kind="struct"><name>batmat::linalg::with_shift_A_t</name>
+  </compound>
+  <compound refid="structbatmat_1_1linalg_1_1with__shift__B__t" kind="struct"><name>batmat::linalg::with_shift_B_t</name>
+  </compound>
+  <compound refid="structbatmat_1_1matrix_1_1aligned__deleter" kind="struct"><name>batmat::matrix::aligned_deleter</name>
+    <member refid="structbatmat_1_1matrix_1_1aligned__deleter_1a408cdf1797d876f490912433d5a5f95b" kind="variable"><name>size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1aligned__deleter_1a9eaec28c3330a1247ab078aa630bc84c" kind="variable"><name>align</name></member>
+    <member refid="structbatmat_1_1matrix_1_1aligned__deleter_1a9916ff7ca02d0e0d8d52ef8ebec223db" kind="function"><name>operator()</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1matrix_1_1aligned__deleter_3_01void_00_01A_01_4" kind="struct"><name>batmat::matrix::aligned_deleter&lt; void, A &gt;</name>
+    <member refid="structbatmat_1_1matrix_1_1aligned__deleter_3_01void_00_01A_01_4_1ad0611e9b79e1e2dc59a4b1218c9fab3c" kind="variable"><name>size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1aligned__deleter_3_01void_00_01A_01_4_1a5e90f15a907a38ae86049a4e0e376a5f" kind="variable"><name>align</name></member>
+    <member refid="structbatmat_1_1matrix_1_1aligned__deleter_3_01void_00_01A_01_4_1a27f39e796f9e9e8e08f369465b098548" kind="function"><name>operator()</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1matrix_1_1DefaultStride" kind="struct"><name>batmat::matrix::DefaultStride</name>
+    <member refid="structbatmat_1_1matrix_1_1DefaultStride_1a0dc8b06d730831d724e9f5ed7b4fa0d1" kind="function"><name>DefaultStride</name></member>
+    <member refid="structbatmat_1_1matrix_1_1DefaultStride_1a78e026aecd748e3253e64c43fd948329" kind="function"><name>DefaultStride</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1matrix_1_1detail_1_1default__alignment" kind="struct"><name>batmat::matrix::detail::default_alignment</name>
+    <member refid="structbatmat_1_1matrix_1_1detail_1_1default__alignment_1a2b9ac76603ff404c4b2b6e1b1b946de5" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1matrix_1_1detail_1_1default__alignment_3_01T_00_01I_00_01Stride_01_4" kind="struct"><name>batmat::matrix::detail::default_alignment&lt; T, I, Stride &gt;</name>
+    <member refid="structbatmat_1_1matrix_1_1detail_1_1default__alignment_3_01T_00_01I_00_01Stride_01_4_1ae90a0a7fb07650ff95db84f7928a6623" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1matrix_1_1integral__value__type" kind="struct"><name>batmat::matrix::integral_value_type</name>
+    <member refid="structbatmat_1_1matrix_1_1integral__value__type_1a3540fe2105ff4fc344e631f298516c48" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1matrix_1_1integral__value__type_3_01IntConst_01_4" kind="struct"><name>batmat::matrix::integral_value_type&lt; IntConst &gt;</name>
+    <member refid="structbatmat_1_1matrix_1_1integral__value__type_3_01IntConst_01_4_1abb03ebfdf6002e894500a4e481ecd445" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1matrix_1_1Layout" kind="struct"><name>batmat::matrix::Layout</name>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kind="typedef"><name>index_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1a5e721839d51c94a99b049d07bcabef34" kind="typedef"><name>batch_size_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1aa395557491ef36ac1fe975805f79ce9d" kind="typedef"><name>depth_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1adbd044655112aa290a95525908ad8da2" kind="typedef"><name>layer_stride_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1adf0f222ddc1393633a863b59c1ff5f5c" kind="typedef"><name>standard_stride_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1ad635fd9e2c04bb18318948e8d24eedd2" kind="variable"><name>storage_order</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1a4ab5b96fbdbb92e59359e2968358815f" kind="variable"><name>is_column_major</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1a7876840d7f3a002ffd73707c0d578051" kind="variable"><name>is_row_major</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1aebbbef0c379cf86bde10b75ee7e1b1c4" kind="variable"><name>depth</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1aa6cf1ff5b51545b4affcc54fb7a3907f" kind="variable"><name>rows</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1a4a47a151637b07b2914041e812ad3b89" kind="variable"><name>cols</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1af7c1cc246c31ebe62393ddca4bea6b84" kind="variable"><name>outer_stride</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1a95f2a085f27e819b459d224585a7ff1e" kind="variable"><name>batch_size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1afb8a312aa8127b4a4654e1a8bf26bb73" kind="variable"><name>layer_stride</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1a12965e8c230436dda76f22e40e1cb8bc" kind="function"><name>Layout</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1aff9b51a402154b4a2077dfcdd6fbde84" kind="function"><name>outer_size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1a5e74756b01a91b41e93ac8389a12ca53" kind="function"><name>inner_size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1a04399d68bc20cb524716cb574b193647" kind="function"><name>num_batches</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1a1985ab91f33e988053608fa3ba5013e1" kind="function"><name>ceil_depth</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1ad2db83d1e69032d91bc28abc53cea63b" kind="function"><name>ceil_depth</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1aa097c475737f4ddeb81dfc0e532d5127" kind="function"><name>floor_depth</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1a442c2a8194f8abeb9c2a12d24c779477" kind="function"><name>floor_depth</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1a258898385db70de79cdeeda9bad108ab" kind="function"><name>get_layer_stride</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1ab26ef5aa697ece13f346d91d30226230" kind="function"><name>has_full_layer_stride</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1a9596303c45c45f6656503fe09a905de0" kind="function"><name>has_full_outer_stride</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1ae5813060653ef3008bac823d55ad2488" kind="function"><name>has_full_inner_stride</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1ac8b472536cee6d2dccd6a6341f561af3" kind="function"><name>layer_index</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1ad235cde7c8a8d7c9ae3f09744c5082ed" kind="function"><name>layer_index</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1ad1a0d7d66c1b46d14f35f6b6f35e84e5" kind="function"><name>operator()</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1a2049ae7c85f75e751c4fc3ca9a608d6b" kind="function"><name>operator()</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1a8fa978b1da954fe460c4a75a7c09db54" kind="function"><name>size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1ae147f07e960409dee05088e8edc8e8b1" kind="function"><name>padded_size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1a2b9425bddfcd050a33ea5808e41b0dc6" kind="function"><name>convert_to_standard_stride</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout" kind="struct"><name>batmat::matrix::Layout::PlainLayout</name>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1aed6ba09721893e751e71bdd21fab1574" kind="variable"><name>depth</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1a1db3c28a1d5056554a3514d8bdfa4dbb" kind="variable"><name>rows</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1af2198d27d36e1a16dd6c477ff5aa86e5" kind="variable"><name>cols</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1aa92c9a47ab19602d1f5061bc83079868" kind="variable"><name>outer_stride</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1a1272b35ef72199a1ef66ab733f496a2e" kind="variable"><name>batch_size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1a46d2d23986d62f8b92371abf900c0246" kind="variable"><name>layer_stride</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1matrix_1_1Matrix" kind="struct"><name>batmat::matrix::Matrix</name>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a171bf7e529d147fc19aaf8f64a322dc5" kind="typedef"><name>view_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1aad28dd71b045a7ececc317cf4059eaf3" kind="typedef"><name>const_view_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a9a532cb99700c9deac968c1bc07d2ab8" kind="typedef"><name>layout_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a30d48bd060e7c4737b0515e0db1e83f3" kind="typedef"><name>plain_layout_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a2520d5ccdaf3f856f3765f80f18d6017" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1ae14209774daf6806d0c07a36f7a2b5ba" kind="typedef"><name>index_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a423c138da500752d102a65b64440fdab" kind="typedef"><name>batch_size_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1acbfcb139c784744b657b49bdd595e030" kind="typedef"><name>depth_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a489d3a605f733b8b64a46d5c3bc80efd" kind="typedef"><name>standard_stride_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1aa1dc7c597770d9cfcc23c259c6425650" kind="typedef"><name>alignment_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1ad5e54dbe19223e82f62633ca5df037da" kind="variable"><name>view_</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a9d12158780b55e8d0130002cae533b16" kind="function"><name>default_alignment</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a49e03d07ae5c5846d9a62b1dbb60d2ca" kind="function"><name>allocate</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1ac91d5861e58229c1c2c54f3d1f57a81a" kind="function"><name>allocate</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a31bc591468b4eb454ac56690b0545ab7" kind="function"><name>clear</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a90548624c2e7bfcc30810846a2e72e77" kind="function"><name>view</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1aa82b9abbf85add5ff5cd7fb7c9bc098c" kind="function"><name>view</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1abdcf94ddfb8a90f4b7c5e35d1b698ae2" kind="function"><name>layout</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a4efb5febf22a1c1ab9b238a008e1cf59" kind="function"><name>resize</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a757dbd5cb7427a0375682a3df28865a0" kind="function"><name>set_constant</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1ade6e6266a3cfc286a7a9034bec2db5f3" kind="function"><name>Matrix</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a71b344ebe44876b9d22e0c1a0a97eab6" kind="function"><name>Matrix</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a99fba7e894442c84b2a4a5b23bc38595" kind="function"><name>Matrix</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a2d4a63b5c5dcf05ea2d1bbcdd0bddbda" kind="function"><name>Matrix</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a2fa150e1a339dff7c47f4571f55171ae" kind="function"><name>Matrix</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a0a763d266322cf537b4ef31d97024d6e" kind="function"><name>Matrix</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1aa81fbadb601a62d4ff9d8186118593f8" kind="function"><name>Matrix</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a5fb75c61cd68e17d9bf056d7aefea47c" kind="function"><name>operator=</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a41089b3dbcccc4d70eb43911ca5024f0" kind="function"><name>operator=</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a74191bcabec4a082ceb79a28db3c1add" kind="function"><name>~Matrix</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a101671c2839b26003626a9aee4ed1ccf" kind="function"><name>operator view_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1ada8aed82bd7742dd15f5b4656edadd0d" kind="function"><name>operator const_view_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1ab8bc686f4fba68e2017b43f2f4db5ed0" kind="function"><name>operator View&lt; T, I, S, D, I, O &gt;</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1ad0aa38ffe8821ba884d2767c26e67388" kind="function"><name>operator View&lt; const T, I, S, D, I, O &gt;</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1ae7ff09a9420eb27f7b9d3f917cf17379" kind="function"><name>operator()</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1aa2db570973e18d83b38375bf5f5db558" kind="function"><name>operator()</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a9cdec7a1807ada3f768b15f155c5e060" kind="function"><name>operator()</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1adaeb76226f173280e93ad855ac093ab2" kind="function"><name>operator()</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a841711336374115892691a8482c6a193" kind="function"><name>batch</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1ab8a23b4572f50a0d2b6113eecee080b8" kind="function"><name>batch</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a110fd3c26517c1eb67e361e078c51cb9" kind="function"><name>batch_dyn</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1aa10aa77f5dc88ad5218e169adcef1fb2" kind="function"><name>batch_dyn</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a7286698e1fb773c218230f46c6ac73ed" kind="function"><name>reshaped</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a4633e970819b6191916c69b0d900cc07" kind="function"><name>reshaped</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a836301b19eccea717f83c274f8149b4a" kind="function"><name>top_rows</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a691de5977e2842a88f6c659f3b009435" kind="function"><name>top_rows</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a7855e378ff9b2eb20c938da8601923e5" kind="function"><name>left_cols</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a7d9e626618898ecdbfe11ed50a3bfb71" kind="function"><name>left_cols</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a7766bd06944369269e9c49cf2c9f9270" kind="function"><name>bottom_rows</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a0c221b1b31b8a1e952d2af9384751c92" kind="function"><name>bottom_rows</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a8bf38dde287fcd804c4df05cc01ae380" kind="function"><name>right_cols</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a990b7df34cfdfa122272acf9e92df33d" kind="function"><name>right_cols</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1aed1263629572b34095b62d5dec7b91d9" kind="function"><name>middle_rows</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1adec3c4b8e4e8f51786f551d8b8662ea8" kind="function"><name>middle_rows</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a827ac9ed4962edf1f9fdfd06cbbeca6c" kind="function"><name>middle_cols</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a86f5fe18e73e576bac25d56b82c29ee4" kind="function"><name>middle_cols</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a9ee08d5e2be23f61a393f5692bba96f3" kind="function"><name>top_left</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a7582f39c5da94e6f67217cf70f145381" kind="function"><name>top_left</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a9183edd9dd4134b509e8db3b918c1585" kind="function"><name>top_right</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a01ff1004fd0a9b04924c19c3b62cf47f" kind="function"><name>top_right</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a97043a3c5c4277df66c268355510184f" kind="function"><name>bottom_left</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a0f33118f9fc5913e6a76610be44f22b4" kind="function"><name>bottom_left</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1ae417524eb68bfe0b09688210314b6c88" kind="function"><name>bottom_right</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a8c3d42ee852564ba51a63ff88d726a5c" kind="function"><name>bottom_right</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a6691a1dad53dfe84336c528e9d7b5784" kind="function"><name>block</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1ac8c8d5487152e2b1ed2d4805d8378567" kind="function"><name>block</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1ae450ea40239ee9c2f8370928d76901e9" kind="function"><name>transposed</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a69aef398cd1a3b82864d4f6672b546dc" kind="function"><name>transposed</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1ae5df59ee77f3abb3144872c01d7bf1eb" kind="function"><name>as_const</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1ae33ff54a57c8eb9fd63b9843ec62f76c" kind="function"><name>begin</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1abfcfe0451c533fa18000a9e32d84ea1d" kind="function"><name>begin</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a93ea6edad5f038a06f811ffab2a90906" kind="function"><name>end</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1ac3903e11a15955fb3347ee5f6c40cb61" kind="function"><name>end</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a5c20a7d16d3b82fa61a3bd72ff40e9b5" kind="function"><name>size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a4a4b4a946b3d040017961cae4f43c215" kind="function"><name>padded_size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a557cb39b19c9463b91222695a8f48c13" kind="function"><name>data</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1af85cb001857300a9fd67c0efe20ea76f" kind="function"><name>data</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1af958e54ea0b2a2c074a97dcf1c1e78d9" kind="function"><name>depth</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1adc5504be1d59ca90ddbd747ad06f77e5" kind="function"><name>ceil_depth</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1afa718d6165ab8a9d5428ff09ea38e4b0" kind="function"><name>num_batches</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a6db175aa1b211d594161f61e2a1d629f" kind="function"><name>rows</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1af06fdfd92d9395fb9bf37221781d64ae" kind="function"><name>cols</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1aa3106fc8a7da0df4a46a03459dd20a2a" kind="function"><name>outer_stride</name></member>
+    <member refid="structbatmat_1_1matrix_1_1Matrix_1a54d8a34c7d086f2c8a9ee868ee33391d" kind="function"><name>batch_size</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1matrix_1_1uninitialized__t" kind="struct"><name>batmat::matrix::uninitialized_t</name>
+  </compound>
+  <compound refid="structbatmat_1_1matrix_1_1View" kind="struct"><name>batmat::matrix::View</name>
+    <member refid="structbatmat_1_1matrix_1_1View_1afab4ef784be9c2eb607b32ee01443a14" kind="function"><name>batch</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a7413cc3f2de4aa60dddc53515316d09c" kind="function"><name>batch_dyn</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a03bc4d77448c6a431ad9afa371c410bd" kind="function"><name>first_layers</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a4fab94433b9358b5d5ae490d4be4612d" kind="function"><name>middle_layers</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1abd3d195f148998f1020d39cea4ef0c5b" kind="function"><name>data</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a4199ceacf690f7d75d14fa31b6f93d12" kind="function"><name>begin</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a65c4f7147d2b8eadcf793341615e9265" kind="function"><name>end</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a96d36d03d9a8f601b559f2d0a279f27e" kind="function"><name>size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a3c9363a7f6172b2350eddf610812987a" kind="function"><name>padded_size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1af0e126c614d4d25d1b07d778bf4f7c34" kind="function"><name>depth</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a90de7f9a56aeda5ceb9f4d3ca604f82b" kind="function"><name>ceil_depth</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a2e60a675ceb5f0816761f53b50932290" kind="function"><name>num_batches</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a8a985a0de1538c7d48ba72dafeedac04" kind="function"><name>rows</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a658f96d2f60d1a7e1bfc55ee46ad76d2" kind="function"><name>cols</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1afa2c308d93a3e7a1ff8a00aa044bea71" kind="function"><name>outer_stride</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1ace0f2f30fc941f898d62867adc440087" kind="function"><name>outer_size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a90b6311fd3fe15291caa206e01a9c6f1" kind="function"><name>inner_size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a8730427d93fa34b89c63b24ea353aac5" kind="function"><name>inner_stride</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a652fe35cdc98459e74dd3f193bd67750" kind="function"><name>batch_size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1ad789388aeaae21bd80f85c604c604995" kind="function"><name>layer_stride</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a85261424b54110a4374afb5be6159f21" kind="function"><name>has_full_layer_stride</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a18f95c4cf1fb5d73b4d80049b35dffb9" kind="function"><name>has_full_outer_stride</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a764fa59ba1b5bae126c04c4b8cf23572" kind="function"><name>has_full_inner_stride</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a4d2131f86753afbd57090790d75d98a0" kind="function"><name>reshaped</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a8643bd7086c7eece449a9a8b8afff661" kind="function"><name>top_rows</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a784de6877b93091726b6cfa3579fe8ca" kind="function"><name>left_cols</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a485295b0ba5180ca31f2c5d3ea04cd28" kind="function"><name>bottom_rows</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a65e8824cd34781ca5901152b8eb4dff2" kind="function"><name>right_cols</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a5de296a861344e3a9e599081545480b9" kind="function"><name>middle_rows</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a3ae9a5ed0a41a37eaf3cc57c60eab3db" kind="function"><name>middle_cols</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1ac17cd50705f2ef876c6b483e4b8394b4" kind="function"><name>top_left</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1aee77fd6ec42b32bc5a5bc826274a914f" kind="function"><name>top_right</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a58f8cbcd01d3e93cc584ad1250234af8" kind="function"><name>bottom_left</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a0aaed4ee88727aba4c6066b65a897056" kind="function"><name>bottom_right</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a1c9de38ddbf785fa09e56a8fa5169c05" kind="function"><name>block</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a24b36d6e7568ec7941969cf410f42f01" kind="function"><name>transposed</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a8000c4823b91daf5dfea18ccd6b0e45d" kind="function"><name>as_column</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a4100ad6c24e2d0a8050ac1d9ed6a2b46" kind="function"><name>add_to_diagonal</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a1cfba3a1a9ffdcd786c5fe76488a626c" kind="function"><name>set_constant</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1ab593ea4d085e0f6f56d6cc28479cea6d" kind="function"><name>negate</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1af59145deefbfd73abdd5be12f54806cf" kind="function"><name>copy_values</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a99bc563329bf4abf7d1285745d9ff985" kind="function"><name>operator=</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a0b2bf5139cb4ae1698c4ca8a365bca0a" kind="function"><name>operator=</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1acb673b4079389369a6c0fb019fde245d" kind="function"><name>operator+=</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a012e075ecef99aebefdef47cbf1e8f5a" kind="typedef"><name>layout_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a07f5398f5cef2f53d4fc26f5d9ca9c78" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kind="typedef"><name>index_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a0c328fcfd23b220a108167a511021954" kind="typedef"><name>batch_size_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1af3044dd381fe1e3d1442efd22a590cf6" kind="typedef"><name>depth_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a09739bf7956973d94ac2a327fe14094a" kind="typedef"><name>layer_stride_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a0d67e8c21c53ceda34cf38d44d69b5d9" kind="typedef"><name>standard_stride_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a5b58d4bfc6aa4d8f90faf3dcf30d649b" kind="typedef"><name>const_view_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a144c1ef95a12cb6134e85f06bf306988" kind="typedef"><name>batch_view_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1aa43531137c5afae7c33a90822cdef2fb" kind="typedef"><name>general_slice_view_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1af2f2324c52e5bb88e70c8191e6337983" kind="typedef"><name>col_slice_view_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1aacba293d849732693abdca99ae237896" kind="typedef"><name>row_slice_view_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1af9023b390e4eb12fddec55d0ec1adfa6" kind="variable"><name>storage_order</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a02bf028bb593d05b86d955fd972d622a" kind="variable"><name>is_column_major</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1adc94b8ed2cbdba1ad1721b712f3ea558" kind="variable"><name>is_row_major</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a505fee81af0f8fe2860572b6cbe497d8" kind="variable"><name>has_single_batch_at_compile_time</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a85a50d696f7c76de8c7093b65eb14615" kind="variable"><name>has_single_layer_at_compile_time</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a75590180ddf188388521f81f7c181d6c" kind="variable"><name>data_ptr</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a130d341c328c2e848593a609a3e22a21" kind="variable"><name>layout</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kind="function"><name>View</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1abe2b1bdf5ee7b92845739f9514f9bcb4" kind="function"><name>View</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a3006d00fa01758f26342535ac06e0593" kind="function"><name>View</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a4fe9a196700464e2cfff6ab203e7594a" kind="function"><name>View</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1ab5554d055756ec92e7c6bd233f120a8e" kind="function"><name>operator const_view_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1ae7446046ddf4b9d0d701af66e76cebd5" kind="function"><name>as_const</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a0cbde49e22764991c58d0bcd94c13877" kind="function"><name>operator guanaqo::MatrixView&lt; T, I, standard_stride_type, O &gt;</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a09c75dd7db867e42e86378288f98e7b5" kind="function"><name>operator()</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a1f1965ca1df1441baae9b38248a27e30" kind="function"><name>operator()</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1af72c9ff6839b732973ee1582655d4f50" kind="function"><name>reassign</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a1e373fba18186c9f4602603f9546a524" kind="function"><name>operator View&lt; T, I, S, integral_value_type_t&lt; D &gt;, L, O &gt;</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a8d52ae35f6857501961deed76b32bb37" kind="function"><name>operator View&lt; const T, I, S, integral_value_type_t&lt; D &gt;, L, O &gt;</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a158efefd16b427b3f8607ace43b07769" kind="function"><name>operator View&lt; T, I, S, D, I, O &gt;</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a8927d61cfcc0fd7b44464b478096343f" kind="function"><name>operator View&lt; const T, I, S, D, I, O &gt;</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1a42204aefac8e4fa20bfa343082e744f0" kind="function"><name>get_layer_stride_for</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator" kind="struct"><name>batmat::matrix::View::linear_iterator</name>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1ad916c76c7c08214d0087daa4fddc864a" kind="typedef"><name>value_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1aece6884dc858caa31c4eca89528c233f" kind="typedef"><name>reference</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1aac01f187e2b4a5a4f1f7ab34333688eb" kind="typedef"><name>difference_type</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1ab3057665d24b940ac9f175754b66f33b" kind="variable"><name>data</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1acc58874157a231d00f60646f700c5ce3" kind="variable"><name>end</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1af7c05dbbecaf7031f806227fd76919a1" kind="variable"><name>next_jump</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1acef748523169aca09a3f4ca78ea35a05" kind="variable"><name>padding_size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1a6d22e538859b075408dff7cca8e586b7" kind="variable"><name>batch_size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1abffb7ad0c9925e13b110a5c23a1e9d5d" kind="function"><name>operator++</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1a77f4efb2855326c6658ba19171f6ce97" kind="function"><name>operator++</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1a90f8e4d9ff676bdd2ad5e7162eb9bf15" kind="function"><name>operator*</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1a3fd445e604a8fe2d3d8da995ecfbbebc" kind="function"><name>operator==</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView" kind="struct"><name>batmat::matrix::View::PlainBatchedMatrixView</name>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView_1a7756d036bd488304f983d9e32e853de8" kind="variable"><name>data</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView_1a2489ee25d63f63134996256872e20ea9" kind="variable"><name>depth</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView_1a7136c77edcd42fb6c3101a9e34f29b43" kind="variable"><name>rows</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView_1ad030bd28717dc83159c13be3bfd48427" kind="variable"><name>cols</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView_1aa7083df49ccd2827b40d2f410a6af597" kind="variable"><name>outer_stride</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView_1ac5158829f15b39691a0612cb0e56f482" kind="variable"><name>batch_size</name></member>
+    <member refid="structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView_1a74a1b4972f447d16480ca9cbbe7cbcd9" kind="variable"><name>layer_stride</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1ops_1_1detail_1_1floating__point__to__int" kind="struct"><name>batmat::ops::detail::floating_point_to_int</name>
+  </compound>
+  <compound refid="structbatmat_1_1ops_1_1detail_1_1floating__point__to__int_3_01double_01_4" kind="struct"><name>batmat::ops::detail::floating_point_to_int&lt; double &gt;</name>
+    <member refid="structbatmat_1_1ops_1_1detail_1_1floating__point__to__int_3_01double_01_4_1a2ae5c54eae2939e181420220dbc595fd" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1ops_1_1detail_1_1floating__point__to__int_3_01float_01_4" kind="struct"><name>batmat::ops::detail::floating_point_to_int&lt; float &gt;</name>
+    <member refid="structbatmat_1_1ops_1_1detail_1_1floating__point__to__int_3_01float_01_4_1ac75aec70729bee433f7aea0f00522c78" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1ops_1_1detail_1_1mask__type" kind="struct"><name>batmat::ops::detail::mask_type</name>
+    <member refid="structbatmat_1_1ops_1_1detail_1_1mask__type_1a7fda4eff7c09e3a80b13dd924d9f6ab6" kind="typedef"><name>type</name></member>
+  </compound>
+  <compound refid="classbatmat_1_1thread__pool" kind="class"><name>batmat::thread_pool</name>
+    <member refid="classbatmat_1_1thread__pool_1a6d4274c6b588677b0abe47c30ab0aabd" kind="variable"><name>signals</name></member>
+    <member refid="classbatmat_1_1thread__pool_1ae3e3e5088353356b3a68eacb2ab81417" kind="variable"><name>funcs</name></member>
+    <member refid="classbatmat_1_1thread__pool_1a85ab070fec23f9ad68ed1b8c0b13119c" kind="variable"><name>exceptions</name></member>
+    <member refid="classbatmat_1_1thread__pool_1ac40cd1232995a61e4fae5fa8a11ea5f5" kind="variable"><name>threads</name></member>
+    <member refid="classbatmat_1_1thread__pool_1af76f63a05a428fdb232d476d29f9fd83" kind="function"><name>work</name></member>
+    <member refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" kind="function"><name>thread_pool</name></member>
+    <member refid="classbatmat_1_1thread__pool_1ac097800a6b1736ee04aab5a84db78ed9" kind="function"><name>thread_pool</name></member>
+    <member refid="classbatmat_1_1thread__pool_1a3532861d79bf11f7664daf44669a8f74" kind="function"><name>operator=</name></member>
+    <member refid="classbatmat_1_1thread__pool_1ade44e6dcd53aca05cb911a25981d3aaa" kind="function"><name>thread_pool</name></member>
+    <member refid="classbatmat_1_1thread__pool_1ae58df086f8e869d3bb6a9a11bce120a5" kind="function"><name>operator=</name></member>
+    <member refid="classbatmat_1_1thread__pool_1ab853c1291632bf9716903b814de99add" kind="function"><name>schedule</name></member>
+    <member refid="classbatmat_1_1thread__pool_1a96d111a17960c65c3a5c92fc00efc12a" kind="function"><name>wait</name></member>
+    <member refid="classbatmat_1_1thread__pool_1ad279eade9b6741d9f6f704813d3da3ee" kind="function"><name>wait_all</name></member>
+    <member refid="classbatmat_1_1thread__pool_1a90949f56916900ff5c9d56a411e7d932" kind="function"><name>sync_run_all</name></member>
+    <member refid="classbatmat_1_1thread__pool_1a0040071bd46efdec431f45be24d4dc6a" kind="function"><name>sync_run_n</name></member>
+    <member refid="classbatmat_1_1thread__pool_1aeaf61c4492c851d524c403f58e8eb14f" kind="function"><name>size</name></member>
+  </compound>
+  <compound refid="structbatmat_1_1thread__pool_1_1Signals" kind="struct"><name>batmat::thread_pool::Signals</name>
+    <member refid="structbatmat_1_1thread__pool_1_1Signals_1a77f6dfd98ebe69ceb1416cadea1faa75" kind="variable"><name>mtx</name></member>
+    <member refid="structbatmat_1_1thread__pool_1_1Signals_1a8c952637ba7cf88cd63fa3ffb9cf359e" kind="variable"><name>cv</name></member>
+  </compound>
+  <compound refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4" kind="struct"><name>guanaqo::Timed&lt; batmat::DefaultTimings &gt;</name>
+    <member refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1abbeecef34105f4eb7451ee1a116ad29b" kind="typedef"><name>clock</name></member>
+    <member refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a6c935a737948c580834285f330959be9" kind="variable"><name>time</name></member>
+    <member refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1ab360b8dcf076d8275460105be3e91ceb" kind="variable"><name>wall_start_time</name></member>
+    <member refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a524ce94079d964deeeb2f48c5869708c" kind="function"><name>Timed</name></member>
+    <member refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a834faa80ce5a071b1bfc4c23c0c4eefa" kind="function"><name>~Timed</name></member>
+    <member refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1ae2627b0cd95df565c95eddaaa541b10a" kind="function"><name>Timed</name></member>
+    <member refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1abf7a35c24e8318240b4909205c2e9720" kind="function"><name>operator=</name></member>
+  </compound>
+  <compound refid="conceptbatmat_1_1linalg_1_1detail_1_1gemm__diag_1_1track__zeros__opt" kind="concept"><name>batmat::linalg::detail::gemm_diag::track_zeros_opt</name>
+  </compound>
+  <compound refid="conceptbatmat_1_1linalg_1_1rotate__opt" kind="concept"><name>batmat::linalg::rotate_opt</name>
+  </compound>
+  <compound refid="conceptbatmat_1_1linalg_1_1shift__opt" kind="concept"><name>batmat::linalg::shift_opt</name>
+  </compound>
+  <compound refid="conceptbatmat_1_1linalg_1_1simdifiable" kind="concept"><name>batmat::linalg::simdifiable</name>
+  </compound>
+  <compound refid="conceptbatmat_1_1linalg_1_1simdifiable__multi" kind="concept"><name>batmat::linalg::simdifiable_multi</name>
+  </compound>
+  <compound refid="conceptbatmat_1_1ops_1_1detail_1_1same__size__but__different__ints" kind="concept"><name>batmat::ops::detail::same_size_but_different_ints</name>
+  </compound>
+  <compound refid="namespacebatmat" kind="namespace"><name>batmat</name>
+    <member refid="group__topic-utils_1gaa625a055ebbfa5ba05a1fd8f1f104807" kind="enum"><name>LoopDir</name></member>
+    <member refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kind="typedef"><name>index_constant</name></member>
+    <member refid="group__topic-utils_1ga65fdbfd18ede71fc4fb894153854c2ee" kind="function"><name>foreach_chunked</name></member>
+    <member refid="group__topic-utils_1gab76a36340644bbf7c8093caa45aef12f" kind="function"><name>foreach_chunked_merged</name></member>
+    <member refid="namespacebatmat_1adb8a0dae1b391ee1b2d08ae57964b218" kind="function"><name>foreach_chunked_merged_parallel</name></member>
+    <member refid="namespacebatmat_1ab410ecec2f820373d48cbe68b4b2fee4" kind="function"><name>foreach_thread</name></member>
+    <member refid="namespacebatmat_1ad09de96d614741ac248be14af9e8888a" kind="function"><name>foreach_thread</name></member>
+    <member refid="group__topic-utils_1gae259627b9bd8c02e66d1e244c969e2bc" kind="function"><name>make_2d_lut</name></member>
+    <member refid="group__topic-utils_1ga91b0a07e3a00c803e9859ace6b86828f" kind="function"><name>make_1d_lut</name></member>
+    <member refid="group__topic-utils_1ga9d3db6b0fa567b730dae54e1f1012165" kind="function"><name>pool_set_num_threads</name></member>
+    <member refid="group__topic-utils_1ga536ae1dd079e87845527154b7f4ecc06" kind="function"><name>pool_sync_run_all</name></member>
+    <member refid="group__topic-utils_1ga72f329f3122a76019f71f597fa44bae7" kind="function"><name>pool_sync_run_n</name></member>
+    <member refid="namespacebatmat_1aafc9b52d8b52e8e01bd08e2cc2067e49" kind="function"><name>operator&lt;&lt;</name></member>
+    <member refid="namespacebatmat_1a19592f22ba225cca6878c88155d0f5a3" kind="function"><name>timed</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1datapar" kind="namespace"><name>batmat::datapar</name>
+    <member refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kind="typedef"><name>simd</name></member>
+    <member refid="namespacebatmat_1_1datapar_1aa3c7c9554d61e55ae3384b5e4c5ce7af" kind="typedef"><name>deduced_abi</name></member>
+    <member refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kind="typedef"><name>deduced_simd</name></member>
+    <member refid="namespacebatmat_1_1datapar_1a497d8b4d202d9476ad67782ba4d4feef" kind="typedef"><name>simd_size</name></member>
+    <member refid="namespacebatmat_1_1datapar_1a3cbb75e6685dbd98807439ac0dca33f0" kind="typedef"><name>simd_align</name></member>
+    <member refid="namespacebatmat_1_1datapar_1a8c13bd77d282b3132fca8a1273d05488" kind="typedef"><name>rebind_simd_t</name></member>
+    <member refid="namespacebatmat_1_1datapar_1a55556a636c771c6e0f5805c2d186f1ec" kind="typedef"><name>scalar_abi</name></member>
+    <member refid="namespacebatmat_1_1datapar_1a149c22d1c48e31a930932999a6959700" kind="function"><name>unaligned_load</name></member>
+    <member refid="namespacebatmat_1_1datapar_1a9e5512aee8f62a9475578de6da9dd666" kind="function"><name>aligned_load</name></member>
+    <member refid="namespacebatmat_1_1datapar_1ac0a83627dacddc05ffd7c3bc54716ba5" kind="function"><name>unaligned_store</name></member>
+    <member refid="namespacebatmat_1_1datapar_1a37a115c835b05841a7f348320e1e43b6" kind="function"><name>aligned_store</name></member>
+    <member refid="namespacebatmat_1_1datapar_1ac9b1641243fc46c499b326c12e68ff4f" kind="function"><name>masked_aligned_store</name></member>
+    <member refid="namespacebatmat_1_1datapar_1a50d5b6b45672aa2c632b8fa168f7908c" kind="function"><name>to_intrin</name></member>
+    <member refid="namespacebatmat_1_1datapar_1adb66c808eb0fedc04313ed3a65838b4a" kind="function"><name>from_values</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1detail" kind="namespace"><name>batmat::detail</name>
+    <member refid="namespacebatmat_1_1detail_1af4ebcc103086a296893602f9b5866fb9" kind="variable"><name>pool_mtx</name></member>
+    <member refid="namespacebatmat_1_1detail_1a20bcf72347bb0bdb2eebbeadcdd5e0b2" kind="variable"><name>pool</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg" kind="namespace"><name>batmat::linalg</name>
+    <member refid="group__topic-linalg_1ga7305be66e2eab7d32be3409e555d8136" kind="function"><name>compress_masks</name></member>
+    <member refid="group__topic-linalg_1ga1b26575da2cfc351d0a18eda0475b8d3" kind="function"><name>compress_masks_count</name></member>
+    <member refid="group__topic-linalg_1gaaac6172ca3a3098c8c85f4c703ac7575" kind="function"><name>compress_masks_sqrt</name></member>
+    <member refid="group__topic-linalg_1ga318bdad6a6e249fcd8652b2b49012418" kind="function"><name>compress_masks_sqrt</name></member>
+    <member refid="group__topic-linalg_1ga9df61b993f7e79ad21eddb76b4c2089e" kind="function"><name>copy</name></member>
+    <member refid="group__topic-linalg_1ga0c62a1596a13149c17223ca93a4de7bd" kind="function"><name>copy</name></member>
+    <member refid="group__topic-linalg_1gaf53b173cc76dd28168d422b8812298a3" kind="function"><name>fill</name></member>
+    <member refid="group__topic-linalg_1ga3b16436bd7456f60369fd1db2d67442e" kind="function"><name>fill</name></member>
+    <member refid="group__topic-linalg_1gad57207460bfd526791afa8a0ccc19041" kind="function"><name>gemm_diag</name></member>
+    <member refid="group__topic-linalg_1ga0ae75850dc387a83a665ea8b370d5268" kind="function"><name>gemm_diag_add</name></member>
+    <member refid="group__topic-linalg_1gaa0e3784877a4dfc671b25479fa918281" kind="function"><name>gemm_diag_add</name></member>
+    <member refid="group__topic-linalg_1ga958862e903797c035916e22d09f4fcb3" kind="function"><name>syrk_diag_add</name></member>
+    <member refid="group__topic-linalg_1ga26d21bd656eb96da9c58c2e92329918a" kind="function"><name>syrk_diag_add</name></member>
+    <member refid="group__topic-linalg_1ga56b98ed114604544b0806d8b191b119e" kind="function"><name>gemm</name></member>
+    <member refid="group__topic-linalg_1ga2ecaacbba5614bcbbf95c79023424e64" kind="function"><name>gemm_neg</name></member>
+    <member refid="group__topic-linalg_1ga1177461212428f6b96e21abff82af6a3" kind="function"><name>gemm_add</name></member>
+    <member refid="group__topic-linalg_1ga8c44e915ee2cda546e7dc005ab1af1c4" kind="function"><name>gemm_add</name></member>
+    <member refid="group__topic-linalg_1ga6ba27579e2442c5a7689d0577f63478e" kind="function"><name>gemm_sub</name></member>
+    <member refid="group__topic-linalg_1ga611ecdda112c005fe2d42372a92aea7b" kind="function"><name>gemm_sub</name></member>
+    <member refid="group__topic-linalg_1ga59ec2e76f7d857d495fcc518d19f2a77" kind="function"><name>syrk</name></member>
+    <member refid="group__topic-linalg_1ga51fc97f0f6c6ce55401630c8b57889e9" kind="function"><name>syrk</name></member>
+    <member refid="group__topic-linalg_1ga24000b15cd231d821eb1292ad3631c2b" kind="function"><name>syrk</name></member>
+    <member refid="group__topic-linalg_1ga038f5f115bd19ed4f3ca205ca4728fc3" kind="function"><name>syrk_neg</name></member>
+    <member refid="group__topic-linalg_1ga8a698c5e4610420a9d7fcf483f41f452" kind="function"><name>syrk_neg</name></member>
+    <member refid="group__topic-linalg_1ga8d63dfa8eaa22949ca78e2241a608a0f" kind="function"><name>syrk_neg</name></member>
+    <member refid="group__topic-linalg_1ga94668e960bcf7b6a7ffe8902d799079a" kind="function"><name>syrk_add</name></member>
+    <member refid="group__topic-linalg_1gaaf33c861e820d1d87ca43314e7453bf3" kind="function"><name>syrk_add</name></member>
+    <member refid="group__topic-linalg_1ga19841b227bc4cf6d0949b85b6e201033" kind="function"><name>syrk_sub</name></member>
+    <member refid="group__topic-linalg_1ga3b3a5785bb0a178c28eb050f5e7ad982" kind="function"><name>syrk_sub</name></member>
+    <member refid="group__topic-linalg_1ga677da05414c67192ed400e3a0b0a2c51" kind="function"><name>trmm</name></member>
+    <member refid="group__topic-linalg_1ga776866b470bf67ecb2f561a7714f6ac8" kind="function"><name>trmm</name></member>
+    <member refid="group__topic-linalg_1ga4bcadac1586aa8f2fd1a8f632c369601" kind="function"><name>trmm</name></member>
+    <member refid="group__topic-linalg_1ga9c7791da3ee24263434ba87316ac50e3" kind="function"><name>trmm</name></member>
+    <member refid="group__topic-linalg_1ga1474b560ee985d29dad901fec92a6e09" kind="function"><name>trmm_neg</name></member>
+    <member refid="group__topic-linalg_1ga41be251a5129e3aa430b4d0685e4f055" kind="function"><name>trmm_neg</name></member>
+    <member refid="group__topic-linalg_1gab8de92b40ec44dc42b8194ca149e2195" kind="function"><name>trmm_add</name></member>
+    <member refid="group__topic-linalg_1ga5ff4cf9c0cc64e6b59d44a9a7b257d36" kind="function"><name>trmm_add</name></member>
+    <member refid="group__topic-linalg_1ga4c466c8c3c49448dbe08d2a69f0dc753" kind="function"><name>trmm_sub</name></member>
+    <member refid="group__topic-linalg_1ga6b66dee15a04b53f3f39edc1caa41bb6" kind="function"><name>trmm_sub</name></member>
+    <member refid="group__topic-linalg_1ga8ce09a22e339c8a076415d047c23a5cd" kind="function"><name>gemv</name></member>
+    <member refid="group__topic-linalg_1gaabdf90658a0013e1858d377dcecf5d6f" kind="function"><name>gemv_neg</name></member>
+    <member refid="group__topic-linalg_1ga4d4c245f7f41a9e595292defaf3f55cf" kind="function"><name>gemv_add</name></member>
+    <member refid="group__topic-linalg_1ga7cfed7daaf31afb02d713f7ccd1481da" kind="function"><name>gemv_add</name></member>
+    <member refid="group__topic-linalg_1gac4246c2e6b61282811138d8232f9d737" kind="function"><name>gemv_sub</name></member>
+    <member refid="group__topic-linalg_1ga26163eb18f74d290e190d0a8d52ade6b" kind="function"><name>gemv_sub</name></member>
+    <member refid="group__topic-linalg_1gae6733a70513ebef849110b4842708820" kind="function"><name>hyhound_diag</name></member>
+    <member refid="group__topic-linalg_1ga333ab34077b524480da3a9835b51e166" kind="function"><name>hyhound_diag</name></member>
+    <member refid="group__topic-linalg_1gaab95bb8df58e52f0b5c2f156f8c6dea0" kind="function"><name>hyhound_size_W</name></member>
+    <member refid="group__topic-linalg_1ga3e2338ff100c3544cad0105effc729c0" kind="function"><name>hyhound_diag_apply</name></member>
+    <member refid="group__topic-linalg_1gaa675e1f6e044ea392f0ee072bcd38890" kind="function"><name>hyhound_diag_apply</name></member>
+    <member refid="group__topic-linalg_1ga71aaa795868e76c82b95bdd6230b9519" kind="function"><name>hyhound_sign</name></member>
+    <member refid="group__topic-linalg_1gae5ae03b84e9ada852009a47cfb1a101b" kind="function"><name>hyhound_diag_2</name></member>
+    <member refid="group__topic-linalg_1gaf619c0c15ef61d2dd2eaa585f525a93f" kind="function"><name>hyhound_diag_cyclic</name></member>
+    <member refid="group__topic-linalg_1ga623445a546acac724601551447aaef5a" kind="function"><name>hyhound_diag_riccati</name></member>
+    <member refid="group__topic-linalg_1ga12c3f866950fd1c70288d50280b7fb6b" kind="function"><name>syrk_add_potrf</name></member>
+    <member refid="group__topic-linalg_1gac41bc35d00eb8f3efe6db4d3f0deb2c4" kind="function"><name>syrk_add_potrf</name></member>
+    <member refid="group__topic-linalg_1ga9b273b45f515781eb285544bbcca8143" kind="function"><name>syrk_sub_potrf</name></member>
+    <member refid="group__topic-linalg_1ga74ca156ede10af825418293b6eaec901" kind="function"><name>syrk_sub_potrf</name></member>
+    <member refid="group__topic-linalg_1gacb1f9d940de812c4cc0fb23a407d955d" kind="function"><name>syrk_diag_add_potrf</name></member>
+    <member refid="group__topic-linalg_1ga42e34a775639000995fdfbe90491c36a" kind="function"><name>syrk_diag_add_potrf</name></member>
+    <member refid="group__topic-linalg_1gaa5a48352d831fa72f651dfb4a53bba9e" kind="function"><name>potrf</name></member>
+    <member refid="group__topic-linalg_1ga0d94954d9b08608b3d7f3c2bdaec531d" kind="function"><name>potrf</name></member>
+    <member refid="group__topic-linalg_1ga86ace4b801d8635578413dafc05539d3" kind="function"><name>symm_add</name></member>
+    <member refid="group__topic-linalg_1ga28b7fe55495d3a3c414ce0e43b8a8b2c" kind="function"><name>symm_add</name></member>
+    <member refid="group__topic-linalg_1gaf56b3f892871b53ff7dc0efedb0eac36" kind="function"><name>symv</name></member>
+    <member refid="group__topic-linalg_1ga9577422bc277329e6409043853208764" kind="function"><name>symv_neg</name></member>
+    <member refid="group__topic-linalg_1ga6be77cce642739acb04a594098a57ffe" kind="function"><name>symv_add</name></member>
+    <member refid="group__topic-linalg_1ga05b276ea72af0939b1b8fbc2a40bcdfb" kind="function"><name>symv_add</name></member>
+    <member refid="group__topic-linalg_1ga126f2b74ab3588969d16c1ea34febd99" kind="function"><name>symv_sub</name></member>
+    <member refid="group__topic-linalg_1gabb4409c022fa8f42bd3e24191eb8b633" kind="function"><name>symv_sub</name></member>
+    <member refid="group__topic-linalg_1ga1c157567ed0f419c4136ec2a69dc8a59" kind="function"><name>syomv</name></member>
+    <member refid="group__topic-linalg_1gae8fed320ade4ba886dfe45d35f31ccc5" kind="function"><name>syomv_neg</name></member>
+    <member refid="group__topic-linalg_1gafc9f5555ed4639e0e5ad0e552f9717e4" kind="function"><name>tril</name></member>
+    <member refid="group__topic-linalg_1gaf6d9519ee15d51a0ba7243e640d8be71" kind="function"><name>triu</name></member>
+    <member refid="group__topic-linalg_1gab42ee44cb500f4d76bb81090614490d8" kind="function"><name>make_structured</name></member>
+    <member refid="group__topic-linalg_1ga21c503ca31b0d06b1a0e93ccf0b754c7" kind="function"><name>trsm</name></member>
+    <member refid="group__topic-linalg_1ga1b8da34024f01d4b25fd976fa5adee70" kind="function"><name>trsm</name></member>
+    <member refid="group__topic-linalg_1gaaca48f4a7e9d1302c0d9666a73a877f6" kind="function"><name>trsm</name></member>
+    <member refid="group__topic-linalg_1gadde7784a92a41d2f74b1447e41880fae" kind="function"><name>trsm</name></member>
+    <member refid="group__topic-linalg_1ga5a6901e33f6891995b0c147814b06230" kind="function"><name>trtri</name></member>
+    <member refid="group__topic-linalg_1ga12d76466423aac96d5405fc6ac08ff08" kind="function"><name>trtri</name></member>
+    <member refid="group__topic-linalg_1gaa4e16632065fd0d673234b06e71ea4c0" kind="function"><name>trtri</name></member>
+    <member refid="group__topic-linalg_1ga01d821b394c1ded4bab2042442dcc6b4" kind="function"><name>trtri</name></member>
+    <member refid="group__topic-linalg_1ga3526955f82976c2274834e5a69b21b7e" kind="enum"><name>PackingSelector</name></member>
+    <member refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kind="enum"><name>MatrixStructure</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a12561d95ffd5ca9cc074d7b3edceb429" kind="enum"><name>StorageOrder</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a4be791b0744b45a32676446036a52ccd" kind="typedef"><name>simdified_view_type</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a4bd9921eb6500f6c64da965ba4f46050" kind="typedef"><name>simdified_view_t</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a06ed92cc4e6bc6418b81329ce5355426" kind="typedef"><name>simdified_value_t</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kind="typedef"><name>simdified_abi_t</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a3f72f46ab5a64618b0df6098b8540343" kind="typedef"><name>simdified_multi_view_type</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a60b8e9e6e7e0e3ab201e3f71ee1b2670" kind="typedef"><name>simdified_multi_view_t</name></member>
+    <member refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kind="typedef"><name>view</name></member>
+    <member refid="namespacebatmat_1_1linalg_1aa93224d87d900a2dacc032305840169b" kind="typedef"><name>matrix</name></member>
+    <member refid="namespacebatmat_1_1linalg_1addaba7b0622b6b5975594e94337858ac" kind="typedef"><name>real_view</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a32ee2585cc9b2affcd31f6d9a777306c" kind="typedef"><name>mut_real_view</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a12b1a32966e2bf48fecc809ad2ed7368" kind="variable"><name>track_zeros</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a19dd80ec8e830706d80326f9d31edd1c" kind="variable"><name>with_shift_A</name></member>
+    <member refid="namespacebatmat_1_1linalg_1ae34de8e3d7e12c8e08708720db7e122c" kind="variable"><name>with_shift_B</name></member>
+    <member refid="namespacebatmat_1_1linalg_1acb94b9e005e461541acb9ed52f87e8b5" kind="variable"><name>with_rotate_C</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a13b33813baa12b55f7746c6987d5f42e" kind="variable"><name>with_rotate_D</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a4b867a52c6cf0fb12da276e972f1fc14" kind="variable"><name>with_mask_D</name></member>
+    <member refid="namespacebatmat_1_1linalg_1ae3b515432262221f9e530afd77291b7c" kind="variable"><name>shift_A</name></member>
+    <member refid="namespacebatmat_1_1linalg_1af683980060a1b736ec116431256d4463" kind="variable"><name>shift_A&lt; T, Ts... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1ada4a3475e2bb3a3e0140214b1bc642ab" kind="variable"><name>shift_A&lt; with_shift_A_t&lt; I &gt;, Ts... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a9e7784af0901e8887da8390a2554f8eb" kind="variable"><name>shift_B</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a1fef4fff81bf8391e278bf24c62506fd" kind="variable"><name>shift_B&lt; T, Ts... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1ad033b51afb3af353752513da2691cb3b" kind="variable"><name>shift_B&lt; with_shift_B_t&lt; I &gt;, Ts... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a46cf975c68ece97777d8e4dfd6b1dadf" kind="variable"><name>rotate_C</name></member>
+    <member refid="namespacebatmat_1_1linalg_1ac5c187a20a813fa9c49ff23ffee1f8ce" kind="variable"><name>rotate_C&lt; T, Ts... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1acab42f73ebc546c85cc3c31df4a379f1" kind="variable"><name>rotate_C&lt; with_rotate_C_t&lt; I &gt;, Ts... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1ab04a87d2e13b965d6fe2684355159478" kind="variable"><name>rotate_D</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a674dc08c5efbc90940a8e852cbbd54f5" kind="variable"><name>rotate_D&lt; T, Ts... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a744b9742b81407ec64ea03a013dfc7ee" kind="variable"><name>rotate_D&lt; with_rotate_D_t&lt; I &gt;, Ts... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a5f3d7bfa8cda00a0b262b6eac578e96e" kind="variable"><name>mask_D</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a857748dba6a3b881ac61e4227c6781a9" kind="variable"><name>mask_D&lt; T, Ts... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a2b89788a516e3c9e0a71a97d7e306cc5" kind="variable"><name>mask_D&lt; with_mask_D_t&lt; I &gt;, Ts... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a64cdc82e29e4a883a1e8c9dc16e01873" kind="variable"><name>is_shift_opt</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a6d6dcba4021b28bb1d2c991795caa9dc" kind="variable"><name>is_shift_opt&lt; with_shift_A_t&lt; I &gt; &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a3a35b162b51c4790811e9abb5566af2f" kind="variable"><name>is_shift_opt&lt; with_shift_B_t&lt; I &gt; &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a68811bb0dc3714b6f0bbb5ca8afc56b9" kind="variable"><name>is_shift_opt&lt; with_rotate_C_t&lt; I &gt; &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a0179065f211dc8f8292b15c277298621" kind="variable"><name>is_shift_opt&lt; with_rotate_D_t&lt; I &gt; &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a81853ec4616ad5a628ea58e5424e6109" kind="variable"><name>is_shift_opt&lt; with_mask_D_t&lt; I &gt; &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a18f5c2df0c1ec2ea5038ad05d81946d1" kind="variable"><name>with_rotate</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a10ff2f21577bfc4d8d96d8104715267b" kind="variable"><name>with_mask</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a8c727e255c0df5a8041151fd6889b4fc" kind="variable"><name>get_rotate</name></member>
+    <member refid="namespacebatmat_1_1linalg_1abd28ef0011ceef42ba470ded4ec5035e" kind="variable"><name>get_rotate&lt; T, Ts... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a859255c62148ba0dbde3c1d7a01a3ceb" kind="variable"><name>get_rotate&lt; with_rotate_t&lt; I &gt;, Ts... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a94c3eba4eaabc3dcb64cf1fa7727f802" kind="variable"><name>get_mask</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a6a6d52eeb2f4d133e251391d3fb5acb7" kind="variable"><name>get_mask&lt; T, Ts... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a2a3eadfc27bc5ba985c93f77ec030dc9" kind="variable"><name>get_mask&lt; with_mask_t&lt; I &gt;, Ts... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a025c96e7210b4e290963004865dfa8c4" kind="variable"><name>is_rotate_opt</name></member>
+    <member refid="namespacebatmat_1_1linalg_1ad02fd85f6689899b4a41e64c577234d7" kind="variable"><name>is_rotate_opt&lt; with_rotate_t&lt; I &gt; &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1ad21603db0e1689940050857129a7e4fd" kind="variable"><name>is_rotate_opt&lt; with_mask_t&lt; I &gt; &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kind="variable"><name>simdify_compatible</name></member>
+    <member refid="namespacebatmat_1_1linalg_1adc0d6c4d5c8b977cd64010b9b2642223" kind="variable"><name>simdify_compatible&lt; V, Vs... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1ad955091c80d01d8d4201c828ec0c4c2c" kind="variable"><name>with_rotate_A</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a460a8cb1037e34fbd3779c3e48074792" kind="variable"><name>with_rotate_B</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kind="function"><name>simdify</name></member>
+    <member refid="namespacebatmat_1_1linalg_1aa9e2303717d8e0d49cf3da6d21c5471e" kind="function"><name>simdify</name></member>
+    <member refid="group__topic-linalg_1gaa0bd5dc9f7ed367a2f7fd8b835694d42" kind="function"><name>transpose</name></member>
+    <member refid="group__topic-linalg_1gad0b3d11ecd3861f1c325ca907dc19c1d" kind="function"><name>Structured</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a8699debc88226ab70dead0e1fa7a7c37" kind="function"><name>simdify</name></member>
+    <member refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" kind="function"><name>with_cached_access</name></member>
+    <member refid="namespacebatmat_1_1linalg_1ad40f567e60fa1837b503bbf967068207" kind="function"><name>with_cached_access</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a9fdaac31d1f50e897eea6151f4b14f5d" kind="function"><name>with_cached_access</name></member>
+    <member refid="namespacebatmat_1_1linalg_1acc3629657a80e64a88a2b4adc162ac11" kind="function"><name>with_cached_access</name></member>
+    <member refid="namespacebatmat_1_1linalg_1a19723a0cad457cfaa3a2e02fc5e8006f" kind="function"><name>with_cached_access</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg_1_1detail" kind="namespace"><name>batmat::linalg::detail</name>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1a71184afe3c389f21d064930a43a7049c" kind="function"><name>compress_masks_impl</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1a86f65f38e1de024143f611d38d6ec764" kind="function"><name>compress_masks_count</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1ad5285a8604b72e9ed9102afde642b324" kind="function"><name>compress_masks</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1afa8def53ae5fe3f658b732ea5cc20da2" kind="function"><name>compress_masks_sqrt</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1af26685ecf86832d020eeed2c759f1c4a" kind="function"><name>gemm</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1aafe5abf07c832375ed47675bfc9f5a86" kind="function"><name>gemmt</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1a986cbb6d34a89fe9f0a7e475746934e7" kind="function"><name>trmm</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1ace93b35f0993d2bcf550c1ea6ed92d96" kind="function"><name>apply_gemm_options</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1ab2140481ceabb6a2dbe49a62479b2d47" kind="function"><name>gemv</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1a8664a4b53357eef277b5bff5f06a9d04" kind="function"><name>apply_gemv_options</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1a6356ece5808d89381635b59246a158d6" kind="function"><name>hyhound_diag</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1ae9bdcfd57ff8c62767691f16fd19676b" kind="function"><name>hyhound_diag</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1a02dfdae9c62e6e04a1883300a5596774" kind="function"><name>hyhound_diag_apply</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1ae08f58a280ea099e7cefd16ac7e2810f" kind="function"><name>hyhound_diag_2</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1a899e19f752b26f44ee94ecb94c7a1c8b" kind="function"><name>hyhound_diag_cyclic</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1a533820c033d4bc11f8969555ab6c47cc" kind="function"><name>hyhound_diag_riccati</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1ae828c0bcb038f2984315c13a863a373b" kind="function"><name>potrf</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1aef2ec4540dc4cbc963fd37e80434b020" kind="function"><name>symm</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1a88e3a02794e19050db3bd09ae27ac43a" kind="function"><name>symv</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1aad5eae1a9a7c923fe97aa8062e74beec" kind="function"><name>trsm</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1a7c0391dc95024cb883f25c65e495ad58" kind="function"><name>trtri</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg_1_1detail_1_1copy" kind="namespace"><name>batmat::linalg::detail::copy</name>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a2734a86018fe0537b59c91e9f85c5fbb" kind="function"><name>fill</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1ac74ffd0a7e0af8bcd39fb94b587e66b1" kind="function"><name>copy</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1aeb609e925d7e85aaa5f7ffdf4c385ecb" kind="function"><name>copy</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a026a036e2e49617672190bba15b87859" kind="function"><name>copy</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a8769b73dad2efc43ad5032114321f591" kind="function"><name>apply_options</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag" kind="namespace"><name>batmat::linalg::detail::gemm_diag</name>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1adc7e1eda16e2bcde71f87b6047a38dd2" kind="variable"><name>get_track_zeros</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1aa65143d0c39ae6fe326f01fdfe502ff2" kind="variable"><name>get_track_zeros&lt; T, Ts... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1ad3431c2cd24670081224da5c3ed2043a" kind="variable"><name>get_track_zeros&lt; track_zeros_t&lt; Z &gt;, Ts... &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1a0d8b129bd217d214b917272afd2a8b7d" kind="variable"><name>is_track_zeros_opt</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1ae99d02c20b87ea38be8bc128940dc64c" kind="variable"><name>is_track_zeros_opt&lt; track_zeros_t&lt; Z &gt; &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1a2c3d3424f62a8393a28b1d360f411f69" kind="function"><name>gemm_diag</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1ab0a59bf5060c11684f2c13aee1a997d1" kind="function"><name>apply_options</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg_1_1detail_1_1syomv" kind="namespace"><name>batmat::linalg::detail::syomv</name>
+    <member refid="namespacebatmat_1_1linalg_1_1detail_1_1syomv_1afc288b1dae62ec92c03b3a5a97723bdc" kind="function"><name>syomv</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg_1_1flops" kind="namespace"><name>batmat::linalg::flops</name>
+    <member refid="group__topic-linalg-flops_1ga837cc287e8d3e7e62cf013aa2c1f58d3" kind="function"><name>operator+</name></member>
+    <member refid="group__topic-linalg-flops_1ga3f5450fd91a87ba9dc28e346bf46bf31" kind="function"><name>total</name></member>
+    <member refid="group__topic-linalg-flops_1ga792bf36ee357f56cea635ef9337368b8" kind="function"><name>gemm</name></member>
+    <member refid="group__topic-linalg-flops_1ga7ab4fbff09383b46ed353e5c8b1cb44a" kind="function"><name>trmm</name></member>
+    <member refid="group__topic-linalg-flops_1gad70c29c07e3f55d4464e001bdfd14da2" kind="function"><name>gemmt</name></member>
+    <member refid="group__topic-linalg-flops_1gac7a4c106e784546210860c59c3634e5e" kind="function"><name>syrk</name></member>
+    <member refid="group__topic-linalg-flops_1ga232cc639534f37bf900df45fb929743e" kind="function"><name>gemmt_diag</name></member>
+    <member refid="group__topic-linalg-flops_1ga840f3e725b3e51c181bc4b2961697528" kind="function"><name>potrf</name></member>
+    <member refid="group__topic-linalg-flops_1ga5c387fb603a544664054bd7db3d363a7" kind="function"><name>hyh_square</name></member>
+    <member refid="group__topic-linalg-flops_1ga907a77af15c3cba01ac8b66c3388adb4" kind="function"><name>hyh_apply</name></member>
+    <member refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" kind="function"><name>hyh</name></member>
+    <member refid="group__topic-linalg-flops_1ga5bc716f7288da381eb1c0120a7d3182c" kind="function"><name>syrk_potrf</name></member>
+    <member refid="group__topic-linalg-flops_1ga982c62c85e182a49c333bb2eef903625" kind="function"><name>trsm</name></member>
+    <member refid="group__topic-linalg-flops_1ga5f151f75e2a3092103903fb8f8f3cae3" kind="function"><name>trtri</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg_1_1micro__kernels" kind="namespace"><name>batmat::linalg::micro_kernels</name>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm" kind="namespace"><name>batmat::linalg::micro_kernels::gemm</name>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1af0304c22970e8f8e0fa363dd6330729b" kind="variable"><name>ColsReg</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a1e70ed8554280a01dbe44b932e0309e8" kind="variable"><name>gemm_copy_lut</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a1032d34b7d87dd1ff172587040eff304" kind="variable"><name>first_column</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a19c649ba5762668c0619054114573e58" kind="variable"><name>last_column</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kind="variable"><name>RowsReg</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1ab45cf1ec52800de1cb3fa7a8ca8728b9" kind="variable"><name>RowsReg&lt; T, Abi &gt;</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1ac69c39d34745b70589892c7594e29bd6" kind="function"><name>gemm_copy_microkernel</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a9a004fcdd3237c9903bdd7bc81aa43c3" kind="function"><name>gemm_copy_register</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag" kind="namespace"><name>batmat::linalg::micro_kernels::gemm_diag</name>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a9bdc8e1700f6f5f0bd26eb0e3632ad5a" kind="variable"><name>ColsReg</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a9605630dbb1bcb3b812451fb6bba0b19" kind="variable"><name>gemm_diag_copy_lut</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a6bb287d24616b9f621b152bed9359ac9" kind="variable"><name>first_column</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a536c6b4c514dbe03ac382ab028165a20" kind="variable"><name>last_column</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kind="variable"><name>RowsReg</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1ab44ba86816595cc9551b7630a3a68857" kind="function"><name>gemm_diag_copy_microkernel</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1ac3b0cbc0431188ba51f8861d18a002c6" kind="function"><name>gemm_diag_copy_register</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemv" kind="namespace"><name>batmat::linalg::micro_kernels::gemv</name>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemv_1ad7bf2648f530c66ac18b9b64084fb408" kind="variable"><name>RowsReg</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemv_1a097ffde945ec83c5c99f009b1255159a" kind="variable"><name>gemv_copy_lut</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemv_1adc76af1f86f99c43137ad12fbbf7b02c" kind="function"><name>gemv_copy_microkernel</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemv_1aafe5591645f17ff88569e8c9fd026e2a" kind="function"><name>gemv_copy_register</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound" kind="namespace"><name>batmat::linalg::micro_kernels::hyhound</name>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87afc4eafa57bfbf59fdc46f9cbfacf2" kind="enum"><name>Structure</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87afc4eafa57bfbf59fdc46f9cbfacf2a0db377921f4ce762c62526131097968f" kind="enumvalue"><name>General</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87afc4eafa57bfbf59fdc46f9cbfacf2ad7ed4ee1df437474d005188535f74875" kind="enumvalue"><name>Zero</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87afc4eafa57bfbf59fdc46f9cbfacf2a19de5b94f7b83900d4b296d9fa491aec" kind="enumvalue"><name>Upper</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1af145fe6484342df29f95f704cd780e99" kind="variable"><name>SizeR</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a58926d525a534c2f5b9c3a74495fc131" kind="variable"><name>SizeS</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1ad3da8ec66ed4392d5a8fa58792418319" kind="variable"><name>microkernel_diag_lut</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a1eeba000f2874ce2b2cb2dcec0364ac5" kind="variable"><name>microkernel_full_lut</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1ac6e03ac9e4fdb208e1225bc18b9aaf3a" kind="variable"><name>microkernel_tail_lut</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1abeb33e38dd44a95e55b5130c05592091" kind="variable"><name>microkernel_tail_lut_2</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a9c8b334cabf1bbba060325ee859a1c7b" kind="function"><name>hyhound_diag_diag_microkernel</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a1ceb252ea60212d3273bcd59dcb46ba8" kind="function"><name>hyhound_diag_full_microkernel</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a534cdfdc1e56dcd5573a5fc39eac7176" kind="function"><name>hyhound_diag_tail_microkernel</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87d65ca6b3a6b9d06c62258aed33fab8" kind="function"><name>hyhound_W_size</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a2c5a2006331870dacb985bf041677d2f" kind="function"><name>hyhound_diag_register</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1abb8a02f51481706c9fcde21d335e6bde" kind="function"><name>hyhound_diag_register</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1aaf3bb7241f5671570517c0b5a3319741" kind="function"><name>hyhound_diag_apply_register</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1ae92a1b550b2c03dd1a8bc9497d365b64" kind="function"><name>hyhound_diag_2_register</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a296680bfcaddeb3c87b4da48edd2c531" kind="function"><name>hyhound_diag_cyclic_register</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a5180c328f7daee0ec80eb04fe70a8707" kind="function"><name>hyhound_diag_riccati_register</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1detail" kind="namespace"><name>batmat::linalg::micro_kernels::hyhound::detail</name>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1detail_1ad044144d29b80f6db7a6765e234a91ea" kind="function"><name>rotate</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1detail_1a464493e37ef99c3ed930c5d86bedb2d6" kind="function"><name>rotate</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf" kind="namespace"><name>batmat::linalg::micro_kernels::potrf</name>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a6d97a42fcc9cb4c6ec3bc1fecc25ee03" kind="typedef"><name>diag_uview_type</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1ac8c97a705deb67e219cdf6e4c0549c3f" kind="typedef"><name>diag_view_type</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a1af456782f0f08207d0c9ca6a9d65df4" kind="variable"><name>ColsReg</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a6aa231e11d4fdeeef42148191cf288df" kind="variable"><name>potrf_copy_lut</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1abae632b1484c889c2f362b44dcae8c4e" kind="variable"><name>trsm_copy_lut</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kind="variable"><name>RowsReg</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1add686c799a211b971e9a8453d122bedc" kind="function"><name>potrf_copy_microkernel</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a7409608f7378a6391ad092fbaf087932" kind="function"><name>trsm_copy_microkernel</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a8bf1deb6078071adb45021570fadae23" kind="function"><name>potrf_copy_register</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a801c92e07c9f735ca314ca694df6fc1b" kind="function"><name>load_diag</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a635ee44454b128a7c62293a99b0083eb" kind="function"><name>apply_diag</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv" kind="namespace"><name>batmat::linalg::micro_kernels::symv</name>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1a3da5b2ee321a968e991f6c065c63e5f5" kind="variable"><name>RowsReg</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1adb3f5219e0b935dae432cd71a5123553" kind="variable"><name>symv_copy_lut</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1a8e3e42248c801d300b568f3999aca5b8" kind="function"><name>symv_copy_microkernel</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1a7983f41d91ff84c3ab71e3ce41bc8718" kind="function"><name>symv_copy_register</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv" kind="namespace"><name>batmat::linalg::micro_kernels::syomv</name>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1a1532e6b178df89f7e3357ea46a218586" kind="variable"><name>syomv_lut</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kind="variable"><name>RowsReg</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1ae86f50db44ab72f6cc46375603241750" kind="function"><name>syomv_microkernel</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1af5a554923dce53d14cc5a7a90e5169cb" kind="function"><name>syomv_register</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trsm" kind="namespace"><name>batmat::linalg::micro_kernels::trsm</name>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trsm_1aa589baf40668e748e389a9b4b180936b" kind="variable"><name>ColsReg</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trsm_1af2cce25060119fc04aa4e8e63047f044" kind="variable"><name>trsm_copy_lut</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trsm_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kind="variable"><name>RowsReg</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trsm_1a45a73b224fbc54482018580253e3a846" kind="function"><name>trsm_copy_microkernel</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trsm_1a99e84b46532140e0b84a1a60002bd82f" kind="function"><name>trsm_copy_register</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri" kind="namespace"><name>batmat::linalg::micro_kernels::trtri</name>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af75df864a9e8b9d493afec89b432ef62" kind="variable"><name>ColsReg</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a66af129bc17c5d94f9fdb76b92edac7b" kind="variable"><name>trtri_copy_lut</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a03e2c492eb817c0169071450de2d341f" kind="variable"><name>trmm_lut</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kind="variable"><name>RowsReg</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af85745fbec819255a01a9b9513324512" kind="function"><name>trtri_copy_microkernel</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a83a92100dec173181dece5d96bf9ca1c" kind="function"><name>trmm_microkernel</name></member>
+    <member refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1abad0e2c032d6297bf7a2f0a68b771d40" kind="function"><name>trtri_copy_register</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1matrix" kind="namespace"><name>batmat::matrix</name>
+    <member refid="namespacebatmat_1_1matrix_1a3bf2b5f85e94200874b4a9bc591cc79c" kind="typedef"><name>integral_value_type_t</name></member>
+    <member refid="group__topic-matrix-utils_1gae1611b15c38c77550ccbe46aff4bdcea" kind="variable"><name>uninitialized</name></member>
+    <member refid="namespacebatmat_1_1matrix_1a3d6493a269ccc46e9b44b34547a907dc" kind="function"><name>data</name></member>
+    <member refid="namespacebatmat_1_1matrix_1a0e5c0c9bcf56aa42f04eb8cb7815ef9f" kind="function"><name>data</name></member>
+    <member refid="namespacebatmat_1_1matrix_1a57cb27e69c13203bc77004c5068d42eb" kind="function"><name>data</name></member>
+    <member refid="namespacebatmat_1_1matrix_1ab055982bb47d583c6d71933ed276adad" kind="function"><name>rows</name></member>
+    <member refid="namespacebatmat_1_1matrix_1a2150b3f03f6d87cefd6c64126ee75860" kind="function"><name>cols</name></member>
+    <member refid="namespacebatmat_1_1matrix_1a3e16dcc24f9a287844624e6fab123756" kind="function"><name>outer_stride</name></member>
+    <member refid="namespacebatmat_1_1matrix_1af0d488172736d683f0389fb9aeacbb92" kind="function"><name>depth</name></member>
+    <member refid="namespacebatmat_1_1matrix_1aeedf60a3269d97c9ce101e6e58ae60c7" kind="function"><name>as_align_val</name></member>
+    <member refid="group__topic-matrix-utils_1ga3e92d037864fc4f6d218f961d069e7bb" kind="function"><name>make_aligned_unique_ptr</name></member>
+    <member refid="group__topic-matrix-utils_1ga98675c4ff0dc3e7e479110770a1861d6" kind="function"><name>make_aligned_unique_ptr</name></member>
+    <member refid="namespacebatmat_1_1matrix_1ababb2f1149159a016b144d990bee1934" kind="function"><name>operator==</name></member>
+    <member refid="namespacebatmat_1_1matrix_1a7371ed797cad25463c1ab8fe7483504c" kind="function"><name>operator!=</name></member>
+    <member refid="namespacebatmat_1_1matrix_1ae776b3c503310f4027d73231ee798113" kind="function"><name>operator!=</name></member>
+    <member refid="namespacebatmat_1_1matrix_1aa36a101a15c060e5c656463a5c6ef587" kind="function"><name>data</name></member>
+    <member refid="namespacebatmat_1_1matrix_1ace408d79a94aff7ca1f7bf2a7dc94719" kind="function"><name>rows</name></member>
+    <member refid="namespacebatmat_1_1matrix_1a5d849ea8e2d6d668665f5ece822668fa" kind="function"><name>cols</name></member>
+    <member refid="namespacebatmat_1_1matrix_1a72d2eafd283cf2aaae93c61dfa2c1fa7" kind="function"><name>outer_stride</name></member>
+    <member refid="namespacebatmat_1_1matrix_1a7704572499a68b9b08db1c8e4cc57d4a" kind="function"><name>depth</name></member>
+    <member refid="namespacebatmat_1_1matrix_1a12561d95ffd5ca9cc074d7b3edceb429" kind="enum"><name>StorageOrder</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1matrix_1_1detail" kind="namespace"><name>batmat::matrix::detail</name>
+    <member refid="namespacebatmat_1_1matrix_1_1detail_1a89b64480e7120b12558a7a46b47bce44" kind="typedef"><name>default_alignment_t</name></member>
+    <member refid="namespacebatmat_1_1matrix_1_1detail_1a2cf98dab88a4f9d05671cbd56f967e31" kind="function"><name>make_aligned_unique_ptr</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1ops" kind="namespace"><name>batmat::ops</name>
+    <member refid="group__topic-low-level-ops_1ga7edc1a8ca0fbd5557bd397cfd28a743e" kind="function"><name>gather</name></member>
+    <member refid="group__topic-low-level-ops_1ga247b1215d2f350a55c60a922efc98e4e" kind="function"><name>rotl</name></member>
+    <member refid="group__topic-low-level-ops_1ga99482a68bf78d2c163dcd663b24131c5" kind="function"><name>rotr</name></member>
+    <member refid="group__topic-low-level-ops_1gaaa3114a23628a7f5db3d380c07e6d03a" kind="function"><name>shiftl</name></member>
+    <member refid="group__topic-low-level-ops_1gafd42e3bbc4c662e3384ffc8653fdc6a8" kind="function"><name>shiftr</name></member>
+    <member refid="group__topic-low-level-ops_1gaf86c438318c89dd7be953a0633285ef8" kind="function"><name>rot</name></member>
+    <member refid="group__topic-low-level-ops_1ga179fee4bcade5a062eeae2b0b2d74478" kind="function"><name>rsqrt</name></member>
+    <member refid="group__topic-low-level-ops_1ga633648536facc16ec0c0ff27cc9932d0" kind="function"><name>rsqrt</name></member>
+    <member refid="group__topic-low-level-ops_1gaa7e113b52b9b2f919ea0cd6b700c0e40" kind="function"><name>transpose_dyn</name></member>
+    <member refid="group__topic-low-level-ops_1ga4d57a10ef71c7ecf19366ed11bc793d7" kind="function"><name>transpose</name></member>
+    <member refid="namespacebatmat_1_1ops_1a1c03064f61a66762167720552b17492d" kind="variable"><name>RowsRegTranspose</name></member>
+    <member refid="namespacebatmat_1_1ops_1aba08c59c6da886c90e67b44012ac10db" kind="variable"><name>ColsRegTranspose</name></member>
+    <member refid="namespacebatmat_1_1ops_1a1779d107ba7ae64b4f6b8f005636884d" kind="variable"><name>RowsRegTranspose&lt; double &gt;</name></member>
+    <member refid="namespacebatmat_1_1ops_1a109f73f14ca73aef5e13389450570fae" kind="variable"><name>ColsRegTranspose&lt; double &gt;</name></member>
+    <member refid="namespacebatmat_1_1ops_1a0de59f8bf5b1c4058c2e188fa3c556e1" kind="function"><name>cneg</name></member>
+  </compound>
+  <compound refid="namespacebatmat_1_1ops_1_1detail" kind="namespace"><name>batmat::ops::detail</name>
+    <member refid="group__topic-low-level-ops_1ga0de59f8bf5b1c4058c2e188fa3c556e1" kind="function"><name>cneg</name></member>
+    <member refid="group__topic-low-level-ops_1ga3c252012a50af49aceac433f2104ff41" kind="function"><name>cneg</name></member>
+    <member refid="group__topic-low-level-ops_1gac3333193d8a7f69c46423b137922ed16" kind="function"><name>cneg</name></member>
+    <member refid="namespacebatmat_1_1ops_1_1detail_1abe58362cb69f6df7025afcf8d1df4e11" kind="typedef"><name>floating_point_to_int_t</name></member>
+    <member refid="namespacebatmat_1_1ops_1_1detail_1aae3aa21caaf70f9c41a78a5ffd434fc1" kind="typedef"><name>convert_int_t</name></member>
+    <member refid="namespacebatmat_1_1ops_1_1detail_1aedd67c16728b3e5de575579fc5728a6b" kind="typedef"><name>mask_type_t</name></member>
+    <member refid="namespacebatmat_1_1ops_1_1detail_1a371e08d0c4b13352046afed85365a4bf" kind="function"><name>gather</name></member>
+    <member refid="namespacebatmat_1_1ops_1_1detail_1a6f0b1229fa5b88f23723fc65b75706ea" kind="function"><name>convert_int</name></member>
+    <member refid="namespacebatmat_1_1ops_1_1detail_1a7a2eefc87ffd67db8b263046db94a373" kind="function"><name>convert_mask</name></member>
+    <member refid="namespacebatmat_1_1ops_1_1detail_1ae37fca8a2efbc9ce698af24433ea5c2f" kind="function"><name>compare_ge_0</name></member>
+    <member refid="namespacebatmat_1_1ops_1_1detail_1af86c438318c89dd7be953a0633285ef8" kind="function"><name>rot</name></member>
+    <member refid="namespacebatmat_1_1ops_1_1detail_1a9210fe01d8e36639fb10c5145d2fd373" kind="function"><name>rotl</name></member>
+    <member refid="namespacebatmat_1_1ops_1_1detail_1a5cbbec102f5a2e6220a1d32149ad373d" kind="function"><name>rotr</name></member>
+    <member refid="namespacebatmat_1_1ops_1_1detail_1a25773d280715f4b8bbf625cbb8653e42" kind="function"><name>shiftl</name></member>
+    <member refid="namespacebatmat_1_1ops_1_1detail_1a952bfdf95e53d22d4e6b28c39c701dae" kind="function"><name>shiftr</name></member>
+    <member refid="namespacebatmat_1_1ops_1_1detail_1a1d23fd344d42bef88f6bd35fa0d233e4" kind="function"><name>rsqrt_1</name></member>
+    <member refid="namespacebatmat_1_1ops_1_1detail_1a685a1392db0d11da88957bf989278125" kind="function"><name>rsqrt_2</name></member>
+  </compound>
+  <compound refid="namespacestd" kind="namespace"><name>std</name>
+  </compound>
+  <compound refid="examples_8md" kind="file"><name>examples.md</name>
+  </compound>
+  <compound refid="groups_8dox" kind="file"><name>groups.dox</name>
+  </compound>
+  <compound refid="index_8md" kind="file"><name>index.md</name>
+  </compound>
+  <compound refid="assume_8hpp" kind="file"><name>assume.hpp</name>
+    <member refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kind="define"><name>BATMAT_ASSERT</name></member>
+    <member refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kind="define"><name>BATMAT_ASSUME</name></member>
+  </compound>
+  <compound refid="kib_8hpp" kind="file"><name>kib.hpp</name>
+  </compound>
+  <compound refid="compress_8hpp" kind="file"><name>compress.hpp</name>
+  </compound>
+  <compound refid="copy_8hpp" kind="file"><name>copy.hpp</name>
+  </compound>
+  <compound refid="flops_8hpp" kind="file"><name>flops.hpp</name>
+  </compound>
+  <compound refid="gemm-diag_8hpp" kind="file"><name>gemm-diag.hpp</name>
+  </compound>
+  <compound refid="micro-kernels_2gemm-diag_8hpp" kind="file"><name>gemm-diag.hpp</name>
+  </compound>
+  <compound refid="gemm_8hpp" kind="file"><name>gemm.hpp</name>
+  </compound>
+  <compound refid="micro-kernels_2gemm_8hpp" kind="file"><name>gemm.hpp</name>
+  </compound>
+  <compound refid="gemv_8hpp" kind="file"><name>gemv.hpp</name>
+  </compound>
+  <compound refid="micro-kernels_2gemv_8hpp" kind="file"><name>gemv.hpp</name>
+  </compound>
+  <compound refid="hyhound_8hpp" kind="file"><name>hyhound.hpp</name>
+  </compound>
+  <compound refid="micro-kernels_2hyhound_8hpp" kind="file"><name>hyhound.hpp</name>
+  </compound>
+  <compound refid="gemm-diag_8tpp" kind="file"><name>gemm-diag.tpp</name>
+    <member refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kind="define"><name>UNROLL_FOR</name></member>
+  </compound>
+  <compound refid="gemm_8tpp" kind="file"><name>gemm.tpp</name>
+    <member refid="gemm_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kind="define"><name>UNROLL_FOR</name></member>
+  </compound>
+  <compound refid="gemv_8tpp" kind="file"><name>gemv.tpp</name>
+    <member refid="gemv_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kind="define"><name>UNROLL_FOR</name></member>
+  </compound>
+  <compound refid="hyhound_8tpp" kind="file"><name>hyhound.tpp</name>
+    <member refid="hyhound_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kind="define"><name>UNROLL_FOR</name></member>
+  </compound>
+  <compound refid="potrf_8tpp" kind="file"><name>potrf.tpp</name>
+    <member refid="potrf_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kind="define"><name>UNROLL_FOR</name></member>
+  </compound>
+  <compound refid="micro-kernels_2symv_8hpp" kind="file"><name>symv.hpp</name>
+  </compound>
+  <compound refid="symv_8hpp" kind="file"><name>symv.hpp</name>
+  </compound>
+  <compound refid="symv_8tpp" kind="file"><name>symv.tpp</name>
+    <member refid="symv_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kind="define"><name>UNROLL_FOR</name></member>
+  </compound>
+  <compound refid="syomv_8tpp" kind="file"><name>syomv.tpp</name>
+    <member refid="syomv_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kind="define"><name>UNROLL_FOR</name></member>
+  </compound>
+  <compound refid="micro-kernels_2trsm_8hpp" kind="file"><name>trsm.hpp</name>
+  </compound>
+  <compound refid="trsm_8hpp" kind="file"><name>trsm.hpp</name>
+  </compound>
+  <compound refid="trsm_8tpp" kind="file"><name>trsm.tpp</name>
+    <member refid="trsm_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kind="define"><name>UNROLL_FOR</name></member>
+  </compound>
+  <compound refid="trtri_8tpp" kind="file"><name>trtri.tpp</name>
+    <member refid="trtri_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kind="define"><name>UNROLL_FOR</name></member>
+  </compound>
+  <compound refid="micro-kernels_2potrf_8hpp" kind="file"><name>potrf.hpp</name>
+  </compound>
+  <compound refid="potrf_8hpp" kind="file"><name>potrf.hpp</name>
+  </compound>
+  <compound refid="shift_8hpp" kind="file"><name>shift.hpp</name>
+  </compound>
+  <compound refid="simdify_8hpp" kind="file"><name>simdify.hpp</name>
+  </compound>
+  <compound refid="structure_8hpp" kind="file"><name>structure.hpp</name>
+  </compound>
+  <compound refid="symm_8hpp" kind="file"><name>symm.hpp</name>
+  </compound>
+  <compound refid="micro-kernels_2syomv_8hpp" kind="file"><name>syomv.hpp</name>
+  </compound>
+  <compound refid="syomv_8hpp" kind="file"><name>syomv.hpp</name>
+  </compound>
+  <compound refid="triangular_8hpp" kind="file"><name>triangular.hpp</name>
+  </compound>
+  <compound refid="micro-kernels_2trtri_8hpp" kind="file"><name>trtri.hpp</name>
+  </compound>
+  <compound refid="trtri_8hpp" kind="file"><name>trtri.hpp</name>
+  </compound>
+  <compound refid="uview_8hpp" kind="file"><name>uview.hpp</name>
+  </compound>
+  <compound refid="loop_8hpp" kind="file"><name>loop.hpp</name>
+  </compound>
+  <compound refid="lut_8hpp" kind="file"><name>lut.hpp</name>
+  </compound>
+  <compound refid="layout_8hpp" kind="file"><name>layout.hpp</name>
+  </compound>
+  <compound refid="matrix_8hpp" kind="file"><name>matrix.hpp</name>
+  </compound>
+  <compound refid="storage_8hpp" kind="file"><name>storage.hpp</name>
+  </compound>
+  <compound refid="view_8hpp" kind="file"><name>view.hpp</name>
+  </compound>
+  <compound refid="openmp_8h" kind="file"><name>openmp.h</name>
+    <member refid="openmp_8h_1aeba6741fe24ed21a53724572c25855bd" kind="define"><name>BATMAT_OMP</name></member>
+    <member refid="openmp_8h_1afc3c943f60b9b7ac34df71b90169bae9" kind="define"><name>BATMAT_OMP_IF_ELSE</name></member>
+    <member refid="openmp_8h_1aac5beb62dae653c1d1eec2613b29e714" kind="define"><name>BATMAT_OMP_IF</name></member>
+  </compound>
+  <compound refid="cneg_8hpp" kind="file"><name>cneg.hpp</name>
+  </compound>
+  <compound refid="gather_8hpp" kind="file"><name>gather.hpp</name>
+  </compound>
+  <compound refid="mask_8hpp" kind="file"><name>mask.hpp</name>
+  </compound>
+  <compound refid="rotate_8hpp" kind="file"><name>rotate.hpp</name>
+  </compound>
+  <compound refid="rsqrt_8hpp" kind="file"><name>rsqrt.hpp</name>
+  </compound>
+  <compound refid="transpose_8hpp" kind="file"><name>transpose.hpp</name>
+  </compound>
+  <compound refid="avx-512_8hpp" kind="file"><name>avx-512.hpp</name>
+  </compound>
+  <compound refid="avx2_8hpp" kind="file"><name>avx2.hpp</name>
+  </compound>
+  <compound refid="generic_8hpp" kind="file"><name>generic.hpp</name>
+  </compound>
+  <compound refid="neon_8hpp" kind="file"><name>neon.hpp</name>
+  </compound>
+  <compound refid="platform_8hpp" kind="file"><name>platform.hpp</name>
+  </compound>
+  <compound refid="simd_8hpp" kind="file"><name>simd.hpp</name>
+    <member refid="simd_8hpp_1a0533d5b0648899560248b705d45a3b6f" kind="define"><name>BATMAT_HAVE_SIMD_TO_INTRIN</name></member>
+  </compound>
+  <compound refid="thread-pool_8hpp" kind="file"><name>thread-pool.hpp</name>
+  </compound>
+  <compound refid="timing_8hpp" kind="file"><name>timing.hpp</name>
+  </compound>
+  <compound refid="unroll_8h" kind="file"><name>unroll.h</name>
+    <member refid="unroll_8h_1a50c6fa4278afd7f4b1900a3c61286d92" kind="define"><name>BATMAT_FULLY_UNROLL_LOOP</name></member>
+    <member refid="unroll_8h_1addb39c3474d8e234f06b9ca62ed0bf75" kind="define"><name>BATMAT_FULLY_UNROLLED_FOR</name></member>
+    <member refid="unroll_8h_1a73dd9b450e263421adfef45753671d8e" kind="define"><name>BATMAT_FULLY_UNROLLED_IVDEP_FOR</name></member>
+    <member refid="unroll_8h_1a3b47b5e0ab192416373a2afa12ef97cd" kind="define"><name>BATMAT_UNROLLED_IVDEP_FOR</name></member>
+  </compound>
+  <compound refid="batmat_8cpp" kind="file"><name>batmat.cpp</name>
+  </compound>
+  <compound refid="linalg_8cpp" kind="file"><name>linalg.cpp</name>
+  </compound>
+  <compound refid="thread-pool_8cpp" kind="file"><name>thread-pool.cpp</name>
+  </compound>
+  <compound refid="timing_8cpp" kind="file"><name>timing.cpp</name>
+  </compound>
+  <compound refid="example_8cpp" kind="file"><name>example.cpp</name>
+    <member refid="example_8cpp_1ae66f6b31b5ad750f1fe042a706a4e3d4" kind="function"><name>main</name></member>
+  </compound>
+  <compound refid="group__topic-matrix" kind="group"><name>topic-matrix</name>
+  </compound>
+  <compound refid="group__topic-matrix-utils" kind="group"><name>topic-matrix-utils</name>
+    <member refid="group__topic-matrix-utils_1gae1611b15c38c77550ccbe46aff4bdcea" kind="variable"><name>uninitialized</name></member>
+    <member refid="group__topic-matrix-utils_1ga3e92d037864fc4f6d218f961d069e7bb" kind="function"><name>make_aligned_unique_ptr</name></member>
+    <member refid="group__topic-matrix-utils_1ga98675c4ff0dc3e7e479110770a1861d6" kind="function"><name>make_aligned_unique_ptr</name></member>
+  </compound>
+  <compound refid="group__topic-linalg" kind="group"><name>topic-linalg</name>
+    <member refid="group__topic-linalg_1ga7305be66e2eab7d32be3409e555d8136" kind="function"><name>compress_masks</name></member>
+    <member refid="group__topic-linalg_1ga1b26575da2cfc351d0a18eda0475b8d3" kind="function"><name>compress_masks_count</name></member>
+    <member refid="group__topic-linalg_1gaaac6172ca3a3098c8c85f4c703ac7575" kind="function"><name>compress_masks_sqrt</name></member>
+    <member refid="group__topic-linalg_1ga318bdad6a6e249fcd8652b2b49012418" kind="function"><name>compress_masks_sqrt</name></member>
+    <member refid="group__topic-linalg_1ga9df61b993f7e79ad21eddb76b4c2089e" kind="function"><name>copy</name></member>
+    <member refid="group__topic-linalg_1ga0c62a1596a13149c17223ca93a4de7bd" kind="function"><name>copy</name></member>
+    <member refid="group__topic-linalg_1gaf53b173cc76dd28168d422b8812298a3" kind="function"><name>fill</name></member>
+    <member refid="group__topic-linalg_1ga3b16436bd7456f60369fd1db2d67442e" kind="function"><name>fill</name></member>
+    <member refid="group__topic-linalg_1gad57207460bfd526791afa8a0ccc19041" kind="function"><name>gemm_diag</name></member>
+    <member refid="group__topic-linalg_1ga0ae75850dc387a83a665ea8b370d5268" kind="function"><name>gemm_diag_add</name></member>
+    <member refid="group__topic-linalg_1gaa0e3784877a4dfc671b25479fa918281" kind="function"><name>gemm_diag_add</name></member>
+    <member refid="group__topic-linalg_1ga958862e903797c035916e22d09f4fcb3" kind="function"><name>syrk_diag_add</name></member>
+    <member refid="group__topic-linalg_1ga26d21bd656eb96da9c58c2e92329918a" kind="function"><name>syrk_diag_add</name></member>
+    <member refid="group__topic-linalg_1ga56b98ed114604544b0806d8b191b119e" kind="function"><name>gemm</name></member>
+    <member refid="group__topic-linalg_1ga2ecaacbba5614bcbbf95c79023424e64" kind="function"><name>gemm_neg</name></member>
+    <member refid="group__topic-linalg_1ga1177461212428f6b96e21abff82af6a3" kind="function"><name>gemm_add</name></member>
+    <member refid="group__topic-linalg_1ga8c44e915ee2cda546e7dc005ab1af1c4" kind="function"><name>gemm_add</name></member>
+    <member refid="group__topic-linalg_1ga6ba27579e2442c5a7689d0577f63478e" kind="function"><name>gemm_sub</name></member>
+    <member refid="group__topic-linalg_1ga611ecdda112c005fe2d42372a92aea7b" kind="function"><name>gemm_sub</name></member>
+    <member refid="group__topic-linalg_1ga59ec2e76f7d857d495fcc518d19f2a77" kind="function"><name>syrk</name></member>
+    <member refid="group__topic-linalg_1ga51fc97f0f6c6ce55401630c8b57889e9" kind="function"><name>syrk</name></member>
+    <member refid="group__topic-linalg_1ga24000b15cd231d821eb1292ad3631c2b" kind="function"><name>syrk</name></member>
+    <member refid="group__topic-linalg_1ga038f5f115bd19ed4f3ca205ca4728fc3" kind="function"><name>syrk_neg</name></member>
+    <member refid="group__topic-linalg_1ga8a698c5e4610420a9d7fcf483f41f452" kind="function"><name>syrk_neg</name></member>
+    <member refid="group__topic-linalg_1ga8d63dfa8eaa22949ca78e2241a608a0f" kind="function"><name>syrk_neg</name></member>
+    <member refid="group__topic-linalg_1ga94668e960bcf7b6a7ffe8902d799079a" kind="function"><name>syrk_add</name></member>
+    <member refid="group__topic-linalg_1gaaf33c861e820d1d87ca43314e7453bf3" kind="function"><name>syrk_add</name></member>
+    <member refid="group__topic-linalg_1ga19841b227bc4cf6d0949b85b6e201033" kind="function"><name>syrk_sub</name></member>
+    <member refid="group__topic-linalg_1ga3b3a5785bb0a178c28eb050f5e7ad982" kind="function"><name>syrk_sub</name></member>
+    <member refid="group__topic-linalg_1ga677da05414c67192ed400e3a0b0a2c51" kind="function"><name>trmm</name></member>
+    <member refid="group__topic-linalg_1ga776866b470bf67ecb2f561a7714f6ac8" kind="function"><name>trmm</name></member>
+    <member refid="group__topic-linalg_1ga4bcadac1586aa8f2fd1a8f632c369601" kind="function"><name>trmm</name></member>
+    <member refid="group__topic-linalg_1ga9c7791da3ee24263434ba87316ac50e3" kind="function"><name>trmm</name></member>
+    <member refid="group__topic-linalg_1ga1474b560ee985d29dad901fec92a6e09" kind="function"><name>trmm_neg</name></member>
+    <member refid="group__topic-linalg_1ga41be251a5129e3aa430b4d0685e4f055" kind="function"><name>trmm_neg</name></member>
+    <member refid="group__topic-linalg_1gab8de92b40ec44dc42b8194ca149e2195" kind="function"><name>trmm_add</name></member>
+    <member refid="group__topic-linalg_1ga5ff4cf9c0cc64e6b59d44a9a7b257d36" kind="function"><name>trmm_add</name></member>
+    <member refid="group__topic-linalg_1ga4c466c8c3c49448dbe08d2a69f0dc753" kind="function"><name>trmm_sub</name></member>
+    <member refid="group__topic-linalg_1ga6b66dee15a04b53f3f39edc1caa41bb6" kind="function"><name>trmm_sub</name></member>
+    <member refid="group__topic-linalg_1ga8ce09a22e339c8a076415d047c23a5cd" kind="function"><name>gemv</name></member>
+    <member refid="group__topic-linalg_1gaabdf90658a0013e1858d377dcecf5d6f" kind="function"><name>gemv_neg</name></member>
+    <member refid="group__topic-linalg_1ga4d4c245f7f41a9e595292defaf3f55cf" kind="function"><name>gemv_add</name></member>
+    <member refid="group__topic-linalg_1ga7cfed7daaf31afb02d713f7ccd1481da" kind="function"><name>gemv_add</name></member>
+    <member refid="group__topic-linalg_1gac4246c2e6b61282811138d8232f9d737" kind="function"><name>gemv_sub</name></member>
+    <member refid="group__topic-linalg_1ga26163eb18f74d290e190d0a8d52ade6b" kind="function"><name>gemv_sub</name></member>
+    <member refid="group__topic-linalg_1gae6733a70513ebef849110b4842708820" kind="function"><name>hyhound_diag</name></member>
+    <member refid="group__topic-linalg_1ga333ab34077b524480da3a9835b51e166" kind="function"><name>hyhound_diag</name></member>
+    <member refid="group__topic-linalg_1gaab95bb8df58e52f0b5c2f156f8c6dea0" kind="function"><name>hyhound_size_W</name></member>
+    <member refid="group__topic-linalg_1ga3e2338ff100c3544cad0105effc729c0" kind="function"><name>hyhound_diag_apply</name></member>
+    <member refid="group__topic-linalg_1gaa675e1f6e044ea392f0ee072bcd38890" kind="function"><name>hyhound_diag_apply</name></member>
+    <member refid="group__topic-linalg_1ga71aaa795868e76c82b95bdd6230b9519" kind="function"><name>hyhound_sign</name></member>
+    <member refid="group__topic-linalg_1gae5ae03b84e9ada852009a47cfb1a101b" kind="function"><name>hyhound_diag_2</name></member>
+    <member refid="group__topic-linalg_1gaf619c0c15ef61d2dd2eaa585f525a93f" kind="function"><name>hyhound_diag_cyclic</name></member>
+    <member refid="group__topic-linalg_1ga623445a546acac724601551447aaef5a" kind="function"><name>hyhound_diag_riccati</name></member>
+    <member refid="group__topic-linalg_1ga12c3f866950fd1c70288d50280b7fb6b" kind="function"><name>syrk_add_potrf</name></member>
+    <member refid="group__topic-linalg_1gac41bc35d00eb8f3efe6db4d3f0deb2c4" kind="function"><name>syrk_add_potrf</name></member>
+    <member refid="group__topic-linalg_1ga9b273b45f515781eb285544bbcca8143" kind="function"><name>syrk_sub_potrf</name></member>
+    <member refid="group__topic-linalg_1ga74ca156ede10af825418293b6eaec901" kind="function"><name>syrk_sub_potrf</name></member>
+    <member refid="group__topic-linalg_1gacb1f9d940de812c4cc0fb23a407d955d" kind="function"><name>syrk_diag_add_potrf</name></member>
+    <member refid="group__topic-linalg_1ga42e34a775639000995fdfbe90491c36a" kind="function"><name>syrk_diag_add_potrf</name></member>
+    <member refid="group__topic-linalg_1gaa5a48352d831fa72f651dfb4a53bba9e" kind="function"><name>potrf</name></member>
+    <member refid="group__topic-linalg_1ga0d94954d9b08608b3d7f3c2bdaec531d" kind="function"><name>potrf</name></member>
+    <member refid="group__topic-linalg_1ga86ace4b801d8635578413dafc05539d3" kind="function"><name>symm_add</name></member>
+    <member refid="group__topic-linalg_1ga28b7fe55495d3a3c414ce0e43b8a8b2c" kind="function"><name>symm_add</name></member>
+    <member refid="group__topic-linalg_1gaf56b3f892871b53ff7dc0efedb0eac36" kind="function"><name>symv</name></member>
+    <member refid="group__topic-linalg_1ga9577422bc277329e6409043853208764" kind="function"><name>symv_neg</name></member>
+    <member refid="group__topic-linalg_1ga6be77cce642739acb04a594098a57ffe" kind="function"><name>symv_add</name></member>
+    <member refid="group__topic-linalg_1ga05b276ea72af0939b1b8fbc2a40bcdfb" kind="function"><name>symv_add</name></member>
+    <member refid="group__topic-linalg_1ga126f2b74ab3588969d16c1ea34febd99" kind="function"><name>symv_sub</name></member>
+    <member refid="group__topic-linalg_1gabb4409c022fa8f42bd3e24191eb8b633" kind="function"><name>symv_sub</name></member>
+    <member refid="group__topic-linalg_1ga1c157567ed0f419c4136ec2a69dc8a59" kind="function"><name>syomv</name></member>
+    <member refid="group__topic-linalg_1gae8fed320ade4ba886dfe45d35f31ccc5" kind="function"><name>syomv_neg</name></member>
+    <member refid="group__topic-linalg_1gafc9f5555ed4639e0e5ad0e552f9717e4" kind="function"><name>tril</name></member>
+    <member refid="group__topic-linalg_1gaf6d9519ee15d51a0ba7243e640d8be71" kind="function"><name>triu</name></member>
+    <member refid="group__topic-linalg_1gab42ee44cb500f4d76bb81090614490d8" kind="function"><name>make_structured</name></member>
+    <member refid="group__topic-linalg_1ga21c503ca31b0d06b1a0e93ccf0b754c7" kind="function"><name>trsm</name></member>
+    <member refid="group__topic-linalg_1ga1b8da34024f01d4b25fd976fa5adee70" kind="function"><name>trsm</name></member>
+    <member refid="group__topic-linalg_1gaaca48f4a7e9d1302c0d9666a73a877f6" kind="function"><name>trsm</name></member>
+    <member refid="group__topic-linalg_1gadde7784a92a41d2f74b1447e41880fae" kind="function"><name>trsm</name></member>
+    <member refid="group__topic-linalg_1ga5a6901e33f6891995b0c147814b06230" kind="function"><name>trtri</name></member>
+    <member refid="group__topic-linalg_1ga12d76466423aac96d5405fc6ac08ff08" kind="function"><name>trtri</name></member>
+    <member refid="group__topic-linalg_1gaa4e16632065fd0d673234b06e71ea4c0" kind="function"><name>trtri</name></member>
+    <member refid="group__topic-linalg_1ga01d821b394c1ded4bab2042442dcc6b4" kind="function"><name>trtri</name></member>
+    <member refid="group__topic-linalg_1ga3526955f82976c2274834e5a69b21b7e" kind="enum"><name>PackingSelector</name></member>
+    <member refid="group__topic-linalg_1gga3526955f82976c2274834e5a69b21b7ea6e7b34fa59e1bd229b207892956dc41c" kind="enumvalue"><name>Never</name></member>
+    <member refid="group__topic-linalg_1gga3526955f82976c2274834e5a69b21b7ea68eec46437c384d8dad18d5464ebc35c" kind="enumvalue"><name>Always</name></member>
+    <member refid="group__topic-linalg_1gga3526955f82976c2274834e5a69b21b7eaaf70b1ac863830a4e1ce6268c8399f54" kind="enumvalue"><name>Transpose</name></member>
+    <member refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kind="enum"><name>MatrixStructure</name></member>
+    <member refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kind="enumvalue"><name>General</name></member>
+    <member refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kind="enumvalue"><name>LowerTriangular</name></member>
+    <member refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629cace546798a67931b38dee5a153f9cf688" kind="enumvalue"><name>UpperTriangular</name></member>
+    <member refid="group__topic-linalg_1gaa0bd5dc9f7ed367a2f7fd8b835694d42" kind="function"><name>transpose</name></member>
+    <member refid="group__topic-linalg_1gad0b3d11ecd3861f1c325ca907dc19c1d" kind="function"><name>Structured</name></member>
+  </compound>
+  <compound refid="group__topic-linalg-flops" kind="group"><name>topic-linalg-flops</name>
+    <member refid="group__topic-linalg-flops_1ga837cc287e8d3e7e62cf013aa2c1f58d3" kind="function"><name>operator+</name></member>
+    <member refid="group__topic-linalg-flops_1ga3f5450fd91a87ba9dc28e346bf46bf31" kind="function"><name>total</name></member>
+    <member refid="group__topic-linalg-flops_1ga792bf36ee357f56cea635ef9337368b8" kind="function"><name>gemm</name></member>
+    <member refid="group__topic-linalg-flops_1ga7ab4fbff09383b46ed353e5c8b1cb44a" kind="function"><name>trmm</name></member>
+    <member refid="group__topic-linalg-flops_1gad70c29c07e3f55d4464e001bdfd14da2" kind="function"><name>gemmt</name></member>
+    <member refid="group__topic-linalg-flops_1gac7a4c106e784546210860c59c3634e5e" kind="function"><name>syrk</name></member>
+    <member refid="group__topic-linalg-flops_1ga232cc639534f37bf900df45fb929743e" kind="function"><name>gemmt_diag</name></member>
+    <member refid="group__topic-linalg-flops_1ga840f3e725b3e51c181bc4b2961697528" kind="function"><name>potrf</name></member>
+    <member refid="group__topic-linalg-flops_1ga5c387fb603a544664054bd7db3d363a7" kind="function"><name>hyh_square</name></member>
+    <member refid="group__topic-linalg-flops_1ga907a77af15c3cba01ac8b66c3388adb4" kind="function"><name>hyh_apply</name></member>
+    <member refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" kind="function"><name>hyh</name></member>
+    <member refid="group__topic-linalg-flops_1ga5bc716f7288da381eb1c0120a7d3182c" kind="function"><name>syrk_potrf</name></member>
+    <member refid="group__topic-linalg-flops_1ga982c62c85e182a49c333bb2eef903625" kind="function"><name>trsm</name></member>
+    <member refid="group__topic-linalg-flops_1ga5f151f75e2a3092103903fb8f8f3cae3" kind="function"><name>trtri</name></member>
+  </compound>
+  <compound refid="group__topic-utils" kind="group"><name>topic-utils</name>
+    <member refid="group__topic-utils_1gaa625a055ebbfa5ba05a1fd8f1f104807" kind="enum"><name>LoopDir</name></member>
+    <member refid="group__topic-utils_1ggaa625a055ebbfa5ba05a1fd8f1f104807a67d2f6740a8eaebf4d5c6f79be8da481" kind="enumvalue"><name>Forward</name></member>
+    <member refid="group__topic-utils_1ggaa625a055ebbfa5ba05a1fd8f1f104807ab3263eb38f8903efc271cc7a760da510" kind="enumvalue"><name>Backward</name></member>
+    <member refid="group__topic-utils_1ga65fdbfd18ede71fc4fb894153854c2ee" kind="function"><name>foreach_chunked</name></member>
+    <member refid="group__topic-utils_1gab76a36340644bbf7c8093caa45aef12f" kind="function"><name>foreach_chunked_merged</name></member>
+    <member refid="group__topic-utils_1gae259627b9bd8c02e66d1e244c969e2bc" kind="function"><name>make_2d_lut</name></member>
+    <member refid="group__topic-utils_1ga91b0a07e3a00c803e9859ace6b86828f" kind="function"><name>make_1d_lut</name></member>
+    <member refid="group__topic-utils_1ga9d3db6b0fa567b730dae54e1f1012165" kind="function"><name>pool_set_num_threads</name></member>
+    <member refid="group__topic-utils_1ga536ae1dd079e87845527154b7f4ecc06" kind="function"><name>pool_sync_run_all</name></member>
+    <member refid="group__topic-utils_1ga72f329f3122a76019f71f597fa44bae7" kind="function"><name>pool_sync_run_n</name></member>
+  </compound>
+  <compound refid="group__topic-low-level-ops" kind="group"><name>topic-low-level-ops</name>
+    <member refid="group__topic-low-level-ops_1ga0de59f8bf5b1c4058c2e188fa3c556e1" kind="function"><name>cneg</name></member>
+    <member refid="group__topic-low-level-ops_1ga3c252012a50af49aceac433f2104ff41" kind="function"><name>cneg</name></member>
+    <member refid="group__topic-low-level-ops_1gac3333193d8a7f69c46423b137922ed16" kind="function"><name>cneg</name></member>
+    <member refid="group__topic-low-level-ops_1ga7edc1a8ca0fbd5557bd397cfd28a743e" kind="function"><name>gather</name></member>
+    <member refid="group__topic-low-level-ops_1ga247b1215d2f350a55c60a922efc98e4e" kind="function"><name>rotl</name></member>
+    <member refid="group__topic-low-level-ops_1ga99482a68bf78d2c163dcd663b24131c5" kind="function"><name>rotr</name></member>
+    <member refid="group__topic-low-level-ops_1gaaa3114a23628a7f5db3d380c07e6d03a" kind="function"><name>shiftl</name></member>
+    <member refid="group__topic-low-level-ops_1gafd42e3bbc4c662e3384ffc8653fdc6a8" kind="function"><name>shiftr</name></member>
+    <member refid="group__topic-low-level-ops_1gaf86c438318c89dd7be953a0633285ef8" kind="function"><name>rot</name></member>
+    <member refid="group__topic-low-level-ops_1ga179fee4bcade5a062eeae2b0b2d74478" kind="function"><name>rsqrt</name></member>
+    <member refid="group__topic-low-level-ops_1ga633648536facc16ec0c0ff27cc9932d0" kind="function"><name>rsqrt</name></member>
+    <member refid="group__topic-low-level-ops_1gaa7e113b52b9b2f919ea0cd6b700c0e40" kind="function"><name>transpose_dyn</name></member>
+    <member refid="group__topic-low-level-ops_1ga4d57a10ef71c7ecf19366ed11bc793d7" kind="function"><name>transpose</name></member>
+  </compound>
+  <compound refid="examples" kind="page"><name>examples</name>
+  </compound>
+  <compound refid="dir_fb227e489dae4e94b57f952e55a850cd" kind="dir"><name>batmat</name>
+  </compound>
+  <compound refid="dir_63a8bd2941168c96d494403d8e78330f" kind="dir"><name>batmat/include/batmat</name>
+  </compound>
+  <compound refid="dir_49e56c817e5e54854c35e136979f97ca" kind="dir"><name>/home/runner/work/batmat/batmat/docs</name>
+  </compound>
+  <compound refid="dir_0f66d13221df5a7c05ce5dcf2db3bc52" kind="dir"><name>/home/runner/work/batmat/batmat/docs/source/doxygen</name>
+  </compound>
+  <compound refid="dir_72d467c23e78781a791bd9375234cac1" kind="dir"><name>batmat/include</name>
+  </compound>
+  <compound refid="dir_6b3c116c82570f1db015b5f9324a36e3" kind="dir"><name>batmat/include/batmat/linalg</name>
+  </compound>
+  <compound refid="dir_7d060953eb114525bd9f89a7367682cb" kind="dir"><name>batmat/src/linalg</name>
+  </compound>
+  <compound refid="dir_2285d197d30045dcff418b8c8e7f58c8" kind="dir"><name>batmat/include/batmat/matrix</name>
+  </compound>
+  <compound refid="dir_b8f890d267c2f423150d987ef3045acc" kind="dir"><name>batmat/include/batmat/linalg/micro-kernels</name>
+  </compound>
+  <compound refid="dir_49963b07cc1ee01c8c0c2caacff1ea40" kind="dir"><name>batmat/include/batmat/ops</name>
+  </compound>
+  <compound refid="dir_72c4fd12b1e5011133266bc60516aaac" kind="dir"><name>batmat/include/batmat/platform</name>
+  </compound>
+  <compound refid="dir_1ab31cb45db5038bdda41b72d8600e0e" kind="dir"><name>/home/runner/work/batmat/batmat/docs/source</name>
+  </compound>
+  <compound refid="dir_bac6c998d92352d196046d5e7ec59f44" kind="dir"><name>batmat/src</name>
+  </compound>
+  <compound refid="dir_878c013f375bf12a0b46b5ad70af9790" kind="dir"><name>/home/runner/work/batmat/batmat/test_package/src</name>
+  </compound>
+  <compound refid="dir_778c889fd2923b7a4e5b0e07560cf5c6" kind="dir"><name>/home/runner/work/batmat/batmat/test_package</name>
+  </compound>
+  <compound refid="example_8cpp-example" kind="example"><name>example.cpp</name>
+  </compound>
+  <compound refid="indexpage" kind="page"><name>index</name>
+  </compound>
+</doxygenindex>

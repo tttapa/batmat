@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1types_1_1Head" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::types::Head</compoundname>
+    <templateparamlist>
+      <param>
+        <type>class</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::types::Head&lt; class &gt;</label>
+        <link refid="structbatmat_1_1types_1_1Head"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/dtypes.hpp" line="18" column="1" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="18" bodyend="-1"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,229 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1matrix_1_1View_1_1linear__iterator" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::matrix::View::linear_iterator</compoundname>
+    <includes refid="view_8hpp" local="no">batmat/matrix/view.hpp</includes>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1ad916c76c7c08214d0087daa4fddc864a" prot="public" static="no">
+        <type>T</type>
+        <definition>using batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::value_type = T</definition>
+        <argsstring></argsstring>
+        <name>value_type</name>
+        <qualifiedname>batmat::matrix::View::linear_iterator::value_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="229" column="9" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="229" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1aece6884dc858caa31c4eca89528c233f" prot="public" static="no">
+        <type>T &amp;</type>
+        <definition>using batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::reference = T &amp;</definition>
+        <argsstring></argsstring>
+        <name>reference</name>
+        <qualifiedname>batmat::matrix::View::linear_iterator::reference</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="230" column="9" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="230" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1aac01f187e2b4a5a4f1f7ab34333688eb" prot="public" static="no">
+        <type>I</type>
+        <definition>using batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::difference_type = I</definition>
+        <argsstring></argsstring>
+        <name>difference_type</name>
+        <qualifiedname>batmat::matrix::View::linear_iterator::difference_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="231" column="9" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="231" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1ab3057665d24b940ac9f175754b66f33b" prot="public" static="no" mutable="no">
+        <type>T *</type>
+        <definition>T* batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::data</definition>
+        <argsstring></argsstring>
+        <name>data</name>
+        <qualifiedname>batmat::matrix::View::linear_iterator::data</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="232" column="11" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="232" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1a90f8e4d9ff676bdd2ad5e7162eb9bf15" compoundref="view_8hpp" startline="251" endline="251">batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::operator*</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1abffb7ad0c9925e13b110a5c23a1e9d5d" compoundref="view_8hpp" startline="238" endline="245">batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::operator++</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1a3fd445e604a8fe2d3d8da995ecfbbebc" compoundref="view_8hpp" startline="252" endline="252">batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::operator==</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1acc58874157a231d00f60646f700c5ce3" prot="public" static="no" mutable="no">
+        <type>T *</type>
+        <definition>T* batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::end</definition>
+        <argsstring></argsstring>
+        <name>end</name>
+        <qualifiedname>batmat::matrix::View::linear_iterator::end</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="233" column="11" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="233" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1abffb7ad0c9925e13b110a5c23a1e9d5d" compoundref="view_8hpp" startline="238" endline="245">batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::operator++</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1a3fd445e604a8fe2d3d8da995ecfbbebc" compoundref="view_8hpp" startline="252" endline="252">batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::operator==</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1af7c05dbbecaf7031f806227fd76919a1" prot="public" static="no" mutable="no">
+        <type>T *</type>
+        <definition>T* batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::next_jump</definition>
+        <argsstring></argsstring>
+        <name>next_jump</name>
+        <qualifiedname>batmat::matrix::View::linear_iterator::next_jump</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="234" column="11" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="234" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1abffb7ad0c9925e13b110a5c23a1e9d5d" compoundref="view_8hpp" startline="238" endline="245">batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::operator++</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1acef748523169aca09a3f4ca78ea35a05" prot="public" static="no" mutable="no">
+        <type>I</type>
+        <definition>I batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::padding_size</definition>
+        <argsstring></argsstring>
+        <name>padding_size</name>
+        <qualifiedname>batmat::matrix::View::linear_iterator::padding_size</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="235" column="11" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="235" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1abffb7ad0c9925e13b110a5c23a1e9d5d" compoundref="view_8hpp" startline="238" endline="245">batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::operator++</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1a6d22e538859b075408dff7cca8e586b7" prot="public" static="no" mutable="no">
+        <type>I</type>
+        <definition>I batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::batch_size</definition>
+        <argsstring></argsstring>
+        <name>batch_size</name>
+        <qualifiedname>batmat::matrix::View::linear_iterator::batch_size</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="236" column="11" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="236" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1abffb7ad0c9925e13b110a5c23a1e9d5d" compoundref="view_8hpp" startline="238" endline="245">batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::operator++</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1abffb7ad0c9925e13b110a5c23a1e9d5d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator" kindref="compound">linear_iterator</ref> &amp;</type>
+        <definition>linear_iterator &amp; batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::operator++</definition>
+        <argsstring>()</argsstring>
+        <name>operator++</name>
+        <qualifiedname>batmat::matrix::View::linear_iterator::operator++</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="238" column="25" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="238" bodyend="245"/>
+        <references refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1a6d22e538859b075408dff7cca8e586b7" compoundref="view_8hpp" startline="236">batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::batch_size</references>
+        <references refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1ab3057665d24b940ac9f175754b66f33b" compoundref="view_8hpp" startline="232">batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::data</references>
+        <references refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1acc58874157a231d00f60646f700c5ce3" compoundref="view_8hpp" startline="233">batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::end</references>
+        <references refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1af7c05dbbecaf7031f806227fd76919a1" compoundref="view_8hpp" startline="234">batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::next_jump</references>
+        <references refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1acef748523169aca09a3f4ca78ea35a05" compoundref="view_8hpp" startline="235">batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::padding_size</references>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1a77f4efb2855326c6658ba19171f6ce97" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator" kindref="compound">linear_iterator</ref></type>
+        <definition>linear_iterator batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::operator++</definition>
+        <argsstring>(int)</argsstring>
+        <name>operator++</name>
+        <qualifiedname>batmat::matrix::View::linear_iterator::operator++</qualifiedname>
+        <param>
+          <type>int</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="246" column="25" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="246" bodyend="250"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1a90f8e4d9ff676bdd2ad5e7162eb9bf15" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1aece6884dc858caa31c4eca89528c233f" kindref="member">reference</ref></type>
+        <definition>reference batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::operator*</definition>
+        <argsstring>() const</argsstring>
+        <name>operator*</name>
+        <qualifiedname>batmat::matrix::View::linear_iterator::operator*</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="251" column="19" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="251" bodyend="251"/>
+        <references refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1ab3057665d24b940ac9f175754b66f33b" compoundref="view_8hpp" startline="232">batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::data</references>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1a3fd445e604a8fe2d3d8da995ecfbbebc" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::operator==</definition>
+        <argsstring>(std::default_sentinel_t) const</argsstring>
+        <name>operator==</name>
+        <qualifiedname>batmat::matrix::View::linear_iterator::operator==</qualifiedname>
+        <param>
+          <type>std::default_sentinel_t</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="252" column="14" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="252" bodyend="252"/>
+        <references refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1ab3057665d24b940ac9f175754b66f33b" compoundref="view_8hpp" startline="232">batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::data</references>
+        <references refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1acc58874157a231d00f60646f700c5ce3" compoundref="view_8hpp" startline="233">batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator::end</references>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Iterator over all elements of a view. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::matrix::View&lt; T, I, S, D, L, O &gt;::linear_iterator</label>
+        <link refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/matrix/view.hpp" line="228" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="228" bodyend="253"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1a6d22e538859b075408dff7cca8e586b7" prot="public" virt="non-virtual"><scope>batmat::matrix::View::linear_iterator</scope><name>batch_size</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1ab3057665d24b940ac9f175754b66f33b" prot="public" virt="non-virtual"><scope>batmat::matrix::View::linear_iterator</scope><name>data</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1aac01f187e2b4a5a4f1f7ab34333688eb" prot="public" virt="non-virtual"><scope>batmat::matrix::View::linear_iterator</scope><name>difference_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1acc58874157a231d00f60646f700c5ce3" prot="public" virt="non-virtual"><scope>batmat::matrix::View::linear_iterator</scope><name>end</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1af7c05dbbecaf7031f806227fd76919a1" prot="public" virt="non-virtual"><scope>batmat::matrix::View::linear_iterator</scope><name>next_jump</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1a90f8e4d9ff676bdd2ad5e7162eb9bf15" prot="public" virt="non-virtual"><scope>batmat::matrix::View::linear_iterator</scope><name>operator*</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1abffb7ad0c9925e13b110a5c23a1e9d5d" prot="public" virt="non-virtual"><scope>batmat::matrix::View::linear_iterator</scope><name>operator++</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1a77f4efb2855326c6658ba19171f6ce97" prot="public" virt="non-virtual"><scope>batmat::matrix::View::linear_iterator</scope><name>operator++</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1a3fd445e604a8fe2d3d8da995ecfbbebc" prot="public" virt="non-virtual"><scope>batmat::matrix::View::linear_iterator</scope><name>operator==</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1acef748523169aca09a3f4ca78ea35a05" prot="public" virt="non-virtual"><scope>batmat::matrix::View::linear_iterator</scope><name>padding_size</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1aece6884dc858caa31c4eca89528c233f" prot="public" virt="non-virtual"><scope>batmat::matrix::View::linear_iterator</scope><name>reference</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator_1ad916c76c7c08214d0087daa4fddc864a" prot="public" virt="non-virtual"><scope>batmat::matrix::View::linear_iterator</scope><name>value_type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

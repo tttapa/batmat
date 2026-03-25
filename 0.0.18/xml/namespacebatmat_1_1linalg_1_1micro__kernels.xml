@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg_1_1micro__kernels" kind="namespace" language="C++">
+    <compoundname>batmat::linalg::micro_kernels</compoundname>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag">batmat::linalg::micro_kernels::gemm_diag</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm">batmat::linalg::micro_kernels::gemm</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemv">batmat::linalg::micro_kernels::gemv</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound">batmat::linalg::micro_kernels::hyhound</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf">batmat::linalg::micro_kernels::potrf</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv">batmat::linalg::micro_kernels::symv</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv">batmat::linalg::micro_kernels::syomv</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trsm">batmat::linalg::micro_kernels::trsm</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri">batmat::linalg::micro_kernels::trtri</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" line="11" column="1"/>
+  </compounddef>
+</doxygen>

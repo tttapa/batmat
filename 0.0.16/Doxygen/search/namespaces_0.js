@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['batmat_0',['batmat',['../namespacebatmat.html',1,'']]],
+  ['batmat_3a_3adatapar_1',['datapar',['../namespacebatmat_1_1datapar.html',1,'batmat']]],
+  ['batmat_3a_3adetail_2',['detail',['../namespacebatmat_1_1detail.html',1,'batmat']]],
+  ['batmat_3a_3alinalg_3',['linalg',['../namespacebatmat_1_1linalg.html',1,'batmat']]],
+  ['batmat_3a_3alinalg_3a_3adetail_4',['detail',['../namespacebatmat_1_1linalg_1_1detail.html',1,'batmat::linalg']]],
+  ['batmat_3a_3alinalg_3a_3adetail_3a_3acopy_5',['copy',['../namespacebatmat_1_1linalg_1_1detail_1_1copy.html',1,'batmat::linalg::detail']]],
+  ['batmat_3a_3alinalg_3a_3adetail_3a_3agemm_5fdiag_6',['gemm_diag',['../namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag.html',1,'batmat::linalg::detail']]],
+  ['batmat_3a_3alinalg_3a_3adetail_3a_3asyomv_7',['syomv',['../namespacebatmat_1_1linalg_1_1detail_1_1syomv.html',1,'batmat::linalg::detail']]],
+  ['batmat_3a_3alinalg_3a_3aflops_8',['flops',['../namespacebatmat_1_1linalg_1_1flops.html',1,'batmat::linalg']]],
+  ['batmat_3a_3alinalg_3a_3amicro_5fkernels_9',['micro_kernels',['../namespacebatmat_1_1linalg_1_1micro__kernels.html',1,'batmat::linalg']]],
+  ['batmat_3a_3alinalg_3a_3amicro_5fkernels_3a_3agemm_10',['gemm',['../namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm.html',1,'batmat::linalg::micro_kernels']]],
+  ['batmat_3a_3alinalg_3a_3amicro_5fkernels_3a_3agemm_5fdiag_11',['gemm_diag',['../namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag.html',1,'batmat::linalg::micro_kernels']]],
+  ['batmat_3a_3alinalg_3a_3amicro_5fkernels_3a_3agemv_12',['gemv',['../namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemv.html',1,'batmat::linalg::micro_kernels']]],
+  ['batmat_3a_3alinalg_3a_3amicro_5fkernels_3a_3ahyhound_13',['hyhound',['../namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound.html',1,'batmat::linalg::micro_kernels']]],
+  ['batmat_3a_3alinalg_3a_3amicro_5fkernels_3a_3ahyhound_3a_3adetail_14',['detail',['../namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1detail.html',1,'batmat::linalg::micro_kernels::hyhound']]],
+  ['batmat_3a_3alinalg_3a_3amicro_5fkernels_3a_3apotrf_15',['potrf',['../namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf.html',1,'batmat::linalg::micro_kernels']]],
+  ['batmat_3a_3alinalg_3a_3amicro_5fkernels_3a_3asymv_16',['symv',['../namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv.html',1,'batmat::linalg::micro_kernels']]],
+  ['batmat_3a_3alinalg_3a_3amicro_5fkernels_3a_3asyomv_17',['syomv',['../namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv.html',1,'batmat::linalg::micro_kernels']]],
+  ['batmat_3a_3alinalg_3a_3amicro_5fkernels_3a_3atrsm_18',['trsm',['../namespacebatmat_1_1linalg_1_1micro__kernels_1_1trsm.html',1,'batmat::linalg::micro_kernels']]],
+  ['batmat_3a_3alinalg_3a_3amicro_5fkernels_3a_3atrtri_19',['trtri',['../namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri.html',1,'batmat::linalg::micro_kernels']]],
+  ['batmat_3a_3amatrix_20',['matrix',['../namespacebatmat_1_1matrix.html',1,'batmat']]],
+  ['batmat_3a_3amatrix_3a_3adetail_21',['detail',['../namespacebatmat_1_1matrix_1_1detail.html',1,'batmat::matrix']]],
+  ['batmat_3a_3aops_22',['ops',['../namespacebatmat_1_1ops.html',1,'batmat']]],
+  ['batmat_3a_3aops_3a_3adetail_23',['detail',['../namespacebatmat_1_1ops_1_1detail.html',1,'batmat::ops']]],
+  ['batmat_3a_3atypes_24',['types',['../namespacebatmat_1_1types.html',1,'batmat']]]
+];

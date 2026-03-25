@@ -1,0 +1,1677 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg" kind="namespace" language="C++">
+    <compoundname>batmat::linalg</compoundname>
+    <innerclass refid="structbatmat_1_1linalg_1_1track__zeros__t" prot="public">batmat::linalg::track_zeros_t</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1TilingOptions" prot="public">batmat::linalg::TilingOptions</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1with__shift__A__t" prot="public">batmat::linalg::with_shift_A_t</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1with__rotate__B__t" prot="public">batmat::linalg::with_rotate_B_t</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1with__rotate__C__t" prot="public">batmat::linalg::with_rotate_C_t</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1with__rotate__D__t" prot="public">batmat::linalg::with_rotate_D_t</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1with__mask__D__t" prot="public">batmat::linalg::with_mask_D_t</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1with__rotate__t" prot="public">batmat::linalg::with_rotate_t</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1with__mask__t" prot="public">batmat::linalg::with_mask_t</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1Structured" prot="public">batmat::linalg::Structured</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1with__rotate__A__t" prot="public">batmat::linalg::with_rotate_A_t</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1simd__view__types" prot="public">batmat::linalg::simd_view_types</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1uview" prot="public">batmat::linalg::uview</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1uview__vec" prot="public">batmat::linalg::uview_vec</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1cached__uview" prot="public">batmat::linalg::cached_uview</innerclass>
+    <innerconcept refid="conceptbatmat_1_1linalg_1_1shift__opt">batmat::linalg::shift_opt</innerconcept>
+    <innerconcept refid="conceptbatmat_1_1linalg_1_1rotate__opt">batmat::linalg::rotate_opt</innerconcept>
+    <innerconcept refid="conceptbatmat_1_1linalg_1_1simdifiable">batmat::linalg::simdifiable</innerconcept>
+    <innerconcept refid="conceptbatmat_1_1linalg_1_1simdifiable__multi">batmat::linalg::simdifiable_multi</innerconcept>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1detail">batmat::linalg::detail</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1flops">batmat::linalg::flops</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels">batmat::linalg::micro_kernels</innernamespace>
+    <sectiondef kind="user-defined">
+      <header>Compression of masks containing zeros</header>
+      <member refid="group__topic-linalg_1ga7305be66e2eab7d32be3409e555d8136" kind="function"><name>compress_masks</name></member>
+      <member refid="group__topic-linalg_1ga1b26575da2cfc351d0a18eda0475b8d3" kind="function"><name>compress_masks_count</name></member>
+      <member refid="group__topic-linalg_1gaaac6172ca3a3098c8c85f4c703ac7575" kind="function"><name>compress_masks_sqrt</name></member>
+      <member refid="group__topic-linalg_1ga318bdad6a6e249fcd8652b2b49012418" kind="function"><name>compress_masks_sqrt</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Copying and filling batches of matrices</header>
+      <member refid="group__topic-linalg_1ga9df61b993f7e79ad21eddb76b4c2089e" kind="function"><name>copy</name></member>
+      <member refid="group__topic-linalg_1ga0c62a1596a13149c17223ca93a4de7bd" kind="function"><name>copy</name></member>
+      <member refid="group__topic-linalg_1gaf53b173cc76dd28168d422b8812298a3" kind="function"><name>fill</name></member>
+      <member refid="group__topic-linalg_1ga3b16436bd7456f60369fd1db2d67442e" kind="function"><name>fill</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Multiplication of batches of matrices with diagonal scaling</header>
+      <member refid="group__topic-linalg_1gad57207460bfd526791afa8a0ccc19041" kind="function"><name>gemm_diag</name></member>
+      <member refid="group__topic-linalg_1ga0ae75850dc387a83a665ea8b370d5268" kind="function"><name>gemm_diag_add</name></member>
+      <member refid="group__topic-linalg_1gaa0e3784877a4dfc671b25479fa918281" kind="function"><name>gemm_diag_add</name></member>
+      <member refid="group__topic-linalg_1ga958862e903797c035916e22d09f4fcb3" kind="function"><name>syrk_diag_add</name></member>
+      <member refid="group__topic-linalg_1ga26d21bd656eb96da9c58c2e92329918a" kind="function"><name>syrk_diag_add</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Multiplication of batches of general matrices</header>
+      <member refid="group__topic-linalg_1ga56b98ed114604544b0806d8b191b119e" kind="function"><name>gemm</name></member>
+      <member refid="group__topic-linalg_1ga2ecaacbba5614bcbbf95c79023424e64" kind="function"><name>gemm_neg</name></member>
+      <member refid="group__topic-linalg_1ga1177461212428f6b96e21abff82af6a3" kind="function"><name>gemm_add</name></member>
+      <member refid="group__topic-linalg_1ga8c44e915ee2cda546e7dc005ab1af1c4" kind="function"><name>gemm_add</name></member>
+      <member refid="group__topic-linalg_1ga6ba27579e2442c5a7689d0577f63478e" kind="function"><name>gemm_sub</name></member>
+      <member refid="group__topic-linalg_1ga611ecdda112c005fe2d42372a92aea7b" kind="function"><name>gemm_sub</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Multiplication of batches of matrices with symmetric results</header>
+      <member refid="group__topic-linalg_1ga59ec2e76f7d857d495fcc518d19f2a77" kind="function"><name>syrk</name></member>
+      <member refid="group__topic-linalg_1ga51fc97f0f6c6ce55401630c8b57889e9" kind="function"><name>syrk</name></member>
+      <member refid="group__topic-linalg_1ga24000b15cd231d821eb1292ad3631c2b" kind="function"><name>syrk</name></member>
+      <member refid="group__topic-linalg_1ga038f5f115bd19ed4f3ca205ca4728fc3" kind="function"><name>syrk_neg</name></member>
+      <member refid="group__topic-linalg_1ga8a698c5e4610420a9d7fcf483f41f452" kind="function"><name>syrk_neg</name></member>
+      <member refid="group__topic-linalg_1ga8d63dfa8eaa22949ca78e2241a608a0f" kind="function"><name>syrk_neg</name></member>
+      <member refid="group__topic-linalg_1ga94668e960bcf7b6a7ffe8902d799079a" kind="function"><name>syrk_add</name></member>
+      <member refid="group__topic-linalg_1gaaf33c861e820d1d87ca43314e7453bf3" kind="function"><name>syrk_add</name></member>
+      <member refid="group__topic-linalg_1ga19841b227bc4cf6d0949b85b6e201033" kind="function"><name>syrk_sub</name></member>
+      <member refid="group__topic-linalg_1ga3b3a5785bb0a178c28eb050f5e7ad982" kind="function"><name>syrk_sub</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Multiplication of batches of triangular matrices</header>
+      <member refid="group__topic-linalg_1ga677da05414c67192ed400e3a0b0a2c51" kind="function"><name>trmm</name></member>
+      <member refid="group__topic-linalg_1ga776866b470bf67ecb2f561a7714f6ac8" kind="function"><name>trmm</name></member>
+      <member refid="group__topic-linalg_1ga4bcadac1586aa8f2fd1a8f632c369601" kind="function"><name>trmm</name></member>
+      <member refid="group__topic-linalg_1ga9c7791da3ee24263434ba87316ac50e3" kind="function"><name>trmm</name></member>
+      <member refid="group__topic-linalg_1ga1474b560ee985d29dad901fec92a6e09" kind="function"><name>trmm_neg</name></member>
+      <member refid="group__topic-linalg_1ga41be251a5129e3aa430b4d0685e4f055" kind="function"><name>trmm_neg</name></member>
+      <member refid="group__topic-linalg_1gab8de92b40ec44dc42b8194ca149e2195" kind="function"><name>trmm_add</name></member>
+      <member refid="group__topic-linalg_1ga5ff4cf9c0cc64e6b59d44a9a7b257d36" kind="function"><name>trmm_add</name></member>
+      <member refid="group__topic-linalg_1ga4c466c8c3c49448dbe08d2a69f0dc753" kind="function"><name>trmm_sub</name></member>
+      <member refid="group__topic-linalg_1ga6b66dee15a04b53f3f39edc1caa41bb6" kind="function"><name>trmm_sub</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Matrix-vector multiplication of batches of matrices</header>
+      <member refid="group__topic-linalg_1ga8ce09a22e339c8a076415d047c23a5cd" kind="function"><name>gemv</name></member>
+      <member refid="group__topic-linalg_1gaabdf90658a0013e1858d377dcecf5d6f" kind="function"><name>gemv_neg</name></member>
+      <member refid="group__topic-linalg_1ga4d4c245f7f41a9e595292defaf3f55cf" kind="function"><name>gemv_add</name></member>
+      <member refid="group__topic-linalg_1ga7cfed7daaf31afb02d713f7ccd1481da" kind="function"><name>gemv_add</name></member>
+      <member refid="group__topic-linalg_1gac4246c2e6b61282811138d8232f9d737" kind="function"><name>gemv_sub</name></member>
+      <member refid="group__topic-linalg_1ga26163eb18f74d290e190d0a8d52ade6b" kind="function"><name>gemv_sub</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Cholesky factorization updates</header>
+      <member refid="group__topic-linalg_1gae6733a70513ebef849110b4842708820" kind="function"><name>hyhound_diag</name></member>
+      <member refid="group__topic-linalg_1ga333ab34077b524480da3a9835b51e166" kind="function"><name>hyhound_diag</name></member>
+      <member refid="group__topic-linalg_1gaab95bb8df58e52f0b5c2f156f8c6dea0" kind="function"><name>hyhound_size_W</name></member>
+      <member refid="group__topic-linalg_1ga3e2338ff100c3544cad0105effc729c0" kind="function"><name>hyhound_diag_apply</name></member>
+      <member refid="group__topic-linalg_1gaa675e1f6e044ea392f0ee072bcd38890" kind="function"><name>hyhound_diag_apply</name></member>
+      <member refid="group__topic-linalg_1ga71aaa795868e76c82b95bdd6230b9519" kind="function"><name>hyhound_sign</name></member>
+      <member refid="group__topic-linalg_1gae5ae03b84e9ada852009a47cfb1a101b" kind="function"><name>hyhound_diag_2</name></member>
+      <member refid="group__topic-linalg_1gaf619c0c15ef61d2dd2eaa585f525a93f" kind="function"><name>hyhound_diag_cyclic</name></member>
+      <member refid="group__topic-linalg_1ga623445a546acac724601551447aaef5a" kind="function"><name>hyhound_diag_riccati</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Cholesky factorization of batches of matrices</header>
+      <member refid="group__topic-linalg_1ga12c3f866950fd1c70288d50280b7fb6b" kind="function"><name>syrk_add_potrf</name></member>
+      <member refid="group__topic-linalg_1gac41bc35d00eb8f3efe6db4d3f0deb2c4" kind="function"><name>syrk_add_potrf</name></member>
+      <member refid="group__topic-linalg_1ga9b273b45f515781eb285544bbcca8143" kind="function"><name>syrk_sub_potrf</name></member>
+      <member refid="group__topic-linalg_1ga74ca156ede10af825418293b6eaec901" kind="function"><name>syrk_sub_potrf</name></member>
+      <member refid="group__topic-linalg_1gacb1f9d940de812c4cc0fb23a407d955d" kind="function"><name>syrk_diag_add_potrf</name></member>
+      <member refid="group__topic-linalg_1ga42e34a775639000995fdfbe90491c36a" kind="function"><name>syrk_diag_add_potrf</name></member>
+      <member refid="group__topic-linalg_1gaa5a48352d831fa72f651dfb4a53bba9e" kind="function"><name>potrf</name></member>
+      <member refid="group__topic-linalg_1ga0d94954d9b08608b3d7f3c2bdaec531d" kind="function"><name>potrf</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Symmetric multiplication of batches of matrices</header>
+      <member refid="group__topic-linalg_1ga86ace4b801d8635578413dafc05539d3" kind="function"><name>symm_add</name></member>
+      <member refid="group__topic-linalg_1ga28b7fe55495d3a3c414ce0e43b8a8b2c" kind="function"><name>symm_add</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Symmetric matrix-vector multiplication of batches of matrices</header>
+      <member refid="group__topic-linalg_1gaf56b3f892871b53ff7dc0efedb0eac36" kind="function"><name>symv</name></member>
+      <member refid="group__topic-linalg_1ga9577422bc277329e6409043853208764" kind="function"><name>symv_neg</name></member>
+      <member refid="group__topic-linalg_1ga6be77cce642739acb04a594098a57ffe" kind="function"><name>symv_add</name></member>
+      <member refid="group__topic-linalg_1ga05b276ea72af0939b1b8fbc2a40bcdfb" kind="function"><name>symv_add</name></member>
+      <member refid="group__topic-linalg_1ga126f2b74ab3588969d16c1ea34febd99" kind="function"><name>symv_sub</name></member>
+      <member refid="group__topic-linalg_1gabb4409c022fa8f42bd3e24191eb8b633" kind="function"><name>symv_sub</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Symmetric matrix-vector multiplication of a block tridiagonal matrix</header>
+      <member refid="group__topic-linalg_1ga1c157567ed0f419c4136ec2a69dc8a59" kind="function"><name>syomv</name></member>
+      <member refid="group__topic-linalg_1gae8fed320ade4ba886dfe45d35f31ccc5" kind="function"><name>syomv_neg</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Triangular views of batches of matrices</header>
+      <member refid="group__topic-linalg_1gafc9f5555ed4639e0e5ad0e552f9717e4" kind="function"><name>tril</name></member>
+      <member refid="group__topic-linalg_1gaf6d9519ee15d51a0ba7243e640d8be71" kind="function"><name>triu</name></member>
+      <member refid="group__topic-linalg_1gab42ee44cb500f4d76bb81090614490d8" kind="function"><name>make_structured</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Triangular solve of batches of matrices</header>
+      <member refid="group__topic-linalg_1ga21c503ca31b0d06b1a0e93ccf0b754c7" kind="function"><name>trsm</name></member>
+      <member refid="group__topic-linalg_1ga1b8da34024f01d4b25fd976fa5adee70" kind="function"><name>trsm</name></member>
+      <member refid="group__topic-linalg_1gaaca48f4a7e9d1302c0d9666a73a877f6" kind="function"><name>trsm</name></member>
+      <member refid="group__topic-linalg_1gadde7784a92a41d2f74b1447e41880fae" kind="function"><name>trsm</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Triangular inversion of batches of matrices</header>
+      <member refid="group__topic-linalg_1ga5a6901e33f6891995b0c147814b06230" kind="function"><name>trtri</name></member>
+      <member refid="group__topic-linalg_1ga12d76466423aac96d5405fc6ac08ff08" kind="function"><name>trtri</name></member>
+      <member refid="group__topic-linalg_1gaa4e16632065fd0d673234b06e71ea4c0" kind="function"><name>trtri</name></member>
+      <member refid="group__topic-linalg_1ga01d821b394c1ded4bab2042442dcc6b4" kind="function"><name>trtri</name></member>
+    </sectiondef>
+    <sectiondef kind="enum">
+      <member refid="group__topic-linalg_1ga3526955f82976c2274834e5a69b21b7e" kind="enum"><name>PackingSelector</name></member>
+      <member refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kind="enum"><name>MatrixStructure</name></member>
+      <memberdef kind="enum" id="namespacebatmat_1_1linalg_1a12561d95ffd5ca9cc074d7b3edceb429" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>StorageOrder</name>
+        <qualifiedname>batmat::linalg::StorageOrder</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="16" column="1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="namespacebatmat_1_1linalg_1a4be791b0744b45a32676446036a52ccd" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type" kindref="compound">detail::simdified_view_type</ref>&lt; std::remove_reference_t&lt; V &gt; &gt;</type>
+        <definition>using batmat::linalg::simdified_view_type = detail::simdified_view_type&lt;std::remove_reference_t&lt;V&gt;&gt;</definition>
+        <argsstring></argsstring>
+        <name>simdified_view_type</name>
+        <qualifiedname>batmat::linalg::simdified_view_type</qualifiedname>
+        <briefdescription>
+<para>Convert the given view or matrix type <computeroutput>V</computeroutput> (<ref refid="structbatmat_1_1matrix_1_1View" kindref="compound">batmat::matrix::View</ref> or <ref refid="structbatmat_1_1matrix_1_1Matrix" kindref="compound">batmat::matrix::Matrix</ref>) to a batched view type using a deduced SIMD type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This conversion takes place in the wrapper around the optimized implementations (which require views with a proper SIMD-compatible stride). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="173" column="1" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="173" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1linalg_1a4bd9921eb6500f6c64da965ba4f46050" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>simdifiable</type>
+            <declname>V</declname>
+            <defname>V</defname>
+          </param>
+        </templateparamlist>
+        <type>typename <ref refid="namespacebatmat_1_1linalg_1a4be791b0744b45a32676446036a52ccd" kindref="member">simdified_view_type</ref>&lt; V &gt;::type</type>
+        <definition>using batmat::linalg::simdified_view_t = typename simdified_view_type&lt;V&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>simdified_view_t</name>
+        <qualifiedname>batmat::linalg::simdified_view_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="179" column="1" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="179" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1linalg_1a06ed92cc4e6bc6418b81329ce5355426" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+        </templateparamlist>
+        <type>typename <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__value" kindref="compound">detail::simdified_value</ref>&lt; V &gt;::type</type>
+        <definition>using batmat::linalg::simdified_value_t = typename detail::simdified_value&lt;V&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>simdified_value_t</name>
+        <qualifiedname>batmat::linalg::simdified_value_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="202" column="1" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="202" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+        </templateparamlist>
+        <type>typename <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__abi" kindref="compound">detail::simdified_abi</ref>&lt; V &gt;::type</type>
+        <definition>using batmat::linalg::simdified_abi_t = typename detail::simdified_abi&lt;V&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>simdified_abi_t</name>
+        <qualifiedname>batmat::linalg::simdified_abi_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="204" column="1" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="204" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1linalg_1a3f72f46ab5a64618b0df6098b8540343" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type" kindref="compound">detail::simdified_multi_view_type</ref>&lt; std::remove_reference_t&lt; V &gt; &gt;</type>
+        <definition>using batmat::linalg::simdified_multi_view_type = detail::simdified_multi_view_type&lt;std::remove_reference_t&lt;V&gt;&gt;</definition>
+        <argsstring></argsstring>
+        <name>simdified_multi_view_type</name>
+        <qualifiedname>batmat::linalg::simdified_multi_view_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="224" column="1" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="224" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1linalg_1a60b8e9e6e7e0e3ab201e3f71ee1b2670" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>simdifiable_multi</type>
+            <declname>V</declname>
+            <defname>V</defname>
+          </param>
+        </templateparamlist>
+        <type>typename <ref refid="namespacebatmat_1_1linalg_1a3f72f46ab5a64618b0df6098b8540343" kindref="member">simdified_multi_view_type</ref>&lt; V &gt;::type</type>
+        <definition>using batmat::linalg::simdified_multi_view_t = typename simdified_multi_view_type&lt;V&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>simdified_multi_view_t</name>
+        <qualifiedname>batmat::linalg::simdified_multi_view_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="231" column="1" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="231" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>Order</declname>
+            <defname>Order</defname>
+            <defval>StorageOrder::ColMajor</defval>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1simd__view__types" kindref="compound">simd_view_types</ref>&lt; std::remove_const_t&lt; T &gt;, Abi &gt;::template <ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Order &gt;</type>
+        <definition>using batmat::linalg::view = simd_view_types&lt;std::remove_const_t&lt;T&gt;, Abi&gt;::template view&lt;T, Order&gt;</definition>
+        <argsstring></argsstring>
+        <name>view</name>
+        <qualifiedname>batmat::linalg::view</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="70" column="1" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1linalg_1aa93224d87d900a2dacc032305840169b" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>Order</declname>
+            <defname>Order</defname>
+            <defval>StorageOrder::ColMajor</defval>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1simd__view__types" kindref="compound">simd_view_types</ref>&lt; std::remove_const_t&lt; T &gt;, Abi &gt;::template <ref refid="namespacebatmat_1_1linalg_1aa93224d87d900a2dacc032305840169b" kindref="member">matrix</ref>&lt; T, Order &gt;</type>
+        <definition>using batmat::linalg::matrix = simd_view_types&lt;std::remove_const_t&lt;T&gt;, Abi&gt;::template matrix&lt;T, Order&gt;</definition>
+        <argsstring></argsstring>
+        <name>matrix</name>
+        <qualifiedname>batmat::linalg::matrix</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="72" column="1" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1linalg_1addaba7b0622b6b5975594e94337858ac" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>Order</declname>
+            <defname>Order</defname>
+            <defval>StorageOrder::ColMajor</defval>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1simd__view__types" kindref="compound">simd_view_types</ref>&lt; real_t, Abi &gt;::template <ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const real_t, Order &gt;</type>
+        <definition>using batmat::linalg::real_view = simd_view_types&lt;real_t, Abi&gt;::template view&lt;const real_t, Order&gt;</definition>
+        <argsstring></argsstring>
+        <name>real_view</name>
+        <qualifiedname>batmat::linalg::real_view</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="75" column="1" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1linalg_1a32ee2585cc9b2affcd31f6d9a777306c" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>Order</declname>
+            <defname>Order</defname>
+            <defval>StorageOrder::ColMajor</defval>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1simd__view__types" kindref="compound">simd_view_types</ref>&lt; real_t, Abi &gt;::template <ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; real_t, Order &gt;</type>
+        <definition>using batmat::linalg::mut_real_view = simd_view_types&lt;real_t, Abi&gt;::template view&lt;real_t, Order&gt;</definition>
+        <argsstring></argsstring>
+        <name>mut_real_view</name>
+        <qualifiedname>batmat::linalg::mut_real_view</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="77" column="1" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="77" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a12b1a32966e2bf48fecc809ad2ed7368" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>bool</type>
+            <declname>Z</declname>
+            <defname>Z</defname>
+            <defval>true</defval>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1track__zeros__t" kindref="compound">track_zeros_t</ref>&lt; Z &gt;</type>
+        <definition>track_zeros_t&lt;Z&gt; batmat::linalg::track_zeros</definition>
+        <argsstring></argsstring>
+        <name>track_zeros</name>
+        <qualifiedname>batmat::linalg::track_zeros</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm-diag.hpp" line="56" column="32" bodyfile="batmat/include/batmat/linalg/gemm-diag.hpp" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a19dd80ec8e830706d80326f9d31edd1c" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1with__shift__A__t" kindref="compound">with_shift_A_t</ref>&lt; I &gt;</type>
+        <definition>with_shift_A_t&lt;I&gt; batmat::linalg::with_shift_A</definition>
+        <argsstring></argsstring>
+        <name>with_shift_A</name>
+        <qualifiedname>batmat::linalg::with_shift_A</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="20" column="33" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a460a8cb1037e34fbd3779c3e48074792" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1with__rotate__B__t" kindref="compound">with_rotate_B_t</ref>&lt; I &gt;</type>
+        <definition>with_rotate_B_t&lt;I&gt; batmat::linalg::with_rotate_B</definition>
+        <argsstring></argsstring>
+        <name>with_rotate_B</name>
+        <qualifiedname>batmat::linalg::with_rotate_B</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="22" column="34" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1acb94b9e005e461541acb9ed52f87e8b5" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1with__rotate__C__t" kindref="compound">with_rotate_C_t</ref>&lt; I &gt;</type>
+        <definition>with_rotate_C_t&lt;I&gt; batmat::linalg::with_rotate_C</definition>
+        <argsstring></argsstring>
+        <name>with_rotate_C</name>
+        <qualifiedname>batmat::linalg::with_rotate_C</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="24" column="34" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a13b33813baa12b55f7746c6987d5f42e" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1with__rotate__D__t" kindref="compound">with_rotate_D_t</ref>&lt; I &gt;</type>
+        <definition>with_rotate_D_t&lt;I&gt; batmat::linalg::with_rotate_D</definition>
+        <argsstring></argsstring>
+        <name>with_rotate_D</name>
+        <qualifiedname>batmat::linalg::with_rotate_D</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="26" column="34" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a4b867a52c6cf0fb12da276e972f1fc14" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1with__mask__D__t" kindref="compound">with_mask_D_t</ref>&lt; I &gt;</type>
+        <definition>with_mask_D_t&lt;I&gt; batmat::linalg::with_mask_D</definition>
+        <argsstring></argsstring>
+        <name>with_mask_D</name>
+        <qualifiedname>batmat::linalg::with_mask_D</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="28" column="32" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1ae3b515432262221f9e530afd77291b7c" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class...</type>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::shift_A</definition>
+        <argsstring></argsstring>
+        <name>shift_A</name>
+        <qualifiedname>batmat::linalg::shift_A</qualifiedname>
+        <initializer>= std::nullopt</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="31" column="32" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="31" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ace93b35f0993d2bcf550c1ea6ed92d96" compoundref="gemm_8hpp" startline="230" endline="242">batmat::linalg::detail::apply_gemm_options</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a8664a4b53357eef277b5bff5f06a9d04" compoundref="gemv_8hpp" startline="48" endline="60">batmat::linalg::detail::apply_gemv_options</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1af683980060a1b736ec116431256d4463" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::shift_A&lt; T, Ts... &gt;</definition>
+        <argsstring></argsstring>
+        <name>shift_A&lt; T, Ts... &gt;</name>
+        <qualifiedname>batmat::linalg::shift_A&lt; T, Ts... &gt;</qualifiedname>
+        <initializer>= <ref refid="namespacebatmat_1_1linalg_1ae3b515432262221f9e530afd77291b7c" kindref="member">shift_A</ref>&lt;Ts...&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="33" column="8" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1ada4a3475e2bb3a3e0140214b1bc642ab" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::shift_A&lt; with_shift_A_t&lt; I &gt;, Ts... &gt;</definition>
+        <argsstring></argsstring>
+        <name>shift_A&lt; with_shift_A_t&lt; I &gt;, Ts... &gt;</name>
+        <qualifiedname>batmat::linalg::shift_A&lt; with_shift_A_t&lt; I &gt;, Ts... &gt;</qualifiedname>
+        <initializer>= I</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="35" column="8" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a35af6f23e1e42037c92a7cdf3101ac9e" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class...</type>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::rotate_B</definition>
+        <argsstring></argsstring>
+        <name>rotate_B</name>
+        <qualifiedname>batmat::linalg::rotate_B</qualifiedname>
+        <initializer>= std::nullopt</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="38" column="32" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="38" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ace93b35f0993d2bcf550c1ea6ed92d96" compoundref="gemm_8hpp" startline="230" endline="242">batmat::linalg::detail::apply_gemm_options</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a8664a4b53357eef277b5bff5f06a9d04" compoundref="gemv_8hpp" startline="48" endline="60">batmat::linalg::detail::apply_gemv_options</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1ac6073fd41ae74f5bb9edd68c0620e14e" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::rotate_B&lt; T, Ts... &gt;</definition>
+        <argsstring></argsstring>
+        <name>rotate_B&lt; T, Ts... &gt;</name>
+        <qualifiedname>batmat::linalg::rotate_B&lt; T, Ts... &gt;</qualifiedname>
+        <initializer>= <ref refid="namespacebatmat_1_1linalg_1a35af6f23e1e42037c92a7cdf3101ac9e" kindref="member">rotate_B</ref>&lt;Ts...&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="40" column="8" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a85175140df380c17c742ef882062cdec" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::rotate_B&lt; with_rotate_B_t&lt; I &gt;, Ts... &gt;</definition>
+        <argsstring></argsstring>
+        <name>rotate_B&lt; with_rotate_B_t&lt; I &gt;, Ts... &gt;</name>
+        <qualifiedname>batmat::linalg::rotate_B&lt; with_rotate_B_t&lt; I &gt;, Ts... &gt;</qualifiedname>
+        <initializer>= I</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="42" column="8" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a46cf975c68ece97777d8e4dfd6b1dadf" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class...</type>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::rotate_C</definition>
+        <argsstring></argsstring>
+        <name>rotate_C</name>
+        <qualifiedname>batmat::linalg::rotate_C</qualifiedname>
+        <initializer>= std::nullopt</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="45" column="32" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="45" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ace93b35f0993d2bcf550c1ea6ed92d96" compoundref="gemm_8hpp" startline="230" endline="242">batmat::linalg::detail::apply_gemm_options</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a8664a4b53357eef277b5bff5f06a9d04" compoundref="gemv_8hpp" startline="48" endline="60">batmat::linalg::detail::apply_gemv_options</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1ac5c187a20a813fa9c49ff23ffee1f8ce" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::rotate_C&lt; T, Ts... &gt;</definition>
+        <argsstring></argsstring>
+        <name>rotate_C&lt; T, Ts... &gt;</name>
+        <qualifiedname>batmat::linalg::rotate_C&lt; T, Ts... &gt;</qualifiedname>
+        <initializer>= <ref refid="namespacebatmat_1_1linalg_1a46cf975c68ece97777d8e4dfd6b1dadf" kindref="member">rotate_C</ref>&lt;Ts...&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="47" column="8" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1acab42f73ebc546c85cc3c31df4a379f1" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::rotate_C&lt; with_rotate_C_t&lt; I &gt;, Ts... &gt;</definition>
+        <argsstring></argsstring>
+        <name>rotate_C&lt; with_rotate_C_t&lt; I &gt;, Ts... &gt;</name>
+        <qualifiedname>batmat::linalg::rotate_C&lt; with_rotate_C_t&lt; I &gt;, Ts... &gt;</qualifiedname>
+        <initializer>= I</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="49" column="8" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1ab04a87d2e13b965d6fe2684355159478" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class...</type>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::rotate_D</definition>
+        <argsstring></argsstring>
+        <name>rotate_D</name>
+        <qualifiedname>batmat::linalg::rotate_D</qualifiedname>
+        <initializer>= std::nullopt</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="52" column="32" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="52" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ace93b35f0993d2bcf550c1ea6ed92d96" compoundref="gemm_8hpp" startline="230" endline="242">batmat::linalg::detail::apply_gemm_options</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a8664a4b53357eef277b5bff5f06a9d04" compoundref="gemv_8hpp" startline="48" endline="60">batmat::linalg::detail::apply_gemv_options</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a674dc08c5efbc90940a8e852cbbd54f5" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::rotate_D&lt; T, Ts... &gt;</definition>
+        <argsstring></argsstring>
+        <name>rotate_D&lt; T, Ts... &gt;</name>
+        <qualifiedname>batmat::linalg::rotate_D&lt; T, Ts... &gt;</qualifiedname>
+        <initializer>= <ref refid="namespacebatmat_1_1linalg_1ab04a87d2e13b965d6fe2684355159478" kindref="member">rotate_D</ref>&lt;Ts...&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="54" column="8" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a744b9742b81407ec64ea03a013dfc7ee" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::rotate_D&lt; with_rotate_D_t&lt; I &gt;, Ts... &gt;</definition>
+        <argsstring></argsstring>
+        <name>rotate_D&lt; with_rotate_D_t&lt; I &gt;, Ts... &gt;</name>
+        <qualifiedname>batmat::linalg::rotate_D&lt; with_rotate_D_t&lt; I &gt;, Ts... &gt;</qualifiedname>
+        <initializer>= I</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="56" column="8" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a5f3d7bfa8cda00a0b262b6eac578e96e" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class...</type>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::mask_D</definition>
+        <argsstring></argsstring>
+        <name>mask_D</name>
+        <qualifiedname>batmat::linalg::mask_D</qualifiedname>
+        <initializer>= std::nullopt</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="59" column="32" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="59" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ace93b35f0993d2bcf550c1ea6ed92d96" compoundref="gemm_8hpp" startline="230" endline="242">batmat::linalg::detail::apply_gemm_options</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a8664a4b53357eef277b5bff5f06a9d04" compoundref="gemv_8hpp" startline="48" endline="60">batmat::linalg::detail::apply_gemv_options</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a857748dba6a3b881ac61e4227c6781a9" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::mask_D&lt; T, Ts... &gt;</definition>
+        <argsstring></argsstring>
+        <name>mask_D&lt; T, Ts... &gt;</name>
+        <qualifiedname>batmat::linalg::mask_D&lt; T, Ts... &gt;</qualifiedname>
+        <initializer>= <ref refid="namespacebatmat_1_1linalg_1a5f3d7bfa8cda00a0b262b6eac578e96e" kindref="member">mask_D</ref>&lt;Ts...&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="61" column="8" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a2b89788a516e3c9e0a71a97d7e306cc5" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::mask_D&lt; with_mask_D_t&lt; I &gt;, Ts... &gt;</definition>
+        <argsstring></argsstring>
+        <name>mask_D&lt; with_mask_D_t&lt; I &gt;, Ts... &gt;</name>
+        <qualifiedname>batmat::linalg::mask_D&lt; with_mask_D_t&lt; I &gt;, Ts... &gt;</qualifiedname>
+        <initializer>= I</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="63" column="8" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a64cdc82e29e4a883a1e8c9dc16e01873" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class</type>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool batmat::linalg::is_shift_opt</definition>
+        <argsstring></argsstring>
+        <name>is_shift_opt</name>
+        <qualifiedname>batmat::linalg::is_shift_opt</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="66" column="23" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a6d6dcba4021b28bb1d2c991795caa9dc" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool batmat::linalg::is_shift_opt&lt; with_shift_A_t&lt; I &gt; &gt;</definition>
+        <argsstring></argsstring>
+        <name>is_shift_opt&lt; with_shift_A_t&lt; I &gt; &gt;</name>
+        <qualifiedname>batmat::linalg::is_shift_opt&lt; with_shift_A_t&lt; I &gt; &gt;</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="68" column="18" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a86f8a7f3f9008da3723375788b0e196e" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool batmat::linalg::is_shift_opt&lt; with_rotate_B_t&lt; I &gt; &gt;</definition>
+        <argsstring></argsstring>
+        <name>is_shift_opt&lt; with_rotate_B_t&lt; I &gt; &gt;</name>
+        <qualifiedname>batmat::linalg::is_shift_opt&lt; with_rotate_B_t&lt; I &gt; &gt;</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="70" column="18" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a68811bb0dc3714b6f0bbb5ca8afc56b9" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool batmat::linalg::is_shift_opt&lt; with_rotate_C_t&lt; I &gt; &gt;</definition>
+        <argsstring></argsstring>
+        <name>is_shift_opt&lt; with_rotate_C_t&lt; I &gt; &gt;</name>
+        <qualifiedname>batmat::linalg::is_shift_opt&lt; with_rotate_C_t&lt; I &gt; &gt;</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="72" column="18" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a0179065f211dc8f8292b15c277298621" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool batmat::linalg::is_shift_opt&lt; with_rotate_D_t&lt; I &gt; &gt;</definition>
+        <argsstring></argsstring>
+        <name>is_shift_opt&lt; with_rotate_D_t&lt; I &gt; &gt;</name>
+        <qualifiedname>batmat::linalg::is_shift_opt&lt; with_rotate_D_t&lt; I &gt; &gt;</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="74" column="18" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a81853ec4616ad5a628ea58e5424e6109" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool batmat::linalg::is_shift_opt&lt; with_mask_D_t&lt; I &gt; &gt;</definition>
+        <argsstring></argsstring>
+        <name>is_shift_opt&lt; with_mask_D_t&lt; I &gt; &gt;</name>
+        <qualifiedname>batmat::linalg::is_shift_opt&lt; with_mask_D_t&lt; I &gt; &gt;</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="76" column="18" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a18f5c2df0c1ec2ea5038ad05d81946d1" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1with__rotate__t" kindref="compound">with_rotate_t</ref>&lt; I &gt;</type>
+        <definition>with_rotate_t&lt;I&gt; batmat::linalg::with_rotate</definition>
+        <argsstring></argsstring>
+        <name>with_rotate</name>
+        <qualifiedname>batmat::linalg::with_rotate</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="87" column="32" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a10ff2f21577bfc4d8d96d8104715267b" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1with__mask__t" kindref="compound">with_mask_t</ref>&lt; I &gt;</type>
+        <definition>with_mask_t&lt;I&gt; batmat::linalg::with_mask</definition>
+        <argsstring></argsstring>
+        <name>with_mask</name>
+        <qualifiedname>batmat::linalg::with_mask</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="89" column="30" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="89" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a8c727e255c0df5a8041151fd6889b4fc" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class...</type>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::get_rotate</definition>
+        <argsstring></argsstring>
+        <name>get_rotate</name>
+        <qualifiedname>batmat::linalg::get_rotate</qualifiedname>
+        <initializer>= std::nullopt</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="92" column="32" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="92" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a8769b73dad2efc43ad5032114321f591" compoundref="copy_8hpp" startline="169" endline="175">batmat::linalg::detail::copy::apply_options</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1abd28ef0011ceef42ba470ded4ec5035e" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::get_rotate&lt; T, Ts... &gt;</definition>
+        <argsstring></argsstring>
+        <name>get_rotate&lt; T, Ts... &gt;</name>
+        <qualifiedname>batmat::linalg::get_rotate&lt; T, Ts... &gt;</qualifiedname>
+        <initializer>= <ref refid="namespacebatmat_1_1linalg_1a8c727e255c0df5a8041151fd6889b4fc" kindref="member">get_rotate</ref>&lt;Ts...&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="94" column="8" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="94" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a859255c62148ba0dbde3c1d7a01a3ceb" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::get_rotate&lt; with_rotate_t&lt; I &gt;, Ts... &gt;</definition>
+        <argsstring></argsstring>
+        <name>get_rotate&lt; with_rotate_t&lt; I &gt;, Ts... &gt;</name>
+        <qualifiedname>batmat::linalg::get_rotate&lt; with_rotate_t&lt; I &gt;, Ts... &gt;</qualifiedname>
+        <initializer>= I</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="96" column="8" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="96" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a94c3eba4eaabc3dcb64cf1fa7727f802" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class...</type>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::get_mask</definition>
+        <argsstring></argsstring>
+        <name>get_mask</name>
+        <qualifiedname>batmat::linalg::get_mask</qualifiedname>
+        <initializer>= std::nullopt</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="99" column="32" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="99" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a8769b73dad2efc43ad5032114321f591" compoundref="copy_8hpp" startline="169" endline="175">batmat::linalg::detail::copy::apply_options</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a6a6d52eeb2f4d133e251391d3fb5acb7" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::get_mask&lt; T, Ts... &gt;</definition>
+        <argsstring></argsstring>
+        <name>get_mask&lt; T, Ts... &gt;</name>
+        <qualifiedname>batmat::linalg::get_mask&lt; T, Ts... &gt;</qualifiedname>
+        <initializer>= <ref refid="namespacebatmat_1_1linalg_1a94c3eba4eaabc3dcb64cf1fa7727f802" kindref="member">get_mask</ref>&lt;Ts...&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="101" column="8" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a2a3eadfc27bc5ba985c93f77ec030dc9" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; int &gt;</type>
+        <definition>std::optional&lt;int&gt; batmat::linalg::get_mask&lt; with_mask_t&lt; I &gt;, Ts... &gt;</definition>
+        <argsstring></argsstring>
+        <name>get_mask&lt; with_mask_t&lt; I &gt;, Ts... &gt;</name>
+        <qualifiedname>batmat::linalg::get_mask&lt; with_mask_t&lt; I &gt;, Ts... &gt;</qualifiedname>
+        <initializer>= I</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="103" column="8" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a025c96e7210b4e290963004865dfa8c4" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class</type>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool batmat::linalg::is_rotate_opt</definition>
+        <argsstring></argsstring>
+        <name>is_rotate_opt</name>
+        <qualifiedname>batmat::linalg::is_rotate_opt</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="106" column="23" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="106" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1ad02fd85f6689899b4a41e64c577234d7" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool batmat::linalg::is_rotate_opt&lt; with_rotate_t&lt; I &gt; &gt;</definition>
+        <argsstring></argsstring>
+        <name>is_rotate_opt&lt; with_rotate_t&lt; I &gt; &gt;</name>
+        <qualifiedname>batmat::linalg::is_rotate_opt&lt; with_rotate_t&lt; I &gt; &gt;</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="108" column="18" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="108" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1ad21603db0e1689940050857129a7e4fd" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool batmat::linalg::is_rotate_opt&lt; with_mask_t&lt; I &gt; &gt;</definition>
+        <argsstring></argsstring>
+        <name>is_rotate_opt&lt; with_mask_t&lt; I &gt; &gt;</name>
+        <qualifiedname>batmat::linalg::is_rotate_opt&lt; with_mask_t&lt; I &gt; &gt;</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/shift.hpp" line="110" column="18" bodyfile="batmat/include/batmat/linalg/shift.hpp" bodystart="110" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class...</type>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool batmat::linalg::simdify_compatible</definition>
+        <argsstring></argsstring>
+        <name>simdify_compatible</name>
+        <qualifiedname>batmat::linalg::simdify_compatible</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="207" column="23" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="207" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1adc0d6c4d5c8b977cd64010b9b2642223" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>simdifiable</type>
+            <declname>V</declname>
+            <defname>V</defname>
+          </param>
+          <param>
+            <type>simdifiable...</type>
+            <declname>Vs</declname>
+            <defname>Vs</defname>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool batmat::linalg::simdify_compatible&lt; V, Vs... &gt;</definition>
+        <argsstring></argsstring>
+        <name>simdify_compatible&lt; V, Vs... &gt;</name>
+        <qualifiedname>batmat::linalg::simdify_compatible&lt; V, Vs... &gt;</qualifiedname>
+        <initializer>                                     =
+(std::is_same_v&lt;<ref refid="namespacebatmat_1_1linalg_1a06ed92cc4e6bc6418b81329ce5355426" kindref="member">simdified_value_t</ref>&lt;V&gt;, <ref refid="namespacebatmat_1_1linalg_1a06ed92cc4e6bc6418b81329ce5355426" kindref="member">simdified_value_t</ref>&lt;Vs&gt;&gt; &amp;&amp; ...) &amp;&amp;
+(std::is_same_v&lt;<ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t</ref>&lt;V&gt;, <ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t</ref>&lt;Vs&gt;&gt; &amp;&amp; ...)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="210" column="18" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="210" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1ad955091c80d01d8d4201c828ec0c4c2c" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1with__rotate__A__t" kindref="compound">with_rotate_A_t</ref>&lt; I &gt;</type>
+        <definition>with_rotate_A_t&lt;I&gt; batmat::linalg::with_rotate_A</definition>
+        <argsstring></argsstring>
+        <name>with_rotate_A</name>
+        <qualifiedname>batmat::linalg::with_rotate_A</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/trsm.hpp" line="20" column="34" bodyfile="batmat/include/batmat/linalg/trsm.hpp" bodystart="20" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="namespacebatmat_1_1linalg_1a4bd9921eb6500f6c64da965ba4f46050" kindref="member">simdified_view_t</ref>&lt; decltype(a)&gt;</type>
+        <definition>simdified_view_t&lt; decltype(a)&gt; batmat::linalg::simdify</definition>
+        <argsstring>(simdifiable auto &amp;&amp;a)</argsstring>
+        <name>simdify</name>
+        <qualifiedname>batmat::linalg::simdify</qualifiedname>
+        <param>
+          <type>simdifiable auto &amp;&amp;</type>
+          <declname>a</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="214" column="16" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="214" bodyend="221"/>
+        <referencedby refid="group__topic-linalg_1ga7305be66e2eab7d32be3409e555d8136" compoundref="compress_8hpp" startline="240" endline="243">compress_masks</referencedby>
+        <referencedby refid="group__topic-linalg_1ga1b26575da2cfc351d0a18eda0475b8d3" compoundref="compress_8hpp" startline="246" endline="249">compress_masks_count</referencedby>
+        <referencedby refid="group__topic-linalg_1gaaac6172ca3a3098c8c85f4c703ac7575" compoundref="compress_8hpp" startline="252" endline="255">compress_masks_sqrt</referencedby>
+        <referencedby refid="group__topic-linalg_1ga318bdad6a6e249fcd8652b2b49012418" compoundref="compress_8hpp" startline="258" endline="261">compress_masks_sqrt</referencedby>
+        <referencedby refid="group__topic-linalg_1ga0c62a1596a13149c17223ca93a4de7bd" compoundref="copy_8hpp" startline="196" endline="200">copy</referencedby>
+        <referencedby refid="group__topic-linalg_1ga9df61b993f7e79ad21eddb76b4c2089e" compoundref="copy_8hpp" startline="187" endline="191">copy</referencedby>
+        <referencedby refid="group__topic-linalg_1ga3b16436bd7456f60369fd1db2d67442e" compoundref="copy_8hpp" startline="210" endline="213">fill</referencedby>
+        <referencedby refid="group__topic-linalg_1gaf53b173cc76dd28168d422b8812298a3" compoundref="copy_8hpp" startline="204" endline="206">fill</referencedby>
+        <referencedby refid="group__topic-linalg_1gad57207460bfd526791afa8a0ccc19041" compoundref="gemm-diag_8hpp" startline="93" endline="98">gemm_diag</referencedby>
+        <referencedby refid="group__topic-linalg_1ga0ae75850dc387a83a665ea8b370d5268" compoundref="gemm-diag_8hpp" startline="104" endline="109">gemm_diag_add</referencedby>
+        <referencedby refid="group__topic-linalg_1ga8ce09a22e339c8a076415d047c23a5cd" compoundref="gemv_8hpp" startline="73" endline="78">gemv</referencedby>
+        <referencedby refid="group__topic-linalg_1ga4d4c245f7f41a9e595292defaf3f55cf" compoundref="gemv_8hpp" startline="93" endline="97">gemv_add</referencedby>
+        <referencedby refid="group__topic-linalg_1gaabdf90658a0013e1858d377dcecf5d6f" compoundref="gemv_8hpp" startline="83" endline="88">gemv_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1gac4246c2e6b61282811138d8232f9d737" compoundref="gemv_8hpp" startline="108" endline="112">gemv_sub</referencedby>
+        <referencedby refid="group__topic-linalg_1gae6733a70513ebef849110b4842708820" compoundref="hyhound_8hpp" startline="152" endline="156">hyhound_diag</referencedby>
+        <referencedby refid="group__topic-linalg_1ga333ab34077b524480da3a9835b51e166" compoundref="hyhound_8hpp" startline="161" endline="165">hyhound_diag</referencedby>
+        <referencedby refid="group__topic-linalg_1gae5ae03b84e9ada852009a47cfb1a101b" compoundref="hyhound_8hpp" startline="226" endline="229">hyhound_diag_2</referencedby>
+        <referencedby refid="group__topic-linalg_1gaa675e1f6e044ea392f0ee072bcd38890" compoundref="hyhound_8hpp" startline="202" endline="206">hyhound_diag_apply</referencedby>
+        <referencedby refid="group__topic-linalg_1ga3e2338ff100c3544cad0105effc729c0" compoundref="hyhound_8hpp" startline="188" endline="192">hyhound_diag_apply</referencedby>
+        <referencedby refid="group__topic-linalg_1gaf619c0c15ef61d2dd2eaa585f525a93f" compoundref="hyhound_8hpp" startline="240" endline="245">hyhound_diag_cyclic</referencedby>
+        <referencedby refid="group__topic-linalg_1ga623445a546acac724601551447aaef5a" compoundref="hyhound_8hpp" startline="258" endline="263">hyhound_diag_riccati</referencedby>
+        <referencedby refid="group__topic-linalg_1ga71aaa795868e76c82b95bdd6230b9519" compoundref="hyhound_8hpp" startline="212" endline="215">hyhound_sign</referencedby>
+        <referencedby refid="group__topic-linalg_1gaab95bb8df58e52f0b5c2f156f8c6dea0" compoundref="hyhound_8hpp" startline="170" endline="173">hyhound_size_W</referencedby>
+        <referencedby refid="group__topic-linalg_1gaa5a48352d831fa72f651dfb4a53bba9e" compoundref="potrf_8hpp" startline="98" endline="102">potrf</referencedby>
+        <referencedby refid="group__topic-linalg_1ga0d94954d9b08608b3d7f3c2bdaec531d" compoundref="potrf_8hpp" startline="106" endline="110">potrf</referencedby>
+        <referencedby refid="group__topic-linalg_1ga86ace4b801d8635578413dafc05539d3" compoundref="symm_8hpp" startline="76" endline="79">symm_add</referencedby>
+        <referencedby refid="group__topic-linalg_1gaf56b3f892871b53ff7dc0efedb0eac36" compoundref="symv_8hpp" startline="47" endline="52">symv</referencedby>
+        <referencedby refid="group__topic-linalg_1ga6be77cce642739acb04a594098a57ffe" compoundref="symv_8hpp" startline="67" endline="71">symv_add</referencedby>
+        <referencedby refid="group__topic-linalg_1ga9577422bc277329e6409043853208764" compoundref="symv_8hpp" startline="57" endline="62">symv_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga126f2b74ab3588969d16c1ea34febd99" compoundref="symv_8hpp" startline="82" endline="86">symv_sub</referencedby>
+        <referencedby refid="group__topic-linalg_1ga1c157567ed0f419c4136ec2a69dc8a59" compoundref="syomv_8hpp" startline="46" endline="50">syomv</referencedby>
+        <referencedby refid="group__topic-linalg_1gae8fed320ade4ba886dfe45d35f31ccc5" compoundref="syomv_8hpp" startline="55" endline="59">syomv_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga59ec2e76f7d857d495fcc518d19f2a77" compoundref="gemm_8hpp" startline="310" endline="319">syrk</referencedby>
+        <referencedby refid="group__topic-linalg_1ga24000b15cd231d821eb1292ad3631c2b" compoundref="gemm_8hpp" startline="329" endline="338">syrk</referencedby>
+        <referencedby refid="group__topic-linalg_1ga94668e960bcf7b6a7ffe8902d799079a" compoundref="gemm_8hpp" startline="376" endline="383">syrk_add</referencedby>
+        <referencedby refid="group__topic-linalg_1ga12c3f866950fd1c70288d50280b7fb6b" compoundref="potrf_8hpp" startline="50" endline="54">syrk_add_potrf</referencedby>
+        <referencedby refid="group__topic-linalg_1ga958862e903797c035916e22d09f4fcb3" compoundref="gemm-diag_8hpp" startline="122" endline="129">syrk_diag_add</referencedby>
+        <referencedby refid="group__topic-linalg_1gacb1f9d940de812c4cc0fb23a407d955d" compoundref="potrf_8hpp" startline="80" endline="87">syrk_diag_add_potrf</referencedby>
+        <referencedby refid="group__topic-linalg_1ga038f5f115bd19ed4f3ca205ca4728fc3" compoundref="gemm_8hpp" startline="343" endline="352">syrk_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga8d63dfa8eaa22949ca78e2241a608a0f" compoundref="gemm_8hpp" startline="362" endline="371">syrk_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga19841b227bc4cf6d0949b85b6e201033" compoundref="gemm_8hpp" startline="393" endline="400">syrk_sub</referencedby>
+        <referencedby refid="group__topic-linalg_1ga9b273b45f515781eb285544bbcca8143" compoundref="potrf_8hpp" startline="65" endline="69">syrk_sub_potrf</referencedby>
+        <referencedby refid="group__topic-linalg_1ga677da05414c67192ed400e3a0b0a2c51" compoundref="gemm_8hpp" startline="416" endline="422">trmm</referencedby>
+        <referencedby refid="group__topic-linalg_1gab8de92b40ec44dc42b8194ca149e2195" compoundref="gemm_8hpp" startline="462" endline="469">trmm_add</referencedby>
+        <referencedby refid="group__topic-linalg_1ga1474b560ee985d29dad901fec92a6e09" compoundref="gemm_8hpp" startline="444" endline="450">trmm_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga4c466c8c3c49448dbe08d2a69f0dc753" compoundref="gemm_8hpp" startline="481" endline="488">trmm_sub</referencedby>
+        <referencedby refid="group__topic-linalg_1ga5a6901e33f6891995b0c147814b06230" compoundref="trtri_8hpp" startline="41" endline="46">trtri</referencedby>
+        <referencedby refid="group__topic-linalg_1gaa4e16632065fd0d673234b06e71ea4c0" compoundref="trtri_8hpp" startline="58" endline="62">trtri</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1aa9e2303717d8e0d49cf3da6d21c5471e" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="namespacebatmat_1_1linalg_1a60b8e9e6e7e0e3ab201e3f71ee1b2670" kindref="member">simdified_multi_view_t</ref>&lt; decltype(a)&gt;</type>
+        <definition>simdified_multi_view_t&lt; decltype(a)&gt; batmat::linalg::simdify</definition>
+        <argsstring>(simdifiable_multi auto &amp;&amp;a)</argsstring>
+        <name>simdify</name>
+        <qualifiedname>batmat::linalg::simdify</qualifiedname>
+        <param>
+          <type>simdifiable_multi auto &amp;&amp;</type>
+          <declname>a</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="252" column="16" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="252" bodyend="260"/>
+      </memberdef>
+      <member refid="group__topic-linalg_1gaa0bd5dc9f7ed367a2f7fd8b835694d42" kind="function"><name>transpose</name></member>
+      <member refid="group__topic-linalg_1gad0b3d11ecd3861f1c325ca907dc19c1d" kind="function"><name>Structured</name></member>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1a8699debc88226ab70dead0e1fa7a7c37" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class M</type>
+          </param>
+          <param>
+            <type>MatrixStructure</type>
+            <declname>S</declname>
+            <defname>S</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::simdify</definition>
+        <argsstring>(const Structured&lt; M, S &gt; &amp;)=delete</argsstring>
+        <name>simdify</name>
+        <qualifiedname>batmat::linalg::simdify</qualifiedname>
+        <param>
+          <type>const <ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured</ref>&lt; M, S &gt; &amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/triangular.hpp" line="62" column="6" declfile="batmat/include/batmat/linalg/triangular.hpp" declline="62" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" prot="public" static="no" const="no" explicit="no" inline="yes" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>index_t</type>
+            <declname>Rows</declname>
+            <defname>Rows</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>Cols</declname>
+            <defname>Cols</defname>
+          </param>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>Order</declname>
+            <defname>Order</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1cached__uview" kindref="compound">cached_uview</ref>&lt; Order==StorageOrder::ColMajor ? Cols :Rows, T, Abi, Order &gt;</type>
+        <definition>cached_uview&lt; Order==StorageOrder::ColMajor ? Cols :Rows, T, Abi, Order &gt; batmat::linalg::with_cached_access</definition>
+        <argsstring>(const uview&lt; T, Abi, Order &gt; &amp;o) noexcept</argsstring>
+        <name>with_cached_access</name>
+        <qualifiedname>batmat::linalg::with_cached_access</qualifiedname>
+        <param>
+          <type>const <ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, Order &gt; &amp;</type>
+          <declname>o</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="228" column="1" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="228" bodyend="230"/>
+        <references refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" compoundref="uview_8hpp" startline="228" endline="230">with_cached_access</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1ac69c39d34745b70589892c7594e29bd6" compoundref="gemm_8tpp" startline="27" endline="160">batmat::linalg::micro_kernels::gemm::gemm_copy_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1ab44ba86816595cc9551b7630a3a68857" compoundref="gemm-diag_8tpp" startline="27" endline="95">batmat::linalg::micro_kernels::gemm_diag::gemm_diag_copy_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemv_1adc76af1f86f99c43137ad12fbbf7b02c" compoundref="gemv_8tpp" startline="16" endline="75">batmat::linalg::micro_kernels::gemv::gemv_copy_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a9c8b334cabf1bbba060325ee859a1c7b" compoundref="hyhound_8tpp" startline="19" endline="68">batmat::linalg::micro_kernels::hyhound::hyhound_diag_diag_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a1ceb252ea60212d3273bcd59dcb46ba8" compoundref="hyhound_8tpp" startline="72" endline="113">batmat::linalg::micro_kernels::hyhound::hyhound_diag_full_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a534cdfdc1e56dcd5573a5fc39eac7176" compoundref="hyhound_8tpp" startline="136" endline="259">batmat::linalg::micro_kernels::hyhound::hyhound_diag_tail_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1add686c799a211b971e9a8453d122bedc" compoundref="potrf_8tpp" startline="44" endline="134">batmat::linalg::micro_kernels::potrf::potrf_copy_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1a8e3e42248c801d300b568f3999aca5b8" compoundref="symv_8tpp" startline="16" endline="61">batmat::linalg::micro_kernels::symv::symv_copy_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1ae86f50db44ab72f6cc46375603241750" compoundref="syomv_8tpp" startline="17" endline="52">batmat::linalg::micro_kernels::syomv::syomv_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a83a92100dec173181dece5d96bf9ca1c" compoundref="trtri_8tpp" startline="98" endline="129">batmat::linalg::micro_kernels::trtri::trmm_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a7409608f7378a6391ad092fbaf087932" compoundref="potrf_8tpp" startline="149" endline="208">batmat::linalg::micro_kernels::potrf::trsm_copy_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trsm_1a45a73b224fbc54482018580253e3a846" compoundref="trsm_8tpp" startline="21" endline="80">batmat::linalg::micro_kernels::trsm::trsm_copy_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af85745fbec819255a01a9b9513324512" compoundref="trtri_8tpp" startline="19" endline="90">batmat::linalg::micro_kernels::trtri::trtri_copy_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" compoundref="uview_8hpp" startline="228" endline="230">with_cached_access</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1ad40f567e60fa1837b503bbf967068207" compoundref="uview_8hpp" startline="235" endline="237">with_cached_access</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1a9fdaac31d1f50e897eea6151f4b14f5d" compoundref="uview_8hpp" startline="242" endline="244">with_cached_access</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1ad40f567e60fa1837b503bbf967068207" prot="public" static="no" const="no" explicit="no" inline="yes" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>index_t</type>
+            <declname>Rows</declname>
+            <defname>Rows</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>Cols</declname>
+            <defname>Cols</defname>
+          </param>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1cached__uview" kindref="compound">cached_uview</ref>&lt; Cols, T, Abi, StorageOrder::ColMajor &gt;</type>
+        <definition>cached_uview&lt; Cols, T, Abi, StorageOrder::ColMajor &gt; batmat::linalg::with_cached_access</definition>
+        <argsstring>(const uview&lt; T, Abi, StorageOrder::ColMajor &gt; &amp;o) noexcept</argsstring>
+        <name>with_cached_access</name>
+        <qualifiedname>batmat::linalg::with_cached_access</qualifiedname>
+        <param>
+          <type>const <ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt; &amp;</type>
+          <declname>o</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="235" column="1" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="235" bodyend="237"/>
+        <references refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" compoundref="uview_8hpp" startline="228" endline="230">with_cached_access</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1a9fdaac31d1f50e897eea6151f4b14f5d" prot="public" static="no" const="no" explicit="no" inline="yes" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>index_t</type>
+            <declname>Rows</declname>
+            <defname>Rows</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>Cols</declname>
+            <defname>Cols</defname>
+          </param>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::RowMajor &gt;</type>
+        <definition>uview&lt; T, Abi, StorageOrder::RowMajor &gt; batmat::linalg::with_cached_access</definition>
+        <argsstring>(const uview&lt; T, Abi, StorageOrder::RowMajor &gt; &amp;o) noexcept</argsstring>
+        <name>with_cached_access</name>
+        <qualifiedname>batmat::linalg::with_cached_access</qualifiedname>
+        <param>
+          <type>const <ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::RowMajor &gt; &amp;</type>
+          <declname>o</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="242" column="1" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="242" bodyend="244"/>
+        <references refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" compoundref="uview_8hpp" startline="228" endline="230">with_cached_access</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1acc3629657a80e64a88a2b4adc162ac11" prot="public" static="no" const="no" explicit="no" inline="yes" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>index_t</type>
+            <declname>Rows</declname>
+            <defname>Rows</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>Cols</declname>
+            <defname>Cols</defname>
+          </param>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1cached__uview" kindref="compound">cached_uview</ref>&lt; Rows, T, Abi, StorageOrder::RowMajor &gt;</type>
+        <definition>cached_uview&lt; Rows, T, Abi, StorageOrder::RowMajor &gt; batmat::linalg::with_cached_access</definition>
+        <argsstring>(const uview&lt; T, Abi, StorageOrder::RowMajor &gt; &amp;o) noexcept</argsstring>
+        <name>with_cached_access</name>
+        <qualifiedname>batmat::linalg::with_cached_access</qualifiedname>
+        <param>
+          <type>const <ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::RowMajor &gt; &amp;</type>
+          <declname>o</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="249" column="1" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="249" bodyend="251"/>
+        <references refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" compoundref="uview_8hpp" startline="228" endline="230">with_cached_access</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1a19723a0cad457cfaa3a2e02fc5e8006f" prot="public" static="no" const="no" explicit="no" inline="yes" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>index_t</type>
+            <declname>Rows</declname>
+            <defname>Rows</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>Cols</declname>
+            <defname>Cols</defname>
+          </param>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+        <definition>uview&lt; T, Abi, StorageOrder::ColMajor &gt; batmat::linalg::with_cached_access</definition>
+        <argsstring>(const uview&lt; T, Abi, StorageOrder::ColMajor &gt; &amp;o) noexcept</argsstring>
+        <name>with_cached_access</name>
+        <qualifiedname>batmat::linalg::with_cached_access</qualifiedname>
+        <param>
+          <type>const <ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt; &amp;</type>
+          <declname>o</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="256" column="1" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="256" bodyend="258"/>
+        <references refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" compoundref="uview_8hpp" startline="228" endline="230">with_cached_access</references>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/compress.hpp" line="11" column="1"/>
+  </compounddef>
+</doxygen>
