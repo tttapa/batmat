@@ -192,7 +192,7 @@ struct View {
         const auto layer = b * bs;
         BATMAT_ASSERT(n == 0 || layer + (n - 1) * stride * bs + bs <= depth());
         return {{.data         = data() + layout.layer_index(layer),
-                 .depth        = n,
+                 .depth        = n * bs,
                  .rows         = rows(),
                  .cols         = cols(),
                  .outer_stride = outer_stride(),
