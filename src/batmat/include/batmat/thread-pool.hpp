@@ -6,6 +6,7 @@
 #include <mutex>
 #include <optional>
 #include <stdexcept>
+#include <stop_token>
 #include <thread>
 #include <utility>
 #include <vector>
@@ -15,42 +16,23 @@ namespace batmat {
 /// @ingroup topic-utils
 class thread_pool {
   private:
-    struct Signals {
+    struct State {
         std::mutex mtx;
         std::condition_variable_any cv;
-    };
-    std::vector<Signals> signals;
-    std::vector<std::function<void()>> funcs;
-    std::vector<std::exception_ptr> exceptions;
-    std::vector<std::jthread> threads; // must be destroyed first
+        std::function<void()> func;
+        std::exception_ptr exception;
 
-    void work(std::stop_token stop, size_t i) {
-        auto &sig = signals[i];
-        while (true) {
-            std::unique_lock lck{sig.mtx};
-            sig.cv.wait(lck, stop, [&] { return static_cast<bool>(funcs[i]); });
-            if (stop.stop_requested()) {
-                break;
-            } else {
-                try {
-                    funcs[i]();
-                } catch (...) {
-                    exceptions[i] = std::current_exception();
-                }
-                funcs[i] = nullptr;
-                lck.unlock();
-                sig.cv.notify_all();
-            }
-        }
-    }
+        void run(std::stop_token stop);
+    };
+    std::vector<State> states;
+    std::vector<std::jthread> threads; // must be destroyed first
 
   public:
     explicit thread_pool(size_t num_threads = std::thread::hardware_concurrency())
-        : signals(num_threads), funcs(num_threads), exceptions(num_threads) {
+        : states(num_threads) {
         threads.reserve(num_threads);
-        for (size_t i = 0; i < num_threads; ++i)
-            threads.emplace_back(
-                [this, i](std::stop_token stop) { this->work(std::move(stop), i); });
+        for (auto &state : states)
+            threads.emplace_back([&state](std::stop_token stop) { state.run(std::move(stop)); });
     }
 
     thread_pool(const thread_pool &)            = delete;
@@ -59,18 +41,18 @@ class thread_pool {
     thread_pool &operator=(thread_pool &&)      = default;
 
     void schedule(size_t i, std::function<void()> func) {
-        auto &sig = signals[i];
-        std::unique_lock lck{sig.mtx};
-        funcs[i] = std::move(func);
+        auto &state = states[i];
+        std::unique_lock lck{state.mtx};
+        state.func = std::move(func);
         lck.unlock();
-        sig.cv.notify_all();
+        state.cv.notify_all();
     }
 
     void wait(size_t i) {
-        auto &sig = signals[i];
-        std::unique_lock lck{sig.mtx};
-        sig.cv.wait(lck, [&] { return !funcs[i]; });
-        if (auto &e = exceptions[i])
+        auto &state = states[i];
+        std::unique_lock lck{state.mtx};
+        state.cv.wait(lck, [&] { return !state.func; });
+        if (auto &e = state.exception)
             std::rethrow_exception(std::exchange(e, nullptr));
     }
 
@@ -99,6 +81,25 @@ class thread_pool {
 
     [[nodiscard]] size_t size() const { return threads.size(); }
 };
+
+inline void thread_pool::State::run(std::stop_token stop) {
+    while (true) {
+        std::unique_lock lck{mtx};
+        cv.wait(lck, stop, [&] { return static_cast<bool>(func); });
+        if (stop.stop_requested()) {
+            break;
+        } else {
+            try {
+                func();
+            } catch (...) {
+                exception = std::current_exception();
+            }
+            func = nullptr;
+            lck.unlock();
+            cv.notify_all();
+        }
+    }
+}
 
 namespace detail {
 extern std::mutex pool_mtx;
