@@ -705,26 +705,24 @@ struct View {
     operator View<T, I, S, integral_value_type_t<D>, L, O>() const
         requires(!std::same_as<integral_value_type_t<D>, D>)
     {
-        const auto bs = static_cast<integral_value_type_t<D>>(batch_size());
         return {{.data         = data(),
                  .depth        = depth(),
                  .rows         = rows(),
                  .cols         = cols(),
                  .outer_stride = outer_stride(),
-                 .batch_size   = bs,
+                 .batch_size   = batch_size(),
                  .layer_stride = layout.layer_stride}};
     }
     /// Implicit conversion to a view with a dynamic depth, going from non-const to const.
     operator View<const T, I, S, integral_value_type_t<D>, L, O>() const
         requires(!std::is_const_v<T> && !std::same_as<integral_value_type_t<D>, D>)
     {
-        const auto bs = static_cast<integral_value_type_t<D>>(batch_size());
         return {{.data         = data(),
                  .depth        = depth(),
                  .rows         = rows(),
                  .cols         = cols(),
                  .outer_stride = outer_stride(),
-                 .batch_size   = bs,
+                 .batch_size   = batch_size(),
                  .layer_stride = layout.layer_stride}};
     }
     /// Implicit conversion to a view with a dynamic layer stride.
