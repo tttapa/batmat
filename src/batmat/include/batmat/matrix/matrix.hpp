@@ -422,6 +422,8 @@ struct Matrix {
 
     /// @copydoc View::set_constant()
     void set_constant(value_type t) { view().set_constant(t); }
+    /// @copydoc View::set_diagonal()
+    void set_diagonal(const value_type &t) { view().set_diagonal(t); }
     /// @copydoc View::add_to_diagonal()
     void add_to_diagonal(const value_type &t) { view().add_to_diagonal(t); }
     /// @copydoc View::negate()

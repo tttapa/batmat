@@ -575,6 +575,7 @@ struct View {
     /// @name Value manipulation
     /// @{
 
+    /// Add the scalar @p t to the diagonal elements of all matrices.
     void add_to_diagonal(const value_type &t) {
         const auto bs = static_cast<I>(batch_size());
         const auto n  = std::min(rows(), cols());
@@ -588,6 +589,22 @@ struct View {
         }
     }
 
+    /// Replace the diagonal elements of all matrices by the scalar @p t (without modifying any
+    /// other elements).
+    void set_diagonal(const value_type &t) {
+        const auto bs = static_cast<I>(batch_size());
+        const auto n  = std::min(rows(), cols());
+        for (index_type b = 0; b < num_batches(); ++b) {
+            auto *p = batch(b).data();
+            for (index_type i = 0; i < n; ++i) {
+                for (index_type r = 0; r < bs; ++r)
+                    *p++ = t;
+                p += bs * outer_stride();
+            }
+        }
+    }
+
+    /// Replace the elements of all matrices by the scalar @p t.
     void set_constant(value_type t) {
         const auto bs = static_cast<I>(batch_size());
         for (index_type b = 0; b < num_batches(); ++b) {
