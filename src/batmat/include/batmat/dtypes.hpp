@@ -99,7 +99,8 @@ using GetDType = typename Ts::dtype;
 /// @ref Types containing all supported dtypes.
 using dtype_all = Tail<Types<void BATMAT_FOREACH_DTYPE(BATMAT_PREFIX_COMMA)>>::type;
 
-/// @ref Types containing @ref DTypeVectorLength for all supported (dtype, VL) combinations.
+/// @ref batmat::types::Types containing @ref batmat::types::DTypeVectorLength for all supported
+/// (dtype, VL) combinations.
 #define BATMAT_INST_DT_VL(DT, VL) , DTypeVectorLength<DT, VL>
 using dtype_vl_all = Tail<Types<void BATMAT_FOREACH_DTYPE_VL(BATMAT_INST_DT_VL)>>::type;
 #undef BATMAT_INST_DT_VL
