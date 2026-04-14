@@ -85,6 +85,9 @@ auto hmin(V v) { // TODO
     return m;
 }
 
+using std::datapar::reduce_count;
+using std::datapar::select;
+
 } // namespace batmat::datapar
 
 #else
@@ -144,6 +147,12 @@ using scalar_abi = deduced_abi<Tp, 1>;
 
 using stdx::hmax;
 using stdx::hmin;
+
+auto reduce_count(auto v) { return popcount(v); }
+auto select(auto cond, auto t, auto f) {
+    where(cond, f) = t;
+    return f;
+}
 
 } // namespace batmat::datapar
 

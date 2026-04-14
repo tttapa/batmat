@@ -5,6 +5,7 @@
 #include <batmat/linalg/uview.hpp>
 #include <batmat/loop.hpp>
 #include <batmat/ops/gather.hpp>
+#include <batmat/simd.hpp>
 #include <batmat/unroll.h>
 #include <guanaqo/trace.hpp>
 
@@ -106,12 +107,10 @@ template <class T, class Abi, index_t N = 8, StorageOrder OAi>
             }
         }
         // Invariant: first registers in the buffer contain fewest zeros
-        BATMAT_FULLY_UNROLLED_FOR (index_t i = 1; i < N; ++i)
-#if BATMAT_WITH_GSI_HPC_SIMD
+        BATMAT_FULLY_UNROLLED_FOR (index_t i = 1; i < N; ++i) {
+            using datapar::reduce_count;
             assert(reduce_count(hist[i] != 0) <= reduce_count(hist[i - 1] != 0));
-#else
-            assert(popcount(hist[i] != 0) <= popcount(hist[i - 1] != 0));
-#endif
+        }
     }
     BATMAT_FULLY_UNROLLED_FOR (auto &h : hist)
         if (any_of(h != 0))
@@ -171,12 +170,10 @@ index_t compress_masks_count(view<const T, Abi> S_in) {
             }
         }
         // Invariant: first registers in the buffer contain fewest zeros
-        BATMAT_FULLY_UNROLLED_FOR (index_t i = 1; i < N; ++i)
-#if BATMAT_WITH_GSI_HPC_SIMD
+        BATMAT_FULLY_UNROLLED_FOR (index_t i = 1; i < N; ++i) {
+            using datapar::reduce_count;
             assert(reduce_count(hist[i] != 0) <= reduce_count(hist[i - 1] != 0));
-#else
-            assert(popcount(hist[i] != 0) <= popcount(hist[i - 1] != 0));
-#endif
+        }
     }
     BATMAT_FULLY_UNROLLED_FOR (auto &h : hist)
         if (any_of(h != 0))
