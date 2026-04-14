@@ -116,8 +116,9 @@ struct simdified_view_type<const batmat::matrix::Matrix<T, I, S, S, O, A>> {
 template <class V>
 struct simdified_multi_view_type;
 
-template <class T, class S, class L, StorageOrder O>
-struct simdified_multi_view_type<batmat::matrix::View<T, index_t, S, index_t, L, O>> {
+template <class T, class S, class D, class L, StorageOrder O>
+    requires(D{} == 0 || D{} > S{})
+struct simdified_multi_view_type<batmat::matrix::View<T, index_t, S, D, L, O>> {
     using value_type   = std::remove_const_t<T>;
     using abi_type     = datapar::deduced_abi<value_type, S{}>;
     using simd_type    = datapar::simd<value_type, abi_type>;
@@ -128,8 +129,9 @@ struct simdified_multi_view_type<batmat::matrix::View<T, index_t, S, index_t, L,
     static_assert(stride::value * sizeof(value_type) >= alignment::value);
 };
 
-template <class T, class S, class L, StorageOrder O>
-struct simdified_multi_view_type<const batmat::matrix::View<T, index_t, S, index_t, L, O>> {
+template <class T, class S, class D, class L, StorageOrder O>
+    requires(D{} == 0 || D{} > S{})
+struct simdified_multi_view_type<const batmat::matrix::View<T, index_t, S, D, L, O>> {
     using value_type   = std::remove_const_t<T>;
     using abi_type     = datapar::deduced_abi<value_type, S{}>;
     using simd_type    = datapar::simd<value_type, abi_type>;
@@ -140,8 +142,9 @@ struct simdified_multi_view_type<const batmat::matrix::View<T, index_t, S, index
     static_assert(stride::value * sizeof(value_type) >= alignment::value);
 };
 
-template <class T, class I, class S, StorageOrder O, class A>
-struct simdified_multi_view_type<batmat::matrix::Matrix<T, I, S, I, O, A>> {
+template <class T, class I, class S, class D, StorageOrder O, class A>
+    requires(D{} == 0 || D{} > S{})
+struct simdified_multi_view_type<batmat::matrix::Matrix<T, I, S, D, O, A>> {
     using value_type   = T;
     using abi_type     = datapar::deduced_abi<value_type, S{}>;
     using simd_type    = datapar::simd<value_type, abi_type>;
@@ -152,8 +155,9 @@ struct simdified_multi_view_type<batmat::matrix::Matrix<T, I, S, I, O, A>> {
     static_assert(A{} >= alignment::value);
 };
 
-template <class T, class I, class S, class A, StorageOrder O>
-struct simdified_multi_view_type<const batmat::matrix::Matrix<T, I, S, I, O, A>> {
+template <class T, class I, class S, class D, class A, StorageOrder O>
+    requires(D{} == 0 || D{} > S{})
+struct simdified_multi_view_type<const batmat::matrix::Matrix<T, I, S, D, O, A>> {
     using value_type   = T;
     using abi_type     = datapar::deduced_abi<value_type, S{}>;
     using simd_type    = datapar::simd<value_type, abi_type>;
