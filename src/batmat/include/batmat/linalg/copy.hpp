@@ -214,6 +214,43 @@ void fill(simdified_value_t<VB> a, Structured<VB, S> B) {
 
 /// @}
 
+/// @name Copying and filling multiple batches of matrices
+/// @{
+
+/// B = A.
+template <simdifiable_multi VA, simdifiable_multi VB, rotate_opt... Opts>
+    requires simdify_compatible<VA, VB>
+void copy(VA &&A, VB &&B, Opts... opts) {
+    BATMAT_ASSERT(A.num_batches() == B.num_batches());
+    for (index_t b = 0; b < A.num_batches(); ++b)
+        copy(A.batch(b), B.batch(b), opts...);
+}
+
+/// B = A.
+template <MatrixStructure S, simdifiable_multi VA, simdifiable_multi VB, rotate_opt... Opts>
+    requires simdify_compatible<VA, VB>
+void copy(Structured<VA, S> A, Structured<VB, S> B, Opts... opts) {
+    BATMAT_ASSERT(A.value.num_batches() == B.value.num_batches());
+    for (index_t b = 0; b < A.value.num_batches(); ++b)
+        copy(make_structured<S>(A.value.batch(b)), make_structured<S>(B.value.batch(b)), opts...);
+}
+
+/// B = A.
+template <simdifiable_multi VB>
+void fill(simdified_value_t<VB> a, VB &&B) {
+    for (index_t b = 0; b < B.num_batches(); ++b)
+        fill(a, B.batch(b));
+}
+
+/// B = A.
+template <MatrixStructure S, simdifiable_multi VB>
+void fill(simdified_value_t<VB> a, Structured<VB, S> B) {
+    for (index_t b = 0; b < B.value.num_batches(); ++b)
+        fill(a, make_structured<S>(B.value.batch(b)));
+}
+
+/// @}
+
 /// @}
 
 } // namespace batmat::linalg
