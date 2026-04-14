@@ -82,6 +82,7 @@ if (Doxygen_FOUND AND Python3_Interpreter_FOUND)
             "${PROJECT_SOURCE_DIR}/docs/source/doxygen/examples.md"
             "${PROJECT_SOURCE_DIR}/docs/source/doxygen/index.md"
             "${PROJECT_SOURCE_DIR}/test_package/src"
+            "${PROJECT_BINARY_DIR}/src/include"
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
         COMMENT "Generating Doxygen documentation")
     foreach(target batmat)
