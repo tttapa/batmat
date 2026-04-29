@@ -3,7 +3,7 @@ find_package(Python3 COMPONENTS Interpreter)
 
 option(BATMAT_DOCS_DOWNLOAD_TAGFILES
     "Whether to download tag files for external documentation" On)
-set(BATMAT_DOCS_GUANAQO_VERSION "1.0.0-alpha.25" CACHE STRING
+set(BATMAT_DOCS_GUANAQO_VERSION "1.0.0-alpha.28" CACHE STRING
     "Version of guanaqo to use for documentation")
 set(BATMAT_DOCS_GUANAQO_URL "https://tttapa.github.io/guanaqo" CACHE STRING
     "URL of guanaqo documentation")
