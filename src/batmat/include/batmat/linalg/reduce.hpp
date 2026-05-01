@@ -247,9 +247,10 @@ inline namespace multi {
 /// Compute the norms (max, 1-norm, and 2-norm) of a vector.
 template <simdifiable_multi Vx>
 norms<simdified_value_t<Vx>>::result norms_all(Vx &&x) {
-    typename norms<simdified_value_t<Vx>>::result result{};
+    using norms = linalg::norms<simdified_value_t<Vx>>;
+    typename norms::result result{};
     for (index_t b = 0; b < x.num_batches(); ++b)
-        result = norms<simdified_value_t<Vx>>{}(result, linalg::norms_all(x.batch(b)));
+        result = norms{}(result, linalg::norms_all(x.batch(b)));
     return result;
 }
 
@@ -314,6 +315,81 @@ simdified_value_t<Vw> weighted_norm_sq_difference(Vw &&w, Vx &&x, Vy &&y) {
         result += linalg::weighted_norm_sq_diff(w.batch(b), x.batch(b), y.batch(b));
     return result;
 }
+
+/// Compute the lane-wise norms (max, 1-norm, and 2-norm) of a batch of vectors.
+template <simdifiable_multi Vx>
+norms<simdified_value_t<Vx>, simdified_simd_t<Vx>>::result_simd vnorms_all(Vx &&x) {
+    using std::max;
+    using norms = linalg::norms<simdified_value_t<Vx>, simdified_simd_t<Vx>>;
+    typename norms::result_simd result{};
+    for (index_t b = 0; b < x.num_batches(); ++b)
+        result = norms{}(result, linalg::vnorms_all(x.batch(b)));
+    return result;
+}
+
+/// Compute the lane-wise infinity norms of a batch of vectors.
+template <simdifiable_multi Vx>
+simdified_simd_t<Vx> vnorm_inf(Vx &&x) {
+    return vnorms_all(std::forward<Vx>(x)).norm_inf();
+}
+
+/// Compute the lane-wise 1-norms of a batch of vectors.
+template <simdifiable_multi Vx>
+simdified_simd_t<Vx> vnorm_1(Vx &&x) {
+    return vnorms_all(std::forward<Vx>(x)).norm_1();
+}
+
+/// Compute the lane-wise squared 2-norms of a batch of vectors.
+template <simdifiable_multi Vx>
+simdified_simd_t<Vx> vnorm_2_squared(Vx &&x) {
+    simdified_simd_t<Vx> result{};
+    for (index_t b = 0; b < x.num_batches(); ++b)
+        result += linalg::vnorm_2_squared(x.batch(b));
+    return result;
+}
+
+/// Compute the lane-wise 2-norms of a batch of vectors.
+template <simdifiable_multi Vx>
+simdified_simd_t<Vx> vnorm_2(Vx &&x) {
+    using std::sqrt;
+    return sqrt(vnorm_2_squared(std::forward<Vx>(x)));
+}
+
+/// Compute the lane-wise dot products of two batches of vectors.
+template <simdifiable_multi Vx, simdifiable_multi Vy>
+    requires simdify_compatible<Vx, Vy>
+simdified_simd_t<Vx> vdot(Vx &&x, Vy &&y) {
+    BATMAT_ASSERT(x.num_batches() == y.num_batches());
+    simdified_simd_t<Vx> result{};
+    for (index_t b = 0; b < x.num_batches(); ++b)
+        result += linalg::vdot(x.batch(b), y.batch(b));
+    return result;
+}
+
+/// ∑ wᵢ xᵢ² (lane-wise).
+template <simdifiable_multi Vw, simdifiable_multi Vx>
+    requires simdify_compatible<Vw, Vx>
+simdified_simd_t<Vw> weighted_vnorm_sq(Vw &&w, Vx &&x) {
+    BATMAT_ASSERT(w.num_batches() == x.num_batches());
+    simdified_simd_t<Vw> result{};
+    for (index_t b = 0; b < w.num_batches(); ++b)
+        result += linalg::weighted_vnorm_sq(w.batch(b), x.batch(b));
+    return result;
+}
+
+/// ∑ wᵢ(xᵢ - yᵢ)² (lane-wise).
+template <simdifiable_multi Vw, simdifiable_multi Vx, simdifiable_multi Vy>
+    requires simdify_compatible<Vw, Vx, Vy>
+simdified_simd_t<Vw> weighted_vnorm_sq_diff(Vw &&w, Vx &&x, Vy &&y) {
+    BATMAT_ASSERT(w.num_batches() == x.num_batches());
+    BATMAT_ASSERT(w.num_batches() == y.num_batches());
+    simdified_simd_t<Vw> result{};
+    for (index_t b = 0; b < w.num_batches(); ++b)
+        result += linalg::weighted_vnorm_sq_diff(w.batch(b), x.batch(b), y.batch(b));
+    return result;
+}
+
+/// @}
 
 } // namespace multi
 

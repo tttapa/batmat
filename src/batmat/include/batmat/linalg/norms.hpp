@@ -31,6 +31,19 @@ struct norms : norms<T> {
         simd amax;
         simd asum;
         simd sumsq;
+
+        /// ℓ₁ norm.
+        [[nodiscard]] simd norm_1() const { return asum; }
+        /// ℓ₂ norm.
+        [[nodiscard]] simd norm_2() const {
+            using std::sqrt;
+            return sqrt(sumsq);
+        }
+        /// max-norm.
+        [[nodiscard]] simd norm_inf() const {
+            using std::isfinite;
+            return datapar::select(isfinite(asum), amax, asum);
+        }
     };
 
     using norms<T>::operator();
@@ -41,6 +54,12 @@ struct norms : norms<T> {
         using std::max;
         auto at = abs(t);
         return {.amax = max(at, accum.amax), .asum = at + accum.asum, .sumsq = t * t + accum.sumsq};
+    }
+
+    /// Combine two accumulators.
+    result_simd operator()(result_simd a, result_simd b) const {
+        using std::max;
+        return {.amax = max(a.amax, b.amax), .asum = a.asum + b.asum, .sumsq = a.sumsq + b.sumsq};
     }
 
     /// Reduce the SIMD accumulator to a scalar result.
@@ -68,6 +87,7 @@ struct norms<T, void> {
             using std::sqrt;
             return sqrt(sumsq);
         }
+        /// max-norm.
         [[nodiscard]] T norm_inf() const {
             using std::isfinite;
             return isfinite(asum) ? amax : asum;

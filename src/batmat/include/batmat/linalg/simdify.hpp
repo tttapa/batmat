@@ -256,6 +256,11 @@ struct simdified_abi<V> {
     using type = typename batmat::linalg::simdified_multi_view_type<V>::abi_type;
 };
 
+template <simdifiable_multi V>
+struct simdified_simd<V> {
+    using type = typename batmat::linalg::simdified_multi_view_type<V>::simd_type;
+};
+
 } // namespace detail
 
 template <simdifiable_multi V, simdifiable_multi... Vs>
