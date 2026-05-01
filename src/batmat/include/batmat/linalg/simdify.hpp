@@ -200,12 +200,22 @@ struct simdified_abi<V> {
     using type = typename batmat::linalg::simdified_view_type<V>::abi_type;
 };
 
+template <class>
+struct simdified_simd;
+
+template <simdifiable V>
+struct simdified_simd<V> {
+    using type = typename batmat::linalg::simdified_view_type<V>::simd_type;
+};
+
 } // namespace detail
 
 template <class V>
 using simdified_value_t = typename detail::simdified_value<V>::type;
 template <class V>
 using simdified_abi_t = typename detail::simdified_abi<V>::type;
+template <class V>
+using simdified_simd_t = typename detail::simdified_simd<V>::type;
 
 template <class...>
 inline constexpr bool simdify_compatible = false;
