@@ -331,7 +331,7 @@ void clamp_resid(Vx &&x, Vlo &&lo, Vhi &&hi, Vz &&z) {
 /// Elementwise clamping z = max(lo, min(x, hi)), with scalar lo and hi.
 template <simdifiable Vx, simdifiable Vz>
     requires simdify_compatible<Vx, Vz>
-void clamp(Vx &&x, simdified_value_t<Vx> lo, simdified_value_t<Vx> hi, Vz &&z) {
+void clamp(Vx &&x, simdified_simd_t<Vx> lo, simdified_simd_t<Vx> hi, Vz &&z) {
     GUANAQO_TRACE_LINALG("clamp", 2 * detail::num_elem(simdify(x))); // max, min
     detail::clamp<simdified_value_t<Vx>, simdified_abi_t<Vx>>(simdify(x).as_const(), lo, hi,
                                                               simdify(z));
@@ -586,7 +586,7 @@ inline namespace multi {
 /// @{
 
 /// Multiply a vector by a scalar z = αx.
-template <simdifiable_multi Vx, simdifiable_multi Vz, std::convertible_to<simdified_value_t<Vx>> T>
+template <simdifiable_multi Vx, simdifiable_multi Vz, std::convertible_to<simdified_simd_t<Vx>> T>
     requires simdify_compatible<Vx, Vz>
 void scale(T alpha, Vx &&x, Vz &&z) {
     BATMAT_ASSERT(x.num_batches() == z.num_batches());
@@ -595,7 +595,7 @@ void scale(T alpha, Vx &&x, Vz &&z) {
 }
 
 /// Multiply a vector by a scalar x = αx.
-template <simdifiable_multi Vx, std::convertible_to<simdified_value_t<Vx>> T>
+template <simdifiable_multi Vx, std::convertible_to<simdified_simd_t<Vx>> T>
 void scale(T alpha, Vx &&x) {
     for (index_t b = 0; b < x.num_batches(); ++b)
         linalg::scale(alpha, x.batch(b));
@@ -645,7 +645,7 @@ void clamp_resid(Vx &&x, Vlo &&lo, Vhi &&hi, Vz &&z) {
 /// Elementwise clamping z = max(lo, min(x, hi)), with scalar lo and hi.
 template <simdifiable_multi Vx, simdifiable_multi Vz>
     requires simdify_compatible<Vx, Vz>
-void clamp(Vx &&x, simdified_value_t<Vx> lo, simdified_value_t<Vx> hi, Vz &&z) {
+void clamp(Vx &&x, simdified_simd_t<Vx> lo, simdified_simd_t<Vx> hi, Vz &&z) {
     BATMAT_ASSERT(x.num_batches() == z.num_batches());
     for (index_t b = 0; b < x.num_batches(); ++b)
         linalg::clamp(x.batch(b), lo, hi, z.batch(b));
@@ -653,8 +653,8 @@ void clamp(Vx &&x, simdified_value_t<Vx> lo, simdified_value_t<Vx> hi, Vz &&z) {
 
 /// Add scaled vector z = αx + βy.
 template <simdifiable_multi Vx, simdifiable_multi Vy, simdifiable_multi Vz, //
-          std::convertible_to<simdified_value_t<Vx>> Ta,
-          std::convertible_to<simdified_value_t<Vx>> Tb>
+          std::convertible_to<simdified_simd_t<Vx>> Ta,
+          std::convertible_to<simdified_simd_t<Vx>> Tb>
     requires simdify_compatible<Vx, Vy, Vz>
 void axpby(Ta alpha, Vx &&x, Tb beta, Vy &&y, Vz &&z) {
     BATMAT_ASSERT(x.num_batches() == y.num_batches());
@@ -665,8 +665,8 @@ void axpby(Ta alpha, Vx &&x, Tb beta, Vy &&y, Vz &&z) {
 
 /// Add scaled vector y = αx + βy.
 template <simdifiable_multi Vx, simdifiable_multi Vy, //
-          std::convertible_to<simdified_value_t<Vx>> Ta,
-          std::convertible_to<simdified_value_t<Vx>> Tb>
+          std::convertible_to<simdified_simd_t<Vx>> Ta,
+          std::convertible_to<simdified_simd_t<Vx>> Tb>
     requires simdify_compatible<Vx, Vy>
 void axpby(Ta alpha, Vx &&x, Tb beta, Vy &&y) {
     BATMAT_ASSERT(x.num_batches() == y.num_batches());
@@ -677,7 +677,7 @@ void axpby(Ta alpha, Vx &&x, Tb beta, Vy &&y) {
 /// Add scaled vector y = ∑ᵢ αᵢxᵢ + βy.
 template <auto Beta = 1, simdifiable_multi Vy, simdifiable_multi... Vx>
     requires simdify_compatible<Vy, Vx...>
-void axpy(Vy &&y, const std::array<simdified_value_t<Vy>, sizeof...(Vx)> &alphas, Vx &&...x) {
+void axpy(Vy &&y, const std::array<simdified_simd_t<Vy>, sizeof...(Vx)> &alphas, Vx &&...x) {
     BATMAT_ASSERT(((y.num_batches() == x.num_batches()) && ...));
     for (index_t b = 0; b < y.num_batches(); ++b)
         linalg::axpy<Beta>(y.batch(b), alphas, x.batch(b)...);
@@ -685,7 +685,7 @@ void axpy(Vy &&y, const std::array<simdified_value_t<Vy>, sizeof...(Vx)> &alphas
 
 /// Add scaled vector z = αx + y.
 template <simdifiable_multi Vx, simdifiable_multi Vy, simdifiable_multi Vz,
-          std::convertible_to<simdified_value_t<Vx>> Ta>
+          std::convertible_to<simdified_simd_t<Vx>> Ta>
     requires simdify_compatible<Vx, Vy, Vz>
 void axpy(Ta alpha, Vx &&x, Vy &&y, Vz &&z) {
     axpby(alpha, x, 1, y, z);
@@ -693,7 +693,7 @@ void axpy(Ta alpha, Vx &&x, Vy &&y, Vz &&z) {
 
 /// Add scaled vector y = αx + βy (where β is a compile-time constant).
 template <auto Beta = 1, simdifiable_multi Vx, simdifiable_multi Vy,
-          std::convertible_to<simdified_value_t<Vx>> Ta>
+          std::convertible_to<simdified_simd_t<Vx>> Ta>
     requires simdify_compatible<Vx, Vy>
 void axpy(Ta alpha, Vx &&x, Vy &&y) {
     BATMAT_ASSERT(x.num_batches() == y.num_batches());
