@@ -149,7 +149,7 @@ template <class T, class Abi, class F, class... Ys, class... Xs>
 
 /// Scalar product.
 template <class T, class Abi, StorageOrder OB, StorageOrder OC>
-[[gnu::flatten]] void scale(T a, view<const T, Abi, OB> B, view<T, Abi, OC> C) {
+[[gnu::flatten]] void scale(datapar::simd<T, Abi> a, view<const T, Abi, OB> B, view<T, Abi, OC> C) {
     BATMAT_ASSERT(B.rows() == C.rows());
     BATMAT_ASSERT(B.cols() == C.cols());
     iter_elems_store<T, Abi, OC>([&](auto Bi) { return a * Bi; }, C, B);
@@ -182,10 +182,11 @@ template <class T, class Abi, StorageOrder O>
 
 /// Elementwise clamping z = max(lo, min(x, hi)), with scalar lo and hi.
 template <class T, class Abi, StorageOrder O>
-[[gnu::flatten]] void clamp(view<const T, Abi, O> x, T lo, T hi, view<T, Abi, O> z) {
+[[gnu::flatten]] void clamp(view<const T, Abi, O> x, datapar::simd<T, Abi> lo,
+                            datapar::simd<T, Abi> hi, view<T, Abi, O> z) {
     BATMAT_ASSERT(x.rows() == z.rows());
     BATMAT_ASSERT(x.cols() == z.cols());
-    const auto clamp = [&](auto xi) { return fmax(decltype(xi){lo}, fmin(xi, decltype(xi){hi})); };
+    const auto clamp = [&](auto xi) { return fmax(lo, fmin(xi, hi)); };
     iter_elems_store<T, Abi, O>(clamp, z, x);
 }
 
@@ -208,7 +209,8 @@ template <class T, class Abi, StorageOrder O>
 
 /// Linear combination of vectors z = beta * z + sum_i alpha_i * x_i.
 template <class T, class Abi, T Beta, StorageOrder O, class... Xs>
-[[gnu::flatten]] void gaxpby(view<T, Abi, O> z, const std::array<T, sizeof...(Xs)> &alphas,
+[[gnu::flatten]] void gaxpby(view<T, Abi, O> z,
+                             const std::array<datapar::simd<T, Abi>, sizeof...(Xs)> &alphas,
                              const Xs &...xs) {
     BATMAT_ASSERT(((z.rows() == xs.rows()) && ...));
     BATMAT_ASSERT(((z.cols() == xs.cols()) && ...));
@@ -274,7 +276,7 @@ template <class T, class Abi, int Rotate, StorageOrder OA, StorageOrder OB, Stor
 /// @{
 
 /// Multiply a vector by a scalar z = αx.
-template <simdifiable Vx, simdifiable Vz, std::convertible_to<simdified_value_t<Vx>> T>
+template <simdifiable Vx, simdifiable Vz, std::convertible_to<simdified_simd_t<Vx>> T>
     requires simdify_compatible<Vx, Vz>
 void scale(T alpha, Vx &&x, Vz &&z) {
     GUANAQO_TRACE_LINALG("scale", detail::num_elem(simdify(x)));
@@ -283,7 +285,7 @@ void scale(T alpha, Vx &&x, Vz &&z) {
 }
 
 /// Multiply a vector by a scalar x = αx.
-template <simdifiable Vx, std::convertible_to<simdified_value_t<Vx>> T>
+template <simdifiable Vx, std::convertible_to<simdified_simd_t<Vx>> T>
 void scale(T alpha, Vx &&x) {
     GUANAQO_TRACE_LINALG("scale", detail::num_elem(simdify(x)));
     detail::scale<simdified_value_t<Vx>, simdified_abi_t<Vx>>(alpha, simdify(x).as_const(),
@@ -337,8 +339,8 @@ void clamp(Vx &&x, simdified_value_t<Vx> lo, simdified_value_t<Vx> hi, Vz &&z) {
 
 /// Add scaled vector z = αx + βy.
 template <simdifiable Vx, simdifiable Vy, simdifiable Vz, //
-          std::convertible_to<simdified_value_t<Vx>> Ta,
-          std::convertible_to<simdified_value_t<Vx>> Tb>
+          std::convertible_to<simdified_simd_t<Vx>> Ta,
+          std::convertible_to<simdified_simd_t<Vx>> Tb>
     requires simdify_compatible<Vx, Vy, Vz>
 void axpby(Ta alpha, Vx &&x, Tb beta, Vy &&y, Vz &&z) {
     GUANAQO_TRACE_LINALG("axpby", 2 * detail::num_elem(simdify(x))); // mul, fma
@@ -348,8 +350,8 @@ void axpby(Ta alpha, Vx &&x, Tb beta, Vy &&y, Vz &&z) {
 
 /// Add scaled vector y = αx + βy.
 template <simdifiable Vx, simdifiable Vy, //
-          std::convertible_to<simdified_value_t<Vx>> Ta,
-          std::convertible_to<simdified_value_t<Vx>> Tb>
+          std::convertible_to<simdified_simd_t<Vx>> Ta,
+          std::convertible_to<simdified_simd_t<Vx>> Tb>
     requires simdify_compatible<Vx, Vy>
 void axpby(Ta alpha, Vx &&x, Tb beta, Vy &&y) {
     GUANAQO_TRACE_LINALG("axpby", 2 * detail::num_elem(simdify(x))); // mul, fma
@@ -360,7 +362,7 @@ void axpby(Ta alpha, Vx &&x, Tb beta, Vy &&y) {
 /// Add scaled vector y = ∑ᵢ αᵢxᵢ + βy.
 template <auto Beta = 1, simdifiable Vy, simdifiable... Vx>
     requires simdify_compatible<Vy, Vx...>
-void axpy(Vy &&y, const std::array<simdified_value_t<Vy>, sizeof...(Vx)> &alphas, Vx &&...x) {
+void axpy(Vy &&y, const std::array<simdified_simd_t<Vy>, sizeof...(Vx)> &alphas, Vx &&...x) {
     [[maybe_unused]] static constexpr index_t num_mul = Beta != 1 && Beta != 0 ? 1 : 0;
     [[maybe_unused]] static constexpr index_t num_fma = sizeof...(Vx);
     GUANAQO_TRACE_LINALG("axpy", (num_mul + num_fma) * detail::num_elem(simdify(y))); // mul, fma
@@ -370,7 +372,7 @@ void axpy(Vy &&y, const std::array<simdified_value_t<Vy>, sizeof...(Vx)> &alphas
 
 /// Add scaled vector z = αx + y.
 template <simdifiable Vx, simdifiable Vy, simdifiable Vz,
-          std::convertible_to<simdified_value_t<Vx>> Ta>
+          std::convertible_to<simdified_simd_t<Vx>> Ta>
     requires simdify_compatible<Vx, Vy, Vz>
 void axpy(Ta alpha, Vx &&x, Vy &&y, Vz &&z) {
     axpby(alpha, x, Ta{1}, y, z);
@@ -378,7 +380,7 @@ void axpy(Ta alpha, Vx &&x, Vy &&y, Vz &&z) {
 
 /// Add scaled vector y = αx + βy (where β is a compile-time constant).
 template <auto Beta = 1, simdifiable Vx, simdifiable Vy,
-          std::convertible_to<simdified_value_t<Vx>> Ta>
+          std::convertible_to<simdified_simd_t<Vx>> Ta>
     requires simdify_compatible<Vx, Vy>
 void axpy(Ta alpha, Vx &&x, Vy &&y) {
     [[maybe_unused]] static constexpr index_t num_mul = Beta != 1 && Beta != 0 ? 1 : 0;

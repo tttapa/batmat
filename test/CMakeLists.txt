@@ -17,6 +17,7 @@ add_executable(tests
     "matrix/test-view.cpp"
     "linalg/test-compress.cpp"
     "linalg/test-copy.cpp"
+    "linalg/test-elementwise.cpp"
     "linalg/test-gemm.cpp"
     "linalg/test-gemm-diag.cpp"
     "linalg/test-gemv.cpp"
