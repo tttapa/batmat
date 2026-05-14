@@ -14,6 +14,7 @@ function(batmat_codegen_micro_kernels tgt headers_target)
     set(SIGNS_potrf "false" "true")
     set(SIGNS_trtri "false")
     set(SIGNS_hyhound "false" "true")
+    set(SIGNS_geqrf "false")
 
     add_library(${tgt}-micro-kernels INTERFACE)
     list(APPEND BATMAT_CODEGEN_TARGETS ${tgt}-micro-kernels)
@@ -84,6 +85,11 @@ function(batmat_codegen_micro_kernels tgt headers_target)
         string(APPEND ${out} "template BATMAT_LINALG_TRTRI_EXPORT void trtri_copy_register<${T}, ${Abi}, ${Conf}, ${OA}, ${OD}>(view<const ${T}, ${Abi}, ${OA}> A, view<${T}, ${Abi}, ${OD}> D) noexcept;\n")
     endmacro()
 
+    macro(instantiate_geqrf out T Abi Conf OA OD)
+        string(APPEND ${out} "template BATMAT_LINALG_GEQRF_EXPORT void geqrf_copy_register<${T}, ${Abi}, ${Conf}, ${OA}, ${OD}>(view<const ${T}, ${Abi}, ${OA}> A, view<${T}, ${Abi}, ${OD}> D) noexcept;\n")
+        # string(APPEND ${out} "template BATMAT_LINALG_GEQRF_EXPORT void geqrf_copy_register<${T}, ${Abi}, ${Conf}, ${OA}, ${OD}>(view<const ${T}, ${Abi}, ${OA}> A, view<${T}, ${Abi}, ${OD}> D, view<${T}, ${Abi}> W) noexcept;\n")  # TODO
+    endmacro()
+
     batmat_add_micro_kernels("gemm")
     batmat_add_micro_kernels("gemm-diag")
     batmat_add_micro_kernels("gemv")
@@ -93,6 +99,7 @@ function(batmat_codegen_micro_kernels tgt headers_target)
     batmat_add_micro_kernels("potrf")
     batmat_add_micro_kernels("trsm")
     batmat_add_micro_kernels("trtri")
+    batmat_add_micro_kernels("geqrf")
 
     foreach(DType_ IN LISTS BATMAT_DTYPES)
         string(TOUPPER "${DType_}" DTypeU)
@@ -401,6 +408,24 @@ function(batmat_codegen_micro_kernels tgt headers_target)
             endmacro()
             batmat_instantiate_trtri("trtri-l" ".struc=LowerTriangular")
             # batmat_instantiate_trtri("trtri-u" ".struc=UpperTriangular")  # TODO
+
+            # GEQRF
+            macro(batmat_instantiate_geqrf name struc_config)
+                set(op "geqrf")
+                set(op_ "geqrf")
+                set(instantiations "")
+                foreach(OA "ColMajor" "RowMajor")
+                    foreach(OD "ColMajor" "RowMajor")
+                        set(Conf "${struc_config}")
+                        instantiate_geqrf(instantiations "${DType}" "${Abi}" "{${Conf}}" "${OA}" "${OD}")
+                    endforeach()
+                endforeach()
+                configure_file("${CMAKE_CURRENT_FUNCTION_LIST_DIR}/inst.cpp.in" "${OUT_DIR}/${name}-${DType_}-${VL}.cpp" @ONLY)
+                target_sources(${tgt}-micro-kernels-${op} PRIVATE "${OUT_DIR}/${name}-${DType_}-${VL}.cpp")
+                set_source_files_properties("${OUT_DIR}/${name}-${DType_}-${VL}.cpp" PROPERTIES UNITY_GROUP "${VL}-${DType_}-geqrf")
+            endmacro()
+            # batmat_instantiate_geqrf("geqrf-l" ".struc=LowerTriangular")  # TODO
+            batmat_instantiate_geqrf("geqrf-u" ".struc=UpperTriangular")
 
         endforeach()
     endforeach()

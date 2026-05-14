@@ -115,6 +115,8 @@ target_sources(batmat-core PUBLIC FILE_SET HEADERS
           "batmat/include/batmat/linalg/micro-kernels/gemm.tpp"
           "batmat/include/batmat/linalg/micro-kernels/gemv.hpp"
           "batmat/include/batmat/linalg/micro-kernels/gemv.tpp"
+          "batmat/include/batmat/linalg/micro-kernels/geqrf.hpp"
+          "batmat/include/batmat/linalg/micro-kernels/geqrf.tpp"
           "batmat/include/batmat/linalg/micro-kernels/hyhound.hpp"
           "batmat/include/batmat/linalg/micro-kernels/hyhound.tpp"
           "batmat/include/batmat/linalg/micro-kernels/potrf.hpp"
@@ -139,6 +141,7 @@ target_sources(batmat-core PUBLIC FILE_SET HEADERS
           "batmat/include/batmat/linalg/triangular.hpp"
           "batmat/include/batmat/linalg/trsm.hpp"
           "batmat/include/batmat/linalg/trtri.hpp"
+          "batmat/include/batmat/linalg/geqrf.hpp"
           "batmat/include/batmat/linalg/uview.hpp"
 )
 

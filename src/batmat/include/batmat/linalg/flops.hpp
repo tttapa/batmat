@@ -201,6 +201,14 @@ constexpr FlopCount trtri(index_t m) {
 }
 // [flops-trtri]
 
+/// QR factorization of an m×n matrix with m≥n.
+/// @implementation{flops-geqrf}
+// [flops-geqrf]
+constexpr FlopCount geqrf(index_t m, index_t n) {
+    return {}; // TODO
+}
+// [flops-geqrf]
+
 /// @}
 
 } // namespace batmat::linalg::flops

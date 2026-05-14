@@ -13,40 +13,6 @@ struct BATMAT_LINALG_HYHOUND_EXPORT KernelConfig {
     bool sign_only = false;
 };
 
-template <class T, class Abi, index_t R>
-struct triangular_accessor {
-    using value_type = T;
-    value_type *data;
-
-    using simd = datapar::simd<std::remove_const_t<T>, Abi>;
-    static constexpr ptrdiff_t inner_stride =
-        datapar::simd_size<std::remove_const_t<T>, Abi>::value;
-
-    static constexpr index_t num_elem_per_layer() { return R * (R + 1) / 2; }
-    static constexpr size_t size() {
-        return simd::size() * static_cast<size_t>(num_elem_per_layer());
-    }
-    static constexpr size_t alignment() {
-        return datapar::simd_align<std::remove_const_t<T>, Abi>::value;
-    }
-
-    [[gnu::always_inline]] value_type &operator()(index_t r, index_t c) const noexcept {
-        assert(r <= c);
-        return data[(r + c * (c + 1) / 2) * inner_stride];
-    }
-    [[gnu::always_inline]] simd load(index_t r, index_t c) const noexcept {
-        return datapar::aligned_load<simd>(&operator()(r, c));
-    }
-    [[gnu::always_inline]] void store(simd x, index_t r, index_t c) const noexcept
-        requires(!std::is_const_v<T>)
-    {
-        datapar::aligned_store(x, &operator()(r, c));
-    }
-
-    [[gnu::always_inline]] triangular_accessor(value_type *data) noexcept : data{data} {}
-    operator triangular_accessor<const T, Abi, R>() const noexcept { return {data}; }
-};
-
 template <class T, class Abi>
 inline constexpr index_t SizeR = gemm::RowsReg<T, Abi>; // TODO
 template <class T, class Abi>
