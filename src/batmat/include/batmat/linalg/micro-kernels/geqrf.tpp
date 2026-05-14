@@ -225,6 +225,7 @@ void geqrf_copy_register(const view<const T, Abi, OA> A, const view<T, Abi, OD> 
     static constexpr index_constant<SizeS<T, Abi>> S;
     const index_t k = A.rows();
     BATMAT_ASSUME(k > 0);
+    BATMAT_ASSUME(A.rows() >= A.cols());
     BATMAT_ASSUME(A.rows() == D.rows());
     BATMAT_ASSUME(A.cols() == D.cols());
 
@@ -240,26 +241,33 @@ void geqrf_copy_register(const view<const T, Abi, OA> A, const view<T, Abi, OD> 
         foreach_chunked(
             0, A.cols(), R,
             [&](index_t j) {
-                // Triangularize block column j (all rows below diagonal)
                 auto Djj = D_.block(j, j);
-                if (j == 0) // copy result from A to D
+                // Copy result from A to D
+                if (j == 0) {
+                    // Triangularize block column j (all rows below diagonal)
                     geqrf_diag_microkernel<T, Abi, Conf, R, OA, OD>(k, W, A_, Djj);
-                else
-                    geqrf_diag_microkernel<T, Abi, Conf, R, OD, OD>(k - j, W, Djj, Djj);
-
-                // Update the trailing columns (in multiples of S)
-                foreach_chunked_merged(
-                    j + R, A.cols(), S,
-                    [&](index_t i, auto rem_i) {
-                        auto Dji = D_.block(j, i);
-                        if (j == 0)
+                    // Update the trailing columns (in multiples of S)
+                    foreach_chunked_merged(
+                        j + R, A.cols(), S,
+                        [&](index_t i, auto rem_i) {
+                            auto Dji = D_.block(j, i);
                             microkernel_tail_lut<T, Abi, Conf, OA, OD>[rem_i - 1](
                                 k, true, W, A_.block(j, i), Dji, Djj);
-                        else
+                        },
+                        LoopDir::Backward); // TODO: decide on order
+                } else {
+                    // Triangularize block column j (all rows below diagonal)
+                    geqrf_diag_microkernel<T, Abi, Conf, R, OD, OD>(k - j, W, Djj, Djj);
+                    // Update the trailing columns (in multiples of S)
+                    foreach_chunked_merged(
+                        j + R, A.cols(), S,
+                        [&](index_t i, auto rem_i) {
+                            auto Dji = D_.block(j, i);
                             microkernel_tail_lut<T, Abi, Conf, OD, OD>[rem_i - 1](k - j, true, W,
                                                                                   Dji, Dji, Djj);
-                    },
-                    LoopDir::Backward); // TODO: decide on order
+                        },
+                        LoopDir::Backward); // TODO: decide on order
+                }
             },
             [&](index_t j, index_t rem_j) {
                 auto Djj = D_.block(j, j);
@@ -269,7 +277,35 @@ void geqrf_copy_register(const view<const T, Abi, OA> A, const view<T, Abi, OD> 
                     microkernel_full_lut<T, Abi, Conf, OD, OD>[rem_j - 1](k - j, Djj, Djj);
             });
     } else {
-        BATMAT_ASSERT(!"NYI: non-square QR");
+        foreach_chunked_merged(0, A.cols(), R, [&](index_t j, auto rem_j) {
+            auto Djj = D_.block(j, j);
+            // Copy result from A to D
+            if (j == 0) {
+                // Triangularize block column j (all rows below diagonal)
+                microkernel_diag_lut<T, Abi, Conf, OA, OD>[rem_j - 1](k, W, A_, Djj);
+                // Update the trailing columns (in multiples of S)
+                foreach_chunked_merged(
+                    j + R, A.cols(), S,
+                    [&](index_t i, auto rem_i) {
+                        auto Dji = D_.block(j, i);
+                        microkernel_tail_lut_2<T, Abi, Conf, OA, OD>[rem_j - 1][rem_i - 1](
+                            k, true, W, A_.block(j, i), Dji, Djj);
+                    },
+                    LoopDir::Backward); // TODO: decide on order
+            } else {
+                // Triangularize block column j (all rows below diagonal)
+                microkernel_diag_lut<T, Abi, Conf, OD, OD>[rem_j - 1](k - j, W, Djj, Djj);
+                // Update the trailing columns (in multiples of S)
+                foreach_chunked_merged(
+                    j + R, A.cols(), S,
+                    [&](index_t i, auto rem_i) {
+                        auto Dji = D_.block(j, i);
+                        microkernel_tail_lut_2<T, Abi, Conf, OD, OD>[rem_j - 1][rem_i - 1](
+                            k - j, true, W, Dji, Dji, Djj);
+                    },
+                    LoopDir::Backward); // TODO: decide on order
+            }
+        });
     }
 }
 

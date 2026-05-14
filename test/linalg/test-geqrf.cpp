@@ -19,8 +19,8 @@ TYPED_TEST_P(QRTest, geqrf) {
     using EMat = Eigen::MatrixX<typename TypeParam::value_type>;
     for (auto n : batmat::tests::sizes)
         for (auto m : batmat::tests::sizes) {
-            if (m != n)
-                continue; // TODO: support rectangular matrices
+            if (m < n)
+                continue; // Tall matrices only
             const auto A0 = this->template get_matrix<0>(m, n);
             auto A        = A0;
             A.set_constant(std::numeric_limits<typename TypeParam::value_type>::quiet_NaN());
@@ -29,7 +29,7 @@ TYPED_TEST_P(QRTest, geqrf) {
                         [&](auto l, auto &&res, auto &&ref, auto &&) {
                             EMat resU       = tri<Upper>(res);
                             const auto refU = tri<Upper>(ref);
-                            for (index_t i = 0; i < resU.rows(); ++i)
+                            for (index_t i = 0; i < resU.cols(); ++i)
                                 if (resU(i, i) * refU(i, i) < 0)
                                     resU.row(i) *= -1; // Adjust sign ambiguity
                             EXPECT_THAT(resU, EigenAlmostEqualRel(refU, this->tolerance_n(n))) << l;
