@@ -205,7 +205,7 @@ template <int S>
     constexpr size_t N    = x.size();
     constexpr int indices = (((N - S + 3) % N) << 6) | (((N - S + 2) % N) << 4) |
                             (((N - S + 1) % N) << 2) | ((N - S) % N);
-    __m256d y = _mm256_permute4x64_pd(static_cast<__m256d>(x), indices);
+    __m256d y             = _mm256_permute4x64_pd(static_cast<__m256d>(x), indices);
     return decltype(x){y};
 }
 

@@ -20,12 +20,12 @@ constexpr size_t total(FlopCount c) { return c.fma + c.mul + c.add + c.div + c.s
 constexpr FlopCount potrf(size_t m, size_t n) {
     assert(m >= n);
     return {
-        .fma = (n + 1) * n * (n - 1) / 6    // Schur complement (square)
-               + (m - n) * n * (n - 1) / 2, //                  (bottom)
-        .mul = n * (n - 1) / 2              // multiplication by inverse pivot (square)
-               + (m - n) * n,               //                                 (bottom)
-        .div  = n,                          // inverting pivot
-        .sqrt = n,                          // square root pivot
+        .fma  = (n + 1) * n * (n - 1) / 6    // Schur complement (square)
+                + (m - n) * n * (n - 1) / 2, //                  (bottom)
+        .mul  = n * (n - 1) / 2              // multiplication by inverse pivot (square)
+                + (m - n) * n,               //                                 (bottom)
+        .div  = n,                           // inverting pivot
+        .sqrt = n,                           // square root pivot
     };
 }
 } // namespace flops

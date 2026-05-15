@@ -131,12 +131,12 @@ constexpr FlopCount gemmt_diag(index_t m, index_t n, index_t k, MatrixStructure 
 constexpr FlopCount potrf(index_t m, index_t n) {
     BATMAT_ASSUME(m >= n);
     return {
-        .fma = (n + 1) * n * (n - 1) / 6    // Schur complement (square)
-               + (m - n) * n * (n - 1) / 2, //                  (bottom)
-        .mul = n * (n - 1) / 2              // multiplication by inverse pivot (square)
-               + (m - n) * n,               //                                 (bottom)
-        .div  = n,                          // inverting pivot
-        .sqrt = n,                          // square root pivot
+        .fma  = (n + 1) * n * (n - 1) / 6    // Schur complement (square)
+                + (m - n) * n * (n - 1) / 2, //                  (bottom)
+        .mul  = n * (n - 1) / 2              // multiplication by inverse pivot (square)
+                + (m - n) * n,               //                                 (bottom)
+        .div  = n,                           // inverting pivot
+        .sqrt = n,                           // square root pivot
     };
 }
 // [flops-potrf]
