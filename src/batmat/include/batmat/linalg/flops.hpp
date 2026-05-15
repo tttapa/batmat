@@ -205,7 +205,12 @@ constexpr FlopCount trtri(index_t m) {
 /// @implementation{flops-geqrf}
 // [flops-geqrf]
 constexpr FlopCount geqrf(index_t m, index_t n) {
-    return {}; // TODO
+    // TODO: double-check these
+    return {.fma  = m * n * n - n * (n - 1) * (2 * n + 5) / 6,
+            .mul  = m * n - n,
+            .add  = n * (n + 1) / 2,
+            .div  = 2 * n,
+            .sqrt = n};
 }
 // [flops-geqrf]
 
@@ -213,7 +218,8 @@ constexpr FlopCount geqrf(index_t m, index_t n) {
 /// @implementation{flops-geqrf-apply}
 // [flops-geqrf-apply]
 constexpr FlopCount geqrf_apply(index_t m, index_t n, index_t k) {
-    return {}; // TODO
+    // TODO: double-check these
+    return {.fma = 2 * k * (m * n - n * (n + 1) / 2), .mul = k * n, .add = k * n};
 }
 // [flops-geqrf-apply]
 

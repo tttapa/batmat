@@ -88,6 +88,8 @@ geqrf_diag_microkernel(index_t k, triangular_accessor<T, Abi, SizeR<T, Abi>> W,
     }
 }
 
+/// A (k×R)
+/// D (k×R)
 template <class T, class Abi, KernelConfig Conf, index_t R, StorageOrder OA, StorageOrder OD>
 [[gnu::hot, gnu::flatten]] void geqrf_full_microkernel(index_t k, uview<const T, Abi, OA> A,
                                                        uview<T, Abi, OD> D) noexcept {

@@ -45,7 +45,7 @@ with contextlib.suppress(FileNotFoundError):
 stat = "median"
 metric = "real_time"
 gflops_max = {
-    "Nutella": 40,
+    "Nutella": 41.6,
     "blacksad.esat.kuleuven.be": 20,
     "ketelbuik.esat.kuleuven.be": 39.2,
 }.get(data["context"]["host_name"])
@@ -240,6 +240,10 @@ separate_figs = {
     "potrf": {
         ("RowMajor",): "\\textsc{potrf} $D_r = \\mathrm{chol}(A_r)$",
         ("ColMajor",): "\\textsc{potrf} $D_c = \\mathrm{chol}(A_c)$",
+    },
+    "geqrf": {
+        ("RowMajor",): "\\textsc{geqrf} $D_r = \\mathrm{QR}(A_r)$",
+        ("ColMajor",): "\\textsc{geqrf} $D_c = \\mathrm{QR}(A_c)$",
     },
     "hyh": {
         # ("RowMajor", "ColMajor"): "Hyhound $(\\tilde L_r \\; 0) = (L_r \\; A_c) \\breve Q$",
