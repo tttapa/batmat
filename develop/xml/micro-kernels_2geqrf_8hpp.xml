@@ -1,0 +1,290 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="micro-kernels_2geqrf_8hpp" kind="file" language="C++">
+    <compoundname>geqrf.hpp</compoundname>
+    <includes refid="structure_8hpp" local="no">batmat/linalg/structure.hpp</includes>
+    <includes refid="uview_8hpp" local="no">batmat/linalg/uview.hpp</includes>
+    <includes refid="lut_8hpp" local="no">batmat/lut.hpp</includes>
+    <includes local="no">batmat/micro-kernels/geqrf/export.h</includes>
+    <includes refid="platform_8hpp" local="no">batmat/platform/platform.hpp</includes>
+    <includes refid="simd_8hpp" local="no">batmat/simd.hpp</includes>
+    <includedby refid="geqrf_8hpp" local="no">batmat/include/batmat/linalg/geqrf.hpp</includedby>
+    <includedby refid="geqrf_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/geqrf.tpp</includedby>
+    <incdepgraph>
+      <node id="6">
+        <label>batmat/config.hpp</label>
+        <link refid="config_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>batmat/assume.hpp</label>
+        <link refid="assume_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/micro-kernels/geqrf.hpp</label>
+        <link refid="micro-kernels_2geqrf_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/linalg/structure.hpp</label>
+        <link refid="structure_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>batmat/linalg/uview.hpp</label>
+        <link refid="uview_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+      </node>
+      <node id="24">
+        <label>batmat/lut.hpp</label>
+        <link refid="lut_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>batmat/matrix/layout.hpp</label>
+        <link refid="layout_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>batmat/matrix/matrix.hpp</label>
+        <link refid="matrix_8hpp"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>batmat/matrix/storage.hpp</label>
+        <link refid="storage_8hpp"/>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="16">
+        <label>batmat/matrix/view.hpp</label>
+        <link refid="view_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="28">
+        <label>generic.hpp</label>
+        <link refid="generic_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="27">
+        <label>batmat/platform/platform.hpp</label>
+        <link refid="platform_8hpp"/>
+        <childnode refid="28" relation="include">
+        </childnode>
+      </node>
+      <node id="20">
+        <label>batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>batmat/unroll.h</label>
+        <link refid="unroll_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="26">
+        <label>batmat/micro-kernels/geqrf/export.h</label>
+      </node>
+      <node id="11">
+        <label>cstddef</label>
+      </node>
+      <node id="3">
+        <label>cstdint</label>
+      </node>
+      <node id="23">
+        <label>experimental/simd</label>
+      </node>
+      <node id="8">
+        <label>guanaqo/assume.hpp</label>
+      </node>
+      <node id="25">
+        <label>guanaqo/lut.hpp</label>
+      </node>
+      <node id="18">
+        <label>guanaqo/mat-view.hpp</label>
+      </node>
+      <node id="22">
+        <label>guanaqo/stringify.h</label>
+      </node>
+      <node id="12">
+        <label>memory</label>
+      </node>
+      <node id="13">
+        <label>new</label>
+      </node>
+      <node id="7">
+        <label>stdfloat</label>
+      </node>
+      <node id="14">
+        <label>tuple</label>
+      </node>
+      <node id="15">
+        <label>type_traits</label>
+      </node>
+      <node id="19">
+        <label>utility</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>batmat/include/batmat/linalg/geqrf.hpp</label>
+        <link refid="geqrf_8hpp"/>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/micro-kernels/geqrf.hpp</label>
+        <link refid="micro-kernels_2geqrf_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>batmat/include/batmat/linalg/micro-kernels/geqrf.tpp</label>
+        <link refid="geqrf_8tpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structbatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1_1KernelConfig" prot="public">batmat::linalg::micro_kernels::geqrf::KernelConfig</innerclass>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg">batmat::linalg</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels">batmat::linalg::micro_kernels</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf">batmat::linalg::micro_kernels::geqrf</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="structure_8hpp" kindref="compound">batmat/linalg/structure.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="uview_8hpp" kindref="compound">batmat/linalg/uview.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="lut_8hpp" kindref="compound">batmat/lut.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;batmat/micro-kernels/geqrf/export.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="platform_8hpp" kindref="compound">batmat/platform/platform.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="simd_8hpp" kindref="compound">batmat/simd.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf" kindref="compound">batmat::linalg::micro_kernels::geqrf</ref><sp/>{</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1_1KernelConfig" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">BATMAT_LINALG_GEQRF_EXPORT<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1_1KernelConfig" kindref="compound">KernelConfig</ref><sp/>{};</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="15" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1a80c47a3c743792ea1bfdf19077ceba69" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1a80c47a3c743792ea1bfdf19077ceba69" kindref="member">SizeR</ref><sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">gemm::RowsReg&lt;T, Abi&gt;</ref>;<sp/></highlight><highlight class="comment">//<sp/>TODO</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="17" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1a61a46ddbe33d4fdec7ff435405d66588" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1a61a46ddbe33d4fdec7ff435405d66588" kindref="member">SizeS</ref><sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">gemm::RowsReg&lt;T, Abi&gt;</ref>;<sp/></highlight><highlight class="comment">//<sp/>TODO</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>index_t<sp/>R,<sp/>StorageOrder<sp/>OA,<sp/>StorageOrder<sp/>OD&gt;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1a4f4baa4113d13acb6849ca1f33e820a2" kindref="member">geqrf_diag_microkernel</ref>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>k,<sp/><ref refid="structbatmat_1_1linalg_1_1triangular__accessor" kindref="compound">triangular_accessor</ref>&lt;T,<sp/>Abi,<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1a80c47a3c743792ea1bfdf19077ceba69" kindref="member">SizeR&lt;T, Abi&gt;</ref>&gt;<sp/>W,</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, OA&gt;</ref><sp/>A,<sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, OD&gt;</ref><sp/>D)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>index_t<sp/>R,<sp/>StorageOrder<sp/>OA,<sp/>StorageOrder<sp/>OD&gt;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1af4fb98c87b43cf096056240e8d269f62" kindref="member">geqrf_full_microkernel</ref>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>k,<sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, OA&gt;</ref><sp/>A,<sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, OD&gt;</ref><sp/>D)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1_1KernelConfig" kindref="compound">KernelConfig</ref><sp/>Conf,<sp/><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>R,<sp/><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>S,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OA,</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OD,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OB&gt;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1a8a045dd27aa59eceeab7b438f46179d9" kindref="member">geqrf_tail_microkernel</ref>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>k,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>transposed,</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1triangular__accessor" kindref="compound">triangular_accessor</ref>&lt;</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>T,<sp/>Abi,<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1a80c47a3c743792ea1bfdf19077ceba69" kindref="member">SizeR&lt;T, Abi&gt;</ref>&gt;<sp/>W,</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, OA&gt;</ref><sp/>A,<sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, OD&gt;</ref><sp/>D,</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, OB&gt;</ref><sp/>B)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Helper<sp/>function<sp/>to<sp/>compute<sp/>size<sp/>of<sp/>the<sp/>storage<sp/>for<sp/>the<sp/>matrix<sp/>W<sp/>(part<sp/>of<sp/>the<sp/>block</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Householder<sp/>representation).</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>StorageOrder<sp/>OA&gt;</highlight></codeline>
+<codeline lineno="36" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1a40d93db25b38dc2ffb4406f8b8bbbdad" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::pair&lt;index_t,<sp/>index_t&gt;<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1a40d93db25b38dc2ffb4406f8b8bbbdad" kindref="member">geqrf_W_size</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OA&gt;</ref><sp/>A)<sp/>{</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant&lt;SizeR&lt;std::remove_const_t&lt;T&gt;</ref>,<sp/>Abi&gt;&gt;<sp/>R;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">W_t<sp/>=<sp/><ref refid="structbatmat_1_1linalg_1_1triangular__accessor" kindref="compound">triangular_accessor&lt;std::remove_const_t&lt;T&gt;</ref>,<sp/>Abi,<sp/>R&gt;;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{W_t::num_elem_per_layer(),<sp/>(A.cols()<sp/>+<sp/>R<sp/>-<sp/>1)<sp/>/<sp/>R};</highlight></codeline>
+<codeline lineno="40"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Low-level<sp/>register-blocked<sp/>routines</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/>KernelConfig<sp/>Conf<sp/>=<sp/>{},<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OA<sp/>=<sp/>StorageOrder::ColMajor,</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OD<sp/>=<sp/>StorageOrder::ColMajor&gt;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal">BATMAT_LINALG_GEQRF_EXPORT<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1a1eef16afef871e52bc20f0bb1480bccc" kindref="member">geqrf_copy_register</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OA&gt;</ref><sp/>A,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OD&gt;</ref><sp/>D,</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi&gt;</ref><sp/>W)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>StorageOrder<sp/>OA,<sp/>StorageOrder<sp/>OD,<sp/>StorageOrder<sp/>OB&gt;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1a383154c0a49a6db9fc74a1a242d0cc17" kindref="member">geqrf_apply_register</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OA&gt;</ref><sp/>A,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OD&gt;</ref><sp/>D,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OB&gt;</ref><sp/>B,</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>W,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>transposed)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::linalg::micro_kernels::geqrf</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/linalg/micro-kernels/geqrf.hpp"/>
+  </compounddef>
+</doxygen>

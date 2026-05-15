@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg_1_1flops" kind="namespace" language="C++">
+    <compoundname>batmat::linalg::flops</compoundname>
+    <innerclass refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount" prot="public">batmat::linalg::flops::FlopCount</innerclass>
+    <sectiondef kind="func">
+      <member refid="group__topic-linalg-flops_1ga837cc287e8d3e7e62cf013aa2c1f58d3" kind="function"><name>operator+</name></member>
+      <member refid="group__topic-linalg-flops_1ga3f5450fd91a87ba9dc28e346bf46bf31" kind="function"><name>total</name></member>
+      <member refid="group__topic-linalg-flops_1ga792bf36ee357f56cea635ef9337368b8" kind="function"><name>gemm</name></member>
+      <member refid="group__topic-linalg-flops_1ga7ab4fbff09383b46ed353e5c8b1cb44a" kind="function"><name>trmm</name></member>
+      <member refid="group__topic-linalg-flops_1gad70c29c07e3f55d4464e001bdfd14da2" kind="function"><name>gemmt</name></member>
+      <member refid="group__topic-linalg-flops_1gac7a4c106e784546210860c59c3634e5e" kind="function"><name>syrk</name></member>
+      <member refid="group__topic-linalg-flops_1ga232cc639534f37bf900df45fb929743e" kind="function"><name>gemmt_diag</name></member>
+      <member refid="group__topic-linalg-flops_1ga840f3e725b3e51c181bc4b2961697528" kind="function"><name>potrf</name></member>
+      <member refid="group__topic-linalg-flops_1ga5c387fb603a544664054bd7db3d363a7" kind="function"><name>hyh_square</name></member>
+      <member refid="group__topic-linalg-flops_1ga907a77af15c3cba01ac8b66c3388adb4" kind="function"><name>hyh_apply</name></member>
+      <member refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" kind="function"><name>hyh</name></member>
+      <member refid="group__topic-linalg-flops_1ga5bc716f7288da381eb1c0120a7d3182c" kind="function"><name>syrk_potrf</name></member>
+      <member refid="group__topic-linalg-flops_1ga982c62c85e182a49c333bb2eef903625" kind="function"><name>trsm</name></member>
+      <member refid="group__topic-linalg-flops_1ga5f151f75e2a3092103903fb8f8f3cae3" kind="function"><name>trtri</name></member>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/flops.hpp" line="8" column="1"/>
+  </compounddef>
+</doxygen>

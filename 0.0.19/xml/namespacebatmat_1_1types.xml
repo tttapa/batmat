@@ -1,0 +1,429 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1types" kind="namespace" language="C++">
+    <compoundname>batmat::types</compoundname>
+    <innerclass refid="structbatmat_1_1types_1_1Types" prot="public">batmat::types::Types</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1Head" prot="public">batmat::types::Head</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1Head_3_01Types_3_01T_00_01Ts_8_8_8_01_4_01_4" prot="public">batmat::types::Head&lt; Types&lt; T, Ts... &gt; &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1Tail" prot="public">batmat::types::Tail</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1Tail_3_01Types_3_01T_00_01Ts_8_8_8_01_4_01_4" prot="public">batmat::types::Tail&lt; Types&lt; T, Ts... &gt; &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1Concat" prot="public">batmat::types::Concat</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1Concat_3_4" prot="public">batmat::types::Concat&lt;&gt;</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1Concat_3_01Types_3_01Ts_8_8_8_01_4_01_4" prot="public">batmat::types::Concat&lt; Types&lt; Ts... &gt; &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1Concat_3_01Types_3_01Ts1_8_8_8_01_4_00_01Types_3_01Ts2_8_8_8_01_4_00_01Rest_8_8_8_01_4" prot="public">batmat::types::Concat&lt; Types&lt; Ts1... &gt;, Types&lt; Ts2... &gt;, Rest... &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1Map" prot="public">batmat::types::Map</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1Map_3_01Func_00_01Types_3_01Ts_8_8_8_01_4_01_4" prot="public">batmat::types::Map&lt; Func, Types&lt; Ts... &gt; &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1FlatMap" prot="public">batmat::types::FlatMap</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1FlatMap_3_01Func_00_01Types_3_01Ts_8_8_8_01_4_01_4" prot="public">batmat::types::FlatMap&lt; Func, Types&lt; Ts... &gt; &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1Filter" prot="public">batmat::types::Filter</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1Filter_3_01Pred_00_01Types_3_01Ts_8_8_8_01_4_01_4" prot="public">batmat::types::Filter&lt; Pred, Types&lt; Ts... &gt; &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1DTypeVectorLength" prot="public">batmat::types::DTypeVectorLength</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1VectorLengthIs" prot="public">batmat::types::VectorLengthIs</innerclass>
+    <innerclass refid="structbatmat_1_1types_1_1DTypeIs" prot="public">batmat::types::DTypeIs</innerclass>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="namespacebatmat_1_1types_1a0ff3349caa27611242c9cf00bfe422e8" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>template&lt; class &gt; class</type>
+            <declname>Func</declname>
+            <defname>Func</defname>
+          </param>
+          <param>
+            <type>class List</type>
+          </param>
+        </templateparamlist>
+        <type>typename <ref refid="structbatmat_1_1types_1_1Map" kindref="compound">Map</ref>&lt; Func, List &gt;<ref refid="structbatmat_1_1types_1_1Tail" kindref="compound">::type</ref></type>
+        <definition>using batmat::types::Map_t = typename Map&lt;Func, List&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>Map_t</name>
+        <qualifiedname>batmat::types::Map_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="53" column="1" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1types_1a23dc1e7d8617090b1fd5117489a937dd" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>template&lt; class &gt; class</type>
+            <declname>Func</declname>
+            <defname>Func</defname>
+          </param>
+          <param>
+            <type>class List</type>
+          </param>
+        </templateparamlist>
+        <type>typename <ref refid="structbatmat_1_1types_1_1FlatMap" kindref="compound">FlatMap</ref>&lt; Func, List &gt;<ref refid="structbatmat_1_1types_1_1Tail" kindref="compound">::type</ref></type>
+        <definition>using batmat::types::FlatMap_t = typename FlatMap&lt;Func, List&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>FlatMap_t</name>
+        <qualifiedname>batmat::types::FlatMap_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="62" column="1" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1types_1a852b41a2809a36771046db0a9993c9e8" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>template&lt; class &gt; class</type>
+            <declname>Pred</declname>
+            <defname>Pred</defname>
+          </param>
+          <param>
+            <type>class List</type>
+          </param>
+        </templateparamlist>
+        <type>typename <ref refid="structbatmat_1_1types_1_1Filter" kindref="compound">Filter</ref>&lt; Pred, List &gt;<ref refid="structbatmat_1_1types_1_1Tail" kindref="compound">::type</ref></type>
+        <definition>using batmat::types::Filter_t = typename Filter&lt;Pred, List&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>Filter_t</name>
+        <qualifiedname>batmat::types::Filter_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="71" column="1" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="71" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1types_1acdd39509db159e09fe4c23e408f5b5ac" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>index_t</type>
+            <declname>VL</declname>
+            <defname>VL</defname>
+          </param>
+          <param>
+            <type>class List</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1types_1a23dc1e7d8617090b1fd5117489a937dd" kindref="member">FlatMap_t</ref>&lt; <ref refid="structbatmat_1_1types_1_1VectorLengthIs" kindref="compound">VectorLengthIs</ref>&lt; VL &gt;::template <ref refid="structbatmat_1_1types_1_1Tail" kindref="compound">type</ref>, List &gt;</type>
+        <definition>using batmat::types::FilterVL = FlatMap_t&lt;VectorLengthIs&lt;VL&gt;::template type, List&gt;</definition>
+        <argsstring></argsstring>
+        <name>FilterVL</name>
+        <qualifiedname>batmat::types::FilterVL</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="93" column="1" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1types_1aab76381eaa0498df3939a6f1c834ac90" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class Ts</type>
+          </param>
+        </templateparamlist>
+        <type>typename Ts::dtype</type>
+        <definition>using batmat::types::GetDType = typename Ts::dtype</definition>
+        <argsstring></argsstring>
+        <name>GetDType</name>
+        <qualifiedname>batmat::types::GetDType</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="96" column="1" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="96" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1types_1af13749574859752fba0968855bdc3812" prot="public" static="no">
+        <type><ref refid="structbatmat_1_1types_1_1Tail" kindref="compound">Tail</ref>&lt; <ref refid="structbatmat_1_1types_1_1Types" kindref="compound">Types</ref>&lt; void, double &gt; &gt;<ref refid="structbatmat_1_1types_1_1Tail" kindref="compound">::type</ref></type>
+        <definition>using batmat::types::dtype_all = Tail&lt;Types&lt;void  , double &gt;&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>dtype_all</name>
+        <qualifiedname>batmat::types::dtype_all</qualifiedname>
+        <briefdescription>
+<para><ref refid="structbatmat_1_1types_1_1Types" kindref="compound">Types</ref> containing all supported dtypes. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="100" column="1" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1types_1a30001e4d150fffbe85ecfaf2f8af2530" prot="public" static="no">
+        <type><ref refid="structbatmat_1_1types_1_1Tail" kindref="compound">Tail</ref>&lt; <ref refid="structbatmat_1_1types_1_1Types" kindref="compound">Types</ref>&lt; void, <ref refid="structbatmat_1_1types_1_1DTypeVectorLength" kindref="compound">DTypeVectorLength</ref>&lt; double, 1 &gt;, <ref refid="structbatmat_1_1types_1_1DTypeVectorLength" kindref="compound">DTypeVectorLength</ref>&lt; double, 4 &gt;, <ref refid="structbatmat_1_1types_1_1DTypeVectorLength" kindref="compound">DTypeVectorLength</ref>&lt; double, 8 &gt; &gt; &gt;<ref refid="structbatmat_1_1types_1_1Tail" kindref="compound">::type</ref></type>
+        <definition>using batmat::types::dtype_vl_all = Tail&lt;Types&lt;void  , DTypeVectorLength&lt;double, 1&gt; , DTypeVectorLength&lt;double, 4&gt; , DTypeVectorLength&lt;double, 8&gt; &gt;&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>dtype_vl_all</name>
+        <qualifiedname>batmat::types::dtype_vl_all</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="104" column="1" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="104" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1types_1ae40b2ad805944ed44d63c1c5d4dfd0df" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>index_t</type>
+            <declname>VL</declname>
+            <defname>VL</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1types_1a0ff3349caa27611242c9cf00bfe422e8" kindref="member">Map_t</ref>&lt; <ref refid="namespacebatmat_1_1types_1aab76381eaa0498df3939a6f1c834ac90" kindref="member">GetDType</ref>, <ref refid="namespacebatmat_1_1types_1a852b41a2809a36771046db0a9993c9e8" kindref="member">Filter_t</ref>&lt; <ref refid="structbatmat_1_1types_1_1VectorLengthIs" kindref="compound">VectorLengthIs</ref>&lt; VL &gt;::template <ref refid="structbatmat_1_1types_1_1Tail" kindref="compound">type</ref>, <ref refid="namespacebatmat_1_1types_1a30001e4d150fffbe85ecfaf2f8af2530" kindref="member">dtype_vl_all</ref> &gt; &gt;</type>
+        <definition>using batmat::types::dtypes_for_vl = Map_t&lt;GetDType, Filter_t&lt;VectorLengthIs&lt;VL&gt;::template type, dtype_vl_all&gt;&gt;</definition>
+        <argsstring></argsstring>
+        <name>dtypes_for_vl</name>
+        <qualifiedname>batmat::types::dtypes_for_vl</qualifiedname>
+        <briefdescription>
+<para><ref refid="structbatmat_1_1types_1_1Types" kindref="compound">Types</ref> containing all supported dtypes for a given vector length <computeroutput>VL</computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="118" column="1" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="118" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1types_1af16c765fb4bec03559f2606eb38b8eb3" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class DT</type>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>VL</declname>
+            <defname>VL</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1types_1a852b41a2809a36771046db0a9993c9e8" kindref="member">Filter_t</ref>&lt; <ref refid="structbatmat_1_1types_1_1DTypeIs" kindref="compound">DTypeIs</ref>&lt; DT &gt;::template <ref refid="structbatmat_1_1types_1_1Tail" kindref="compound">type</ref>, <ref refid="namespacebatmat_1_1types_1a852b41a2809a36771046db0a9993c9e8" kindref="member">Filter_t</ref>&lt; <ref refid="structbatmat_1_1types_1_1VectorLengthIs" kindref="compound">VectorLengthIs</ref>&lt; VL &gt;::template <ref refid="structbatmat_1_1types_1_1Tail" kindref="compound">type</ref>, <ref refid="namespacebatmat_1_1types_1a30001e4d150fffbe85ecfaf2f8af2530" kindref="member">dtype_vl_all</ref> &gt; &gt;</type>
+        <definition>using batmat::types::lookup_dtype_vl = Filter_t&lt;DTypeIs&lt;DT&gt;::template type, 
+                                Filter_t&lt;VectorLengthIs&lt;VL&gt;::template type, dtype_vl_all&gt;&gt;</definition>
+        <argsstring></argsstring>
+        <name>lookup_dtype_vl</name>
+        <qualifiedname>batmat::types::lookup_dtype_vl</qualifiedname>
+        <briefdescription>
+<para><ref refid="structbatmat_1_1types_1_1Types" kindref="compound">Types</ref> containing the given dtype and vector length combination, if supported. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="122" column="1" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="122" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacebatmat_1_1types_1aa1ecccab3ab9ab064b37540dcc344d51" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class DT</type>
+          </param>
+        </templateparamlist>
+        <type>std::array</type>
+        <definition>std::array batmat::types::vl_for_dtype</definition>
+        <argsstring></argsstring>
+        <name>vl_for_dtype</name>
+        <qualifiedname>batmat::types::vl_for_dtype</qualifiedname>
+        <initializer>                                  = []&lt;class... Dtvls&gt;(<ref refid="structbatmat_1_1types_1_1Types" kindref="compound">Types</ref>&lt;Dtvls...&gt;) {
+    return std::array&lt;index_t, sizeof...(Dtvls)&gt;{Dtvls::vl...};
+}(<ref refid="namespacebatmat_1_1types_1a852b41a2809a36771046db0a9993c9e8" kindref="member">Filter_t</ref>&lt;<ref refid="structbatmat_1_1types_1_1DTypeIs" kindref="compound">DTypeIs</ref>&lt;DT&gt;::template <ref refid="structbatmat_1_1types_1_1Tail" kindref="compound">type</ref>, <ref refid="namespacebatmat_1_1types_1a30001e4d150fffbe85ecfaf2f8af2530" kindref="member">dtype_vl_all</ref>&gt;{})</initializer>
+        <briefdescription>
+<para>Array of supported vector lengths for a given dtype <computeroutput>T</computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="109" column="22" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="109" bodyend="111"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1types_1aab60400dda3e9349e57c3529a284c6c4" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>std::array</type>
+        <definition>std::array batmat::types::vl_for_real_t</definition>
+        <argsstring></argsstring>
+        <name>vl_for_real_t</name>
+        <qualifiedname>batmat::types::vl_for_real_t</qualifiedname>
+        <initializer>= <ref refid="namespacebatmat_1_1types_1aa1ecccab3ab9ab064b37540dcc344d51" kindref="member">vl_for_dtype</ref>&lt;real_t&gt;</initializer>
+        <briefdescription>
+<para>Array of supported vector lengths for the default real_t. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="114" column="22" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="114" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1types_1afe7ed712c23cc569c407af2cd4f9ff0a" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class DT</type>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>VL</declname>
+            <defname>VL</defname>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool batmat::types::is_supported_dtype_vl</definition>
+        <argsstring></argsstring>
+        <name>is_supported_dtype_vl</name>
+        <qualifiedname>batmat::types::is_supported_dtype_vl</qualifiedname>
+        <initializer>= !std::is_same_v&lt;<ref refid="namespacebatmat_1_1types_1af16c765fb4bec03559f2606eb38b8eb3" kindref="member">lookup_dtype_vl</ref>&lt;DT, VL&gt;, <ref refid="structbatmat_1_1types_1_1Types" kindref="compound">Types</ref>&lt;&gt;&gt;</initializer>
+        <briefdescription>
+<para>Check if a given (dtype, VL) combination is supported. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="127" column="16" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="127" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1types_1ac2c573add0774f51e8e98caab5ab436c" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class DT</type>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>VL</declname>
+            <defname>VL</defname>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::types::vl_at_least</definition>
+        <argsstring></argsstring>
+        <name>vl_at_least</name>
+        <qualifiedname>batmat::types::vl_at_least</qualifiedname>
+        <initializer>                              = [] {
+    if constexpr (<ref refid="namespacebatmat_1_1types_1afe7ed712c23cc569c407af2cd4f9ff0a" kindref="member">is_supported_dtype_vl</ref>&lt;DT, VL&gt;) {
+        return VL;
+    } else {
+        auto options = <ref refid="namespacebatmat_1_1types_1aa1ecccab3ab9ab064b37540dcc344d51" kindref="member">vl_for_dtype</ref>&lt;DT&gt;;
+        std::ranges::sort(options, std::less{});
+        for (auto v : options)
+            if (v &gt;= VL)
+                return v;
+        return index_t{0};
+    }
+}()</initializer>
+        <briefdescription>
+<para>The smallest supported vector length for dtype <computeroutput>DT</computeroutput> that is greater than or equal to <computeroutput>VL</computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Returns 0 if no supported vector length is large enough. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="132" column="19" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="132" bodyend="143"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1types_1aae92c3201f735f2fefabf1173b89d79b" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class DT</type>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>VL</declname>
+            <defname>VL</defname>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::types::vl_at_most</definition>
+        <argsstring></argsstring>
+        <name>vl_at_most</name>
+        <qualifiedname>batmat::types::vl_at_most</qualifiedname>
+        <initializer>                             = [] {
+    if constexpr (<ref refid="namespacebatmat_1_1types_1afe7ed712c23cc569c407af2cd4f9ff0a" kindref="member">is_supported_dtype_vl</ref>&lt;DT, VL&gt;) {
+        return VL;
+    } else {
+        auto options = <ref refid="namespacebatmat_1_1types_1aa1ecccab3ab9ab064b37540dcc344d51" kindref="member">vl_for_dtype</ref>&lt;DT&gt;;
+        std::ranges::sort(options, std::greater{});
+        for (auto v : options)
+            if (v &lt;= VL)
+                return v;
+        return index_t{0};
+    }
+}()</initializer>
+        <briefdescription>
+<para>The largest supported vector length for dtype <computeroutput>DT</computeroutput> that is less than or equal to <computeroutput>VL</computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Returns 0 if no supported vector length is small enough. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="148" column="19" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="148" bodyend="159"/>
+        <referencedby refid="example_8cpp_1ae66f6b31b5ad750f1fe042a706a4e3d4" compoundref="example_8cpp" startline="20" endline="67">main</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1types_1a9894d775cdeab01330210c447969e304" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class DT</type>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>VL</declname>
+            <defname>VL</defname>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::types::vl_or_largest</definition>
+        <argsstring></argsstring>
+        <name>vl_or_largest</name>
+        <qualifiedname>batmat::types::vl_or_largest</qualifiedname>
+        <initializer>                                = [] {
+    if constexpr (<ref refid="namespacebatmat_1_1types_1afe7ed712c23cc569c407af2cd4f9ff0a" kindref="member">is_supported_dtype_vl</ref>&lt;DT, VL&gt;) {
+        return VL;
+    } else {
+        auto options = <ref refid="namespacebatmat_1_1types_1aa1ecccab3ab9ab064b37540dcc344d51" kindref="member">vl_for_dtype</ref>&lt;DT&gt;;
+        std::ranges::sort(options, std::greater{});
+        return options.empty() ? index_t{0} : options.front();
+    }
+}()</initializer>
+        <briefdescription>
+<para><computeroutput>VL</computeroutput> if it is a supported vector length for dtype <computeroutput>DT</computeroutput>, otherwise the largest supported vector length for <computeroutput>DT</computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="164" column="19" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="164" bodyend="172"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1types_1a78f03b093795880cf74f47dc5c0de946" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class F</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::types::foreach_dtype_vl</definition>
+        <argsstring>(F &amp;&amp;f)</argsstring>
+        <name>foreach_dtype_vl</name>
+        <qualifiedname>batmat::types::foreach_dtype_vl</qualifiedname>
+        <param>
+          <type>F &amp;&amp;</type>
+          <declname>f</declname>
+        </param>
+        <briefdescription>
+<para>Call a given function <computeroutput>f</computeroutput> for all supported (dtype, VL) combinations. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><computeroutput>f</computeroutput> should be callable with signature <computeroutput>void(DTypeVectorLength)</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="177" column="16" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="177" bodyend="179"/>
+        <referencedby refid="example_8cpp_1ae66f6b31b5ad750f1fe042a706a4e3d4" compoundref="example_8cpp" startline="20" endline="67">main</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/dtypes.hpp" line="9" column="1"/>
+  </compounddef>
+</doxygen>

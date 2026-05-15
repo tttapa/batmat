@@ -1,0 +1,345 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="classbatmat_1_1thread__pool" kind="class" language="C++" prot="public">
+    <compoundname>batmat::thread_pool</compoundname>
+    <includes refid="thread-pool_8hpp" local="no">batmat/thread-pool.hpp</includes>
+    <innerclass refid="structbatmat_1_1thread__pool_1_1State" prot="private">batmat::thread_pool::State</innerclass>
+    <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classbatmat_1_1thread__pool_1aa9965a46465bb84a0eb4fb4d46928600" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="structbatmat_1_1thread__pool_1_1State" kindref="compound">State</ref> &gt;</type>
+        <definition>std::vector&lt;State&gt; batmat::thread_pool::states</definition>
+        <argsstring></argsstring>
+        <name>states</name>
+        <qualifiedname>batmat::thread_pool::states</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="27" column="17" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="27" bodyend="-1"/>
+        <referencedby refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" compoundref="thread-pool_8hpp" startline="31" endline="36">thread_pool</referencedby>
+        <referencedby refid="classbatmat_1_1thread__pool_1ab853c1291632bf9716903b814de99add" compoundref="thread-pool_8hpp" startline="43" endline="49">schedule</referencedby>
+        <referencedby refid="classbatmat_1_1thread__pool_1a96d111a17960c65c3a5c92fc00efc12a" compoundref="thread-pool_8hpp" startline="51" endline="57">wait</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="classbatmat_1_1thread__pool_1ac40cd1232995a61e4fae5fa8a11ea5f5" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; std::jthread &gt;</type>
+        <definition>std::vector&lt;std::jthread&gt; batmat::thread_pool::threads</definition>
+        <argsstring></argsstring>
+        <name>threads</name>
+        <qualifiedname>batmat::thread_pool::threads</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="28" column="17" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="28" bodyend="-1"/>
+        <referencedby refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" compoundref="thread-pool_8hpp" startline="31" endline="36">thread_pool</referencedby>
+        <referencedby refid="classbatmat_1_1thread__pool_1aeaf61c4492c851d524c403f58e8eb14f" compoundref="thread-pool_8hpp" startline="82" endline="82">size</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" prot="public" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>batmat::thread_pool::thread_pool</definition>
+        <argsstring>(size_t num_threads=std::thread::hardware_concurrency())</argsstring>
+        <name>thread_pool</name>
+        <qualifiedname>batmat::thread_pool::thread_pool</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>num_threads</declname>
+          <defval>std::thread::hardware_concurrency()</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="31" column="14" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="31" bodyend="36"/>
+        <references refid="classbatmat_1_1thread__pool_1aa9965a46465bb84a0eb4fb4d46928600" compoundref="thread-pool_8hpp" startline="27">states</references>
+        <references refid="classbatmat_1_1thread__pool_1ac40cd1232995a61e4fae5fa8a11ea5f5" compoundref="thread-pool_8hpp" startline="28">threads</references>
+        <referencedby refid="classbatmat_1_1thread__pool_1ac097800a6b1736ee04aab5a84db78ed9">thread_pool</referencedby>
+        <referencedby refid="classbatmat_1_1thread__pool_1ade44e6dcd53aca05cb911a25981d3aaa">thread_pool</referencedby>
+        <referencedby refid="classbatmat_1_1thread__pool_1a3532861d79bf11f7664daf44669a8f74">operator=</referencedby>
+        <referencedby refid="classbatmat_1_1thread__pool_1ae58df086f8e869d3bb6a9a11bce120a5">operator=</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classbatmat_1_1thread__pool_1ac097800a6b1736ee04aab5a84db78ed9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>batmat::thread_pool::thread_pool</definition>
+        <argsstring>(const thread_pool &amp;)=delete</argsstring>
+        <name>thread_pool</name>
+        <qualifiedname>batmat::thread_pool::thread_pool</qualifiedname>
+        <param>
+          <type>const thread_pool &amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="38" column="5"/>
+        <references refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" compoundref="thread-pool_8hpp" startline="31" endline="36">thread_pool</references>
+      </memberdef>
+      <memberdef kind="function" id="classbatmat_1_1thread__pool_1a3532861d79bf11f7664daf44669a8f74" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" kindref="member">thread_pool</ref> &amp;</type>
+        <definition>thread_pool &amp; batmat::thread_pool::operator=</definition>
+        <argsstring>(const thread_pool &amp;)=delete</argsstring>
+        <name>operator=</name>
+        <qualifiedname>batmat::thread_pool::operator=</qualifiedname>
+        <param>
+          <type>const <ref refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" kindref="member">thread_pool</ref> &amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="39" column="17"/>
+        <references refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" compoundref="thread-pool_8hpp" startline="31" endline="36">thread_pool</references>
+      </memberdef>
+      <memberdef kind="function" id="classbatmat_1_1thread__pool_1ade44e6dcd53aca05cb911a25981d3aaa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>batmat::thread_pool::thread_pool</definition>
+        <argsstring>(thread_pool &amp;&amp;)=default</argsstring>
+        <name>thread_pool</name>
+        <qualifiedname>batmat::thread_pool::thread_pool</qualifiedname>
+        <param>
+          <type>thread_pool &amp;&amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="40" column="5"/>
+        <references refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" compoundref="thread-pool_8hpp" startline="31" endline="36">thread_pool</references>
+      </memberdef>
+      <memberdef kind="function" id="classbatmat_1_1thread__pool_1ae58df086f8e869d3bb6a9a11bce120a5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" kindref="member">thread_pool</ref> &amp;</type>
+        <definition>thread_pool &amp; batmat::thread_pool::operator=</definition>
+        <argsstring>(thread_pool &amp;&amp;)=default</argsstring>
+        <name>operator=</name>
+        <qualifiedname>batmat::thread_pool::operator=</qualifiedname>
+        <param>
+          <type><ref refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" kindref="member">thread_pool</ref> &amp;&amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="41" column="17"/>
+        <references refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" compoundref="thread-pool_8hpp" startline="31" endline="36">thread_pool</references>
+      </memberdef>
+      <memberdef kind="function" id="classbatmat_1_1thread__pool_1ab853c1291632bf9716903b814de99add" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void batmat::thread_pool::schedule</definition>
+        <argsstring>(size_t i, std::function&lt; void()&gt; func)</argsstring>
+        <name>schedule</name>
+        <qualifiedname>batmat::thread_pool::schedule</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>i</declname>
+        </param>
+        <param>
+          <type>std::function&lt; void()&gt;</type>
+          <declname>func</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="43" column="10" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="43" bodyend="49"/>
+        <references refid="classbatmat_1_1thread__pool_1aa9965a46465bb84a0eb4fb4d46928600" compoundref="thread-pool_8hpp" startline="27">states</references>
+        <referencedby refid="classbatmat_1_1thread__pool_1a90949f56916900ff5c9d56a411e7d932" compoundref="thread-pool_8hpp" startline="65" endline="70">sync_run_all</referencedby>
+        <referencedby refid="classbatmat_1_1thread__pool_1a0040071bd46efdec431f45be24d4dc6a" compoundref="thread-pool_8hpp" startline="73" endline="80">sync_run_n</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classbatmat_1_1thread__pool_1a96d111a17960c65c3a5c92fc00efc12a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void batmat::thread_pool::wait</definition>
+        <argsstring>(size_t i)</argsstring>
+        <name>wait</name>
+        <qualifiedname>batmat::thread_pool::wait</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="51" column="10" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="51" bodyend="57"/>
+        <references refid="classbatmat_1_1thread__pool_1aa9965a46465bb84a0eb4fb4d46928600" compoundref="thread-pool_8hpp" startline="27">states</references>
+        <referencedby refid="classbatmat_1_1thread__pool_1a0040071bd46efdec431f45be24d4dc6a" compoundref="thread-pool_8hpp" startline="73" endline="80">sync_run_n</referencedby>
+        <referencedby refid="classbatmat_1_1thread__pool_1ad279eade9b6741d9f6f704813d3da3ee" compoundref="thread-pool_8hpp" startline="59" endline="62">wait_all</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classbatmat_1_1thread__pool_1ad279eade9b6741d9f6f704813d3da3ee" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void batmat::thread_pool::wait_all</definition>
+        <argsstring>()</argsstring>
+        <name>wait_all</name>
+        <qualifiedname>batmat::thread_pool::wait_all</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="59" column="10" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="59" bodyend="62"/>
+        <references refid="classbatmat_1_1thread__pool_1aeaf61c4492c851d524c403f58e8eb14f" compoundref="thread-pool_8hpp" startline="82" endline="82">size</references>
+        <references refid="classbatmat_1_1thread__pool_1a96d111a17960c65c3a5c92fc00efc12a" compoundref="thread-pool_8hpp" startline="51" endline="57">wait</references>
+        <referencedby refid="classbatmat_1_1thread__pool_1a90949f56916900ff5c9d56a411e7d932" compoundref="thread-pool_8hpp" startline="65" endline="70">sync_run_all</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classbatmat_1_1thread__pool_1a90949f56916900ff5c9d56a411e7d932" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class I</type>
+            <defval>size_t</defval>
+          </param>
+          <param>
+            <type>class F</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::thread_pool::sync_run_all</definition>
+        <argsstring>(F &amp;&amp;f)</argsstring>
+        <name>sync_run_all</name>
+        <qualifiedname>batmat::thread_pool::sync_run_all</qualifiedname>
+        <param>
+          <type>F &amp;&amp;</type>
+          <declname>f</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="65" column="10" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="65" bodyend="70"/>
+        <references refid="classbatmat_1_1thread__pool_1ab853c1291632bf9716903b814de99add" compoundref="thread-pool_8hpp" startline="43" endline="49">schedule</references>
+        <references refid="classbatmat_1_1thread__pool_1aeaf61c4492c851d524c403f58e8eb14f" compoundref="thread-pool_8hpp" startline="82" endline="82">size</references>
+        <references refid="classbatmat_1_1thread__pool_1ad279eade9b6741d9f6f704813d3da3ee" compoundref="thread-pool_8hpp" startline="59" endline="62">wait_all</references>
+      </memberdef>
+      <memberdef kind="function" id="classbatmat_1_1thread__pool_1a0040071bd46efdec431f45be24d4dc6a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class I</type>
+            <defval>size_t</defval>
+          </param>
+          <param>
+            <type>class F</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::thread_pool::sync_run_n</definition>
+        <argsstring>(I n, F &amp;&amp;f)</argsstring>
+        <name>sync_run_n</name>
+        <qualifiedname>batmat::thread_pool::sync_run_n</qualifiedname>
+        <param>
+          <type>I</type>
+          <declname>n</declname>
+        </param>
+        <param>
+          <type>F &amp;&amp;</type>
+          <declname>f</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="73" column="10" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="73" bodyend="80"/>
+        <references refid="classbatmat_1_1thread__pool_1ab853c1291632bf9716903b814de99add" compoundref="thread-pool_8hpp" startline="43" endline="49">schedule</references>
+        <references refid="classbatmat_1_1thread__pool_1aeaf61c4492c851d524c403f58e8eb14f" compoundref="thread-pool_8hpp" startline="82" endline="82">size</references>
+        <references refid="classbatmat_1_1thread__pool_1a96d111a17960c65c3a5c92fc00efc12a" compoundref="thread-pool_8hpp" startline="51" endline="57">wait</references>
+      </memberdef>
+      <memberdef kind="function" id="classbatmat_1_1thread__pool_1aeaf61c4492c851d524c403f58e8eb14f" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>size_t</type>
+        <definition>size_t batmat::thread_pool::size</definition>
+        <argsstring>() const</argsstring>
+        <name>size</name>
+        <qualifiedname>batmat::thread_pool::size</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="82" column="13" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="82" bodyend="82"/>
+        <references refid="classbatmat_1_1thread__pool_1ac40cd1232995a61e4fae5fa8a11ea5f5" compoundref="thread-pool_8hpp" startline="28">threads</references>
+        <referencedby refid="group__topic-utils_1ga72f329f3122a76019f71f597fa44bae7" compoundref="thread-pool_8hpp" startline="130" endline="135">batmat::pool_sync_run_n</referencedby>
+        <referencedby refid="classbatmat_1_1thread__pool_1a90949f56916900ff5c9d56a411e7d932" compoundref="thread-pool_8hpp" startline="65" endline="70">sync_run_all</referencedby>
+        <referencedby refid="classbatmat_1_1thread__pool_1a0040071bd46efdec431f45be24d4dc6a" compoundref="thread-pool_8hpp" startline="73" endline="80">sync_run_n</referencedby>
+        <referencedby refid="classbatmat_1_1thread__pool_1ad279eade9b6741d9f6f704813d3da3ee" compoundref="thread-pool_8hpp" startline="59" endline="62">wait_all</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::thread_pool</label>
+        <link refid="classbatmat_1_1thread__pool"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>-states</edgelabel>
+        </childnode>
+        <childnode refid="5" relation="usage">
+          <edgelabel>-threads</edgelabel>
+        </childnode>
+      </node>
+      <node id="3">
+        <label>batmat::thread_pool::State</label>
+        <link refid="structbatmat_1_1thread__pool_1_1State"/>
+        <childnode refid="4" relation="usage">
+          <edgelabel>+mtx</edgelabel>
+        </childnode>
+      </node>
+      <node id="6">
+        <label>std::jthread</label>
+      </node>
+      <node id="4">
+        <label>std::mutex</label>
+      </node>
+      <node id="2">
+        <label>std::vector&lt; batmat::thread_pool::State &gt;</label>
+        <childnode refid="3" relation="usage">
+          <edgelabel>+elements</edgelabel>
+        </childnode>
+      </node>
+      <node id="5">
+        <label>std::vector&lt; std::jthread &gt;</label>
+        <childnode refid="6" relation="usage">
+          <edgelabel>+elements</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/thread-pool.hpp" line="17" column="1" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="17" bodyend="83"/>
+    <listofallmembers>
+      <member refid="classbatmat_1_1thread__pool_1a3532861d79bf11f7664daf44669a8f74" prot="public" virt="non-virtual"><scope>batmat::thread_pool</scope><name>operator=</name></member>
+      <member refid="classbatmat_1_1thread__pool_1ae58df086f8e869d3bb6a9a11bce120a5" prot="public" virt="non-virtual"><scope>batmat::thread_pool</scope><name>operator=</name></member>
+      <member refid="classbatmat_1_1thread__pool_1ab853c1291632bf9716903b814de99add" prot="public" virt="non-virtual"><scope>batmat::thread_pool</scope><name>schedule</name></member>
+      <member refid="classbatmat_1_1thread__pool_1aeaf61c4492c851d524c403f58e8eb14f" prot="public" virt="non-virtual"><scope>batmat::thread_pool</scope><name>size</name></member>
+      <member refid="classbatmat_1_1thread__pool_1aa9965a46465bb84a0eb4fb4d46928600" prot="private" virt="non-virtual"><scope>batmat::thread_pool</scope><name>states</name></member>
+      <member refid="classbatmat_1_1thread__pool_1a90949f56916900ff5c9d56a411e7d932" prot="public" virt="non-virtual"><scope>batmat::thread_pool</scope><name>sync_run_all</name></member>
+      <member refid="classbatmat_1_1thread__pool_1a0040071bd46efdec431f45be24d4dc6a" prot="public" virt="non-virtual"><scope>batmat::thread_pool</scope><name>sync_run_n</name></member>
+      <member refid="classbatmat_1_1thread__pool_1a9c1427d8de79105307859cd227712696" prot="public" virt="non-virtual"><scope>batmat::thread_pool</scope><name>thread_pool</name></member>
+      <member refid="classbatmat_1_1thread__pool_1ac097800a6b1736ee04aab5a84db78ed9" prot="public" virt="non-virtual"><scope>batmat::thread_pool</scope><name>thread_pool</name></member>
+      <member refid="classbatmat_1_1thread__pool_1ade44e6dcd53aca05cb911a25981d3aaa" prot="public" virt="non-virtual"><scope>batmat::thread_pool</scope><name>thread_pool</name></member>
+      <member refid="classbatmat_1_1thread__pool_1ac40cd1232995a61e4fae5fa8a11ea5f5" prot="private" virt="non-virtual"><scope>batmat::thread_pool</scope><name>threads</name></member>
+      <member refid="classbatmat_1_1thread__pool_1a96d111a17960c65c3a5c92fc00efc12a" prot="public" virt="non-virtual"><scope>batmat::thread_pool</scope><name>wait</name></member>
+      <member refid="classbatmat_1_1thread__pool_1ad279eade9b6741d9f6f704813d3da3ee" prot="public" virt="non-virtual"><scope>batmat::thread_pool</scope><name>wait_all</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

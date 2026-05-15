@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1thread__pool_1_1State" kind="struct" language="C++" prot="private">
+    <compoundname>batmat::thread_pool::State</compoundname>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1thread__pool_1_1State_1a4292517c81b84aa0c22f73ee87a5bd6a" prot="public" static="no" mutable="no">
+        <type>std::mutex</type>
+        <definition>std::mutex batmat::thread_pool::State::mtx</definition>
+        <argsstring></argsstring>
+        <name>mtx</name>
+        <qualifiedname>batmat::thread_pool::State::mtx</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="20" column="20" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="20" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1thread__pool_1_1State_1aa25072098a8f3bd37406e68af3fc8ddb" compoundref="thread-pool_8hpp" startline="85" endline="102">run</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1thread__pool_1_1State_1a1fe28dc0a76b2abeb029990e64f0e16b" prot="public" static="no" mutable="no">
+        <type>std::condition_variable_any</type>
+        <definition>std::condition_variable_any batmat::thread_pool::State::cv</definition>
+        <argsstring></argsstring>
+        <name>cv</name>
+        <qualifiedname>batmat::thread_pool::State::cv</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="21" column="37" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="21" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1thread__pool_1_1State_1aa25072098a8f3bd37406e68af3fc8ddb" compoundref="thread-pool_8hpp" startline="85" endline="102">run</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1thread__pool_1_1State_1a791ead0bc1c6991f5fbccd42653a21ff" prot="public" static="no" mutable="no">
+        <type>std::function&lt; void()&gt;</type>
+        <definition>std::function&lt;void()&gt; batmat::thread_pool::State::func</definition>
+        <argsstring></argsstring>
+        <name>func</name>
+        <qualifiedname>batmat::thread_pool::State::func</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="22" column="23" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="22" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1thread__pool_1_1State_1aa25072098a8f3bd37406e68af3fc8ddb" compoundref="thread-pool_8hpp" startline="85" endline="102">run</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1thread__pool_1_1State_1ae7d57e6ab71521b3ceb901cf75f48764" prot="public" static="no" mutable="no">
+        <type>std::exception_ptr</type>
+        <definition>std::exception_ptr batmat::thread_pool::State::exception</definition>
+        <argsstring></argsstring>
+        <name>exception</name>
+        <qualifiedname>batmat::thread_pool::State::exception</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="23" column="28" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="23" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1thread__pool_1_1State_1aa25072098a8f3bd37406e68af3fc8ddb" compoundref="thread-pool_8hpp" startline="85" endline="102">run</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="structbatmat_1_1thread__pool_1_1State_1aa25072098a8f3bd37406e68af3fc8ddb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void batmat::thread_pool::State::run</definition>
+        <argsstring>(std::stop_token stop)</argsstring>
+        <name>run</name>
+        <qualifiedname>batmat::thread_pool::State::run</qualifiedname>
+        <param>
+          <type>std::stop_token</type>
+          <declname>stop</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="25" column="14" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="85" bodyend="102"/>
+        <references refid="structbatmat_1_1thread__pool_1_1State_1a1fe28dc0a76b2abeb029990e64f0e16b" compoundref="thread-pool_8hpp" startline="21">cv</references>
+        <references refid="structbatmat_1_1thread__pool_1_1State_1ae7d57e6ab71521b3ceb901cf75f48764" compoundref="thread-pool_8hpp" startline="23">exception</references>
+        <references refid="structbatmat_1_1thread__pool_1_1State_1a791ead0bc1c6991f5fbccd42653a21ff" compoundref="thread-pool_8hpp" startline="22">func</references>
+        <references refid="structbatmat_1_1thread__pool_1_1State_1a4292517c81b84aa0c22f73ee87a5bd6a" compoundref="thread-pool_8hpp" startline="20">mtx</references>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::thread_pool::State</label>
+        <link refid="structbatmat_1_1thread__pool_1_1State"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>+mtx</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>std::mutex</label>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/thread-pool.hpp" line="19" column="5" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="19" bodyend="26"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1thread__pool_1_1State_1a1fe28dc0a76b2abeb029990e64f0e16b" prot="public" virt="non-virtual"><scope>batmat::thread_pool::State</scope><name>cv</name></member>
+      <member refid="structbatmat_1_1thread__pool_1_1State_1ae7d57e6ab71521b3ceb901cf75f48764" prot="public" virt="non-virtual"><scope>batmat::thread_pool::State</scope><name>exception</name></member>
+      <member refid="structbatmat_1_1thread__pool_1_1State_1a791ead0bc1c6991f5fbccd42653a21ff" prot="public" virt="non-virtual"><scope>batmat::thread_pool::State</scope><name>func</name></member>
+      <member refid="structbatmat_1_1thread__pool_1_1State_1a4292517c81b84aa0c22f73ee87a5bd6a" prot="public" virt="non-virtual"><scope>batmat::thread_pool::State</scope><name>mtx</name></member>
+      <member refid="structbatmat_1_1thread__pool_1_1State_1aa25072098a8f3bd37406e68af3fc8ddb" prot="public" virt="non-virtual"><scope>batmat::thread_pool::State</scope><name>run</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1norms_1_1result__simd" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::norms::result_simd</compoundname>
+    <includes refid="norms_8hpp" local="no">batmat/linalg/norms.hpp</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a9a4a92884d60d73f1cc317061b6d60a3" prot="public" static="no" mutable="no">
+        <type>simd</type>
+        <definition>simd batmat::linalg::norms&lt; T, simd &gt;::result_simd::amax</definition>
+        <argsstring></argsstring>
+        <name>amax</name>
+        <qualifiedname>batmat::linalg::norms::result_simd::amax</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/norms.hpp" line="31" column="14" bodyfile="batmat/include/batmat/linalg/norms.hpp" bodystart="31" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a3e5090751dadb61f0f726862fc0e7047" compoundref="norms_8hpp" startline="43" endline="46">batmat::linalg::norms&lt; T, simd &gt;::result_simd::norm_inf</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1norms_1a45bc403c090c2204ad41f772e58007fc" compoundref="norms_8hpp" startline="60" endline="63">batmat::linalg::norms&lt; T, simd &gt;::operator()</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1norms_1a19b125ae4f22beeff397e7ebe7a24696" compoundref="norms_8hpp" startline="66" endline="69">batmat::linalg::norms&lt; T, simd &gt;::operator()</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1norms_1a2050dcd3e3d08b85ec264692f3b05b52" compoundref="norms_8hpp" startline="52" endline="57">batmat::linalg::norms&lt; T, simd &gt;::operator()</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1norms_1_1result__simd_1acaf6ef3de3b2d4ee97b72e9c158b44bd" prot="public" static="no" mutable="no">
+        <type>simd</type>
+        <definition>simd batmat::linalg::norms&lt; T, simd &gt;::result_simd::asum</definition>
+        <argsstring></argsstring>
+        <name>asum</name>
+        <qualifiedname>batmat::linalg::norms::result_simd::asum</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/norms.hpp" line="32" column="14" bodyfile="batmat/include/batmat/linalg/norms.hpp" bodystart="32" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1aabb471da2adffa47a32ba7c9ea091bda" compoundref="norms_8hpp" startline="36" endline="36">batmat::linalg::norms&lt; T, simd &gt;::result_simd::norm_1</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a3e5090751dadb61f0f726862fc0e7047" compoundref="norms_8hpp" startline="43" endline="46">batmat::linalg::norms&lt; T, simd &gt;::result_simd::norm_inf</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1norms_1a45bc403c090c2204ad41f772e58007fc" compoundref="norms_8hpp" startline="60" endline="63">batmat::linalg::norms&lt; T, simd &gt;::operator()</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1norms_1a19b125ae4f22beeff397e7ebe7a24696" compoundref="norms_8hpp" startline="66" endline="69">batmat::linalg::norms&lt; T, simd &gt;::operator()</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1norms_1a2050dcd3e3d08b85ec264692f3b05b52" compoundref="norms_8hpp" startline="52" endline="57">batmat::linalg::norms&lt; T, simd &gt;::operator()</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a086b482f626355af733c0ad057ecd570" prot="public" static="no" mutable="no">
+        <type>simd</type>
+        <definition>simd batmat::linalg::norms&lt; T, simd &gt;::result_simd::sumsq</definition>
+        <argsstring></argsstring>
+        <name>sumsq</name>
+        <qualifiedname>batmat::linalg::norms::result_simd::sumsq</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/norms.hpp" line="33" column="14" bodyfile="batmat/include/batmat/linalg/norms.hpp" bodystart="33" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1ae26404016c64cbf7b1d0c14798c79848" compoundref="norms_8hpp" startline="38" endline="41">batmat::linalg::norms&lt; T, simd &gt;::result_simd::norm_2</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1norms_1a45bc403c090c2204ad41f772e58007fc" compoundref="norms_8hpp" startline="60" endline="63">batmat::linalg::norms&lt; T, simd &gt;::operator()</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1norms_1a19b125ae4f22beeff397e7ebe7a24696" compoundref="norms_8hpp" startline="66" endline="69">batmat::linalg::norms&lt; T, simd &gt;::operator()</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1norms_1a2050dcd3e3d08b85ec264692f3b05b52" compoundref="norms_8hpp" startline="52" endline="57">batmat::linalg::norms&lt; T, simd &gt;::operator()</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1norms_1_1result__simd_1aabb471da2adffa47a32ba7c9ea091bda" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>simd</type>
+        <definition>simd batmat::linalg::norms&lt; T, simd &gt;::result_simd::norm_1</definition>
+        <argsstring>() const</argsstring>
+        <name>norm_1</name>
+        <qualifiedname>batmat::linalg::norms::result_simd::norm_1</qualifiedname>
+        <briefdescription>
+<para>ℓ₁ norm. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/norms.hpp" line="36" column="15" bodyfile="batmat/include/batmat/linalg/norms.hpp" bodystart="36" bodyend="36"/>
+        <references refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1acaf6ef3de3b2d4ee97b72e9c158b44bd" compoundref="norms_8hpp" startline="32">batmat::linalg::norms&lt; T, simd &gt;::result_simd::asum</references>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1norms_1_1result__simd_1ae26404016c64cbf7b1d0c14798c79848" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>simd</type>
+        <definition>simd batmat::linalg::norms&lt; T, simd &gt;::result_simd::norm_2</definition>
+        <argsstring>() const</argsstring>
+        <name>norm_2</name>
+        <qualifiedname>batmat::linalg::norms::result_simd::norm_2</qualifiedname>
+        <briefdescription>
+<para>ℓ₂ norm. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/norms.hpp" line="38" column="15" bodyfile="batmat/include/batmat/linalg/norms.hpp" bodystart="38" bodyend="41"/>
+        <references refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a086b482f626355af733c0ad057ecd570" compoundref="norms_8hpp" startline="33">batmat::linalg::norms&lt; T, simd &gt;::result_simd::sumsq</references>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a3e5090751dadb61f0f726862fc0e7047" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>simd</type>
+        <definition>simd batmat::linalg::norms&lt; T, simd &gt;::result_simd::norm_inf</definition>
+        <argsstring>() const</argsstring>
+        <name>norm_inf</name>
+        <qualifiedname>batmat::linalg::norms::result_simd::norm_inf</qualifiedname>
+        <briefdescription>
+<para>max-norm. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/norms.hpp" line="43" column="15" bodyfile="batmat/include/batmat/linalg/norms.hpp" bodystart="43" bodyend="46"/>
+        <references refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a9a4a92884d60d73f1cc317061b6d60a3" compoundref="norms_8hpp" startline="31">batmat::linalg::norms&lt; T, simd &gt;::result_simd::amax</references>
+        <references refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1acaf6ef3de3b2d4ee97b72e9c158b44bd" compoundref="norms_8hpp" startline="32">batmat::linalg::norms&lt; T, simd &gt;::result_simd::asum</references>
+        <references refid="namespacebatmat_1_1datapar_1ad0c6f39983831e00225b0ebc6088c5eb" compoundref="simd_8hpp" startline="152" endline="155">batmat::datapar::select</references>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Lane-wise accumulators. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::norms&lt; T, simd &gt;::result_simd</label>
+        <link refid="structbatmat_1_1linalg_1_1norms_1_1result__simd"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/norms.hpp" line="30" column="5" bodyfile="batmat/include/batmat/linalg/norms.hpp" bodystart="30" bodyend="47"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a9a4a92884d60d73f1cc317061b6d60a3" prot="public" virt="non-virtual"><scope>batmat::linalg::norms::result_simd</scope><name>amax</name></member>
+      <member refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1acaf6ef3de3b2d4ee97b72e9c158b44bd" prot="public" virt="non-virtual"><scope>batmat::linalg::norms::result_simd</scope><name>asum</name></member>
+      <member refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1aabb471da2adffa47a32ba7c9ea091bda" prot="public" virt="non-virtual"><scope>batmat::linalg::norms::result_simd</scope><name>norm_1</name></member>
+      <member refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1ae26404016c64cbf7b1d0c14798c79848" prot="public" virt="non-virtual"><scope>batmat::linalg::norms::result_simd</scope><name>norm_2</name></member>
+      <member refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a3e5090751dadb61f0f726862fc0e7047" prot="public" virt="non-virtual"><scope>batmat::linalg::norms::result_simd</scope><name>norm_inf</name></member>
+      <member refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a086b482f626355af733c0ad057ecd570" prot="public" virt="non-virtual"><scope>batmat::linalg::norms::result_simd</scope><name>sumsq</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

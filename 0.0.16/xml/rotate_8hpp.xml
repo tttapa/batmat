@@ -1,0 +1,453 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="rotate_8hpp" kind="file" language="C++">
+    <compoundname>rotate.hpp</compoundname>
+    <includes refid="simd_8hpp" local="no">batmat/simd.hpp</includes>
+    <includes local="no">cassert</includes>
+    <includedby refid="copy_8hpp" local="no">batmat/include/batmat/linalg/copy.hpp</includedby>
+    <includedby refid="gemm-diag_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/gemm-diag.tpp</includedby>
+    <includedby refid="gemm_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/gemm.tpp</includedby>
+    <includedby refid="gemv_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/gemv.tpp</includedby>
+    <includedby refid="hyhound_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/hyhound.tpp</includedby>
+    <includedby refid="symv_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/symv.tpp</includedby>
+    <includedby refid="syomv_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/syomv.tpp</includedby>
+    <includedby refid="trsm_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/trsm.tpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>batmat/include/batmat/ops/rotate.hpp</label>
+        <link refid="rotate_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>batmat/unroll.h</label>
+        <link refid="unroll_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>batmat/config.hpp</label>
+      </node>
+      <node id="8">
+        <label>cassert</label>
+      </node>
+      <node id="7">
+        <label>cstddef</label>
+      </node>
+      <node id="6">
+        <label>experimental/simd</label>
+      </node>
+      <node id="5">
+        <label>guanaqo/stringify.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>batmat/include/batmat/linalg/copy.hpp</label>
+        <link refid="copy_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>batmat/include/batmat/linalg/gemm-diag.hpp</label>
+        <link refid="gemm-diag_8hpp"/>
+      </node>
+      <node id="5">
+        <label>batmat/include/batmat/linalg/gemm.hpp</label>
+        <link refid="gemm_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>batmat/include/batmat/linalg/gemv.hpp</label>
+        <link refid="gemv_8hpp"/>
+      </node>
+      <node id="7">
+        <label>batmat/include/batmat/linalg/hyhound.hpp</label>
+        <link refid="hyhound_8hpp"/>
+      </node>
+      <node id="10">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm-diag.tpp</label>
+        <link refid="gemm-diag_8tpp"/>
+      </node>
+      <node id="11">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm.tpp</label>
+        <link refid="gemm_8tpp"/>
+      </node>
+      <node id="12">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemv.tpp</label>
+        <link refid="gemv_8tpp"/>
+      </node>
+      <node id="13">
+        <label>batmat/include/batmat/linalg/micro-kernels/hyhound.tpp</label>
+        <link refid="hyhound_8tpp"/>
+      </node>
+      <node id="14">
+        <label>batmat/include/batmat/linalg/micro-kernels/symv.tpp</label>
+        <link refid="symv_8tpp"/>
+      </node>
+      <node id="15">
+        <label>batmat/include/batmat/linalg/micro-kernels/syomv.tpp</label>
+        <link refid="syomv_8tpp"/>
+      </node>
+      <node id="16">
+        <label>batmat/include/batmat/linalg/micro-kernels/trsm.tpp</label>
+        <link refid="trsm_8tpp"/>
+      </node>
+      <node id="8">
+        <label>batmat/include/batmat/linalg/potrf.hpp</label>
+        <link refid="potrf_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>batmat/include/batmat/linalg/trsm.hpp</label>
+        <link refid="trsm_8hpp"/>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/ops/rotate.hpp</label>
+        <link refid="rotate_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>/home/runner/work/batmat/batmat/test_package/src/example.cpp</label>
+        <link refid="example_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1ops">batmat::ops</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1ops_1_1detail">batmat::ops::detail</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="simd_8hpp" kindref="compound">batmat/simd.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cassert&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1ops" kindref="compound">batmat::ops</ref><sp/>{</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1ops_1_1detail" kindref="compound">detail</ref><sp/>{</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/>Note:<sp/>The<sp/>return<sp/>types<sp/>-&gt;<sp/>F<sp/>are<sp/>crucial<sp/>to<sp/>avoid<sp/>a<sp/>bug<sp/>in<sp/>GCC.<sp/>https://godbolt.org/z/Phfvsq7hY</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="14"><highlight class="comment">///<sp/>Rotate<sp/>the<sp/>elements<sp/>of<sp/>@p<sp/>x<sp/>to<sp/>the<sp/>right<sp/>by<sp/>@p<sp/>s<sp/>positions.</highlight></codeline>
+<codeline lineno="15"><highlight class="comment">///<sp/>For<sp/>example,<sp/>`rotr&lt;1&gt;([x0,<sp/>x1,<sp/>x2,<sp/>x3])<sp/>==<sp/>[x3,<sp/>x0,<sp/>x1,<sp/>x2]`</highlight></codeline>
+<codeline lineno="16"><highlight class="comment">///<sp/>and<sp/>`rotr&lt;-1&gt;([x0,<sp/>x1,<sp/>x2,<sp/>x3])<sp/>==<sp/>[x1,<sp/>x2,<sp/>x3,<sp/>x0]`.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>F,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="18" refid="namespacebatmat_1_1ops_1_1detail_1af86c438318c89dd7be953a0633285ef8" refkind="member"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1af86c438318c89dd7be953a0633285ef8" kindref="member">rot</ref>(<ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/>x,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>s)<sp/>{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>assert(s<sp/>&lt;=<sp/>0<sp/>||<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">size_t</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(+s)<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>assert(s<sp/>&gt;=<sp/>0<sp/>||<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">size_t</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(-s)<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>n<sp/>=<sp/>x.size();</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref>{[&amp;](</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>j)<sp/>-&gt;<sp/>F<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>x[(n<sp/>+<sp/>j<sp/>-<sp/>s)<sp/>%<sp/>n];<sp/>}};</highlight></codeline>
+<codeline lineno="23"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>F,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="26" refid="namespacebatmat_1_1ops_1_1detail_1a9210fe01d8e36639fb10c5145d2fd373" refkind="member"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a9210fe01d8e36639fb10c5145d2fd373" kindref="member">rotl</ref>(<ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(S<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>S<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>n<sp/>=<sp/>x.size();</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref>{[&amp;](</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>j)<sp/>-&gt;<sp/>F<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>x[(j<sp/>+<sp/>S)<sp/>%<sp/>n];<sp/>}};</highlight></codeline>
+<codeline lineno="30"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>F,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="33" refid="namespacebatmat_1_1ops_1_1detail_1a5cbbec102f5a2e6220a1d32149ad373d" refkind="member"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a5cbbec102f5a2e6220a1d32149ad373d" kindref="member">rotr</ref>(<ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(S<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>S<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>n<sp/>=<sp/>x.size();</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref>{[&amp;](</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>j)<sp/>-&gt;<sp/>F<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>x[(n<sp/>+<sp/>j<sp/>-<sp/>S)<sp/>%<sp/>n];<sp/>}};</highlight></codeline>
+<codeline lineno="37"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>F,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="40" refid="namespacebatmat_1_1ops_1_1detail_1a25773d280715f4b8bbf625cbb8653e42" refkind="member"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a25773d280715f4b8bbf625cbb8653e42" kindref="member">shiftl</ref>(<ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(S<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>S<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>n<sp/>=<sp/>x.size();</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref>{[&amp;](</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>j)<sp/>-&gt;<sp/>F<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>j<sp/>+<sp/>S<sp/>&lt;<sp/>n<sp/>?<sp/>x[j<sp/>+<sp/>S]<sp/>:<sp/>F{};<sp/>}};</highlight></codeline>
+<codeline lineno="44"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>F,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="47" refid="namespacebatmat_1_1ops_1_1detail_1a952bfdf95e53d22d4e6b28c39c701dae" refkind="member"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a952bfdf95e53d22d4e6b28c39c701dae" kindref="member">shiftr</ref>(<ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(S<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>S<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref>{[&amp;](</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>j)<sp/>-&gt;<sp/>F<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>j<sp/>&gt;=<sp/>S<sp/>?<sp/>x[j<sp/>-<sp/>S]<sp/>:<sp/>F{};<sp/>}};</highlight></codeline>
+<codeline lineno="50"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(__AVX512F__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1af86c438318c89dd7be953a0633285ef8" kindref="member">rot</ref>(<ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">datapar::deduced_simd&lt;double, 8&gt;</ref><sp/>x,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>s)<sp/>{</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>assert(s<sp/>&lt;=<sp/>0<sp/>||<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">size_t</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(+s)<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>assert(s<sp/>&gt;=<sp/>0<sp/>||<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">size_t</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(-s)<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>N<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>x.size();</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constinit</highlight><highlight class="normal"><sp/>std::array&lt;int64_t,<sp/>2<sp/>*<sp/>N<sp/>-<sp/>1&gt;<sp/>indices_lut<sp/>=<sp/>[]<sp/>{</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::array&lt;int64_t,<sp/>2<sp/>*<sp/>N<sp/>-<sp/>1&gt;<sp/>lut{};</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>2<sp/>*<sp/>N<sp/>-<sp/>1;<sp/>++i)</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>lut[i]<sp/>=<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">int64_t</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">((i<sp/>+<sp/>1)<sp/>%<sp/>N);</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>lut;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>}();</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>rot(+1,<sp/>[0,<sp/>1,<sp/>2,<sp/>3,<sp/>4,<sp/>5,<sp/>6,<sp/>7])<sp/>==<sp/>[7,<sp/>0,<sp/>1,<sp/>2,<sp/>3,<sp/>4,<sp/>5,<sp/>6]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>rot(+2,<sp/>[0,<sp/>1,<sp/>2,<sp/>3,<sp/>4,<sp/>5,<sp/>6,<sp/>7])<sp/>==<sp/>[6,<sp/>7,<sp/>0,<sp/>1,<sp/>2,<sp/>3,<sp/>4,<sp/>5]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>rot(+7,<sp/>[0,<sp/>1,<sp/>2,<sp/>3,<sp/>4,<sp/>5,<sp/>6,<sp/>7])<sp/>==<sp/>[1,<sp/>2,<sp/>3,<sp/>4,<sp/>5,<sp/>6,<sp/>7,<sp/>0]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>rot(-1,<sp/>[0,<sp/>1,<sp/>2,<sp/>3,<sp/>4,<sp/>5,<sp/>6,<sp/>7])<sp/>==<sp/>[1,<sp/>2,<sp/>3,<sp/>4,<sp/>5,<sp/>6,<sp/>7,<sp/>0]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>rot(-2,<sp/>[0,<sp/>1,<sp/>2,<sp/>3,<sp/>4,<sp/>5,<sp/>6,<sp/>7])<sp/>==<sp/>[2,<sp/>3,<sp/>4,<sp/>5,<sp/>6,<sp/>7,<sp/>0,<sp/>1]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>rot(-7,<sp/>[0,<sp/>1,<sp/>2,<sp/>3,<sp/>4,<sp/>5,<sp/>6,<sp/>7])<sp/>==<sp/>[7,<sp/>0,<sp/>1,<sp/>2,<sp/>3,<sp/>4,<sp/>5,<sp/>6]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>[1,<sp/>2,<sp/>3,<sp/>4,<sp/>5,<sp/>6,<sp/>7,<sp/>0,<sp/>1,<sp/>2,<sp/>3,<sp/>4,<sp/>5,<sp/>6,<sp/>7]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-7</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-6</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/>7</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>-1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constinit</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>int64_t<sp/>*p<sp/>=<sp/>indices_lut.data()<sp/>+<sp/>N<sp/>-<sp/>1;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(s<sp/>&lt;<sp/>0)</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>s<sp/>+=<sp/>N;</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>__m512i<sp/>indices<sp/>=<sp/>_mm512_loadu_epi64(p<sp/>-<sp/>s);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/>__m512d<sp/>y<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>_mm512_permutexvar_pd(indices,<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">__m512d</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(x));</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(x){y};</highlight></codeline>
+<codeline lineno="86"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1af86c438318c89dd7be953a0633285ef8" kindref="member">rot</ref>(<ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">datapar::deduced_simd&lt;double, 4&gt;</ref><sp/>x,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>s)<sp/>{</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>assert(s<sp/>&lt;=<sp/>0<sp/>||<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">size_t</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(+s)<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/>assert(s<sp/>&gt;=<sp/>0<sp/>||<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">size_t</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(-s)<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>N<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>x.size();</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constinit</highlight><highlight class="normal"><sp/>std::array&lt;int64_t,<sp/>2<sp/>*<sp/>N<sp/>-<sp/>1&gt;<sp/>indices_lut<sp/>=<sp/>[]<sp/>{</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::array&lt;int64_t,<sp/>2<sp/>*<sp/>N<sp/>-<sp/>1&gt;<sp/>lut{};</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>2<sp/>*<sp/>N<sp/>-<sp/>1;<sp/>++i)</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>lut[i]<sp/>=<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">int64_t</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">((i<sp/>+<sp/>1)<sp/>%<sp/>N);</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>lut;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/>}();</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constinit</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>int64_t<sp/>*p<sp/>=<sp/>indices_lut.data()<sp/>+<sp/>N<sp/>-<sp/>1;</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(s<sp/>&lt;<sp/>0)</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>s<sp/>+=<sp/>N;</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>__m256i<sp/>indices<sp/>=<sp/>_mm256_loadu_epi64(p<sp/>-<sp/>s);</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/>__m256d<sp/>y<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>_mm256_permutexvar_pd(indices,<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">__m256d</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(x));</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(x){y};</highlight></codeline>
+<codeline lineno="104"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S&gt;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a9210fe01d8e36639fb10c5145d2fd373" kindref="member">rotl</ref>(<ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">datapar::deduced_simd&lt;double, 8&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(S<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>S<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>N<sp/><sp/><sp/><sp/>=<sp/>x.size();</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>__m512i<sp/>indices<sp/>=<sp/>_mm512_set_epi64((S<sp/>+<sp/>7)<sp/>%<sp/>N,<sp/>(S<sp/>+<sp/>6)<sp/>%<sp/>N,<sp/>(S<sp/>+<sp/>5)<sp/>%<sp/>N,<sp/>(S<sp/>+<sp/>4)<sp/>%<sp/>N,</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(S<sp/>+<sp/>3)<sp/>%<sp/>N,<sp/>(S<sp/>+<sp/>2)<sp/>%<sp/>N,<sp/>(S<sp/>+<sp/>1)<sp/>%<sp/>N,<sp/>S<sp/>%<sp/>N);</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/>__m512d<sp/>y<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>_mm512_permutexvar_pd(indices,<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">__m512d</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(x));</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(x){y};</highlight></codeline>
+<codeline lineno="114"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S&gt;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a5cbbec102f5a2e6220a1d32149ad373d" kindref="member">rotr</ref>(<ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">datapar::deduced_simd&lt;double, 8&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(S<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>S<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>N<sp/>=<sp/>x.size();</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>__m512i<sp/>indices<sp/>=</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>_mm512_set_epi64((N<sp/>-<sp/>S<sp/>+<sp/>7)<sp/>%<sp/>N,<sp/>(N<sp/>-<sp/>S<sp/>+<sp/>6)<sp/>%<sp/>N,<sp/>(N<sp/>-<sp/>S<sp/>+<sp/>5)<sp/>%<sp/>N,<sp/>(N<sp/>-<sp/>S<sp/>+<sp/>4)<sp/>%<sp/>N,</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(N<sp/>-<sp/>S<sp/>+<sp/>3)<sp/>%<sp/>N,<sp/>(N<sp/>-<sp/>S<sp/>+<sp/>2)<sp/>%<sp/>N,<sp/>(N<sp/>-<sp/>S<sp/>+<sp/>1)<sp/>%<sp/>N,<sp/>(N<sp/>-<sp/>S)<sp/>%<sp/>N);</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/>__m512d<sp/>y<sp/>=<sp/>_mm512_permutexvar_pd(indices,<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">__m512d</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(x));</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(x){y};</highlight></codeline>
+<codeline lineno="125"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S&gt;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a25773d280715f4b8bbf625cbb8653e42" kindref="member">shiftl</ref>(<ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">datapar::deduced_simd&lt;double, 8&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(S<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>S<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>uint8_t<sp/>mask<sp/>=<sp/>(1u<sp/>&lt;&lt;<sp/>(x.size()<sp/>-<sp/>S))<sp/>-<sp/>1u;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>y<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">__m512d</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(<ref refid="namespacebatmat_1_1ops_1_1detail_1a9210fe01d8e36639fb10c5145d2fd373" kindref="member">rotl&lt;S&gt;</ref>(x));</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/>y<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>_mm512_mask_blend_pd(mask,<sp/>_mm512_set1_pd(0),<sp/>y);</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(x){y};</highlight></codeline>
+<codeline lineno="134"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S&gt;</highlight></codeline>
+<codeline lineno="137"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a952bfdf95e53d22d4e6b28c39c701dae" kindref="member">shiftr</ref>(<ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">datapar::deduced_simd&lt;double, 8&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(S<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>S<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>uint8_t<sp/>mask<sp/>=<sp/>(1u<sp/>&lt;&lt;<sp/>S)<sp/>-<sp/>1u;</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>y<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">__m512d</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(<ref refid="namespacebatmat_1_1ops_1_1detail_1a5cbbec102f5a2e6220a1d32149ad373d" kindref="member">rotr&lt;S&gt;</ref>(x));</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/>y<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>_mm512_mask_blend_pd(mask,<sp/>y,<sp/>_mm512_set1_pd(0));</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(x){y};</highlight></codeline>
+<codeline lineno="143"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(__AVX2__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S&gt;</highlight></codeline>
+<codeline lineno="150"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a25773d280715f4b8bbf625cbb8653e42" kindref="member">shiftl</ref>(<ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">datapar::deduced_simd&lt;double, 4&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(S<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>S<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>uint8_t<sp/>mask<sp/>=<sp/>(1u<sp/>&lt;&lt;<sp/>(x.size()<sp/>-<sp/>S))<sp/>-<sp/>1u;</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>y<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">__m256d</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(<ref refid="namespacebatmat_1_1ops_1_1detail_1a9210fe01d8e36639fb10c5145d2fd373" kindref="member">rotl&lt;S&gt;</ref>(x));</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/>y<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>_mm256_blend_pd(_mm256_set1_pd(0),<sp/>y,<sp/>mask);</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(x){y};</highlight></codeline>
+<codeline lineno="156"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S&gt;</highlight></codeline>
+<codeline lineno="159"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a952bfdf95e53d22d4e6b28c39c701dae" kindref="member">shiftr</ref>(<ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">datapar::deduced_simd&lt;double, 4&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(S<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>S<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>uint8_t<sp/>mask<sp/>=<sp/>(1u<sp/>&lt;&lt;<sp/>S)<sp/>-<sp/>1u;</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>y<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">__m256d</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(<ref refid="namespacebatmat_1_1ops_1_1detail_1a5cbbec102f5a2e6220a1d32149ad373d" kindref="member">rotr&lt;S&gt;</ref>(x));</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/>y<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>_mm256_blend_pd(y,<sp/>_mm256_set1_pd(0),<sp/>mask);</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(x){y};</highlight></codeline>
+<codeline lineno="165"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"></highlight></codeline>
+<codeline lineno="167"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="168"><highlight class="normal"></highlight></codeline>
+<codeline lineno="169"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(__AVX512F__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="170"><highlight class="normal"></highlight></codeline>
+<codeline lineno="171"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S&gt;</highlight></codeline>
+<codeline lineno="172"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a9210fe01d8e36639fb10c5145d2fd373" kindref="member">rotl</ref>(<ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">datapar::deduced_simd&lt;double, 4&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(S<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>S<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>N<sp/><sp/><sp/><sp/>=<sp/>x.size();</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>__m256i<sp/>indices<sp/>=<sp/>_mm256_set_epi64x((S<sp/>+<sp/>3)<sp/>%<sp/>N,<sp/>(S<sp/>+<sp/>2)<sp/>%<sp/>N,<sp/>(S<sp/>+<sp/>1)<sp/>%<sp/>N,<sp/>S<sp/>%<sp/>N);</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/>__m256d<sp/>y<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>_mm256_permutexvar_pd(indices,<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">__m256d</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(x));</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(x){y};</highlight></codeline>
+<codeline lineno="178"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"></highlight></codeline>
+<codeline lineno="180"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S&gt;</highlight></codeline>
+<codeline lineno="181"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a5cbbec102f5a2e6220a1d32149ad373d" kindref="member">rotr</ref>(<ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">datapar::deduced_simd&lt;double, 4&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(S<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>S<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>N<sp/>=<sp/>x.size();</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>__m256i<sp/>indices<sp/>=</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>_mm256_set_epi64x((N<sp/>-<sp/>S<sp/>+<sp/>3)<sp/>%<sp/>N,<sp/>(N<sp/>-<sp/>S<sp/>+<sp/>2)<sp/>%<sp/>N,<sp/>(N<sp/>-<sp/>S<sp/>+<sp/>1)<sp/>%<sp/>N,<sp/>(N<sp/>-<sp/>S)<sp/>%<sp/>N);</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/>__m256d<sp/>y<sp/>=<sp/>_mm256_permutexvar_pd(indices,<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">__m256d</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(x));</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(x){y};</highlight></codeline>
+<codeline lineno="188"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"></highlight></codeline>
+<codeline lineno="190"><highlight class="normal"></highlight><highlight class="preprocessor">#elif<sp/>defined(__AVX2__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="191"><highlight class="normal"></highlight></codeline>
+<codeline lineno="192"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S&gt;</highlight></codeline>
+<codeline lineno="193"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a9210fe01d8e36639fb10c5145d2fd373" kindref="member">rotl</ref>(<ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">datapar::deduced_simd&lt;double, 4&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(S<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>S<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>N<sp/>=<sp/>x.size();</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>indices<sp/>=</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(((S<sp/>+<sp/>3)<sp/>%<sp/>N)<sp/>&lt;&lt;<sp/>6)<sp/>|<sp/>(((S<sp/>+<sp/>2)<sp/>%<sp/>N)<sp/>&lt;&lt;<sp/>4)<sp/>|<sp/>(((S<sp/>+<sp/>1)<sp/>%<sp/>N)<sp/>&lt;&lt;<sp/>2)<sp/>|<sp/>(S<sp/>%<sp/>N);</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/>__m256d<sp/>y<sp/>=<sp/>_mm256_permute4x64_pd(</highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">__m256d</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(x),<sp/>indices);</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(x){y};</highlight></codeline>
+<codeline lineno="200"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"></highlight></codeline>
+<codeline lineno="202"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S&gt;</highlight></codeline>
+<codeline lineno="203"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a5cbbec102f5a2e6220a1d32149ad373d" kindref="member">rotr</ref>(<ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">datapar::deduced_simd&lt;double, 4&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(S<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>S<sp/>&lt;<sp/>x.size());</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>N<sp/><sp/><sp/><sp/>=<sp/>x.size();</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>indices<sp/>=<sp/>(((N<sp/>-<sp/>S<sp/>+<sp/>3)<sp/>%<sp/>N)<sp/>&lt;&lt;<sp/>6)<sp/>|<sp/>(((N<sp/>-<sp/>S<sp/>+<sp/>2)<sp/>%<sp/>N)<sp/>&lt;&lt;<sp/>4)<sp/>|</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(((N<sp/>-<sp/>S<sp/>+<sp/>1)<sp/>%<sp/>N)<sp/>&lt;&lt;<sp/>2)<sp/>|<sp/>((N<sp/>-<sp/>S)<sp/>%<sp/>N);</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/>__m256d<sp/>y<sp/>=<sp/>_mm256_permute4x64_pd(</highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">__m256d</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(x),<sp/>indices);</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(x){y};</highlight></codeline>
+<codeline lineno="210"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"></highlight></codeline>
+<codeline lineno="212"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="213"><highlight class="normal"></highlight></codeline>
+<codeline lineno="214"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>detail</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="215"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="216"><highlight class="comment">///<sp/>@addtogroup<sp/>topic-low-level-ops</highlight></codeline>
+<codeline lineno="217"><highlight class="comment">///<sp/>@{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="218"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="219"><highlight class="comment">///<sp/>@name<sp/>Lane-wise<sp/>rotations<sp/>of<sp/>SIMD<sp/>vectors</highlight></codeline>
+<codeline lineno="220"><highlight class="comment">///<sp/>@{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="221"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="222"><highlight class="comment">///<sp/>Rotates<sp/>the<sp/>elements<sp/>of<sp/>@p<sp/>x<sp/>by<sp/>@p<sp/>s<sp/>positions<sp/>to<sp/>the<sp/>left.</highlight></codeline>
+<codeline lineno="223"><highlight class="comment">///<sp/>For<sp/>example,<sp/>`rotl&lt;1&gt;([x0,<sp/>x1,<sp/>x2,<sp/>x3])<sp/>==<sp/>[x1,<sp/>x2,<sp/>x3,<sp/>x0]`</highlight></codeline>
+<codeline lineno="224"><highlight class="comment">///<sp/>and<sp/>`rotl&lt;-1&gt;([x0,<sp/>x1,<sp/>x2,<sp/>x3])<sp/>==<sp/>[x3,<sp/>x0,<sp/>x1,<sp/>x2]`.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="225"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>F,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="226" refid="group__topic-low-level-ops_1ga247b1215d2f350a55c60a922efc98e4e" refkind="member"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/><ref refid="group__topic-low-level-ops_1ga247b1215d2f350a55c60a922efc98e4e" kindref="member">rotl</ref>(<ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>(S<sp/>%<sp/>x.size()<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>x;</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>(S<sp/>&lt;<sp/>0)</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a5cbbec102f5a2e6220a1d32149ad373d" kindref="member">detail::rotr&lt;-S&gt;</ref>(x);</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a9210fe01d8e36639fb10c5145d2fd373" kindref="member">detail::rotl&lt;S&gt;</ref>(x);</highlight></codeline>
+<codeline lineno="233"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="235"><highlight class="comment">///<sp/>Rotate<sp/>the<sp/>elements<sp/>of<sp/>@p<sp/>x<sp/>to<sp/>the<sp/>right<sp/>by<sp/>@p<sp/>S<sp/>positions.</highlight></codeline>
+<codeline lineno="236"><highlight class="comment">///<sp/>For<sp/>example,<sp/>`rotr&lt;1&gt;([x0,<sp/>x1,<sp/>x2,<sp/>x3])<sp/>==<sp/>[x3,<sp/>x0,<sp/>x1,<sp/>x2]`</highlight></codeline>
+<codeline lineno="237"><highlight class="comment">///<sp/>and<sp/>`rotr&lt;-1&gt;([x0,<sp/>x1,<sp/>x2,<sp/>x3])<sp/>==<sp/>[x1,<sp/>x2,<sp/>x3,<sp/>x0]`.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="238"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>F,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="239" refid="group__topic-low-level-ops_1ga99482a68bf78d2c163dcd663b24131c5" refkind="member"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/><ref refid="group__topic-low-level-ops_1ga99482a68bf78d2c163dcd663b24131c5" kindref="member">rotr</ref>(<ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>(S<sp/>%<sp/>x.size()<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>x;</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>(S<sp/>&lt;<sp/>0)</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a9210fe01d8e36639fb10c5145d2fd373" kindref="member">detail::rotl&lt;-S&gt;</ref>(x);</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a5cbbec102f5a2e6220a1d32149ad373d" kindref="member">detail::rotr&lt;S&gt;</ref>(x);</highlight></codeline>
+<codeline lineno="246"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="248"><highlight class="comment">///<sp/>Shift<sp/>the<sp/>elements<sp/>of<sp/>@p<sp/>x<sp/>to<sp/>the<sp/>left<sp/>by<sp/>@p<sp/>S<sp/>positions,<sp/>shifting<sp/>in<sp/>zeros.</highlight></codeline>
+<codeline lineno="249"><highlight class="comment">///<sp/>For<sp/>example,<sp/>`shiftl&lt;1&gt;([x0,<sp/>x1,<sp/>x2,<sp/>x3])<sp/>==<sp/>[x1,<sp/>x2,<sp/>x3,<sp/>0]`</highlight></codeline>
+<codeline lineno="250"><highlight class="comment">///<sp/>and<sp/>`shiftl&lt;-1&gt;([x0,<sp/>x1,<sp/>x2,<sp/>x3])<sp/>==<sp/>[0,<sp/>x0,<sp/>x1,<sp/>x2]`.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="251"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>F,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="252" refid="group__topic-low-level-ops_1gaaa3114a23628a7f5db3d380c07e6d03a" refkind="member"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/><ref refid="group__topic-low-level-ops_1gaaa3114a23628a7f5db3d380c07e6d03a" kindref="member">shiftl</ref>(<ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>(S<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>x;</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>(S<sp/>&gt;=<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(x.size())<sp/>||<sp/>-S<sp/>&gt;=<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(x.size()))</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref>{0};</highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>(S<sp/>&lt;<sp/>0)</highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a952bfdf95e53d22d4e6b28c39c701dae" kindref="member">detail::shiftr&lt;-S&gt;</ref>(x);</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a25773d280715f4b8bbf625cbb8653e42" kindref="member">detail::shiftl&lt;S&gt;</ref>(x);</highlight></codeline>
+<codeline lineno="261"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="263"><highlight class="comment">///<sp/>Shift<sp/>the<sp/>elements<sp/>of<sp/>@p<sp/>x<sp/>to<sp/>the<sp/>right<sp/>by<sp/>@p<sp/>S<sp/>positions,<sp/>shifting<sp/>in<sp/>zeros.</highlight></codeline>
+<codeline lineno="264"><highlight class="comment">///<sp/>For<sp/>example,<sp/>`shiftr&lt;1&gt;([x0,<sp/>x1,<sp/>x2,<sp/>x3])<sp/>==<sp/>[0,<sp/>x0,<sp/>x1,<sp/>x2]`</highlight></codeline>
+<codeline lineno="265"><highlight class="comment">///<sp/>and<sp/>`shiftr&lt;-1&gt;([x0,<sp/>x1,<sp/>x2,<sp/>x3])<sp/>==<sp/>[x1,<sp/>x2,<sp/>x3,<sp/>0]`.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="266"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>S,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>F,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="267" refid="group__topic-low-level-ops_1gafd42e3bbc4c662e3384ffc8653fdc6a8" refkind="member"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/><ref refid="group__topic-low-level-ops_1gafd42e3bbc4c662e3384ffc8653fdc6a8" kindref="member">shiftr</ref>(<ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>(S<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>x;</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>(S<sp/>&gt;=<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(x.size())<sp/>||<sp/>-S<sp/>&gt;=<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(x.size()))</highlight></codeline>
+<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;F, Abi&gt;</ref>{0};</highlight></codeline>
+<codeline lineno="272"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>(S<sp/>&lt;<sp/>0)</highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a25773d280715f4b8bbf625cbb8653e42" kindref="member">detail::shiftl&lt;-S&gt;</ref>(x);</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="275"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a952bfdf95e53d22d4e6b28c39c701dae" kindref="member">detail::shiftr&lt;S&gt;</ref>(x);</highlight></codeline>
+<codeline lineno="276"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="277"><highlight class="normal"></highlight></codeline>
+<codeline lineno="278"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1ops_1_1detail_1af86c438318c89dd7be953a0633285ef8" kindref="member">detail::rot</ref>;</highlight></codeline>
+<codeline lineno="279"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="280"><highlight class="comment">///<sp/>@}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="281"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="282"><highlight class="comment">///<sp/>@}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="283"><highlight class="normal"></highlight></codeline>
+<codeline lineno="284"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::ops</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/ops/rotate.hpp"/>
+  </compounddef>
+</doxygen>

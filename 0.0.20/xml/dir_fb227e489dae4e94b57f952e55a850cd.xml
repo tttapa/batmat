@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="dir_fb227e489dae4e94b57f952e55a850cd" kind="dir">
+    <compoundname>batmat</compoundname>
+    <innerdir refid="dir_72d467c23e78781a791bd9375234cac1">batmat/include</innerdir>
+    <innerdir refid="dir_bac6c998d92352d196046d5e7ec59f44">batmat/src</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/"/>
+  </compounddef>
+</doxygen>

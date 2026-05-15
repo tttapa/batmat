@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg_1_1multi" kind="namespace" inline="yes" language="C++">
+    <compoundname>batmat::linalg::multi</compoundname>
+    <sectiondef kind="user-defined">
+      <header>Multi-batch elementwise operations</header>
+      <member refid="group__topic-linalg_1ga0637f86f1cf6402eac80a98d06306f1c" kind="function"><name>scale</name></member>
+      <member refid="group__topic-linalg_1gaf738f587ff3e76ae0c433b4ae2bfc365" kind="function"><name>scale</name></member>
+      <member refid="group__topic-linalg_1ga116bfccbe583a8cf6e4e2762939c1f7a" kind="function"><name>hadamard</name></member>
+      <member refid="group__topic-linalg_1ga4020d9f3d223209d1ca946db33a1afc7" kind="function"><name>hadamard</name></member>
+      <member refid="group__topic-linalg_1ga3225ce6513d16cc799b7b6d8c17acd0c" kind="function"><name>clamp</name></member>
+      <member refid="group__topic-linalg_1ga34225d761da23305455b0c79bcd788d3" kind="function"><name>clamp_resid</name></member>
+      <member refid="group__topic-linalg_1ga296ba8cd9c803a5a315685a80b4c25a0" kind="function"><name>clamp</name></member>
+      <member refid="group__topic-linalg_1gacd70174fe9a7b2772a262eb765e392e4" kind="function"><name>axpby</name></member>
+      <member refid="group__topic-linalg_1ga57dd2dfd6e51d691c816c34fa99eac74" kind="function"><name>axpby</name></member>
+      <member refid="group__topic-linalg_1ga25fb60fc8ae72652ea9aefde2b2fdbe8" kind="function"><name>axpy</name></member>
+      <member refid="group__topic-linalg_1ga751cc5ddeeee996f19efb77e41997a3e" kind="function"><name>axpy</name></member>
+      <member refid="group__topic-linalg_1gab763de2ba39616c64187a3accd2373d8" kind="function"><name>axpy</name></member>
+      <member refid="group__topic-linalg_1gac18387cff0eda90d903159ae1f3f1afa" kind="function"><name>negate</name></member>
+      <member refid="group__topic-linalg_1gad7e2ad822d2867ee65663409f15eea6b" kind="function"><name>negate</name></member>
+      <member refid="group__topic-linalg_1ga068041aa63c157a862d03da7d51805eb" kind="function"><name>sub</name></member>
+      <member refid="group__topic-linalg_1gaf15b456ed0930732045854bf4aaad627" kind="function"><name>sub</name></member>
+      <member refid="group__topic-linalg_1ga30945899cf622ac71dd390b7e04c5a51" kind="function"><name>add</name></member>
+      <member refid="group__topic-linalg_1ga88f7ea553530a09cdb4a66a6e7cdc106" kind="function"><name>add</name></member>
+      <member refid="group__topic-linalg_1gaed87f517d85a8b46ffab9c9c2fbf64a8" kind="function"><name>for_each_elementwise</name></member>
+      <member refid="group__topic-linalg_1ga84a0c01194cdc9c617a07e7c67d26612" kind="function"><name>transform_elementwise</name></member>
+      <member refid="group__topic-linalg_1gae17b1275404d00710acdb79d9480272e" kind="function"><name>transform2_elementwise</name></member>
+      <member refid="group__topic-linalg_1ga26409fc0531896d8d4c6c7d8c3235088" kind="function"><name>transform_n_elementwise</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Multi-batch reduction operations</header>
+      <member refid="group__topic-linalg_1gaf8eb151cbb08a90151a479db051d8ace" kind="function"><name>norms_all</name></member>
+      <member refid="group__topic-linalg_1ga5343991146c9dd1d0401ee09087b8a0b" kind="function"><name>norm_inf</name></member>
+      <member refid="group__topic-linalg_1ga47a69c033eb6ad495d5c17f334be0298" kind="function"><name>norm_1</name></member>
+      <member refid="group__topic-linalg_1ga37924ba08fb1a8d01b92b785ed3c610b" kind="function"><name>norm_2_squared</name></member>
+      <member refid="group__topic-linalg_1ga20e00e2398651b8041b6d63b2a75dbf0" kind="function"><name>norm_2</name></member>
+      <member refid="group__topic-linalg_1ga844208e942cdcfb4ee50cebab4481a34" kind="function"><name>dot</name></member>
+      <member refid="group__topic-linalg_1ga406bfa25b521c4b109cf96cb58d7d352" kind="function"><name>weighted_norm_sq</name></member>
+      <member refid="group__topic-linalg_1ga5134432e5e76af1610d138cabffba048" kind="function"><name>weighted_norm_sq_difference</name></member>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/elementwise.hpp" line="578" column="8"/>
+  </compounddef>
+</doxygen>

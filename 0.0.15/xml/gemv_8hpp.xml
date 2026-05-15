@@ -1,0 +1,470 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="gemv_8hpp" kind="file" language="C++">
+    <compoundname>gemv.hpp</compoundname>
+    <includes refid="copy_8hpp" local="no">batmat/linalg/copy.hpp</includes>
+    <includes refid="micro-kernels_2gemv_8hpp" local="no">batmat/linalg/micro-kernels/gemv.hpp</includes>
+    <includes refid="shift_8hpp" local="no">batmat/linalg/shift.hpp</includes>
+    <includes refid="simdify_8hpp" local="no">batmat/linalg/simdify.hpp</includes>
+    <includes refid="triangular_8hpp" local="no">batmat/linalg/triangular.hpp</includes>
+    <includes refid="uview_8hpp" local="no">batmat/linalg/uview.hpp</includes>
+    <includes refid="loop_8hpp" local="no">batmat/loop.hpp</includes>
+    <includes refid="storage_8hpp" local="no">batmat/matrix/storage.hpp</includes>
+    <includes local="no">guanaqo/trace.hpp</includes>
+    <incdepgraph>
+      <node id="14">
+        <label>batmat/assume.hpp</label>
+        <link refid="assume_8hpp"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/linalg/copy.hpp</label>
+        <link refid="copy_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/gemv.hpp</label>
+        <link refid="gemv_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+      </node>
+      <node id="41">
+        <label>batmat/linalg/micro-kernels/gemv.hpp</label>
+        <link refid="micro-kernels_2gemv_8hpp"/>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>batmat/linalg/shift.hpp</label>
+        <link refid="shift_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>batmat/linalg/simdify.hpp</label>
+        <link refid="simdify_8hpp"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="24">
+        <label>batmat/linalg/structure.hpp</label>
+        <link refid="structure_8hpp"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="26">
+        <label>batmat/linalg/triangular.hpp</label>
+        <link refid="triangular_8hpp"/>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+      </node>
+      <node id="27">
+        <label>batmat/linalg/uview.hpp</label>
+        <link refid="uview_8hpp"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+      </node>
+      <node id="28">
+        <label>batmat/loop.hpp</label>
+        <link refid="loop_8hpp"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+      </node>
+      <node id="31">
+        <label>batmat/lut.hpp</label>
+        <link refid="lut_8hpp"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>batmat/matrix/layout.hpp</label>
+        <link refid="layout_8hpp"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>batmat/matrix/matrix.hpp</label>
+        <link refid="matrix_8hpp"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>batmat/matrix/storage.hpp</label>
+        <link refid="storage_8hpp"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>batmat/matrix/view.hpp</label>
+        <link refid="view_8hpp"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="29">
+        <label>batmat/openmp.h</label>
+        <link refid="openmp_8h"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+      </node>
+      <node id="33">
+        <label>batmat/ops/rotate.hpp</label>
+        <link refid="rotate_8hpp"/>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+      </node>
+      <node id="35">
+        <label>batmat/ops/transpose.hpp</label>
+        <link refid="transpose_8hpp"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="37">
+        <label>generic.hpp</label>
+        <link refid="generic_8hpp"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="36">
+        <label>batmat/platform/platform.hpp</label>
+        <link refid="platform_8hpp"/>
+        <childnode refid="37" relation="include">
+        </childnode>
+      </node>
+      <node id="20">
+        <label>batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>batmat/unroll.h</label>
+        <link refid="unroll_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="39">
+        <label>algorithm</label>
+      </node>
+      <node id="15">
+        <label>batmat/config.hpp</label>
+      </node>
+      <node id="34">
+        <label>cassert</label>
+      </node>
+      <node id="40">
+        <label>concepts</label>
+      </node>
+      <node id="9">
+        <label>cstddef</label>
+      </node>
+      <node id="25">
+        <label>cstdint</label>
+      </node>
+      <node id="23">
+        <label>experimental/simd</label>
+      </node>
+      <node id="16">
+        <label>guanaqo/assume.hpp</label>
+      </node>
+      <node id="32">
+        <label>guanaqo/lut.hpp</label>
+      </node>
+      <node id="18">
+        <label>guanaqo/mat-view.hpp</label>
+      </node>
+      <node id="22">
+        <label>guanaqo/stringify.h</label>
+      </node>
+      <node id="38">
+        <label>guanaqo/trace.hpp</label>
+      </node>
+      <node id="10">
+        <label>memory</label>
+      </node>
+      <node id="11">
+        <label>new</label>
+      </node>
+      <node id="30">
+        <label>omp.h</label>
+      </node>
+      <node id="4">
+        <label>optional</label>
+      </node>
+      <node id="12">
+        <label>tuple</label>
+      </node>
+      <node id="5">
+        <label>type_traits</label>
+      </node>
+      <node id="19">
+        <label>utility</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg">batmat::linalg</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1detail">batmat::linalg::detail</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="copy_8hpp" kindref="compound">batmat/linalg/copy.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="micro-kernels_2gemv_8hpp" kindref="compound">batmat/linalg/micro-kernels/gemv.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="shift_8hpp" kindref="compound">batmat/linalg/shift.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="simdify_8hpp" kindref="compound">batmat/linalg/simdify.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="triangular_8hpp" kindref="compound">batmat/linalg/triangular.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="uview_8hpp" kindref="compound">batmat/linalg/uview.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="loop_8hpp" kindref="compound">batmat/loop.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="storage_8hpp" kindref="compound">batmat/matrix/storage.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;guanaqo/trace.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg" kindref="compound">batmat::linalg</ref><sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1detail" kindref="compound">detail</ref><sp/>{</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/>micro_kernels::gemv::KernelConfig<sp/>Conf<sp/>=<sp/>{},<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OA&gt;</highlight></codeline>
+<codeline lineno="17" refid="namespacebatmat_1_1linalg_1_1detail_1ab2140481ceabb6a2dbe49a62479b2d47" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1ab2140481ceabb6a2dbe49a62479b2d47" kindref="member">gemv</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OA&gt;</ref><sp/>A,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>B,<sp/>std::optional&lt;<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref>&gt;<sp/>C,</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi&gt;</ref><sp/>D)<sp/>{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__trace__perfetto_1gaa51e3bdc848c54b9290a36579d145375" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">GUANAQO_TRACE_LINALG</ref>(</highlight><highlight class="stringliteral">&quot;gemv&quot;</highlight><highlight class="normal">,<sp/>A.rows()<sp/>*<sp/>A.cols()<sp/>*<sp/>B.cols()<sp/>*<sp/>A.depth());</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Check<sp/>dimensions</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(!C<sp/>||<sp/>C-&gt;rows()<sp/>==<sp/>D.rows());</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(!C<sp/>||<sp/>C-&gt;cols()<sp/>==<sp/>D.cols());</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(A.rows()<sp/>==<sp/>D.rows());</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(A.cols()<sp/>==<sp/>B.rows());</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(B.cols()<sp/>==<sp/>D.cols());</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(B.cols()<sp/>==<sp/>1);</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>index_t<sp/>M<sp/>=<sp/>D.rows(),<sp/>K<sp/>=<sp/>A.cols();</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Degenerate<sp/>case</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(M<sp/>==<sp/>0)<sp/>[[unlikely]]</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(K<sp/>==<sp/>0)<sp/>[[unlikely]]<sp/>{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>https://github.com/llvm/llvm-project/issues/146272</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig" kindref="compound">detail::copy::CopyConfig</ref><sp/>rot{.rotate<sp/>=<sp/>Conf.rotate_C<sp/>-<sp/>Conf.rotate_D,</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.mask<sp/><sp/><sp/>=<sp/>Conf.mask_D};</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1FillConfig" kindref="compound">detail::copy::FillConfig</ref><sp/>msk{.mask<sp/>=<sp/>Conf.mask_D};</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(C)</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1ac74ffd0a7e0af8bcd39fb94b587e66b1" kindref="member">detail::copy::copy&lt;T, Abi, rot&gt;</ref>(*C,<sp/>D);</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a2734a86018fe0537b59c91e9f85c5fbb" kindref="member">detail::copy::fill&lt;T, Abi, msk&gt;</ref>(T{},<sp/>D);</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemv_1aafe5591645f17ff88569e8c9fd026e2a" kindref="member">micro_kernels::gemv::gemv_copy_register&lt;T, Abi, Conf, OA&gt;</ref>(A,<sp/>B,<sp/>C,<sp/>D);</highlight></codeline>
+<codeline lineno="44"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;<ref refid="conceptbatmat_1_1linalg_1_1shift__opt" kindref="compound">shift_opt</ref>...<sp/>Opts&gt;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig" kindref="compound">micro_kernels::gemv::KernelConfig</ref></highlight></codeline>
+<codeline lineno="48" refid="namespacebatmat_1_1linalg_1_1detail_1a8664a4b53357eef277b5bff5f06a9d04" refkind="member"><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1detail_1a8664a4b53357eef277b5bff5f06a9d04" kindref="member">apply_gemv_options</ref>(<ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig" kindref="compound">micro_kernels::gemv::KernelConfig</ref><sp/>conf,<sp/>Opts...)<sp/>{</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>s<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1ae3b515432262221f9e530afd77291b7c" kindref="member">shift_A&lt;Opts...&gt;</ref>)</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>conf.<ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig_1aa8e49a43c4f99211ea7f3393d2517355" kindref="member">shift_A</ref><sp/>=<sp/>*s;</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>s<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1a35af6f23e1e42037c92a7cdf3101ac9e" kindref="member">rotate_B&lt;Opts...&gt;</ref>)</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>conf.<ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig_1a53dbb90dae921f8e8419ba32a65526c5" kindref="member">rotate_B</ref><sp/>=<sp/>*s;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>s<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1a46cf975c68ece97777d8e4dfd6b1dadf" kindref="member">rotate_C&lt;Opts...&gt;</ref>)</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>conf.<ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig_1a99299a5578f652fcb29f9497fb979b81" kindref="member">rotate_C</ref><sp/>=<sp/>*s;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>s<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1ab04a87d2e13b965d6fe2684355159478" kindref="member">rotate_D&lt;Opts...&gt;</ref>)</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>conf.<ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig_1a431afc40aa9c0caba784c811cefc356b" kindref="member">rotate_D</ref><sp/>=<sp/>*s;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>s<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1a5f3d7bfa8cda00a0b262b6eac578e96e" kindref="member">mask_D&lt;Opts...&gt;</ref>)</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>conf.<ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig_1a293c6e5c7b33f0381f5931f04472e0ff" kindref="member">mask_D</ref><sp/>=<sp/>*s;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>conf;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>detail</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="64"><highlight class="comment">///<sp/>@addtogroup<sp/>topic-linalg</highlight></codeline>
+<codeline lineno="65"><highlight class="comment">///<sp/>@{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="67"><highlight class="comment">///<sp/>@name<sp/>Matrix-vector<sp/>multiplication<sp/>of<sp/>batches<sp/>of<sp/>matrices</highlight></codeline>
+<codeline lineno="68"><highlight class="comment">///<sp/>@{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="70"><highlight class="comment">///<sp/>d<sp/>=<sp/>A<sp/>b</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;simdifiable<sp/>VA,<sp/>simdifiable<sp/>VB,<sp/>simdifiable<sp/>VD,<sp/>shift_opt...<sp/>Opts&gt;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VA, VB, VD&gt;</ref></highlight></codeline>
+<codeline lineno="73" refid="group__topic-linalg_1ga8ce09a22e339c8a076415d047c23a5cd" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1ga8ce09a22e339c8a076415d047c23a5cd" kindref="member">gemv</ref>(VA<sp/>&amp;&amp;A,<sp/>VB<sp/>&amp;&amp;B,<sp/>VD<sp/>&amp;&amp;D,<sp/>Opts...<sp/>opts)<sp/>{</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>conf<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a8664a4b53357eef277b5bff5f06a9d04" kindref="member">detail::apply_gemv_options</ref>({.negate<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">},<sp/>opts...);</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/>std::optional&lt;</highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(<ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(D).as_const())&gt;<sp/>null;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1ab2140481ceabb6a2dbe49a62479b2d47" kindref="member">detail::gemv&lt;simdified_value_t&lt;VA&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VA&gt;</ref>,<sp/>conf&gt;(</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(B).as_const(),<sp/>null,<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(D));</highlight></codeline>
+<codeline lineno="78"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="80"><highlight class="comment">///<sp/>d<sp/>=<sp/>-A<sp/>b</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;simdifiable<sp/>VA,<sp/>simdifiable<sp/>VB,<sp/>simdifiable<sp/>VD,<sp/>shift_opt...<sp/>Opts&gt;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VA, VB, VD&gt;</ref></highlight></codeline>
+<codeline lineno="83" refid="group__topic-linalg_1gaabdf90658a0013e1858d377dcecf5d6f" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1gaabdf90658a0013e1858d377dcecf5d6f" kindref="member">gemv_neg</ref>(VA<sp/>&amp;&amp;A,<sp/>VB<sp/>&amp;&amp;B,<sp/>VD<sp/>&amp;&amp;D,<sp/>Opts...<sp/>opts)<sp/>{</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>conf<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a8664a4b53357eef277b5bff5f06a9d04" kindref="member">detail::apply_gemv_options</ref>({.negate<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">},<sp/>opts...);</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/>std::optional&lt;</highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(<ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(D).as_const())&gt;<sp/>null;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1ab2140481ceabb6a2dbe49a62479b2d47" kindref="member">detail::gemv&lt;simdified_value_t&lt;VA&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VA&gt;</ref>,<sp/>conf&gt;(</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(B).as_const(),<sp/>null,<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(D));</highlight></codeline>
+<codeline lineno="88"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="90"><highlight class="comment">///<sp/>d<sp/>=<sp/>c<sp/>+<sp/>A<sp/>b</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;simdifiable<sp/>VA,<sp/>simdifiable<sp/>VB,<sp/>simdifiable<sp/>VC,<sp/>simdifiable<sp/>VD,<sp/>shift_opt...<sp/>Opts&gt;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VA, VB, VC, VD&gt;</ref></highlight></codeline>
+<codeline lineno="93" refid="group__topic-linalg_1ga4d4c245f7f41a9e595292defaf3f55cf" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1ga4d4c245f7f41a9e595292defaf3f55cf" kindref="member">gemv_add</ref>(VA<sp/>&amp;&amp;A,<sp/>VB<sp/>&amp;&amp;B,<sp/>VC<sp/>&amp;&amp;C,<sp/>VD<sp/>&amp;&amp;D,<sp/>Opts...<sp/>opts)<sp/>{</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>conf<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a8664a4b53357eef277b5bff5f06a9d04" kindref="member">detail::apply_gemv_options</ref>({.negate<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">},<sp/>opts...);</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1ab2140481ceabb6a2dbe49a62479b2d47" kindref="member">detail::gemv&lt;simdified_value_t&lt;VA&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VA&gt;</ref>,<sp/>conf&gt;(</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(B).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(C).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(D));</highlight></codeline>
+<codeline lineno="97"><highlight class="normal">}</highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="98"><highlight class="comment">///<sp/>d<sp/>=<sp/>d<sp/>+<sp/>A<sp/>b</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;simdifiable<sp/>VA,<sp/>simdifiable<sp/>VB,<sp/>simdifiable<sp/>VD,<sp/>shift_opt...<sp/>Opts&gt;</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VA, VB, VD&gt;</ref></highlight></codeline>
+<codeline lineno="101" refid="group__topic-linalg_1ga7cfed7daaf31afb02d713f7ccd1481da" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1ga4d4c245f7f41a9e595292defaf3f55cf" kindref="member">gemv_add</ref>(VA<sp/>&amp;&amp;A,<sp/>VB<sp/>&amp;&amp;B,<sp/>VD<sp/>&amp;&amp;D,<sp/>Opts...<sp/>opts)<sp/>{</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__topic-linalg_1ga4d4c245f7f41a9e595292defaf3f55cf" kindref="member">gemv_add</ref>(A,<sp/>B,<sp/>D,<sp/>D,<sp/>opts...);</highlight></codeline>
+<codeline lineno="103"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="105"><highlight class="comment">///<sp/>d<sp/>=<sp/>c<sp/>-<sp/>A<sp/>b</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;simdifiable<sp/>VA,<sp/>simdifiable<sp/>VB,<sp/>simdifiable<sp/>VC,<sp/>simdifiable<sp/>VD,<sp/>shift_opt...<sp/>Opts&gt;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VA, VB, VC, VD&gt;</ref></highlight></codeline>
+<codeline lineno="108" refid="group__topic-linalg_1gac4246c2e6b61282811138d8232f9d737" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1gac4246c2e6b61282811138d8232f9d737" kindref="member">gemv_sub</ref>(VA<sp/>&amp;&amp;A,<sp/>VB<sp/>&amp;&amp;B,<sp/>VC<sp/>&amp;&amp;C,<sp/>VD<sp/>&amp;&amp;D,<sp/>Opts...<sp/>opts)<sp/>{</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>conf<sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a8664a4b53357eef277b5bff5f06a9d04" kindref="member">detail::apply_gemv_options</ref>({.negate<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">},<sp/>opts...);</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1ab2140481ceabb6a2dbe49a62479b2d47" kindref="member">detail::gemv&lt;simdified_value_t&lt;VA&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VA&gt;</ref>,<sp/>conf&gt;(</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(B).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(C).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(D));</highlight></codeline>
+<codeline lineno="112"><highlight class="normal">}</highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="113"><highlight class="comment">///<sp/>d<sp/>=<sp/>d<sp/>-<sp/>A<sp/>b</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;simdifiable<sp/>VA,<sp/>simdifiable<sp/>VB,<sp/>simdifiable<sp/>VD,<sp/>shift_opt...<sp/>Opts&gt;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VA, VB, VD&gt;</ref></highlight></codeline>
+<codeline lineno="116" refid="group__topic-linalg_1ga26163eb18f74d290e190d0a8d52ade6b" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1gac4246c2e6b61282811138d8232f9d737" kindref="member">gemv_sub</ref>(VA<sp/>&amp;&amp;A,<sp/>VB<sp/>&amp;&amp;B,<sp/>VD<sp/>&amp;&amp;D,<sp/>Opts...<sp/>opts)<sp/>{</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__topic-linalg_1gac4246c2e6b61282811138d8232f9d737" kindref="member">gemv_sub</ref>(A,<sp/>B,<sp/>D,<sp/>D,<sp/>opts...);</highlight></codeline>
+<codeline lineno="118"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="120"><highlight class="comment">///<sp/>@}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="122"><highlight class="comment">///<sp/>@}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::linalg</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/linalg/gemv.hpp"/>
+  </compounddef>
+</doxygen>
