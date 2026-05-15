@@ -8,6 +8,7 @@
 #include <guanaqo/print.hpp>
 
 #include <Eigen/Core>
+#include <limits>
 
 /// @file
 /// @see https://google.github.io/googletest/reference/matchers.html#defining-matchers
@@ -80,8 +81,11 @@ MATCHER_P2(EigenAlmostEqual, expect, atol, "") {
 }
 
 MATCHER_P2(EigenAlmostEqualRel, expect, rtol, "") {
-    auto diff     = arg - expect;
-    auto diffnorm = diff.cwiseQuotient(expect).template lpNorm<Eigen::Infinity>();
+    using Scalar         = typename std::decay_t<decltype(arg)>::Scalar;
+    constexpr Scalar eps = std::numeric_limits<Scalar>::min();
+    auto diff            = (arg - expect).cwiseAbs();
+    auto scale           = arg.cwiseAbs().cwiseMax(expect.cwiseAbs()).cwiseMax(eps);
+    auto diffnorm        = diff.cwiseQuotient(scale).template lpNorm<Eigen::Infinity>();
     if (auto *os = result_listener->stream()) {
         if (std::max(diff.rows(), diff.cols()) <= 16) {
             *os << "\nactual = ...\n";
