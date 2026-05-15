@@ -9,9 +9,7 @@
 
 namespace batmat::linalg::micro_kernels::geqrf {
 
-struct BATMAT_LINALG_GEQRF_EXPORT KernelConfig {
-    MatrixStructure struc = MatrixStructure::UpperTriangular;
-};
+struct BATMAT_LINALG_GEQRF_EXPORT KernelConfig {};
 
 template <class T, class Abi>
 inline constexpr index_t SizeR = gemm::RowsReg<T, Abi>; // TODO
@@ -26,11 +24,11 @@ template <class T, class Abi, KernelConfig Conf, index_t R, StorageOrder OA, Sto
 void geqrf_full_microkernel(index_t k, uview<const T, Abi, OA> A, uview<T, Abi, OD> D) noexcept;
 
 template <class T, class Abi, KernelConfig Conf, index_t R, index_t S, StorageOrder OA,
-          StorageOrder OD>
+          StorageOrder OD, StorageOrder OB>
 void geqrf_tail_microkernel(index_t k, bool transposed,
                             triangular_accessor<const T, Abi, SizeR<T, Abi>> W,
                             uview<const T, Abi, OA> A, uview<T, Abi, OD> D,
-                            uview<const T, Abi, OD> B) noexcept;
+                            uview<const T, Abi, OB> B) noexcept;
 
 // Helper function to compute size of the storage for the matrix W (part of the block
 // Householder representation).
@@ -44,12 +42,11 @@ constexpr std::pair<index_t, index_t> geqrf_W_size(view<T, Abi, OA> A) {
 // Low-level register-blocked routines
 template <class T, class Abi, KernelConfig Conf = {}, StorageOrder OA = StorageOrder::ColMajor,
           StorageOrder OD = StorageOrder::ColMajor>
-BATMAT_LINALG_GEQRF_EXPORT void geqrf_copy_register(view<const T, Abi, OA> A,
-                                                    view<T, Abi, OD> D) noexcept;
-
-template <class T, class Abi, KernelConfig Conf = {}, StorageOrder OA = StorageOrder::ColMajor,
-          StorageOrder OD = StorageOrder::ColMajor>
 BATMAT_LINALG_GEQRF_EXPORT void geqrf_copy_register(view<const T, Abi, OA> A, view<T, Abi, OD> D,
                                                     view<T, Abi> W) noexcept;
+
+template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OD, StorageOrder OB>
+void geqrf_apply_register(view<const T, Abi, OA> A, view<T, Abi, OD> D, view<const T, Abi, OB> B,
+                          view<const T, Abi> W, bool transposed) noexcept;
 
 } // namespace batmat::linalg::micro_kernels::geqrf

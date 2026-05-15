@@ -86,8 +86,11 @@ function(batmat_codegen_micro_kernels tgt headers_target)
     endmacro()
 
     macro(instantiate_geqrf out T Abi Conf OA OD)
-        string(APPEND ${out} "template BATMAT_LINALG_GEQRF_EXPORT void geqrf_copy_register<${T}, ${Abi}, ${Conf}, ${OA}, ${OD}>(view<const ${T}, ${Abi}, ${OA}> A, view<${T}, ${Abi}, ${OD}> D) noexcept;\n")
-        # string(APPEND ${out} "template BATMAT_LINALG_GEQRF_EXPORT void geqrf_copy_register<${T}, ${Abi}, ${Conf}, ${OA}, ${OD}>(view<const ${T}, ${Abi}, ${OA}> A, view<${T}, ${Abi}, ${OD}> D, view<${T}, ${Abi}> W) noexcept;\n")  # TODO
+        string(APPEND ${out} "template BATMAT_LINALG_GEQRF_EXPORT void geqrf_copy_register<${T}, ${Abi}, ${Conf}, ${OA}, ${OD}>(view<const ${T}, ${Abi}, ${OA}> A, view<${T}, ${Abi}, ${OD}> D, view<${T}, ${Abi}> W) noexcept;\n")
+    endmacro()
+
+    macro(instantiate_geqrf_apply out T Abi Conf OA OD OB)
+        string(APPEND ${out} "template BATMAT_LINALG_GEQRF_EXPORT void geqrf_apply_register<${T}, ${Abi}, ${Conf}, ${OA}, ${OD}, ${OB}>(view<const ${T}, ${Abi}, ${OA}> A, view<${T}, ${Abi}, ${OD}> D, view<const ${T}, ${Abi}, ${OB}> B, view<const ${T}, ${Abi}> W, bool transposed) noexcept;\n")
     endmacro()
 
     batmat_add_micro_kernels("gemm")
@@ -418,14 +421,16 @@ function(batmat_codegen_micro_kernels tgt headers_target)
                     foreach(OD "ColMajor" "RowMajor")
                         set(Conf "${struc_config}")
                         instantiate_geqrf(instantiations "${DType}" "${Abi}" "{${Conf}}" "${OA}" "${OD}")
+                        foreach(OB "ColMajor" "RowMajor")
+                            instantiate_geqrf_apply(instantiations "${DType}" "${Abi}" "{${Conf}}" "${OA}" "${OD}" "${OB}")
+                        endforeach()
                     endforeach()
                 endforeach()
                 configure_file("${CMAKE_CURRENT_FUNCTION_LIST_DIR}/inst.cpp.in" "${OUT_DIR}/${name}-${DType_}-${VL}.cpp" @ONLY)
                 target_sources(${tgt}-micro-kernels-${op} PRIVATE "${OUT_DIR}/${name}-${DType_}-${VL}.cpp")
                 set_source_files_properties("${OUT_DIR}/${name}-${DType_}-${VL}.cpp" PROPERTIES UNITY_GROUP "${VL}-${DType_}-geqrf")
             endmacro()
-            # batmat_instantiate_geqrf("geqrf-l" ".struc=LowerTriangular")  # TODO
-            batmat_instantiate_geqrf("geqrf-u" ".struc=UpperTriangular")
+            batmat_instantiate_geqrf("geqrf" "")
 
         endforeach()
     endforeach()

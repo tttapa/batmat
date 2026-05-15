@@ -209,6 +209,14 @@ constexpr FlopCount geqrf(index_t m, index_t n) {
 }
 // [flops-geqrf]
 
+/// Apply the Q factor of a QR factorization of an m×n matrix with m≥n to an m×k matrix.
+/// @implementation{flops-geqrf-apply}
+// [flops-geqrf-apply]
+constexpr FlopCount geqrf_apply(index_t m, index_t n, index_t k) {
+    return {}; // TODO
+}
+// [flops-geqrf-apply]
+
 /// @}
 
 } // namespace batmat::linalg::flops
