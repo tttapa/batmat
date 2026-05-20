@@ -6,12 +6,14 @@
 #include <guanaqo/mat-view.hpp>
 #include <random>
 
-using namespace batmat::linalg;
 using batmat::index_t;
 using batmat::real_t;
+using batmat::linalg::StorageOrder;
+namespace flops = batmat::linalg::flops;
 
 template <class Abi, StorageOrder OA = StorageOrder::ColMajor, StorageOrder OB = OA>
-void trtri(benchmark::State &state) {
+constexpr auto trtri = [](benchmark::State &state) {
+    using namespace batmat::linalg;
     std::mt19937 rng{12345};
     std::uniform_real_distribution<real_t> uni{-1, 1};
 
@@ -30,13 +32,48 @@ void trtri(benchmark::State &state) {
                 state.ResumeTiming();
                 guanaqo::blas::xtrtri_LN(D(l));
             } else {
-                trtri(tril(A.batch(l)), tril(D.batch(l)));
+                batmat::linalg::trtri(tril(A.batch(l)), tril(D.batch(l)));
             }
     auto flop_cnt                 = static_cast<double>(d * total(flops::trtri(A.rows())));
     state.counters["GFLOP count"] = {1e-9 * flop_cnt};
     state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
     state.counters["depth"]  = {static_cast<double>(d)};
-}
+};
+
+#ifdef BATMAT_WITH_EIGEN
+#include <Eigen/Dense>
+
+template <StorageOrder OA, StorageOrder OB>
+constexpr auto trtri<struct eigen, OA, OB> = [](benchmark::State &state) {
+    constexpr auto OrderA = OA == StorageOrder::ColMajor ? Eigen::ColMajor : Eigen::RowMajor;
+    constexpr auto OrderB = OB == StorageOrder::ColMajor ? Eigen::ColMajor : Eigen::RowMajor;
+    using EMatA           = Eigen::Matrix<real_t, Eigen::Dynamic, Eigen::Dynamic, OrderA>;
+    using EMatB           = Eigen::Matrix<real_t, Eigen::Dynamic, Eigen::Dynamic, OrderB>;
+    std::mt19937 rng{12345};
+    std::uniform_real_distribution<real_t> uni{-1, 1};
+
+    const index_t d = BATMAT_BENCHMARK_DEPTH;
+    const auto n    = static_cast<index_t>(state.range(0));
+    std::vector<EMatA> A;
+    std::vector<EMatB> B;
+    for (index_t l = 0; l < d; ++l) {
+        auto &Al = A.emplace_back(n, n);
+        std::ranges::generate(Al.reshaped(), [&] { return uni(rng); });
+        Al += (10 * static_cast<real_t>(n)) * EMatA::Identity(n, n);
+        B.emplace_back(n, n);
+    }
+    for (auto _ : state)
+        for (index_t l = 0; l < d; ++l) {
+            B[l].noalias() =
+                A[l].template triangularView<Eigen::Lower>().solve(EMatA::Identity(n, n));
+        }
+    auto flop_cnt                 = static_cast<double>(d * total(flops::trtri(n)));
+    state.counters["GFLOP count"] = {1e-9 * flop_cnt};
+    state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
+    state.counters["depth"]  = {static_cast<double>(d)};
+};
+
+#endif
 
 using enum StorageOrder;
 #define BM_RANGES()                                                                                \
@@ -58,3 +95,7 @@ BENCHMARK(trtri<simd8, ColMajor>)->BM_RANGES();
 BENCHMARK(trtri<simd4, RowMajor>)->BM_RANGES();
 BENCHMARK(trtri<simd4, ColMajor>)->BM_RANGES();
 BENCHMARK(trtri<scalar, ColMajor>)->BM_RANGES();
+#ifdef BATMAT_WITH_EIGEN
+BENCHMARK(trtri<eigen, RowMajor>)->BM_RANGES();
+BENCHMARK(trtri<eigen, ColMajor>)->BM_RANGES();
+#endif

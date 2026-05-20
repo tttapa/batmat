@@ -64,6 +64,39 @@ constexpr auto potrf<struct blasfeo, OA> = [](benchmark::State &state) {
 };
 #endif
 
+#ifdef BATMAT_WITH_EIGEN
+#include <Eigen/Cholesky>
+#include <Eigen/Dense>
+
+template <StorageOrder OA>
+constexpr auto potrf<struct eigen, OA> = [](benchmark::State &state) {
+    constexpr auto Order = OA == StorageOrder::ColMajor ? Eigen::ColMajor : Eigen::RowMajor;
+    using EMat           = Eigen::Matrix<real_t, Eigen::Dynamic, Eigen::Dynamic, Order>;
+    std::mt19937 rng{12345};
+    std::uniform_real_distribution<real_t> uni{-1, 1};
+
+    const index_t d = BATMAT_BENCHMARK_DEPTH;
+    const auto n    = static_cast<index_t>(state.range(0));
+    std::vector<EMat> A;
+    std::vector<Eigen::LLT<EMat, Eigen::Lower>> T;
+    for (index_t l = 0; l < d; ++l) {
+        auto &Al = A.emplace_back(n, n);
+        std::ranges::generate(Al.reshaped(), [&] { return uni(rng); });
+        Al += (10 * static_cast<real_t>(n)) * EMat::Identity(n, n);
+        T.emplace_back(n);
+    }
+    for (auto _ : state)
+        for (index_t l = 0; l < d; ++l) {
+            T[l].compute(A[l]);
+        }
+    auto flop_cnt                 = static_cast<double>(d * total(flops::potrf(n, n)));
+    state.counters["GFLOP count"] = {1e-9 * flop_cnt};
+    state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
+    state.counters["depth"]  = {static_cast<double>(d)};
+};
+
+#endif
+
 using enum StorageOrder;
 #define BM_RANGES()                                                                                \
     DenseRange(1, 127, 1)                                                                          \
@@ -86,4 +119,8 @@ BENCHMARK(potrf<simd4, RowMajor>)->BM_RANGES();
 BENCHMARK(potrf<scalar, ColMajor>)->BM_RANGES();
 #ifdef BATMAT_WITH_BLASFEO
 BENCHMARK(potrf<blasfeo, ColMajor>)->BM_RANGES();
+#endif
+#ifdef BATMAT_WITH_EIGEN
+BENCHMARK(potrf<eigen, ColMajor>)->BM_RANGES();
+BENCHMARK(potrf<eigen, RowMajor>)->BM_RANGES();
 #endif

@@ -125,6 +125,8 @@ def benchmark_label(func_name: str, args: tuple[str]) -> str:
         abi_label = f"{impl} {isa_str}"
     elif args[0] == "blasfeo":
         abi_label = f"BLASFEO {isa_str}"
+    elif args[0] == "eigen":
+        abi_label = f"Eigen {isa_str}"
     elif args[0] == "simd4":
         abi_label = f"batmat {isa_str} (4)"
     elif args[0] == "simd8":
@@ -161,6 +163,8 @@ def benchmark_label(func_name: str, args: tuple[str]) -> str:
 def benchmark_color(args: tuple[str], label: str) -> str:
     if args[0] == "blasfeo":
         return "tab:pink"
+    elif args[0] == "eigen":
+        return "tab:cyan"
     elif args[0] == "simd4":
         if "no tiling" in label:
             return "tab:blue"

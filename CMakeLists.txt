@@ -28,6 +28,8 @@ option(BATMAT_WITH_BENCHMARKS
     "Build the benchmarks" Off)
 cmake_dependent_option(BATMAT_WITH_BLASFEO
     "Enable the comparisons to BLASFEO in the benchmarks" Off BATMAT_WITH_BENCHMARKS Off)
+cmake_dependent_option(BATMAT_WITH_EIGEN
+    "Enable the comparisons to Eigen in the benchmarks" Off BATMAT_WITH_BENCHMARKS Off)
 # Developer options
 option(BATMAT_ONLY_DOCS
     "Only build the documentation" Off)

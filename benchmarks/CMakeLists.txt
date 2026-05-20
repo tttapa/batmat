@@ -5,23 +5,31 @@ find_package(Python3 COMPONENTS Interpreter)
 if (BATMAT_WITH_BLASFEO)
     find_package(blasfeo REQUIRED)
 endif()
+if (BATMAT_WITH_EIGEN)
+    find_package(Eigen3 REQUIRED)
+endif()
 
 set(BATMAT_BENCHMARK_DEPTH 8 CACHE STRING "Batch depth used in benchmarks")
 
 add_compile_definitions(BATMAT_BENCHMARK_DEPTH=${BATMAT_BENCHMARK_DEPTH})
 add_library(benchmark-main STATIC "benchmark-main.cpp")
-target_link_libraries(benchmark-main PUBLIC batmat::batmat benchmark::benchmark)
+target_link_libraries(benchmark-main PUBLIC batmat::batmat benchmark::benchmark guanaqo::blas
+                                     PRIVATE batmat::warnings)
+if (BATMAT_WITH_BLASFEO)
+    target_compile_definitions(benchmark-main PUBLIC BATMAT_WITH_BLASFEO)
+    target_link_libraries(benchmark-main PUBLIC blasfeo)
+    target_include_directories(benchmark-main PUBLIC include)
+endif()
+if (BATMAT_WITH_EIGEN)
+    target_compile_definitions(benchmark-main PUBLIC BATMAT_WITH_EIGEN)
+    target_link_libraries(benchmark-main PUBLIC Eigen3::Eigen)
+endif()
 add_custom_target(run-benchmarks)
 
 function(setup_benchmark_target name)
     set(target_name benchmark-${name})
     add_executable(${target_name} "${name}.cpp")
-    target_link_libraries(${target_name} PRIVATE benchmark-main guanaqo::blas batmat::warnings)
-    if (BATMAT_WITH_BLASFEO)
-        target_compile_definitions(${target_name} PRIVATE BATMAT_WITH_BLASFEO)
-        target_link_libraries(${target_name} PRIVATE blasfeo)
-        target_include_directories(${target_name} PRIVATE include)
-    endif()
+    target_link_libraries(${target_name} PRIVATE benchmark-main batmat::warnings)
     add_custom_command(
         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/results/${target_name}.json
         COMMAND ${CMAKE_COMMAND} -E make_directory

@@ -26,6 +26,7 @@ class BatmatRecipe(ConanFile):
         "with_cpu_time": False,
         "with_gsi_hpc_simd": False,
         "with_blasfeo": False,
+        "with_eigen": True,
     }
     options = {
         "shared": [True, False],
@@ -73,9 +74,12 @@ class BatmatRecipe(ConanFile):
             self.requires("gsi-hpc-simd/tttapa.20250625", transitive_headers=True)
         if self.options.get_safe("with_blasfeo"):
             self.requires("blasfeo/tttapa.20260119")
+        if self.options.get_safe("with_eigen"):
+            self.requires("eigen/[~5.0]")
 
     def build_requirements(self):
-        self.test_requires("eigen/[~5.0]")
+        if not self.options.get_safe("with_eigen"):
+            self.test_requires("eigen/[~5.0]")
         self.test_requires("gtest/1.17.0")
         self.tool_requires("cmake/[>=3.24 <5]")
 
@@ -98,6 +102,12 @@ class BatmatRecipe(ConanFile):
             self.options.vector_lengths_float = "1,4,8"
 
     def configure(self):
+        # Blasfeo is only used in the benchmarks
+        if not self.options.get_safe("with_benchmarks"):
+            self.options.rm_safe("with_blasfeo")
+        # Eigen is only optional in the benchmarks
+        if not self.options.get_safe("with_benchmarks"):
+            self.options.rm_safe("with_eigen")
         if self.options.get_safe("with_benchmarks"):
             self.options["guanaqo/*"].with_blas = True
 

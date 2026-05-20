@@ -78,6 +78,45 @@ constexpr auto gemm<struct blasfeo, OA, OB> = [](benchmark::State &state) {
 };
 #endif
 
+#ifdef BATMAT_WITH_EIGEN
+#include <Eigen/Dense>
+#include <Eigen/QR>
+
+template <StorageOrder OA, StorageOrder OB>
+constexpr auto gemm<struct eigen, OA, OB> = [](benchmark::State &state) {
+    constexpr auto OrderA = OA == StorageOrder::ColMajor ? Eigen::ColMajor : Eigen::RowMajor;
+    constexpr auto OrderB = OB == StorageOrder::ColMajor ? Eigen::ColMajor : Eigen::RowMajor;
+    constexpr auto OrderC = Eigen::ColMajor;
+    using EMatA           = Eigen::Matrix<real_t, Eigen::Dynamic, Eigen::Dynamic, OrderA>;
+    using EMatB           = Eigen::Matrix<real_t, Eigen::Dynamic, Eigen::Dynamic, OrderB>;
+    using EMatC           = Eigen::Matrix<real_t, Eigen::Dynamic, Eigen::Dynamic, OrderC>;
+    std::mt19937 rng{12345};
+    std::uniform_real_distribution<real_t> uni{-1, 1};
+
+    const index_t d = BATMAT_BENCHMARK_DEPTH;
+    const auto n    = static_cast<index_t>(state.range(0));
+    std::vector<EMatA> A;
+    std::vector<EMatB> B;
+    std::vector<EMatC> C;
+    for (index_t l = 0; l < d; ++l) {
+        auto &Al = A.emplace_back(n, n);
+        std::ranges::generate(Al.reshaped(), [&] { return uni(rng); });
+        auto &Bl = B.emplace_back(n, n);
+        std::ranges::generate(Bl.reshaped(), [&] { return uni(rng); });
+        C.emplace_back(n, n);
+    }
+    for (auto _ : state)
+        for (index_t l = 0; l < d; ++l) {
+            C[l].noalias() = A[l] * B[l];
+        }
+    auto flop_cnt                 = static_cast<double>(d * total(flops::gemm(n, n, n)));
+    state.counters["GFLOP count"] = {1e-9 * flop_cnt};
+    state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
+    state.counters["depth"]  = {static_cast<double>(d)};
+};
+
+#endif
+
 using enum StorageOrder;
 using enum PackingSelector;
 #define BM_RANGES()                                                                                \
@@ -133,6 +172,13 @@ BENCHMARK(gemm<blasfeo, RowMajor, ColMajor>)->BM_RANGES();
 BENCHMARK(gemm<blasfeo, RowMajor, RowMajor>)->BM_RANGES();
 BENCHMARK(gemm<blasfeo, ColMajor, ColMajor>)->BM_RANGES();
 BENCHMARK(gemm<blasfeo, ColMajor, RowMajor>)->BM_RANGES();
+#endif
+
+#ifdef BATMAT_WITH_EIGEN
+BENCHMARK(gemm<eigen, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(gemm<eigen, RowMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(gemm<eigen, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(gemm<eigen, ColMajor, RowMajor>)->BM_RANGES();
 #endif
 
 #if 0
