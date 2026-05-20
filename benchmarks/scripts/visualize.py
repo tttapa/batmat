@@ -245,6 +245,10 @@ separate_figs = {
         ("RowMajor",): "\\textsc{geqrf} $D_r = \\mathrm{QR}(A_r)$",
         ("ColMajor",): "\\textsc{geqrf} $D_c = \\mathrm{QR}(A_c)$",
     },
+    "sytrd": {
+        ("RowMajor",): "\\textsc{sytrd} $D_r = \\mathrm{tridiag}(A_r)$",
+        ("ColMajor",): "\\textsc{sytrd} $D_c = \\mathrm{tridiag}(A_c)$",
+    },
     "hyh": {
         # ("RowMajor", "ColMajor"): "Hyhound $(\\tilde L_r \\; 0) = (L_r \\; A_c) \\breve Q$",
         ("ColMajor", "ColMajor"): "Hyhound $(\\tilde L_c \\; 0) = (L_c \\; A_c) \\breve Q$",

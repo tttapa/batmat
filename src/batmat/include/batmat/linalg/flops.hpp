@@ -223,6 +223,19 @@ constexpr FlopCount geqrf_apply(index_t m, index_t n, index_t k) {
 }
 // [flops-geqrf-apply]
 
+/// Symmetric tridiagonalization of an m×m matrix.
+/// @implementation{flops-sytrd}
+// [flops-sytrd]
+constexpr FlopCount sytrd(index_t m) {
+    // TODO: fix these counts
+    return {.fma  = m * m * m, // TODO
+            .mul  = 0,         // TODO
+            .add  = 0,         // TODO
+            .div  = 2 * m,
+            .sqrt = m};
+}
+// [flops-sytrd]
+
 /// @}
 
 } // namespace batmat::linalg::flops
