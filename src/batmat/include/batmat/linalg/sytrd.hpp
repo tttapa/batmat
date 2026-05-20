@@ -26,8 +26,11 @@ void sytrd(view<T, Abi, OD> D, view<T, Abi> W, view<T, Abi> Y) {
     [[maybe_unused]] const auto fc = flops::sytrd(M);
     GUANAQO_TRACE_LINALG("sytrd", total(fc) * D.depth());
     // Degenerate case
-    if (M < 3) [[unlikely]]
-        return; // TODO: store W if needed
+    if (M < 3) [[unlikely]] {
+        if (W.rows() > 0 && W.cols() > 0)
+            W.set_constant(T{}); // identity
+        return;
+    }
     return micro_kernels::sytrd::sytrd_register<T, Abi, Conf>(D, W, Y);
 }
 
@@ -36,6 +39,8 @@ template <class T, class Abi, micro_kernels::geqrf::KernelConfig Conf, StorageOr
 void sytrd_apply(view<const T, Abi, OA> A, view<T, Abi, OD> D, view<const T, Abi, OB> B,
                  view<const T, Abi> W, bool transposed) {
     const index_t k = A.rows();
+    if (k == 0)
+        return;
     if (A.data() != D.data())
         linalg::copy(A.top_rows(1), D.top_rows(1));
     geqrf_apply<T, Abi, Conf>(A.bottom_rows(k - 1), D.bottom_rows(k - 1),
