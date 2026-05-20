@@ -34,7 +34,7 @@ void geqrf(view<const T, Abi, OA> A, view<T, Abi, OD> D, view<T, Abi> W) {
 template <class T, class Abi, micro_kernels::geqrf::KernelConfig Conf, StorageOrder OA,
           StorageOrder OD, StorageOrder OB>
 void geqrf_apply(view<const T, Abi, OA> A, view<T, Abi, OD> D, view<const T, Abi, OB> B,
-                 view<const T, Abi> W, bool transposed) {
+                 view<const T, Abi> W, bool transposed, bool reversed) {
     // Check dimensions
     BATMAT_ASSERT(A.rows() == D.rows());
     BATMAT_ASSERT(A.cols() == D.cols());
@@ -50,7 +50,8 @@ void geqrf_apply(view<const T, Abi, OA> A, view<T, Abi, OD> D, view<const T, Abi
     if (M == 0 || N == 0 || K == 0) [[unlikely]]
         return;
 
-    return micro_kernels::geqrf::geqrf_apply_register<T, Abi, Conf>(A, D, B, W, transposed);
+    return micro_kernels::geqrf::geqrf_apply_register<T, Abi, Conf>(A, D, B, W, transposed,
+                                                                    reversed);
 }
 } // namespace detail
 
@@ -90,8 +91,8 @@ template <simdifiable VA, simdifiable VD, simdifiable VB, simdifiable VW>
     requires simdify_compatible<VA, VD, VB, VW>
 void geqrf_apply(VA &&A, VD &&D, VB &&B, VW &&W, bool transposed = false) {
     detail::geqrf_apply<simdified_value_t<VD>, simdified_abi_t<VD>, {}>(
-        simdify(A).as_const(), simdify(D), simdify(B).as_const(), simdify(W).as_const(),
-        transposed);
+        simdify(A).as_const(), simdify(D), simdify(B).as_const(), simdify(W).as_const(), transposed,
+        false);
 }
 
 /// Apply the Q factor from @ref geqrf (represented by @p B and @p W) to a matrix @p D, overwriting
@@ -100,8 +101,8 @@ template <simdifiable VD, simdifiable VB, simdifiable VW>
     requires simdify_compatible<VD, VB, VW>
 void geqrf_apply(VD &&D, VB &&B, VW &&W, bool transposed = false) {
     detail::geqrf_apply<simdified_value_t<VD>, simdified_abi_t<VD>, {}>(
-        simdify(D).as_const(), simdify(D), simdify(B).as_const(), simdify(W).as_const(),
-        transposed);
+        simdify(D).as_const(), simdify(D), simdify(B).as_const(), simdify(W).as_const(), transposed,
+        false);
 }
 
 /// Get the size of the storage for the matrix W returned by

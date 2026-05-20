@@ -62,7 +62,7 @@ geqrf_diag_microkernel(index_t k, triangular_accessor<T, Abi, SizeR<T, Abi>> W,
         // Energy condition and Householder coefficients
         const simd ãjj = copysign(sqrt(bb[j]), aa[j]), β = aa[j] + ãjj;
         simd inv_τ = β / ãjj, inv_β = simd{1} / β;
-        D.store(ãjj, j, j);
+        D.store(-ãjj, j, j);
         // Save block Householder matrix W
         UNROLL_FOR (index_t i = 0; i < j; ++i)
             bb[i] = bb[i] * inv_β + aa[i];
@@ -72,7 +72,7 @@ geqrf_diag_microkernel(index_t k, triangular_accessor<T, Abi, SizeR<T, Abi>> W,
         // Replace row j of A by R (and replace bb[j+1:] with w)
         UNROLL_FOR (index_t i = j + 1; i < R; ++i) {
             bb[i] = (aa[i] + bb[i] * inv_β) * inv_τ; // w
-            D.store(bb[i] - aa[i], j, i);            // R[j, i]
+            D.store(aa[i] - bb[i], j, i);            // R[j, i]
         }
         // Update trailing part of A
         for (index_t l = j + 1; l < k; ++l) {
@@ -116,11 +116,11 @@ template <class T, class Abi, KernelConfig Conf, index_t R, StorageOrder OA, Sto
         // Energy condition and Householder coefficients
         const simd ãjj = copysign(sqrt(bb[j]), aa[j]), β = aa[j] + ãjj;
         simd inv_τ = β / ãjj, inv_β = simd{1} / β;
-        D.store(ãjj, j, j);
+        D.store(-ãjj, j, j);
         // Replace row j of A by R (and replace bb[j+1:] with w)
         UNROLL_FOR (index_t i = j + 1; i < R; ++i) {
             bb[i] = (aa[i] + bb[i] * inv_β) * inv_τ; // w
-            D.store(bb[i] - aa[i], j, i);            // R[j, i]
+            D.store(aa[i] - bb[i], j, i);            // R[j, i]
         }
         // Update trailing part of A
         for (index_t l = j + 1; l < k; ++l) {
@@ -138,7 +138,7 @@ template <class T, class Abi, KernelConfig Conf, index_t R, StorageOrder OA, Sto
 
 // Householder vectors are stored in the strict lower triangle of B, with the upper triangle
 // implicitly equal to the identity.
-// The matrix W completes the block Householder representation Q = BW⁻¹Bᵀ - I. The diagonal of W
+// The matrix W completes the block Householder representation Q = I - BW⁻¹Bᵀ. The diagonal of W
 // is already inverted to enable efficient application of W⁻¹.
 // B = [ 1   0   0   ... ]
 //     [ b11 1   0   ... ]
@@ -190,16 +190,16 @@ template <class T, class Abi, KernelConfig Conf, index_t R, index_t S, StorageOr
                 V[j][i] *= W.load(j, j); // diagonal already inverted
             }
 
-    // Update A = B V - A
+    // Update A = A - B V
     simd Bl[R];
     // Top R rows of B
     UNROLL_FOR (index_t l = 0; l < R; ++l) {
         UNROLL_FOR (index_t j = 0; j < l; ++j)
             Bl[j] = B.load(l, j);
         UNROLL_FOR (index_t i = 0; i < S; ++i) {
-            simd Dli = V[l][i] - A.load(l, i);
+            simd Dli = A.load(l, i) - V[l][i];
             UNROLL_FOR (index_t j = 0; j < l; ++j)
-                Dli += V[j][i] * Bl[j];
+                Dli -= V[j][i] * Bl[j];
             D.store(Dli, l, i);
         }
     }
@@ -208,9 +208,9 @@ template <class T, class Abi, KernelConfig Conf, index_t R, index_t S, StorageOr
         UNROLL_FOR (index_t j = 0; j < R; ++j)
             Bl[j] = B.load(l, j);
         UNROLL_FOR (index_t i = 0; i < S; ++i) {
-            simd Dli = -A.load(l, i);
+            simd Dli = A.load(l, i);
             UNROLL_FOR (index_t j = 0; j < R; ++j)
-                Dli += V[j][i] * Bl[j];
+                Dli -= V[j][i] * Bl[j];
             D.store(Dli, l, i);
         }
     }
@@ -322,7 +322,7 @@ void geqrf_copy_register(const view<const T, Abi, OA> A, const view<T, Abi, OD> 
 template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OD, StorageOrder OB>
 void geqrf_apply_register(const view<const T, Abi, OA> A, const view<T, Abi, OD> D,
                           const view<const T, Abi, OB> B, const view<const T, Abi> W,
-                          bool transposed) noexcept {
+                          bool transposed, bool reversed) noexcept {
     const index_t k = A.rows();
     BATMAT_ASSUME(k > 0);
     BATMAT_ASSUME(A.rows() == D.rows());
@@ -340,10 +340,11 @@ void geqrf_apply_register(const view<const T, Abi, OA> A, const view<T, Abi, OD>
     const uview<const T, Abi, StorageOrder::ColMajor> W_ = W;
 
     // Process all diagonal blocks (in multiples of R, except the last).
+    const bool forward = transposed ^ reversed;
     foreach_chunked_merged(
         0, B.cols(), R,
         [&](index_t j, auto nj) {
-            const bool first = transposed ? j == 0 : j + nj >= B.cols();
+            const bool first = forward ? j == 0 : j + nj >= B.cols();
             static constexpr index_constant<SizeS<T, Abi>> S;
             // Part of A corresponding to this diagonal block
             auto Bjj = B_.block(j, j);
@@ -367,7 +368,7 @@ void geqrf_apply_register(const view<const T, Abi, OA> A, const view<T, Abi, OD>
                 },
                 LoopDir::Backward); // TODO: decide on order
         },
-        transposed ? LoopDir::Forward : LoopDir::Backward);
+        forward ? LoopDir::Forward : LoopDir::Backward);
 }
 
 } // namespace batmat::linalg::micro_kernels::geqrf

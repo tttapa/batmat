@@ -46,7 +46,8 @@ BATMAT_LINALG_GEQRF_EXPORT void geqrf_copy_register(view<const T, Abi, OA> A, vi
                                                     view<T, Abi> W) noexcept;
 
 template <class T, class Abi, KernelConfig Conf, StorageOrder OA, StorageOrder OD, StorageOrder OB>
-void geqrf_apply_register(view<const T, Abi, OA> A, view<T, Abi, OD> D, view<const T, Abi, OB> B,
-                          view<const T, Abi> W, bool transposed) noexcept;
+BATMAT_LINALG_GEQRF_EXPORT void geqrf_apply_register(view<const T, Abi, OA> A, view<T, Abi, OD> D,
+                                                     view<const T, Abi, OB> B, view<const T, Abi> W,
+                                                     bool transposed, bool reversed) noexcept;
 
 } // namespace batmat::linalg::micro_kernels::geqrf

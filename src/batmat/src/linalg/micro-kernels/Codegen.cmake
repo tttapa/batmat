@@ -90,7 +90,7 @@ function(batmat_codegen_micro_kernels tgt headers_target)
     endmacro()
 
     macro(instantiate_geqrf_apply out T Abi Conf OA OD OB)
-        string(APPEND ${out} "template BATMAT_LINALG_GEQRF_EXPORT void geqrf_apply_register<${T}, ${Abi}, ${Conf}, ${OA}, ${OD}, ${OB}>(view<const ${T}, ${Abi}, ${OA}> A, view<${T}, ${Abi}, ${OD}> D, view<const ${T}, ${Abi}, ${OB}> B, view<const ${T}, ${Abi}> W, bool transposed) noexcept;\n")
+        string(APPEND ${out} "template BATMAT_LINALG_GEQRF_EXPORT void geqrf_apply_register<${T}, ${Abi}, ${Conf}, ${OA}, ${OD}, ${OB}>(view<const ${T}, ${Abi}, ${OA}> A, view<${T}, ${Abi}, ${OD}> D, view<const ${T}, ${Abi}, ${OB}> B, view<const ${T}, ${Abi}> W, bool transposed, bool reversed) noexcept;\n")
     endmacro()
 
     batmat_add_micro_kernels("gemm")
