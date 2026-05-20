@@ -37,8 +37,6 @@ option(BATMAT_WARNINGS_AS_ERRORS
     "Enable -Werror or /WX" Off)
 option(BATMAT_WITH_COVERAGE
     "Generate coverage information" Off)
-set(BATMAT_DOXYFILE "Doxyfile" CACHE FILEPATH
-    "The Doxyfile to use for the docs target")
 option(BATMAT_WITH_ACCURATE_BUILD_TIME
     "Update the build time on every build" On)
 option(BATMAT_VERIFY_ASSUMPTIONS
