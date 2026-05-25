@@ -1,6 +1,7 @@
 #include <batmat/linalg/copy.hpp>
 #include <batmat/linalg/flops.hpp>
 #include <batmat/linalg/potrf.hpp>
+#include <batmat/linalg/small-potrf.hpp>
 #include <benchmark/benchmark.h>
 #include <guanaqo/blas/hl-blas-interface.hpp>
 #include <random>
@@ -33,6 +34,56 @@ constexpr auto potrf = [](benchmark::State &state) {
             } else {
                 batmat::linalg::potrf(tril(A.batch(l)), tril(B.batch(l)));
             }
+    auto flop_cnt = static_cast<double>(d * total(flops::potrf(A.rows(), A.cols())));
+    state.counters["GFLOP count"] = {1e-9 * flop_cnt};
+    state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
+    state.counters["depth"]  = {static_cast<double>(d)};
+};
+
+template <index_t R>
+struct small;
+
+template <index_t R>
+constexpr auto potrf<small<R>, StorageOrder::ColMajor> = [](benchmark::State &state) {
+    using namespace batmat::linalg;
+    std::mt19937 rng{12345};
+    std::uniform_real_distribution<real_t> uni{-1, 1};
+
+    const index_t d = BATMAT_BENCHMARK_DEPTH;
+    const auto n    = static_cast<index_t>(state.range(0));
+    batmat::matrix::Matrix<real_t> A{{.depth = d, .rows = n, .cols = n}};
+    batmat::matrix::Matrix<real_t> B{{.depth = d, .rows = n, .cols = n}};
+    std::ranges::generate(A, [&] { return uni(rng); });
+    std::ranges::generate(B, [&] { return uni(rng); });
+    A.view().add_to_diagonal(10 * static_cast<real_t>(n));
+    for (auto _ : state)
+        for (index_t l = 0; l < A.num_batches(); ++l)
+            batmat::linalg::small_potrf<R>(tril(A.batch(l)), tril(B.batch(l)));
+    auto flop_cnt = static_cast<double>(d * total(flops::potrf(A.rows(), A.cols())));
+    state.counters["GFLOP count"] = {1e-9 * flop_cnt};
+    state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
+    state.counters["depth"]  = {static_cast<double>(d)};
+};
+
+template <index_t R, index_t S>
+struct small_left;
+
+template <index_t R, index_t S>
+constexpr auto potrf<small_left<R, S>, StorageOrder::ColMajor> = [](benchmark::State &state) {
+    using namespace batmat::linalg;
+    std::mt19937 rng{12345};
+    std::uniform_real_distribution<real_t> uni{-1, 1};
+
+    const index_t d = BATMAT_BENCHMARK_DEPTH;
+    const auto n    = static_cast<index_t>(state.range(0));
+    batmat::matrix::Matrix<real_t> A{{.depth = d, .rows = n, .cols = n}};
+    batmat::matrix::Matrix<real_t> B{{.depth = d, .rows = n, .cols = n}};
+    std::ranges::generate(A, [&] { return uni(rng); });
+    std::ranges::generate(B, [&] { return uni(rng); });
+    A.view().add_to_diagonal(10 * static_cast<real_t>(n));
+    for (auto _ : state)
+        for (index_t l = 0; l < A.num_batches(); ++l)
+            batmat::linalg::small_potrf_left<R, S>(tril(A.batch(l)), tril(B.batch(l)));
     auto flop_cnt = static_cast<double>(d * total(flops::potrf(A.rows(), A.cols())));
     state.counters["GFLOP count"] = {1e-9 * flop_cnt};
     state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
@@ -117,6 +168,8 @@ BENCHMARK(potrf<simd8, RowMajor>)->BM_RANGES();
 BENCHMARK(potrf<simd4, ColMajor>)->BM_RANGES();
 BENCHMARK(potrf<simd4, RowMajor>)->BM_RANGES();
 BENCHMARK(potrf<scalar, ColMajor>)->BM_RANGES();
+BENCHMARK(potrf<small<4>, ColMajor>)->BM_RANGES();
+BENCHMARK(potrf<small_left<4, 8>, ColMajor>)->BM_RANGES();
 #ifdef BATMAT_WITH_BLASFEO
 BENCHMARK(potrf<blasfeo, ColMajor>)->BM_RANGES();
 #endif

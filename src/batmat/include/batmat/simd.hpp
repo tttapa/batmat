@@ -126,8 +126,35 @@ void aligned_store(V v, typename V::value_type *p) {
 }
 
 template <class V>
+V masked_aligned_load(const typename V::value_type *p, typename V::mask_type m) {
+    V v{};
+    where(m, v).copy_from(p, stdx::vector_aligned);
+    return v;
+}
+
+template <class V>
+V masked_unaligned_load(const typename V::value_type *p, typename V::mask_type m) {
+    V v{};
+    where(m, v).copy_from(p, stdx::element_aligned);
+    return v;
+}
+
+template <class V>
 void masked_aligned_store(V v, typename V::mask_type m, typename V::value_type *p) {
     where(m, v).copy_to(p, stdx::vector_aligned);
+}
+
+template <class V>
+void masked_unaligned_store(V v, typename V::mask_type m, typename V::value_type *p) {
+    where(m, v).copy_to(p, stdx::element_aligned);
+}
+
+template <class V, index_t N, bool Value = true>
+auto generate_mask() {
+    typename V::mask_type m{Value};
+    BATMAT_FULLY_UNROLLED_FOR (index_t i = N; i < V::size(); ++i)
+        m[i] = !Value;
+    return m;
 }
 
 template <class V>

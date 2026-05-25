@@ -76,4 +76,10 @@ template <template <class T, index_t N> class ConfigsForDtVl>
 using TestConfigs = types::FlatMap_t<UncurryDTypeVL<ConfigsForDtVl>::template type,
                                      types::dtype_vl_all>::template into<::testing::Types>;
 
+/// Apply the given @p ConfigsForDtVl template to all supported combinations of dtypes and vector
+/// lengths and convert the result to a Google Test type list.
+template <template <class T> class ConfigsForDt>
+using TestConfigsDTypes =
+    types::FlatMap_t<ConfigsForDt, types::dtype_all>::template into<::testing::Types>;
+
 } // namespace batmat::tests

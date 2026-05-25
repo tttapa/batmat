@@ -68,13 +68,25 @@ df["full name"] = df["run_name"]
 df["run_name"] = df["run_name"].apply(lambda x: x.split("/", 2)[0])
 
 
+def split_top_level(s):
+    res, buf, depth = [], "", 0
+    for c in s:
+        if c == "," and depth == 0:
+            res.append(buf.strip())
+            buf = ""
+        else:
+            depth += (c == "<") - (c == ">")
+            buf += c
+    return tuple(res + [buf.strip()])
+
+
 def parse_run_name(name):
     """Split into function name and list of template args."""
     m = re.match(r"(\w+)<(.*)>", name)
     if not m:
         return name, ()
     func, args_str = m.groups()
-    args = tuple(a.strip() for a in args_str.split(","))
+    args = split_top_level(args_str)
     return func, args
 
 
@@ -117,7 +129,7 @@ def add_reference_columns(df: pd.DataFrame, metrics):
     return df.drop(columns="ref_name")
 
 
-def benchmark_label(func_name: str, args: tuple[str]) -> str:
+def benchmark_label(func_name: str, args: tuple[str, ...]) -> str | None:
     # Map ABI
     impl = "hyhound" if func_name == "hyh" else "MKL"
     isa_str = "AVX2" if isa == "avx2" else "AVX-512" if isa == "avx512" else isa
@@ -131,6 +143,10 @@ def benchmark_label(func_name: str, args: tuple[str]) -> str:
         abi_label = f"batmat {isa_str} (4)"
     elif args[0] == "simd8":
         abi_label = f"batmat {isa_str} (8)"
+    elif m := re.match(r"small<(\d+)>", args[0]):
+        abi_label = f"batmat {isa_str} (scalar {m.group(1)})"
+    elif m := re.match(r"small_left<(\d+), (\d+)>", args[0]):
+        abi_label = f"batmat {isa_str} (scalar left {m.group(1)}, {m.group(2)})"
     else:
         abi_label = "unknown"
 
@@ -160,7 +176,7 @@ def benchmark_label(func_name: str, args: tuple[str]) -> str:
     return abi_label
 
 
-def benchmark_color(args: tuple[str], label: str) -> str:
+def benchmark_color(args: tuple[str, ...], label: str) -> str:
     if args[0] == "blasfeo":
         return "tab:pink"
     elif args[0] == "eigen":
@@ -173,6 +189,20 @@ def benchmark_color(args: tuple[str], label: str) -> str:
         if "no tiling" in label:
             return "tab:orange"
         return "tab:red"
+    elif m := re.match(r"small<(\d+)>", args[0]):
+        if m.group(1) == "3":
+            return "black"
+        elif m.group(1) == "4":
+            return "#c20078"
+        elif m.group(1) == "8":
+            return "#bbf90f"
+    elif m := re.match(r"small_left<(\d+), (\d+)>", args[0]):
+        if m.group(1) == "4" and m.group(2) == "8":
+            return "bbf90f"
+        elif m.group(1) == "8" and m.group(2) == "8":
+            return "#c20078"
+        elif m.group(1) == "8" and m.group(2) == "4":
+            return "black"
     return "tab:purple"
 
 
