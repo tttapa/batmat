@@ -21,6 +21,8 @@ using scalar_abi = deduced_abi<Tp, 1>;
 
 template <class V>
 V unaligned_load(const typename V::value_type *p) {
+    // const_cast required because unchecked_load seems to lack a std::remove_const_t somewhere
+    // in its metaprogramming
     std::span<typename V::value_type, V::size()> sp{const_cast<V::value_type *>(p), V::size()};
     return std::datapar::unchecked_load<V>(sp);
 }
@@ -43,6 +45,24 @@ void aligned_store(V v, typename V::value_type *p) {
 }
 
 template <class V>
+V masked_aligned_load(const typename V::value_type *p, typename V::mask_type m) {
+    std::span<const typename V::value_type, V::size()> sp{p, V::size()};
+    return std::datapar::unchecked_load<V>(sp, m, std::datapar::flag_aligned);
+}
+
+template <class V>
+V masked_unaligned_load(const typename V::value_type *p, typename V::mask_type m) {
+    std::span<const typename V::value_type, V::size()> sp{p, V::size()};
+    return std::datapar::unchecked_load<V>(sp, m);
+}
+
+template <class V, index_t N>
+V partial_load(const typename V::value_type *p) {
+    std::span<const typename V::value_type, N> sp{p, N};
+    return std::datapar::partial_load<V>(sp);
+}
+
+template <class V>
 void masked_aligned_store(V v, typename V::mask_type m, typename V::value_type *p) {
     std::span<typename V::value_type, V::size()> sp{p, V::size()};
     if constexpr (V::size() == 1) {
@@ -51,6 +71,32 @@ void masked_aligned_store(V v, typename V::mask_type m, typename V::value_type *
     } else {
         std::datapar::unchecked_store(v, sp, m, std::datapar::flag_aligned);
     }
+}
+
+template <class V>
+void masked_unaligned_store(V v, typename V::mask_type m, typename V::value_type *p) {
+    std::span<typename V::value_type, V::size()> sp{p, V::size()};
+    if constexpr (V::size() == 1) {
+        if (m[0])
+            std::datapar::unchecked_store(v, sp);
+    } else {
+        std::datapar::unchecked_store(v, sp, m);
+    }
+}
+
+template <class V, index_t I, bool Value = true>
+auto generate_mask() {
+    return typename V::mask_type{[](index_t i) -> bool { return (i != I) ^ Value; }};
+}
+
+template <class V, bool Value = true>
+auto generate_mask(index_t i) {
+    return typename V::mask_type{[i](index_t j) -> bool { return (j != i) ^ Value; }};
+}
+
+template <class V, index_t N, bool Value = true>
+auto generate_mask_until() {
+    return typename V::mask_type{[](index_t i) -> bool { return (i >= N) ^ Value; }};
 }
 
 #if defined(__x86_64__) || defined(_M_X64)
@@ -149,12 +195,32 @@ void masked_unaligned_store(V v, typename V::mask_type m, typename V::value_type
     where(m, v).copy_to(p, stdx::element_aligned);
 }
 
-template <class V, index_t N, bool Value = true>
+template <class V, index_t I, bool Value = true>
 auto generate_mask() {
+    typename V::mask_type m{!Value};
+    m[I] = Value;
+    return m;
+}
+
+template <class V, bool Value = true>
+auto generate_mask(index_t i) {
+    typename V::mask_type m{!Value};
+    m[i] = Value;
+    return m;
+}
+
+template <class V, index_t N, bool Value = true>
+auto generate_mask_until() {
     typename V::mask_type m{Value};
     BATMAT_FULLY_UNROLLED_FOR (index_t i = N; i < V::size(); ++i)
         m[i] = !Value;
     return m;
+}
+
+template <class V, index_t N>
+V partial_load(const typename V::value_type *p) {
+    const auto mask = generate_mask_until<V, N>();
+    return masked_unaligned_load<V>(p, mask);
 }
 
 template <class V>

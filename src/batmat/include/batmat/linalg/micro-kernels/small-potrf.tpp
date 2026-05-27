@@ -208,18 +208,17 @@ void syrk_potrf_trsm_microkernel(index_t m, index_t k, scalar_view<const T> L21,
     using ops::sqrt;
 
     using simd           = datapar::deduced_simd<T, std::bit_ceil(static_cast<unsigned>(NC))>;
-    const auto load_mask = datapar::generate_mask<simd, NC>();
+    const auto load_mask = datapar::generate_mask_until<simd, NC>();
 
     /* Load diagonal block into registers */
     simd Dr[NC];
     UNROLL_FOR (index_t j = 0; j < NC; ++j) // column
         Dr[j] = NC == simd::size() ? datapar::unaligned_load<simd>(&A22(0, j))
-                                   : datapar::masked_unaligned_load<simd>(&A22(0, j), load_mask);
+                                   : datapar::partial_load<simd, NC>(&A22(0, j));
     /* Accumulate previous updates */
     for (index_t l = 0; l < k; ++l) { // syrk update diagonal block
-        simd L21l = NC == simd::size()
-                        ? datapar::unaligned_load<simd>(&L21(0, l))
-                        : datapar::masked_unaligned_load<simd>(&L21(0, l), load_mask);
+        simd L21l = NC == simd::size() ? datapar::unaligned_load<simd>(&L21(0, l))
+                                       : datapar::partial_load<simd, NC>(&L21(0, l));
         UNROLL_FOR (index_t j = 0; j < NC; ++j)
             Dr[j] -= L21l * L21l[j];
     }
@@ -236,9 +235,16 @@ void syrk_potrf_trsm_microkernel(index_t m, index_t k, scalar_view<const T> L21,
         Dr[j] *= inv_pivot;                         // update current column
         UNROLL_FOR (index_t i = j + 1; i < NC; ++i) // column syrk
             Dr[i] -= Dr[j] * Dr[j][i];
+#if BATMAT_WITH_GSI_HPC_SIMD
+        const auto mask_j = datapar::generate_mask<simd>(j);
+        Dr[j]             = datapar::select(mask_j, simd{pivot}, Dr[j]);
+        datapar::masked_unaligned_store(Dr[j], store_mask, &L22(0, j));
+        store_mask = store_mask && !mask_j;
+#else
         Dr[j][j] = pivot;
         datapar::masked_unaligned_store(Dr[j], store_mask, &L22(0, j));
         store_mask[j] = false;
+#endif
     }
 
     /* Multiply the sub-diagonal blocks by the inverse of the Cholesky factor */
