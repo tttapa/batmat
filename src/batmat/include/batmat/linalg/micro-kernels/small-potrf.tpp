@@ -32,10 +32,10 @@ void potrf_trsm_microkernel(index_t k, scalar_view<const T> A, scalar_view<T> L)
         Dr[index(j, j)]      = inv_pivot;
         UNROLL_FOR (index_t i = j + 1; i < NC; ++i)
             Dr[index(i, j)] *= inv_pivot;
-        UNROLL_FOR (index_t k = j + 1; k < NC; ++k) { // column syrk
-            const T fac = Dr[index(k, j)];
-            UNROLL_FOR (index_t i = k; i < NC; ++i)
-                Dr[index(i, k)] -= Dr[index(i, j)] * fac;
+        UNROLL_FOR (index_t kk = j + 1; kk < NC; ++kk) { // column syrk
+            const T fac = Dr[index(kk, j)];
+            UNROLL_FOR (index_t i = kk; i < NC; ++i)
+                Dr[index(i, kk)] -= Dr[index(i, j)] * fac;
         }
         L(j, j) = pivot;
         UNROLL_FOR (index_t i = j + 1; i < NC; ++i) // row
@@ -43,16 +43,16 @@ void potrf_trsm_microkernel(index_t k, scalar_view<const T> A, scalar_view<T> L)
     }
     /* Multiply the sub-diagonal blocks by the inverse of the Cholesky factor */
     auto trsm_tail = [&](auto &trsm_tail, index_t r, auto N) {
-        using simd = datapar::deduced_simd<T, N>;
+        using simdN = datapar::deduced_simd<T, N>;
         for (; r + N <= k; r += N) { // block row
-            simd Xrx[NC];
+            simdN Xrx[NC];
             UNROLL_FOR (index_t c = 0; c < NC; ++c) // column
-                Xrx[c] = datapar::unaligned_load<simd>(&A(r, c));
+                Xrx[c] = datapar::unaligned_load<simdN>(&A(r, c));
             UNROLL_FOR (index_t c = 0; c < NC; ++c) { // column
-                simd &Xij = Xrx[c];
-                UNROLL_FOR (index_t k = 0; k < c; ++k) { // column inner
-                    const T Aik = Dr[index(c, k)];
-                    Xij -= Aik * Xrx[k];
+                simdN &Xij = Xrx[c];
+                UNROLL_FOR (index_t kk = 0; kk < c; ++kk) { // column inner
+                    const T Aik = Dr[index(c, kk)];
+                    Xij -= Aik * Xrx[kk];
                 }
                 Xij *= Dr[index(c, c)];
                 datapar::unaligned_store(Xij, &L(r, c));
@@ -100,9 +100,9 @@ void potrf_syrk_microkernel(index_t k, scalar_view<const T> L21, scalar_view<con
             UNROLL_FOR (index_t j = 0; j < RowsReg; ++j)
                 Aix[j] = datapar::unaligned_load<simd>(&A22_cached(i, j));
             UNROLL_FOR (index_t j = 0; j < RowsReg; ++j)
-                UNROLL_FOR (index_t k = 0; k < ColsReg; ++k) {
-                    const simd A21ik = datapar::unaligned_load<simd>(&L21_cached(i, k));
-                    Aix[j] -= A21ik * A21_reg[j][k];
+                UNROLL_FOR (index_t kk = 0; kk < ColsReg; ++kk) {
+                    const simd A21ik = datapar::unaligned_load<simd>(&L21_cached(i, kk));
+                    Aix[j] -= A21ik * A21_reg[j][kk];
                 }
             UNROLL_FOR (index_t j = 0; j < RowsReg; ++j)
                 datapar::unaligned_store(Aix[j], &L22_cached(i, j));
@@ -124,6 +124,8 @@ void small_potrf(view<const T, datapar::scalar_abi<T>> A, view<T, datapar::scala
         make_2d_lut<R, R>([]<index_t Row, index_t Col>(index_constant<Row>, index_constant<Col>) {
             return potrf_syrk_microkernel<T, Row + 1, Col + 1>;
         });
+    (void)microkernel_syrk_lut; // Invalid GCC warning
+    (void)microkernel_syrk_lut_2;
 
     const index_t m = L.rows(), N = L.cols();
     if (n < 0)
@@ -280,6 +282,7 @@ void small_potrf_left(view<const T, datapar::scalar_abi<T>> A,
         make_1d_lut<R>([]<index_t Row>(index_constant<Row>) {
             return syrk_potrf_trsm_microkernel<T, Row + 1, S>;
         });
+    (void)microkernel_lut; // Invalid GCC warning
 
     const index_t m = L.rows(), N = L.cols();
     BATMAT_ASSUME(m >= N);

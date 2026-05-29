@@ -56,7 +56,7 @@ V masked_unaligned_load(const typename V::value_type *p, typename V::mask_type m
     return std::datapar::unchecked_load<V>(sp, m);
 }
 
-template <class V, index_t N>
+template <class V, int N>
 V partial_load(const typename V::value_type *p) {
     std::span<const typename V::value_type, N> sp{p, N};
     return std::datapar::partial_load<V>(sp);
@@ -84,19 +84,19 @@ void masked_unaligned_store(V v, typename V::mask_type m, typename V::value_type
     }
 }
 
-template <class V, index_t I, bool Value = true>
+template <class V, int I, bool Value = true>
 auto generate_mask() {
-    return typename V::mask_type{[](index_t i) -> bool { return (i != I) ^ Value; }};
+    return typename V::mask_type{[](int i) -> bool { return (i != I) ^ Value; }};
 }
 
 template <class V, bool Value = true>
-auto generate_mask(index_t i) {
-    return typename V::mask_type{[i](index_t j) -> bool { return (j != i) ^ Value; }};
+auto generate_mask(int i) {
+    return typename V::mask_type{[i](int j) -> bool { return (j != i) ^ Value; }};
 }
 
-template <class V, index_t N, bool Value = true>
+template <class V, int N, bool Value = true>
 auto generate_mask_until() {
-    return typename V::mask_type{[](index_t i) -> bool { return (i >= N) ^ Value; }};
+    return typename V::mask_type{[](int i) -> bool { return (i >= N) ^ Value; }};
 }
 
 #if defined(__x86_64__) || defined(_M_X64)
@@ -195,7 +195,7 @@ void masked_unaligned_store(V v, typename V::mask_type m, typename V::value_type
     where(m, v).copy_to(p, stdx::element_aligned);
 }
 
-template <class V, index_t I, bool Value = true>
+template <class V, size_t I, bool Value = true>
 auto generate_mask() {
     typename V::mask_type m{!Value};
     m[I] = Value;
@@ -203,21 +203,21 @@ auto generate_mask() {
 }
 
 template <class V, bool Value = true>
-auto generate_mask(index_t i) {
+auto generate_mask(size_t i) {
     typename V::mask_type m{!Value};
     m[i] = Value;
     return m;
 }
 
-template <class V, index_t N, bool Value = true>
+template <class V, size_t N, bool Value = true>
 auto generate_mask_until() {
     typename V::mask_type m{Value};
-    BATMAT_FULLY_UNROLLED_FOR (index_t i = N; i < V::size(); ++i)
+    BATMAT_FULLY_UNROLLED_FOR (size_t i = N; i < V::size(); ++i)
         m[i] = !Value;
     return m;
 }
 
-template <class V, index_t N>
+template <class V, size_t N>
 V partial_load(const typename V::value_type *p) {
     const auto mask = generate_mask_until<V, N>();
     return masked_unaligned_load<V>(p, mask);
