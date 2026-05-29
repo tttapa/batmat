@@ -185,7 +185,7 @@ struct View {
                  .layer_stride = layout.layer_stride}};
     }
 
-    /// Get a view of @p n batches starting at batch @p b, with a stride of @p stride layers.
+    /// Get a view of @p n batches starting at batch @p b, with a stride of @p stride batches.
     [[nodiscard]] View<T, I, S, I, I, O> middle_batches(index_type b, index_type n,
                                                         index_type stride = 1) const {
         const auto bs    = static_cast<I>(batch_size());
