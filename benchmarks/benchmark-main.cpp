@@ -21,7 +21,14 @@
 #endif
 
 #ifdef BATMAT_WITH_EIGEN
+#if __has_include(<Eigen/Version>)
 #include <Eigen/Version>
+#else
+#include <Eigen/Core>
+#define EIGEN_VERSION_STRING                                                                       \
+    GUANAQO_STRINGIFY(EIGEN_WORLD_VERSION)                                                         \
+    "." GUANAQO_STRINGIFY(EIGEN_MAJOR_VERSION) "." GUANAQO_STRINGIFY(EIGEN_MINOR_VERSION)
+#endif
 #endif
 
 void register_context() {
