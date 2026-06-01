@@ -251,18 +251,18 @@ void syrk_potrf_trsm_microkernel(index_t m, index_t k, scalar_view<const T> L21,
 
     /* Multiply the sub-diagonal blocks by the inverse of the Cholesky factor */
     auto trsm_tail = [&](auto &trsm_tail, index_t r, auto N) {
-        using simd = datapar::deduced_simd<T, N>;
+        using simdN = datapar::deduced_simd<T, N>;
         for (; r + N <= m; r += N) { // block row
-            simd Xrx[NC];
+            simdN Xrx[NC];
             UNROLL_FOR (index_t c = 0; c < NC; ++c) // column
-                Xrx[c] = datapar::unaligned_load<simd>(&A22(r, c));
+                Xrx[c] = datapar::unaligned_load<simdN>(&A22(r, c));
             for (index_t l = 0; l < k; ++l) { // syrk update subdiagonal block
-                simd L21rl = datapar::unaligned_load<simd>(&L21(r, l));
+                simdN L21rl = datapar::unaligned_load<simdN>(&L21(r, l));
                 UNROLL_FOR (index_t j = 0; j < NC; ++j)
                     Xrx[j] -= L21rl * L21(j, l);
             }
             UNROLL_FOR (index_t j = 0; j < NC; ++j) { // column
-                simd &Xij = Xrx[j];
+                simdN &Xij = Xrx[j];
                 UNROLL_FOR (index_t i = 0; i < j; ++i) // column inner
                     Xij -= Dr[i][j] * Xrx[i];
                 Xij *= inv_pivots[j];
