@@ -1,0 +1,68 @@
+#include <batmat/linalg/eigvals.hpp>
+#include <batmat/linalg/sytrd.hpp>
+#include <gtest/gtest.h>
+
+#include "config.hpp"
+#include "eigen-matchers.hpp"
+#include "fixtures.hpp"
+
+#include <Eigen/Eigenvalues>
+#include <print>
+
+using batmat::matrix::StorageOrder;
+using enum Eigen::UpLoType;
+
+template <class Config>
+struct EigvalsTest : batmat::tests::LinalgTest<Config> {};
+TYPED_TEST_SUITE_P(EigvalsTest);
+
+TYPED_TEST_P(EigvalsTest, eigvalsh) {
+    using batmat::index_t;
+    using batmat::linalg::eigvalsh_trd;
+    using batmat::linalg::extract_bidiag;
+    using batmat::linalg::sytrd;
+    using batmat::linalg::sytrd_apply;
+    using batmat::linalg::sytrd_size_W;
+    using batmat::linalg::sytrd_size_Y;
+    using batmat::linalg::tril;
+    using EVec = Eigen::VectorX<typename TypeParam::value_type>;
+    for (auto m : batmat::tests::sizes) {
+        if (m == 0)
+            continue;
+        const auto A0 = this->template get_matrix<0>(m, m);
+        auto [rw, cw] = sytrd_size_W(A0);
+        auto W        = this->template get_matrix<StorageOrder::ColMajor>(rw, cw);
+        auto [ry, cy] = sytrd_size_Y(A0);
+        auto Y        = this->template get_matrix<StorageOrder::ColMajor>(ry, cy);
+        auto A        = A0;
+        W.set_constant(std::numeric_limits<typename TypeParam::value_type>::quiet_NaN());
+        Y.set_constant(std::numeric_limits<typename TypeParam::value_type>::quiet_NaN());
+        auto d = this->get_vector(m);
+        auto e = this->get_vector(m - 1);
+        batmat::linalg::TridiagonalQrOptions options{.max_iterations_per_eigenvalue = 10};
+
+        // Tridiagonalize A in-place
+        sytrd(tril(A), W, Y);
+        extract_bidiag(tril(A), d, e);
+        auto num_iter = eigvalsh_trd(d, e, options);
+        EXPECT_LE(num_iter, options.max_iterations_per_eigenvalue * m)
+            << "Too many iterations: " << num_iter;
+        std::println("Tridiagonal eigvals of size {} computed in {} iterations", m, num_iter);
+
+        this->check(
+            [&](auto &&Al) -> EVec {
+                return Al.template selfadjointView<Eigen::Lower>().eigenvalues();
+            },
+            [&](auto l, EVec res, EVec ref, auto &&) {
+                std::sort(res.begin(), res.end());
+                std::sort(ref.begin(), ref.end());
+                EXPECT_THAT(res, EigenAlmostEqualRel(ref, this->tolerance_n(m))) << l;
+            },
+            d, A0);
+    }
+}
+
+REGISTER_TYPED_TEST_SUITE_P(EigvalsTest, eigvalsh);
+
+using namespace batmat::tests;
+INSTANTIATE_TYPED_TEST_SUITE_P(linalg, EigvalsTest, TestConfigs<OrderConfigs1>);
