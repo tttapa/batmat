@@ -18,8 +18,8 @@ TYPED_TEST_SUITE_P(EigvalsTest);
 
 TYPED_TEST_P(EigvalsTest, eigvalsh) {
     using batmat::index_t;
-    using batmat::linalg::eigvalsh_trd;
     using batmat::linalg::extract_bidiag;
+    using batmat::linalg::sterf;
     using batmat::linalg::sytrd;
     using batmat::linalg::sytrd_apply;
     using batmat::linalg::sytrd_size_W;
@@ -39,15 +39,16 @@ TYPED_TEST_P(EigvalsTest, eigvalsh) {
         Y.set_constant(std::numeric_limits<typename TypeParam::value_type>::quiet_NaN());
         auto d = this->get_vector(m);
         auto e = this->get_vector(m - 1);
-        batmat::linalg::TridiagonalQrOptions options{.max_iterations_per_eigenvalue = 10};
+        batmat::linalg::SterfOptions options{.max_iterations_per_eigenvalue = 5};
 
         // Tridiagonalize A in-place
         sytrd(tril(A), W, Y);
         extract_bidiag(tril(A), d, e);
-        auto num_iter = eigvalsh_trd(d, e, options);
-        EXPECT_LE(num_iter, options.max_iterations_per_eigenvalue * m)
-            << "Too many iterations: " << num_iter;
-        std::println("Tridiagonal eigvals of size {} computed in {} iterations", m, num_iter);
+        auto num_iter = sterf(d, e, options);
+        ASSERT_TRUE(num_iter) << "Convergence failure (" << num_iter.error() << " iterations)";
+        EXPECT_LE(*num_iter, options.max_iterations_per_eigenvalue * m)
+            << "Too many iterations (" << *num_iter << ")";
+        std::println("Tridiagonal eigvals of size {} computed in {} iterations", m, *num_iter);
 
         this->check(
             [&](auto &&Al) -> EVec {

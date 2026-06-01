@@ -1,9 +1,5 @@
 #pragma once
 
-#include <cmath>
-#include <limits>
-#include <utility>
-
 #include <batmat/assume.hpp>
 #include <batmat/linalg/elementwise.hpp>
 #include <batmat/linalg/simdify.hpp>
@@ -11,88 +7,22 @@
 #include <batmat/linalg/uview.hpp>
 #include <batmat/simd.hpp>
 
-namespace batmat::datapar {
-
-auto two_mult_fma(auto a, auto b) {
-    using std::fma;
-    auto p = a * b;
-    return std::make_pair(p, fma(a, b, -p));
-}
-
-auto weak_hypot(auto f, auto g) {
-    using datapar::select;
-    using std::abs;
-    using std::sqrt;
-    auto af = abs(f), ag = abs(g);
-    auto smol = select(af < ag, af, ag);
-    auto larg = select(af < ag, ag, af);
-    auto r    = smol / larg;
-    return select(larg == 0, 0, larg * sqrt(1 + r * r));
-}
-
-/// https://arxiv.org/pdf/2406.02750v1
-[[gnu::flatten]]
-auto compensated_givens(auto f, auto g) {
-    using std::fma;
-    auto r = weak_hypot(f, g);
-    auto c̅ = f / r, s̅ = g / r;
-    auto [c1, c2] = two_mult_fma(c̅, c̅);
-    auto [s1, s2] = two_mult_fma(s̅, s̅);
-    auto ε_norm   = select(c1 > s1, 1 - c1 - s1 - c2 - s2, 1 - s1 - c1 - s2 - c2) / 2;
-    auto [p, pp]  = two_mult_fma(c̅, g);
-    auto ε_orth   = (fma(-s̅, f, p) + pp) / r;
-    auto δc       = c̅ * ε_norm - s̅ * ε_orth;
-    auto δs       = s̅ * ε_norm + c̅ * ε_orth;
-    auto c        = select(r == 0, 1, c̅ + δc);
-    auto s        = select(r == 0, 0, s̅ + δs);
-    return std::make_pair(c, s);
-}
-
-[[gnu::flatten]]
-auto weak_givens(auto f, auto g) {
-    auto r = weak_hypot(f, g);
-    auto c = select(r == 0, 1, f / r);
-    auto s = select(r == 0, 0, g / r);
-    return std::make_pair(c, s);
-}
-
-} // namespace batmat::datapar
+#include <cmath>
+#include <expected>
+#include <limits>
 
 namespace batmat::linalg {
 
-struct TridiagonalQrOptions {
+struct SterfOptions {
     /// If <= 0, machine epsilon is used.
-    double relative_tolerance            = 0.0;
-    size_t max_iterations_per_eigenvalue = 64;
+    double relative_tolerance             = 0.0;
+    index_t max_iterations_per_eigenvalue = 64;
 };
 
 namespace detail {
 
 [[nodiscard]] constexpr auto default_tolerance(auto user_tol) noexcept {
     return user_tol > 0 ? user_tol : std::numeric_limits<decltype(user_tol)>::epsilon();
-}
-
-template <class T, class Abi>
-[[nodiscard]] datapar::simd<T, Abi>
-block_norm_estimate(uview<const T, Abi, StorageOrder::ColMajor> d,
-                    uview<const T, Abi, StorageOrder::ColMajor> e, index_t l, index_t m) noexcept {
-    using std::abs;
-    using std::max;
-    datapar::simd<T, Abi> anorm{};
-    for (index_t i = l; i <= m; ++i)
-        anorm = max(anorm, abs(d.load(i, 0)));
-    for (index_t i = l; i < m; ++i)
-        anorm = max(anorm, abs(e.load(i, 0)));
-    return anorm;
-}
-
-template <class T, class Abi>
-void scale_block(uview<T, Abi, StorageOrder::ColMajor> d, uview<T, Abi, StorageOrder::ColMajor> e,
-                 index_t l, index_t m, datapar::simd<T, Abi> factor) noexcept {
-    for (index_t i = l; i <= m; ++i)
-        d.store(d.load(i, 0) * factor, i, 0);
-    for (index_t i = l; i < m; ++i)
-        e.store(e.load(i, 0) * factor, i, 0);
 }
 
 template <class T, class Abi>
@@ -106,30 +36,25 @@ template <class T, class Abi>
     static constexpr T small = sqrt(safe_min) / ε;
     static constexpr T large = sqrt(safe_max) * ε;
 
-    datapar::simd<T, Abi> factor = one;
-    factor                       = datapar::select(anorm > large, large / anorm, factor);
-    factor                       = datapar::select(anorm < small, small / anorm, factor);
-    factor                       = datapar::select(anorm == zero, one, factor);
+    auto factor = datapar::simd<T, Abi>{one};
+    factor      = datapar::select(anorm > large, large / anorm, factor);
+    factor      = datapar::select(anorm < small, small / anorm, factor);
+    factor      = datapar::select(anorm == zero, one, factor);
     return factor;
 }
 
 template <class T, class Abi>
-[[nodiscard]] bool negligible_subdiagonal_pwk(datapar::simd<T, Abi> subdiag,
-                                              datapar::simd<T, Abi> diag_left,
-                                              datapar::simd<T, Abi> diag_right,
-                                              datapar::simd<T, Abi> rel_tol) noexcept {
-    // Pal-Walker-Kahan/LAPACK-style squared test:
-    //     e_i^2 <= eps^2 * |d_i| * |d_{i+1}| + safe_min
-    // This avoids taking square roots and behaves better when adjacent
-    // diagonals vary substantially in scale.
+[[nodiscard]] bool all_zero(datapar::simd<T, Abi> x) noexcept {
+    using std::all_of;
+    return all_of(x == T{0});
+}
+
+template <class T, class Abi>
+[[nodiscard]] bool negligible_squared_e(datapar::simd<T, Abi> e0_sq, datapar::simd<T, Abi> d0,
+                                        datapar::simd<T, Abi> d1, T ε_sq) noexcept {
     using std::abs;
     using std::all_of;
-    const auto eps2  = rel_tol * rel_tol;
-    const T safe_min = std::numeric_limits<T>::min();
-
-    const auto lhs = abs(subdiag) * abs(subdiag);
-    const auto rhs = eps2 * abs(diag_left) * abs(diag_right) + safe_min;
-    return all_of(lhs <= rhs);
+    return all_of(abs(e0_sq) <= ε_sq * abs(d0 * d1));
 }
 
 /// Eigenvalues of [a b; b c].
@@ -150,127 +75,160 @@ stable_2x2_eigenvalues(datapar::simd<T, Abi> a, datapar::simd<T, Abi> b,
 }
 
 template <class T, class Abi>
-void solve_2x2_block_inplace(uview<T, Abi, StorageOrder::ColMajor> d,
-                             uview<T, Abi, StorageOrder::ColMajor> e, index_t l) noexcept {
-    const auto [lambda1, lambda2] =
-        stable_2x2_eigenvalues(d.load(l, 0), e.load(l, 0), d.load(l + 1, 0));
-    d.store(lambda1, l, 0);
-    e.store(datapar::simd<T, Abi>{}, l, 0);
-    d.store(lambda2, l + 1, 0);
+void solve_2x2_squared_e_inplace(uview<T, Abi, StorageOrder::ColMajor> d,
+                                 uview<T, Abi, StorageOrder::ColMajor> e, index_t l) noexcept {
+    using std::abs;
+    using std::sqrt;
+    const auto b = sqrt(abs(e.load(l, 0))); // TODO: can we avoid the square root here?
+    const auto a = d.load(l, 0), c = d.load(l + 1, 0);
+    const auto [λ1, λ2] = stable_2x2_eigenvalues(a, b, c);
+    d.store(λ1, l, 0), d.store(λ2, l + 1, 0), e.store(T{0}, l, 0);
 }
 
 template <class T, class Abi>
-void reverse_simd(uview<T, Abi, StorageOrder::ColMajor> v, index_t n) noexcept {
-    index_t head = 0, tail = n;
-    if (head != tail) {
-        --tail;
-        while (head < tail) {
-            const auto t = v.load(head, 0);
-            v.store(v.load(tail, 0), head, 0);
-            v.store(t, tail, 0);
-            ++head;
-            --tail;
-        }
-    }
+void scale_diag_only(uview<T, Abi, StorageOrder::ColMajor> d, index_t l, index_t m,
+                     datapar::simd<T, Abi> factor) noexcept {
+    for (index_t i = l; i <= m; ++i)
+        d.store(d.load(i, 0) * factor, i, 0);
 }
 
 template <class T, class Abi>
-void reverse_active_block(uview<T, Abi, StorageOrder::ColMajor> d,
-                          uview<T, Abi, StorageOrder::ColMajor> e, index_t l, index_t m) noexcept {
-    reverse_simd<T, Abi>(d.middle_rows(l), m - l + 1);
-    if (m > l)
-        reverse_simd<T, Abi>(e.middle_rows(l), m - l);
+void scale_squared_e(uview<T, Abi, StorageOrder::ColMajor> d,
+                     uview<T, Abi, StorageOrder::ColMajor> e, index_t l, index_t m,
+                     datapar::simd<T, Abi> factor) noexcept {
+    scale_diag_only(d, l, m, factor);
+    const auto factor_sq = factor * factor;
+    for (index_t i = l; i < m; ++i)
+        e.store(e.load(i, 0) * factor_sq, i, 0);
 }
 
 template <class T, class Abi>
-[[gnu::flatten]]
-void implicit_wilkinson_ql_step_inplace(uview<T, Abi, StorageOrder::ColMajor> d,
-                                        uview<T, Abi, StorageOrder::ColMajor> e, index_t l,
-                                        index_t m, index_t n) {
+void sterf_ql_sweep_squared_e_inplace(uview<T, Abi, StorageOrder::ColMajor> d,
+                                      uview<T, Abi, StorageOrder::ColMajor> e, index_t l,
+                                      index_t m) noexcept {
     using simd = datapar::simd<T, Abi>;
     using std::abs;
-    using std::copysign;
     using std::hypot;
-    const T zero{0}, one{1}, two{2};
+    using std::sqrt;
 
-    // Wilkinson shift in QL orientation.
-    auto g = (d.load(l + 1, 0) - d.load(l, 0)) / (two * e.load(l, 0));
-    auto r = hypot(g, one); // TODO: do we need a fully robust hypot here?
+    const simd zero{T{0}}, one{T{1}}, two{T{2}};
 
-    g = d.load(m, 0) - d.load(l, 0) + e.load(l, 0) / (g + copysign(r, g));
+    const auto p0     = d.load(l, 0);
+    const auto e0     = sqrt(abs(e.load(l, 0)));
+    auto σ            = (d.load(l + 1, 0) - p0) / (two * e0);
+    const auto rshift = hypot(σ, one);
+    σ                 = p0 - e0 / (σ + copysign(rshift, σ));
 
-    simd s{one};
-    simd c{one};
-    simd p{zero};
+    auto c = one;
+    auto s = zero;
+    auto γ = d.load(m, 0) - σ;
+    auto p = γ * γ;
 
     for (index_t i = m; i-- > l;) {
-        const auto ei = e.load(i, 0);
-        const auto f = s * ei, b = c * ei;
-        std::tie(c, s) = datapar::compensated_givens(g, f);
-        if (i + 1 < n - 1)
-            e.store(c * g + s * f, i + 1, 0);
-
-        g            = d.load(i + 1, 0) - p;
-        const auto r = (d.load(i, 0) - g) * s + c * b + b * c;
-        p            = s * r;
-
-        d.store(g + p, i + 1, 0);
-        g = c * r - b;
+        const auto bb = e.load(i, 0);
+        const auto r  = p + bb;
+        if (i != m - 1)
+            e.store(s * r, i + 1, 0);
+        const auto old_c = c;
+        c                = p / r;
+        s                = bb / r;
+        const auto old_γ = γ;
+        const auto α     = d.load(i, 0);
+        γ                = c * (α - σ) - s * old_γ;
+        d.store(old_γ + (α - γ), i + 1, 0);
+        p = datapar::select(c != zero, (γ * γ) / c, old_c * bb);
     }
-
-    d.store(d.load(l, 0) - p, l, 0);
-    e.store(g, l, 0);
-    if (m < n - 1)
-        e.store(zero, m, 0); // e[m] is boundary after active block. Ignore if m == n - 1.
+    e.store(s * p, l, 0);
+    d.store(σ + γ, l, 0);
 }
 
 template <class T, class Abi>
-void implicit_wilkinson_qr_step_inplace(uview<T, Abi, StorageOrder::ColMajor> d,
-                                        uview<T, Abi, StorageOrder::ColMajor> e, index_t l,
-                                        index_t m, index_t n) {
-    // TODO: avoid actually reversing the storage, just templatize the QR/QL step
-    reverse_active_block<T, Abi>(d, e, l, m);
-    implicit_wilkinson_ql_step_inplace<T, Abi>(d, e, l, m, n);
-    reverse_active_block<T, Abi>(d, e, l, m);
-}
-
-template <class T, class Abi>
-void implicit_wilkinson_step_inplace(uview<T, Abi, StorageOrder::ColMajor> d,
-                                     uview<T, Abi, StorageOrder::ColMajor> e, index_t l, index_t m,
-                                     index_t n) {
-    // Temporarily scale the active block to safeguard against overflow/underflow in the QR/QL step.
+void sterf_qr_sweep_squared_e_inplace(uview<T, Abi, StorageOrder::ColMajor> d,
+                                      uview<T, Abi, StorageOrder::ColMajor> e, index_t l,
+                                      index_t m) noexcept {
+    using simd = datapar::simd<T, Abi>;
     using std::abs;
-    using std::any_of;
+    using std::hypot;
+    using std::sqrt;
 
-    const auto anorm  = block_norm_estimate<T, Abi>(d, e, l, m);
-    const auto factor = safe_scaling_factor(anorm);
+    const simd zero{T{0}}, one{T{1}}, two{T{2}};
 
-    if (any_of(factor != T{1}))
-        scale_block(d, e, l, m, factor);
+    const auto p0     = d.load(m, 0);
+    const auto e0     = sqrt(abs(e.load(m - 1, 0)));
+    auto σ            = (d.load(m - 1, 0) - p0) / (two * e0);
+    const auto rshift = hypot(σ, one);
+    σ                 = p0 - e0 / (σ + copysign(rshift, σ));
 
-    // Direction choice:
-    // If the lower-right endpoint is smaller in magnitude, QR orientation
-    // tends to deflate from that end more favorably. Otherwise use QL.
+    auto c = one;
+    auto s = zero;
+    auto γ = d.load(l, 0) - σ;
+    auto p = γ * γ;
+
+    for (index_t i = l; i < m; ++i) {
+        const auto bb = e.load(i, 0);
+        const auto r  = p + bb;
+        if (i != l)
+            e.store(s * r, i - 1, 0);
+        const auto old_c = c;
+        c                = p / r;
+        s                = bb / r;
+        const auto old_γ = γ;
+        const auto α     = d.load(i + 1, 0);
+        γ                = c * (α - σ) - s * old_γ;
+        d.store(old_γ + (α - γ), i, 0);
+        p = datapar::select(c != zero, (γ * γ) / c, old_c * bb);
+    }
+    e.store(s * p, m - 1, 0);
+    d.store(σ + γ, m, 0);
+}
+
+template <class T, class Abi>
+void sterf_dynamic_step_squared_e_inplace(uview<T, Abi, StorageOrder::ColMajor> d,
+                                          uview<T, Abi, StorageOrder::ColMajor> e, index_t l,
+                                          index_t m) noexcept {
+    using std::abs;
     static constexpr index_t half_v = datapar::simd_size<T, Abi>::value / 2;
-    if (datapar::reduce_count(abs(d.load(m, 0)) < abs(d.load(l, 0))) > half_v)
-        implicit_wilkinson_qr_step_inplace<T, Abi>(d, e, l, m, n);
+    const bool use_qr = datapar::reduce_count(abs(d.load(m, 0)) < abs(d.load(l, 0))) > half_v;
+    if (use_qr)
+        sterf_qr_sweep_squared_e_inplace<T, Abi>(d, e, l, m);
     else
-        implicit_wilkinson_ql_step_inplace<T, Abi>(d, e, l, m, n);
-
-    if (any_of(factor != T{1}))
-        scale_block(d, e, l, m, T{1} / factor);
+        sterf_ql_sweep_squared_e_inplace<T, Abi>(d, e, l, m);
 }
 
 template <class T, class Abi>
-bool all_zero(datapar::simd<T, Abi> v) noexcept {
-    using std::all_of;
-    return all_of(v == T{0});
+[[nodiscard]] datapar::simd<T, Abi>
+squared_block_norm_estimate_from_squared_e(uview<T, Abi, StorageOrder::ColMajor> d,
+                                           uview<T, Abi, StorageOrder::ColMajor> e_sq, index_t l,
+                                           index_t m) noexcept {
+    using simd = datapar::simd<T, Abi>;
+    using std::abs;
+    using std::max;
+
+    simd anorm_sq{T{0}};
+    for (index_t i = l; i <= m; ++i) {
+        const auto di = d.load(i, 0);
+        anorm_sq      = max(anorm_sq, di * di);
+    }
+    for (index_t i = l; i < m; ++i) {
+        const auto ei_sq = abs(e_sq.load(i, 0)); // may be negative due to rounding
+        anorm_sq         = max(anorm_sq, ei_sq);
+    }
+    return anorm_sq;
 }
 
 template <class T, class Abi>
-index_t symmetric_tridiagonal_eigenvalues_inplace(view<T, Abi, StorageOrder::ColMajor> diag,
-                                                  view<T, Abi, StorageOrder::ColMajor> subdiag,
-                                                  TridiagonalQrOptions options) {
+[[nodiscard]] datapar::simd<T, Abi>
+block_norm_estimate_from_squared_e(uview<T, Abi, StorageOrder::ColMajor> d,
+                                   uview<T, Abi, StorageOrder::ColMajor> e_sq, index_t l,
+                                   index_t m) noexcept {
+    using std::sqrt;
+    return sqrt(squared_block_norm_estimate_from_squared_e<T, Abi>(d, e_sq, l, m));
+}
+
+template <class T, class Abi>
+std::expected<index_t, index_t> sterf(view<T, Abi, StorageOrder::ColMajor> diag,
+                                      view<T, Abi, StorageOrder::ColMajor> subdiag,
+                                      SterfOptions options) {
     static_assert(!std::is_const_v<T>);
     BATMAT_ASSERT(diag.cols() == 1);
     BATMAT_ASSERT(subdiag.cols() == 1);
@@ -282,55 +240,73 @@ index_t symmetric_tridiagonal_eigenvalues_inplace(view<T, Abi, StorageOrder::Col
     if (n <= 1)
         return 0;
 
-    const T rtol = default_tolerance(static_cast<T>(options.relative_tolerance));
+    using simd = datapar::simd<T, Abi>;
+    using std::any_of;
+
+    const T ε    = default_tolerance(static_cast<T>(options.relative_tolerance));
+    const T ε_sq = ε * ε;
+    const simd zero{T{0}}, one{T{1}};
     const index_t max_total_iterations = options.max_iterations_per_eigenvalue * n;
     index_t total_iterations           = 0;
 
     const uview<T, Abi, StorageOrder::ColMajor> d{diag};
     const uview<T, Abi, StorageOrder::ColMajor> e{subdiag};
 
-    // Repeatedly split the matrix at negligible subdiagonals and process
-    // each unreduced block.
-    const auto reduce_block = [&](index_t l, index_t m) {
-        implicit_wilkinson_step_inplace(d, e, l, m, n);
-        // Clean up any newly negligible subdiagonal entries in the active block.
-        for (index_t i = l; i < m; ++i)
-            if (negligible_subdiagonal_pwk<T, Abi>(e.load(i, 0), d.load(i, 0), d.load(i + 1, 0),
-                                                   rtol))
-                e.store(T{0}, i, 0);
-    };
+    // Square all offdiagonals globally and apply the equivalent squared LAPACK split test:
+    //     |e_i| <= eps * sqrt(|d_i|) * sqrt(|d_{i+1}|)
+    // becomes
+    //     e_i^2 <= eps^2 * |d_i * d_{i+1}|.
+    for (index_t i = 0; i + 1 < n; ++i) {
+        const auto ei    = e.load(i, 0);
+        const auto ei_sq = ei * ei;
+        const auto di = d.load(i, 0), di_next = d.load(i + 1, 0);
+        const bool split = negligible_squared_e(ei_sq, di, di_next, ε_sq);
+        e.store(split ? zero : ei_sq, i, 0);
+    }
+
     bool found_unreduced_block;
     do {
         found_unreduced_block = false;
-        index_t l             = 0;
+
+        index_t l = 0;
         while (l < n) {
             // Skip over converged 1x1 blocks.
             while (l + 1 < n && all_zero(e.load(l, 0)))
                 ++l;
             if (l + 1 >= n)
                 break;
-            // Find the end of the active unreduced block.
+            // Find the end of the current unreduced block.
             index_t m;
             for (m = l; m + 1 < n; ++m) {
-                auto em = e.load(m, 0);
+                const auto em = e.load(m, 0);
                 if (all_zero(em))
                     break;
-                if (negligible_subdiagonal_pwk<T, Abi>(em, d.load(m, 0), d.load(m + 1, 0), rtol)) {
-                    e.store(T{0}, m, 0);
+                if (negligible_squared_e(em, d.load(m, 0), d.load(m + 1, 0), ε_sq)) {
+                    e.store(zero, m, 0);
                     break;
                 }
             }
             // Active unreduced block is d[l..m]. Reduce it.
             if (m > l) {
                 found_unreduced_block = true;
-                if (m == l + 1)
-                    solve_2x2_block_inplace(d, e, l);
-                else if (++total_iterations > max_total_iterations)
-                    return total_iterations;
-                else
-                    reduce_block(l, m);
+                const auto anorm      = block_norm_estimate_from_squared_e(d, e, l, m);
+                const auto factor     = safe_scaling_factor(anorm);
+                const bool scaled     = any_of(factor != one);
+                if (scaled)
+                    scale_squared_e(d, e, l, m, factor);
+
+                if (m == l + 1) // Solve the 2×2 block directly rather than using QR sweeps
+                    solve_2x2_squared_e_inplace(d, e, l);
+                else if (++total_iterations < max_total_iterations)
+                    sterf_dynamic_step_squared_e_inplace(d, e, l, m);
+
+                if (scaled)
+                    scale_squared_e(d, e, l, m, T{1} / factor);
+                if (total_iterations >= max_total_iterations)
+                    return std::unexpected(total_iterations);
             }
-            l = m + 1;
+
+            l = m + 1; // Beginning of next block
         }
     } while (found_unreduced_block);
     return total_iterations;
@@ -338,14 +314,19 @@ index_t symmetric_tridiagonal_eigenvalues_inplace(view<T, Abi, StorageOrder::Col
 
 } // namespace detail
 
+/// Eigenvalues of a symmetric tridiagonal matrix given by `diag` and `subdiag`, computed in-place
+/// using the Pal-Walker-Kahan variant of the implicit QR/QL method with Wilkinson shifts. Based on
+/// LAPACK 3.12.1's `STERF`:
+/// https://netlib.org/lapack//explore-html/d4/d9d/group__sterf_gad293bb81da1c7785b42796d1e197f08c.html
+/// @return Number of QR steps taken. An unexpected value signals failure to converge within the
+///         maximum number of iterations specified in `options`.
 template <simdifiable Vd, simdifiable Vs>
     requires simdify_compatible<Vd, Vs>
-index_t eigvalsh_trd(Vd &&diag, Vs &&subdiag, TridiagonalQrOptions options = {}) {
+std::expected<index_t, index_t> sterf(Vd &&diag, Vs &&subdiag, SterfOptions options = {}) {
     static_assert(decltype(simdify(diag))::storage_order == StorageOrder::ColMajor);
     static_assert(decltype(simdify(subdiag))::storage_order == StorageOrder::ColMajor);
-    return detail::symmetric_tridiagonal_eigenvalues_inplace<simdified_value_t<Vd>,
-                                                             simdified_abi_t<Vd>>(
-        simdify(diag), simdify(subdiag), options);
+    return detail::sterf<simdified_value_t<Vd>, simdified_abi_t<Vd>>(simdify(diag),
+                                                                     simdify(subdiag), options);
 }
 
 template <simdifiable VA, simdifiable Vd, simdifiable Vs, MatrixStructure SA>

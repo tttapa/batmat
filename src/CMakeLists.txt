@@ -150,6 +150,7 @@ target_sources(batmat-core PUBLIC FILE_SET HEADERS
           "batmat/include/batmat/linalg/geqrf.hpp"
           "batmat/include/batmat/linalg/sytrd.hpp"
           "batmat/include/batmat/linalg/uview.hpp"
+          "batmat/include/batmat/linalg/eigvals.hpp"
 )
 
 include("batmat/src/linalg/micro-kernels/Codegen.cmake")
