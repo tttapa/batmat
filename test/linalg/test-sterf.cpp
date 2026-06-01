@@ -1,4 +1,4 @@
-#include <batmat/linalg/eigvals.hpp>
+#include <batmat/linalg/sterf.hpp>
 #include <batmat/linalg/sytrd.hpp>
 #include <gtest/gtest.h>
 
@@ -16,7 +16,7 @@ template <class Config>
 struct EigvalsTest : batmat::tests::LinalgTest<Config> {};
 TYPED_TEST_SUITE_P(EigvalsTest);
 
-TYPED_TEST_P(EigvalsTest, eigvalsh) {
+TYPED_TEST_P(EigvalsTest, sterf) {
     using batmat::index_t;
     using batmat::linalg::extract_bidiag;
     using batmat::linalg::sterf;
@@ -63,7 +63,7 @@ TYPED_TEST_P(EigvalsTest, eigvalsh) {
     }
 }
 
-REGISTER_TYPED_TEST_SUITE_P(EigvalsTest, eigvalsh);
+REGISTER_TYPED_TEST_SUITE_P(EigvalsTest, sterf);
 
 using namespace batmat::tests;
 INSTANTIATE_TYPED_TEST_SUITE_P(linalg, EigvalsTest, TestConfigs<OrderConfigs1>);

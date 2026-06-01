@@ -30,7 +30,7 @@ add_executable(tests
     "linalg/test-geqrf.cpp"
     "linalg/test-sytrd.cpp"
     "linalg/test-small-potrf.cpp"
-    "linalg/test-eigvals.cpp"
+    "linalg/test-sterf.cpp"
 )
 target_compile_definitions(tests PRIVATE
     $<$<BOOL:${BATMAT_EXTENSIVE_TESTS}>:BATMAT_EXTENSIVE_TESTS>)
