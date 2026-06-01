@@ -1,12 +1,10 @@
 [settings]
+os=Linux
 build_type=Release
 compiler=gcc
 compiler.cppstd=gnu23
 compiler.libcxx=libstdc++11
-compiler.version=15
+compiler.version=16.1
 
 [tool_requires]
-tttapa-toolchains/1.2.0
-
-[conf]
-tools.cmake.cmaketoolchain:generator=Ninja Multi-Config
+tttapa-toolchains/1.3.0
