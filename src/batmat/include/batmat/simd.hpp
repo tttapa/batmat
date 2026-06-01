@@ -260,4 +260,6 @@ constexpr V from_values(auto... values) {
     return aligned_load<V>(data);
 }
 
+auto select(bool cond, auto t, auto f) { return cond ? t : f; }
+
 } // namespace batmat::datapar
