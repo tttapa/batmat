@@ -5,13 +5,14 @@ on:
 
 jobs:
   build:
-    name: "Build (GCC ${{ matrix.gcc }}, ${{ matrix.build_type }}, ${{ matrix.profile }}, ${{ matrix.gsi-hpc-simd == 'True' && 'GSI-HPC/SIMD' || 'GCC SIMD' }})"
+    name: "Build (GCC ${{ matrix.gcc }}, ${{ matrix.build_type }}, ${{ matrix.dtype }}, ${{ matrix.profile }}, ${{ matrix.gsi-hpc-simd == 'True' && 'GSI-HPC/SIMD' || 'GCC SIMD' }})"
     strategy:
       matrix:
         gcc: ["15"]
         build_type: ["Debug", "Release"]
         profile: ["dev"]
         gsi-hpc-simd: ["True", "False"]
+        dtype: ["double", "float"]
       fail-fast: false
     runs-on: ubuntu-24.04
     env:
@@ -24,7 +25,8 @@ jobs:
     - name: Setup Conan and sccache
       uses: ./.github/workflows/setup-conan
       with:
-        cache-key: ${{ matrix.profile }}-${{ matrix.gcc }}-${{ matrix.build_type }}-${{ matrix.gsi-hpc-simd }}
+        restore-key: ${{ matrix.profile }}-${{ matrix.gcc }}-${{ matrix.build_type }}-${{ matrix.gsi-hpc-simd }}-
+        cache-key: ${{ matrix.profile }}-${{ matrix.gcc }}-${{ matrix.build_type }}-${{ matrix.gsi-hpc-simd }}-${{ matrix.dtype }}
 
     - name: Build
       run: >
@@ -32,9 +34,15 @@ jobs:
         -s compiler.version=${{ matrix.gcc }}
         -s build_type=${{ matrix.build_type }}
         -o \&:with_gsi_hpc_simd=${{ matrix.gsi-hpc-simd }}
+        -o \&:dtypes=${{ matrix.dtype }}
+        -o \&:vector_lengths_double=1,2,4
+        -o \&:vector_lengths_float=1,4,8
+        -o guanaqo/\*:with_mkl=False
         -c '&:tools.cmake.cmaketoolchain:extra_variables*={"CMAKE_DISABLE_PRECOMPILE_HEADERS": "On"}'
         -c '&:tools.cmake.cmaketoolchain:extra_variables*={"CMAKE_COMPILE_WARNING_AS_ERROR": "On"}'
         -c '&:tools.compilation:verbosity=verbose'
+      env:
+        DEV_ARCH: x86-64-v3
 
     - run: conan cache clean
 
@@ -62,9 +70,11 @@ jobs:
           conan install . --build=missing -pr scripts/dev/profiles/dev -o guanaqo/\*:with_mkl=False
           -s:h build_type=Debug -s:b build_type=Release
           -s:b compiler.cppstd=20
+        env:
+          DEV_ARCH: x86-64-v3
 
       - name: Generate documentation
-        run: ./scripts/ci/gen-docs.sh "${{ github.workspace }}/staging" conan-default conan-debug
+        run: ./scripts/ci/gen-docs.sh "${{ github.workspace }}/staging" conan-debug conan-debug
 
       - name: Upload documentation
         uses: actions/upload-artifact@v6
