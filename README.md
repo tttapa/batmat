@@ -130,11 +130,11 @@ cmake --build --preset conan-release
 > Batmat makes extensive use of vectorization (in fact, that's kind of the whole point).
 > Be sure to enable SIMD ISA extension support in your Conan profile's
 > compiler flags for the best performance.
-> See [scripts/dev/profiles/laptop](scripts/dev/profiles/laptop) for an example.
+> See [scripts/dev/profiles](scripts/dev/profiles) for some examples.
 
-GCC 14 or later is required (and can be installed through Conan).
-Clang is also supported, although older versions of Clang may require the
-`-o\&:with_gsi_hpc_simd=True` option to be passed to Conan to enable support for the
+GCC 14 or later is required (and can be installed through Conan by using the
+`scripts/dev/profiles/dev` profile). Clang is also supported, although older versions of Clang may
+require the `-o\&:with_gsi_hpc_simd=True` option to be passed to Conan to enable support for the
 [GSI-HPC/simd](https://github.com/GSI-HPC/simd) library. Intel's LLVM-based ICX compiler is also
 supported.
 
@@ -145,7 +145,8 @@ Batmat performs exceptionally well on matrices smaller than around 100×100 (tha
 ```sh
 . ~/intel/oneapi/setvars.sh  # For the Intel MKL
 python3 -m pip install -r benchmarks/scripts/requirements.txt
-conan install . --build=missing -o guanaqo/\*:with_mkl=True -o\&:with_benchmarks=True -o\&:with_blasfeo=True
+profile=scripts/dev/profiles/dev  # or dev-minimal to avoid sccache and MKL dependencies
+conan install . --build=missing -pr $profile
 cmake --fresh --preset conan-release -DBATMAT_WITH_ACCURATE_BUILD_TIME=Off
-cmake --build --preset conan-release -t viz-benchmark-potrf  # or gemm, syrk, trsm, syrk-potrf, trmm, trtri, hyh
+cmake --build --preset conan-release -t viz-benchmark-potrf  # or gemm, syrk, trsm, syrk-potrf, trmm, trtri, hyh ...
 ```

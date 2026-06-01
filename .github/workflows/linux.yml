@@ -10,7 +10,7 @@ jobs:
       matrix:
         gcc: ["15"]
         build_type: ["Debug", "Release"]
-        profile: ["laptop"]
+        profile: ["dev"]
         gsi-hpc-simd: ["True", "False"]
       fail-fast: false
     runs-on: ubuntu-24.04
@@ -31,13 +31,7 @@ jobs:
         conan build . --build=missing -pr scripts/dev/profiles/${{ matrix.profile }}
         -s compiler.version=${{ matrix.gcc }}
         -s build_type=${{ matrix.build_type }}
-        -c \*:tools.build:skip_test=True
-        -c \&:tools.build:skip_test=False
-        -o \&:with_benchmarks=True
-        -o \&:with_blasfeo=True
         -o \&:with_gsi_hpc_simd=${{ matrix.gsi-hpc-simd }}
-        -c '&:tools.cmake.cmaketoolchain:extra_variables*={"CMAKE_C_COMPILER_LAUNCHER": "sccache"}'
-        -c '&:tools.cmake.cmaketoolchain:extra_variables*={"CMAKE_CXX_COMPILER_LAUNCHER": "sccache"}'
         -c '&:tools.cmake.cmaketoolchain:extra_variables*={"CMAKE_DISABLE_PRECOMPILE_HEADERS": "On"}'
         -c '&:tools.cmake.cmaketoolchain:extra_variables*={"CMAKE_COMPILE_WARNING_AS_ERROR": "On"}'
         -c '&:tools.compilation:verbosity=verbose'
@@ -65,7 +59,7 @@ jobs:
 
       - name: Install dependencies
         run: >
-          conan install . --build=missing -pr scripts/dev/profiles/laptop
+          conan install . --build=missing -pr scripts/dev/profiles/dev -o guanaqo/\*:with_mkl=False
           -s:h build_type=Debug -s:b build_type=Release
           -s:b compiler.cppstd=20
 
