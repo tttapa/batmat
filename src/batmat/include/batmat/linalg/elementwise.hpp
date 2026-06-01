@@ -519,7 +519,7 @@ void transform_n_diag(F &&fun, std::tuple<VAs...> As, VBs &&...Bs) {
 /// matrices or vectors. This function supports setting the diagonal of a matrix to the values of
 /// a vector, copying the diagonal of one matrix to the diagonal of another, or copying the diagonal
 /// elements of a matrix to a vector.
-template <class F, simdifiable VA, simdifiable VB>
+template <simdifiable VA, simdifiable VB>
     requires simdify_compatible<VA, VB>
 void copy_diag(VA &&A, VB &&B) {
     [[maybe_unused]] const index_t n =
