@@ -23,7 +23,8 @@ TEST(linalg, vdot) {
     auto result = linalg::vdot(a, b);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
-    for (index_t j = 0; j < v_t(); ++j)
+    static_assert(result.size() == v_t());
+    for (decltype(result.size()) j = 0; j < result.size(); ++j)
         EXPECT_NEAR(expected[j], result[j], eps) << j;
 }
 
@@ -71,7 +72,8 @@ TEST(linalg, vnorms_all) {
     auto result = linalg::vnorms_all(a);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
-    for (index_t j = 0; j < v_t(); ++j) {
+    static_assert(result.amax.size() == v_t());
+    for (decltype(result.amax.size()) j = 0; j < result.amax.size(); ++j) {
         EXPECT_NEAR(expected_amax[j], result.amax[j], eps) << "amax at lane " << j;
         EXPECT_NEAR(expected_asum[j], result.asum[j], eps) << "asum at lane " << j;
         EXPECT_NEAR(expected_sumsq[j], result.sumsq[j], eps) << "sumsq at lane " << j;
@@ -124,7 +126,8 @@ TEST(linalg, vnorm_inf) {
     auto result = linalg::vnorm_inf(a);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
-    for (index_t j = 0; j < v_t(); ++j)
+    static_assert(result.size() == v_t());
+    for (decltype(result.size()) j = 0; j < result.size(); ++j)
         EXPECT_NEAR(expected[j], result[j], eps) << j;
 }
 
@@ -167,7 +170,8 @@ TEST(linalg, vnorm_1) {
     auto result = linalg::vnorm_1(a);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
-    for (index_t j = 0; j < v_t(); ++j)
+    static_assert(result.size() == v_t());
+    for (decltype(result.size()) j = 0; j < result.size(); ++j)
         EXPECT_NEAR(expected[j], result[j], eps) << j;
 }
 
@@ -210,7 +214,8 @@ TEST(linalg, vnorm_2_squared) {
     auto result = linalg::vnorm_2_squared(a);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
-    for (index_t j = 0; j < v_t(); ++j)
+    static_assert(result.size() == v_t());
+    for (decltype(result.size()) j = 0; j < result.size(); ++j)
         EXPECT_NEAR(expected[j], result[j], eps) << j;
 }
 
@@ -257,7 +262,8 @@ TEST(linalg, vnorm_2) {
     auto result = linalg::vnorm_2(a);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
-    for (index_t j = 0; j < v_t(); ++j)
+    static_assert(result.size() == v_t());
+    for (decltype(result.size()) j = 0; j < result.size(); ++j)
         EXPECT_NEAR(expected[j], result[j], eps) << j;
 }
 
@@ -302,7 +308,8 @@ TEST(linalg, weighted_vnorm_sq) {
     auto result = linalg::weighted_vnorm_sq(w, a);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
-    for (index_t j = 0; j < v_t(); ++j)
+    static_assert(result.size() == v_t());
+    for (decltype(result.size()) j = 0; j < result.size(); ++j)
         EXPECT_NEAR(expected[j], result[j], eps) << j;
 }
 
@@ -352,7 +359,8 @@ TEST(linalg, weighted_vnorm_sq_diff) {
     auto result = linalg::weighted_vnorm_sq_diff(w, a, b);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
-    for (index_t j = 0; j < v_t(); ++j)
+    static_assert(result.size() == v_t());
+    for (decltype(result.size()) j = 0; j < result.size(); ++j)
         EXPECT_NEAR(expected[j], result[j], eps) << j;
 }
 
@@ -402,7 +410,8 @@ TEST(linalg, vdot_multi) {
     auto result = linalg::vdot(a, b);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
-    for (index_t j = 0; j < v_t(); ++j)
+    static_assert(result.size() == v_t());
+    for (decltype(result.size()) j = 0; j < result.size(); ++j)
         EXPECT_NEAR(expected[j], result[j], eps) << j;
 }
 
@@ -451,7 +460,8 @@ TEST(linalg, vnorms_all_multi) {
     auto result = linalg::vnorms_all(a);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
-    for (index_t j = 0; j < v_t(); ++j) {
+    static_assert(result.amax.size() == v_t());
+    for (decltype(result.amax.size()) j = 0; j < result.amax.size(); ++j) {
         EXPECT_NEAR(expected_amax[j], result.amax[j], eps) << "amax at lane " << j;
         EXPECT_NEAR(expected_asum[j], result.asum[j], eps) << "asum at lane " << j;
         EXPECT_NEAR(expected_sumsq[j], result.sumsq[j], eps) << "sumsq at lane " << j;
@@ -476,7 +486,8 @@ TEST(linalg, vnorm_inf_multi) {
     auto result = linalg::vnorm_inf(a);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
-    for (index_t j = 0; j < v_t(); ++j)
+    static_assert(result.size() == v_t());
+    for (decltype(result.size()) j = 0; j < result.size(); ++j)
         EXPECT_NEAR(expected[j], result[j], eps) << j;
 }
 
@@ -498,7 +509,8 @@ TEST(linalg, vnorm_1_multi) {
     auto result = linalg::vnorm_1(a);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
-    for (index_t j = 0; j < v_t(); ++j)
+    static_assert(result.size() == v_t());
+    for (decltype(result.size()) j = 0; j < result.size(); ++j)
         EXPECT_NEAR(expected[j], result[j], eps) << j;
 }
 
@@ -520,7 +532,8 @@ TEST(linalg, vnorm_2_squared_multi) {
     auto result = linalg::vnorm_2_squared(a);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
-    for (index_t j = 0; j < v_t(); ++j)
+    static_assert(result.size() == v_t());
+    for (decltype(result.size()) j = 0; j < result.size(); ++j)
         EXPECT_NEAR(expected[j], result[j], eps) << j;
 }
 
@@ -546,7 +559,8 @@ TEST(linalg, vnorm_2_multi) {
     auto result = linalg::vnorm_2(a);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
-    for (index_t j = 0; j < v_t(); ++j)
+    static_assert(result.size() == v_t());
+    for (decltype(result.size()) j = 0; j < result.size(); ++j)
         EXPECT_NEAR(expected[j], result[j], eps) << j;
 }
 
@@ -570,7 +584,8 @@ TEST(linalg, weighted_vnorm_sq_multi) {
     auto result = linalg::weighted_vnorm_sq(w, a);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
-    for (index_t j = 0; j < v_t(); ++j)
+    static_assert(result.size() == v_t());
+    for (decltype(result.size()) j = 0; j < result.size(); ++j)
         EXPECT_NEAR(expected[j], result[j], eps) << j;
 }
 
@@ -599,6 +614,7 @@ TEST(linalg, weighted_vnorm_sq_diff_multi) {
     auto result = linalg::weighted_vnorm_sq_diff(w, a, b);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
-    for (index_t j = 0; j < v_t(); ++j)
+    static_assert(result.size() == v_t());
+    for (decltype(result.size()) j = 0; j < result.size(); ++j)
         EXPECT_NEAR(expected[j], result[j], eps) << j;
 }
