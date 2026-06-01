@@ -9,11 +9,34 @@
 using batmat::index_t;
 using batmat::real_t;
 using batmat::linalg::StorageOrder;
+using guanaqo::blas::blas_index_t;
 namespace flops = batmat::linalg::flops;
 
+// TODO: move to guanaqo::blas
 #ifndef LAPACK_dgeqrf
 #define LAPACK_dgeqrf dgeqrf
 #endif
+#ifndef LAPACK_sgeqrf
+#define LAPACK_sgeqrf sgeqrf
+#endif
+
+template <class T, class I>
+void xgeqrf(const I *m, const I *n, std::type_identity_t<T *> a, const I *lda,
+            std::type_identity_t<T *> tau, T *work, const I *lwork, I *info);
+template <>
+void xgeqrf<float, blas_index_t>(const blas_index_t *m, const blas_index_t *n,
+                                 std::type_identity_t<float *> a, const blas_index_t *lda,
+                                 std::type_identity_t<float *> tau, float *work,
+                                 const blas_index_t *lwork, blas_index_t *info) {
+    LAPACK_sgeqrf(m, n, a, lda, tau, work, lwork, info);
+}
+template <>
+void xgeqrf<double, blas_index_t>(const blas_index_t *m, const blas_index_t *n,
+                                  std::type_identity_t<double *> a, const blas_index_t *lda,
+                                  std::type_identity_t<double *> tau, double *work,
+                                  const blas_index_t *lwork, blas_index_t *info) {
+    LAPACK_dgeqrf(m, n, a, lda, tau, work, lwork, info);
+}
 
 template <class Abi, StorageOrder OA>
 constexpr auto geqrf = [](benchmark::State &state) {
@@ -23,7 +46,7 @@ constexpr auto geqrf = [](benchmark::State &state) {
 
     const index_t d = BATMAT_BENCHMARK_DEPTH;
     const auto n    = static_cast<index_t>(state.range(0));
-    const auto ni   = static_cast<guanaqo::blas::blas_index_t>(n);
+    const auto ni   = static_cast<blas_index_t>(n);
     matrix<real_t, Abi, OA> A{{.depth = d, .rows = n, .cols = n}};
     matrix<real_t, Abi, OA> B{{.depth = d, .rows = n, .cols = n}};
     auto [rw, cw] = geqrf_size_W(A.batch(0));
@@ -33,9 +56,9 @@ constexpr auto geqrf = [](benchmark::State &state) {
     // Allocate LAPACK workspace
     std::vector<real_t> work(1);
     if constexpr (decltype(A)::batch_size_type::value == 1) {
-        const guanaqo::blas::blas_index_t neg_one = -1;
-        guanaqo::blas::blas_index_t info;
-        LAPACK_dgeqrf(&ni, &ni, nullptr, &ni, nullptr, work.data(), &neg_one, &info);
+        const blas_index_t neg_one = -1;
+        blas_index_t info;
+        xgeqrf(&ni, &ni, nullptr, &ni, nullptr, work.data(), &neg_one, &info);
         BATMAT_ASSERT(info == 0);
         work.resize(static_cast<size_t>(work[0]));
         BATMAT_ASSERT(W.size() >= n);
@@ -45,12 +68,12 @@ constexpr auto geqrf = [](benchmark::State &state) {
             if constexpr (decltype(A)::batch_size_type::value == 1) {
                 state.PauseTiming();
                 copy(A.batch(l), B.batch(l));
-                const auto lwork = static_cast<guanaqo::blas::blas_index_t>(work.size());
-                guanaqo::blas::blas_index_t info;
+                const auto lwork = static_cast<blas_index_t>(work.size());
+                blas_index_t info;
                 state.ResumeTiming();
                 // guanaqo::blas::xgeqrf(B(l)); // TODO
-                LAPACK_dgeqrf(&ni, &ni, B.batch(l).data(), &ni, W.batch(l).data(), work.data(),
-                              &lwork, &info);
+                xgeqrf(&ni, &ni, B.batch(l).data(), &ni, W.batch(l).data(), work.data(), &lwork,
+                       &info);
             } else {
                 batmat::linalg::geqrf(A.batch(l), B.batch(l), W.batch(l));
             }

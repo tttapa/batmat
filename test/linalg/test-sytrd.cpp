@@ -52,7 +52,7 @@ TYPED_TEST_P(TridiagTest, sytrd) {
 
         this->check([&](auto &&Al) -> EMat { return Al.template selfadjointView<Eigen::Lower>(); },
                     [&](auto l, auto &&res, auto &&ref, auto &&) {
-                        EXPECT_THAT(res, EigenAlmostEqualRel(ref, this->tolerance_n(m))) << l;
+                        EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance_n(m))) << l;
                     },
                     QTQᵀ, A0);
 

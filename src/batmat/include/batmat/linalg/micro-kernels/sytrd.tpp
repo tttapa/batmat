@@ -177,14 +177,14 @@ sytrd_diag_microkernel(index_t k, triangular_accessor<T, Abi, SizeR<T, Abi>> W, 
         UNROLL_FOR (index_t l = j + 2; l < R + 1; ++l) {
             simd ã32 = Axj1[l] + γ_ω * b[l] - bb[l];
             D.store(ã32, l, j + 1);
-            simd yl = bb[l] - simd{0.5} * γ * b[l];
+            simd yl = bb[l] - simd{T{0.5}} * γ * b[l];
             Y.store(yl, l, j);
         }
         for (index_t l = max(R + 1, j + 2); l < k; ++l) {
             simd bl  = D.load(l, j);
             simd ã32 = D.load(l, j + 1) + γ_ω * bl - Y.load(l, j);
             D.store(ã32, l, j + 1);
-            simd yl = Y.load(l, j) - simd{0.5} * γ * bl;
+            simd yl = Y.load(l, j) - simd{T{0.5}} * γ * bl;
             Y.store(yl, l, j);
         }
 

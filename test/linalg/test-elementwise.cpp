@@ -17,35 +17,34 @@ TEST(linalg, scale) {
     std::ranges::generate(a, [&] { return dist(rng); });
 
     matrix::Matrix<real_t, index_t, v_t, v_t> b{{.rows = n, .cols = 1}};
-    linalg::scale(3.14, a, b);
+    linalg::scale(real_t(3.14), a, b);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
         for (index_t j = 0; j < v_t(); ++j)
-            EXPECT_NEAR(3.14 * a(j, i, 0), b(j, i, 0), eps) << i << ", " << j;
+            EXPECT_NEAR(real_t(3.14) * a(j, i, 0), b(j, i, 0), eps) << i << ", " << j;
 }
 
 TEST(linalg, vscale) {
     using namespace batmat;
 
-    const index_t n            = 43;
-    using v_t                  = index_constant<4>;
-    using abi                  = datapar::deduced_abi<real_t, v_t{}()>;
-    constexpr size_t alignment = datapar::simd_align<real_t, abi>::value;
+    const index_t n = 43;
+    using v_t       = index_constant<4>;
+    using abi       = datapar::deduced_abi<real_t, v_t{}()>;
     matrix::Matrix<real_t, index_t, v_t, v_t> a{{.rows = n, .cols = 1}};
     std::mt19937 rng{12345};
     std::uniform_real_distribution<real_t> dist{-2, 2};
     std::ranges::generate(a, [&] { return dist(rng); });
 
-    alignas(alignment) real_t alpha_data[v_t()] = {3.14, 4.15, 5.16, 6.17};
-    auto alpha = datapar::aligned_load<datapar::simd<real_t, abi>>(alpha_data);
+    const auto α = datapar::from_values<datapar::simd<real_t, abi>>(real_t(3.14), real_t(4.15),
+                                                                    real_t(5.16), real_t(6.17));
     matrix::Matrix<real_t, index_t, v_t, v_t> b{{.rows = n, .cols = 1}};
-    linalg::scale(alpha, a, b);
+    linalg::scale(α, a, b);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
         for (index_t j = 0; j < v_t(); ++j)
-            EXPECT_NEAR(alpha_data[j] * a(j, i, 0), b(j, i, 0), eps) << i << ", " << j;
+            EXPECT_NEAR(α[j] * a(j, i, 0), b(j, i, 0), eps) << i << ", " << j;
 }
 
 TEST(linalg, hadamard) {
@@ -113,18 +112,17 @@ TEST(linalg, clamp_scalar) {
 TEST(linalg, clamp_perlane_matrix) {
     using namespace batmat;
 
-    const index_t n            = 43;
-    using v_t                  = index_constant<4>;
-    using abi                  = datapar::deduced_abi<real_t, v_t{}()>;
-    constexpr size_t alignment = datapar::simd_align<real_t, abi>::value;
+    const index_t n = 43;
+    using v_t       = index_constant<4>;
+    using abi       = datapar::deduced_abi<real_t, v_t{}()>;
 
     matrix::Matrix<real_t, index_t, v_t, v_t> a{{.rows = n, .cols = 1}};
     std::mt19937 rng{12345};
     std::uniform_real_distribution<real_t> dist{-4, 4};
     std::ranges::generate(a, [&] { return dist(rng); });
 
-    alignas(alignment) real_t lo_data[v_t()] = {-0.5, -1.0, -2.0, -3.0};
-    alignas(alignment) real_t hi_data[v_t()] = {0.5, 1.0, 2.0, 3.0};
+    real_t lo_data[v_t()] = {-0.5, -1.0, -2.0, -3.0};
+    real_t hi_data[v_t()] = {0.5, 1.0, 2.0, 3.0};
     matrix::Matrix<real_t, index_t, v_t, v_t> lo_mat{{.rows = n, .cols = 1}};
     matrix::Matrix<real_t, index_t, v_t, v_t> hi_mat{{.rows = n, .cols = 1}};
     for (index_t i = 0; i < n; ++i)
@@ -187,16 +185,16 @@ TEST(linalg, axpby_scalar) {
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
         for (index_t j = 0; j < v_t(); ++j)
-            EXPECT_NEAR(2.0 * x(j, i, 0) - 1.5 * y(j, i, 0), z(j, i, 0), eps) << i << ", " << j;
+            EXPECT_NEAR(real_t(2.0) * x(j, i, 0) - real_t(1.5) * y(j, i, 0), z(j, i, 0), eps)
+                << i << ", " << j;
 }
 
 TEST(linalg, axpby_vector) {
     using namespace batmat;
 
-    const index_t n            = 43;
-    using v_t                  = index_constant<4>;
-    using abi                  = datapar::deduced_abi<real_t, v_t{}()>;
-    constexpr size_t alignment = datapar::simd_align<real_t, abi>::value;
+    const index_t n = 43;
+    using v_t       = index_constant<4>;
+    using abi       = datapar::deduced_abi<real_t, v_t{}()>;
 
     matrix::Matrix<real_t, index_t, v_t, v_t> x{{.rows = n, .cols = 1}};
     matrix::Matrix<real_t, index_t, v_t, v_t> y{{.rows = n, .cols = 1}};
@@ -205,17 +203,16 @@ TEST(linalg, axpby_vector) {
     std::ranges::generate(x, [&] { return dist(rng); });
     std::ranges::generate(y, [&] { return dist(rng); });
 
-    alignas(alignment) real_t a_data[v_t()] = {1.1, 2.2, 3.3, 4.4};
-    alignas(alignment) real_t b_data[v_t()] = {-0.5, -1.0, -1.5, -2.0};
-    auto a_simd = datapar::aligned_load<datapar::simd<real_t, abi>>(a_data);
-    auto b_simd = datapar::aligned_load<datapar::simd<real_t, abi>>(b_data);
+    const auto a = datapar::from_values<datapar::simd<real_t, abi>>(real_t(1.1), real_t(2.2),
+                                                                    real_t(3.3), real_t(4.4));
+    const auto b = datapar::from_values<datapar::simd<real_t, abi>>(real_t(-0.5), real_t(-1.0),
+                                                                    real_t(-1.5), real_t(-2.0));
     matrix::Matrix<real_t, index_t, v_t, v_t> z2{{.rows = n, .cols = 1}};
-    linalg::axpby(a_simd, x, b_simd, y, z2);
+    linalg::axpby(a, x, b, y, z2);
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
         for (index_t j = 0; j < v_t(); ++j)
-            EXPECT_NEAR(a_data[j] * x(j, i, 0) + b_data[j] * y(j, i, 0), z2(j, i, 0), eps)
-                << i << ", " << j;
+            EXPECT_NEAR(a[j] * x(j, i, 0) + b[j] * y(j, i, 0), z2(j, i, 0), eps) << i << ", " << j;
 }
 
 TEST(linalg, axpy_inplace) {
@@ -235,7 +232,7 @@ TEST(linalg, axpy_inplace) {
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
         for (index_t j = 0; j < v_t(); ++j)
-            EXPECT_NEAR(0.5 * x(j, i, 0) + y(j, i, 0), y2(j, i, 0), eps) << i << ", " << j;
+            EXPECT_NEAR(real_t(0.5) * x(j, i, 0) + y(j, i, 0), y2(j, i, 0), eps) << i << ", " << j;
 }
 
 TEST(linalg, negate) {
@@ -356,7 +353,7 @@ TEST(linalg, scale_multi) {
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
     for (index_t d = 0; d < 3 * v_t(); ++d)
         for (index_t i = 0; i < n; ++i)
-            EXPECT_NEAR(2.5 * a(d, i, 0), b(d, i, 0), eps) << d << ", " << i;
+            EXPECT_NEAR(real_t(2.5) * a(d, i, 0), b(d, i, 0), eps) << d << ", " << i;
 }
 
 TEST(linalg, hadamard_multi) {
@@ -418,7 +415,8 @@ TEST(linalg, axpby_scalar_multi) {
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
     for (index_t d = 0; d < 3 * v_t(); ++d)
         for (index_t i = 0; i < n; ++i)
-            EXPECT_NEAR(2.0 * x(d, i, 0) - 1.5 * y(d, i, 0), z(d, i, 0), eps) << d << ", " << i;
+            EXPECT_NEAR(real_t(2.0) * x(d, i, 0) - real_t(1.5) * y(d, i, 0), z(d, i, 0), eps)
+                << d << ", " << i;
 }
 
 TEST(linalg, axpy_inplace_multi) {
@@ -434,53 +432,51 @@ TEST(linalg, axpy_inplace_multi) {
     std::ranges::generate(y, [&] { return dist(rng); });
 
     matrix::Matrix<real_t, index_t, v_t> y2 = y;
-    linalg::axpy(real_t{0.5}, x, y2);
+    linalg::axpy(real_t(0.5), x, y2);
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
     for (index_t d = 0; d < 3 * v_t(); ++d)
         for (index_t i = 0; i < n; ++i)
-            EXPECT_NEAR(0.5 * x(d, i, 0) + y(d, i, 0), y2(d, i, 0), eps) << d << ", " << i;
+            EXPECT_NEAR(real_t(0.5) * x(d, i, 0) + y(d, i, 0), y2(d, i, 0), eps) << d << ", " << i;
 }
 
 TEST(linalg, scale_multi_simd) {
     using namespace batmat;
 
-    const index_t n            = 43;
-    using v_t                  = index_constant<4>;
-    using abi                  = datapar::deduced_abi<real_t, v_t{}()>;
-    constexpr size_t alignment = datapar::simd_align<real_t, abi>::value;
+    const index_t n = 43;
+    using v_t       = index_constant<4>;
+    using abi       = datapar::deduced_abi<real_t, v_t{}()>;
     matrix::Matrix<real_t, index_t, v_t> a{{.depth = 3 * v_t(), .rows = n, .cols = 1}};
     std::mt19937 rng{12345};
     std::uniform_real_distribution<real_t> dist{-2, 2};
     std::ranges::generate(a, [&] { return dist(rng); });
 
-    alignas(alignment) real_t alpha_data[v_t()] = {3.14, 4.15, 5.16, 6.17};
-    auto alpha = datapar::aligned_load<datapar::simd<real_t, abi>>(alpha_data);
+    const auto α = datapar::from_values<datapar::simd<real_t, abi>>(real_t(3.14), real_t(4.15),
+                                                                    real_t(5.16), real_t(6.17));
 
     matrix::Matrix<real_t, index_t, v_t> b{{.depth = 3 * v_t(), .rows = n, .cols = 1}};
-    linalg::scale(alpha, a, b);
+    linalg::scale(α, a, b);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
     for (index_t d = 0; d < 3 * v_t(); ++d)
         for (index_t i = 0; i < n; ++i)
-            EXPECT_NEAR(alpha_data[d % v_t()] * a(d, i, 0), b(d, i, 0), eps) << d << ", " << i;
+            EXPECT_NEAR(α[d % v_t()] * a(d, i, 0), b(d, i, 0), eps) << d << ", " << i;
 }
 
 TEST(linalg, clamp_scalar_multi_simd) {
     using namespace batmat;
 
-    const index_t n            = 43;
-    using v_t                  = index_constant<4>;
-    using abi                  = datapar::deduced_abi<real_t, v_t{}()>;
-    constexpr size_t alignment = datapar::simd_align<real_t, abi>::value;
+    const index_t n = 43;
+    using v_t       = index_constant<4>;
+    using abi       = datapar::deduced_abi<real_t, v_t{}()>;
     matrix::Matrix<real_t, index_t, v_t> a{{.depth = 3 * v_t(), .rows = n, .cols = 1}};
     std::mt19937 rng{12345};
     std::uniform_real_distribution<real_t> dist{-4, 4};
     std::ranges::generate(a, [&] { return dist(rng); });
 
-    alignas(alignment) real_t lo_data[v_t()] = {-1.5, -1.0, -0.5, -2.0};
-    alignas(alignment) real_t hi_data[v_t()] = {1.5, 1.0, 0.5, 2.0};
-    auto lo = datapar::aligned_load<datapar::simd<real_t, abi>>(lo_data);
-    auto hi = datapar::aligned_load<datapar::simd<real_t, abi>>(hi_data);
+    const auto lo = datapar::from_values<datapar::simd<real_t, abi>>(real_t(-1.5), real_t(-1.0),
+                                                                     real_t(-0.5), real_t(-2.0));
+    const auto hi = datapar::from_values<datapar::simd<real_t, abi>>(real_t(1.5), real_t(1.0),
+                                                                     real_t(0.5), real_t(2.0));
 
     matrix::Matrix<real_t, index_t, v_t> z{{.depth = 3 * v_t(), .rows = n, .cols = 1}};
     linalg::clamp(a, lo, hi, z);
@@ -488,7 +484,7 @@ TEST(linalg, clamp_scalar_multi_simd) {
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
     for (index_t d = 0; d < 3 * v_t(); ++d)
         for (index_t i = 0; i < n; ++i) {
-            real_t expect = std::max(lo_data[d % v_t()], std::min(a(d, i, 0), hi_data[d % v_t()]));
+            real_t expect = std::max(lo[d % v_t()], std::min(a(d, i, 0), hi[d % v_t()]));
             EXPECT_NEAR(expect, z(d, i, 0), eps) << d << ", " << i;
         }
 }
@@ -496,10 +492,9 @@ TEST(linalg, clamp_scalar_multi_simd) {
 TEST(linalg, axpby_scalar_multi_simd) {
     using namespace batmat;
 
-    const index_t n            = 43;
-    using v_t                  = index_constant<4>;
-    using abi                  = datapar::deduced_abi<real_t, v_t{}()>;
-    constexpr size_t alignment = datapar::simd_align<real_t, abi>::value;
+    const index_t n = 43;
+    using v_t       = index_constant<4>;
+    using abi       = datapar::deduced_abi<real_t, v_t{}()>;
     matrix::Matrix<real_t, index_t, v_t> x{{.depth = 3 * v_t(), .rows = n, .cols = 1}};
     matrix::Matrix<real_t, index_t, v_t> y{{.depth = 3 * v_t(), .rows = n, .cols = 1}};
     std::mt19937 rng{12345};
@@ -507,29 +502,27 @@ TEST(linalg, axpby_scalar_multi_simd) {
     std::ranges::generate(x, [&] { return dist(rng); });
     std::ranges::generate(y, [&] { return dist(rng); });
 
-    alignas(alignment) real_t alpha_data[v_t()] = {2.5, 2.0, 1.5, 3.0};
-    alignas(alignment) real_t beta_data[v_t()]  = {-1.0, -1.5, -0.5, -2.0};
-    auto alpha = datapar::aligned_load<datapar::simd<real_t, abi>>(alpha_data);
-    auto beta  = datapar::aligned_load<datapar::simd<real_t, abi>>(beta_data);
+    const auto α = datapar::from_values<datapar::simd<real_t, abi>>(real_t(2.5), real_t(2.0),
+                                                                    real_t(1.5), real_t(3.0));
+    const auto β = datapar::from_values<datapar::simd<real_t, abi>>(real_t(-1.0), real_t(-1.5),
+                                                                    real_t(-0.5), real_t(-2.0));
 
     matrix::Matrix<real_t, index_t, v_t> z{{.depth = 3 * v_t(), .rows = n, .cols = 1}};
-    linalg::axpby(alpha, x, beta, y, z);
+    linalg::axpby(α, x, β, y, z);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
     for (index_t d = 0; d < 3 * v_t(); ++d)
         for (index_t i = 0; i < n; ++i)
-            EXPECT_NEAR(alpha_data[d % v_t()] * x(d, i, 0) + beta_data[d % v_t()] * y(d, i, 0),
-                        z(d, i, 0), eps)
+            EXPECT_NEAR(α[d % v_t()] * x(d, i, 0) + β[d % v_t()] * y(d, i, 0), z(d, i, 0), eps)
                 << d << ", " << i;
 }
 
 TEST(linalg, axpy_inplace_multi_simd) {
     using namespace batmat;
 
-    const index_t n            = 43;
-    using v_t                  = index_constant<4>;
-    using abi                  = datapar::deduced_abi<real_t, v_t{}()>;
-    constexpr size_t alignment = datapar::simd_align<real_t, abi>::value;
+    const index_t n = 43;
+    using v_t       = index_constant<4>;
+    using abi       = datapar::deduced_abi<real_t, v_t{}()>;
     matrix::Matrix<real_t, index_t, v_t> x{{.depth = 3 * v_t(), .rows = n, .cols = 1}};
     matrix::Matrix<real_t, index_t, v_t> y{{.depth = 3 * v_t(), .rows = n, .cols = 1}};
     std::mt19937 rng{12345};
@@ -537,15 +530,14 @@ TEST(linalg, axpy_inplace_multi_simd) {
     std::ranges::generate(x, [&] { return dist(rng); });
     std::ranges::generate(y, [&] { return dist(rng); });
 
-    alignas(alignment) real_t alpha_data[v_t()] = {0.5, 1.5, 2.0, -0.5};
-    auto alpha = datapar::aligned_load<datapar::simd<real_t, abi>>(alpha_data);
+    const auto α = datapar::from_values<datapar::simd<real_t, abi>>(real_t(0.5), real_t(1.5),
+                                                                    real_t(2.0), real_t(-0.5));
 
     matrix::Matrix<real_t, index_t, v_t> y2 = y;
-    linalg::axpy(alpha, x, y2);
+    linalg::axpy(α, x, y2);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
     for (index_t d = 0; d < 3 * v_t(); ++d)
         for (index_t i = 0; i < n; ++i)
-            EXPECT_NEAR(alpha_data[d % v_t()] * x(d, i, 0) + y(d, i, 0), y2(d, i, 0), eps)
-                << d << ", " << i;
+            EXPECT_NEAR(α[d % v_t()] * x(d, i, 0) + y(d, i, 0), y2(d, i, 0), eps) << d << ", " << i;
 }

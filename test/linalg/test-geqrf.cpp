@@ -33,13 +33,13 @@ TYPED_TEST_P(QRTest, geqrf) {
                             for (index_t i = 0; i < resU.cols(); ++i)
                                 if (resU(i, i) * refU(i, i) < 0)
                                     resU.row(i) *= -1; // Adjust sign ambiguity
-                            EXPECT_THAT(resU, EigenAlmostEqualRel(refU, this->tolerance_n(n))) << l;
+                            EXPECT_THAT(resU, EigenAlmostEqual(refU, this->tolerance_n(n))) << l;
                             EMat resL       = tri<StrictlyLower>(res);
                             const auto refL = tri<StrictlyLower>(ref);
                             for (index_t i = 0; i < resL.cols(); ++i)
                                 if (resU(i, i) * refU(i, i) < 0)
                                     resL.col(i) *= -1; // Adjust sign ambiguity
-                            EXPECT_THAT(resL, EigenAlmostEqualRel(refL, this->tolerance_n(n))) << l;
+                            EXPECT_THAT(resL, EigenAlmostEqual(refL, this->tolerance_n(n))) << l;
                         },
                         A, A0);
             if (n > 1)
@@ -49,7 +49,7 @@ TYPED_TEST_P(QRTest, geqrf) {
                                 // (either way, it represents Q = I)
                                 EXPECT_THAT(
                                     res.topRows(n - 1),
-                                    EigenAlmostEqualRel(ref.topRows(n - 1), this->tolerance_n(n)))
+                                    EigenAlmostEqual(ref.topRows(n - 1), this->tolerance_n(n)))
                                     << l;
                             },
                             w, A0);

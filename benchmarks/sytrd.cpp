@@ -9,11 +9,38 @@
 using batmat::index_t;
 using batmat::real_t;
 using batmat::linalg::StorageOrder;
+using guanaqo::blas::blas_index_t;
 namespace flops = batmat::linalg::flops;
 
+// TODO: move to guanaqo::blas
 #ifndef LAPACK_dsytrd
 #define LAPACK_dsytrd dsytrd
 #endif
+#ifndef LAPACK_ssytrd
+#define LAPACK_ssytrd ssytrd
+#endif
+
+template <class T, class I>
+void xsytrd(const char *uplo, const I *n, std::type_identity_t<T *> a, const I *lda,
+            std::type_identity_t<T *> d, std::type_identity_t<T *> e, std::type_identity_t<T *> tau,
+            T *work, const I *lwork, I *info);
+template <>
+void xsytrd<float, blas_index_t>(const char *uplo, const blas_index_t *n,
+                                 std::type_identity_t<float *> a, const blas_index_t *lda,
+                                 std::type_identity_t<float *> d, std::type_identity_t<float *> e,
+                                 std::type_identity_t<float *> tau, float *work,
+                                 const blas_index_t *lwork, blas_index_t *info) {
+    LAPACK_ssytrd(uplo, n, a, lda, d, e, tau, work, lwork, info);
+}
+template <>
+void xsytrd<double, blas_index_t>(const char *uplo, const blas_index_t *n,
+                                  std::type_identity_t<double *> a, const blas_index_t *lda,
+                                  std::type_identity_t<double *> d,
+                                  std::type_identity_t<double *> e,
+                                  std::type_identity_t<double *> tau, double *work,
+                                  const blas_index_t *lwork, blas_index_t *info) {
+    LAPACK_dsytrd(uplo, n, a, lda, d, e, tau, work, lwork, info);
+}
 
 template <class Abi, StorageOrder OA>
 constexpr auto sytrd = [](benchmark::State &state) {
@@ -38,8 +65,7 @@ constexpr auto sytrd = [](benchmark::State &state) {
     if constexpr (decltype(A)::batch_size_type::value == 1) {
         const guanaqo::blas::blas_index_t neg_one = -1;
         guanaqo::blas::blas_index_t info;
-        LAPACK_dsytrd("L", &ni, nullptr, &ni, nullptr, nullptr, nullptr, work.data(), &neg_one,
-                      &info);
+        xsytrd("L", &ni, nullptr, &ni, nullptr, nullptr, nullptr, work.data(), &neg_one, &info);
         BATMAT_ASSERT(info == 0);
         work.resize(static_cast<size_t>(work[0]));
         BATMAT_ASSERT(W.size() >= n - 1);
@@ -53,8 +79,8 @@ constexpr auto sytrd = [](benchmark::State &state) {
                 guanaqo::blas::blas_index_t info;
                 state.ResumeTiming();
                 // guanaqo::blas::xsytrd(B(l)); // TODO
-                LAPACK_dsytrd("L", &ni, B.batch(l).data(), &ni, diag.data(), subdiag.data(),
-                              W.batch(l).data(), work.data(), &lwork, &info);
+                xsytrd("L", &ni, B.batch(l).data(), &ni, diag.data(), subdiag.data(),
+                       W.batch(l).data(), work.data(), &lwork, &info);
             } else {
                 state.PauseTiming();
                 copy(A.batch(l), B.batch(l));
