@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 project(batmat
-    VERSION 0.0.22
+    VERSION 0.0.23
     DESCRIPTION "Batched linear algebra routines"
     HOMEPAGE_URL "https://github.com/tttapa/batmat"
     LANGUAGES CXX
