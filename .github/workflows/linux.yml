@@ -8,7 +8,7 @@ jobs:
     name: "Build (GCC ${{ matrix.gcc }}, ${{ matrix.build_type }}, ${{ matrix.dtype }}, ${{ matrix.profile }}, ${{ matrix.gsi-hpc-simd == 'True' && 'GSI-HPC/SIMD' || 'GCC SIMD' }})"
     strategy:
       matrix:
-        gcc: ["15"]
+        gcc: ["16"]
         build_type: ["Debug", "Release"]
         profile: ["dev"]
         gsi-hpc-simd: ["True", "False"]
