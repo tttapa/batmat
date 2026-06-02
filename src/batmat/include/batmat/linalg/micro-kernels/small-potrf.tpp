@@ -94,7 +94,8 @@ void potrf_syrk_microkernel(index_t k, scalar_view<const T> L21, scalar_view<con
     }
     // Matrix multiplication of sub-diagonal block
     auto gemm_tail = [&](auto &gemm_tail, index_t i, auto N) {
-        using simd = datapar::deduced_simd<T, N>;
+        using simd         = datapar::deduced_simd<T, N>;
+        using simd_index_t = decltype(simd::size());
         for (; i + N <= k; i += N) { // block row
             simd Aix[RowsReg];
             UNROLL_FOR (index_t j = 0; j < RowsReg; ++j)
@@ -102,7 +103,7 @@ void potrf_syrk_microkernel(index_t k, scalar_view<const T> L21, scalar_view<con
             UNROLL_FOR (index_t j = 0; j < RowsReg; ++j)
                 UNROLL_FOR (index_t kk = 0; kk < ColsReg; ++kk) {
                     const simd A21ik = datapar::unaligned_load<simd>(&L21_cached(i, kk));
-                    Aix[j] -= A21ik * A21_reg[j][kk];
+                    Aix[j] -= A21ik * A21_reg[j][static_cast<simd_index_t>(kk)];
                 }
             UNROLL_FOR (index_t j = 0; j < RowsReg; ++j)
                 datapar::unaligned_store(Aix[j], &L22_cached(i, j));
@@ -210,6 +211,7 @@ void syrk_potrf_trsm_microkernel(index_t m, index_t k, scalar_view<const T> L21,
     using ops::sqrt;
 
     using simd           = datapar::deduced_simd<T, std::bit_ceil(static_cast<unsigned>(NC))>;
+    using simd_index_t   = decltype(simd::size());
     const auto load_mask = datapar::generate_mask_until<simd, NC>();
 
     /* Load diagonal block into registers */
@@ -222,30 +224,30 @@ void syrk_potrf_trsm_microkernel(index_t m, index_t k, scalar_view<const T> L21,
         simd L21l = NC == simd::size() ? datapar::unaligned_load<simd>(&L21(0, l))
                                        : datapar::partial_load<simd, NC>(&L21(0, l));
         UNROLL_FOR (index_t j = 0; j < NC; ++j)
-            Dr[j] -= L21l * L21l[j];
+            Dr[j] -= L21l * L21l[static_cast<simd_index_t>(j)];
     }
 
     /* Cholesky factorization of diagonal block */
     T inv_pivots[NC];
     auto store_mask = load_mask;
     UNROLL_FOR (index_t j = 0; j < NC; ++j) { // column
-        const T Djj = Dr[j][j];
+        const T Djj = Dr[j][static_cast<simd_index_t>(j)];
         BATMAT_ASSUME(Djj > T{});
         const T pivot     = sqrt(Djj);
         const T inv_pivot = 1 / pivot;
         inv_pivots[j]     = inv_pivot;
         Dr[j] *= inv_pivot;                         // update current column
         UNROLL_FOR (index_t i = j + 1; i < NC; ++i) // column syrk
-            Dr[i] -= Dr[j] * Dr[j][i];
+            Dr[i] -= Dr[j] * Dr[j][static_cast<simd_index_t>(i)];
 #if BATMAT_WITH_GSI_HPC_SIMD
-        const auto mask_j = datapar::generate_mask<simd>(j);
+        const auto mask_j = datapar::generate_mask<simd>(static_cast<simd_index_t>(j));
         Dr[j]             = datapar::select(mask_j, simd{pivot}, Dr[j]);
         datapar::masked_unaligned_store(Dr[j], store_mask, &L22(0, j));
         store_mask = store_mask && !mask_j;
 #else
-        Dr[j][j] = pivot;
+        Dr[j][static_cast<simd_index_t>(j)] = pivot;
         datapar::masked_unaligned_store(Dr[j], store_mask, &L22(0, j));
-        store_mask[j] = false;
+        store_mask[static_cast<simd_index_t>(j)] = false;
 #endif
     }
 
@@ -264,7 +266,7 @@ void syrk_potrf_trsm_microkernel(index_t m, index_t k, scalar_view<const T> L21,
             UNROLL_FOR (index_t j = 0; j < NC; ++j) { // column
                 simdN &Xij = Xrx[j];
                 UNROLL_FOR (index_t i = 0; i < j; ++i) // column inner
-                    Xij -= Dr[i][j] * Xrx[i];
+                    Xij -= Dr[i][static_cast<simd_index_t>(j)] * Xrx[i];
                 Xij *= inv_pivots[j];
                 datapar::unaligned_store(Xij, &L22(r, j));
             }

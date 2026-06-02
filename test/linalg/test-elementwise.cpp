@@ -21,7 +21,7 @@ TEST(linalg, scale) {
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j)
+        for (int j = 0; j < v_t(); ++j)
             EXPECT_NEAR(real_t(3.14) * a(j, i, 0), b(j, i, 0), eps) << i << ", " << j;
 }
 
@@ -43,7 +43,7 @@ TEST(linalg, vscale) {
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j)
+        for (int j = 0; j < v_t(); ++j)
             EXPECT_NEAR(α[j] * a(j, i, 0), b(j, i, 0), eps) << i << ", " << j;
 }
 
@@ -64,7 +64,7 @@ TEST(linalg, hadamard) {
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j)
+        for (int j = 0; j < v_t(); ++j)
             EXPECT_NEAR(a(j, i, 0) * b(j, i, 0), c(j, i, 0), eps) << i << ", " << j;
 }
 
@@ -84,7 +84,7 @@ TEST(linalg, hadamard_inplace) {
     linalg::hadamard(a2, b);
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j)
+        for (int j = 0; j < v_t(); ++j)
             EXPECT_NEAR(a(j, i, 0) * b(j, i, 0), a2(j, i, 0), eps) << i << ", " << j;
 }
 
@@ -103,7 +103,7 @@ TEST(linalg, clamp_scalar) {
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j) {
+        for (int j = 0; j < v_t(); ++j) {
             real_t expect = std::max(real_t{-1.0}, std::min(a(j, i, 0), real_t{1.0}));
             EXPECT_NEAR(expect, z(j, i, 0), eps) << i << ", " << j;
         }
@@ -114,7 +114,6 @@ TEST(linalg, clamp_perlane_matrix) {
 
     const index_t n = 43;
     using v_t       = index_constant<4>;
-    using abi       = datapar::deduced_abi<real_t, v_t{}()>;
 
     matrix::Matrix<real_t, index_t, v_t, v_t> a{{.rows = n, .cols = 1}};
     std::mt19937 rng{12345};
@@ -126,7 +125,7 @@ TEST(linalg, clamp_perlane_matrix) {
     matrix::Matrix<real_t, index_t, v_t, v_t> lo_mat{{.rows = n, .cols = 1}};
     matrix::Matrix<real_t, index_t, v_t, v_t> hi_mat{{.rows = n, .cols = 1}};
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j) {
+        for (int j = 0; j < v_t(); ++j) {
             lo_mat(j, i, 0) = lo_data[j];
             hi_mat(j, i, 0) = hi_data[j];
         }
@@ -134,7 +133,7 @@ TEST(linalg, clamp_perlane_matrix) {
     linalg::clamp(a, lo_mat, hi_mat, z2);
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j) {
+        for (int j = 0; j < v_t(); ++j) {
             real_t expect = std::max(lo_data[j], std::min(a(j, i, 0), hi_data[j]));
             EXPECT_NEAR(expect, z2(j, i, 0), eps) << i << ", " << j;
         }
@@ -153,7 +152,7 @@ TEST(linalg, clamp_resid) {
     std::ranges::generate(a, [&] { return dist(rng); });
     // Use controlled lo/hi so expectations are deterministic and within sensible ranges
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j) {
+        for (int j = 0; j < v_t(); ++j) {
             lo(j, i, 0) = -1.0;
             hi(j, i, 0) = 1.0;
         }
@@ -162,7 +161,7 @@ TEST(linalg, clamp_resid) {
     linalg::clamp_resid(a, lo, hi, z);
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j) {
+        for (int j = 0; j < v_t(); ++j) {
             real_t expect = a(j, i, 0) - std::max(lo(j, i, 0), std::min(a(j, i, 0), hi(j, i, 0)));
             EXPECT_NEAR(expect, z(j, i, 0), eps) << i << ", " << j;
         }
@@ -184,7 +183,7 @@ TEST(linalg, axpby_scalar) {
     linalg::axpby(real_t{2.0}, x, real_t{-1.5}, y, z);
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j)
+        for (int j = 0; j < v_t(); ++j)
             EXPECT_NEAR(real_t(2.0) * x(j, i, 0) - real_t(1.5) * y(j, i, 0), z(j, i, 0), eps)
                 << i << ", " << j;
 }
@@ -211,7 +210,7 @@ TEST(linalg, axpby_vector) {
     linalg::axpby(a, x, b, y, z2);
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j)
+        for (int j = 0; j < v_t(); ++j)
             EXPECT_NEAR(a[j] * x(j, i, 0) + b[j] * y(j, i, 0), z2(j, i, 0), eps) << i << ", " << j;
 }
 
@@ -231,7 +230,7 @@ TEST(linalg, axpy_inplace) {
     linalg::axpy(real_t{0.5}, x, y2);
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j)
+        for (int j = 0; j < v_t(); ++j)
             EXPECT_NEAR(real_t(0.5) * x(j, i, 0) + y(j, i, 0), y2(j, i, 0), eps) << i << ", " << j;
 }
 
@@ -249,7 +248,7 @@ TEST(linalg, negate) {
     linalg::negate(A, C);
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j)
+        for (int j = 0; j < v_t(); ++j)
             EXPECT_NEAR(-A(j, i, 0), C(j, i, 0), eps) << i << ", " << j;
 }
 
@@ -269,7 +268,7 @@ TEST(linalg, add) {
     linalg::add(A, B, D);
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j)
+        for (int j = 0; j < v_t(); ++j)
             EXPECT_NEAR(A(j, i, 0) + B(j, i, 0), D(j, i, 0), eps) << i << ", " << j;
 }
 
@@ -289,7 +288,7 @@ TEST(linalg, sub) {
     linalg::sub(A, B, E);
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j)
+        for (int j = 0; j < v_t(); ++j)
             EXPECT_NEAR(A(j, i, 0) - B(j, i, 0), E(j, i, 0), eps) << i << ", " << j;
 }
 
@@ -307,7 +306,7 @@ TEST(linalg, transform_elementwise) {
     linalg::transform_elementwise([](auto xi) { return xi * xi; }, Z, A);
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j)
+        for (int j = 0; j < v_t(); ++j)
             EXPECT_NEAR(A(j, i, 0) * A(j, i, 0), Z(j, i, 0), eps) << i << ", " << j;
 }
 
@@ -329,7 +328,7 @@ TEST(linalg, transform2_elementwise) {
         [](auto ai, auto bi) { return std::make_tuple(ai + bi, ai - bi); }, C1, E1, A, B);
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 100;
     for (index_t i = 0; i < n; ++i)
-        for (index_t j = 0; j < v_t(); ++j) {
+        for (int j = 0; j < v_t(); ++j) {
             EXPECT_NEAR(A(j, i, 0) + B(j, i, 0), C1(j, i, 0), eps) << i << ", " << j;
             EXPECT_NEAR(A(j, i, 0) - B(j, i, 0), E1(j, i, 0), eps) << i << ", " << j;
         }
@@ -457,7 +456,7 @@ TEST(linalg, scale_multi_simd) {
     linalg::scale(α, a, b);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
-    for (index_t d = 0; d < 3 * v_t(); ++d)
+    for (int d = 0; d < 3 * v_t(); ++d)
         for (index_t i = 0; i < n; ++i)
             EXPECT_NEAR(α[d % v_t()] * a(d, i, 0), b(d, i, 0), eps) << d << ", " << i;
 }
@@ -482,7 +481,7 @@ TEST(linalg, clamp_scalar_multi_simd) {
     linalg::clamp(a, lo, hi, z);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
-    for (index_t d = 0; d < 3 * v_t(); ++d)
+    for (int d = 0; d < 3 * v_t(); ++d)
         for (index_t i = 0; i < n; ++i) {
             real_t expect = std::max(lo[d % v_t()], std::min(a(d, i, 0), hi[d % v_t()]));
             EXPECT_NEAR(expect, z(d, i, 0), eps) << d << ", " << i;
@@ -511,7 +510,7 @@ TEST(linalg, axpby_scalar_multi_simd) {
     linalg::axpby(α, x, β, y, z);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
-    for (index_t d = 0; d < 3 * v_t(); ++d)
+    for (int d = 0; d < 3 * v_t(); ++d)
         for (index_t i = 0; i < n; ++i)
             EXPECT_NEAR(α[d % v_t()] * x(d, i, 0) + β[d % v_t()] * y(d, i, 0), z(d, i, 0), eps)
                 << d << ", " << i;
@@ -537,7 +536,7 @@ TEST(linalg, axpy_inplace_multi_simd) {
     linalg::axpy(α, x, y2);
 
     constexpr real_t eps = std::numeric_limits<real_t>::epsilon() * 1000;
-    for (index_t d = 0; d < 3 * v_t(); ++d)
+    for (int d = 0; d < 3 * v_t(); ++d)
         for (index_t i = 0; i < n; ++i)
             EXPECT_NEAR(α[d % v_t()] * x(d, i, 0) + y(d, i, 0), y2(d, i, 0), eps) << d << ", " << i;
 }

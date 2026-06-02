@@ -168,7 +168,7 @@ sytrd_diag_microkernel(index_t k, triangular_accessor<T, Abi, SizeR<T, Abi>> W, 
             wᵀb_ω += bl * Y.load(l, j);
         }
         const simd γ  = inv_τ * wᵀb_ω; // γ = τ⁻¹ (wᵀb + ω)
-        const simd d2 = a2 - 2 * ω + γ;
+        const simd d2 = a2 - T{2} * ω + γ;
         D.store(-c̃j, j + 1, j);
         D.store(d2, j + 1, j + 1);
 

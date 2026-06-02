@@ -52,9 +52,9 @@ template <class T, class Abi>
 template <class T, class Abi>
 [[nodiscard]] bool negligible_squared_e(datapar::simd<T, Abi> e0_sq, datapar::simd<T, Abi> d0,
                                         datapar::simd<T, Abi> d1, T ε_sq) noexcept {
-    using std::abs;
     using std::all_of;
-    return all_of(abs(e0_sq) <= ε_sq * abs(d0 * d1));
+    using std::fabs;
+    return all_of(fabs(e0_sq) <= ε_sq * fabs(d0 * d1));
 }
 
 /// Eigenvalues of [a b; b c].
@@ -77,9 +77,9 @@ stable_2x2_eigenvalues(datapar::simd<T, Abi> a, datapar::simd<T, Abi> b,
 template <class T, class Abi>
 void solve_2x2_squared_e_inplace(uview<T, Abi, StorageOrder::ColMajor> d,
                                  uview<T, Abi, StorageOrder::ColMajor> e, index_t l) noexcept {
-    using std::abs;
+    using std::fabs;
     using std::sqrt;
-    const auto b = sqrt(abs(e.load(l, 0))); // TODO: can we avoid the square root here?
+    const auto b = sqrt(fabs(e.load(l, 0))); // TODO: can we avoid the square root here?
     const auto a = d.load(l, 0), c = d.load(l + 1, 0);
     const auto [λ1, λ2] = stable_2x2_eigenvalues(a, b, c);
     d.store(λ1, l, 0), d.store(λ2, l + 1, 0), e.store(T{0}, l, 0);
@@ -107,14 +107,14 @@ void sterf_ql_sweep_squared_e_inplace(uview<T, Abi, StorageOrder::ColMajor> d,
                                       uview<T, Abi, StorageOrder::ColMajor> e, index_t l,
                                       index_t m) noexcept {
     using simd = datapar::simd<T, Abi>;
-    using std::abs;
+    using std::fabs;
     using std::hypot;
     using std::sqrt;
 
     const simd zero{T{0}}, one{T{1}}, two{T{2}};
 
     const auto p0     = d.load(l, 0);
-    const auto e0     = sqrt(abs(e.load(l, 0)));
+    const auto e0     = sqrt(fabs(e.load(l, 0)));
     auto σ            = (d.load(l + 1, 0) - p0) / (two * e0);
     const auto rshift = hypot(σ, one);
     σ                 = p0 - e0 / (σ + copysign(rshift, σ));
@@ -147,14 +147,14 @@ void sterf_qr_sweep_squared_e_inplace(uview<T, Abi, StorageOrder::ColMajor> d,
                                       uview<T, Abi, StorageOrder::ColMajor> e, index_t l,
                                       index_t m) noexcept {
     using simd = datapar::simd<T, Abi>;
-    using std::abs;
+    using std::fabs;
     using std::hypot;
     using std::sqrt;
 
     const simd zero{T{0}}, one{T{1}}, two{T{2}};
 
     const auto p0     = d.load(m, 0);
-    const auto e0     = sqrt(abs(e.load(m - 1, 0)));
+    const auto e0     = sqrt(fabs(e.load(m - 1, 0)));
     auto σ            = (d.load(m - 1, 0) - p0) / (two * e0);
     const auto rshift = hypot(σ, one);
     σ                 = p0 - e0 / (σ + copysign(rshift, σ));
@@ -186,9 +186,9 @@ template <class T, class Abi>
 void sterf_dynamic_step_squared_e_inplace(uview<T, Abi, StorageOrder::ColMajor> d,
                                           uview<T, Abi, StorageOrder::ColMajor> e, index_t l,
                                           index_t m) noexcept {
-    using std::abs;
+    using std::fabs;
     static constexpr index_t half_v = datapar::simd_size<T, Abi>::value / 2;
-    const bool use_qr = datapar::reduce_count(abs(d.load(m, 0)) < abs(d.load(l, 0))) > half_v;
+    const bool use_qr = datapar::reduce_count(fabs(d.load(m, 0)) < fabs(d.load(l, 0))) > half_v;
     if (use_qr)
         sterf_qr_sweep_squared_e_inplace<T, Abi>(d, e, l, m);
     else
@@ -201,7 +201,7 @@ squared_block_norm_estimate_from_squared_e(uview<T, Abi, StorageOrder::ColMajor>
                                            uview<T, Abi, StorageOrder::ColMajor> e_sq, index_t l,
                                            index_t m) noexcept {
     using simd = datapar::simd<T, Abi>;
-    using std::abs;
+    using std::fabs;
     using std::max;
 
     simd anorm_sq{T{0}};
@@ -210,7 +210,7 @@ squared_block_norm_estimate_from_squared_e(uview<T, Abi, StorageOrder::ColMajor>
         anorm_sq      = max(anorm_sq, di * di);
     }
     for (index_t i = l; i < m; ++i) {
-        const auto ei_sq = abs(e_sq.load(i, 0)); // may be negative due to rounding
+        const auto ei_sq = fabs(e_sq.load(i, 0)); // may be negative due to rounding
         anorm_sq         = max(anorm_sq, ei_sq);
     }
     return anorm_sq;

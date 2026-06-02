@@ -50,9 +50,9 @@ struct norms : norms<T> {
 
     /// Update the accumulator with a new value.
     result_simd operator()(result_simd accum, simd t) const {
-        using std::abs;
+        using std::fabs;
         using std::max;
-        auto at = abs(t);
+        auto at = fabs(t);
         return {.amax = max(at, accum.amax), .asum = at + accum.asum, .sumsq = t * t + accum.sumsq};
     }
 
@@ -96,9 +96,9 @@ struct norms<T, void> {
 
     /// Update the accumulator with a new value.
     result operator()(result accum, T t) const {
-        using std::abs;
+        using std::fabs;
         using std::max;
-        auto at = abs(t);
+        auto at = fabs(t);
         return {.amax = max(at, accum.amax), .asum = at + accum.asum, .sumsq = t * t + accum.sumsq};
     }
 
