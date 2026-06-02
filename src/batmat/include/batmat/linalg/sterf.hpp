@@ -118,6 +118,7 @@ void sterf_ql_sweep_squared_e_inplace(uview<T, Abi, StorageOrder::ColMajor> d,
     auto σ            = (d.load(l + 1, 0) - p0) / (two * e0);
     const auto rshift = hypot(σ, one);
     σ                 = p0 - e0 / (σ + copysign(rshift, σ));
+    σ                 = datapar::select(e0 != zero, σ, zero);
 
     auto c = one;
     auto s = zero;
@@ -130,8 +131,8 @@ void sterf_ql_sweep_squared_e_inplace(uview<T, Abi, StorageOrder::ColMajor> d,
         if (i != m - 1)
             e.store(s * r, i + 1, 0);
         const auto old_c = c;
-        c                = p / r;
-        s                = bb / r;
+        c                = datapar::select(r != zero, p / r, one);
+        s                = datapar::select(r != zero, bb / r, zero);
         const auto old_γ = γ;
         const auto α     = d.load(i, 0);
         γ                = c * (α - σ) - s * old_γ;
@@ -158,6 +159,7 @@ void sterf_qr_sweep_squared_e_inplace(uview<T, Abi, StorageOrder::ColMajor> d,
     auto σ            = (d.load(m - 1, 0) - p0) / (two * e0);
     const auto rshift = hypot(σ, one);
     σ                 = p0 - e0 / (σ + copysign(rshift, σ));
+    σ                 = datapar::select(e0 != zero, σ, zero);
 
     auto c = one;
     auto s = zero;
@@ -170,8 +172,8 @@ void sterf_qr_sweep_squared_e_inplace(uview<T, Abi, StorageOrder::ColMajor> d,
         if (i != l)
             e.store(s * r, i - 1, 0);
         const auto old_c = c;
-        c                = p / r;
-        s                = bb / r;
+        c                = datapar::select(r != zero, p / r, one);
+        s                = datapar::select(r != zero, bb / r, zero);
         const auto old_γ = γ;
         const auto α     = d.load(i + 1, 0);
         γ                = c * (α - σ) - s * old_γ;

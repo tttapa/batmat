@@ -27,6 +27,7 @@ sytrd_diag_microkernel(index_t k, triangular_accessor<T, Abi, SizeR<T, Abi>> W, 
     using std::sqrt;
     using simd = datapar::simd<T, Abi>;
     BATMAT_ASSUME(k > R);
+    static constexpr auto safe_min = std::numeric_limits<T>::min();
 
     //          j    j+1   j+2    R
     // ┌─────┬─────┬─────┬─────┐
@@ -111,8 +112,10 @@ sytrd_diag_microkernel(index_t k, triangular_accessor<T, Abi, SizeR<T, Abi>> W, 
         //            triangle of A3)
 
         // Energy condition and Householder coefficients
-        const simd c̃j = copysign(sqrt(bb[j]), a21), β = a21 + c̃j;
-        const simd inv_τ = β / c̃j, inv_β = simd{1} / β;
+        const simd abs_c̃jj = sqrt(bb[j]);
+        const simd c̃j = copysign(abs_c̃jj, a21), β = a21 + c̃j;
+        const simd inv_τ = datapar::select(abs_c̃jj > safe_min, β / c̃j, simd{0}),
+                   inv_β = datapar::select(abs_c̃jj > safe_min, simd{1} / β, simd{0});
 
         // Save block Householder matrix W
         UNROLL_FOR (index_t i = 0; i < j; ++i)

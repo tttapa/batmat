@@ -50,6 +50,7 @@ hyhound_diag_diag_microkernel(index_t kA, triangular_accessor<T, Abi, SizeR<T, A
     // Pre-compute the offsets of the columns of L
     auto L_cached = with_cached_access<R, R>(L);
     BATMAT_ASSUME(kA > 0);
+    static constexpr auto safe_min = std::numeric_limits<T>::min();
 
     UNROLL_FOR (index_t j = 0; j < R; ++j) {
         // Compute all inner products between A and a
@@ -62,8 +63,10 @@ hyhound_diag_diag_microkernel(index_t kA, triangular_accessor<T, Abi, SizeR<T, A
         }
         // Energy condition and Householder coefficients
         const simd α2 = bb[j], Ljj = L_cached.load(j, j);
-        const simd L̃jj = copysign(sqrt(Ljj * Ljj + α2), Ljj), β = Ljj + L̃jj;
-        simd γoβ = simd{2} * β / (β * β + α2), γ = β * γoβ, inv_β = simd{1} / β;
+        const simd abs_L̃jj = sqrt(Ljj * Ljj + α2);
+        const simd L̃jj = copysign(abs_L̃jj, Ljj), β = Ljj + L̃jj;
+        simd γoβ = datapar::select(abs_L̃jj > safe_min, simd{1} / L̃jj, simd{0}), γ = β * γoβ,
+             inv_β = datapar::select(abs_L̃jj > safe_min, simd{1} / β, simd{0});
         L_cached.store(L̃jj, j, j);
         // Compute L̃
         UNROLL_FOR (index_t i = j + 1; i < R; ++i) {
@@ -102,6 +105,7 @@ hyhound_diag_full_microkernel(index_t kA, uview<T, Abi, OL> L, uview<T, Abi, OA>
     // Pre-compute the offsets of the columns of L
     auto L_cached = with_cached_access<R, R>(L);
     BATMAT_ASSUME(kA > 0);
+    static constexpr auto safe_min = std::numeric_limits<T>::min();
 
     UNROLL_FOR (index_t j = 0; j < R; ++j) {
         // Compute some inner products between A and a
@@ -114,8 +118,10 @@ hyhound_diag_full_microkernel(index_t kA, uview<T, Abi, OL> L, uview<T, Abi, OA>
         }
         // Energy condition and Householder coefficients
         const simd α2 = bb[j], Ljj = L_cached.load(j, j);
-        const simd L̃jj = copysign(sqrt(Ljj * Ljj + α2), Ljj), β = Ljj + L̃jj;
-        simd γoβ = simd{2} * β / (β * β + α2), γ = β * γoβ, inv_β = simd{1} / β;
+        const simd abs_L̃jj = sqrt(Ljj * Ljj + α2);
+        const simd L̃jj = copysign(abs_L̃jj, Ljj), β = Ljj + L̃jj;
+        simd γoβ = datapar::select(abs_L̃jj > safe_min, simd{1} / L̃jj, simd{0}), γ = β * γoβ,
+             inv_β = datapar::select(abs_L̃jj > safe_min, simd{1} / β, simd{0});
         L_cached.store(L̃jj, j, j);
         // Compute L̃
         UNROLL_FOR (index_t i = j + 1; i < R; ++i) {

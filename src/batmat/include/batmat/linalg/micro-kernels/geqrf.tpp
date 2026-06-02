@@ -45,6 +45,7 @@ geqrf_diag_microkernel(index_t k, triangular_accessor<T, Abi, SizeR<T, Abi>> W,
     using std::sqrt;
     using simd = datapar::simd<T, Abi>;
     BATMAT_ASSUME(k > 0); // TODO: fast path for k == 1
+    static constexpr auto safe_min = std::numeric_limits<T>::min();
 
     UNROLL_FOR (index_t j = 0; j < R; ++j) {
         const bool use_A = j == 0;
@@ -60,8 +61,10 @@ geqrf_diag_microkernel(index_t k, triangular_accessor<T, Abi, SizeR<T, Abi>> W,
             aa[i] = use_A ? A.load(j, i) : D.load(j, i);
         bb[j] += aa[j] * aa[j];
         // Energy condition and Householder coefficients
-        const simd ãjj = copysign(sqrt(bb[j]), aa[j]), β = aa[j] + ãjj;
-        simd inv_τ = β / ãjj, inv_β = simd{1} / β;
+        const simd abs_ãjj = sqrt(bb[j]);
+        const simd ãjj = copysign(abs_ãjj, aa[j]), β = aa[j] + ãjj;
+        simd inv_τ = datapar::select(abs_ãjj > safe_min, β / ãjj, simd{0}),
+             inv_β = datapar::select(abs_ãjj > safe_min, simd{1} / β, simd{0});
         D.store(-ãjj, j, j);
         // Save block Householder matrix W
         UNROLL_FOR (index_t i = 0; i < j; ++i)
@@ -93,10 +96,12 @@ geqrf_diag_microkernel(index_t k, triangular_accessor<T, Abi, SizeR<T, Abi>> W,
 template <class T, class Abi, KernelConfig Conf, index_t R, StorageOrder OA, StorageOrder OD>
 [[gnu::hot, gnu::flatten]] void geqrf_full_microkernel(index_t k, uview<const T, Abi, OA> A,
                                                        uview<T, Abi, OD> D) noexcept {
+    using std::abs;
     using std::copysign;
     using std::sqrt;
     using simd = datapar::simd<T, Abi>;
     BATMAT_ASSUME(k > 0); // TODO: fast path for k == 1
+    static constexpr auto safe_min = std::numeric_limits<T>::min();
 
     UNROLL_FOR (index_t j = 0; j < R; ++j) {
         const bool use_A = j == 0;
@@ -114,8 +119,10 @@ template <class T, class Abi, KernelConfig Conf, index_t R, StorageOrder OA, Sto
             aa[i] = use_A ? A.load(j, i) : D.load(j, i);
         bb[j] += aa[j] * aa[j];
         // Energy condition and Householder coefficients
-        const simd ãjj = copysign(sqrt(bb[j]), aa[j]), β = aa[j] + ãjj;
-        simd inv_τ = β / ãjj, inv_β = simd{1} / β;
+        const simd abs_ãjj = sqrt(bb[j]);
+        const simd ãjj = copysign(abs_ãjj, aa[j]), β = aa[j] + ãjj;
+        simd inv_τ = datapar::select(abs_ãjj > safe_min, β / ãjj, simd{0}),
+             inv_β = datapar::select(abs_ãjj > safe_min, simd{1} / β, simd{0});
         D.store(-ãjj, j, j);
         // Replace row j of A by R (and replace bb[j+1:] with w)
         UNROLL_FOR (index_t i = j + 1; i < R; ++i) {
