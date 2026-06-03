@@ -178,12 +178,20 @@ struct Matrix {
     [[nodiscard]] auto batch_dyn(index_type b) { return view().batch_dyn(b); }
     /// @copydoc View::batch_dyn()
     [[nodiscard]] auto batch_dyn(index_type b) const { return view().batch_dyn(b); }
-    /// @copydoc View::middle_batches()
-    [[nodiscard]] auto middle_batches(index_type b, index_type n, index_type stride = 1) {
+    /// @copydoc View::middle_batches(index_type,index_type)
+    [[nodiscard]] auto middle_batches(index_type b, index_type n) {
+        return view().middle_batches(b, n);
+    }
+    /// @copydoc View::middle_batches(index_type,index_type,index_type)
+    [[nodiscard]] auto middle_batches(index_type b, index_type n, index_type stride) {
         return view().middle_batches(b, n, stride);
     }
-    /// @copydoc View::middle_batches()
-    [[nodiscard]] auto middle_batches(index_type b, index_type n, index_type stride = 1) const {
+    /// @copydoc View::middle_batches(index_type,index_type)
+    [[nodiscard]] auto middle_batches(index_type b, index_type n) const {
+        return view().middle_batches(b, n);
+    }
+    /// @copydoc View::middle_batches(index_type,index_type,index_type)
+    [[nodiscard]] auto middle_batches(index_type b, index_type n, index_type stride) const {
         return view().middle_batches(b, n, stride);
     }
 

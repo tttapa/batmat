@@ -185,9 +185,23 @@ struct View {
                  .layer_stride = layout.layer_stride}};
     }
 
+    /// Get a view of @p n batches starting at batch @p b.
+    [[nodiscard]] View<T, I, S, I, L, O> middle_batches(index_type b, index_type n) const {
+        const auto bs    = static_cast<I>(batch_size());
+        const auto layer = b * bs;
+        BATMAT_ASSERT(n == 0 || layer + (n - 1) * bs + bs <= depth());
+        return {{.data         = data() + layout.layer_index(layer),
+                 .depth        = n * bs,
+                 .rows         = rows(),
+                 .cols         = cols(),
+                 .outer_stride = outer_stride(),
+                 .batch_size   = batch_size(),
+                 .layer_stride = layout.layer_stride}};
+    }
+
     /// Get a view of @p n batches starting at batch @p b, with a stride of @p stride batches.
     [[nodiscard]] View<T, I, S, I, I, O> middle_batches(index_type b, index_type n,
-                                                        index_type stride = 1) const {
+                                                        index_type stride) const {
         const auto bs    = static_cast<I>(batch_size());
         const auto layer = b * bs;
         BATMAT_ASSERT(n == 0 || layer + (n - 1) * stride * bs + bs <= depth());
