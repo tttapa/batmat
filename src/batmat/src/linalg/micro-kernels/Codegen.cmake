@@ -86,6 +86,10 @@ function(batmat_codegen_micro_kernels tgt headers_target)
         string(APPEND ${out} "template BATMAT_LINALG_SYTRD_EXPORT void sytrd_register<${T}, ${Abi}, ${Conf}, ${OD}>(view<${T}, ${Abi}, ${OD}> D, view<${T}, ${Abi}> W, view<${T}, ${Abi}> Y) noexcept;\n")
     endmacro()
 
+    macro(instantiate_sterf out T Abi)
+        string(APPEND ${out} "template BATMAT_LINALG_STERF_EXPORT std::expected<index_t, index_t> sterf<${T}, ${Abi}>(view<${T}, ${Abi}, StorageOrder::ColMajor> diag, view<${T}, ${Abi}, StorageOrder::ColMajor> subdiag, SterfOptions options) noexcept;\n")
+    endmacro()
+
     batmat_add_micro_kernels("gemm")
     batmat_add_micro_kernels("gemm-diag")
     batmat_add_micro_kernels("gemv")
@@ -97,6 +101,7 @@ function(batmat_codegen_micro_kernels tgt headers_target)
     batmat_add_micro_kernels("trtri")
     batmat_add_micro_kernels("geqrf")
     batmat_add_micro_kernels("sytrd")
+    batmat_add_micro_kernels("sterf")
     batmat_add_micro_kernels("small-potrf")
 
     foreach(DType_ IN LISTS BATMAT_DTYPES)
@@ -441,6 +446,18 @@ function(batmat_codegen_micro_kernels tgt headers_target)
                 set_source_files_properties("${OUT_DIR}/${name}-${DType_}-${VL}.cpp" PROPERTIES UNITY_GROUP "${VL}-${DType_}-sytrd")
             endmacro()
             batmat_instantiate_sytrd("sytrd" "")
+
+            # STERF
+            macro(batmat_instantiate_sterf name)
+                set(op "sterf")
+                set(op_ "sterf")
+                set(instantiations "")
+                instantiate_sterf(instantiations "${DType}" "${Abi}")
+                configure_file("${CMAKE_CURRENT_FUNCTION_LIST_DIR}/inst.cpp.in" "${OUT_DIR}/${name}-${DType_}-${VL}.cpp" @ONLY)
+                target_sources(${tgt}-micro-kernels-${op} PRIVATE "${OUT_DIR}/${name}-${DType_}-${VL}.cpp")
+                set_source_files_properties("${OUT_DIR}/${name}-${DType_}-${VL}.cpp" PROPERTIES UNITY_GROUP "${VL}-${DType_}-sterf")
+            endmacro()
+            batmat_instantiate_sterf("sterf")
 
         endforeach()
 
