@@ -46,6 +46,8 @@ jobs:
       # https://github.com/conan-io/conan-center-index/issues/27778
       env:
         DEV_ARCH: x86-64-v3
+        OMP_NUM_THREADS: 1
+        CTEST_PARALLEL_LEVEL: 4
 
     - run: conan cache clean
 

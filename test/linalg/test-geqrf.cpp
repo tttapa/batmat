@@ -1,11 +1,14 @@
 #include <batmat/linalg/copy.hpp>
 #include <batmat/linalg/geqrf.hpp>
-#include <Eigen/QR>
 #include <gtest/gtest.h>
 
 #include "config.hpp"
 #include "eigen-matchers.hpp"
 #include "fixtures.hpp"
+
+BATMAT_PRAGMA_GCC_OPTIMIZE_O3_BEGIN
+#include <Eigen/QR>
+BATMAT_PRAGMA_GCC_OPTIMIZE_O3_END
 
 using batmat::matrix::StorageOrder;
 using enum Eigen::UpLoType;

@@ -3,11 +3,12 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include "eigen-tests.hpp" // must be included before guanaqo/eigen/view.hpp
+
 #include <guanaqo/demangled-typename.hpp>
 #include <guanaqo/eigen/view.hpp>
 #include <guanaqo/print.hpp>
 
-#include <Eigen/Core>
 #include <limits>
 
 /// @file

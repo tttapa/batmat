@@ -2,11 +2,12 @@
 
 #include <gtest/gtest.h>
 
+#include "eigen-tests.hpp" // must be included before guanaqo/eigen/view.hpp
+
 #include <batmat/config.hpp>
 #include <batmat/matrix/matrix.hpp>
 #include <guanaqo/eigen/view.hpp>
 
-#include <Eigen/Core>
 #include <random>
 
 namespace batmat::tests {
@@ -47,7 +48,8 @@ class LinalgTest : public ::testing::Test {
         return a;
     }
 
-    static void check(auto eval_ref, auto check_res, auto &&res, auto &&...args) {
+    BATMAT_ATTR_GNU_OPTIMIZE_O3 static void check(auto eval_ref, auto check_res, auto &&res,
+                                                  auto &&...args) {
         for (index_t l = 0; l < res.depth(); ++l) {
             EMat ref = eval_ref(as_eigen(args(l))...);
             check_res(l, as_eigen(res(l)), ref, as_eigen(args(l))...);

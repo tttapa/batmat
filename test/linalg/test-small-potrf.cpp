@@ -1,10 +1,13 @@
 #include <batmat/linalg/small-potrf.hpp>
-#include <Eigen/Cholesky>
 #include <gtest/gtest.h>
 
 #include "config.hpp"
 #include "eigen-matchers.hpp"
 #include "fixtures.hpp"
+
+BATMAT_PRAGMA_GCC_OPTIMIZE_O3_BEGIN
+#include <Eigen/Cholesky>
+BATMAT_PRAGMA_GCC_OPTIMIZE_O3_END
 
 using enum Eigen::UpLoType;
 

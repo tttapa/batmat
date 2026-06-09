@@ -1,13 +1,15 @@
 #include <batmat/linalg/sterf.hpp>
 #include <batmat/linalg/sytrd.hpp>
 #include <gtest/gtest.h>
+#include <print>
 
 #include "config.hpp"
 #include "eigen-matchers.hpp"
 #include "fixtures.hpp"
 
+BATMAT_PRAGMA_GCC_OPTIMIZE_O3_BEGIN
 #include <Eigen/Eigenvalues>
-#include <print>
+BATMAT_PRAGMA_GCC_OPTIMIZE_O3_END
 
 using batmat::matrix::StorageOrder;
 using enum Eigen::UpLoType;

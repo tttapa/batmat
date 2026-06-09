@@ -1,11 +1,14 @@
 #include <batmat/linalg/gemm.hpp>
 #include <batmat/linalg/hyhound.hpp>
-#include <Eigen/Cholesky>
 #include <gtest/gtest.h>
 
 #include "config.hpp"
 #include "eigen-matchers.hpp"
 #include "fixtures.hpp"
+
+BATMAT_PRAGMA_GCC_OPTIMIZE_O3_BEGIN
+#include <Eigen/Cholesky>
+BATMAT_PRAGMA_GCC_OPTIMIZE_O3_END
 
 using batmat::matrix::StorageOrder;
 using enum Eigen::UpLoType;
