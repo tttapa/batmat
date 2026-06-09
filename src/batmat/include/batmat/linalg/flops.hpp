@@ -227,12 +227,12 @@ constexpr FlopCount geqrf_apply(index_t m, index_t n, index_t k) {
 /// @implementation{flops-sytrd}
 // [flops-sytrd]
 constexpr FlopCount sytrd(index_t m) {
-    // TODO: fix these counts
-    return {.fma  = m * m * m, // TODO
-            .mul  = 0,         // TODO
-            .add  = 0,         // TODO
-            .div  = 2 * m,
-            .sqrt = m};
+    // TODO: double-check these
+    return {.fma  = (m - 2) * (2 * m * m + 7 * m + 9) / 3,
+            .mul  = (m - 2) * (m + 2),
+            .add  = (m - 2) * (m + 1) / 2 + 2 * (m - 2),
+            .div  = 2 * (m - 2),
+            .sqrt = m - 2};
 }
 // [flops-sytrd]
 
