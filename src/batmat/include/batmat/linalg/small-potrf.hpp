@@ -57,7 +57,7 @@ template <index_t R = 4, MatrixStructure SD, simdifiable VA, simdifiable VD>
 void small_potrf(Structured<VA, SD> A, Structured<VD, SD> D) {
     static_assert(std::is_same_v<simdified_abi_t<VD>, datapar::scalar_abi<simdified_value_t<VD>>>);
     static_assert(SD == MatrixStructure::LowerTriangular);
-    static_assert(D.value.storage_order == StorageOrder::ColMajor);
+    static_assert(decltype(simdify(D.value))::storage_order == StorageOrder::ColMajor);
     detail::small_potrf<simdified_value_t<VD>, simdified_abi_t<VD>, R>(simdify(A.value).as_const(),
                                                                        simdify(D.value));
 }
@@ -74,7 +74,7 @@ template <index_t R = 4, index_t S = 8, MatrixStructure SD, simdifiable VA, simd
 void small_potrf_left(Structured<VA, SD> A, Structured<VD, SD> D) {
     static_assert(std::is_same_v<simdified_abi_t<VD>, datapar::scalar_abi<simdified_value_t<VD>>>);
     static_assert(SD == MatrixStructure::LowerTriangular);
-    static_assert(D.value.storage_order == StorageOrder::ColMajor);
+    static_assert(decltype(simdify(D.value))::storage_order == StorageOrder::ColMajor);
     detail::small_potrf_left<simdified_value_t<VD>, simdified_abi_t<VD>, R, S>(
         simdify(A.value).as_const(), simdify(D.value));
 }
