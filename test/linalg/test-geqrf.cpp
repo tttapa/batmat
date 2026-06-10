@@ -10,6 +10,7 @@ BATMAT_PRAGMA_GCC_OPTIMIZE_O3_BEGIN
 #include <Eigen/QR>
 BATMAT_PRAGMA_GCC_OPTIMIZE_O3_END
 
+using batmat::index_t;
 using batmat::matrix::StorageOrder;
 using enum Eigen::UpLoType;
 
