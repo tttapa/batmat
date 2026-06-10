@@ -25,8 +25,8 @@ template <class T, class Abi>
     static constexpr T safe_max = std::numeric_limits<T>::max();
     static constexpr T ε        = std::numeric_limits<T>::epsilon();
     // Conservative safe range for intermediate squared/hypot-like quantities.
-    static constexpr T small = sqrt(safe_min) / ε;
-    static constexpr T large = sqrt(safe_max) * ε;
+    static const T small = sqrt(safe_min) / ε;
+    static const T large = sqrt(safe_max) * ε;
 
     auto factor = datapar::simd<T, Abi>{one};
     factor      = datapar::select(anorm > large, large / anorm, factor);
