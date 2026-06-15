@@ -15,13 +15,18 @@ TYPED_TEST_SUITE_P(SymvTest);
 TYPED_TEST_P(SymvTest, symv) {
     using batmat::linalg::symv;
     using batmat::linalg::tril;
+    using EVec = Eigen::VectorX<typename TypeParam::value_type>;
     for (auto m : batmat::tests::sizes) {
         const auto A = this->template get_matrix<0>(m, m);
         const auto B = this->get_vector(m);
         auto C       = this->get_vector(m);
         symv(tril(A), B, C);
         this->check(
-            [&](auto &&Al, auto &&Bl) { return Al.template selfadjointView<Eigen::Lower>() * Bl; },
+            [&](auto &&Al, auto &&Bl) -> EVec {
+                if (m == 0)
+                    return EVec::Zero(0);
+                return Al.template selfadjointView<Eigen::Lower>() * Bl;
+            },
             [&](auto l, auto &&res, auto &&ref, auto &&...) {
                 EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance))
                     << l << "    (" << m << "×" << m << ")";
@@ -33,6 +38,7 @@ TYPED_TEST_P(SymvTest, symv) {
 TYPED_TEST_P(SymvTest, symvSub) {
     using batmat::linalg::symv_sub;
     using batmat::linalg::tril;
+    using EVec = Eigen::VectorX<typename TypeParam::value_type>;
     for (auto m : batmat::tests::sizes) {
         const auto A = this->template get_matrix<0>(m, m);
         const auto B = this->get_vector(m);
@@ -40,7 +46,9 @@ TYPED_TEST_P(SymvTest, symvSub) {
         auto D       = this->get_vector(m);
         symv_sub(tril(A), B, C, D);
         this->check(
-            [&](auto &&Al, auto &&Bl, auto &&Cl) {
+            [&](auto &&Al, auto &&Bl, auto &&Cl) -> EVec {
+                if (m == 0)
+                    return EVec::Zero(0);
                 return Cl - Al.template selfadjointView<Eigen::Lower>() * Bl;
             },
             [&](auto l, auto &&res, auto &&ref, auto &&...) {
@@ -55,24 +63,30 @@ TYPED_TEST_P(SymvTest, symvSub) {
 TYPED_TEST_P(SymvTest, symvNeg) {
     using batmat::linalg::symv_neg;
     using batmat::linalg::tril;
+    using EVec = Eigen::VectorX<typename TypeParam::value_type>;
     for (auto m : batmat::tests::sizes) {
         const auto A = this->template get_matrix<0>(m, m);
         const auto B = this->get_vector(m);
         auto C       = this->get_vector(m);
         symv_neg(tril(A), B, C);
-        this->check([&](auto &&Al,
-                        auto &&Bl) { return (-Al).template selfadjointView<Eigen::Lower>() * Bl; },
-                    [&](auto l, auto &&res, auto &&ref, auto &&...) {
-                        EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance))
-                            << l << "    (" << m << "×" << m << ")";
-                    },
-                    C, A, B);
+        this->check(
+            [&](auto &&Al, auto &&Bl) -> EVec {
+                if (m == 0)
+                    return EVec::Zero(0);
+                return (-Al).template selfadjointView<Eigen::Lower>() * Bl;
+            },
+            [&](auto l, auto &&res, auto &&ref, auto &&...) {
+                EXPECT_THAT(res, EigenAlmostEqual(ref, this->tolerance))
+                    << l << "    (" << m << "×" << m << ")";
+            },
+            C, A, B);
     }
 }
 
 TYPED_TEST_P(SymvTest, symvAdd) {
     using batmat::linalg::symv_add;
     using batmat::linalg::tril;
+    using EVec = Eigen::VectorX<typename TypeParam::value_type>;
     for (auto m : batmat::tests::sizes) {
         const auto A = this->template get_matrix<0>(m, m);
         const auto B = this->get_vector(m);
@@ -80,7 +94,9 @@ TYPED_TEST_P(SymvTest, symvAdd) {
         auto D       = this->get_vector(m);
         symv_add(tril(A), B, C, D);
         this->check(
-            [&](auto &&Al, auto &&Bl, auto &&Cl) {
+            [&](auto &&Al, auto &&Bl, auto &&Cl) -> EVec {
+                if (m == 0)
+                    return EVec::Zero(0);
                 return Cl + Al.template selfadjointView<Eigen::Lower>() * Bl;
             },
             [&](auto l, auto &&res, auto &&ref, auto &&...) {
