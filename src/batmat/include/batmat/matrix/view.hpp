@@ -110,13 +110,11 @@ struct View {
         [[no_unique_address]] depth_type depth = guanaqo::default_stride<depth_type>::value;
         index_type rows                        = 0;
         index_type cols                        = rows == 0 ? 0 : 1;
-        index_type outer_stride = (rows == 0 || cols == 0) ? 0 // no offset for empty matrices
-                                                           : (is_row_major ? cols : rows);
+        index_type outer_stride                = is_row_major ? cols : rows;
         [[no_unique_address]] batch_size_type batch_size =
             guanaqo::default_stride<batch_size_type>::value;
         [[no_unique_address]] layer_stride_type layer_stride =
-            (rows == 0 || cols == 0) ? 0 // no offset for empty matrices
-                                     : outer_stride * (is_row_major ? rows : cols);
+            outer_stride * (is_row_major ? rows : cols);
     };
 
     /// Create a new view.
@@ -164,7 +162,7 @@ struct View {
     /// layer `b * batch_size()`).
     [[nodiscard]] batch_view_type batch(index_type b) const {
         const auto layer = b * static_cast<index_t>(batch_size());
-        return {{.data         = data() + layout.layer_index(layer),
+        return {{.data         = data() ? data() + layout.layer_index(layer) : nullptr,
                  .depth        = batch_size(),
                  .rows         = rows(),
                  .cols         = cols(),
@@ -178,7 +176,7 @@ struct View {
         const auto d     = static_cast<I>(depth());
         const auto layer = b * static_cast<index_t>(batch_size());
         const auto last  = b == d / batch_size();
-        return {{.data         = data() + layout.layer_index(layer),
+        return {{.data         = data() ? data() + layout.layer_index(layer) : nullptr,
                  .depth        = last ? d - layout.floor_depth() : batch_size(),
                  .rows         = rows(),
                  .cols         = cols(),
@@ -192,7 +190,7 @@ struct View {
         const auto bs    = static_cast<I>(batch_size());
         const auto layer = b * bs;
         BATMAT_ASSERT(n == 0 || layer + (n - 1) * bs + bs <= depth());
-        return {{.data         = data() + layout.layer_index(layer),
+        return {{.data         = data() ? data() + layout.layer_index(layer) : nullptr,
                  .depth        = n * bs,
                  .rows         = rows(),
                  .cols         = cols(),
@@ -207,7 +205,7 @@ struct View {
         const auto bs    = static_cast<I>(batch_size());
         const auto layer = b * bs;
         BATMAT_ASSERT(n == 0 || layer + (n - 1) * stride * bs + bs <= depth());
-        return {{.data         = data() + layout.layer_index(layer),
+        return {{.data         = data() ? data() + layout.layer_index(layer) : nullptr,
                  .depth        = n * bs,
                  .rows         = rows(),
                  .cols         = cols(),

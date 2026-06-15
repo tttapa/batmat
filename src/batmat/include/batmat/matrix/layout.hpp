@@ -83,13 +83,11 @@ struct Layout {
         [[no_unique_address]] depth_type depth = guanaqo::default_stride<depth_type>::value;
         index_type rows                        = 0;
         index_type cols                        = rows == 0 ? 0 : 1;
-        index_type outer_stride = (rows == 0 || cols == 0) ? 0 // no offset for empty matrices
-                                                           : (is_row_major ? cols : rows);
+        index_type outer_stride                = is_row_major ? cols : rows;
         [[no_unique_address]] batch_size_type batch_size =
             guanaqo::default_stride<batch_size_type>::value;
         [[no_unique_address]] layer_stride_type layer_stride =
-            (rows == 0 || cols == 0) ? 0 // no offset for empty matrices
-                                     : outer_stride * (is_row_major ? rows : cols);
+            outer_stride * (is_row_major ? rows : cols);
     };
 
     constexpr Layout(PlainLayout p = {})
@@ -146,8 +144,8 @@ struct Layout {
             return layer_stride;
     }
     [[nodiscard]] constexpr bool has_full_layer_stride() const {
-        auto ls = static_cast<index_t>(get_layer_stride());
-        return ls == 0 || ls == outer_stride * outer_size() || depth <= static_cast<I>(batch_size);
+        return static_cast<index_t>(get_layer_stride()) == outer_stride * outer_size() ||
+               depth <= static_cast<I>(batch_size);
     }
     [[nodiscard]] constexpr bool has_full_outer_stride() const {
         return outer_stride == 0 || outer_stride == inner_size() || outer_size() == 1;
@@ -173,7 +171,7 @@ struct Layout {
     template <class T>
     [[nodiscard]] guanaqo::MatrixView<T, I, standard_stride_type, storage_order>
     operator()(T *data, index_type l) const {
-        return {{.data         = data + layer_index(l),
+        return {{.data         = data ? data + layer_index(l) : nullptr,
                  .rows         = rows,
                  .cols         = cols,
                  .inner_stride = convert_to_standard_stride(batch_size),
