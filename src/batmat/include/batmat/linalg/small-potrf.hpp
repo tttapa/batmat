@@ -22,7 +22,7 @@ void small_potrf(view<const T, Abi, OD> A, view<T, Abi, OD> D) {
     BATMAT_ASSERT(A.cols() == D.cols());
     BATMAT_ASSERT(D.rows() >= D.cols());
     const index_t M = D.rows(), N = D.cols();
-    GUANAQO_TRACE_LINALG("small_potrf", total(flops::syrk_potrf(M, N, A.cols())) * C.depth());
+    GUANAQO_TRACE_LINALG("small_potrf", total(flops::syrk_potrf(M, N, A.cols())) * A.depth());
     // Degenerate case
     if (M == 0 || N == 0) [[unlikely]]
         return;
@@ -37,7 +37,7 @@ void small_potrf_left(view<const T, Abi, OD> A, view<T, Abi, OD> D) {
     BATMAT_ASSERT(A.cols() == D.cols());
     BATMAT_ASSERT(D.rows() >= D.cols());
     const index_t M = D.rows(), N = D.cols();
-    GUANAQO_TRACE_LINALG("small_potrf_left", total(flops::syrk_potrf(M, N, A.cols())) * C.depth());
+    GUANAQO_TRACE_LINALG("small_potrf_left", total(flops::syrk_potrf(M, N, A.cols())) * A.depth());
     // Degenerate case
     if (M == 0 || N == 0) [[unlikely]]
         return;
