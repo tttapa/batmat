@@ -83,11 +83,13 @@ struct Layout {
         [[no_unique_address]] depth_type depth = guanaqo::default_stride<depth_type>::value;
         index_type rows                        = 0;
         index_type cols                        = rows == 0 ? 0 : 1;
-        index_type outer_stride                = is_row_major ? cols : rows;
+        index_type outer_stride = (rows == 0 || cols == 0) ? 0 // no offset for empty matrices
+                                                           : (is_row_major ? cols : rows);
         [[no_unique_address]] batch_size_type batch_size =
             guanaqo::default_stride<batch_size_type>::value;
         [[no_unique_address]] layer_stride_type layer_stride =
-            outer_stride * (is_row_major ? rows : cols);
+            (rows == 0 || cols == 0) ? 0 // no offset for empty matrices
+                                     : outer_stride * (is_row_major ? rows : cols);
     };
 
     constexpr Layout(PlainLayout p = {})
@@ -144,11 +146,11 @@ struct Layout {
             return layer_stride;
     }
     [[nodiscard]] constexpr bool has_full_layer_stride() const {
-        return static_cast<index_t>(get_layer_stride()) == outer_stride * outer_size() ||
-               depth <= static_cast<I>(batch_size);
+        auto ls = static_cast<index_t>(get_layer_stride());
+        return ls == 0 || ls == outer_stride * outer_size() || depth <= static_cast<I>(batch_size);
     }
     [[nodiscard]] constexpr bool has_full_outer_stride() const {
-        return outer_stride == inner_size() || outer_size() == 1;
+        return outer_stride == 0 || outer_stride == inner_size() || outer_size() == 1;
     }
     [[nodiscard]] constexpr bool has_full_inner_stride() const { return inner_stride == 1; }
     [[nodiscard]] constexpr index_type layer_index(index_type l, index_type s) const {
@@ -179,6 +181,7 @@ struct Layout {
     }
     template <class T>
     [[nodiscard]] T &operator()(T *data, index_type l, index_type r, index_type c) const {
+        BATMAT_ASSUME(data != nullptr);
         auto *const p = data + layer_index(l);
         const auto bs = static_cast<I>(batch_size);
         return *(is_row_major ? p + bs * (c + outer_stride * r) : p + bs * (r + outer_stride * c));

@@ -110,11 +110,13 @@ struct View {
         [[no_unique_address]] depth_type depth = guanaqo::default_stride<depth_type>::value;
         index_type rows                        = 0;
         index_type cols                        = rows == 0 ? 0 : 1;
-        index_type outer_stride                = is_row_major ? cols : rows;
+        index_type outer_stride = (rows == 0 || cols == 0) ? 0 // no offset for empty matrices
+                                                           : (is_row_major ? cols : rows);
         [[no_unique_address]] batch_size_type batch_size =
             guanaqo::default_stride<batch_size_type>::value;
         [[no_unique_address]] layer_stride_type layer_stride =
-            outer_stride * (is_row_major ? rows : cols);
+            (rows == 0 || cols == 0) ? 0 // no offset for empty matrices
+                                     : outer_stride * (is_row_major ? rows : cols);
     };
 
     /// Create a new view.
