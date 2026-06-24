@@ -7,6 +7,10 @@
 
 namespace batmat::linalg::micro_kernels::small_potrf {
 
+struct BATMAT_LINALG_SMALL_POTRF_EXPORT KernelConfig {
+    bool negate_A = false; ///< Whether to compute chol(C - AAᵀ) instead of chol(C + AAᵀ)
+};
+
 template <class T>
 using scalar_view = uview<T, datapar::scalar_abi<std::remove_const_t<T>>, StorageOrder::ColMajor>;
 
@@ -22,13 +26,15 @@ BATMAT_LINALG_SMALL_POTRF_EXPORT void small_potrf(view<const T, datapar::scalar_
                                                   view<T, datapar::scalar_abi<T>> L,
                                                   index_t n = -1) noexcept;
 
-template <class T, index_t NC, index_t NR>
+template <class T, KernelConfig Conf, index_t NC, index_t NR>
 BATMAT_LINALG_SMALL_POTRF_EXPORT void
-syrk_potrf_trsm_microkernel(index_t m, index_t k, scalar_view<const T> L21,
-                            scalar_view<const T> A22, scalar_view<T> L22) noexcept;
+syrk_potrf_trsm_microkernel(index_t m, index_t k0, scalar_view<const T> L20, index_t k,
+                            scalar_view<const T> L21, scalar_view<const T> A22,
+                            scalar_view<T> L22) noexcept;
 
-template <class T, index_t RowsReg = 4, index_t S = 8>
+template <class T, KernelConfig Conf, index_t RowsReg = 4, index_t S = 8>
 BATMAT_LINALG_SMALL_POTRF_EXPORT void small_potrf_left(view<const T, datapar::scalar_abi<T>> A,
-                                                       view<T, datapar::scalar_abi<T>> L) noexcept;
+                                                       view<const T, datapar::scalar_abi<T>> C,
+                                                       view<T, datapar::scalar_abi<T>> D) noexcept;
 
 } // namespace batmat::linalg::micro_kernels::small_potrf

@@ -200,14 +200,16 @@ void small_potrf(view<const T, datapar::scalar_abi<T>> A, view<T, datapar::scala
 }
 
 /// Left-looking variant of small_potrf, which updates the current block with the outer product of
-/// the previously computed part L21.
+/// the previously computed part L21. An additional part L20 can also be added to the update.
+/// @param L20 m×k0
 /// @param L21 m×k
 /// @param A22 m×NC
 /// @param L22 m×NC
-template <class T, index_t NC, index_t NR>
+template <class T, KernelConfig Conf, index_t NC, index_t NR>
 [[gnu::flatten, gnu::hot]]
-void syrk_potrf_trsm_microkernel(index_t m, index_t k, scalar_view<const T> L21,
-                                 scalar_view<const T> A22, scalar_view<T> L22) noexcept {
+void syrk_potrf_trsm_microkernel(index_t m, index_t k0, scalar_view<const T> L20, index_t k,
+                                 scalar_view<const T> L21, scalar_view<const T> A22,
+                                 scalar_view<T> L22) noexcept {
     using ops::sqrt;
 
     using simd           = datapar::deduced_simd<T, std::bit_ceil(static_cast<unsigned>(NC))>;
@@ -219,6 +221,14 @@ void syrk_potrf_trsm_microkernel(index_t m, index_t k, scalar_view<const T> L21,
     UNROLL_FOR (index_t j = 0; j < NC; ++j) // column
         Dr[j] = NC == simd::size() ? datapar::unaligned_load<simd>(&A22(0, j))
                                    : datapar::partial_load<simd, NC>(&A22(0, j));
+    /* Accumulate initial update */
+    for (index_t l = 0; l < k0; ++l) { // syrk update diagonal block
+        simd L20l = NC == simd::size() ? datapar::unaligned_load<simd>(&L20(0, l))
+                                       : datapar::partial_load<simd, NC>(&L20(0, l));
+        UNROLL_FOR (index_t j = 0; j < NC; ++j)
+            Conf.negate_A ? Dr[j] -= L20l * L20l[static_cast<simd_index_t>(j)]
+                          : Dr[j] += L20l * L20l[static_cast<simd_index_t>(j)];
+    }
     /* Accumulate previous updates */
     for (index_t l = 0; l < k; ++l) { // syrk update diagonal block
         simd L21l = NC == simd::size() ? datapar::unaligned_load<simd>(&L21(0, l))
@@ -258,6 +268,12 @@ void syrk_potrf_trsm_microkernel(index_t m, index_t k, scalar_view<const T> L21,
             simdN Xrx[NC];
             UNROLL_FOR (index_t c = 0; c < NC; ++c) // column
                 Xrx[c] = datapar::unaligned_load<simdN>(&A22(r, c));
+            for (index_t l = 0; l < k0; ++l) { // syrk update subdiagonal block
+                simdN L20rl = datapar::unaligned_load<simdN>(&L20(r, l));
+                UNROLL_FOR (index_t j = 0; j < NC; ++j)
+                    Conf.negate_A ? Xrx[j] -= L20rl * L20(j, l) //
+                                  : Xrx[j] += L20rl * L20(j, l);
+            }
             for (index_t l = 0; l < k; ++l) { // syrk update subdiagonal block
                 simdN L21rl = datapar::unaligned_load<simdN>(&L21(r, l));
                 UNROLL_FOR (index_t j = 0; j < NC; ++j)
@@ -277,35 +293,39 @@ void syrk_potrf_trsm_microkernel(index_t m, index_t k, scalar_view<const T> L21,
     trsm_tail(trsm_tail, NC, std::integral_constant<index_t, NR>());
 }
 
-template <class T, index_t R, index_t S>
+template <class T, KernelConfig Conf, index_t R, index_t S>
 void small_potrf_left(view<const T, datapar::scalar_abi<T>> A,
-                      view<T, datapar::scalar_abi<T>> L) noexcept {
+                      view<const T, datapar::scalar_abi<T>> C,
+                      view<T, datapar::scalar_abi<T>> D) noexcept {
     static const constinit auto microkernel_lut =
         make_1d_lut<R>([]<index_t Row>(index_constant<Row>) {
-            return syrk_potrf_trsm_microkernel<T, Row + 1, S>;
+            return syrk_potrf_trsm_microkernel<T, Conf, Row + 1, S>;
         });
     (void)microkernel_lut; // Invalid GCC warning
 
-    const index_t m = L.rows(), N = L.cols();
+    const index_t m = D.rows(), N = D.cols(), k0 = A.cols();
     BATMAT_ASSUME(m >= N);
 
     scalar_view<const T> A_ = A;
-    scalar_view<T> L_       = L;
+    scalar_view<const T> C_ = C;
+    scalar_view<T> D_       = D;
 
     // Loop over columns of H with block size R.
     foreach_chunked(
         0, N, index_constant<R>(),
         [&](index_t i) {
-            auto L22 = L_.block(i, i);
-            auto A22 = A_.block(i, i);
-            auto L21 = L_.block(i, 0);
-            syrk_potrf_trsm_microkernel<T, R, S>(m - i, i, L21, A22, L22);
+            auto L20 = k0 > 0 ? A_.block(i, 0) : A_;
+            auto L22 = D_.block(i, i);
+            auto A22 = C_.block(i, i);
+            auto L21 = D_.block(i, 0);
+            syrk_potrf_trsm_microkernel<T, Conf, R, S>(m - i, k0, L20, i, L21, A22, L22);
         },
         [&](index_t i, auto rem) {
-            auto L22 = L_.block(i, i);
-            auto A22 = A_.block(i, i);
-            auto L21 = L_.block(i, 0);
-            microkernel_lut[rem - 1](m - i, i, L21, A22, L22);
+            auto L20 = k0 > 0 ? A_.block(i, 0) : A_;
+            auto L22 = D_.block(i, i);
+            auto A22 = C_.block(i, i);
+            auto L21 = D_.block(i, 0);
+            microkernel_lut[rem - 1](m - i, k0, L20, i, L21, A22, L22);
         });
 }
 

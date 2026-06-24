@@ -198,7 +198,7 @@ def benchmark_color(args: tuple[str, ...], label: str) -> str:
             return "#bbf90f"
     elif m := re.match(r"small_left<(\d+), (\d+)>", args[0]):
         if m.group(1) == "4" and m.group(2) == "8":
-            return "bbf90f"
+            return "#bbf90f"
         elif m.group(1) == "8" and m.group(2) == "8":
             return "#c20078"
         elif m.group(1) == "8" and m.group(2) == "4":

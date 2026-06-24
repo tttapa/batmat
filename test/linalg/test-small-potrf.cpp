@@ -1,3 +1,4 @@
+#include <batmat/linalg/gemm.hpp>
 #include <batmat/linalg/small-potrf.hpp>
 #include <gtest/gtest.h>
 
@@ -179,8 +180,95 @@ TYPED_TEST_P(SmallPotrfTest, potrfLinplaceTallLeft) {
         }
 }
 
+TYPED_TEST_P(SmallPotrfTest, syrkAddPotrfLinplaceTallLeft) {
+    using batmat::linalg::small_syrk_add_potrf_left;
+    using batmat::linalg::tril;
+    using EMat = Eigen::MatrixX<typename TypeParam::value_type>;
+    for (index_t n : {0, 1, 2, 3, 4, 5, 6, 31})
+        for (auto m : batmat::tests::sizes)
+            for (auto k : batmat::tests::sizes) {
+                const auto ε  = static_cast<TypeParam::value_type>(k + 1) * this->tolerance / 5;
+                const auto A  = this->template get_matrix<0>(m + n, k);
+                const auto D0 = [&] {
+                    auto D = this->template get_matrix<0>(m + n, m);
+                    D.view().add_to_diagonal(static_cast<TypeParam::value_type>(100 * m));
+                    return D;
+                }();
+                auto D = D0;
+                small_syrk_add_potrf_left(A, tril(D));
+                this->check(
+                    [&](auto &&Dl, auto &&Al) {
+                        EMat Dtop = Dl.topRows(m);
+                        EMat Dbot = Dl.bottomRows(n);
+                        if (k > 0) {
+                            Dtop.template selfadjointView<Lower>().rankUpdate(Al.topRows(m), 1.0);
+                            Dbot.noalias() += Al.bottomRows(n) * Al.topRows(m).transpose();
+                        }
+                        Eigen::MatrixX<typename TypeParam::value_type> R(m + n, m);
+                        R.topRows(m) = Dtop.template selfadjointView<Lower>().llt().matrixL();
+                        if (n > 0)
+                            R.bottomRows(n) = triv<Eigen::Lower>(R.topRows(m))
+                                                  .solve(Dbot.transpose())
+                                                  .transpose();
+                        return R;
+                    },
+                    [&](auto l, auto &&res, auto &&ref, auto &&D0, auto &&) {
+                        const auto resL = tri<Lower>(res), resU = tri<StrictlyUpper>(res);
+                        EXPECT_THAT(resL, EigenAlmostEqual(ref, ε)) << l;
+                        EXPECT_THAT(resU, EigenEqual(tri<StrictlyUpper>(D0))) << l;
+                    },
+                    D, D0, A);
+            }
+}
+
+TYPED_TEST_P(SmallPotrfTest, syrkSubPotrfLinplaceTallLeft) {
+    using batmat::linalg::gemm_add;
+    using batmat::linalg::small_syrk_sub_potrf_left;
+    using batmat::linalg::syrk_add;
+    using batmat::linalg::tril;
+    using EMat = Eigen::MatrixX<typename TypeParam::value_type>;
+    for (index_t n : {0, 1, 2, 3, 4, 5, 6, 31})
+        for (auto m : batmat::tests::sizes)
+            for (auto k : batmat::tests::sizes) {
+                const auto ε  = static_cast<TypeParam::value_type>(k + 1) * this->tolerance / 5;
+                const auto A  = this->template get_matrix<0>(m + n, k);
+                const auto D0 = [&] {
+                    auto D = this->template get_matrix<0>(m + n, m);
+                    D.view().add_to_diagonal(static_cast<TypeParam::value_type>(100 * m));
+                    syrk_add(A.top_rows(m), tril(D.top_rows(m)));
+                    gemm_add(A.bottom_rows(n), A.top_rows(m).transposed(), D.bottom_rows(n));
+                    return D;
+                }();
+                auto D = D0;
+                small_syrk_sub_potrf_left(A, tril(D));
+                this->check(
+                    [&](auto &&Dl, auto &&Al) {
+                        EMat Dtop = Dl.topRows(m);
+                        EMat Dbot = Dl.bottomRows(n);
+                        if (k > 0) {
+                            Dtop.template selfadjointView<Lower>().rankUpdate(Al.topRows(m), -1.0);
+                            Dbot.noalias() -= Al.bottomRows(n) * Al.topRows(m).transpose();
+                        }
+                        Eigen::MatrixX<typename TypeParam::value_type> R(m + n, m);
+                        R.topRows(m) = Dtop.template selfadjointView<Lower>().llt().matrixL();
+                        if (n > 0)
+                            R.bottomRows(n) = triv<Eigen::Lower>(R.topRows(m))
+                                                  .solve(Dbot.transpose())
+                                                  .transpose();
+                        return R;
+                    },
+                    [&](auto l, auto &&res, auto &&ref, auto &&D0, auto &&) {
+                        const auto resL = tri<Lower>(res), resU = tri<StrictlyUpper>(res);
+                        EXPECT_THAT(resL, EigenAlmostEqual(ref, ε)) << l;
+                        EXPECT_THAT(resU, EigenEqual(tri<StrictlyUpper>(D0))) << l;
+                    },
+                    D, D0, A);
+            }
+}
+
 REGISTER_TYPED_TEST_SUITE_P(SmallPotrfTest, potrfL, potrfLinplace, potrfLinplaceTall, potrfLLeft,
-                            potrfLinplaceLeft, potrfLinplaceTallLeft);
+                            potrfLinplaceLeft, potrfLinplaceTallLeft, syrkAddPotrfLinplaceTallLeft,
+                            syrkSubPotrfLinplaceTallLeft);
 
 using namespace batmat::tests;
 template <class T>
