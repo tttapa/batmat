@@ -1,0 +1,306 @@
+<!-- HTML header for doxygen 1.16.1-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.16.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>batmat: batmat/include/batmat/linalg/reduce.hpp File Reference</title>
+<link rel="icon" href="batmat-small.png" type="image/x-icon" />
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+window.MathJax = {
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  },
+  loader: {
+    load: ['[tex]/ams']
+  },
+  tex: {
+    macros: {    Reals: "{\\mathrm{I\\!R}}",
+    Nats: "{\\mathrm{I\\!N}}",
+    Cplx: "{\\mathbb{C}}",
+    R: "{\\Reals}",
+    N: "{\\Nats}",
+    C: "{\\Cplx}",
+    Rn: "{\\Reals^n}",
+    Rm: "{\\Reals^m}",
+    gph: "{\\operatorname{\\mathbf{gph}}}",
+    zer: "{\\operatorname{\\mathbf{zer}}}",
+    fix: "{\\operatorname{\\mathbf{fix}}}",
+    minimize: "{\\operatorname*{\\mathbf{minimize}}}",
+    st: "{\\operatorname*{\\mathbf{s.\\!t.}}}",
+    argmin: "{\\operatorname*{\\mathbf{arg\\,min}}}",
+    argmax: "{\\operatorname*{\\mathbf{arg\\,max}}}",
+    subjto: "{\\operatorname*{\\mathbf{subject\\;to}}}",
+    prox: "{\\operatorname{\\mathbf{prox}}}",
+    Hilb: "{\\mathcal{H}}",
+    proj: ["{\\operatorname{\\mathbf{\\Pi}_\\mathnormal{#1}}}",1],
+    dist: "{\\operatorname{\\mathbf{dist}}}",
+    Id: "{\\mathrm{Id}}",
+    I: "{\\mathrm{I}}",
+    one: "{\\mathbf{1}}",
+    defeq: "{\\triangleq}",
+    inprod: ["{\\left\\langle {#1} \\,\\middle|\\, {#2} \\right\\rangle}",2],
+    norm: ["{\\left\\| {#1} \\vphantom{X} \\right\\|}",1],
+    normsq: ["{\\norm{#1}^2}",1],
+    defset: ["{\\left\\{ {#1} \\;\\middle|\\; {#2} \\right\\}}",2],
+    tp: ["{#1^\\top}",1],
+    ttp: ["{#1^{\\!\\top\\!}}",1],
+    herm: ["{#1^\\mathrm{H}}",1],
+    invherm: ["{#1^{-\\mathrm{H}}}",1],
+    inv: ["{#1^{-1}}",1],
+    pinv: ["{#1^\\dagger}",1],
+    lconj: "{\\overline}",
+    sconj: ["{#1^*}",1],
+    iddots: "{\\mathinner{\\kern1mu\\raise1pt{.}\\kern2mu\\raise4pt{.}\\kern2mu\\raise7pt{\\Rule{0pt}{7pt}{0pt}.}\\kern1mu}}",
+    imagfun: ["{\\left(#1\\right)\\left(#2\\right)}",2],
+    Lagr: "{\\mathcal{L}}",
+    jac: "{\\mathrm{J}}",
+    dft: "{\\operatorname{\\mathbf{dft}}}",
+    cbrt: ["{\\sqrt[3]{#1}}",1],
+    sgn: "{\\operatorname{\\mathbf{sgn}}}",
+    setmap: "{\\rightrightarrows}",
+    lammin: "{\\lambda_\\text{min}}",
+    lammax: "{\\lambda_\\text{max}}",
+    Sc: "{\\mathcal{S}}",
+    Scstar: "{\\mathcal{S}^*}",
+    diag: "{\\operatorname{\\mathbf{diag}}}",
+    blkdiag: "{\\operatorname{\\mathbf{blkdiag}}}",
+    posdef: "{\\succ}",
+    possdef: "{\\succeq}",
+    half: "{\\tfrac{1}{2}}",
+    hhbar: "{\\hbar}",
+    barxuk: "{\\bar x^k\\!, \\bar u^k}",
+    },
+    packages: ['base','configmacros','newcommand','ams']
+  }
+};
+window.MathJax.tex.tags = 'ams';
+</script>
+<script type="text/javascript" id="MathJax-script" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script type="text/javascript" src="darkmode_toggle.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="batmat-small.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">batmat<span id="projectnumber">&#160;<code><a href="/batmat/index.html">develop</a></code></span>
+   </div>
+   <div id="projectbrief">Batched linear algebra routines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.16.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('reduce_8hpp.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">reduce.hpp File Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &lt;<a class="el" href="elementwise_8hpp_source.html">batmat/linalg/elementwise.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="norms_8hpp_source.html">batmat/linalg/norms.hpp</a>&gt;</code><br />
+</div>
+<p><a href="reduce_8hpp_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
+Single-batch reduction operations</h2></td></tr>
+<tr class="memitem:gac91fc48262dc91ac86ae56b163548379" id="r_gac91fc48262dc91ac86ae56b163548379"><td class="memTemplParams" colspan="2">template&lt;simdifiable Vx&gt; </td></tr>
+<tr class="memitem:gac91fc48262dc91ac86ae56b163548379 template"><td class="memItemLeft"><a class="el" href="structbatmat_1_1linalg_1_1norms.html">norms</a>&lt; <a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vx &gt;, <a class="el" href="namespacebatmat_1_1linalg.html#a252a73f695fc2d5ac1b47f1fc9ec5f87">simdified_simd_t</a>&lt; Vx &gt; &gt;::result_simd&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#gac91fc48262dc91ac86ae56b163548379">batmat::linalg::vnorms_all</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:gac91fc48262dc91ac86ae56b163548379"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the lane-wise norms (max, 1-norm, and 2-norm) of a batch of vectors.  <br /></td></tr>
+<tr class="memitem:ga4b5f85a9f5a814d3ce2f3cbef1f85f4d" id="r_ga4b5f85a9f5a814d3ce2f3cbef1f85f4d"><td class="memTemplParams" colspan="2">template&lt;simdifiable Vx&gt; </td></tr>
+<tr class="memitem:ga4b5f85a9f5a814d3ce2f3cbef1f85f4d template"><td class="memItemLeft"><a class="el" href="structbatmat_1_1linalg_1_1norms.html">norms</a>&lt; <a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vx &gt; &gt;::result&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga4b5f85a9f5a814d3ce2f3cbef1f85f4d">batmat::linalg::norms_all</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga4b5f85a9f5a814d3ce2f3cbef1f85f4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the norms (max, 1-norm, and 2-norm) of a vector.  <br /></td></tr>
+<tr class="memitem:ga5df70a4a48a955bbb22a056f92596425" id="r_ga5df70a4a48a955bbb22a056f92596425"><td class="memTemplParams" colspan="2">template&lt;simdifiable Vx&gt; </td></tr>
+<tr class="memitem:ga5df70a4a48a955bbb22a056f92596425 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a252a73f695fc2d5ac1b47f1fc9ec5f87">simdified_simd_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga5df70a4a48a955bbb22a056f92596425">batmat::linalg::vnorm_inf</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga5df70a4a48a955bbb22a056f92596425"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the lane-wise infinity norms of a batch of vectors.  <br /></td></tr>
+<tr class="memitem:ga1b8d5cb073a99fca044b1997898f75b0" id="r_ga1b8d5cb073a99fca044b1997898f75b0"><td class="memTemplParams" colspan="2">template&lt;simdifiable Vx&gt; </td></tr>
+<tr class="memitem:ga1b8d5cb073a99fca044b1997898f75b0 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga1b8d5cb073a99fca044b1997898f75b0">batmat::linalg::norm_inf</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga1b8d5cb073a99fca044b1997898f75b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the infinity norm of a vector.  <br /></td></tr>
+<tr class="memitem:ga3e6e5e28a7c1476562994f2d7c3ef63e" id="r_ga3e6e5e28a7c1476562994f2d7c3ef63e"><td class="memTemplParams" colspan="2">template&lt;simdifiable Vx&gt; </td></tr>
+<tr class="memitem:ga3e6e5e28a7c1476562994f2d7c3ef63e template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a252a73f695fc2d5ac1b47f1fc9ec5f87">simdified_simd_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga3e6e5e28a7c1476562994f2d7c3ef63e">batmat::linalg::vnorm_1</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga3e6e5e28a7c1476562994f2d7c3ef63e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the lane-wise 1-norms of a batch of vectors.  <br /></td></tr>
+<tr class="memitem:ga3df1c990d37ff99673276f5ed1d4d682" id="r_ga3df1c990d37ff99673276f5ed1d4d682"><td class="memTemplParams" colspan="2">template&lt;simdifiable Vx&gt; </td></tr>
+<tr class="memitem:ga3df1c990d37ff99673276f5ed1d4d682 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga3df1c990d37ff99673276f5ed1d4d682">batmat::linalg::norm_1</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga3df1c990d37ff99673276f5ed1d4d682"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the 1-norm of a vector.  <br /></td></tr>
+<tr class="memitem:ga0a94ee54fca9f0bde34fa31a4d49abe3" id="r_ga0a94ee54fca9f0bde34fa31a4d49abe3"><td class="memTemplParams" colspan="2">template&lt;simdifiable Vx&gt; </td></tr>
+<tr class="memitem:ga0a94ee54fca9f0bde34fa31a4d49abe3 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a252a73f695fc2d5ac1b47f1fc9ec5f87">simdified_simd_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga0a94ee54fca9f0bde34fa31a4d49abe3">batmat::linalg::vnorm_2_squared</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga0a94ee54fca9f0bde34fa31a4d49abe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the lane-wise squared 2-norms of a batch of vectors.  <br /></td></tr>
+<tr class="memitem:ga1d66228a8b6c2527a2409d6fc775c95b" id="r_ga1d66228a8b6c2527a2409d6fc775c95b"><td class="memTemplParams" colspan="2">template&lt;simdifiable Vx&gt; </td></tr>
+<tr class="memitem:ga1d66228a8b6c2527a2409d6fc775c95b template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga1d66228a8b6c2527a2409d6fc775c95b">batmat::linalg::norm_2_squared</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga1d66228a8b6c2527a2409d6fc775c95b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the squared 2-norm of a vector.  <br /></td></tr>
+<tr class="memitem:gae6dad95fc9e5924b1019f65c04a457d0" id="r_gae6dad95fc9e5924b1019f65c04a457d0"><td class="memTemplParams" colspan="2">template&lt;simdifiable Vx&gt; </td></tr>
+<tr class="memitem:gae6dad95fc9e5924b1019f65c04a457d0 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a252a73f695fc2d5ac1b47f1fc9ec5f87">simdified_simd_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#gae6dad95fc9e5924b1019f65c04a457d0">batmat::linalg::vnorm_2</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:gae6dad95fc9e5924b1019f65c04a457d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the lane-wise 2-norms of a batch of vectors.  <br /></td></tr>
+<tr class="memitem:ga336ca6d256c9be78e7b226e6740c179a" id="r_ga336ca6d256c9be78e7b226e6740c179a"><td class="memTemplParams" colspan="2">template&lt;simdifiable Vx&gt; </td></tr>
+<tr class="memitem:ga336ca6d256c9be78e7b226e6740c179a template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga336ca6d256c9be78e7b226e6740c179a">batmat::linalg::norm_2</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga336ca6d256c9be78e7b226e6740c179a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the 2-norm of a vector.  <br /></td></tr>
+<tr class="memitem:gafa7cb3b8309ef55e4af87c65ddd74389" id="r_gafa7cb3b8309ef55e4af87c65ddd74389"><td class="memTemplParams" colspan="2">template&lt;simdifiable Vx, simdifiable Vy&gt; </td></tr>
+<tr class="memitem:gafa7cb3b8309ef55e4af87c65ddd74389 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a252a73f695fc2d5ac1b47f1fc9ec5f87">simdified_simd_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#gafa7cb3b8309ef55e4af87c65ddd74389">batmat::linalg::vdot</a> (Vx &amp;&amp;x, Vy &amp;&amp;y)</td></tr>
+<tr class="memdesc:gafa7cb3b8309ef55e4af87c65ddd74389"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the lane-wise dot products of two batches of vectors.  <br /></td></tr>
+<tr class="memitem:ga43ee1c1a91fad13259902aec680110a9" id="r_ga43ee1c1a91fad13259902aec680110a9"><td class="memTemplParams" colspan="2">template&lt;simdifiable Vx, simdifiable Vy&gt; </td></tr>
+<tr class="memitem:ga43ee1c1a91fad13259902aec680110a9 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga43ee1c1a91fad13259902aec680110a9">batmat::linalg::dot</a> (Vx &amp;&amp;x, Vy &amp;&amp;y)</td></tr>
+<tr class="memdesc:ga43ee1c1a91fad13259902aec680110a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the dot product of two vectors.  <br /></td></tr>
+<tr class="memitem:ga2693fd092033831353d733a5ae25378b" id="r_ga2693fd092033831353d733a5ae25378b"><td class="memTemplParams" colspan="2">template&lt;simdifiable Vw, simdifiable Va&gt; </td></tr>
+<tr class="memitem:ga2693fd092033831353d733a5ae25378b template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a252a73f695fc2d5ac1b47f1fc9ec5f87">simdified_simd_t</a>&lt; Vw &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga2693fd092033831353d733a5ae25378b">batmat::linalg::weighted_vnorm_sq</a> (Vw &amp;&amp;w, Va &amp;&amp;a)</td></tr>
+<tr class="memdesc:ga2693fd092033831353d733a5ae25378b"><td class="mdescLeft">&#160;</td><td class="mdescRight">∑ wᵢ aᵢ² (lane-wise).  <br /></td></tr>
+<tr class="memitem:ga8876744b6a04479c0b597e3c40f3441b" id="r_ga8876744b6a04479c0b597e3c40f3441b"><td class="memTemplParams" colspan="2">template&lt;simdifiable Vw, simdifiable Va&gt; </td></tr>
+<tr class="memitem:ga8876744b6a04479c0b597e3c40f3441b template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vw &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga8876744b6a04479c0b597e3c40f3441b">batmat::linalg::weighted_norm_sq</a> (Vw &amp;&amp;w, Va &amp;&amp;a)</td></tr>
+<tr class="memdesc:ga8876744b6a04479c0b597e3c40f3441b"><td class="mdescLeft">&#160;</td><td class="mdescRight">∑ wᵢ aᵢ².  <br /></td></tr>
+<tr class="memitem:ga3e37f85123b7490011187d3cc08b76f4" id="r_ga3e37f85123b7490011187d3cc08b76f4"><td class="memTemplParams" colspan="2">template&lt;simdifiable Vw, simdifiable Va, simdifiable Vb&gt; </td></tr>
+<tr class="memitem:ga3e37f85123b7490011187d3cc08b76f4 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a252a73f695fc2d5ac1b47f1fc9ec5f87">simdified_simd_t</a>&lt; Vw &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga3e37f85123b7490011187d3cc08b76f4">batmat::linalg::weighted_vnorm_sq_diff</a> (Vw &amp;&amp;w, Va &amp;&amp;a, Vb &amp;&amp;b)</td></tr>
+<tr class="memdesc:ga3e37f85123b7490011187d3cc08b76f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">∑ wᵢ(aᵢ - bᵢ)² (lane-wise).  <br /></td></tr>
+<tr class="memitem:gab5940a9b3773845204b6c327b6a2b2d7" id="r_gab5940a9b3773845204b6c327b6a2b2d7"><td class="memTemplParams" colspan="2">template&lt;simdifiable Vw, simdifiable Va, simdifiable Vb&gt; </td></tr>
+<tr class="memitem:gab5940a9b3773845204b6c327b6a2b2d7 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vw &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#gab5940a9b3773845204b6c327b6a2b2d7">batmat::linalg::weighted_norm_sq_diff</a> (Vw &amp;&amp;w, Va &amp;&amp;a, Vb &amp;&amp;b)</td></tr>
+<tr class="memdesc:gab5940a9b3773845204b6c327b6a2b2d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">∑ wᵢ(aᵢ - bᵢ)².  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
+Multi-batch reduction operations</h2></td></tr>
+<tr class="memitem:gaf8eb151cbb08a90151a479db051d8ace" id="r_gaf8eb151cbb08a90151a479db051d8ace"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi Vx&gt; </td></tr>
+<tr class="memitem:gaf8eb151cbb08a90151a479db051d8ace template"><td class="memItemLeft"><a class="el" href="structbatmat_1_1linalg_1_1norms.html">norms</a>&lt; <a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vx &gt; &gt;::result&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#gaf8eb151cbb08a90151a479db051d8ace">batmat::linalg::multi::norms_all</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:gaf8eb151cbb08a90151a479db051d8ace"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the norms (max, 1-norm, and 2-norm) of a vector.  <br /></td></tr>
+<tr class="memitem:ga5343991146c9dd1d0401ee09087b8a0b" id="r_ga5343991146c9dd1d0401ee09087b8a0b"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi Vx&gt; </td></tr>
+<tr class="memitem:ga5343991146c9dd1d0401ee09087b8a0b template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga5343991146c9dd1d0401ee09087b8a0b">batmat::linalg::multi::norm_inf</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga5343991146c9dd1d0401ee09087b8a0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the infinity norm of a vector.  <br /></td></tr>
+<tr class="memitem:ga47a69c033eb6ad495d5c17f334be0298" id="r_ga47a69c033eb6ad495d5c17f334be0298"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi Vx&gt; </td></tr>
+<tr class="memitem:ga47a69c033eb6ad495d5c17f334be0298 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga47a69c033eb6ad495d5c17f334be0298">batmat::linalg::multi::norm_1</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga47a69c033eb6ad495d5c17f334be0298"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the 1-norm of a vector.  <br /></td></tr>
+<tr class="memitem:ga37924ba08fb1a8d01b92b785ed3c610b" id="r_ga37924ba08fb1a8d01b92b785ed3c610b"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi Vx&gt; </td></tr>
+<tr class="memitem:ga37924ba08fb1a8d01b92b785ed3c610b template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga37924ba08fb1a8d01b92b785ed3c610b">batmat::linalg::multi::norm_2_squared</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga37924ba08fb1a8d01b92b785ed3c610b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the squared 2-norm of a vector.  <br /></td></tr>
+<tr class="memitem:ga20e00e2398651b8041b6d63b2a75dbf0" id="r_ga20e00e2398651b8041b6d63b2a75dbf0"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi Vx&gt; </td></tr>
+<tr class="memitem:ga20e00e2398651b8041b6d63b2a75dbf0 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga20e00e2398651b8041b6d63b2a75dbf0">batmat::linalg::multi::norm_2</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga20e00e2398651b8041b6d63b2a75dbf0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the 2-norm of a vector.  <br /></td></tr>
+<tr class="memitem:ga844208e942cdcfb4ee50cebab4481a34" id="r_ga844208e942cdcfb4ee50cebab4481a34"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi Vx, simdifiable_multi Vy&gt; </td></tr>
+<tr class="memitem:ga844208e942cdcfb4ee50cebab4481a34 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga844208e942cdcfb4ee50cebab4481a34">batmat::linalg::multi::dot</a> (Vx &amp;&amp;x, Vy &amp;&amp;y)</td></tr>
+<tr class="memdesc:ga844208e942cdcfb4ee50cebab4481a34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the dot product of two vectors.  <br /></td></tr>
+<tr class="memitem:ga406bfa25b521c4b109cf96cb58d7d352" id="r_ga406bfa25b521c4b109cf96cb58d7d352"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi Vw, simdifiable_multi Vx&gt; </td></tr>
+<tr class="memitem:ga406bfa25b521c4b109cf96cb58d7d352 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vw &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga406bfa25b521c4b109cf96cb58d7d352">batmat::linalg::multi::weighted_norm_sq</a> (Vw &amp;&amp;w, Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga406bfa25b521c4b109cf96cb58d7d352"><td class="mdescLeft">&#160;</td><td class="mdescRight">∑ wᵢ xᵢ².  <br /></td></tr>
+<tr class="memitem:ga5134432e5e76af1610d138cabffba048" id="r_ga5134432e5e76af1610d138cabffba048"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi Vw, simdifiable_multi Vx, simdifiable_multi Vy&gt; </td></tr>
+<tr class="memitem:ga5134432e5e76af1610d138cabffba048 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vw &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga5134432e5e76af1610d138cabffba048">batmat::linalg::multi::weighted_norm_sq_difference</a> (Vw &amp;&amp;w, Vx &amp;&amp;x, Vy &amp;&amp;y)</td></tr>
+<tr class="memdesc:ga5134432e5e76af1610d138cabffba048"><td class="mdescLeft">&#160;</td><td class="mdescRight">∑ wᵢ(xᵢ - yᵢ)².  <br /></td></tr>
+<tr class="memitem:ga9d4c6f074eb0335cd635a098328d2868" id="r_ga9d4c6f074eb0335cd635a098328d2868"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi Vx&gt; </td></tr>
+<tr class="memitem:ga9d4c6f074eb0335cd635a098328d2868 template"><td class="memItemLeft"><a class="el" href="structbatmat_1_1linalg_1_1norms.html">norms</a>&lt; <a class="el" href="namespacebatmat_1_1linalg.html#a06ed92cc4e6bc6418b81329ce5355426">simdified_value_t</a>&lt; Vx &gt;, <a class="el" href="namespacebatmat_1_1linalg.html#a252a73f695fc2d5ac1b47f1fc9ec5f87">simdified_simd_t</a>&lt; Vx &gt; &gt;::result_simd&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga9d4c6f074eb0335cd635a098328d2868">batmat::linalg::multi::vnorms_all</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga9d4c6f074eb0335cd635a098328d2868"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the lane-wise norms (max, 1-norm, and 2-norm) of a batch of vectors.  <br /></td></tr>
+<tr class="memitem:ga3fa6d7bc253515728920e8b92d36ad0c" id="r_ga3fa6d7bc253515728920e8b92d36ad0c"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi Vx&gt; </td></tr>
+<tr class="memitem:ga3fa6d7bc253515728920e8b92d36ad0c template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a252a73f695fc2d5ac1b47f1fc9ec5f87">simdified_simd_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga3fa6d7bc253515728920e8b92d36ad0c">batmat::linalg::multi::vnorm_inf</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga3fa6d7bc253515728920e8b92d36ad0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the lane-wise infinity norms of a batch of vectors.  <br /></td></tr>
+<tr class="memitem:ga1c92da9d7ae97bffc8759e3bdaf6e895" id="r_ga1c92da9d7ae97bffc8759e3bdaf6e895"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi Vx&gt; </td></tr>
+<tr class="memitem:ga1c92da9d7ae97bffc8759e3bdaf6e895 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a252a73f695fc2d5ac1b47f1fc9ec5f87">simdified_simd_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga1c92da9d7ae97bffc8759e3bdaf6e895">batmat::linalg::multi::vnorm_1</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga1c92da9d7ae97bffc8759e3bdaf6e895"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the lane-wise 1-norms of a batch of vectors.  <br /></td></tr>
+<tr class="memitem:gae85d4d767c2e31c3a386cc1b94981c22" id="r_gae85d4d767c2e31c3a386cc1b94981c22"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi Vx&gt; </td></tr>
+<tr class="memitem:gae85d4d767c2e31c3a386cc1b94981c22 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a252a73f695fc2d5ac1b47f1fc9ec5f87">simdified_simd_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#gae85d4d767c2e31c3a386cc1b94981c22">batmat::linalg::multi::vnorm_2_squared</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:gae85d4d767c2e31c3a386cc1b94981c22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the lane-wise squared 2-norms of a batch of vectors.  <br /></td></tr>
+<tr class="memitem:ga822334e4bd28f2b6bfee62caa8d1ee2d" id="r_ga822334e4bd28f2b6bfee62caa8d1ee2d"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi Vx&gt; </td></tr>
+<tr class="memitem:ga822334e4bd28f2b6bfee62caa8d1ee2d template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a252a73f695fc2d5ac1b47f1fc9ec5f87">simdified_simd_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga822334e4bd28f2b6bfee62caa8d1ee2d">batmat::linalg::multi::vnorm_2</a> (Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga822334e4bd28f2b6bfee62caa8d1ee2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the lane-wise 2-norms of a batch of vectors.  <br /></td></tr>
+<tr class="memitem:gacbf7d541c3b5e1eb234abde8d3ebcd62" id="r_gacbf7d541c3b5e1eb234abde8d3ebcd62"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi Vx, simdifiable_multi Vy&gt; </td></tr>
+<tr class="memitem:gacbf7d541c3b5e1eb234abde8d3ebcd62 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a252a73f695fc2d5ac1b47f1fc9ec5f87">simdified_simd_t</a>&lt; Vx &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#gacbf7d541c3b5e1eb234abde8d3ebcd62">batmat::linalg::multi::vdot</a> (Vx &amp;&amp;x, Vy &amp;&amp;y)</td></tr>
+<tr class="memdesc:gacbf7d541c3b5e1eb234abde8d3ebcd62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the lane-wise dot products of two batches of vectors.  <br /></td></tr>
+<tr class="memitem:ga98af81c38c01e798962a15284c01a8f4" id="r_ga98af81c38c01e798962a15284c01a8f4"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi Vw, simdifiable_multi Vx&gt; </td></tr>
+<tr class="memitem:ga98af81c38c01e798962a15284c01a8f4 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a252a73f695fc2d5ac1b47f1fc9ec5f87">simdified_simd_t</a>&lt; Vw &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#ga98af81c38c01e798962a15284c01a8f4">batmat::linalg::multi::weighted_vnorm_sq</a> (Vw &amp;&amp;w, Vx &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga98af81c38c01e798962a15284c01a8f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">∑ wᵢ xᵢ² (lane-wise).  <br /></td></tr>
+<tr class="memitem:gaa5493baac9e118acd53b953d330eaa66" id="r_gaa5493baac9e118acd53b953d330eaa66"><td class="memTemplParams" colspan="2">template&lt;simdifiable_multi Vw, simdifiable_multi Vx, simdifiable_multi Vy&gt; </td></tr>
+<tr class="memitem:gaa5493baac9e118acd53b953d330eaa66 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1linalg.html#a252a73f695fc2d5ac1b47f1fc9ec5f87">simdified_simd_t</a>&lt; Vw &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-linalg.html#gaa5493baac9e118acd53b953d330eaa66">batmat::linalg::multi::weighted_vnorm_sq_diff</a> (Vw &amp;&amp;w, Vx &amp;&amp;x, Vy &amp;&amp;y)</td></tr>
+<tr class="memdesc:gaa5493baac9e118acd53b953d330eaa66"><td class="mdescLeft">&#160;</td><td class="mdescRight">∑ wᵢ(xᵢ - yᵢ)² (lane-wise).  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:batmat" id="r_batmat"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat.html">batmat</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg" id="r_batmat_3A_3Alinalg"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg.html">batmat::linalg</a></td></tr>
+<tr class="memitem:batmat_3A_3Alinalg_3A_3Amulti" id="r_batmat_3A_3Alinalg_3A_3Amulti"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1linalg_1_1multi.html">batmat::linalg::multi</a></td></tr>
+</table>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="dir_fb227e489dae4e94b57f952e55a850cd.html">batmat</a></li><li class="navelem"><a href="dir_72d467c23e78781a791bd9375234cac1.html">include</a></li><li class="navelem"><a href="dir_63a8bd2941168c96d494403d8e78330f.html">batmat</a></li><li class="navelem"><a href="dir_6b3c116c82570f1db015b5f9324a36e3.html">linalg</a></li><li class="navelem"><a href="reduce_8hpp.html">reduce.hpp</a></li>
+    <li class="footer">Generated on <span class="timestamp"></span> for batmat by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
+  </ul>
+</div>
+</body>
+</html>

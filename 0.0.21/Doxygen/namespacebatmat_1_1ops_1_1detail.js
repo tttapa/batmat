@@ -1,0 +1,25 @@
+var namespacebatmat_1_1ops_1_1detail =
+[
+    [ "floating_point_to_int", "namespacebatmat_1_1ops_1_1detail.html#structbatmat_1_1ops_1_1detail_1_1floating__point__to__int", null ],
+    [ "floating_point_to_int&lt; float &gt;", "namespacebatmat_1_1ops_1_1detail.html#structbatmat_1_1ops_1_1detail_1_1floating__point__to__int_3_01float_01_4", "namespacebatmat_1_1ops_1_1detail_structbatmat_1_1ops_1_1detail_1_1floating__point__to__int_3_01float_01_4_dup" ],
+    [ "floating_point_to_int&lt; double &gt;", "namespacebatmat_1_1ops_1_1detail.html#structbatmat_1_1ops_1_1detail_1_1floating__point__to__int_3_01double_01_4", "namespacebatmat_1_1ops_1_1detail_structbatmat_1_1ops_1_1detail_1_1floating__point__to__int_3_01double_01_4_dup" ],
+    [ "mask_type", "namespacebatmat_1_1ops_1_1detail.html#structbatmat_1_1ops_1_1detail_1_1mask__type", "namespacebatmat_1_1ops_1_1detail_structbatmat_1_1ops_1_1detail_1_1mask__type_dup" ],
+    [ "same_size_but_different_ints", "conceptbatmat_1_1ops_1_1detail_1_1same__size__but__different__ints.html", null ],
+    [ "floating_point_to_int_t", "namespacebatmat_1_1ops_1_1detail.html#abe58362cb69f6df7025afcf8d1df4e11", null ],
+    [ "convert_int_t", "namespacebatmat_1_1ops_1_1detail.html#aae3aa21caaf70f9c41a78a5ffd434fc1", null ],
+    [ "mask_type_t", "namespacebatmat_1_1ops_1_1detail.html#aedd67c16728b3e5de575579fc5728a6b", null ],
+    [ "cneg", "group__topic-low-level-ops.html#ga0de59f8bf5b1c4058c2e188fa3c556e1", null ],
+    [ "cneg", "group__topic-low-level-ops.html#ga3c252012a50af49aceac433f2104ff41", null ],
+    [ "cneg", "group__topic-low-level-ops.html#gac3333193d8a7f69c46423b137922ed16", null ],
+    [ "gather", "namespacebatmat_1_1ops_1_1detail.html#a371e08d0c4b13352046afed85365a4bf", null ],
+    [ "convert_int", "namespacebatmat_1_1ops_1_1detail.html#a6f0b1229fa5b88f23723fc65b75706ea", null ],
+    [ "convert_mask", "namespacebatmat_1_1ops_1_1detail.html#a7a2eefc87ffd67db8b263046db94a373", null ],
+    [ "compare_ge_0", "namespacebatmat_1_1ops_1_1detail.html#ae37fca8a2efbc9ce698af24433ea5c2f", null ],
+    [ "rot", "namespacebatmat_1_1ops_1_1detail.html#af86c438318c89dd7be953a0633285ef8", null ],
+    [ "rotl", "namespacebatmat_1_1ops_1_1detail.html#a9210fe01d8e36639fb10c5145d2fd373", null ],
+    [ "rotr", "namespacebatmat_1_1ops_1_1detail.html#a5cbbec102f5a2e6220a1d32149ad373d", null ],
+    [ "shiftl", "namespacebatmat_1_1ops_1_1detail.html#a25773d280715f4b8bbf625cbb8653e42", null ],
+    [ "shiftr", "namespacebatmat_1_1ops_1_1detail.html#a952bfdf95e53d22d4e6b28c39c701dae", null ],
+    [ "rsqrt_1", "namespacebatmat_1_1ops_1_1detail.html#a1d23fd344d42bef88f6bd35fa0d233e4", null ],
+    [ "rsqrt_2", "namespacebatmat_1_1ops_1_1detail.html#a685a1392db0d11da88957bf989278125", null ]
+];

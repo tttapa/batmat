@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::matrix::Layout::PlainLayout</compoundname>
+    <includes refid="layout_8hpp" local="no">batmat/matrix/layout.hpp</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1aed6ba09721893e751e71bdd21fab1574" prot="public" static="no" mutable="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1aa395557491ef36ac1fe975805f79ce9d" kindref="member">depth_type</ref></type>
+        <definition>depth_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::PlainLayout::depth</definition>
+        <argsstring></argsstring>
+        <name>depth</name>
+        <qualifiedname>batmat::matrix::Layout::PlainLayout::depth</qualifiedname>
+        <initializer>= <ref refid="group__linalg__views" kindref="compound" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">guanaqo::default_stride</ref>&lt;<ref refid="structbatmat_1_1matrix_1_1Layout_1aa395557491ef36ac1fe975805f79ce9d" kindref="member">depth_type</ref>&gt;::value</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="79" column="21" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1a1db3c28a1d5056554a3514d8bdfa4dbb" prot="public" static="no" mutable="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::PlainLayout::rows</definition>
+        <argsstring></argsstring>
+        <name>rows</name>
+        <qualifiedname>batmat::matrix::Layout::PlainLayout::rows</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="80" column="20" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1af2198d27d36e1a16dd6c477ff5aa86e5" prot="public" static="no" mutable="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::PlainLayout::cols</definition>
+        <argsstring></argsstring>
+        <name>cols</name>
+        <qualifiedname>batmat::matrix::Layout::PlainLayout::cols</qualifiedname>
+        <initializer>= <ref refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1a1db3c28a1d5056554a3514d8bdfa4dbb" kindref="member">rows</ref> == 0 ? 0 : 1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="81" column="20" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1aa92c9a47ab19602d1f5061bc83079868" prot="public" static="no" mutable="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::PlainLayout::outer_stride</definition>
+        <argsstring></argsstring>
+        <name>outer_stride</name>
+        <qualifiedname>batmat::matrix::Layout::PlainLayout::outer_stride</qualifiedname>
+        <initializer>= <ref refid="structbatmat_1_1matrix_1_1Layout_1a7876840d7f3a002ffd73707c0d578051" kindref="member">is_row_major</ref> ? <ref refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1af2198d27d36e1a16dd6c477ff5aa86e5" kindref="member">cols</ref> : <ref refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1a1db3c28a1d5056554a3514d8bdfa4dbb" kindref="member">rows</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="82" column="20" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1a1272b35ef72199a1ef66ab733f496a2e" prot="public" static="no" mutable="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a5e721839d51c94a99b049d07bcabef34" kindref="member">batch_size_type</ref></type>
+        <definition>batch_size_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::PlainLayout::batch_size</definition>
+        <argsstring></argsstring>
+        <name>batch_size</name>
+        <qualifiedname>batmat::matrix::Layout::PlainLayout::batch_size</qualifiedname>
+        <initializer>                        =
+<ref refid="group__linalg__views" kindref="compound" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">guanaqo::default_stride</ref>&lt;<ref refid="structbatmat_1_1matrix_1_1Layout_1a5e721839d51c94a99b049d07bcabef34" kindref="member">batch_size_type</ref>&gt;::value</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="83" column="26" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1a46d2d23986d62f8b92371abf900c0246" prot="public" static="no" mutable="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1adbd044655112aa290a95525908ad8da2" kindref="member">layer_stride_type</ref></type>
+        <definition>layer_stride_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::PlainLayout::layer_stride</definition>
+        <argsstring></argsstring>
+        <name>layer_stride</name>
+        <qualifiedname>batmat::matrix::Layout::PlainLayout::layer_stride</qualifiedname>
+        <initializer>                            =
+<ref refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1aa92c9a47ab19602d1f5061bc83079868" kindref="member">outer_stride</ref> * (<ref refid="structbatmat_1_1matrix_1_1Layout_1a7876840d7f3a002ffd73707c0d578051" kindref="member">is_row_major</ref> ? <ref refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1a1db3c28a1d5056554a3514d8bdfa4dbb" kindref="member">rows</ref> : <ref refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1af2198d27d36e1a16dd6c477ff5aa86e5" kindref="member">cols</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="85" column="28" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="85" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::matrix::Layout&lt; I, S, D, L, O &gt;::PlainLayout</label>
+        <link refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/matrix/layout.hpp" line="78" column="5" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="78" bodyend="87"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1a1272b35ef72199a1ef66ab733f496a2e" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout::PlainLayout</scope><name>batch_size</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1af2198d27d36e1a16dd6c477ff5aa86e5" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout::PlainLayout</scope><name>cols</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1aed6ba09721893e751e71bdd21fab1574" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout::PlainLayout</scope><name>depth</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1a46d2d23986d62f8b92371abf900c0246" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout::PlainLayout</scope><name>layer_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1aa92c9a47ab19602d1f5061bc83079868" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout::PlainLayout</scope><name>outer_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout_1a1db3c28a1d5056554a3514d8bdfa4dbb" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout::PlainLayout</scope><name>rows</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

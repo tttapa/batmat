@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="groups_8dox" kind="file" language="C++">
+    <compoundname>groups.dox</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/**<sp/>@defgroup<sp/>topic-matrix<sp/>Matrix<sp/>data<sp/>structures</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/><sp/>Matrix<sp/>storage<sp/>and<sp/>views</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*/</highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/><sp/><sp/><sp/>/**<sp/>@defgroup<sp/>topic-matrix-utils<sp/>Matrix<sp/>utilities</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/><sp/>Low-level<sp/>utilities<sp/>for<sp/>matrix<sp/>storage</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/><sp/>@ingroup<sp/>topic-matrix</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="9"><highlight class="comment">/**<sp/>@defgroup<sp/>topic-linalg<sp/>Linear<sp/>algebra</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*<sp/><sp/>Batched<sp/>linear<sp/>algebra<sp/>operations</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*/</highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/><sp/><sp/><sp/>/**<sp/>@defgroup<sp/>topic-linalg-flops<sp/>FLOP<sp/>counts</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/><sp/>Theoretical<sp/>floating<sp/>point<sp/>operation<sp/>counts<sp/>for<sp/>linear<sp/>algebra<sp/>operations</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/><sp/>@ingroup<sp/>topic-linalg</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="17"><highlight class="comment">/**<sp/>@defgroup<sp/>topic-utils<sp/>Utilities</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*<sp/><sp/>Various<sp/>utilities</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="21"><highlight class="comment">/**<sp/>@defgroup<sp/>topic-low-level-ops<sp/>Low-level<sp/>operations</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/>*<sp/><sp/>Low-level<sp/>operations<sp/>such<sp/>as<sp/>gathers,<sp/>transposes,<sp/>lane-wise<sp/>rotations,<sp/>inverse<sp/>square<sp/>roots,</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/>*<sp/><sp/>conditional<sp/>negations,<sp/>etc.</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/home/runner/work/batmat/batmat/docs/source/doxygen/groups.dox"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,209 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="triangular_8hpp" kind="file" language="C++">
+    <compoundname>triangular.hpp</compoundname>
+    <includes refid="structure_8hpp" local="no">batmat/linalg/structure.hpp</includes>
+    <includes local="no">utility</includes>
+    <includedby refid="copy_8hpp" local="no">batmat/include/batmat/linalg/copy.hpp</includedby>
+    <includedby refid="gemm-diag_8hpp" local="no">batmat/include/batmat/linalg/gemm-diag.hpp</includedby>
+    <includedby refid="gemm_8hpp" local="no">batmat/include/batmat/linalg/gemm.hpp</includedby>
+    <includedby refid="gemv_8hpp" local="no">batmat/include/batmat/linalg/gemv.hpp</includedby>
+    <includedby refid="hyhound_8hpp" local="no">batmat/include/batmat/linalg/hyhound.hpp</includedby>
+    <includedby refid="potrf_8hpp" local="no">batmat/include/batmat/linalg/potrf.hpp</includedby>
+    <includedby refid="symm_8hpp" local="no">batmat/include/batmat/linalg/symm.hpp</includedby>
+    <includedby refid="symv_8hpp" local="no">batmat/include/batmat/linalg/symv.hpp</includedby>
+    <includedby refid="syomv_8hpp" local="no">batmat/include/batmat/linalg/syomv.hpp</includedby>
+    <includedby refid="trsm_8hpp" local="no">batmat/include/batmat/linalg/trsm.hpp</includedby>
+    <includedby refid="trtri_8hpp" local="no">batmat/include/batmat/linalg/trtri.hpp</includedby>
+    <incdepgraph>
+      <node id="2">
+        <label>batmat/linalg/structure.hpp</label>
+        <link refid="structure_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/triangular.hpp</label>
+        <link refid="triangular_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>cstdint</label>
+      </node>
+      <node id="4">
+        <label>utility</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>batmat/include/batmat/linalg/copy.hpp</label>
+        <link refid="copy_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>batmat/include/batmat/linalg/gemm-diag.hpp</label>
+        <link refid="gemm-diag_8hpp"/>
+      </node>
+      <node id="5">
+        <label>batmat/include/batmat/linalg/gemm.hpp</label>
+        <link refid="gemm_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>batmat/include/batmat/linalg/gemv.hpp</label>
+        <link refid="gemv_8hpp"/>
+      </node>
+      <node id="7">
+        <label>batmat/include/batmat/linalg/hyhound.hpp</label>
+        <link refid="hyhound_8hpp"/>
+      </node>
+      <node id="8">
+        <label>batmat/include/batmat/linalg/potrf.hpp</label>
+        <link refid="potrf_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>batmat/include/batmat/linalg/symm.hpp</label>
+        <link refid="symm_8hpp"/>
+      </node>
+      <node id="11">
+        <label>batmat/include/batmat/linalg/symv.hpp</label>
+        <link refid="symv_8hpp"/>
+      </node>
+      <node id="12">
+        <label>batmat/include/batmat/linalg/syomv.hpp</label>
+        <link refid="syomv_8hpp"/>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/triangular.hpp</label>
+        <link refid="triangular_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>batmat/include/batmat/linalg/trsm.hpp</label>
+        <link refid="trsm_8hpp"/>
+      </node>
+      <node id="13">
+        <label>batmat/include/batmat/linalg/trtri.hpp</label>
+        <link refid="trtri_8hpp"/>
+      </node>
+      <node id="3">
+        <label>/home/runner/work/batmat/batmat/test_package/src/example.cpp</label>
+        <link refid="example_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structbatmat_1_1linalg_1_1Structured" prot="public">batmat::linalg::Structured</innerclass>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg">batmat::linalg</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="structure_8hpp" kindref="compound">batmat/linalg/structure.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;utility&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg" kindref="compound">batmat::linalg</ref><sp/>{</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="8"><highlight class="comment">///<sp/>@addtogroup<sp/>topic-linalg</highlight></codeline>
+<codeline lineno="9"><highlight class="comment">///<sp/>@{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="11"><highlight class="comment">///<sp/>Light-weight<sp/>wrapper<sp/>class<sp/>used<sp/>for<sp/>overload<sp/>resolution<sp/>of<sp/>triangular<sp/>and<sp/>symmetric<sp/>matrices.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>M,<sp/>MatrixStructure<sp/>S<sp/>=<sp/>MatrixStructure::General&gt;</highlight></codeline>
+<codeline lineno="13" refid="structbatmat_1_1linalg_1_1Structured" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1Structured_1aede8ee78c22f9ea970c97fd679162cfa" kindref="member">Structured</ref><sp/>{</highlight></codeline>
+<codeline lineno="14" refid="structbatmat_1_1linalg_1_1Structured_1ae24a0809b596274f8195c3eae3d170ed" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/><ref refid="structbatmat_1_1linalg_1_1Structured_1ae24a0809b596274f8195c3eae3d170ed" kindref="member">structure</ref><sp/>=<sp/>S;</highlight></codeline>
+<codeline lineno="15" refid="structbatmat_1_1linalg_1_1Structured_1aede8ee78c22f9ea970c97fd679162cfa" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">explicit</highlight><highlight class="normal">(S<sp/>!=<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref>)<sp/><ref refid="structbatmat_1_1linalg_1_1Structured_1aede8ee78c22f9ea970c97fd679162cfa" kindref="member">Structured</ref>(M<sp/>&amp;&amp;m)<sp/>:<sp/><ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>{std::forward&lt;M&gt;(m)}<sp/>{}</highlight></codeline>
+<codeline lineno="16" refid="structbatmat_1_1linalg_1_1Structured_1ad9a176fb3b45d863096acf053e30b0e2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1Structured_1ad9a176fb3b45d863096acf053e30b0e2" kindref="member">Structured</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1Structured_1aede8ee78c22f9ea970c97fd679162cfa" kindref="member">Structured</ref><sp/>&amp;)<sp/>=<sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="17" refid="structbatmat_1_1linalg_1_1Structured_1a76a579c4f5045b042173a1ad5dce3e5f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1Structured_1a76a579c4f5045b042173a1ad5dce3e5f" kindref="member">Structured</ref>(<ref refid="structbatmat_1_1linalg_1_1Structured_1aede8ee78c22f9ea970c97fd679162cfa" kindref="member">Structured</ref><sp/>&amp;&amp;)<sp/><sp/><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="18" refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>M<sp/><ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="19" refid="structbatmat_1_1linalg_1_1Structured_1a4b7bb6d67bc01e85aeb2f4c5480e6047" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1Structured_1a4b7bb6d67bc01e85aeb2f4c5480e6047" kindref="member">transposed</ref>()<sp/>const<sp/>&amp;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>requires<sp/>requires<sp/>{<sp/><ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>.transposed();<sp/>}</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured</ref>&lt;</highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>.transposed()),<sp/><ref refid="group__topic-linalg_1gaa0bd5dc9f7ed367a2f7fd8b835694d42" kindref="member">transpose</ref>(S)&gt;{<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>.transposed()};</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="24" refid="structbatmat_1_1linalg_1_1Structured_1acba7e7c24c669f93b6740af376cc3fb6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1Structured_1acba7e7c24c669f93b6740af376cc3fb6" kindref="member">transposed</ref>()<sp/>&amp;&amp;</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/>{<sp/>std::forward&lt;M&gt;(<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>).transposed();<sp/>}</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1Structured_1aede8ee78c22f9ea970c97fd679162cfa" kindref="member">Structured&lt;decltype(std::forward&lt;M&gt;</ref>(<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>).transposed()),<sp/><ref refid="group__topic-linalg_1gaa0bd5dc9f7ed367a2f7fd8b835694d42" kindref="member">transpose</ref>(S)&gt;{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::forward&lt;M&gt;(<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>).transposed()};</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="30" refid="structbatmat_1_1linalg_1_1Structured_1a81f0feaa9abd00bfa623019877ed7863" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1Structured_1a81f0feaa9abd00bfa623019877ed7863" kindref="member">ref</ref>()<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1Structured_1aede8ee78c22f9ea970c97fd679162cfa" kindref="member">Structured&lt;M &amp;, S&gt;</ref>{<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>};<sp/>}<sp/></highlight><highlight class="comment">//<sp/>TODO:<sp/>const<sp/>version</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>M&gt;</highlight></codeline>
+<codeline lineno="34" refid="group__topic-linalg_1gad0b3d11ecd3861f1c325ca907dc19c1d" refkind="member"><highlight class="normal"><ref refid="group__topic-linalg_1gad0b3d11ecd3861f1c325ca907dc19c1d" kindref="member">Structured</ref>(M<sp/>&amp;&amp;)<sp/>-&gt;<sp/><ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured&lt;M&gt;</ref>;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="36"><highlight class="comment">///<sp/>@name<sp/>Triangular<sp/>views<sp/>of<sp/>batches<sp/>of<sp/>matrices</highlight></codeline>
+<codeline lineno="37"><highlight class="comment">///<sp/>@{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="39"><highlight class="comment">///<sp/>Lower-triangular<sp/>view.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>M&gt;</highlight></codeline>
+<codeline lineno="41" refid="group__topic-linalg_1gafc9f5555ed4639e0e5ad0e552f9717e4" refkind="member"><highlight class="normal">[[nodiscard]]<sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1gafc9f5555ed4639e0e5ad0e552f9717e4" kindref="member">tril</ref>(M<sp/>&amp;&amp;m)<sp/>{</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured&lt;M, MatrixStructure::LowerTriangular&gt;</ref>{std::forward&lt;M&gt;(m)};</highlight></codeline>
+<codeline lineno="43"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="45"><highlight class="comment">///<sp/>Upper-triangular<sp/>view.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>M&gt;</highlight></codeline>
+<codeline lineno="47" refid="group__topic-linalg_1gaf6d9519ee15d51a0ba7243e640d8be71" refkind="member"><highlight class="normal">[[nodiscard]]<sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1gaf6d9519ee15d51a0ba7243e640d8be71" kindref="member">triu</ref>(M<sp/>&amp;&amp;m)<sp/>{</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured&lt;M, MatrixStructure::UpperTriangular&gt;</ref>{std::forward&lt;M&gt;(m)};</highlight></codeline>
+<codeline lineno="49"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="51"><highlight class="comment">///<sp/>View<sp/>with<sp/>the<sp/>given<sp/>structure.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;MatrixStructure<sp/>S,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>M&gt;</highlight></codeline>
+<codeline lineno="53" refid="group__topic-linalg_1gab42ee44cb500f4d76bb81090614490d8" refkind="member"><highlight class="normal">[[nodiscard]]<sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1gab42ee44cb500f4d76bb81090614490d8" kindref="member">make_structured</ref>(M<sp/>&amp;&amp;m)<sp/>{</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured&lt;M, S&gt;</ref>{std::forward&lt;M&gt;(m)};</highlight></codeline>
+<codeline lineno="55"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="57"><highlight class="comment">///<sp/>@}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="59"><highlight class="comment">///<sp/>@}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>M,<sp/>MatrixStructure<sp/>S&gt;</highlight></codeline>
+<codeline lineno="62" refid="namespacebatmat_1_1linalg_1a8699debc88226ab70dead0e1fa7a7c37" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured&lt;M, S&gt;</ref><sp/>&amp;)<sp/>=<sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::linalg</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/linalg/triangular.hpp"/>
+  </compounddef>
+</doxygen>

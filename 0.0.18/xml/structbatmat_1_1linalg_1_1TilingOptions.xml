@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1TilingOptions" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::TilingOptions</compoundname>
+    <includes refid="gemm_8hpp" local="no">batmat/linalg/gemm.hpp</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1TilingOptions_1ac4052babe5e1cf38480ebb8a9824df2a" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool batmat::linalg::TilingOptions::no_tiling</definition>
+        <argsstring></argsstring>
+        <name>no_tiling</name>
+        <qualifiedname>batmat::linalg::TilingOptions::no_tiling</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+<para>Don&apos;t use cache tiling. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm.hpp" line="29" column="10" bodyfile="batmat/include/batmat/linalg/gemm.hpp" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1TilingOptions_1aed43d43bbff32aa2c9a388df55a8f21d" prot="public" static="no" mutable="no">
+        <type><ref refid="group__topic-linalg_1ga3526955f82976c2274834e5a69b21b7e" kindref="member">PackingSelector</ref></type>
+        <definition>PackingSelector batmat::linalg::TilingOptions::pack_A</definition>
+        <argsstring></argsstring>
+        <name>pack_A</name>
+        <qualifiedname>batmat::linalg::TilingOptions::pack_A</qualifiedname>
+        <initializer>= <ref refid="group__topic-linalg_1gga3526955f82976c2274834e5a69b21b7eaaf70b1ac863830a4e1ce6268c8399f54" kindref="member">PackingSelector::Transpose</ref></initializer>
+        <briefdescription>
+<para>When to pack matrix A. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm.hpp" line="30" column="21" bodyfile="batmat/include/batmat/linalg/gemm.hpp" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1TilingOptions_1a570a1f3c2b4bcb38749fa88fc70da36b" prot="public" static="no" mutable="no">
+        <type><ref refid="group__topic-linalg_1ga3526955f82976c2274834e5a69b21b7e" kindref="member">PackingSelector</ref></type>
+        <definition>PackingSelector batmat::linalg::TilingOptions::pack_B</definition>
+        <argsstring></argsstring>
+        <name>pack_B</name>
+        <qualifiedname>batmat::linalg::TilingOptions::pack_B</qualifiedname>
+        <initializer>= <ref refid="group__topic-linalg_1gga3526955f82976c2274834e5a69b21b7ea68eec46437c384d8dad18d5464ebc35c" kindref="member">PackingSelector::Always</ref></initializer>
+        <briefdescription>
+<para>When to pack matrix B. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm.hpp" line="31" column="21" bodyfile="batmat/include/batmat/linalg/gemm.hpp" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1TilingOptions_1abb9847e8b17cb93f3a857719a5ad4fc5" prot="public" static="no" mutable="no">
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::TilingOptions::n_c</definition>
+        <argsstring></argsstring>
+        <name>n_c</name>
+        <qualifiedname>batmat::linalg::TilingOptions::n_c</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+<para>Cache block size in the N dimension (columns of B, C and D). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm.hpp" line="32" column="13" bodyfile="batmat/include/batmat/linalg/gemm.hpp" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1TilingOptions_1af29d8cefd011b1b8664168eb4e6065f0" prot="public" static="no" mutable="no">
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::TilingOptions::k_c</definition>
+        <argsstring></argsstring>
+        <name>k_c</name>
+        <qualifiedname>batmat::linalg::TilingOptions::k_c</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+<para>Cache block size in the K dimension (columns of A, rows of B). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm.hpp" line="33" column="13" bodyfile="batmat/include/batmat/linalg/gemm.hpp" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1TilingOptions_1a687685529c73d39f6d3deb88788183b0" prot="public" static="no" mutable="no">
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::TilingOptions::m_c</definition>
+        <argsstring></argsstring>
+        <name>m_c</name>
+        <qualifiedname>batmat::linalg::TilingOptions::m_c</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+<para>Cache block size in the M dimension (rows of A, C and D). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm.hpp" line="34" column="13" bodyfile="batmat/include/batmat/linalg/gemm.hpp" bodystart="34" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Packing and tiling options for matrix-matrix multiplication. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::TilingOptions</label>
+        <link refid="structbatmat_1_1linalg_1_1TilingOptions"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/gemm.hpp" line="28" column="1" bodyfile="batmat/include/batmat/linalg/gemm.hpp" bodystart="28" bodyend="35"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1linalg_1_1TilingOptions_1af29d8cefd011b1b8664168eb4e6065f0" prot="public" virt="non-virtual"><scope>batmat::linalg::TilingOptions</scope><name>k_c</name></member>
+      <member refid="structbatmat_1_1linalg_1_1TilingOptions_1a687685529c73d39f6d3deb88788183b0" prot="public" virt="non-virtual"><scope>batmat::linalg::TilingOptions</scope><name>m_c</name></member>
+      <member refid="structbatmat_1_1linalg_1_1TilingOptions_1abb9847e8b17cb93f3a857719a5ad4fc5" prot="public" virt="non-virtual"><scope>batmat::linalg::TilingOptions</scope><name>n_c</name></member>
+      <member refid="structbatmat_1_1linalg_1_1TilingOptions_1ac4052babe5e1cf38480ebb8a9824df2a" prot="public" virt="non-virtual"><scope>batmat::linalg::TilingOptions</scope><name>no_tiling</name></member>
+      <member refid="structbatmat_1_1linalg_1_1TilingOptions_1aed43d43bbff32aa2c9a388df55a8f21d" prot="public" virt="non-virtual"><scope>batmat::linalg::TilingOptions</scope><name>pack_A</name></member>
+      <member refid="structbatmat_1_1linalg_1_1TilingOptions_1a570a1f3c2b4bcb38749fa88fc70da36b" prot="public" virt="non-virtual"><scope>batmat::linalg::TilingOptions</scope><name>pack_B</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

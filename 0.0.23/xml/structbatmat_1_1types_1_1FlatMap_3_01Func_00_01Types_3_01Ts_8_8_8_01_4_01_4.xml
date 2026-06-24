@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1types_1_1FlatMap_3_01Func_00_01Types_3_01Ts_8_8_8_01_4_01_4" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::types::FlatMap&lt; Func, Types&lt; Ts... &gt; &gt;</compoundname>
+    <includes refid="dtypes_8hpp" local="no">batmat/dtypes.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>template&lt; class &gt; class</type>
+        <declname>Func</declname>
+        <defname>Func</defname>
+      </param>
+      <param>
+        <type>class...</type>
+        <declname>Ts</declname>
+        <defname>Ts</defname>
+      </param>
+    </templateparamlist>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structbatmat_1_1types_1_1FlatMap_3_01Func_00_01Types_3_01Ts_8_8_8_01_4_01_4_1a7776d53bcf2d1681ce028a9d15ac399c" prot="public" static="no">
+        <type>typename <ref refid="structbatmat_1_1types_1_1Concat" kindref="compound">Concat</ref>&lt; Func&lt; Ts &gt;... &gt;::type</type>
+        <definition>using batmat::types::FlatMap&lt; Func, Types&lt; Ts... &gt; &gt;::type = typename Concat&lt;Func&lt;Ts&gt;...&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>batmat::types::FlatMap&lt; Func, Types&lt; Ts... &gt; &gt;::type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="59" column="5" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="59" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::types::FlatMap&lt; Func, Types&lt; Ts... &gt; &gt;</label>
+        <link refid="structbatmat_1_1types_1_1FlatMap_3_01Func_00_01Types_3_01Ts_8_8_8_01_4_01_4"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/dtypes.hpp" line="58" column="1" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="58" bodyend="60"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1types_1_1FlatMap_3_01Func_00_01Types_3_01Ts_8_8_8_01_4_01_4_1a7776d53bcf2d1681ce028a9d15ac399c" prot="public" virt="non-virtual"><scope>batmat::types::FlatMap&lt; Func, Types&lt; Ts... &gt; &gt;</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

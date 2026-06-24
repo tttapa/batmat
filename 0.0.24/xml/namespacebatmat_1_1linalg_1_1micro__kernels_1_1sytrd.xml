@@ -1,0 +1,258 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd" kind="namespace" language="C++">
+    <compoundname>batmat::linalg::micro_kernels::sytrd</compoundname>
+    <innerclass refid="structbatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1_1KernelConfig" prot="public">batmat::linalg::micro_kernels::sytrd::KernelConfig</innerclass>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1acbf0831d5848a3f598dc750891bde9aa" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+        <definition>index_t batmat::linalg::micro_kernels::sytrd::SizeR</definition>
+        <argsstring></argsstring>
+        <name>SizeR</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sytrd::SizeR</qualifiedname>
+        <initializer>= <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">gemm::RowsReg</ref>&lt;T, Abi&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sytrd.hpp" line="15" column="26" bodyfile="batmat/include/batmat/linalg/micro-kernels/sytrd.hpp" bodystart="15" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a1bd67119ddb719fe9011efee9a6a4bd2" compoundref="sytrd_8tpp" startline="24" endline="203">sytrd_diag_microkernel</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a553718615bc4e696c898fb701339564f" prot="public" static="no" constinit="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>const constinit auto</type>
+        <definition>const constinit auto batmat::linalg::micro_kernels::sytrd::microkernel_diag_lut</definition>
+        <argsstring></argsstring>
+        <name>microkernel_diag_lut</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sytrd::microkernel_diag_lut</qualifiedname>
+        <initializer>                                             =
+<ref refid="group__topic-utils_1ga91b0a07e3a00c803e9859ace6b86828f" kindref="member">make_1d_lut</ref>&lt;<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1acbf0831d5848a3f598dc750891bde9aa" kindref="member">SizeR</ref>&lt;T, Abi&gt;&gt;([]&lt;<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref> Row&gt;(<ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant</ref>&lt;Row&gt;) {
+    return <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a1bd67119ddb719fe9011efee9a6a4bd2" kindref="member">sytrd_diag_microkernel</ref>&lt;T, Abi, Conf, Row + 1, OD&gt;;
+})</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sytrd.tpp" line="17" column="29" bodyfile="batmat/include/batmat/linalg/micro-kernels/sytrd.tpp" bodystart="17" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a42acbf47f23092e96ab27c521034456f" compoundref="sytrd_8tpp" startline="207" endline="235">sytrd_register</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a1bd67119ddb719fe9011efee9a6a4bd2" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type><ref refid="example_8cpp_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+            <declname>R</declname>
+            <defname>R</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::sytrd::sytrd_diag_microkernel</definition>
+        <argsstring>(index_t k, triangular_accessor&lt; T, Abi, SizeR&lt; T, Abi &gt; &gt; W, uview&lt; T, Abi, OD &gt; D, uview&lt; T, Abi, StorageOrder::ColMajor &gt; Y) noexcept</argsstring>
+        <name>sytrd_diag_microkernel</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sytrd::sytrd_diag_microkernel</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+          <declname>k</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1triangular__accessor" kindref="compound">triangular_accessor</ref>&lt; T, Abi, <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1acbf0831d5848a3f598dc750891bde9aa" kindref="member">SizeR</ref>&lt; T, Abi &gt; &gt;</type>
+          <declname>W</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>Y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sytrd.tpp" line="24" column="1" bodyfile="batmat/include/batmat/linalg/micro-kernels/sytrd.tpp" bodystart="24" bodyend="203" declfile="batmat/include/batmat/linalg/micro-kernels/sytrd.hpp" declline="18" declcolumn="6"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="namespacebatmat_1_1datapar_1ad0c6f39983831e00225b0ebc6088c5eb" compoundref="simd_8hpp" startline="245" endline="248">batmat::datapar::select</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1acbf0831d5848a3f598dc750891bde9aa" compoundref="micro-kernels_2sytrd_8hpp" startline="15">SizeR</references>
+        <references refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" compoundref="gemm-diag_8tpp" startline="10">UNROLL_FOR</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a257774934be691eab0d88645e5d66585" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>std::pair&lt; <ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref>, <ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref> &gt;</type>
+        <definition>std::pair&lt; index_t, index_t &gt; batmat::linalg::micro_kernels::sytrd::sytrd_W_size</definition>
+        <argsstring>(view&lt; T, Abi, OD &gt; D)</argsstring>
+        <name>sytrd_W_size</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sytrd::sytrd_W_size</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sytrd.hpp" line="24" column="21" bodyfile="batmat/include/batmat/linalg/micro-kernels/sytrd.hpp" bodystart="24" bodyend="28"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ae4eaefe1058ce21f91f0097bc6c0f00b" compoundref="sytrd_8hpp" startline="17" endline="35">batmat::linalg::detail::sytrd</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a42acbf47f23092e96ab27c521034456f" compoundref="sytrd_8tpp" startline="207" endline="235">sytrd_register</referencedby>
+        <referencedby refid="group__topic-linalg_1gae6813e3ff075204c72a0f2027add45c2" compoundref="sytrd_8hpp" startline="91" endline="94">batmat::linalg::sytrd_size_W</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1aec6b3434b38927a4a28761a901d09825" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>std::pair&lt; <ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref>, <ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref> &gt;</type>
+        <definition>std::pair&lt; index_t, index_t &gt; batmat::linalg::micro_kernels::sytrd::sytrd_Y_size</definition>
+        <argsstring>(view&lt; T, Abi, OD &gt; D)</argsstring>
+        <name>sytrd_Y_size</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sytrd::sytrd_Y_size</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sytrd.hpp" line="32" column="21" bodyfile="batmat/include/batmat/linalg/micro-kernels/sytrd.hpp" bodystart="32" bodyend="35"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ae4eaefe1058ce21f91f0097bc6c0f00b" compoundref="sytrd_8hpp" startline="17" endline="35">batmat::linalg::detail::sytrd</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a42acbf47f23092e96ab27c521034456f" compoundref="sytrd_8tpp" startline="207" endline="235">sytrd_register</referencedby>
+        <referencedby refid="group__topic-linalg_1ga78892dba384b75fc12369843671added" compoundref="sytrd_8hpp" startline="99" endline="102">batmat::linalg::sytrd_size_Y</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a42acbf47f23092e96ab27c521034456f" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+            <defval>{}</defval>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+            <defval>StorageOrder::ColMajor</defval>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::sytrd::sytrd_register</definition>
+        <argsstring>(const view&lt; T, Abi, OD &gt; D, const view&lt; T, Abi &gt; W, const view&lt; T, Abi &gt; Y) noexcept</argsstring>
+        <name>sytrd_register</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sytrd::sytrd_register</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi &gt;</type>
+          <declname>W</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi &gt;</type>
+          <declname>Y</declname>
+        </param>
+        <briefdescription>
+<para>Symmetric block tridiagonalization. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sytrd.tpp" line="207" column="6" bodyfile="batmat/include/batmat/linalg/micro-kernels/sytrd.tpp" bodystart="207" bodyend="235" declfile="batmat/include/batmat/linalg/micro-kernels/sytrd.hpp" declline="39" declcolumn="8"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a294edbebb26413734307376578d417d1" compoundref="uview_8hpp" startline="110" endline="112">batmat::linalg::uview&lt; T, Abi, Order &gt;::block</references>
+        <references refid="group__topic-utils_1gab76a36340644bbf7c8093caa45aef12f" compoundref="loop_8hpp" startline="43" endline="61">batmat::foreach_chunked_merged</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a553718615bc4e696c898fb701339564f" compoundref="sytrd_8tpp" startline="17">microkernel_diag_lut</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a919a6b84f8b5f2aef171276479a784e0" compoundref="uview_8hpp" startline="118" endline="120">batmat::linalg::uview&lt; T, Abi, Order &gt;::middle_cols</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a4542c3d6af85ceb8fd44acf1dd3ab5b1" compoundref="uview_8hpp" startline="104" endline="108">batmat::linalg::uview&lt; T, Abi, Order &gt;::store</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a257774934be691eab0d88645e5d66585" compoundref="micro-kernels_2sytrd_8hpp" startline="24" endline="28">sytrd_W_size</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1aec6b3434b38927a4a28761a901d09825" compoundref="micro-kernels_2sytrd_8hpp" startline="32" endline="35">sytrd_Y_size</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ae4eaefe1058ce21f91f0097bc6c0f00b" compoundref="sytrd_8hpp" startline="17" endline="35">batmat::linalg::detail::sytrd</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/micro-kernels/sytrd.hpp" line="10" column="1"/>
+  </compounddef>
+</doxygen>

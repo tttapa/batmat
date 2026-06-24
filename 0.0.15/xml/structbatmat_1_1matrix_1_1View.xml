@@ -1,0 +1,1891 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1matrix_1_1View" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::matrix::View</compoundname>
+    <includes refid="view_8hpp" local="no">batmat/matrix/view.hpp</includes>
+    <innerclass refid="structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView" prot="public">batmat::matrix::View::PlainBatchedMatrixView</innerclass>
+    <innerclass refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator" prot="public">batmat::matrix::View::linear_iterator</innerclass>
+    <templateparamlist>
+      <param>
+        <type>class T</type>
+      </param>
+      <param>
+        <type>class I</type>
+        <defval>index_t</defval>
+      </param>
+      <param>
+        <type>class S</type>
+        <defval>std::integral_constant&lt;I, 1&gt;</defval>
+      </param>
+      <param>
+        <type>class D</type>
+        <defval>I</defval>
+      </param>
+      <param>
+        <type>class L</type>
+        <defval><ref refid="structbatmat_1_1matrix_1_1DefaultStride" kindref="compound">DefaultStride</ref></defval>
+      </param>
+      <param>
+        <type><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref></type>
+        <declname>O</declname>
+        <defname>O</defname>
+        <defval>StorageOrder::ColMajor</defval>
+      </param>
+    </templateparamlist>
+    <sectiondef kind="user-defined">
+      <header>Constructors</header>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>constexpr</type>
+        <definition>batmat::matrix::View&lt; T, I, S, D, L, O &gt;::View</definition>
+        <argsstring>(PlainBatchedMatrixView p={})</argsstring>
+        <name>View</name>
+        <qualifiedname>batmat::matrix::View::View</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView" kindref="compound">PlainBatchedMatrixView</ref></type>
+          <declname>p</declname>
+          <defval>{}</defval>
+        </param>
+        <briefdescription>
+<para>Create a new view. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>It is recommended to use designated initializers for the arguments to avoid mistakes. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="96" column="15" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="96" bodyend="102"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1abe2b1bdf5ee7b92845739f9514f9bcb4" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>constexpr</type>
+        <definition>batmat::matrix::View&lt; T, I, S, D, L, O &gt;::View</definition>
+        <argsstring>(std::span&lt; T &gt; data, layout_type layout)</argsstring>
+        <name>View</name>
+        <qualifiedname>batmat::matrix::View::View</qualifiedname>
+        <param>
+          <type>std::span&lt; T &gt;</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a012e075ecef99aebefdef47cbf1e8f5a" kindref="member">layout_type</ref></type>
+          <declname>layout</declname>
+        </param>
+        <briefdescription>
+<para>Create a new view with the given layout, using the given buffer. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="104" column="15" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="104" bodyend="106"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a3006d00fa01758f26342535ac06e0593" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>constexpr</type>
+        <definition>batmat::matrix::View&lt; T, I, S, D, L, O &gt;::View</definition>
+        <argsstring>(value_type *data, layout_type layout)</argsstring>
+        <name>View</name>
+        <qualifiedname>batmat::matrix::View::View</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a07f5398f5cef2f53d4fc26f5d9ca9c78" kindref="member">value_type</ref> *</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a012e075ecef99aebefdef47cbf1e8f5a" kindref="member">layout_type</ref></type>
+          <declname>layout</declname>
+        </param>
+        <briefdescription>
+<para>Create a new view with the given layout, using the given buffer. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="108" column="15" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="108" bodyend="108"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a4fe9a196700464e2cfff6ab203e7594a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>batmat::matrix::View&lt; T, I, S, D, L, O &gt;::View</definition>
+        <argsstring>(const View &amp;)=default</argsstring>
+        <name>View</name>
+        <qualifiedname>batmat::matrix::View::View</qualifiedname>
+        <param>
+          <type>const View &amp;</type>
+        </param>
+        <briefdescription>
+<para>Copy a view. No data is copied. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="111" column="5"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1af72c9ff6839b732973ee1582655d4f50" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref> &amp;</type>
+        <definition>View &amp; batmat::matrix::View&lt; T, I, S, D, L, O &gt;::reassign</definition>
+        <argsstring>(View other)</argsstring>
+        <name>reassign</name>
+        <qualifiedname>batmat::matrix::View::reassign</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref></type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+<para>Reassign the buffer and layout of this view to those of another view. No data is copied. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="114" column="10" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="114" bodyend="118"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Element access</header>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a1f1965ca1df1441baae9b38248a27e30" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a07f5398f5cef2f53d4fc26f5d9ca9c78" kindref="member">value_type</ref> &amp;</type>
+        <definition>value_type &amp; batmat::matrix::View&lt; T, I, S, D, L, O &gt;::operator()</definition>
+        <argsstring>(index_type l, index_type r, index_type c) const</argsstring>
+        <name>operator()</name>
+        <qualifiedname>batmat::matrix::View::operator()</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>r</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+<para>Access a single element at layer <computeroutput>l</computeroutput>, row <computeroutput>r</computeroutput> and column <computeroutput>c</computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="126" column="17" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="126" bodyend="128"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Batch-wise slicing</header>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1afab4ef784be9c2eb607b32ee01443a14" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a144c1ef95a12cb6134e85f06bf306988" kindref="member">batch_view_type</ref></type>
+        <definition>batch_view_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::batch</definition>
+        <argsstring>(index_type b) const</argsstring>
+        <name>batch</name>
+        <qualifiedname>batmat::matrix::View::batch</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+<para>Access a batch of <ref refid="structbatmat_1_1matrix_1_1View_1a652fe35cdc98459e74dd3f193bd67750" kindref="member">batch_size()</ref> layers, starting at batch index <computeroutput>b</computeroutput> (i.e. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>starting at layer <computeroutput>b * <ref refid="structbatmat_1_1matrix_1_1View_1a652fe35cdc98459e74dd3f193bd67750" kindref="member">batch_size()</ref></computeroutput>). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="137" column="22" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="137" bodyend="145"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a841711336374115892691a8482c6a193" compoundref="matrix_8hpp" startline="167" endline="167">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::batch</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1ab8a23b4572f50a0d2b6113eecee080b8" compoundref="matrix_8hpp" startline="169" endline="169">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::batch</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1View_1acb673b4079389369a6c0fb019fde245d" compoundref="view_8hpp" startline="633" endline="652">batmat::matrix::View&lt; T, index_t, stride, stride, layer_stride, O &gt;::operator+=</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a7413cc3f2de4aa60dddc53515316d09c" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref>&lt; T, I, S, I, L, O &gt;</type>
+        <definition>View&lt; T, I, S, I, L, O &gt; batmat::matrix::View&lt; T, I, S, D, L, O &gt;::batch_dyn</definition>
+        <argsstring>(index_type b) const</argsstring>
+        <name>batch_dyn</name>
+        <qualifiedname>batmat::matrix::View::batch_dyn</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+<para>Same as <ref refid="structbatmat_1_1matrix_1_1View_1afab4ef784be9c2eb607b32ee01443a14" kindref="member">batch()</ref>, but returns a view with a dynamic batch size. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>If the total depth is not a multiple of the batch size, the last batch will have a smaller size. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="149" column="11" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="149" bodyend="160"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a110fd3c26517c1eb67e361e078c51cb9" compoundref="matrix_8hpp" startline="171" endline="171">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::batch_dyn</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1aa10aa77f5dc88ad5218e169adcef1fb2" compoundref="matrix_8hpp" startline="173" endline="173">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::batch_dyn</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1ae2f3a6d7376b6283b4468a5d3202e4bc" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref>&lt; T, I, S, I, I, O &gt;</type>
+        <definition>View&lt; T, I, S, I, I, O &gt; batmat::matrix::View&lt; T, I, S, D, L, O &gt;::middle_batches</definition>
+        <argsstring>(index_type b, index_type n, index_type stride=1) const</argsstring>
+        <name>middle_batches</name>
+        <qualifiedname>batmat::matrix::View::middle_batches</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>b</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>n</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>stride</declname>
+          <defval>1</defval>
+        </param>
+        <briefdescription>
+<para>Get a view of <computeroutput>n</computeroutput> batches starting at batch <computeroutput>b</computeroutput>, with a stride of <computeroutput>stride</computeroutput> layers. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="163" column="11" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="163" bodyend="175"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a2c6c2eae555828dcc25d7033c7ecaaa7" compoundref="matrix_8hpp" startline="175" endline="177">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::middle_batches</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a3bbcd780696ec6b3a2dbc8c0783c4989" compoundref="matrix_8hpp" startline="179" endline="181">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::middle_batches</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Layer-wise slicing</header>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a09c75dd7db867e42e86378288f98e7b5" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structguanaqo_1_1MatrixView" kindref="compound" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">guanaqo::MatrixView</ref>&lt; T, I, <ref refid="structbatmat_1_1matrix_1_1View_1a0d67e8c21c53ceda34cf38d44d69b5d9" kindref="member">standard_stride_type</ref>, O &gt;</type>
+        <definition>guanaqo::MatrixView&lt; T, I, standard_stride_type, O &gt; batmat::matrix::View&lt; T, I, S, D, L, O &gt;::operator()</definition>
+        <argsstring>(index_type l) const</argsstring>
+        <name>operator()</name>
+        <qualifiedname>batmat::matrix::View::operator()</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>l</declname>
+        </param>
+        <briefdescription>
+<para>Access a single layer <computeroutput>l</computeroutput> as a non-batched view. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>The inner stride of the returned view is equal to the batch size of this view, so it cannot be used directly with functions that require unit inner stride (e.g. BLAS). </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="186" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="186" bodyend="188"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a03bc4d77448c6a431ad9afa371c410bd" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class N</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref>&lt; T, I, S, N, L, O &gt;</type>
+        <definition>View&lt; T, I, S, N, L, O &gt; batmat::matrix::View&lt; T, I, S, D, L, O &gt;::first_layers</definition>
+        <argsstring>(N n) const</argsstring>
+        <name>first_layers</name>
+        <qualifiedname>batmat::matrix::View::first_layers</qualifiedname>
+        <param>
+          <type>N</type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+<para>Get a view of the first <computeroutput>n</computeroutput> layers. Note that <computeroutput>n</computeroutput> can be a compile-time constant. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="192" column="11" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="192" bodyend="201"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a95b41ea43aace76792d6fa608fc3f835" compoundref="matrix_8hpp" startline="199" endline="201">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::first_layers</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a209c6cec33e1118df6ab4651ce32dfaf" compoundref="matrix_8hpp" startline="204" endline="206">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::first_layers</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a4fab94433b9358b5d5ae490d4be4612d" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class N</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref>&lt; T, I, S, N, L, O &gt;</type>
+        <definition>View&lt; T, I, S, N, L, O &gt; batmat::matrix::View&lt; T, I, S, D, L, O &gt;::middle_layers</definition>
+        <argsstring>(index_type l, N n) const</argsstring>
+        <name>middle_layers</name>
+        <qualifiedname>batmat::matrix::View::middle_layers</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type>N</type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+<para>Get a view of <computeroutput>n</computeroutput> layers starting at layer <computeroutput>l</computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Note that <computeroutput>n</computeroutput> can be a compile-time constant. <simplesect kind="pre"><para><computeroutput>l % <ref refid="structbatmat_1_1matrix_1_1View_1a652fe35cdc98459e74dd3f193bd67750" kindref="member">batch_size()</ref> == 0</computeroutput> (i.e. the starting layer must be at the start of a batch). </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="207" column="11" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="207" bodyend="217"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a0fdbb5bafb2cdc7fd51517521b959206" compoundref="matrix_8hpp" startline="209" endline="211">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::middle_layers</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a46d3833211108b3a2e35aeb50cb73de2" compoundref="matrix_8hpp" startline="214" endline="216">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::middle_layers</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Iterators and buffer access</header>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1abd3d195f148998f1020d39cea4ef0c5b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>T *</type>
+        <definition>T * batmat::matrix::View&lt; T, I, S, D, L, O &gt;::data</definition>
+        <argsstring>() const</argsstring>
+        <name>data</name>
+        <qualifiedname>batmat::matrix::View::data</qualifiedname>
+        <briefdescription>
+<para>Get a pointer to the first element of the first layer. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="225" column="7" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="225" bodyend="225"/>
+        <referencedby refid="namespacebatmat_1_1matrix_1aa36a101a15c060e5c656463a5c6ef587" compoundref="view_8hpp" startline="748" endline="750">batmat::matrix::data</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a557cb39b19c9463b91222695a8f48c13" compoundref="matrix_8hpp" startline="224" endline="224">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::data</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1af85cb001857300a9fd67c0efe20ea76f" compoundref="matrix_8hpp" startline="226" endline="226">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::data</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1View_1acb673b4079389369a6c0fb019fde245d" compoundref="view_8hpp" startline="633" endline="652">batmat::matrix::View&lt; T, index_t, stride, stride, layer_stride, O &gt;::operator+=</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a4199ceacf690f7d75d14fa31b6f93d12" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1_1linear__iterator" kindref="compound">linear_iterator</ref></type>
+        <definition>linear_iterator batmat::matrix::View&lt; T, I, S, D, L, O &gt;::begin</definition>
+        <argsstring>() const</argsstring>
+        <name>begin</name>
+        <qualifiedname>batmat::matrix::View::begin</qualifiedname>
+        <briefdescription>
+<para>Iterate linearly (in storage order) over all elements of the view. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="pre"><para><computeroutput><ref refid="structbatmat_1_1matrix_1_1View_1a18f95c4cf1fb5d73b4d80049b35dffb9" kindref="member">has_full_outer_stride()</ref></computeroutput> (i.e. no padding within layers). </para>
+</simplesect>
+<simplesect kind="pre"><para><computeroutput><ref refid="structbatmat_1_1matrix_1_1View_1a85261424b54110a4374afb5be6159f21" kindref="member">has_full_layer_stride()</ref></computeroutput> (i.e. no padding between batches). </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="258" column="22" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="258" bodyend="283"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1ae33ff54a57c8eb9fd63b9843ec62f76c" compoundref="matrix_8hpp" startline="228" endline="228">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::begin</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1abfcfe0451c533fa18000a9e32d84ea1d" compoundref="matrix_8hpp" startline="230" endline="230">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::begin</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a65c4f7147d2b8eadcf793341615e9265" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::default_sentinel_t</type>
+        <definition>std::default_sentinel_t batmat::matrix::View&lt; T, I, S, D, L, O &gt;::end</definition>
+        <argsstring>() const</argsstring>
+        <name>end</name>
+        <qualifiedname>batmat::matrix::View::end</qualifiedname>
+        <briefdescription>
+<para>Sentinel for <ref refid="structbatmat_1_1matrix_1_1View_1a4199ceacf690f7d75d14fa31b6f93d12" kindref="member">begin()</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="285" column="30" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="285" bodyend="285"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a93ea6edad5f038a06f811ffab2a90906" compoundref="matrix_8hpp" startline="232" endline="232">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::end</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1ac3903e11a15955fb3347ee5f6c40cb61" compoundref="matrix_8hpp" startline="234" endline="234">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::end</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Dimensions</header>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a96d36d03d9a8f601b559f2d0a279f27e" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::size</definition>
+        <argsstring>() const</argsstring>
+        <name>size</name>
+        <qualifiedname>batmat::matrix::View::size</qualifiedname>
+        <briefdescription>
+<para>Total number of elements in the view (excluding padding). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="293" column="27" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="293" bodyend="293"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a5c20a7d16d3b82fa61a3bd72ff40e9b5" compoundref="matrix_8hpp" startline="243" endline="243">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::size</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a3c9363a7f6172b2350eddf610812987a" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::padded_size</definition>
+        <argsstring>() const</argsstring>
+        <name>padded_size</name>
+        <qualifiedname>batmat::matrix::View::padded_size</qualifiedname>
+        <briefdescription>
+<para>Total number of elements in the view (including all padding). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="295" column="27" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="295" bodyend="295"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a4a4b4a946b3d040017961cae4f43c215" compoundref="matrix_8hpp" startline="245" endline="245">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::padded_size</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1af0e126c614d4d25d1b07d778bf4f7c34" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1af3044dd381fe1e3d1442efd22a590cf6" kindref="member">depth_type</ref></type>
+        <definition>depth_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::depth</definition>
+        <argsstring>() const</argsstring>
+        <name>depth</name>
+        <qualifiedname>batmat::matrix::View::depth</qualifiedname>
+        <briefdescription>
+<para>Number of layers in the view (i.e. depth). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="298" column="27" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="298" bodyend="298"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a12e947022060173e6f7634059a67f325" compoundref="matrix_8hpp" startline="100" endline="107">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::assign_from_view</referencedby>
+        <referencedby refid="namespacebatmat_1_1matrix_1a7704572499a68b9b08db1c8e4cc57d4a" compoundref="view_8hpp" startline="764" endline="766">batmat::matrix::depth</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1af958e54ea0b2a2c074a97dcf1c1e78d9" compoundref="matrix_8hpp" startline="247" endline="247">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::depth</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a90de7f9a56aeda5ceb9f4d3ca604f82b" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::ceil_depth</definition>
+        <argsstring>() const</argsstring>
+        <name>ceil_depth</name>
+        <qualifiedname>batmat::matrix::View::ceil_depth</qualifiedname>
+        <briefdescription>
+<para>The depth rounded up to a multiple of the batch size. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="300" column="27" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="300" bodyend="302"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1adc5504be1d59ca90ddbd747ad06f77e5" compoundref="matrix_8hpp" startline="249" endline="249">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::ceil_depth</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a652fe35cdc98459e74dd3f193bd67750" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a0c328fcfd23b220a108167a511021954" kindref="member">batch_size_type</ref></type>
+        <definition>batch_size_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::batch_size</definition>
+        <argsstring>() const</argsstring>
+        <name>batch_size</name>
+        <qualifiedname>batmat::matrix::View::batch_size</qualifiedname>
+        <briefdescription>
+<para>The batch size, i.e. the number of layers in each batch. Equals the inner stride. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="304" column="32" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="304" bodyend="306"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a12e947022060173e6f7634059a67f325" compoundref="matrix_8hpp" startline="100" endline="107">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::assign_from_view</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a54d8a34c7d086f2c8a9ee868ee33391d" compoundref="matrix_8hpp" startline="283" endline="283">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::batch_size</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1View_1acb673b4079389369a6c0fb019fde245d" compoundref="view_8hpp" startline="633" endline="652">batmat::matrix::View&lt; T, index_t, stride, stride, layer_stride, O &gt;::operator+=</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a2e60a675ceb5f0816761f53b50932290" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::num_batches</definition>
+        <argsstring>() const</argsstring>
+        <name>num_batches</name>
+        <qualifiedname>batmat::matrix::View::num_batches</qualifiedname>
+        <briefdescription>
+<para>Number of batches in the view, i.e. <computeroutput><ref refid="structbatmat_1_1matrix_1_1View_1a90de7f9a56aeda5ceb9f4d3ca604f82b" kindref="member">ceil_depth()</ref> / <ref refid="structbatmat_1_1matrix_1_1View_1a652fe35cdc98459e74dd3f193bd67750" kindref="member">batch_size()</ref></computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="308" column="27" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="308" bodyend="310"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1afa718d6165ab8a9d5428ff09ea38e4b0" compoundref="matrix_8hpp" startline="251" endline="251">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::num_batches</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a8a985a0de1538c7d48ba72dafeedac04" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::rows</definition>
+        <argsstring>() const</argsstring>
+        <name>rows</name>
+        <qualifiedname>batmat::matrix::View::rows</qualifiedname>
+        <briefdescription>
+<para>Number of rows of the matrices. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="312" column="27" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="312" bodyend="312"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a12e947022060173e6f7634059a67f325" compoundref="matrix_8hpp" startline="100" endline="107">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::assign_from_view</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1View_1acb673b4079389369a6c0fb019fde245d" compoundref="view_8hpp" startline="633" endline="652">batmat::matrix::View&lt; T, index_t, stride, stride, layer_stride, O &gt;::operator+=</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a6db175aa1b211d594161f61e2a1d629f" compoundref="matrix_8hpp" startline="253" endline="253">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::rows</referencedby>
+        <referencedby refid="namespacebatmat_1_1matrix_1ace408d79a94aff7ca1f7bf2a7dc94719" compoundref="view_8hpp" startline="752" endline="754">batmat::matrix::rows</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a658f96d2f60d1a7e1bfc55ee46ad76d2" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::cols</definition>
+        <argsstring>() const</argsstring>
+        <name>cols</name>
+        <qualifiedname>batmat::matrix::View::cols</qualifiedname>
+        <briefdescription>
+<para>Number of columns of the matrices. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="314" column="27" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="314" bodyend="314"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a12e947022060173e6f7634059a67f325" compoundref="matrix_8hpp" startline="100" endline="107">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::assign_from_view</referencedby>
+        <referencedby refid="namespacebatmat_1_1matrix_1a5d849ea8e2d6d668665f5ece822668fa" compoundref="view_8hpp" startline="756" endline="758">batmat::matrix::cols</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1af06fdfd92d9395fb9bf37221781d64ae" compoundref="matrix_8hpp" startline="255" endline="255">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::cols</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1View_1acb673b4079389369a6c0fb019fde245d" compoundref="view_8hpp" startline="633" endline="652">batmat::matrix::View&lt; T, index_t, stride, stride, layer_stride, O &gt;::operator+=</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1ace0f2f30fc941f898d62867adc440087" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::outer_size</definition>
+        <argsstring>() const</argsstring>
+        <name>outer_size</name>
+        <qualifiedname>batmat::matrix::View::outer_size</qualifiedname>
+        <briefdescription>
+<para>The size of the outer dimension, i.e. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>the number of columns for column-major storage, or the number of rows for row-major storage. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="317" column="27" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="317" bodyend="319"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1aaceb9153aa10ce23f22a10de7e4ae61a" compoundref="matrix_8hpp" startline="257" endline="257">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::outer_size</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a90b6311fd3fe15291caa206e01a9c6f1" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::inner_size</definition>
+        <argsstring>() const</argsstring>
+        <name>inner_size</name>
+        <qualifiedname>batmat::matrix::View::inner_size</qualifiedname>
+        <briefdescription>
+<para>The size of the inner dimension, i.e. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>the number of rows for column-major storage, or the number of columns for row-major storage. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="322" column="27" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="322" bodyend="324"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a9b4c37a55cf209a1bee70b075124a31e" compoundref="matrix_8hpp" startline="259" endline="259">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::inner_size</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Strides</header>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1afa2c308d93a3e7a1ff8a00aa044bea71" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::outer_stride</definition>
+        <argsstring>() const</argsstring>
+        <name>outer_stride</name>
+        <qualifiedname>batmat::matrix::View::outer_stride</qualifiedname>
+        <briefdescription>
+<para>Outer stride of the matrices (leading dimension in BLAS parlance). </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Should be multiplied by the batch size to get the actual number of elements. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="333" column="27" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="333" bodyend="335"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1View_1acb673b4079389369a6c0fb019fde245d" compoundref="view_8hpp" startline="633" endline="652">batmat::matrix::View&lt; T, index_t, stride, stride, layer_stride, O &gt;::operator+=</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1aa3106fc8a7da0df4a46a03459dd20a2a" compoundref="matrix_8hpp" startline="267" endline="267">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::outer_stride</referencedby>
+        <referencedby refid="namespacebatmat_1_1matrix_1a72d2eafd283cf2aaae93c61dfa2c1fa7" compoundref="view_8hpp" startline="760" endline="762">batmat::matrix::outer_stride</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a2b592885afe4df37a836fe7e32484418" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto batmat::matrix::View&lt; T, I, S, D, L, O &gt;::inner_stride</definition>
+        <argsstring>() const</argsstring>
+        <name>inner_stride</name>
+        <qualifiedname>batmat::matrix::View::inner_stride</qualifiedname>
+        <briefdescription>
+<para>The inner stride of the matrices. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Should be multiplied by the batch size to get the actual number of elements. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="338" column="21" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="338" bodyend="340"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a793ec1b6fd076d56baffb2e61b9f5e2d" compoundref="matrix_8hpp" startline="269" endline="269">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::inner_stride</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1aa517c293b8300ca715b053cc5f092907" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto batmat::matrix::View&lt; T, I, S, D, L, O &gt;::row_stride</definition>
+        <argsstring>() const</argsstring>
+        <name>row_stride</name>
+        <qualifiedname>batmat::matrix::View::row_stride</qualifiedname>
+        <briefdescription>
+<para>The row stride of the matrices, i.e. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>the distance between elements in consecutive rows in a given column. Should be multiplied by the batch size to get the actual number of elements. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="343" column="21" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="343" bodyend="345"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1aba9472ac2072d91a9d019dfff161a073" compoundref="matrix_8hpp" startline="271" endline="271">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::row_stride</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a50ca8f9c48bde393a4f46883f0a89d28" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto batmat::matrix::View&lt; T, I, S, D, L, O &gt;::col_stride</definition>
+        <argsstring>() const</argsstring>
+        <name>col_stride</name>
+        <qualifiedname>batmat::matrix::View::col_stride</qualifiedname>
+        <briefdescription>
+<para>The column stride of the matrices, i.e. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>the distance between elements in consecutive columns in a given row. Should be multiplied by the batch size to get the actual number of elements. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="348" column="21" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="348" bodyend="350"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1ac01e54c2e1b8068ff6d8798bab6b7ee5" compoundref="matrix_8hpp" startline="273" endline="273">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::col_stride</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1ad789388aeaae21bd80f85c604c604995" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::layer_stride</definition>
+        <argsstring>() const</argsstring>
+        <name>layer_stride</name>
+        <qualifiedname>batmat::matrix::View::layer_stride</qualifiedname>
+        <briefdescription>
+<para>The layer stride, i.e. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>the distance between the first layer of one batch and the first layer of the next batch. Should be multiplied by the batch size to get the actual number of elements. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="354" column="27" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="354" bodyend="356"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a97c173408d089764797d4ce7b0006b84" compoundref="matrix_8hpp" startline="275" endline="275">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::layer_stride</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a85261424b54110a4374afb5be6159f21" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool batmat::matrix::View&lt; T, I, S, D, L, O &gt;::has_full_layer_stride</definition>
+        <argsstring>() const</argsstring>
+        <name>has_full_layer_stride</name>
+        <qualifiedname>batmat::matrix::View::has_full_layer_stride</qualifiedname>
+        <briefdescription>
+<para>Whether the <computeroutput><ref refid="structbatmat_1_1matrix_1_1View_1ad789388aeaae21bd80f85c604c604995" kindref="member">layer_stride()</ref> == <ref refid="structbatmat_1_1matrix_1_1View_1afa2c308d93a3e7a1ff8a00aa044bea71" kindref="member">outer_stride()</ref> * <ref refid="structbatmat_1_1matrix_1_1View_1ace0f2f30fc941f898d62867adc440087" kindref="member">outer_size()</ref></computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="358" column="21" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="358" bodyend="360"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a984c11cddbda162bb2b35710ea2a6cda" compoundref="matrix_8hpp" startline="277" endline="277">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::has_full_layer_stride</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a18f95c4cf1fb5d73b4d80049b35dffb9" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool batmat::matrix::View&lt; T, I, S, D, L, O &gt;::has_full_outer_stride</definition>
+        <argsstring>() const</argsstring>
+        <name>has_full_outer_stride</name>
+        <qualifiedname>batmat::matrix::View::has_full_outer_stride</qualifiedname>
+        <briefdescription>
+<para>Whether the <computeroutput><ref refid="structbatmat_1_1matrix_1_1View_1afa2c308d93a3e7a1ff8a00aa044bea71" kindref="member">outer_stride()</ref> == <ref refid="structbatmat_1_1matrix_1_1View_1a2b592885afe4df37a836fe7e32484418" kindref="member">inner_stride()</ref> * <ref refid="structbatmat_1_1matrix_1_1View_1a90b6311fd3fe15291caa206e01a9c6f1" kindref="member">inner_size()</ref></computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="362" column="21" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="362" bodyend="364"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a970f802cb8d512ab93e211c374bc1c19" compoundref="matrix_8hpp" startline="279" endline="279">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::has_full_outer_stride</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a764fa59ba1b5bae126c04c4b8cf23572" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool batmat::matrix::View&lt; T, I, S, D, L, O &gt;::has_full_inner_stride</definition>
+        <argsstring>() const</argsstring>
+        <name>has_full_inner_stride</name>
+        <qualifiedname>batmat::matrix::View::has_full_inner_stride</qualifiedname>
+        <briefdescription>
+<para>Whether the <computeroutput><ref refid="structbatmat_1_1matrix_1_1View_1a2b592885afe4df37a836fe7e32484418" kindref="member">inner_stride()</ref> == 1</computeroutput>. Always true. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="366" column="21" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="366" bodyend="368"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a04e3d98f83f976f49cc8e7f531239cd9" compoundref="matrix_8hpp" startline="281" endline="281">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::has_full_inner_stride</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Reshaping and slicing</header>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a4d2131f86753afbd57090790d75d98a0" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1aa43531137c5afae7c33a90822cdef2fb" kindref="member">general_slice_view_type</ref></type>
+        <definition>general_slice_view_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::reshaped</definition>
+        <argsstring>(index_type rows, index_type cols) const</argsstring>
+        <name>reshaped</name>
+        <qualifiedname>batmat::matrix::View::reshaped</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>rows</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>cols</declname>
+        </param>
+        <briefdescription>
+<para>Reshape the view to the given dimensions. The total size should not change. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="386" column="30" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="386" bodyend="397"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a7286698e1fb773c218230f46c6ac73ed" compoundref="matrix_8hpp" startline="291" endline="293">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::reshaped</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a4633e970819b6191916c69b0d900cc07" compoundref="matrix_8hpp" startline="295" endline="297">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::reshaped</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a8643bd7086c7eece449a9a8b8afff661" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1aacba293d849732693abdca99ae237896" kindref="member">row_slice_view_type</ref></type>
+        <definition>row_slice_view_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::top_rows</definition>
+        <argsstring>(index_type n) const</argsstring>
+        <name>top_rows</name>
+        <qualifiedname>batmat::matrix::View::top_rows</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+<para>Get a view of the first <computeroutput>n</computeroutput> rows. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="400" column="26" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="400" bodyend="410"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a836301b19eccea717f83c274f8149b4a" compoundref="matrix_8hpp" startline="299" endline="299">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::top_rows</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a691de5977e2842a88f6c659f3b009435" compoundref="matrix_8hpp" startline="301" endline="301">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::top_rows</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a784de6877b93091726b6cfa3579fe8ca" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1af2f2324c52e5bb88e70c8191e6337983" kindref="member">col_slice_view_type</ref></type>
+        <definition>col_slice_view_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::left_cols</definition>
+        <argsstring>(index_type n) const</argsstring>
+        <name>left_cols</name>
+        <qualifiedname>batmat::matrix::View::left_cols</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+<para>Get a view of the first <computeroutput>n</computeroutput> columns. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="413" column="26" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="413" bodyend="423"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a7855e378ff9b2eb20c938da8601923e5" compoundref="matrix_8hpp" startline="303" endline="303">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::left_cols</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a7d9e626618898ecdbfe11ed50a3bfb71" compoundref="matrix_8hpp" startline="305" endline="305">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::left_cols</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a485295b0ba5180ca31f2c5d3ea04cd28" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1aacba293d849732693abdca99ae237896" kindref="member">row_slice_view_type</ref></type>
+        <definition>row_slice_view_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::bottom_rows</definition>
+        <argsstring>(index_type n) const</argsstring>
+        <name>bottom_rows</name>
+        <qualifiedname>batmat::matrix::View::bottom_rows</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+<para>Get a view of the last <computeroutput>n</computeroutput> rows. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="426" column="26" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="426" bodyend="438"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a7766bd06944369269e9c49cf2c9f9270" compoundref="matrix_8hpp" startline="307" endline="307">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::bottom_rows</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a0c221b1b31b8a1e952d2af9384751c92" compoundref="matrix_8hpp" startline="309" endline="309">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::bottom_rows</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a65e8824cd34781ca5901152b8eb4dff2" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1af2f2324c52e5bb88e70c8191e6337983" kindref="member">col_slice_view_type</ref></type>
+        <definition>col_slice_view_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::right_cols</definition>
+        <argsstring>(index_type n) const</argsstring>
+        <name>right_cols</name>
+        <qualifiedname>batmat::matrix::View::right_cols</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+<para>Get a view of the last <computeroutput>n</computeroutput> columns. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="441" column="26" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="441" bodyend="453"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a8bf38dde287fcd804c4df05cc01ae380" compoundref="matrix_8hpp" startline="311" endline="311">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::right_cols</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a990b7df34cfdfa122272acf9e92df33d" compoundref="matrix_8hpp" startline="313" endline="313">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::right_cols</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a5de296a861344e3a9e599081545480b9" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1aacba293d849732693abdca99ae237896" kindref="member">row_slice_view_type</ref></type>
+        <definition>row_slice_view_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::middle_rows</definition>
+        <argsstring>(index_type r, index_type n) const</argsstring>
+        <name>middle_rows</name>
+        <qualifiedname>batmat::matrix::View::middle_rows</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>r</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+<para>Get a view of <computeroutput>n</computeroutput> rows starting at row <computeroutput>r</computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="456" column="26" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="456" bodyend="458"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1aed1263629572b34095b62d5dec7b91d9" compoundref="matrix_8hpp" startline="315" endline="315">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::middle_rows</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1adec3c4b8e4e8f51786f551d8b8662ea8" compoundref="matrix_8hpp" startline="317" endline="319">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::middle_rows</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1aa21d2d92fb7d3488170a5fdbd8203445" compoundref="matrix_8hpp" startline="321" endline="325">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::middle_rows</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1aec998b0f66c2015f71d7606b2800e352" compoundref="matrix_8hpp" startline="327" endline="331">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::middle_rows</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1aba409c47100e28f0524e325f278ea571" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1aacba293d849732693abdca99ae237896" kindref="member">row_slice_view_type</ref></type>
+        <definition>row_slice_view_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::middle_rows</definition>
+        <argsstring>(index_type r, index_type n, index_type stride) const</argsstring>
+        <name>middle_rows</name>
+        <qualifiedname>batmat::matrix::View::middle_rows</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>r</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>n</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>stride</declname>
+        </param>
+    <requiresclause><ref refid="structbatmat_1_1matrix_1_1View_1adc94b8ed2cbdba1ad1721b712f3ea558" kindref="member">is_row_major</ref>    </requiresclause>
+        <briefdescription>
+<para>Get a view of <computeroutput>n</computeroutput> rows starting at row <computeroutput>r</computeroutput>, with stride <computeroutput>stride</computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="461" column="26" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="461" bodyend="477"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a3ae9a5ed0a41a37eaf3cc57c60eab3db" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1af2f2324c52e5bb88e70c8191e6337983" kindref="member">col_slice_view_type</ref></type>
+        <definition>col_slice_view_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::middle_cols</definition>
+        <argsstring>(index_type c, index_type n) const</argsstring>
+        <name>middle_cols</name>
+        <qualifiedname>batmat::matrix::View::middle_cols</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>c</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+<para>Get a view of <computeroutput>n</computeroutput> columns starting at column <computeroutput>c</computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="480" column="26" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="480" bodyend="482"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a827ac9ed4962edf1f9fdfd06cbbeca6c" compoundref="matrix_8hpp" startline="333" endline="333">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::middle_cols</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a86f5fe18e73e576bac25d56b82c29ee4" compoundref="matrix_8hpp" startline="335" endline="337">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::middle_cols</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1ae876b8c3f4a3fdba0fda3f9e3cb7dd49" compoundref="matrix_8hpp" startline="339" endline="343">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::middle_cols</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1ae7cc1e5f97da852723b7c7a780550d37" compoundref="matrix_8hpp" startline="345" endline="349">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::middle_cols</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a2f15eb1fa38b3a4c8c85b4adbf5bb0c0" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1af2f2324c52e5bb88e70c8191e6337983" kindref="member">col_slice_view_type</ref></type>
+        <definition>col_slice_view_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::middle_cols</definition>
+        <argsstring>(index_type c, index_type n, index_type stride) const</argsstring>
+        <name>middle_cols</name>
+        <qualifiedname>batmat::matrix::View::middle_cols</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>c</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>n</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>stride</declname>
+        </param>
+    <requiresclause><ref refid="structbatmat_1_1matrix_1_1View_1a02bf028bb593d05b86d955fd972d622a" kindref="member">is_column_major</ref>    </requiresclause>
+        <briefdescription>
+<para>Get a view of <computeroutput>n</computeroutput> columns starting at column <computeroutput>c</computeroutput>, with stride <computeroutput>stride</computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="485" column="26" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="485" bodyend="501"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1ac17cd50705f2ef876c6b483e4b8394b4" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1aa43531137c5afae7c33a90822cdef2fb" kindref="member">general_slice_view_type</ref></type>
+        <definition>general_slice_view_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::top_left</definition>
+        <argsstring>(index_type nr, index_type nc) const</argsstring>
+        <name>top_left</name>
+        <qualifiedname>batmat::matrix::View::top_left</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>nr</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>nc</declname>
+        </param>
+        <briefdescription>
+<para>Get a view of the top-left <computeroutput>nr</computeroutput> by <computeroutput>nc</computeroutput> block of the matrices. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="504" column="30" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="504" bodyend="506"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a9ee08d5e2be23f61a393f5692bba96f3" compoundref="matrix_8hpp" startline="351" endline="351">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::top_left</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a7582f39c5da94e6f67217cf70f145381" compoundref="matrix_8hpp" startline="353" endline="355">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::top_left</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1aee77fd6ec42b32bc5a5bc826274a914f" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1aa43531137c5afae7c33a90822cdef2fb" kindref="member">general_slice_view_type</ref></type>
+        <definition>general_slice_view_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::top_right</definition>
+        <argsstring>(index_type nr, index_type nc) const</argsstring>
+        <name>top_right</name>
+        <qualifiedname>batmat::matrix::View::top_right</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>nr</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>nc</declname>
+        </param>
+        <briefdescription>
+<para>Get a view of the top-right <computeroutput>nr</computeroutput> by <computeroutput>nc</computeroutput> block of the matrices. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="509" column="30" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="509" bodyend="511"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a9183edd9dd4134b509e8db3b918c1585" compoundref="matrix_8hpp" startline="357" endline="357">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::top_right</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a01ff1004fd0a9b04924c19c3b62cf47f" compoundref="matrix_8hpp" startline="359" endline="361">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::top_right</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a58f8cbcd01d3e93cc584ad1250234af8" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1aa43531137c5afae7c33a90822cdef2fb" kindref="member">general_slice_view_type</ref></type>
+        <definition>general_slice_view_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::bottom_left</definition>
+        <argsstring>(index_type nr, index_type nc) const</argsstring>
+        <name>bottom_left</name>
+        <qualifiedname>batmat::matrix::View::bottom_left</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>nr</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>nc</declname>
+        </param>
+        <briefdescription>
+<para>Get a view of the bottom-left <computeroutput>nr</computeroutput> by <computeroutput>nc</computeroutput> block of the matrices. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="514" column="30" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="514" bodyend="516"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a97043a3c5c4277df66c268355510184f" compoundref="matrix_8hpp" startline="363" endline="365">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::bottom_left</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a0f33118f9fc5913e6a76610be44f22b4" compoundref="matrix_8hpp" startline="367" endline="369">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::bottom_left</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a0aaed4ee88727aba4c6066b65a897056" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1aa43531137c5afae7c33a90822cdef2fb" kindref="member">general_slice_view_type</ref></type>
+        <definition>general_slice_view_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::bottom_right</definition>
+        <argsstring>(index_type nr, index_type nc) const</argsstring>
+        <name>bottom_right</name>
+        <qualifiedname>batmat::matrix::View::bottom_right</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>nr</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>nc</declname>
+        </param>
+        <briefdescription>
+<para>Get a view of the bottom-right <computeroutput>nr</computeroutput> by <computeroutput>nc</computeroutput> block of the matrices. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="519" column="30" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="519" bodyend="521"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1ae417524eb68bfe0b09688210314b6c88" compoundref="matrix_8hpp" startline="371" endline="373">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::bottom_right</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a8c3d42ee852564ba51a63ff88d726a5c" compoundref="matrix_8hpp" startline="375" endline="377">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::bottom_right</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a1c9de38ddbf785fa09e56a8fa5169c05" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1aa43531137c5afae7c33a90822cdef2fb" kindref="member">general_slice_view_type</ref></type>
+        <definition>general_slice_view_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::block</definition>
+        <argsstring>(index_type r, index_type c, index_type nr, index_type nc) const</argsstring>
+        <name>block</name>
+        <qualifiedname>batmat::matrix::View::block</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>r</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>c</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>nr</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" kindref="member">index_type</ref></type>
+          <declname>nc</declname>
+        </param>
+        <briefdescription>
+<para>Get a view of the <computeroutput>nr</computeroutput> by <computeroutput>nc</computeroutput> block of the matrices starting at row <computeroutput>r</computeroutput> and column <computeroutput>c</computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="524" column="30" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="524" bodyend="527"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a6691a1dad53dfe84336c528e9d7b5784" compoundref="matrix_8hpp" startline="379" endline="381">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::block</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1ac8c8d5487152e2b1ed2d4805d8378567" compoundref="matrix_8hpp" startline="383" endline="385">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::block</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a24b36d6e7568ec7941969cf410f42f01" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto batmat::matrix::View&lt; T, I, S, D, L, O &gt;::transposed</definition>
+        <argsstring>() const</argsstring>
+        <name>transposed</name>
+        <qualifiedname>batmat::matrix::View::transposed</qualifiedname>
+        <briefdescription>
+<para>Get a transposed view of the matrices. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Note that the data itself is not modified, the returned view simply accesses the same data with rows and column indices swapped. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="536" column="11" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="536" bodyend="545"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1ae450ea40239ee9c2f8370928d76901e9" compoundref="matrix_8hpp" startline="387" endline="387">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::transposed</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a69aef398cd1a3b82864d4f6672b546dc" compoundref="matrix_8hpp" startline="389" endline="389">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::transposed</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a8000c4823b91daf5dfea18ccd6b0e45d" prot="public" static="yes" nodiscard="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref></type>
+        <definition>static View batmat::matrix::View&lt; T, I, S, D, L, O &gt;::as_column</definition>
+        <argsstring>(std::span&lt; T &gt; v)</argsstring>
+        <name>as_column</name>
+        <qualifiedname>batmat::matrix::View::as_column</qualifiedname>
+        <param>
+          <type>std::span&lt; T &gt;</type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+<para>Get a view of the given span as a column vector. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="530" column="18" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="530" bodyend="532"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Value manipulation</header>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a4100ad6c24e2d0a8050ac1d9ed6a2b46" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void batmat::matrix::View&lt; T, I, S, D, L, O &gt;::add_to_diagonal</definition>
+        <argsstring>(const value_type &amp;t)</argsstring>
+        <name>add_to_diagonal</name>
+        <qualifiedname>batmat::matrix::View::add_to_diagonal</qualifiedname>
+        <param>
+          <type>const <ref refid="structbatmat_1_1matrix_1_1View_1a07f5398f5cef2f53d4fc26f5d9ca9c78" kindref="member">value_type</ref> &amp;</type>
+          <declname>t</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="552" column="10" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="552" bodyend="563"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a062d4739cab4e2bbca7439aa0354636a" compoundref="matrix_8hpp" startline="419" endline="419">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::add_to_diagonal</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a1cfba3a1a9ffdcd786c5fe76488a626c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void batmat::matrix::View&lt; T, I, S, D, L, O &gt;::set_constant</definition>
+        <argsstring>(value_type t)</argsstring>
+        <name>set_constant</name>
+        <qualifiedname>batmat::matrix::View::set_constant</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a07f5398f5cef2f53d4fc26f5d9ca9c78" kindref="member">value_type</ref></type>
+          <declname>t</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="565" column="10" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="565" bodyend="577"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a757dbd5cb7427a0375682a3df28865a0" compoundref="matrix_8hpp" startline="417" endline="417">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::set_constant</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1ab593ea4d085e0f6f56d6cc28479cea6d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void batmat::matrix::View&lt; T, I, S, D, L, O &gt;::negate</definition>
+        <argsstring>()</argsstring>
+        <name>negate</name>
+        <qualifiedname>batmat::matrix::View::negate</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="579" column="10" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="579" bodyend="591"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a03de778a92762f688189a0d1817b39d0" compoundref="matrix_8hpp" startline="421" endline="421">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::negate</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1af59145deefbfd73abdd5be12f54806cf" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class Other</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::matrix::View&lt; T, I, S, D, L, O &gt;::copy_values</definition>
+        <argsstring>(const Other &amp;other) const</argsstring>
+        <name>copy_values</name>
+        <qualifiedname>batmat::matrix::View::copy_values</qualifiedname>
+        <param>
+          <type>const Other &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="594" column="10" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="594" bodyend="613"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a0a763d266322cf537b4ef31d97024d6e" compoundref="matrix_8hpp" startline="123" endline="125">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::Matrix</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a12e947022060173e6f7634059a67f325" compoundref="matrix_8hpp" startline="100" endline="107">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::assign_from_view</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a8d60546111144d9a637e6622e378fd04" compoundref="matrix_8hpp" startline="424" endline="426">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::copy_values</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a5fb75c61cd68e17d9bf056d7aefea47c" compoundref="matrix_8hpp" startline="397" endline="406">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::operator=</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a99bc563329bf4abf7d1285745d9ff985" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref> &amp;</type>
+        <definition>View &amp; batmat::matrix::View&lt; T, I, S, D, L, O &gt;::operator=</definition>
+        <argsstring>(const View &amp;other)</argsstring>
+        <name>operator=</name>
+        <qualifiedname>batmat::matrix::View::operator=</qualifiedname>
+        <param>
+          <type>const <ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref> &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+<para>Copy assignment copies the values from another view with the same layout to this view. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="616" column="10" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="616" bodyend="620"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a0b2bf5139cb4ae1698c4ca8a365bca0a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class U</type>
+          </param>
+          <param>
+            <type>class J</type>
+          </param>
+          <param>
+            <type>class R</type>
+          </param>
+          <param>
+            <type>class E</type>
+          </param>
+          <param>
+            <type>class M</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref> &amp;</type>
+        <definition>View &amp; batmat::matrix::View&lt; T, I, S, D, L, O &gt;::operator=</definition>
+        <argsstring>(View&lt; U, J, R, E, M, O &gt; other)</argsstring>
+        <name>operator=</name>
+        <qualifiedname>batmat::matrix::View::operator=</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref>&lt; U, J, R, E, M, O &gt;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+<para>Copy values from another view with a compatible value type and the same layout to this view. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="625" column="10" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="625" bodyend="628"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1acb673b4079389369a6c0fb019fde245d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class U</type>
+          </param>
+          <param>
+            <type>class J</type>
+          </param>
+          <param>
+            <type>class R</type>
+          </param>
+          <param>
+            <type>class E</type>
+          </param>
+          <param>
+            <type>class M</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref> &amp;</type>
+        <definition>View &amp; batmat::matrix::View&lt; T, I, S, D, L, O &gt;::operator+=</definition>
+        <argsstring>(View&lt; U, J, R, E, M, O &gt; other)</argsstring>
+        <name>operator+=</name>
+        <qualifiedname>batmat::matrix::View::operator+=</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref>&lt; U, J, R, E, M, O &gt;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="633" column="10" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="633" bodyend="652"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>View conversions</header>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1ad130676a89cbb9de4403454966c9d1d2" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref></type>
+        <definition>View batmat::matrix::View&lt; T, I, S, D, L, O &gt;::view</definition>
+        <argsstring>() const</argsstring>
+        <name>view</name>
+        <qualifiedname>batmat::matrix::View::view</qualifiedname>
+        <briefdescription>
+<para>Returns the same view. For consistency with <ref refid="structbatmat_1_1matrix_1_1Matrix" kindref="compound">Matrix</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="660" column="11" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="660" bodyend="660"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1ae7446046ddf4b9d0d701af66e76cebd5" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a5b58d4bfc6aa4d8f90faf3dcf30d649b" kindref="member">const_view_type</ref></type>
+        <definition>const_view_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::as_const</definition>
+        <argsstring>() const</argsstring>
+        <name>as_const</name>
+        <qualifiedname>batmat::matrix::View::as_const</qualifiedname>
+        <briefdescription>
+<para>Explicit conversion to a const view. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="662" column="22" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="662" bodyend="662"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1ab5554d055756ec92e7c6bd233f120a8e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>batmat::matrix::View&lt; T, I, S, D, L, O &gt;::operator const_view_type</definition>
+        <argsstring>() const</argsstring>
+        <name>operator const_view_type</name>
+        <qualifiedname>batmat::matrix::View::operator const_view_type</qualifiedname>
+    <requiresclause>(!std::is_const_v&lt;T&gt;)    </requiresclause>
+        <briefdescription>
+<para>Non-const views implicitly convert to const views. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="665" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="665" bodyend="669"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a0cbde49e22764991c58d0bcd94c13877" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>batmat::matrix::View&lt; T, I, S, D, L, O &gt;::operator guanaqo::MatrixView&lt; T, I, standard_stride_type, O &gt;</definition>
+        <argsstring>() const</argsstring>
+        <name>operator guanaqo::MatrixView&lt; T, I, standard_stride_type, O &gt;</name>
+        <qualifiedname>batmat::matrix::View::MatrixView&lt; T, I, standard_stride_type, O &gt;</qualifiedname>
+    <requiresclause><ref refid="structbatmat_1_1matrix_1_1Matrix_1a0776190ae75e20903f7b69c0e91096ff" kindref="member">has_single_layer_at_compile_time</ref>    </requiresclause>
+        <briefdescription>
+<para>If we have a single layer at compile time, we can implicitly convert to a non-batched view. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="672" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="672" bodyend="676"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a1e373fba18186c9f4602603f9546a524" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>batmat::matrix::View&lt; T, I, S, D, L, O &gt;::operator View&lt; T, I, S, integral_value_type_t&lt; D &gt;, L, O &gt;</definition>
+        <argsstring>() const</argsstring>
+        <name>operator View&lt; T, I, S, integral_value_type_t&lt; D &gt;, L, O &gt;</name>
+        <qualifiedname>batmat::matrix::View::operator View&lt; T, I, S, integral_value_type_t&lt; D &gt;, L, O &gt;</qualifiedname>
+    <requiresclause>(!std::same_as&lt;<ref refid="namespacebatmat_1_1matrix_1a3bf2b5f85e94200874b4a9bc591cc79c" kindref="member">integral_value_type_t</ref>&lt;D&gt;, D&gt;)    </requiresclause>
+        <briefdescription>
+<para>Implicit conversion to a view with a dynamic depth. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="679" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="679" bodyend="690"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a8d52ae35f6857501961deed76b32bb37" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>batmat::matrix::View&lt; T, I, S, D, L, O &gt;::operator View&lt; const T, I, S, integral_value_type_t&lt; D &gt;, L, O &gt;</definition>
+        <argsstring>() const</argsstring>
+        <name>operator View&lt; const T, I, S, integral_value_type_t&lt; D &gt;, L, O &gt;</name>
+        <qualifiedname>batmat::matrix::View::operator View&lt; const T, I, S, integral_value_type_t&lt; D &gt;, L, O &gt;</qualifiedname>
+    <requiresclause>(!std::is_const_v&lt;T&gt; &amp;&amp; !std::same_as&lt;<ref refid="namespacebatmat_1_1matrix_1a3bf2b5f85e94200874b4a9bc591cc79c" kindref="member">integral_value_type_t</ref>&lt;D&gt;, D&gt;)    </requiresclause>
+        <briefdescription>
+<para>Implicit conversion to a view with a dynamic depth, going from non-const to const. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="692" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="692" bodyend="703"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a158efefd16b427b3f8607ace43b07769" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>batmat::matrix::View&lt; T, I, S, D, L, O &gt;::operator View&lt; T, I, S, D, I, O &gt;</definition>
+        <argsstring>() const</argsstring>
+        <name>operator View&lt; T, I, S, D, I, O &gt;</name>
+        <qualifiedname>batmat::matrix::View::operator View&lt; T, I, S, D, I, O &gt;</qualifiedname>
+    <requiresclause>(!std::same_as&lt;I, L&gt;)    </requiresclause>
+        <briefdescription>
+<para>Implicit conversion to a view with a dynamic layer stride. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="705" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="705" bodyend="715"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a8927d61cfcc0fd7b44464b478096343f" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>batmat::matrix::View&lt; T, I, S, D, L, O &gt;::operator View&lt; const T, I, S, D, I, O &gt;</definition>
+        <argsstring>() const</argsstring>
+        <name>operator View&lt; const T, I, S, D, I, O &gt;</name>
+        <qualifiedname>batmat::matrix::View::operator View&lt; const T, I, S, D, I, O &gt;</qualifiedname>
+    <requiresclause>(!std::is_const_v&lt;T&gt; &amp;&amp; !std::same_as&lt;I, L&gt;)    </requiresclause>
+        <briefdescription>
+<para>Implicit conversion to a view with a dynamic layer stride, going from non-const to const. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="717" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="717" bodyend="727"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1View_1a012e075ecef99aebefdef47cbf1e8f5a" prot="public" static="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout" kindref="compound">Layout</ref>&lt; I, S, D, L, O &gt;</type>
+        <definition>using batmat::matrix::View&lt; T, I, S, D, L, O &gt;::layout_type = Layout&lt;I, S, D, L, O&gt;</definition>
+        <argsstring></argsstring>
+        <name>layout_type</name>
+        <qualifiedname>batmat::matrix::View::layout_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="34" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1View_1a07f5398f5cef2f53d4fc26f5d9ca9c78" prot="public" static="no">
+        <type>T</type>
+        <definition>using batmat::matrix::View&lt; T, I, S, D, L, O &gt;::value_type = T</definition>
+        <argsstring></argsstring>
+        <name>value_type</name>
+        <qualifiedname>batmat::matrix::View::value_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="35" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" prot="public" static="no">
+        <type>typename <ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">layout_type::index_type</ref></type>
+        <definition>using batmat::matrix::View&lt; T, I, S, D, L, O &gt;::index_type = typename layout_type::index_type</definition>
+        <argsstring></argsstring>
+        <name>index_type</name>
+        <qualifiedname>batmat::matrix::View::index_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="36" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1View_1a0c328fcfd23b220a108167a511021954" prot="public" static="no">
+        <type>typename <ref refid="structbatmat_1_1matrix_1_1Layout_1a5e721839d51c94a99b049d07bcabef34" kindref="member">layout_type::batch_size_type</ref></type>
+        <definition>using batmat::matrix::View&lt; T, I, S, D, L, O &gt;::batch_size_type = typename layout_type::batch_size_type</definition>
+        <argsstring></argsstring>
+        <name>batch_size_type</name>
+        <qualifiedname>batmat::matrix::View::batch_size_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="37" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1View_1af3044dd381fe1e3d1442efd22a590cf6" prot="public" static="no">
+        <type>typename <ref refid="structbatmat_1_1matrix_1_1Layout_1aa395557491ef36ac1fe975805f79ce9d" kindref="member">layout_type::depth_type</ref></type>
+        <definition>using batmat::matrix::View&lt; T, I, S, D, L, O &gt;::depth_type = typename layout_type::depth_type</definition>
+        <argsstring></argsstring>
+        <name>depth_type</name>
+        <qualifiedname>batmat::matrix::View::depth_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="38" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1View_1a09739bf7956973d94ac2a327fe14094a" prot="public" static="no">
+        <type>typename <ref refid="structbatmat_1_1matrix_1_1Layout_1adbd044655112aa290a95525908ad8da2" kindref="member">layout_type::layer_stride_type</ref></type>
+        <definition>using batmat::matrix::View&lt; T, I, S, D, L, O &gt;::layer_stride_type = typename layout_type::layer_stride_type</definition>
+        <argsstring></argsstring>
+        <name>layer_stride_type</name>
+        <qualifiedname>batmat::matrix::View::layer_stride_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="39" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1View_1a0d67e8c21c53ceda34cf38d44d69b5d9" prot="public" static="no">
+        <type>typename <ref refid="structbatmat_1_1matrix_1_1Layout_1adf0f222ddc1393633a863b59c1ff5f5c" kindref="member">layout_type::standard_stride_type</ref></type>
+        <definition>using batmat::matrix::View&lt; T, I, S, D, L, O &gt;::standard_stride_type = typename layout_type::standard_stride_type</definition>
+        <argsstring></argsstring>
+        <name>standard_stride_type</name>
+        <qualifiedname>batmat::matrix::View::standard_stride_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="40" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1View_1a5b58d4bfc6aa4d8f90faf3dcf30d649b" prot="public" static="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref>&lt; const T, I, S, D, L, O &gt;</type>
+        <definition>using batmat::matrix::View&lt; T, I, S, D, L, O &gt;::const_view_type = View&lt;const T, I, S, D, L, O&gt;</definition>
+        <argsstring></argsstring>
+        <name>const_view_type</name>
+        <qualifiedname>batmat::matrix::View::const_view_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="41" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1View_1a144c1ef95a12cb6134e85f06bf306988" prot="public" static="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref>&lt; T, I, S, S, <ref refid="structbatmat_1_1matrix_1_1DefaultStride" kindref="compound">DefaultStride</ref>, O &gt;</type>
+        <definition>using batmat::matrix::View&lt; T, I, S, D, L, O &gt;::batch_view_type = View&lt;T, I, S, S, DefaultStride, O&gt;</definition>
+        <argsstring></argsstring>
+        <name>batch_view_type</name>
+        <qualifiedname>batmat::matrix::View::batch_view_type</qualifiedname>
+        <briefdescription>
+<para>When extracing a single batch, the depth equals the batch size, and the layer stride is no longer relevant. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="57" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1View_1aa43531137c5afae7c33a90822cdef2fb" prot="public" static="no">
+        <type>std::conditional_t&lt; <ref refid="structbatmat_1_1matrix_1_1View_1a505fee81af0f8fe2860572b6cbe497d8" kindref="member">has_single_batch_at_compile_time</ref>, <ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref>, <ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref>&lt; T, I, S, D, I, O &gt; &gt;</type>
+        <definition>using batmat::matrix::View&lt; T, I, S, D, L, O &gt;::general_slice_view_type = 
+std::conditional_t&lt;has_single_batch_at_compile_time, View, View&lt;T, I, S, D, I, O&gt;&gt;</definition>
+        <argsstring></argsstring>
+        <name>general_slice_view_type</name>
+        <qualifiedname>batmat::matrix::View::general_slice_view_type</qualifiedname>
+        <briefdescription>
+<para>When slicing along the outer dimension, the layer stride stays the same, but the outer size may be smaller, which means that even if the original view has a default layer stride, the sliced view may require a dynamic layer stride. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>For a single batch, the layer stride is not relevant, so it is preserved. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="62" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1View_1af2f2324c52e5bb88e70c8191e6337983" prot="public" static="no">
+        <type>std::conditional_t&lt; <ref refid="structbatmat_1_1matrix_1_1View_1adc94b8ed2cbdba1ad1721b712f3ea558" kindref="member">is_row_major</ref>, <ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref>, <ref refid="structbatmat_1_1matrix_1_1View_1aa43531137c5afae7c33a90822cdef2fb" kindref="member">general_slice_view_type</ref> &gt;</type>
+        <definition>using batmat::matrix::View&lt; T, I, S, D, L, O &gt;::col_slice_view_type = std::conditional_t&lt;is_row_major, View, general_slice_view_type&gt;</definition>
+        <argsstring></argsstring>
+        <name>col_slice_view_type</name>
+        <qualifiedname>batmat::matrix::View::col_slice_view_type</qualifiedname>
+        <briefdescription>
+<para><ref refid="structbatmat_1_1matrix_1_1View" kindref="compound">View</ref> with the correct layer stride when slicing along the column dimension. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>For row-major storage, slicing along columns does not change the outer size, in which case the layer stride is still correct. For column-major storage, slicing along columns does change the outer size, in which case we need a dynamic layer stride. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="68" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1View_1aacba293d849732693abdca99ae237896" prot="public" static="no">
+        <type>std::conditional_t&lt; <ref refid="structbatmat_1_1matrix_1_1View_1a02bf028bb593d05b86d955fd972d622a" kindref="member">is_column_major</ref>, <ref refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" kindref="member">View</ref>, <ref refid="structbatmat_1_1matrix_1_1View_1aa43531137c5afae7c33a90822cdef2fb" kindref="member">general_slice_view_type</ref> &gt;</type>
+        <definition>using batmat::matrix::View&lt; T, I, S, D, L, O &gt;::row_slice_view_type = std::conditional_t&lt;is_column_major, View, general_slice_view_type&gt;</definition>
+        <argsstring></argsstring>
+        <name>row_slice_view_type</name>
+        <qualifiedname>batmat::matrix::View::row_slice_view_type</qualifiedname>
+        <briefdescription>
+<para><ref refid="structbatmat_1_1matrix_1_1View" kindref="compound">View</ref> with the correct layer stride when slicing along the row dimension. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="see"><para><ref refid="structbatmat_1_1matrix_1_1View_1af2f2324c52e5bb88e70c8191e6337983" kindref="member">col_slice_view_type</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="71" column="5" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="71" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1View_1af9023b390e4eb12fddec55d0ec1adfa6" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref></type>
+        <definition>StorageOrder batmat::matrix::View&lt; T, I, S, D, L, O &gt;::storage_order</definition>
+        <argsstring></argsstring>
+        <name>storage_order</name>
+        <qualifiedname>batmat::matrix::View::storage_order</qualifiedname>
+        <initializer>= <ref refid="structbatmat_1_1matrix_1_1Layout_1ad635fd9e2c04bb18318948e8d24eedd2" kindref="member">layout_type::storage_order</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="42" column="35" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1View_1a02bf028bb593d05b86d955fd972d622a" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>bool</type>
+        <definition>bool batmat::matrix::View&lt; T, I, S, D, L, O &gt;::is_column_major</definition>
+        <argsstring></argsstring>
+        <name>is_column_major</name>
+        <qualifiedname>batmat::matrix::View::is_column_major</qualifiedname>
+        <initializer>= <ref refid="structbatmat_1_1matrix_1_1Layout_1a4ab5b96fbdbb92e59359e2968358815f" kindref="member">layout_type::is_column_major</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="43" column="27" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="43" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1ae876b8c3f4a3fdba0fda3f9e3cb7dd49" compoundref="matrix_8hpp" startline="339" endline="343">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::middle_cols</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1ae7cc1e5f97da852723b7c7a780550d37" compoundref="matrix_8hpp" startline="345" endline="349">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::middle_cols</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1View_1adc94b8ed2cbdba1ad1721b712f3ea558" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>bool</type>
+        <definition>bool batmat::matrix::View&lt; T, I, S, D, L, O &gt;::is_row_major</definition>
+        <argsstring></argsstring>
+        <name>is_row_major</name>
+        <qualifiedname>batmat::matrix::View::is_row_major</qualifiedname>
+        <initializer>= <ref refid="structbatmat_1_1matrix_1_1Layout_1a7876840d7f3a002ffd73707c0d578051" kindref="member">layout_type::is_row_major</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="44" column="27" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="44" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1aa21d2d92fb7d3488170a5fdbd8203445" compoundref="matrix_8hpp" startline="321" endline="325">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::middle_rows</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1aec998b0f66c2015f71d7606b2800e352" compoundref="matrix_8hpp" startline="327" endline="331">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::middle_rows</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1View_1a505fee81af0f8fe2860572b6cbe497d8" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>bool</type>
+        <definition>bool batmat::matrix::View&lt; T, I, S, D, L, O &gt;::has_single_batch_at_compile_time</definition>
+        <argsstring></argsstring>
+        <name>has_single_batch_at_compile_time</name>
+        <qualifiedname>batmat::matrix::View::has_single_batch_at_compile_time</qualifiedname>
+        <initializer>                                                       = requires {
+    S::value;
+    D::value;
+} &amp;&amp; S{} == D{}</initializer>
+        <briefdescription>
+<para>True if <ref refid="structbatmat_1_1matrix_1_1View_1a652fe35cdc98459e74dd3f193bd67750" kindref="member">batch_size()</ref> and <ref refid="structbatmat_1_1matrix_1_1View_1af0e126c614d4d25d1b07d778bf4f7c34" kindref="member">depth()</ref> are compile-time constants and are equal. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>Views with dynamic batch size and depth may still have a single batch at runtime, but this cannot be statically asserted. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="49" column="27" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="49" bodyend="52"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1View_1a85a50d696f7c76de8c7093b65eb14615" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>bool</type>
+        <definition>bool batmat::matrix::View&lt; T, I, S, D, L, O &gt;::has_single_layer_at_compile_time</definition>
+        <argsstring></argsstring>
+        <name>has_single_layer_at_compile_time</name>
+        <qualifiedname>batmat::matrix::View::has_single_layer_at_compile_time</qualifiedname>
+        <initializer>= requires { D::value; } &amp;&amp; D{} == 1</initializer>
+        <briefdescription>
+<para>True if <ref refid="structbatmat_1_1matrix_1_1View_1af0e126c614d4d25d1b07d778bf4f7c34" kindref="member">depth()</ref> is a compile-time constant and is equal to one. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="54" column="27" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="54" bodyend="54"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1View_1a75590180ddf188388521f81f7c181d6c" prot="public" static="no" mutable="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a07f5398f5cef2f53d4fc26f5d9ca9c78" kindref="member">value_type</ref> *</type>
+        <definition>value_type* batmat::matrix::View&lt; T, I, S, D, L, O &gt;::data_ptr</definition>
+        <argsstring></argsstring>
+        <name>data_ptr</name>
+        <qualifiedname>batmat::matrix::View::data_ptr</qualifiedname>
+        <briefdescription>
+<para>Pointer to the first element of the first layer. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="74" column="16" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="74" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1View_1af72c9ff6839b732973ee1582655d4f50" compoundref="view_8hpp" startline="114" endline="118">batmat::matrix::View&lt; T, index_t, stride, stride, layer_stride, O &gt;::reassign</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1View_1a130d341c328c2e848593a609a3e22a21" prot="public" static="no" mutable="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1View_1a012e075ecef99aebefdef47cbf1e8f5a" kindref="member">layout_type</ref></type>
+        <definition>layout_type batmat::matrix::View&lt; T, I, S, D, L, O &gt;::layout</definition>
+        <argsstring></argsstring>
+        <name>layout</name>
+        <qualifiedname>batmat::matrix::View::layout</qualifiedname>
+        <briefdescription>
+<para><ref refid="structbatmat_1_1matrix_1_1Layout" kindref="compound">Layout</ref> describing the dimensions and strides of the view. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="76" column="17" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="76" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1View_1af72c9ff6839b732973ee1582655d4f50" compoundref="view_8hpp" startline="114" endline="118">batmat::matrix::View&lt; T, index_t, stride, stride, layer_stride, O &gt;::reassign</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-func">
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1View_1a42204aefac8e4fa20bfa343082e744f0" prot="private" static="no" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::matrix::View&lt; T, I, S, D, L, O &gt;::get_layer_stride_for</definition>
+        <argsstring>() const</argsstring>
+        <name>get_layer_stride_for</name>
+        <qualifiedname>batmat::matrix::View::get_layer_stride_for</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/view.hpp" line="374" column="20" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="374" bodyend="379"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Non-owning view of a batch of matrices. </para>
+    </briefdescription>
+    <detaileddescription>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>T</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Element value type (possibly const-qualified). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>I</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Index and size type. Usually <computeroutput>std::ptrdiff_t</computeroutput> or <computeroutput>int</computeroutput>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>S</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Inner stride type (batch size). Usually <computeroutput>std::integral_constant&lt;I, N&gt;</computeroutput> for some <computeroutput>N</computeroutput>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>D</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Batch depth type. Usually equal to <computeroutput>S</computeroutput> for a single batch, or <computeroutput>I</computeroutput> for a dynamic depth. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>L</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Layer stride type. Usually <ref refid="structbatmat_1_1matrix_1_1DefaultStride" kindref="compound">DefaultStride</ref> (which implies that the layer stride is equal to <computeroutput><ref refid="structbatmat_1_1matrix_1_1View_1afa2c308d93a3e7a1ff8a00aa044bea71" kindref="member">outer_stride()</ref> * <ref refid="structbatmat_1_1matrix_1_1View_1ace0f2f30fc941f898d62867adc440087" kindref="member">outer_size()</ref></computeroutput>), or <computeroutput>I</computeroutput> for a dynamic layer stride. Dynamic strides are used for subviews of views with a larger <computeroutput><ref refid="structbatmat_1_1matrix_1_1View_1ace0f2f30fc941f898d62867adc440087" kindref="member">outer_size()</ref></computeroutput>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>O</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Storage order (column or row major). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="3">
+        <label>batmat::matrix::DefaultStride</label>
+        <link refid="structbatmat_1_1matrix_1_1DefaultStride"/>
+      </node>
+      <node id="2">
+        <label>batmat::matrix::Layout&lt; index_t, std::integral_constant&lt; index_t, 1 &gt;, index_t, DefaultStride, StorageOrder::ColMajor &gt;</label>
+        <link refid="structbatmat_1_1matrix_1_1Layout"/>
+        <childnode refid="3" relation="usage">
+          <edgelabel>+layer_stride</edgelabel>
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat::matrix::View&lt; T, I, S, D, L, O &gt;</label>
+        <link refid="structbatmat_1_1matrix_1_1View"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>+layout</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/matrix/view.hpp" line="33" column="1" bodyfile="batmat/include/batmat/matrix/view.hpp" bodystart="33" bodyend="730"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1matrix_1_1View_1a4100ad6c24e2d0a8050ac1d9ed6a2b46" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>add_to_diagonal</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a8000c4823b91daf5dfea18ccd6b0e45d" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>as_column</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1ae7446046ddf4b9d0d701af66e76cebd5" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>as_const</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1afab4ef784be9c2eb607b32ee01443a14" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>batch</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a7413cc3f2de4aa60dddc53515316d09c" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>batch_dyn</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a652fe35cdc98459e74dd3f193bd67750" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>batch_size</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a0c328fcfd23b220a108167a511021954" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>batch_size_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a144c1ef95a12cb6134e85f06bf306988" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>batch_view_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a4199ceacf690f7d75d14fa31b6f93d12" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>begin</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a1c9de38ddbf785fa09e56a8fa5169c05" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>block</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a58f8cbcd01d3e93cc584ad1250234af8" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>bottom_left</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a0aaed4ee88727aba4c6066b65a897056" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>bottom_right</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a485295b0ba5180ca31f2c5d3ea04cd28" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>bottom_rows</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a90de7f9a56aeda5ceb9f4d3ca604f82b" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>ceil_depth</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1af2f2324c52e5bb88e70c8191e6337983" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>col_slice_view_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a50ca8f9c48bde393a4f46883f0a89d28" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>col_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a658f96d2f60d1a7e1bfc55ee46ad76d2" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>cols</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a5b58d4bfc6aa4d8f90faf3dcf30d649b" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>const_view_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1af59145deefbfd73abdd5be12f54806cf" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>copy_values</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1abd3d195f148998f1020d39cea4ef0c5b" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>data</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a75590180ddf188388521f81f7c181d6c" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>data_ptr</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1af0e126c614d4d25d1b07d778bf4f7c34" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>depth</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1af3044dd381fe1e3d1442efd22a590cf6" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>depth_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a65c4f7147d2b8eadcf793341615e9265" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>end</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a03bc4d77448c6a431ad9afa371c410bd" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>first_layers</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1aa43531137c5afae7c33a90822cdef2fb" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>general_slice_view_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a42204aefac8e4fa20bfa343082e744f0" prot="private" virt="non-virtual"><scope>batmat::matrix::View</scope><name>get_layer_stride_for</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a764fa59ba1b5bae126c04c4b8cf23572" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>has_full_inner_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a85261424b54110a4374afb5be6159f21" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>has_full_layer_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a18f95c4cf1fb5d73b4d80049b35dffb9" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>has_full_outer_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a505fee81af0f8fe2860572b6cbe497d8" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>has_single_batch_at_compile_time</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a85a50d696f7c76de8c7093b65eb14615" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>has_single_layer_at_compile_time</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a8217652dc175e9d9ac2f110e355e9cbb" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>index_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a90b6311fd3fe15291caa206e01a9c6f1" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>inner_size</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a2b592885afe4df37a836fe7e32484418" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>inner_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a02bf028bb593d05b86d955fd972d622a" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>is_column_major</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1adc94b8ed2cbdba1ad1721b712f3ea558" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>is_row_major</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1ad789388aeaae21bd80f85c604c604995" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>layer_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a09739bf7956973d94ac2a327fe14094a" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>layer_stride_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a130d341c328c2e848593a609a3e22a21" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>layout</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a012e075ecef99aebefdef47cbf1e8f5a" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>layout_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a784de6877b93091726b6cfa3579fe8ca" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>left_cols</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1ae2f3a6d7376b6283b4468a5d3202e4bc" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>middle_batches</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a3ae9a5ed0a41a37eaf3cc57c60eab3db" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>middle_cols</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a2f15eb1fa38b3a4c8c85b4adbf5bb0c0" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>middle_cols</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a4fab94433b9358b5d5ae490d4be4612d" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>middle_layers</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a5de296a861344e3a9e599081545480b9" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>middle_rows</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1aba409c47100e28f0524e325f278ea571" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>middle_rows</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1ab593ea4d085e0f6f56d6cc28479cea6d" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>negate</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a2e60a675ceb5f0816761f53b50932290" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>num_batches</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1ab5554d055756ec92e7c6bd233f120a8e" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>operator const_view_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a0cbde49e22764991c58d0bcd94c13877" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>operator guanaqo::MatrixView&lt; T, I, standard_stride_type, O &gt;</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a8927d61cfcc0fd7b44464b478096343f" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>operator View&lt; const T, I, S, D, I, O &gt;</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a8d52ae35f6857501961deed76b32bb37" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>operator View&lt; const T, I, S, integral_value_type_t&lt; D &gt;, L, O &gt;</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a158efefd16b427b3f8607ace43b07769" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>operator View&lt; T, I, S, D, I, O &gt;</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a1e373fba18186c9f4602603f9546a524" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>operator View&lt; T, I, S, integral_value_type_t&lt; D &gt;, L, O &gt;</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a1f1965ca1df1441baae9b38248a27e30" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>operator()</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a09c75dd7db867e42e86378288f98e7b5" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>operator()</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1acb673b4079389369a6c0fb019fde245d" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>operator+=</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a99bc563329bf4abf7d1285745d9ff985" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>operator=</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a0b2bf5139cb4ae1698c4ca8a365bca0a" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>operator=</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1ace0f2f30fc941f898d62867adc440087" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>outer_size</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1afa2c308d93a3e7a1ff8a00aa044bea71" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>outer_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a3c9363a7f6172b2350eddf610812987a" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>padded_size</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1af72c9ff6839b732973ee1582655d4f50" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>reassign</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a4d2131f86753afbd57090790d75d98a0" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>reshaped</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a65e8824cd34781ca5901152b8eb4dff2" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>right_cols</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1aacba293d849732693abdca99ae237896" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>row_slice_view_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1aa517c293b8300ca715b053cc5f092907" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>row_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a8a985a0de1538c7d48ba72dafeedac04" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>rows</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a1cfba3a1a9ffdcd786c5fe76488a626c" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>set_constant</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a96d36d03d9a8f601b559f2d0a279f27e" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>size</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a0d67e8c21c53ceda34cf38d44d69b5d9" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>standard_stride_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1af9023b390e4eb12fddec55d0ec1adfa6" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>storage_order</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1ac17cd50705f2ef876c6b483e4b8394b4" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>top_left</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1aee77fd6ec42b32bc5a5bc826274a914f" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>top_right</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a8643bd7086c7eece449a9a8b8afff661" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>top_rows</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a24b36d6e7568ec7941969cf410f42f01" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>transposed</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a07f5398f5cef2f53d4fc26f5d9ca9c78" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>value_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a0033dd840117ba37447a16b70ad4b4d5" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>View</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1abe2b1bdf5ee7b92845739f9514f9bcb4" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>View</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a3006d00fa01758f26342535ac06e0593" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>View</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1a4fe9a196700464e2cfff6ab203e7594a" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>View</name></member>
+      <member refid="structbatmat_1_1matrix_1_1View_1ad130676a89cbb9de4403454966c9d1d2" prot="public" virt="non-virtual"><scope>batmat::matrix::View</scope><name>view</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,436 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1ops_1_1detail" kind="namespace" language="C++">
+    <compoundname>batmat::ops::detail</compoundname>
+    <innerclass refid="structbatmat_1_1ops_1_1detail_1_1floating__point__to__int" prot="public">batmat::ops::detail::floating_point_to_int</innerclass>
+    <innerclass refid="structbatmat_1_1ops_1_1detail_1_1floating__point__to__int_3_01float_01_4" prot="public">batmat::ops::detail::floating_point_to_int&lt; float &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1ops_1_1detail_1_1floating__point__to__int_3_01double_01_4" prot="public">batmat::ops::detail::floating_point_to_int&lt; double &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1ops_1_1detail_1_1mask__type" prot="public">batmat::ops::detail::mask_type</innerclass>
+    <innerconcept refid="conceptbatmat_1_1ops_1_1detail_1_1same__size__but__different__ints">batmat::ops::detail::same_size_but_different_ints</innerconcept>
+    <sectiondef kind="user-defined">
+      <header>Conditional negation of floating point numbers</header>
+      <member refid="group__topic-low-level-ops_1ga0de59f8bf5b1c4058c2e188fa3c556e1" kind="function"><name>cneg</name></member>
+      <member refid="group__topic-low-level-ops_1ga3c252012a50af49aceac433f2104ff41" kind="function"><name>cneg</name></member>
+      <member refid="group__topic-low-level-ops_1gac3333193d8a7f69c46423b137922ed16" kind="function"><name>cneg</name></member>
+    </sectiondef>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="namespacebatmat_1_1ops_1_1detail_1abe58362cb69f6df7025afcf8d1df4e11" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>typename <ref refid="structbatmat_1_1ops_1_1detail_1_1floating__point__to__int" kindref="compound">floating_point_to_int</ref>&lt; T &gt;::type</type>
+        <definition>using batmat::ops::detail::floating_point_to_int_t = typename floating_point_to_int&lt;T&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>floating_point_to_int_t</name>
+        <qualifiedname>batmat::ops::detail::floating_point_to_int_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/cneg.hpp" line="30" column="1" bodyfile="batmat/include/batmat/ops/cneg.hpp" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1ops_1_1detail_1aae3aa21caaf70f9c41a78a5ffd434fc1" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>std::integral</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type>decltype(<ref refid="namespacebatmat_1_1ops_1_1detail_1a6f0b1229fa5b88f23723fc65b75706ea" kindref="member">convert_int</ref>(std::declval&lt; I &gt;()))</type>
+        <definition>using batmat::ops::detail::convert_int_t = decltype(convert_int(std::declval&lt;I&gt;()))</definition>
+        <argsstring></argsstring>
+        <name>convert_int_t</name>
+        <qualifiedname>batmat::ops::detail::convert_int_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/gather.hpp" line="34" column="1" bodyfile="batmat/include/batmat/ops/gather.hpp" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1ops_1_1detail_1aedd67c16728b3e5de575579fc5728a6b" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class AbiT</type>
+          </param>
+        </templateparamlist>
+        <type>typename <ref refid="structbatmat_1_1ops_1_1detail_1_1mask__type" kindref="compound">mask_type</ref>&lt; T, AbiT &gt;::type</type>
+        <definition>using batmat::ops::detail::mask_type_t = typename mask_type&lt;T, AbiT&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>mask_type_t</name>
+        <qualifiedname>batmat::ops::detail::mask_type_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/mask.hpp" line="14" column="1" bodyfile="batmat/include/batmat/ops/mask.hpp" bodystart="14" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1ops_1_1detail_1a371e08d0c4b13352046afed85365a4bf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class AbiT</type>
+          </param>
+          <param>
+            <type>class I</type>
+          </param>
+          <param>
+            <type>class AbiI</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, AbiT &gt;</type>
+        <definition>datapar::simd&lt; T, AbiT &gt; batmat::ops::detail::gather</definition>
+        <argsstring>(datapar::simd&lt; T, AbiT &gt; src, typename datapar::simd&lt; T, AbiT &gt;::mask_type mask, datapar::simd&lt; I, AbiI &gt; vindex, const T *base_addr)</argsstring>
+        <name>gather</name>
+        <qualifiedname>batmat::ops::detail::gather</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, AbiT &gt;</type>
+          <declname>src</declname>
+        </param>
+        <param>
+          <type>typename <ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, AbiT &gt;<ref refid="structbatmat_1_1ops_1_1detail_1_1mask__type" kindref="compound">::mask_type</ref></type>
+          <declname>mask</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; I, AbiI &gt;</type>
+          <declname>vindex</declname>
+        </param>
+        <param>
+          <type>const T *</type>
+          <declname>base_addr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/gather.hpp" line="12" column="1" bodyfile="batmat/include/batmat/ops/gather.hpp" bodystart="12" bodyend="15"/>
+        <referencedby refid="group__topic-low-level-ops_1ga7edc1a8ca0fbd5557bd397cfd28a743e" compoundref="gather_8hpp" startline="56" endline="69">batmat::ops::gather</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1ops_1_1detail_1a6f0b1229fa5b88f23723fc65b75706ea" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>std::integral</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::ops::detail::convert_int</definition>
+        <argsstring>(I i)</argsstring>
+        <name>convert_int</name>
+        <qualifiedname>batmat::ops::detail::convert_int</qualifiedname>
+        <param>
+          <type>I</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/gather.hpp" line="22" column="6" bodyfile="batmat/include/batmat/ops/gather.hpp" bodystart="22" bodyend="32"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1ops_1_1detail_1a7a2eefc87ffd67db8b263046db94a373" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class AbiT</type>
+          </param>
+          <param>
+            <type>class M</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1ops_1_1detail_1aedd67c16728b3e5de575579fc5728a6b" kindref="member">mask_type_t</ref>&lt; T, AbiT &gt;</type>
+        <definition>mask_type_t&lt; T, AbiT &gt; batmat::ops::detail::convert_mask</definition>
+        <argsstring>(M mask)</argsstring>
+        <name>convert_mask</name>
+        <qualifiedname>batmat::ops::detail::convert_mask</qualifiedname>
+        <param>
+          <type>M</type>
+          <declname>mask</declname>
+        </param>
+        <briefdescription>
+<para>Convert a SIMD mask to the appropriate intrinsic type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>If <computeroutput>M</computeroutput> is not a mask type, its values are compared to zero to create a mask.  </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/mask.hpp" line="21" column="21" bodyfile="batmat/include/batmat/ops/mask.hpp" bodystart="21" bodyend="31"/>
+        <referencedby refid="group__topic-low-level-ops_1ga7edc1a8ca0fbd5557bd397cfd28a743e" compoundref="gather_8hpp" startline="56" endline="69">batmat::ops::gather</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1ops_1_1detail_1ae37fca8a2efbc9ce698af24433ea5c2f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::ops::detail::compare_ge_0</definition>
+        <argsstring>(datapar::simd&lt; T, Abi &gt; x)</argsstring>
+        <name>compare_ge_0</name>
+        <qualifiedname>batmat::ops::detail::compare_ge_0</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/mask.hpp" line="34" column="14" bodyfile="batmat/include/batmat/ops/mask.hpp" bodystart="34" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1ops_1_1detail_1af86c438318c89dd7be953a0633285ef8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class F</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; F, Abi &gt;</type>
+        <definition>datapar::simd&lt; F, Abi &gt; batmat::ops::detail::rot</definition>
+        <argsstring>(datapar::simd&lt; F, Abi &gt; x, int s)</argsstring>
+        <name>rot</name>
+        <qualifiedname>batmat::ops::detail::rot</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; F, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>s</declname>
+        </param>
+        <briefdescription>
+<para>Rotate the elements of <computeroutput>x</computeroutput> to the right by <computeroutput>s</computeroutput> positions. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>For example, <computeroutput><ref refid="namespacebatmat_1_1ops_1_1detail_1a5cbbec102f5a2e6220a1d32149ad373d" kindref="member">rotr</ref>&lt;1&gt;([x0, x1, x2, x3]) == [x3, x0, x1, x2]</computeroutput> and <computeroutput><ref refid="namespacebatmat_1_1ops_1_1detail_1a5cbbec102f5a2e6220a1d32149ad373d" kindref="member">rotr</ref>&lt;-1&gt;([x0, x1, x2, x3]) == [x1, x2, x3, x0]</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/rotate.hpp" line="18" column="23" bodyfile="batmat/include/batmat/ops/rotate.hpp" bodystart="18" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1ops_1_1detail_1a9210fe01d8e36639fb10c5145d2fd373" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>S</declname>
+            <defname>S</defname>
+          </param>
+          <param>
+            <type>class F</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; F, Abi &gt;</type>
+        <definition>datapar::simd&lt; F, Abi &gt; batmat::ops::detail::rotl</definition>
+        <argsstring>(datapar::simd&lt; F, Abi &gt; x)</argsstring>
+        <name>rotl</name>
+        <qualifiedname>batmat::ops::detail::rotl</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; F, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/rotate.hpp" line="26" column="23" bodyfile="batmat/include/batmat/ops/rotate.hpp" bodystart="26" bodyend="30"/>
+        <referencedby refid="group__topic-low-level-ops_1ga247b1215d2f350a55c60a922efc98e4e" compoundref="rotate_8hpp" startline="226" endline="233">batmat::ops::rotl</referencedby>
+        <referencedby refid="group__topic-low-level-ops_1ga99482a68bf78d2c163dcd663b24131c5" compoundref="rotate_8hpp" startline="239" endline="246">batmat::ops::rotr</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1ops_1_1detail_1a5cbbec102f5a2e6220a1d32149ad373d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>S</declname>
+            <defname>S</defname>
+          </param>
+          <param>
+            <type>class F</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; F, Abi &gt;</type>
+        <definition>datapar::simd&lt; F, Abi &gt; batmat::ops::detail::rotr</definition>
+        <argsstring>(datapar::simd&lt; F, Abi &gt; x)</argsstring>
+        <name>rotr</name>
+        <qualifiedname>batmat::ops::detail::rotr</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; F, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/rotate.hpp" line="33" column="23" bodyfile="batmat/include/batmat/ops/rotate.hpp" bodystart="33" bodyend="37"/>
+        <referencedby refid="group__topic-low-level-ops_1ga247b1215d2f350a55c60a922efc98e4e" compoundref="rotate_8hpp" startline="226" endline="233">batmat::ops::rotl</referencedby>
+        <referencedby refid="group__topic-low-level-ops_1ga99482a68bf78d2c163dcd663b24131c5" compoundref="rotate_8hpp" startline="239" endline="246">batmat::ops::rotr</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1ops_1_1detail_1a25773d280715f4b8bbf625cbb8653e42" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>S</declname>
+            <defname>S</defname>
+          </param>
+          <param>
+            <type>class F</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; F, Abi &gt;</type>
+        <definition>datapar::simd&lt; F, Abi &gt; batmat::ops::detail::shiftl</definition>
+        <argsstring>(datapar::simd&lt; F, Abi &gt; x)</argsstring>
+        <name>shiftl</name>
+        <qualifiedname>batmat::ops::detail::shiftl</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; F, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/rotate.hpp" line="40" column="23" bodyfile="batmat/include/batmat/ops/rotate.hpp" bodystart="40" bodyend="44"/>
+        <referencedby refid="group__topic-low-level-ops_1gaaa3114a23628a7f5db3d380c07e6d03a" compoundref="rotate_8hpp" startline="252" endline="261">batmat::ops::shiftl</referencedby>
+        <referencedby refid="group__topic-low-level-ops_1gafd42e3bbc4c662e3384ffc8653fdc6a8" compoundref="rotate_8hpp" startline="267" endline="276">batmat::ops::shiftr</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1ops_1_1detail_1a952bfdf95e53d22d4e6b28c39c701dae" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>S</declname>
+            <defname>S</defname>
+          </param>
+          <param>
+            <type>class F</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; F, Abi &gt;</type>
+        <definition>datapar::simd&lt; F, Abi &gt; batmat::ops::detail::shiftr</definition>
+        <argsstring>(datapar::simd&lt; F, Abi &gt; x)</argsstring>
+        <name>shiftr</name>
+        <qualifiedname>batmat::ops::detail::shiftr</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; F, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/rotate.hpp" line="47" column="23" bodyfile="batmat/include/batmat/ops/rotate.hpp" bodystart="47" bodyend="50"/>
+        <referencedby refid="group__topic-low-level-ops_1gaaa3114a23628a7f5db3d380c07e6d03a" compoundref="rotate_8hpp" startline="252" endline="261">batmat::ops::shiftl</referencedby>
+        <referencedby refid="group__topic-low-level-ops_1gafd42e3bbc4c662e3384ffc8653fdc6a8" compoundref="rotate_8hpp" startline="267" endline="276">batmat::ops::shiftr</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1ops_1_1detail_1a1d23fd344d42bef88f6bd35fa0d233e4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+        <definition>datapar::simd&lt; T, Abi &gt; batmat::ops::detail::rsqrt_1</definition>
+        <argsstring>(datapar::simd&lt; T, Abi &gt; x)</argsstring>
+        <name>rsqrt_1</name>
+        <qualifiedname>batmat::ops::detail::rsqrt_1</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+<para>rsqrt_0 with a single Newton iteration of refinement. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/rsqrt.hpp" line="64" column="15" bodyfile="batmat/include/batmat/ops/rsqrt.hpp" bodystart="64" bodyend="68"/>
+        <referencedby refid="namespacebatmat_1_1ops_1_1detail_1a685a1392db0d11da88957bf989278125" compoundref="rsqrt_8hpp" startline="72" endline="76">rsqrt_2</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1ops_1_1detail_1a685a1392db0d11da88957bf989278125" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+        <definition>datapar::simd&lt; T, Abi &gt; batmat::ops::detail::rsqrt_2</definition>
+        <argsstring>(datapar::simd&lt; T, Abi &gt; x)</argsstring>
+        <name>rsqrt_2</name>
+        <qualifiedname>batmat::ops::detail::rsqrt_2</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+<para>rsqrt_0 with two Newton iterations of refinement. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/rsqrt.hpp" line="72" column="15" bodyfile="batmat/include/batmat/ops/rsqrt.hpp" bodystart="72" bodyend="76"/>
+        <references refid="namespacebatmat_1_1ops_1_1detail_1a1d23fd344d42bef88f6bd35fa0d233e4" compoundref="rsqrt_8hpp" startline="64" endline="68">rsqrt_1</references>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/ops/cneg.hpp" line="12" column="1"/>
+  </compounddef>
+</doxygen>

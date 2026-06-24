@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1with__rotate__A__t" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::with_rotate_A_t</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">std::integral_constant&lt; int, I &gt;</basecompoundref>
+    <includes refid="trsm_8hpp" local="no">batmat/linalg/trsm.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>int</type>
+        <declname>I</declname>
+        <defname>I</defname>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1">
+        <label>batmat::linalg::with_rotate_A_t&lt; I &gt;</label>
+        <link refid="structbatmat_1_1linalg_1_1with__rotate__A__t"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>std::integral_constant&lt; int, I &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::with_rotate_A_t&lt; I &gt;</label>
+        <link refid="structbatmat_1_1linalg_1_1with__rotate__A__t"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>std::integral_constant&lt; int, I &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/trsm.hpp" line="18" column="1" bodyfile="batmat/include/batmat/linalg/trsm.hpp" bodystart="18" bodyend="18"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

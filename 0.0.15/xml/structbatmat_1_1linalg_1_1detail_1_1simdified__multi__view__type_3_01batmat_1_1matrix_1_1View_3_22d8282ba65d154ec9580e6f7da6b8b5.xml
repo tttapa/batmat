@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</compoundname>
+    <includes refid="simdify_8hpp" local="no">batmat/linalg/simdify.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>class T</type>
+      </param>
+      <param>
+        <type>class S</type>
+      </param>
+      <param>
+        <type>class L</type>
+      </param>
+      <param>
+        <type><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref></type>
+        <declname>O</declname>
+        <defname>O</defname>
+      </param>
+    </templateparamlist>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1aec98852e728336499f5d6b1054089874" prot="public" static="no">
+        <type>std::remove_const_t&lt; T &gt;</type>
+        <definition>using batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;::value_type = std::remove_const_t&lt;T&gt;</definition>
+        <argsstring></argsstring>
+        <name>value_type</name>
+        <qualifiedname>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;::value_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="121" column="5" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="121" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1aef476382e7fce819e831791018598dab" prot="public" static="no">
+        <type><ref refid="namespacebatmat_1_1datapar_1aa3c7c9554d61e55ae3384b5e4c5ce7af" kindref="member">datapar::deduced_abi</ref>&lt; <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1aec98852e728336499f5d6b1054089874" kindref="member">value_type</ref>, S{}&gt;</type>
+        <definition>using batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;::abi_type = datapar::deduced_abi&lt;value_type, S{}&gt;</definition>
+        <argsstring></argsstring>
+        <name>abi_type</name>
+        <qualifiedname>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;::abi_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="122" column="5" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="122" bodyend="122"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1a37e9acf5b1260a7c1c1c516d3b4bc040" prot="public" static="no">
+        <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1aec98852e728336499f5d6b1054089874" kindref="member">value_type</ref>, <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1aef476382e7fce819e831791018598dab" kindref="member">abi_type</ref> &gt;</type>
+        <definition>using batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;::simd_type = datapar::simd&lt;value_type, abi_type&gt;</definition>
+        <argsstring></argsstring>
+        <name>simd_type</name>
+        <qualifiedname>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;::simd_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="123" column="5" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="123" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1a8e7731798e98d3b79f72162f7c101bea" prot="public" static="no">
+        <type><ref refid="namespacebatmat_1_1datapar_1a497d8b4d202d9476ad67782ba4d4feef" kindref="member">datapar::simd_size</ref>&lt; <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1aec98852e728336499f5d6b1054089874" kindref="member">value_type</ref>, <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1aef476382e7fce819e831791018598dab" kindref="member">abi_type</ref> &gt;</type>
+        <definition>using batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;::stride = datapar::simd_size&lt;value_type, abi_type&gt;</definition>
+        <argsstring></argsstring>
+        <name>stride</name>
+        <qualifiedname>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;::stride</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="124" column="5" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="124" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1a229dff70dc489f4137389d3e91f0342b" prot="public" static="no">
+        <type><ref refid="namespacebatmat_1_1datapar_1a3cbb75e6685dbd98807439ac0dca33f0" kindref="member">datapar::simd_align</ref>&lt; <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1aec98852e728336499f5d6b1054089874" kindref="member">value_type</ref>, <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1aef476382e7fce819e831791018598dab" kindref="member">abi_type</ref> &gt;</type>
+        <definition>using batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;::alignment = datapar::simd_align&lt;value_type, abi_type&gt;</definition>
+        <argsstring></argsstring>
+        <name>alignment</name>
+        <qualifiedname>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;::alignment</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="125" column="5" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="125" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1ac18c64e9d6a508112b72b8819161b37d" prot="public" static="no">
+        <type>L</type>
+        <definition>using batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;::layer_stride = L</definition>
+        <argsstring></argsstring>
+        <name>layer_stride</name>
+        <qualifiedname>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;::layer_stride</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="126" column="5" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="126" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1ad84661674b890c50128f410a21c4a93f" prot="public" static="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1View" kindref="compound">batmat::matrix::View</ref>&lt; T, index_t, <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1a8e7731798e98d3b79f72162f7c101bea" kindref="member">stride</ref>, index_t, <ref refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1ac18c64e9d6a508112b72b8819161b37d" kindref="member">layer_stride</ref>, O &gt;</type>
+        <definition>using batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;::type = batmat::matrix::View&lt;T, index_t, stride, index_t, layer_stride, O&gt;</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;::type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/simdify.hpp" line="127" column="5" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="127" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</label>
+        <link refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/simdify.hpp" line="120" column="1" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="120" bodyend="129"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1aef476382e7fce819e831791018598dab" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</scope><name>abi_type</name></member>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1a229dff70dc489f4137389d3e91f0342b" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</scope><name>alignment</name></member>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1ac18c64e9d6a508112b72b8819161b37d" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</scope><name>layer_stride</name></member>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1a37e9acf5b1260a7c1c1c516d3b4bc040" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</scope><name>simd_type</name></member>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1a8e7731798e98d3b79f72162f7c101bea" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</scope><name>stride</name></member>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1ad84661674b890c50128f410a21c4a93f" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</scope><name>type</name></member>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5_1aec98852e728336499f5d6b1054089874" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</scope><name>value_type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1matrix_1_1detail" kind="namespace" language="C++">
+    <compoundname>batmat::matrix::detail</compoundname>
+    <innerclass refid="structbatmat_1_1matrix_1_1detail_1_1default__alignment" prot="public">batmat::matrix::detail::default_alignment</innerclass>
+    <innerclass refid="structbatmat_1_1matrix_1_1detail_1_1default__alignment_3_01T_00_01I_00_01Stride_01_4" prot="public">batmat::matrix::detail::default_alignment&lt; T, I, Stride &gt;</innerclass>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="namespacebatmat_1_1matrix_1_1detail_1a89b64480e7120b12558a7a46b47bce44" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class I</type>
+          </param>
+          <param>
+            <type>class Stride</type>
+          </param>
+        </templateparamlist>
+        <type>typename <ref refid="structbatmat_1_1matrix_1_1detail_1_1default__alignment" kindref="compound">default_alignment</ref>&lt; T, I, Stride &gt;::type</type>
+        <definition>using batmat::matrix::detail::default_alignment_t = typename default_alignment&lt;T, I, Stride&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>default_alignment_t</name>
+        <qualifiedname>batmat::matrix::detail::default_alignment_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/matrix.hpp" line="29" column="1" bodyfile="batmat/include/batmat/matrix/matrix.hpp" bodystart="29" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1matrix_1_1detail_1a2cf98dab88a4f9d05671cbd56f967e31" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class A</type>
+          </param>
+          <param>
+            <type>bool</type>
+            <declname>Init</declname>
+            <defname>Init</defname>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::matrix::detail::make_aligned_unique_ptr</definition>
+        <argsstring>(size_t size, A align)</argsstring>
+        <name>make_aligned_unique_ptr</name>
+        <qualifiedname>batmat::matrix::detail::make_aligned_unique_ptr</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>size</declname>
+        </param>
+        <param>
+          <type>A</type>
+          <declname>align</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/storage.hpp" line="51" column="6" bodyfile="batmat/include/batmat/matrix/storage.hpp" bodystart="51" bodyend="68"/>
+        <references refid="namespacebatmat_1_1matrix_1aeedf60a3269d97c9ce101e6e58ae60c7" compoundref="storage_8hpp" startline="16" endline="21">batmat::matrix::as_align_val</references>
+        <references refid="group__topic-matrix-utils_1gae1611b15c38c77550ccbe46aff4bdcea">batmat::matrix::uninitialized</references>
+        <referencedby refid="group__topic-matrix-utils_1ga3e92d037864fc4f6d218f961d069e7bb" compoundref="storage_8hpp" startline="77" endline="79">batmat::matrix::make_aligned_unique_ptr</referencedby>
+        <referencedby refid="group__topic-matrix-utils_1ga98675c4ff0dc3e7e479110770a1861d6" compoundref="storage_8hpp" startline="84" endline="86">batmat::matrix::make_aligned_unique_ptr</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/matrix/matrix.hpp" line="15" column="1"/>
+  </compounddef>
+</doxygen>

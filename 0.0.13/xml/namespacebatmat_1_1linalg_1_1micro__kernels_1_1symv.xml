@@ -1,0 +1,196 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv" kind="namespace" language="C++">
+    <compoundname>batmat::linalg::micro_kernels::symv</compoundname>
+    <innerclass refid="structbatmat_1_1linalg_1_1micro__kernels_1_1symv_1_1KernelConfig" prot="public">batmat::linalg::micro_kernels::symv::KernelConfig</innerclass>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1a3da5b2ee321a968e991f6c065c63e5f5" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::micro_kernels::symv::RowsReg</definition>
+        <argsstring></argsstring>
+        <name>RowsReg</name>
+        <qualifiedname>batmat::linalg::micro_kernels::symv::RowsReg</qualifiedname>
+        <initializer>= 2 * <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">gemm::RowsReg</ref>&lt;T, Abi&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/symv.hpp" line="26" column="19" bodyfile="batmat/include/batmat/linalg/micro-kernels/symv.hpp" bodystart="26" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1a8e3e42248c801d300b568f3999aca5b8" compoundref="symv_8tpp" startline="16" endline="61">symv_copy_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1a7983f41d91ff84c3ab71e3ce41bc8718" compoundref="symv_8tpp" startline="65" endline="91">symv_copy_register</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1adb3f5219e0b935dae432cd71a5123553" prot="public" static="no" constinit="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+        </templateparamlist>
+        <type>const constinit auto</type>
+        <definition>const constinit auto batmat::linalg::micro_kernels::symv::symv_copy_lut</definition>
+        <argsstring></argsstring>
+        <name>symv_copy_lut</name>
+        <qualifiedname>batmat::linalg::micro_kernels::symv::symv_copy_lut</qualifiedname>
+        <initializer>                                      =
+<ref refid="group__topic-utils_1ga91b0a07e3a00c803e9859ace6b86828f" kindref="member">make_1d_lut</ref>&lt;<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1a3da5b2ee321a968e991f6c065c63e5f5" kindref="member">RowsReg</ref>&lt;T, Abi&gt;&gt;([]&lt;index_t Row&gt;(<ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant</ref>&lt;Row&gt;) {
+    return <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1a8e3e42248c801d300b568f3999aca5b8" kindref="member">symv_copy_microkernel</ref>&lt;T, Abi, Conf, Row + 1, OA&gt;;
+})</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/symv.hpp" line="29" column="29" bodyfile="batmat/include/batmat/linalg/micro-kernels/symv.hpp" bodystart="29" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1a7983f41d91ff84c3ab71e3ce41bc8718" compoundref="symv_8tpp" startline="65" endline="91">symv_copy_register</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1a8e3e42248c801d300b568f3999aca5b8" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>RowsReg</declname>
+            <defname>RowsReg</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::symv::symv_copy_microkernel</definition>
+        <argsstring>(const uview&lt; const T, Abi, OA &gt; A, const uview&lt; const T, Abi, StorageOrder::ColMajor &gt; B, const std::optional&lt; uview&lt; const T, Abi, StorageOrder::ColMajor &gt; &gt; C, const uview&lt; T, Abi, StorageOrder::ColMajor &gt; D, const index_t k) noexcept</argsstring>
+        <name>symv_copy_microkernel</name>
+        <qualifiedname>batmat::linalg::micro_kernels::symv::symv_copy_microkernel</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; <ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, StorageOrder::ColMajor &gt; &gt;</type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k</declname>
+        </param>
+        <briefdescription>
+<para>Symmetric matrix-vector multiplication d = c ± A b. Single register block. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/symv.tpp" line="16" column="1" bodyfile="batmat/include/batmat/linalg/micro-kernels/symv.tpp" bodystart="16" bodyend="61" declfile="batmat/include/batmat/linalg/micro-kernels/symv.hpp" declline="17" declcolumn="6"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1a3da5b2ee321a968e991f6c065c63e5f5" compoundref="micro-kernels_2symv_8hpp" startline="26">RowsReg</references>
+        <references refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" compoundref="gemm-diag_8tpp" startline="9">UNROLL_FOR</references>
+        <references refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" compoundref="uview_8hpp" startline="228" endline="230">batmat::linalg::with_cached_access</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1a7983f41d91ff84c3ab71e3ce41bc8718" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::symv::symv_copy_register</definition>
+        <argsstring>(const view&lt; const T, Abi, OA &gt; A, const view&lt; const T, Abi &gt; B, const std::optional&lt; view&lt; const T, Abi &gt; &gt; C, const view&lt; T, Abi &gt; D) noexcept</argsstring>
+        <name>symv_copy_register</name>
+        <qualifiedname>batmat::linalg::micro_kernels::symv::symv_copy_register</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; <ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt; &gt;</type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi &gt;</type>
+          <declname>D</declname>
+        </param>
+        <briefdescription>
+<para>Generalized matrix multiplication d = c ± A⁽ᵀ⁾ b. Using register blocking. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/symv.tpp" line="65" column="6" bodyfile="batmat/include/batmat/linalg/micro-kernels/symv.tpp" bodystart="65" bodyend="91" declfile="batmat/include/batmat/linalg/micro-kernels/symv.hpp" declline="22" declcolumn="6"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a294edbebb26413734307376578d417d1" compoundref="uview_8hpp" startline="110" endline="112">batmat::linalg::uview&lt; T, Abi, Order &gt;::block</references>
+        <references refid="group__topic-utils_1gab76a36340644bbf7c8093caa45aef12f" compoundref="loop_8hpp" startline="43" endline="61">batmat::foreach_chunked_merged</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a8b369f4dec638935df8ff5ebfb37b6f8" compoundref="uview_8hpp" startline="114" endline="116">batmat::linalg::uview&lt; T, Abi, Order &gt;::middle_rows</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1a3da5b2ee321a968e991f6c065c63e5f5" compoundref="micro-kernels_2symv_8hpp" startline="26">RowsReg</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1adb3f5219e0b935dae432cd71a5123553" compoundref="micro-kernels_2symv_8hpp" startline="29">symv_copy_lut</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a88e3a02794e19050db3bd09ae27ac43a" compoundref="symv_8hpp" startline="17" endline="34">batmat::linalg::detail::symv</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/micro-kernels/symv.hpp" line="9" column="1"/>
+  </compounddef>
+</doxygen>

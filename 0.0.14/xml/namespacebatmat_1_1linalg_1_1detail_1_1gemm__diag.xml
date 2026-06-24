@@ -1,0 +1,242 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag" kind="namespace" language="C++">
+    <compoundname>batmat::linalg::detail::gemm_diag</compoundname>
+    <innerconcept refid="conceptbatmat_1_1linalg_1_1detail_1_1gemm__diag_1_1track__zeros__opt">batmat::linalg::detail::gemm_diag::track_zeros_opt</innerconcept>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1adc7e1eda16e2bcde71f87b6047a38dd2" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class...</type>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; bool &gt;</type>
+        <definition>std::optional&lt;bool&gt; batmat::linalg::detail::gemm_diag::get_track_zeros</definition>
+        <argsstring></argsstring>
+        <name>get_track_zeros</name>
+        <qualifiedname>batmat::linalg::detail::gemm_diag::get_track_zeros</qualifiedname>
+        <initializer>= std::nullopt</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm-diag.hpp" line="60" column="32" bodyfile="batmat/include/batmat/linalg/gemm-diag.hpp" bodystart="60" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1ab0a59bf5060c11684f2c13aee1a997d1" compoundref="gemm-diag_8hpp" startline="76" endline="80">apply_options</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1aa65143d0c39ae6fe326f01fdfe502ff2" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; bool &gt;</type>
+        <definition>std::optional&lt;bool&gt; batmat::linalg::detail::gemm_diag::get_track_zeros&lt; T, Ts... &gt;</definition>
+        <argsstring></argsstring>
+        <name>get_track_zeros&lt; T, Ts... &gt;</name>
+        <qualifiedname>batmat::linalg::detail::gemm_diag::get_track_zeros&lt; T, Ts... &gt;</qualifiedname>
+        <initializer>= <ref refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1adc7e1eda16e2bcde71f87b6047a38dd2" kindref="member">get_track_zeros</ref>&lt;Ts...&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm-diag.hpp" line="62" column="8" bodyfile="batmat/include/batmat/linalg/gemm-diag.hpp" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1ad3431c2cd24670081224da5c3ed2043a" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>bool</type>
+            <declname>Z</declname>
+            <defname>Z</defname>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; bool &gt;</type>
+        <definition>std::optional&lt;bool&gt; batmat::linalg::detail::gemm_diag::get_track_zeros&lt; track_zeros_t&lt; Z &gt;, Ts... &gt;</definition>
+        <argsstring></argsstring>
+        <name>get_track_zeros&lt; track_zeros_t&lt; Z &gt;, Ts... &gt;</name>
+        <qualifiedname>batmat::linalg::detail::gemm_diag::get_track_zeros&lt; track_zeros_t&lt; Z &gt;, Ts... &gt;</qualifiedname>
+        <initializer>= Z</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm-diag.hpp" line="64" column="8" bodyfile="batmat/include/batmat/linalg/gemm-diag.hpp" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1a0d8b129bd217d214b917272afd2a8b7d" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class</type>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool batmat::linalg::detail::gemm_diag::is_track_zeros_opt</definition>
+        <argsstring></argsstring>
+        <name>is_track_zeros_opt</name>
+        <qualifiedname>batmat::linalg::detail::gemm_diag::is_track_zeros_opt</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm-diag.hpp" line="67" column="23" bodyfile="batmat/include/batmat/linalg/gemm-diag.hpp" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1ae99d02c20b87ea38be8bc128940dc64c" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>bool</type>
+            <declname>Z</declname>
+            <defname>Z</defname>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool batmat::linalg::detail::gemm_diag::is_track_zeros_opt&lt; track_zeros_t&lt; Z &gt; &gt;</definition>
+        <argsstring></argsstring>
+        <name>is_track_zeros_opt&lt; track_zeros_t&lt; Z &gt; &gt;</name>
+        <qualifiedname>batmat::linalg::detail::gemm_diag::is_track_zeros_opt&lt; track_zeros_t&lt; Z &gt; &gt;</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm-diag.hpp" line="69" column="18" bodyfile="batmat/include/batmat/linalg/gemm-diag.hpp" bodystart="69" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1a2c3d3424f62a8393a28b1d360f411f69" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>micro_kernels::gemm_diag::KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+            <defval>{}</defval>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OC</declname>
+            <defname>OC</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::gemm_diag::gemm_diag</definition>
+        <argsstring>(view&lt; const T, Abi, OA &gt; A, view&lt; const T, Abi, OB &gt; B, std::optional&lt; view&lt; const T, Abi, OC &gt; &gt; C, view&lt; T, Abi, OD &gt; D, view&lt; const T, Abi &gt; d)</argsstring>
+        <name>gemm_diag</name>
+        <qualifiedname>batmat::linalg::detail::gemm_diag::gemm_diag</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OB &gt;</type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; <ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OC &gt; &gt;</type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>d</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm-diag.hpp" line="21" column="6" bodyfile="batmat/include/batmat/linalg/gemm-diag.hpp" bodystart="21" bodyend="49"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1ac74ffd0a7e0af8bcd39fb94b587e66b1" compoundref="copy_8hpp" startline="68" endline="107">batmat::linalg::detail::copy::copy</references>
+        <references refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a2734a86018fe0537b59c91e9f85c5fbb" compoundref="copy_8hpp" startline="27" endline="59">batmat::linalg::detail::copy::fill</references>
+        <references refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1a2c3d3424f62a8393a28b1d360f411f69" compoundref="gemm-diag_8hpp" startline="21" endline="49">gemm_diag</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1ac3b0cbc0431188ba51f8861d18a002c6" compoundref="gemm-diag_8tpp" startline="100" endline="184">batmat::linalg::micro_kernels::gemm_diag::gemm_diag_copy_register</references>
+        <references refid="group__topic-linalg-flops_1ga232cc639534f37bf900df45fb929743e" compoundref="flops_8hpp" startline="122" endline="125">batmat::linalg::flops::gemmt_diag</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1a2c3d3424f62a8393a28b1d360f411f69" compoundref="gemm-diag_8hpp" startline="21" endline="49">gemm_diag</referencedby>
+        <referencedby refid="group__topic-linalg_1gad57207460bfd526791afa8a0ccc19041" compoundref="gemm-diag_8hpp" startline="93" endline="98">batmat::linalg::gemm_diag</referencedby>
+        <referencedby refid="group__topic-linalg_1ga0ae75850dc387a83a665ea8b370d5268" compoundref="gemm-diag_8hpp" startline="104" endline="109">batmat::linalg::gemm_diag_add</referencedby>
+        <referencedby refid="group__topic-linalg_1ga958862e903797c035916e22d09f4fcb3" compoundref="gemm-diag_8hpp" startline="122" endline="129">batmat::linalg::syrk_diag_add</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1ab0a59bf5060c11684f2c13aee1a997d1" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class...</type>
+            <declname>Opts</declname>
+            <defname>Opts</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1_1KernelConfig" kindref="compound">micro_kernels::gemm_diag::KernelConfig</ref></type>
+        <definition>micro_kernels::gemm_diag::KernelConfig batmat::linalg::detail::gemm_diag::apply_options</definition>
+        <argsstring>(micro_kernels::gemm_diag::KernelConfig conf, Opts...)</argsstring>
+        <name>apply_options</name>
+        <qualifiedname>batmat::linalg::detail::gemm_diag::apply_options</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1_1KernelConfig" kindref="compound">micro_kernels::gemm_diag::KernelConfig</ref></type>
+          <declname>conf</declname>
+        </param>
+        <param>
+          <type>Opts...</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm-diag.hpp" line="76" column="1" bodyfile="batmat/include/batmat/linalg/gemm-diag.hpp" bodystart="76" bodyend="80"/>
+        <references refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1adc7e1eda16e2bcde71f87b6047a38dd2" compoundref="gemm-diag_8hpp" startline="60">get_track_zeros</references>
+        <references refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1_1KernelConfig_1a70cdd1a05da1d6764e1591202cf81329" compoundref="micro-kernels_2gemm-diag_8hpp" startline="15">batmat::linalg::micro_kernels::gemm_diag::KernelConfig::track_zeros</references>
+        <referencedby refid="group__topic-linalg_1gad57207460bfd526791afa8a0ccc19041" compoundref="gemm-diag_8hpp" startline="93" endline="98">batmat::linalg::gemm_diag</referencedby>
+        <referencedby refid="group__topic-linalg_1ga0ae75850dc387a83a665ea8b370d5268" compoundref="gemm-diag_8hpp" startline="104" endline="109">batmat::linalg::gemm_diag_add</referencedby>
+        <referencedby refid="group__topic-linalg_1ga958862e903797c035916e22d09f4fcb3" compoundref="gemm-diag_8hpp" startline="122" endline="129">batmat::linalg::syrk_diag_add</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/gemm-diag.hpp" line="18" column="1"/>
+  </compounddef>
+</doxygen>

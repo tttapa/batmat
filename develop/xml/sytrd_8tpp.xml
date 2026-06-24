@@ -1,0 +1,552 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="sytrd_8tpp" kind="file" language="C++">
+    <compoundname>sytrd.tpp</compoundname>
+    <includes refid="assume_8hpp" local="no">batmat/assume.hpp</includes>
+    <includes refid="micro-kernels_2sytrd_8hpp" local="no">batmat/linalg/micro-kernels/sytrd.hpp</includes>
+    <includes refid="uview_8hpp" local="no">batmat/linalg/uview.hpp</includes>
+    <includes refid="loop_8hpp" local="no">batmat/loop.hpp</includes>
+    <includes refid="lut_8hpp" local="no">batmat/lut.hpp</includes>
+    <includes refid="cneg_8hpp" local="no">batmat/ops/cneg.hpp</includes>
+    <includes refid="rotate_8hpp" local="no">batmat/ops/rotate.hpp</includes>
+    <includes local="no">guanaqo/trace.hpp</includes>
+    <incdepgraph>
+      <node id="3">
+        <label>batmat/config.hpp</label>
+        <link refid="config_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/assume.hpp</label>
+        <link refid="assume_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>batmat/linalg/micro-kernels/sytrd.hpp</label>
+        <link refid="micro-kernels_2sytrd_8hpp"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/micro-kernels/sytrd.tpp</label>
+        <link refid="sytrd_8tpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>batmat/linalg/structure.hpp</label>
+        <link refid="structure_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>batmat/linalg/uview.hpp</label>
+        <link refid="uview_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+      </node>
+      <node id="30">
+        <label>batmat/loop.hpp</label>
+        <link refid="loop_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+      </node>
+      <node id="25">
+        <label>batmat/lut.hpp</label>
+        <link refid="lut_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="18">
+        <label>batmat/matrix/layout.hpp</label>
+        <link refid="layout_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>batmat/matrix/matrix.hpp</label>
+        <link refid="matrix_8hpp"/>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>batmat/matrix/storage.hpp</label>
+        <link refid="storage_8hpp"/>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>batmat/matrix/view.hpp</label>
+        <link refid="view_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="31">
+        <label>batmat/openmp.h</label>
+        <link refid="openmp_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+      </node>
+      <node id="33">
+        <label>batmat/ops/cneg.hpp</label>
+        <link refid="cneg_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="37">
+        <label>batmat/ops/rotate.hpp</label>
+        <link refid="rotate_8hpp"/>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+      </node>
+      <node id="29">
+        <label>generic.hpp</label>
+        <link refid="generic_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="28">
+        <label>batmat/platform/platform.hpp</label>
+        <link refid="platform_8hpp"/>
+        <childnode refid="29" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>batmat/unroll.h</label>
+        <link refid="unroll_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="27">
+        <label>batmat/micro-kernels/sytrd/export.h</label>
+      </node>
+      <node id="34">
+        <label>bit</label>
+      </node>
+      <node id="38">
+        <label>cassert</label>
+      </node>
+      <node id="35">
+        <label>cmath</label>
+      </node>
+      <node id="12">
+        <label>cstddef</label>
+      </node>
+      <node id="4">
+        <label>cstdint</label>
+      </node>
+      <node id="24">
+        <label>experimental/simd</label>
+      </node>
+      <node id="6">
+        <label>guanaqo/assume.hpp</label>
+      </node>
+      <node id="26">
+        <label>guanaqo/lut.hpp</label>
+      </node>
+      <node id="19">
+        <label>guanaqo/mat-view.hpp</label>
+      </node>
+      <node id="23">
+        <label>guanaqo/stringify.h</label>
+      </node>
+      <node id="39">
+        <label>guanaqo/trace.hpp</label>
+      </node>
+      <node id="36">
+        <label>limits</label>
+      </node>
+      <node id="13">
+        <label>memory</label>
+      </node>
+      <node id="14">
+        <label>new</label>
+      </node>
+      <node id="32">
+        <label>omp.h</label>
+      </node>
+      <node id="5">
+        <label>stdfloat</label>
+      </node>
+      <node id="15">
+        <label>tuple</label>
+      </node>
+      <node id="16">
+        <label>type_traits</label>
+      </node>
+      <node id="20">
+        <label>utility</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg">batmat::linalg</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels">batmat::linalg::micro_kernels</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd">batmat::linalg::micro_kernels::sytrd</innernamespace>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="sytrd_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" prot="public" static="no">
+        <name>UNROLL_FOR</name>
+        <param><defname>...</defname></param>
+        <initializer><ref refid="unroll_8h_1addb39c3474d8e234f06b9ca62ed0bf75" kindref="member">BATMAT_FULLY_UNROLLED_FOR</ref> (__VA_ARGS__)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sytrd.tpp" line="12" column="9" bodyfile="batmat/include/batmat/linalg/micro-kernels/sytrd.tpp" bodystart="12" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="assume_8hpp" kindref="compound">batmat/assume.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="micro-kernels_2sytrd_8hpp" kindref="compound">batmat/linalg/micro-kernels/sytrd.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="uview_8hpp" kindref="compound">batmat/linalg/uview.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="loop_8hpp" kindref="compound">batmat/loop.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="lut_8hpp" kindref="compound">batmat/lut.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="cneg_8hpp" kindref="compound">batmat/ops/cneg.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="rotate_8hpp" kindref="compound">batmat/ops/rotate.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;guanaqo/trace.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="sytrd_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>UNROLL_FOR(...)<sp/>BATMAT_FULLY_UNROLLED_FOR<sp/>(__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd" kindref="compound">batmat::linalg::micro_kernels::sytrd</ref><sp/>{</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>StorageOrder<sp/>OD&gt;</highlight></codeline>
+<codeline lineno="17" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a553718615bc4e696c898fb701339564f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constinit</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a553718615bc4e696c898fb701339564f" kindref="member">microkernel_diag_lut</ref><sp/>=</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__topic-utils_1ga91b0a07e3a00c803e9859ace6b86828f" kindref="member">make_1d_lut&lt;SizeR&lt;T, Abi&gt;</ref>&gt;([]&lt;<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>Row&gt;(<ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant&lt;Row&gt;</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a1bd67119ddb719fe9011efee9a6a4bd2" kindref="member">sytrd_diag_microkernel&lt;T, Abi, Conf, Row + 1, OD&gt;</ref>;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>index_t<sp/>R,<sp/>StorageOrder<sp/>OD&gt;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal">[[gnu::hot,<sp/>gnu::flatten]]<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a1bd67119ddb719fe9011efee9a6a4bd2" refkind="member"><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a1bd67119ddb719fe9011efee9a6a4bd2" kindref="member">sytrd_diag_microkernel</ref>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>k,<sp/><ref refid="structbatmat_1_1linalg_1_1triangular__accessor" kindref="compound">triangular_accessor</ref>&lt;T,<sp/>Abi,<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1acbf0831d5848a3f598dc750891bde9aa" kindref="member">SizeR&lt;T, Abi&gt;</ref>&gt;<sp/>W,<sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, OD&gt;</ref><sp/>D,</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, StorageOrder::ColMajor&gt;</ref><sp/>Y)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">std::copysign;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">std::sqrt;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">simd<sp/>=<sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;T, Abi&gt;</ref>;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(k<sp/>&gt;<sp/>R);</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>safe_min<sp/>=<sp/>std::numeric_limits&lt;T&gt;::min();</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>j<sp/><sp/><sp/><sp/>j+1<sp/><sp/><sp/>j+2<sp/><sp/><sp/><sp/>R</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>┌─────┬─────┬─────┬─────┐</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/>D<sp/><sp/>│<sp/><sp/>·<sp/><sp/>│<sp/><sp/>·<sp/><sp/>│<sp/><sp/>·<sp/><sp/>│</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>├─────┼─────┼─────┼─────┤</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/>d1<sp/>│<sp/>a11<sp/>│<sp/><sp/>×<sp/><sp/>│<sp/><sp/>×<sp/><sp/>│<sp/><sp/>j</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>├─────┼─────┼─────┼─────┤</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/>b2<sp/>│<sp/>a21<sp/>│<sp/>a22<sp/>│<sp/><sp/>×<sp/><sp/>│<sp/><sp/>j+1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>├─────┼─────┼─────┼─────┤</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/>B3<sp/>│<sp/>a31<sp/>│<sp/>a32<sp/>│<sp/><sp/>A3<sp/>│<sp/><sp/>j+2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>└─────┴─────┴─────┴─────┘</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>j<sp/><sp/><sp/>j+1<sp/><sp/>j+2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>┌──────────────┬────┬────┬───────────────┐</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/>d<sp/><sp/><sp/><sp/>·<sp/><sp/><sp/><sp/>·<sp/>│<sp/><sp/>·<sp/>│<sp/><sp/>·<sp/>│<sp/><sp/>·<sp/><sp/><sp/><sp/>·<sp/><sp/><sp/><sp/>·<sp/><sp/>│<sp/><sp/><sp/><sp/><sp/>d:<sp/>diagonal<sp/>elements<sp/>of<sp/>tridiagonal<sp/>matrix</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/><sp/>e:<sp/>off-diagonal<sp/>elements<sp/>of<sp/>tridiagonal<sp/>matrix</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/>c<sp/><sp/><sp/><sp/>d<sp/><sp/><sp/><sp/>·<sp/>│<sp/><sp/>·<sp/>│<sp/><sp/>·<sp/>│<sp/><sp/>·<sp/><sp/><sp/><sp/>·<sp/><sp/><sp/><sp/>·<sp/><sp/>│<sp/><sp/><sp/><sp/><sp/>b:<sp/>Householder<sp/>reflectors</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/><sp/>a:<sp/>original<sp/>matrix</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/>b<sp/><sp/><sp/><sp/>c<sp/><sp/><sp/><sp/>d<sp/>│<sp/><sp/>·<sp/>│<sp/><sp/>·<sp/>│<sp/><sp/>·<sp/><sp/><sp/><sp/>·<sp/><sp/><sp/><sp/>·<sp/><sp/>│<sp/><sp/><sp/><sp/><sp/>×:<sp/>implicitly<sp/>symmetric<sp/>part</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>├────┼────┼───────────────┤</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/>b<sp/><sp/><sp/><sp/>b<sp/><sp/><sp/><sp/>c<sp/>│<sp/><sp/>a<sp/>│<sp/><sp/>×<sp/>│<sp/><sp/>×<sp/><sp/><sp/><sp/>×<sp/><sp/><sp/><sp/>×<sp/><sp/>│<sp/><sp/>j</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>├──────────────┼────┼────┼───────────────┤</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/>b<sp/><sp/><sp/><sp/>b<sp/><sp/><sp/><sp/>b<sp/>│<sp/><sp/>a<sp/>│<sp/><sp/>a<sp/>│<sp/><sp/>×<sp/><sp/><sp/><sp/>×<sp/><sp/><sp/><sp/>×<sp/><sp/>│<sp/><sp/>j+1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>├──────────────┼────┼────┼───────────────┤</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/>b<sp/><sp/><sp/><sp/>b<sp/><sp/><sp/><sp/>b<sp/>│<sp/><sp/>a<sp/>│<sp/><sp/>a<sp/>│<sp/><sp/>a<sp/><sp/><sp/><sp/>×<sp/><sp/><sp/><sp/>×<sp/><sp/>│<sp/><sp/>j+2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>│</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/>b<sp/><sp/><sp/><sp/>b<sp/><sp/><sp/><sp/>b<sp/>│<sp/><sp/>a<sp/>│<sp/><sp/>a<sp/>│<sp/><sp/>a<sp/><sp/><sp/><sp/>a<sp/><sp/><sp/><sp/>×<sp/><sp/>│</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>│</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>│<sp/><sp/>b<sp/><sp/><sp/><sp/>b<sp/><sp/><sp/><sp/>b<sp/>│<sp/><sp/>a<sp/>│<sp/><sp/>a<sp/>│<sp/><sp/>a<sp/><sp/><sp/><sp/>a<sp/><sp/><sp/><sp/>a<sp/><sp/>│</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>└──────────────┴────┴────┴───────────────┘</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/>╰─<sp/>symv<sp/>A3<sp/>by<sp/>a31</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/>╰─<sp/>dot<sp/>a32<sp/>with<sp/>a31</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>│<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>╰─<sp/>±norm<sp/>a31<sp/>and<sp/>a21<sp/>becomes<sp/>c(j)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>╰─<sp/>dot<sp/>B3<sp/>with<sp/>a31<sp/>for<sp/>block<sp/>Householder</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>symv:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>[<sp/><sp/>W(j+2,<sp/>j)<sp/><sp/>]<sp/><sp/><sp/>[<sp/><sp/>A(j+2,<sp/>j+2)<sp/><sp/><sp/>A(j+3,<sp/>j+2)<sp/><sp/><sp/>A(j+4,<sp/>j+2)<sp/><sp/><sp/>...<sp/><sp/>]<sp/><sp/>[<sp/><sp/>A(j+2,<sp/>j)<sp/><sp/>]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>[<sp/><sp/>W(j+3,<sp/>j)<sp/><sp/>]<sp/>=<sp/>[<sp/><sp/>A(j+3,<sp/>j+2)<sp/><sp/><sp/>A(j+3,<sp/>j+3)<sp/><sp/><sp/>A(j+4,<sp/>j+3)<sp/><sp/><sp/>...<sp/><sp/>]<sp/><sp/>[<sp/><sp/>A(j+3,<sp/>j)<sp/><sp/>]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>[<sp/><sp/>W(j+4,<sp/>j)<sp/><sp/>]<sp/><sp/><sp/>[<sp/><sp/>A(j+4,<sp/>j+2)<sp/><sp/><sp/>A(j+4,<sp/>j+3)<sp/><sp/><sp/>A(j+4,<sp/>j+4)<sp/><sp/><sp/>...<sp/><sp/>]<sp/><sp/>[<sp/><sp/>A(j+4,<sp/>j)<sp/><sp/>]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>[<sp/><sp/><sp/><sp/>...<sp/><sp/><sp/><sp/><sp/><sp/>]<sp/><sp/><sp/>[<sp/><sp/><sp/><sp/>...<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>...<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>...<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>...<sp/><sp/>]<sp/><sp/>[<sp/><sp/><sp/><sp/>...<sp/><sp/><sp/><sp/><sp/><sp/>]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>W(j+2,<sp/>j)<sp/>=<sp/>sum(l=j+2..k)<sp/>A(l,<sp/>j+2)<sp/>A(l,<sp/>j)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>W(j+3,<sp/>j)<sp/>=<sp/>A(j+3,<sp/>j+2)<sp/>A(j+2,<sp/>j)<sp/>+<sp/>sum(l=j+3..k)<sp/>A(l,<sp/>j+3)<sp/>A(l,<sp/>j)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>W(j+4,<sp/>j)<sp/>=<sp/>A(j+4,<sp/>j+2)<sp/>A(j+2,<sp/>j)<sp/>+<sp/>A(j+4,<sp/>j+3)<sp/>A(j+3,<sp/>j)<sp/>+<sp/>sum(l=j+4..k)<sp/>A(l,<sp/>j+4)<sp/>A(l,<sp/>j)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>W(q,<sp/>j)<sp/>=<sp/>sum(p=j+2..q-1)<sp/>A(q,<sp/>p)<sp/>A(p,<sp/>j)<sp/>+<sp/>sum(l=q..k)<sp/>A(l,<sp/>q)<sp/>A(l,<sp/>j)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>j<sp/>=<sp/>0;<sp/>j<sp/>&lt;<sp/>R;<sp/>++j)<sp/>{</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">std::max;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>Axj[R<sp/>+<sp/>1];</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>i<sp/>=<sp/>j<sp/>+<sp/>1;<sp/>i<sp/>&lt;<sp/>R<sp/>+<sp/>1;<sp/>++i)</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Axj[i]<sp/>=<sp/>D.load(i,<sp/>j);</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Compute<sp/>inner<sp/>products<sp/>between<sp/>a(j)<sp/>and<sp/>b(i&lt;j),<sp/>a(j),<sp/>and<sp/>a(i&gt;j)<sp/>(symv)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>bb[R<sp/>+<sp/>1]{};</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Triangular<sp/>part</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>q<sp/>=<sp/>j<sp/>+<sp/>2;<sp/>q<sp/>&lt;<sp/>R<sp/>+<sp/>1;<sp/>++q)<sp/>{</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;=<sp/>q;<sp/>++i)</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>bb[i]<sp/>+=<sp/>D.load(q,<sp/>i)<sp/>*<sp/>Axj[q];</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>p<sp/>=<sp/>j<sp/>+<sp/>2;<sp/>p<sp/>&lt;<sp/>q;<sp/>++p)</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>bb[q]<sp/>+=<sp/>D.load(q,<sp/>p)<sp/>*<sp/>Axj[p];</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Rectangular<sp/>part</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>q<sp/>=<sp/>max(R<sp/>+<sp/>1,<sp/>j<sp/>+<sp/>2);<sp/>q<sp/>&lt;<sp/>k;<sp/>++q)<sp/>{</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>Aqx[R<sp/>+<sp/>1];</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>R<sp/>+<sp/>1;<sp/>++i)</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Aqx[i]<sp/>=<sp/>D.load(q,<sp/>i);</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>R<sp/>+<sp/>1;<sp/>++i)</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>bb[i]<sp/>+=<sp/>Aqx[i]<sp/>*<sp/>Aqx[j];</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>Yl{};</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>p<sp/>=<sp/>j<sp/>+<sp/>2;<sp/>p<sp/>&lt;<sp/>R<sp/>+<sp/>1;<sp/>++p)</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Yl<sp/>+=<sp/>Aqx[p]<sp/>*<sp/>Axj[p];</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Y.store(Yl,<sp/>q,<sp/>j);<sp/></highlight><highlight class="comment">//<sp/>W(q,<sp/>j)<sp/>=<sp/>sum(p=j+2..q-1)<sp/>A(q,<sp/>p)<sp/>A(p,<sp/>j)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>simd<sp/>a21<sp/>=<sp/>Axj[j<sp/>+<sp/>1];</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>bb[j]<sp/>+=<sp/>a21<sp/>*<sp/>a21;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>bb[i&lt;j]<sp/>now<sp/>contain<sp/>the<sp/>inner<sp/>products<sp/>of<sp/>a31<sp/>with<sp/>the<sp/>previous<sp/>Householder<sp/>vectors</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(except<sp/>for<sp/>the<sp/>first<sp/>components,<sp/>which<sp/>are<sp/>implicitly<sp/>1<sp/>and<sp/>are<sp/>added<sp/>later).</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>bb[j]<sp/><sp/><sp/>contains<sp/>the<sp/>squared<sp/>norm<sp/>of<sp/>(a21,<sp/>a31).</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>bb[j+1]<sp/>contains<sp/>the<sp/>dot<sp/>product<sp/>of<sp/>a31<sp/>and<sp/>a32.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>bb[i&gt;j+1]<sp/>contain<sp/>the<sp/>top<sp/>rows<sp/>of<sp/>the<sp/>symmetric<sp/>product<sp/>A3<sp/>a31<sp/>(complete).</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Y[i&gt;=R,<sp/>j]<sp/>contains<sp/>part<sp/>of<sp/>the<sp/>symmetric<sp/>product<sp/>A3<sp/>a31,<sp/>but<sp/>still<sp/>requires<sp/>adding</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>the<sp/>contributions<sp/>from<sp/>all<sp/>columns<sp/>&gt;=R<sp/>(including<sp/>dot<sp/>products<sp/>with<sp/>the<sp/>upper</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>triangle<sp/>of<sp/>A3)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Energy<sp/>condition<sp/>and<sp/>Householder<sp/>coefficients</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>simd<sp/>abs_c̃jj<sp/>=<sp/>sqrt(bb[j]);</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>simd<sp/>c̃j<sp/>=<sp/>copysign(abs_c̃jj,<sp/>a21),<sp/>β<sp/>=<sp/>a21<sp/>+<sp/>c̃j;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>simd<sp/>inv_τ<sp/>=<sp/><ref refid="namespacebatmat_1_1datapar_1ad0c6f39983831e00225b0ebc6088c5eb" kindref="member">datapar::select</ref>(abs_c̃jj<sp/>&gt;<sp/>safe_min,<sp/>β<sp/>/<sp/>c̃j,<sp/>simd{0}),</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>inv_β<sp/>=<sp/><ref refid="namespacebatmat_1_1datapar_1ad0c6f39983831e00225b0ebc6088c5eb" kindref="member">datapar::select</ref>(abs_c̃jj<sp/>&gt;<sp/>safe_min,<sp/>simd{1}<sp/>/<sp/>β,<sp/>simd{0});</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Save<sp/>block<sp/>Householder<sp/>matrix<sp/>W</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>j;<sp/>++i)</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Multiply<sp/>implicit<sp/>first<sp/>component<sp/>of<sp/>the<sp/>current<sp/>Householder<sp/>vector<sp/>by<sp/>the</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>corresponding<sp/>row<sp/>of<sp/>the<sp/>previous<sp/>Householder<sp/>vectors,<sp/>and<sp/>add<sp/>it<sp/>to<sp/>the<sp/>previously</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>computed<sp/>inner<sp/>products<sp/>with<sp/>a31,<sp/>scaled<sp/>by<sp/>β⁻¹<sp/>to<sp/>go<sp/>from<sp/>a31<sp/>to<sp/>the<sp/>normalized</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Householder<sp/>vector.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>W.store(bb[i]<sp/>*<sp/>inv_β<sp/>+<sp/>D.load(j<sp/>+<sp/>1,<sp/>i),<sp/>i,<sp/>j);</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>W.store(inv_τ,<sp/>j,<sp/>j);<sp/></highlight><highlight class="comment">//<sp/>inverse<sp/>of<sp/>diagonal</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"></highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Finish<sp/>the<sp/>symmetric<sp/>product<sp/>A3<sp/>a31</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>i<sp/>=<sp/>max(R<sp/>+<sp/>1,<sp/>j<sp/>+<sp/>2);<sp/>i<sp/>&lt;<sp/>k;<sp/>++i)<sp/>{</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>yi<sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>Y.load(i,<sp/>j);</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>simd<sp/>xi<sp/>=<sp/>D.load(i,<sp/>j);</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>yi<sp/>+=<sp/>D.load(i,<sp/>i)<sp/>*<sp/>xi;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>diagonal<sp/>term</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>l<sp/>=<sp/>max(R<sp/>+<sp/>1,<sp/>j<sp/>+<sp/>2);<sp/>l<sp/>&lt;<sp/>i;<sp/>++l)<sp/>{<sp/></highlight><highlight class="comment">//<sp/>lower<sp/>triangle<sp/>l<sp/>&lt;<sp/>i</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>yl<sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>Y.load(l,<sp/>j);</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>simd<sp/>xl<sp/>=<sp/>D.load(l,<sp/>j),<sp/>ail<sp/>=<sp/>D.load(i,<sp/>l);<sp/></highlight><highlight class="comment">//<sp/>TODO:<sp/>access<sp/>D<sp/>column-wise</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>yi<sp/>+=<sp/>ail<sp/>*<sp/>xl;</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>yl<sp/>+=<sp/>ail<sp/>*<sp/>xi;<sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>symmetric<sp/>contribution<sp/>to<sp/>y[j]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Y.store(yl,<sp/>l,<sp/>j);<sp/></highlight><highlight class="comment">//<sp/>TODO:<sp/>optimize<sp/>by<sp/>unrolling<sp/>to<sp/>avoid<sp/>load/store<sp/>of<sp/>yl</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Y.store(yi,<sp/>i,<sp/>j);</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Y[i&gt;=R,<sp/>j]<sp/>now<sp/>contains<sp/>the<sp/>complete<sp/>bottom<sp/>rows<sp/>of<sp/>the<sp/>symmetric<sp/>product<sp/>A3<sp/>a31.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Now<sp/>compute<sp/>the<sp/>vector<sp/>w<sp/>=<sp/>τ⁻¹(A3<sp/>b<sp/>+<sp/>a32)<sp/>=<sp/>τ⁻¹(β⁻¹<sp/>A3<sp/>a31<sp/>+<sp/>a32).</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>Axj1[R<sp/>+<sp/>1];</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>i<sp/>=<sp/>j<sp/>+<sp/>1;<sp/>i<sp/>&lt;<sp/>R<sp/>+<sp/>1;<sp/>++i)</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Axj1[i]<sp/>=<sp/>D.load(i,<sp/>j<sp/>+<sp/>1);</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>i<sp/>=<sp/>j<sp/>+<sp/>2;<sp/>i<sp/>&lt;<sp/>R<sp/>+<sp/>1;<sp/>++i)</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Y.store(bb[i]<sp/>=<sp/>inv_τ<sp/>*<sp/>(inv_β<sp/>*<sp/>bb[i]<sp/>+<sp/>Axj1[i]),<sp/>i,<sp/>j);</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>i<sp/>=<sp/>max(R<sp/>+<sp/>1,<sp/>j<sp/>+<sp/>2);<sp/>i<sp/>&lt;<sp/>k;<sp/>++i)<sp/>{</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>yi<sp/>=<sp/>Y.load(i,<sp/>j);</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Y.store(inv_τ<sp/>*<sp/>(inv_β<sp/>*<sp/>yi<sp/>+<sp/>D.load(i,<sp/>j<sp/>+<sp/>1)),<sp/>i,<sp/>j);</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>bb[i&gt;j+1]<sp/>now<sp/>contain<sp/>w[i].</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>simd<sp/>a2<sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>Axj1[j<sp/>+<sp/>1];</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>simd<sp/>a31ᵀa32<sp/>=<sp/>bb[j<sp/>+<sp/>1];</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>simd<sp/>ω<sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>inv_τ<sp/>*<sp/>(inv_β<sp/>*<sp/>a31ᵀa32<sp/>+<sp/>a2);<sp/></highlight><highlight class="comment">//<sp/>ω<sp/>=<sp/>τ⁻¹(a32ᵀb<sp/>+<sp/>a22)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Scale<sp/>a31<sp/>to<sp/>obtain<sp/>b,<sp/>and<sp/>dot<sp/>it<sp/>with<sp/>w.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>wᵀb_ω<sp/>=<sp/>ω;<sp/></highlight><highlight class="comment">//<sp/>accumulator<sp/>for<sp/>wᵀb<sp/>+<sp/>ω</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>b[R<sp/>+<sp/>1];</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>l<sp/>=<sp/>j<sp/>+<sp/>2;<sp/>l<sp/>&lt;<sp/>R<sp/>+<sp/>1;<sp/>++l)<sp/>{</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>b[l]<sp/>=<sp/>inv_β<sp/>*<sp/>Axj[l];</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>D.store(b[l],<sp/>l,<sp/>j);</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>wᵀb_ω<sp/>+=<sp/>b[l]<sp/>*<sp/>bb[l];</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>l<sp/>=<sp/>max(R<sp/>+<sp/>1,<sp/>j<sp/>+<sp/>2);<sp/>l<sp/>&lt;<sp/>k;<sp/>++l)<sp/>{</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>bl<sp/>=<sp/>inv_β<sp/>*<sp/>D.load(l,<sp/>j);</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>D.store(bl,<sp/>l,<sp/>j);</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>wᵀb_ω<sp/>+=<sp/>bl<sp/>*<sp/>Y.load(l,<sp/>j);</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>simd<sp/>γ<sp/><sp/>=<sp/>inv_τ<sp/>*<sp/>wᵀb_ω;<sp/></highlight><highlight class="comment">//<sp/>γ<sp/>=<sp/>τ⁻¹<sp/>(wᵀb<sp/>+<sp/>ω)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>simd<sp/>d2<sp/>=<sp/>a2<sp/>-<sp/>T{2}<sp/>*<sp/>ω<sp/>+<sp/>γ;</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>D.store(-c̃j,<sp/>j<sp/>+<sp/>1,<sp/>j);</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>D.store(d2,<sp/>j<sp/>+<sp/>1,<sp/>j<sp/>+<sp/>1);</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"></highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Compute<sp/>and<sp/>store<sp/>ã32<sp/>=<sp/>a32<sp/>+<sp/>(γ<sp/>-<sp/>ω)<sp/>b<sp/>-<sp/>w<sp/>and<sp/>y<sp/>=<sp/>w<sp/>-<sp/>½γ<sp/>b</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>simd<sp/>γ_ω<sp/>=<sp/>γ<sp/>-<sp/>ω;</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" kindref="member">UNROLL_FOR</ref><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>l<sp/>=<sp/>j<sp/>+<sp/>2;<sp/>l<sp/>&lt;<sp/>R<sp/>+<sp/>1;<sp/>++l)<sp/>{</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>ã32<sp/>=<sp/>Axj1[l]<sp/>+<sp/>γ_ω<sp/>*<sp/>b[l]<sp/>-<sp/>bb[l];</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>D.store(ã32,<sp/>l,<sp/>j<sp/>+<sp/>1);</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>yl<sp/>=<sp/>bb[l]<sp/>-<sp/>simd{T{0.5}}<sp/>*<sp/>γ<sp/>*<sp/>b[l];</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Y.store(yl,<sp/>l,<sp/>j);</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>l<sp/>=<sp/>max(R<sp/>+<sp/>1,<sp/>j<sp/>+<sp/>2);<sp/>l<sp/>&lt;<sp/>k;<sp/>++l)<sp/>{</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>bl<sp/><sp/>=<sp/>D.load(l,<sp/>j);</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>ã32<sp/>=<sp/>D.load(l,<sp/>j<sp/>+<sp/>1)<sp/>+<sp/>γ_ω<sp/>*<sp/>bl<sp/>-<sp/>Y.load(l,<sp/>j);</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>D.store(ã32,<sp/>l,<sp/>j<sp/>+<sp/>1);</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>yl<sp/>=<sp/>Y.load(l,<sp/>j)<sp/>-<sp/>simd{T{0.5}}<sp/>*<sp/>γ<sp/>*<sp/>bl;</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Y.store(yl,<sp/>l,<sp/>j);</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"></highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Update<sp/>the<sp/>trailing<sp/>submatrix<sp/>A3<sp/>=<sp/>A3<sp/>-<sp/>byᵀ<sp/>-<sp/>ybᵀ</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>TODO:<sp/>optimize<sp/>memory<sp/>accesses</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>i<sp/>=<sp/>j<sp/>+<sp/>2;<sp/>i<sp/>&lt;<sp/>k;<sp/>++i)<sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>column<sp/>of<sp/>A3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>l<sp/>=<sp/>i;<sp/>l<sp/>&lt;<sp/>k;<sp/>++l)<sp/>{<sp/></highlight><highlight class="comment">//<sp/>row<sp/>of<sp/>A3<sp/>(lower<sp/>triangle)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/>Ail<sp/>=<sp/>D.load(l,<sp/>i);</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Ail<sp/>-=<sp/>Y.load(i,<sp/>j)<sp/>*<sp/>D.load(l,<sp/>j)<sp/>+<sp/>Y.load(l,<sp/>j)<sp/>*<sp/>D.load(i,<sp/>j);</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>D.store(Ail,<sp/>l,<sp/>i);</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="203"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="205"><highlight class="comment">///<sp/>Symmetric<sp/>block<sp/>tridiagonalization.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="206"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>StorageOrder<sp/>OD&gt;</highlight></codeline>
+<codeline lineno="207" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a42acbf47f23092e96ab27c521034456f" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a42acbf47f23092e96ab27c521034456f" kindref="member">sytrd_register</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OD&gt;</ref><sp/>D,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi&gt;</ref><sp/>W,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi&gt;</ref><sp/>Y)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant&lt;SizeR&lt;T, Abi&gt;</ref>&gt;<sp/>R;</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>k<sp/>=<sp/>D.rows();</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(k<sp/>&gt;<sp/>0);</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(D.rows()<sp/>==<sp/>D.cols());</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(W.rows()<sp/>==<sp/>0<sp/>||</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(W.cols()<sp/>==<sp/>1<sp/>&amp;&amp;<sp/>W.rows()<sp/>==<sp/>std::max&lt;index_t&gt;(D.cols(),<sp/>1)<sp/>-<sp/>1)<sp/>||</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::make_pair(W.rows(),<sp/>W.cols())<sp/>==<sp/>(<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a257774934be691eab0d88645e5d66585" kindref="member">sytrd_W_size&lt;T, Abi&gt;</ref>)(D));</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(std::make_pair(Y.rows(),<sp/>Y.cols())<sp/>==<sp/>(<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1aec6b3434b38927a4a28761a901d09825" kindref="member">sytrd_Y_size&lt;T, Abi&gt;</ref>)(D));</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"></highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">W_t<sp/>=<sp/><ref refid="structbatmat_1_1linalg_1_1triangular__accessor" kindref="compound">triangular_accessor&lt;T, Abi, R&gt;</ref>;</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">alignas</highlight><highlight class="normal">(W_t::alignment())<sp/>T<sp/>W_sto[W_t::size()];</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"></highlight></codeline>
+<codeline lineno="220"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Sizeless<sp/>views<sp/>to<sp/>partition<sp/>and<sp/>pass<sp/>to<sp/>the<sp/>micro-kernels</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, OD&gt;</ref><sp/>D_<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>D;</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, StorageOrder::ColMajor&gt;</ref><sp/>W_<sp/>=<sp/>W;</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, StorageOrder::ColMajor&gt;</ref><sp/>Y_<sp/>=<sp/>Y;</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>store_full_W<sp/>=<sp/>std::make_pair(W.rows(),<sp/>W.cols())<sp/>==<sp/>(<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a257774934be691eab0d88645e5d66585" kindref="member">sytrd_W_size&lt;T, Abi&gt;</ref>)(D);</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"></highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Process<sp/>all<sp/>diagonal<sp/>blocks<sp/>(in<sp/>multiples<sp/>of<sp/>R,<sp/>except<sp/>the<sp/>last).</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__topic-utils_1gab76a36340644bbf7c8093caa45aef12f" kindref="member">foreach_chunked_merged</ref>(0,<sp/>k<sp/>-<sp/>1,<sp/>R,<sp/>[&amp;](<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>j,<sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>rem_j)<sp/>{</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>Wj<sp/><sp/>=<sp/>store_full_W<sp/>?<sp/>W_t{W_.<ref refid="structbatmat_1_1linalg_1_1uview_1a919a6b84f8b5f2aef171276479a784e0" kindref="member">middle_cols</ref>(j<sp/>/<sp/>R).data}<sp/>:<sp/>W_t{W_sto};</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>Djj<sp/>=<sp/>D_.<ref refid="structbatmat_1_1linalg_1_1uview_1a294edbebb26413734307376578d417d1" kindref="member">block</ref>(j,<sp/>j);</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a553718615bc4e696c898fb701339564f" kindref="member">microkernel_diag_lut&lt;T, Abi, Conf, OD&gt;</ref>[rem_j<sp/>-<sp/>1](k<sp/>-<sp/>j,<sp/>Wj,<sp/>Djj,<sp/>Y_);</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!store_full_W<sp/>&amp;&amp;<sp/>W.rows()<sp/>&gt;<sp/>0)<sp/>[[unlikely]]</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(<ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>l<sp/>=<sp/>0;<sp/>l<sp/>&lt;<sp/>rem_j;<sp/>++l)</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>W_.<ref refid="structbatmat_1_1linalg_1_1uview_1a4542c3d6af85ceb8fd44acf1dd3ab5b1" kindref="member">store</ref>(Wj.load(l,<sp/>l),<sp/>j<sp/>+<sp/>l,<sp/>0);</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline lineno="235"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"></highlight></codeline>
+<codeline lineno="237"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::linalg::micro_kernels::sytrd</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/linalg/micro-kernels/sytrd.tpp"/>
+  </compounddef>
+</doxygen>
