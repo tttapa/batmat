@@ -73,6 +73,45 @@ constexpr auto syrk<struct blasfeo, OA, OC> = [](benchmark::State &state) {
 };
 #endif
 
+#ifdef BATMAT_WITH_EIGEN
+#include <Eigen/Dense>
+
+template <StorageOrder OA, StorageOrder OC>
+constexpr auto syrk<struct eigen, OA, OC> = [](benchmark::State &state) {
+    using namespace batmat::linalg;
+    constexpr auto OrderA = OA == StorageOrder::ColMajor ? Eigen::ColMajor : Eigen::RowMajor;
+    constexpr auto OrderC = OC == StorageOrder::ColMajor ? Eigen::ColMajor : Eigen::RowMajor;
+    using EMatA           = Eigen::Matrix<real_t, Eigen::Dynamic, Eigen::Dynamic, OrderA>;
+    using EMatC           = Eigen::Matrix<real_t, Eigen::Dynamic, Eigen::Dynamic, OrderC>;
+    std::mt19937 rng{12345};
+    std::uniform_real_distribution<real_t> uni{-1, 1};
+
+    const index_t d = BATMAT_BENCHMARK_DEPTH;
+    const auto n    = static_cast<index_t>(state.range(0));
+    std::vector<EMatA> A;
+    std::vector<EMatC> C;
+    std::vector<EMatC> D;
+    for (index_t l = 0; l < d; ++l) {
+        auto &Al = A.emplace_back(n, n);
+        std::ranges::generate(Al.reshaped(), [&] { return uni(rng); });
+        auto &Cl = C.emplace_back(n, n);
+        std::ranges::generate(Cl.reshaped(), [&] { return uni(rng); });
+        D.emplace_back(n, n);
+    }
+    for (auto _ : state)
+        for (index_t l = 0; l < d; ++l) {
+            state.PauseTiming();
+            D[l] = C[l];
+            state.ResumeTiming();
+            D[l].template selfadjointView<Eigen::Lower>().rankUpdate(A[l]);
+        }
+    auto flop_cnt                 = static_cast<double>(d * total(flops::syrk(n, n)));
+    state.counters["GFLOP count"] = {1e-9 * flop_cnt};
+    state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
+    state.counters["depth"]  = {static_cast<double>(d)};
+};
+#endif
+
 using enum StorageOrder;
 #define BM_RANGES()                                                                                \
     DenseRange(1, 127, 1)                                                                          \
@@ -101,4 +140,10 @@ BENCHMARK(syrk<scalar, RowMajor, ColMajor>)->BM_RANGES();
 #ifdef BATMAT_WITH_BLASFEO
 BENCHMARK(syrk<blasfeo, ColMajor, ColMajor>)->BM_RANGES();
 BENCHMARK(syrk<blasfeo, RowMajor, ColMajor>)->BM_RANGES();
+#endif
+#ifdef BATMAT_WITH_EIGEN
+BENCHMARK(syrk<eigen, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(syrk<eigen, ColMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(syrk<eigen, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(syrk<eigen, RowMajor, RowMajor>)->BM_RANGES();
 #endif

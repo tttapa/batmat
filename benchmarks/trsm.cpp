@@ -136,6 +136,51 @@ constexpr auto trsm<struct blasfeo, S, OA, OB> = [](benchmark::State &state) {
 };
 #endif
 
+#ifdef BATMAT_WITH_EIGEN
+#include <Eigen/Dense>
+
+template <Side S, StorageOrder OA, StorageOrder OB>
+constexpr auto trsm<struct eigen, S, OA, OB> = [](benchmark::State &state) {
+    using namespace batmat::linalg;
+    constexpr auto OrderA = OA == StorageOrder::ColMajor ? Eigen::ColMajor : Eigen::RowMajor;
+    constexpr auto OrderB = OB == StorageOrder::ColMajor ? Eigen::ColMajor : Eigen::RowMajor;
+    constexpr auto OrderC = S == Side::Left ? OrderB : OrderA;
+    using EMatA           = Eigen::Matrix<real_t, Eigen::Dynamic, Eigen::Dynamic, OrderA>;
+    using EMatB           = Eigen::Matrix<real_t, Eigen::Dynamic, Eigen::Dynamic, OrderB>;
+    using EMatC           = Eigen::Matrix<real_t, Eigen::Dynamic, Eigen::Dynamic, OrderC>;
+    std::mt19937 rng{12345};
+    std::uniform_real_distribution<real_t> uni{-1, 1};
+
+    const index_t d = BATMAT_BENCHMARK_DEPTH;
+    const auto n    = static_cast<index_t>(state.range(0));
+    std::vector<EMatA> A;
+    std::vector<EMatB> B;
+    std::vector<EMatC> C;
+    for (index_t l = 0; l < d; ++l) {
+        auto &Al = A.emplace_back(n, n);
+        std::ranges::generate(Al.reshaped(), [&] { return uni(rng); });
+        Al += (10 * static_cast<real_t>(n)) * EMatA::Identity(n, n);
+        auto &Bl = B.emplace_back(n, n);
+        std::ranges::generate(Bl.reshaped(), [&] { return uni(rng); });
+        Bl += (10 * static_cast<real_t>(n)) * EMatB::Identity(n, n);
+        C.emplace_back(n, n);
+    }
+    for (auto _ : state)
+        for (index_t l = 0; l < d; ++l)
+            if constexpr (S == Side::Left)
+                C[l].noalias() = A[l].template triangularView<Eigen::Lower>().solve(B[l]);
+            else
+                C[l].noalias() = B[l].transpose()
+                                     .template triangularView<Eigen::Upper>()
+                                     .solve(A[l].transpose())
+                                     .transpose();
+    auto flop_cnt                 = static_cast<double>(d * total(flops::trsm(n, n)));
+    state.counters["GFLOP count"] = {1e-9 * flop_cnt};
+    state.counters["GFLOPS"] = {1e-9 * flop_cnt, benchmark::Counter::kIsIterationInvariantRate};
+    state.counters["depth"]  = {static_cast<double>(d)};
+};
+#endif
+
 using enum StorageOrder;
 #define BM_RANGES()                                                                                \
     DenseRange(1, 127, 1)                                                                          \
@@ -185,4 +230,14 @@ BENCHMARK(trsm<blasfeo, Right, ColMajor, ColMajor>)->BM_RANGES();
 BENCHMARK(trsm<blasfeo, Right, ColMajor, RowMajor>)->BM_RANGES();
 BENCHMARK(trsm<blasfeo, Right, RowMajor, ColMajor>)->BM_RANGES();
 BENCHMARK(trsm<blasfeo, Right, RowMajor, RowMajor>)->BM_RANGES();
+#endif
+#ifdef BATMAT_WITH_EIGEN
+BENCHMARK(trsm<eigen, Left, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trsm<eigen, Left, ColMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(trsm<eigen, Left, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trsm<eigen, Left, RowMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(trsm<eigen, Right, ColMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trsm<eigen, Right, ColMajor, RowMajor>)->BM_RANGES();
+BENCHMARK(trsm<eigen, Right, RowMajor, ColMajor>)->BM_RANGES();
+BENCHMARK(trsm<eigen, Right, RowMajor, RowMajor>)->BM_RANGES();
 #endif
