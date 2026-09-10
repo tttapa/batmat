@@ -4,58 +4,17 @@ import re
 import sys
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import numpy as np
 from pathlib import Path
 
-PREAMBLE = r"""
-\usepackage{fontspec}
-\usepackage[T1]{fontenc}
-\setmainfont{Libertinus Serif}
-
-\usepackage{unicode-math}
-\setmathfont{Latin Modern Math}
-\setmathfont{STIX Two Math}[range={"25B9}]
-\setmathfont{Asana Math}[range={"2A2F}]
-\setmathfont{Libertinus Math}[range=\mathbb]
-\setmathfont[range={cal,bfcal}]{cmsy10}
-
-% Helpers to change the font on the fly
-\setmathfontface\lmmath{Latin Modern Math}
-\setmathfontface\libmath{Libertinus Math}
-\setmathfontface\stixtwomath{STIX Two Math}
-
-\newcommand\mathcall[1]{\libmath{\symscr{#1}}}
-
-% Script fonts for math
-\usepackage[scr=esstix]{mathalpha}
-\usepackage[notext,nomath]{stix}
-
-% Type writer font
-\setmonofont[BoldFont={Fira Code Medium},Scale=0.8]{Fira Code}
-
-% Extract some symbols from other fonts
-\DeclareFontFamily{U}{FdSymbolF}{}
-\DeclareFontShape{U}{FdSymbolF}{m}{n}{
-    <-7.1> s * [1.0] FdSymbolF-Demi
-    <7.1-> s * [1.0] FdSymbolF-Demi
-}{}
-\DeclareFontShape{U}{FdSymbolF}{b}{n}{
-    <-7.1> s * [1.0] FdSymbolF-Bold
-    <7.1-> s * [1.0] FdSymbolF-Bold
-}{}
-\DeclareSymbolFont{fdsdelims}{U}{FdSymbolF}{m}{n}
-\SetSymbolFont{fdsdelims}{bold}{U}{FdSymbolF}{b}{n}
-\DeclareMathDelimiter{\ullcorner}{\mathopen}
-  {fdsdelims}{"4F}{fdsdelims}{"4F}
-\DeclareMathDelimiter{\ulrcorner}{\mathclose}
-  {fdsdelims}{"55}{fdsdelims}{"55}
-"""
-
+mpl.use("pgf")
 plt.rcParams.update(
     {
+        "pgf.texsystem": "lualatex",
+        "pgf.preamble": r"\providecommand{\mathdefault}[1]{#1}",
         "text.usetex": True,
-        "text.latex.preamble": PREAMBLE.replace("\n", " ").replace("  ", " "),
-        "font.family": "Libertinus Serif",
+        "font.family": "serif",
         "font.size": 14,
         "figure.titlesize": 16,
         "axes.titlesize": 15,
@@ -192,6 +151,7 @@ def benchmark_label(func_name: str, args: tuple[str, ...]) -> str | None:
         return None  # This version is slower than small_left, so don't plot it
     elif m := re.match(r"small_left<(\d+), (\d+)>", args[0]):
         abi_label = f"batmat {isa_str} (scalar {m.group(1)}, {m.group(2)})"
+        abi_label = f"batmat {isa_str} (scalar)"
     else:
         abi_label = "unknown"
 
@@ -466,15 +426,15 @@ def plot_gflops(log=False, x_lim_max=None):
     )
 
 
-plot_absolute()
-plt.savefig(filename.with_suffix(".abs.pdf"))
-plot_relative()
-plt.savefig(filename.with_suffix(".rel.pdf"))
-plot_gflops(True)
-plt.savefig(filename.with_suffix(".gflops.pdf"))
-plot_gflops(False, 64)
-plt.savefig(filename.with_suffix(".gflops64.pdf"))
-plot_gflops(False, 120)
-plt.savefig(filename.with_suffix(".gflops120.pdf"))
+print(filename.parent.absolute())
 
-plt.show()
+plot_absolute()
+plt.savefig(filename.with_suffix(".abs.pgf"))
+plot_relative()
+plt.savefig(filename.with_suffix(".rel.pgf"))
+plot_gflops(True)
+plt.savefig(filename.with_suffix(".gflops.pgf"))
+plot_gflops(False, 64)
+plt.savefig(filename.with_suffix(".gflops64.pgf"))
+plot_gflops(False, 120)
+plt.savefig(filename.with_suffix(".gflops120.pgf"))
