@@ -66,7 +66,7 @@ class BatmatRecipe(ConanFile):
     def requirements(self):
         self.requires("guanaqo/1.0.0-alpha.28", transitive_headers=True, transitive_libs=True)
         if self.options.get_safe("with_benchmarks"):
-            self.requires("benchmark/1.9.4")
+            self.requires("benchmark/1.9.5")
             self.requires("hyhound/1.1.1")
         if self.options.get_safe("with_openmp") and self.settings.compiler == "clang":
             self.requires(f"llvm-openmp/[~{self.settings.compiler.version}]")

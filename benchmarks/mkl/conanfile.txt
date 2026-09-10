@@ -1,5 +1,5 @@
 [requires]
-benchmark/1.9.4
+benchmark/1.9.5
 [tool_requires]
 cmake/[>=3.25 <5]
 [generators]
