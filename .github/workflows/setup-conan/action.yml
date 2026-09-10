@@ -31,7 +31,7 @@ runs:
     shell: bash
     run: >
       pip install -U pip build
-      conan~=2.21.0 'py-build-cmake~=0.6.0a2'
+      conan~=2.32.0 'py-build-cmake~=0.6.0a2'
 
   - name: Configure sccache version
     shell: bash
