@@ -7,11 +7,55 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 
+PREAMBLE = r"""
+\usepackage{fontspec}
+\usepackage[T1]{fontenc}
+\setmainfont{Libertinus Serif}
+
+\usepackage{unicode-math}
+\setmathfont{Latin Modern Math}
+\setmathfont{STIX Two Math}[range={"25B9}]
+\setmathfont{Asana Math}[range={"2A2F}]
+\setmathfont{Libertinus Math}[range=\mathbb]
+\setmathfont[range={cal,bfcal}]{cmsy10}
+
+% Helpers to change the font on the fly
+\setmathfontface\lmmath{Latin Modern Math}
+\setmathfontface\libmath{Libertinus Math}
+\setmathfontface\stixtwomath{STIX Two Math}
+
+\newcommand\mathcall[1]{\libmath{\symscr{#1}}}
+
+% Script fonts for math
+\usepackage[scr=esstix]{mathalpha}
+\usepackage[notext,nomath]{stix}
+
+% Type writer font
+\setmonofont[BoldFont={Fira Code Medium},Scale=0.8]{Fira Code}
+
+% Extract some symbols from other fonts
+\DeclareFontFamily{U}{FdSymbolF}{}
+\DeclareFontShape{U}{FdSymbolF}{m}{n}{
+    <-7.1> s * [1.0] FdSymbolF-Demi
+    <7.1-> s * [1.0] FdSymbolF-Demi
+}{}
+\DeclareFontShape{U}{FdSymbolF}{b}{n}{
+    <-7.1> s * [1.0] FdSymbolF-Bold
+    <7.1-> s * [1.0] FdSymbolF-Bold
+}{}
+\DeclareSymbolFont{fdsdelims}{U}{FdSymbolF}{m}{n}
+\SetSymbolFont{fdsdelims}{bold}{U}{FdSymbolF}{b}{n}
+\DeclareMathDelimiter{\ullcorner}{\mathopen}
+  {fdsdelims}{"4F}{fdsdelims}{"4F}
+\DeclareMathDelimiter{\ulrcorner}{\mathclose}
+  {fdsdelims}{"55}{fdsdelims}{"55}
+"""
+
 plt.rcParams.update(
     {
         "text.usetex": True,
-        "text.latex.preamble": r"\renewcommand{\sfdefault}{phv}\renewcommand{\rmdefault}{ptm}",
-        "font.family": "ptm",
+        "text.latex.preamble": PREAMBLE.replace("\n", " ").replace("  ", " "),
+        "font.family": "Libertinus Serif",
         "font.size": 14,
         "figure.titlesize": 16,
         "axes.titlesize": 15,
@@ -145,8 +189,9 @@ def benchmark_label(func_name: str, args: tuple[str, ...]) -> str | None:
         abi_label = f"batmat {isa_str} (8)"
     elif m := re.match(r"small<(\d+)>", args[0]):
         abi_label = f"batmat {isa_str} (scalar {m.group(1)})"
+        return None  # This version is slower than small_left, so don't plot it
     elif m := re.match(r"small_left<(\d+), (\d+)>", args[0]):
-        abi_label = f"batmat {isa_str} (scalar left {m.group(1)}, {m.group(2)})"
+        abi_label = f"batmat {isa_str} (scalar {m.group(1)}, {m.group(2)})"
     else:
         abi_label = "unknown"
 
@@ -172,6 +217,7 @@ def benchmark_label(func_name: str, args: tuple[str, ...]) -> str | None:
             elif args[3].lower() == "transpose" and args[4].lower() == "always":
                 tiling_label = " ($A$ transpose, $B$ full packing)"
                 tiling_label = " (with packing)"
+                tiling_label = ""  # TODO: too much information for thesis figures
         return f"{abi_label}{tiling_label}"
     return abi_label
 
