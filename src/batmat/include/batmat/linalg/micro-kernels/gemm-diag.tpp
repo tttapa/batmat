@@ -49,18 +49,11 @@ gemm_diag_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T,
     // the matmul kernel and the loading/storing of C, which will cause it to
     // place C_reg on the stack, resulting in many unnecessary loads and stores.
     BATMAT_ASSUME(k > 0);
-    // Load accumulator into registers
+    // Keep C loads out of the FMA dependency chains.
     simd C_reg[RowsReg][ColsReg]; // NOLINT(*-c-arrays)
-    if (C) [[likely]] {
-        const auto C_cached = with_cached_access<RowsReg, ColsReg>(*C);
-        UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
-            UNROLL_FOR (index_t jj = min_col(ii); jj <= max_col(ii); ++jj)
-                C_reg[ii][jj] = C_cached.load(ii, jj);
-    } else {
-        UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
-            UNROLL_FOR (index_t jj = min_col(ii); jj <= max_col(ii); ++jj)
-                C_reg[ii][jj] = simd{0};
-    }
+    UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
+        UNROLL_FOR (index_t jj = min_col(ii); jj <= max_col(ii); ++jj)
+            C_reg[ii][jj] = simd{0};
 
     const auto A_cached = with_cached_access<RowsReg, 0>(A);
     const auto B_cached = with_cached_access<0, ColsReg>(B);
@@ -86,6 +79,13 @@ gemm_diag_copy_microkernel(const uview<const T, Abi, OA> A, const uview<const T,
                 if (first_nonzero < 0)
                     first_nonzero = l;
             }
+    }
+
+    if (C) [[likely]] {
+        const auto C_cached = with_cached_access<RowsReg, ColsReg>(*C);
+        UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
+            UNROLL_FOR (index_t jj = min_col(ii); jj <= max_col(ii); ++jj)
+                C_reg[ii][jj] += C_cached.load(ii, jj);
     }
 
     const auto D_cached = with_cached_access<RowsReg, ColsReg>(D);

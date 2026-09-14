@@ -64,16 +64,12 @@ potrf_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T, Ab
     static_assert(RowsReg > 0);
     using ops::rsqrt;
     using simd = datapar::simd<T, Abi>;
-    // Pre-compute the offsets of the columns of C
-    const auto C_cached = with_cached_access<RowsReg, RowsReg>(C);
-    // Load matrix into registers
+    // Keep C loads out of the FMA dependency chains.
     simd C_reg[RowsReg * (RowsReg + 1) / 2]; // NOLINT(*-c-arrays)
     const auto index = [](index_t r, index_t c) { return c * (2 * RowsReg - 1 - c) / 2 + r; };
-    UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
-        UNROLL_FOR (index_t jj = 0; jj < ii; ++jj)
-            C_reg[index(ii, jj)] = C_cached.load(ii, jj);
-        C_reg[index(ii, ii)] = C_cached.load(ii, ii) + simd(regularization);
-    }
+    UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
+        UNROLL_FOR (index_t jj = 0; jj <= ii; ++jj)
+            C_reg[index(ii, jj)] = simd{0};
     // Perform syrk operation of A
     const auto A1_cached = with_cached_access<RowsReg, 0>(A1);
     for (index_t l = 0; l < k1; ++l) {
@@ -97,6 +93,12 @@ potrf_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T, Ab
                 Cij -= Ail * Blj;
             }
         }
+    const auto C_cached = with_cached_access<RowsReg, RowsReg>(C);
+    UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii) {
+        UNROLL_FOR (index_t jj = 0; jj < ii; ++jj)
+            C_reg[index(ii, jj)] += C_cached.load(ii, jj);
+        C_reg[index(ii, ii)] += C_cached.load(ii, ii) + simd(regularization);
+    }
 #if 1
     // Actual Cholesky kernel (Cholesky–Crout)
     UNROLL_FOR (index_t j = 0; j < RowsReg; ++j) {
@@ -173,13 +175,11 @@ void trsm_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T
     static_assert(RowsReg > 0 && ColsReg > 0);
     using ops::rsqrt;
     using simd = datapar::simd<T, Abi>;
-    // Pre-compute the offsets of the columns of C
-    const auto C_cached = with_cached_access<RowsReg, ColsReg>(C);
-    // Load matrix into registers
+    // Keep C loads out of the FMA dependency chains.
     simd C_reg[RowsReg][ColsReg]; // NOLINT(*-c-arrays)
     UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
         UNROLL_FOR (index_t jj = 0; jj < ColsReg; ++jj)
-            C_reg[ii][jj] = C_cached.load(ii, jj);
+            C_reg[ii][jj] = simd{0};
     // Perform gemm operation of A and B
     const auto A1_cached = with_cached_access<RowsReg, 0>(A1);
     const auto B1_cached = with_cached_access<ColsReg, 0>(B1);
@@ -205,6 +205,10 @@ void trsm_copy_microkernel(const uview<const T, Abi, O1> A1, const uview<const T
                 Cij -= Ail * Blj;
             }
         }
+    const auto C_cached = with_cached_access<RowsReg, ColsReg>(C);
+    UNROLL_FOR (index_t ii = 0; ii < RowsReg; ++ii)
+        UNROLL_FOR (index_t jj = 0; jj < ColsReg; ++jj)
+            C_reg[ii][jj] += C_cached.load(ii, jj);
     // Triangular solve
     UNROLL_FOR (index_t jj = 0; jj < RowsReg; ++jj)
         UNROLL_FOR (index_t ii = 0; ii < ColsReg; ++ii) {
