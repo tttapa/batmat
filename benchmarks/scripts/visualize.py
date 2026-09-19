@@ -135,7 +135,7 @@ def add_reference_columns(df: pd.DataFrame, metrics):
 def benchmark_label(func_name: str, args: tuple[str, ...]) -> str | None:
     # Map ABI
     impl = "hyhound" if func_name == "hyh" else "MKL"
-    isa_str = "AVX2" if isa == "avx2" else "AVX-512" if isa == "avx512" else isa
+    isa_str = "AVX2" if isa == "avx2" else "AVX-512" if isa == "avx512f" else isa
     if args[0] == "scalar":
         abi_label = f"{impl} {isa_str}"
     elif args[0] == "blasfeo":
@@ -395,7 +395,7 @@ def plot_partitioned(
             axes[r, 0].set_ylabel(ylabel)
 
         for c in range(ncols):
-            axes[-1, c].set_xlabel("Matrix size")
+            axes[-1, c].set_xlabel("Matrix size $n$")
 
         # fig.suptitle(title, fontsize=15)
         plt.tight_layout()
