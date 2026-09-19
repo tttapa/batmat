@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="group__topic-utilities" kind="group">
+    <compoundname>topic-utilities</compoundname>
+    <title>Topic-utilities</title>
+    <innerfile refid="norms_8hpp">norms.hpp</innerfile>
+    <innerclass refid="structbatmat_1_1linalg_1_1norms" prot="public">batmat::linalg::norms</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4" prot="public">batmat::linalg::norms&lt; T, void &gt;</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

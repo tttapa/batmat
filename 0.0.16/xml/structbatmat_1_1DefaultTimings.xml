@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1DefaultTimings" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::DefaultTimings</compoundname>
+    <includes refid="timing_8hpp" local="no">batmat/timing.hpp</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1DefaultTimings_1aff53271edfb6ae2d0298aac409810c3d" prot="public" static="no" mutable="no">
+        <type>int64_t</type>
+        <definition>int64_t batmat::DefaultTimings::num_invocations</definition>
+        <argsstring></argsstring>
+        <name>num_invocations</name>
+        <qualifiedname>batmat::DefaultTimings::num_invocations</qualifiedname>
+        <initializer>{}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/timing.hpp" line="21" column="13" bodyfile="batmat/include/batmat/timing.hpp" bodystart="21" bodyend="21"/>
+        <referencedby refid="namespacebatmat_1aafc9b52d8b52e8e01bd08e2cc2067e49" compoundref="timing_8cpp" startline="8" endline="18">batmat::operator&lt;&lt;</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1DefaultTimings_1aef980ddec7421dc88141f844e8f886c3" prot="public" static="no" mutable="no">
+        <type>std::chrono::nanoseconds</type>
+        <definition>std::chrono::nanoseconds batmat::DefaultTimings::wall_time</definition>
+        <argsstring></argsstring>
+        <name>wall_time</name>
+        <qualifiedname>batmat::DefaultTimings::wall_time</qualifiedname>
+        <initializer>{}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/timing.hpp" line="22" column="30" bodyfile="batmat/include/batmat/timing.hpp" bodystart="22" bodyend="22"/>
+        <referencedby refid="namespacebatmat_1aafc9b52d8b52e8e01bd08e2cc2067e49" compoundref="timing_8cpp" startline="8" endline="18">batmat::operator&lt;&lt;</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Measures the number of invocations of a specific piece of code and its run time. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::DefaultTimings</label>
+        <link refid="structbatmat_1_1DefaultTimings"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/timing.hpp" line="20" column="1" bodyfile="batmat/include/batmat/timing.hpp" bodystart="20" bodyend="23"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1DefaultTimings_1aff53271edfb6ae2d0298aac409810c3d" prot="public" virt="non-virtual"><scope>batmat::DefaultTimings</scope><name>num_invocations</name></member>
+      <member refid="structbatmat_1_1DefaultTimings_1aef980ddec7421dc88141f844e8f886c3" prot="public" virt="non-virtual"><scope>batmat::DefaultTimings</scope><name>wall_time</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

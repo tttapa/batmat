@@ -1,0 +1,533 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf" kind="namespace" language="C++">
+    <compoundname>batmat::linalg::micro_kernels::sterf</compoundname>
+    <innerclass refid="structbatmat_1_1linalg_1_1micro__kernels_1_1sterf_1_1SterfOptions" prot="public">batmat::linalg::micro_kernels::sterf::SterfOptions</innerclass>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a079bd908454a6eb4e87b9fcaa3844f25" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>std::expected&lt; <ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref>, <ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref> &gt;</type>
+        <definition>std::expected&lt; index_t, index_t &gt; batmat::linalg::micro_kernels::sterf::sterf</definition>
+        <argsstring>(view&lt; T, Abi, StorageOrder::ColMajor &gt; diag, view&lt; T, Abi, StorageOrder::ColMajor &gt; subdiag, SterfOptions options) noexcept</argsstring>
+        <name>sterf</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sterf::sterf</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>diag</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>subdiag</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1sterf_1_1SterfOptions" kindref="compound">SterfOptions</ref></type>
+          <declname>options</declname>
+        </param>
+        <briefdescription>
+<para>Eigenvalues of a symmetric tridiagonal matrix given by <computeroutput>diag</computeroutput> and <computeroutput>subdiag</computeroutput>, computed in-place using the Pal-Walker-Kahan variant of the implicit QR/QL method with Wilkinson shifts. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Based on LAPACK 3.12.1&apos;s <computeroutput>STERF</computeroutput>: <ulink url="https://netlib.org/lapack//explore-html/d4/d9d/group__sterf_gad293bb81da1c7785b42796d1e197f08c.html">https://netlib.org/lapack//explore-html/d4/d9d/group__sterf_gad293bb81da1c7785b42796d1e197f08c.html</ulink> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" line="227" column="15" bodyfile="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" bodystart="227" bodyend="307" declfile="batmat/include/batmat/linalg/micro-kernels/sterf.hpp" declline="18" declcolumn="1"/>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1acf89453f12694b1bdc021a6fe472e3e8" compoundref="sterf_8tpp" startline="39" endline="42">all_zero</references>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a9cb65083c8cf52f255c38ac2658ffc8d" compoundref="sterf_8tpp" startline="215" endline="220">block_norm_estimate_from_squared_e</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a98514341ee88222ca2f105f9e7c3677f" compoundref="sterf_8tpp" startline="16" endline="18">default_tolerance</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a84e59bc69f5cb0f4f3dd9da7bf78afdf" compoundref="uview_8hpp" startline="100" endline="102">batmat::linalg::uview&lt; T, Abi, Order &gt;::load</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1ae572e052c5b681a0255e1906d6b65bed" compoundref="sterf_8tpp" startline="45" endline="50">negligible_squared_e</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a84fedac3bd0f80b387a4972bc46b37d8" compoundref="sterf_8tpp" startline="21" endline="36">safe_scaling_factor</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1ac54f1b498ffa0f5c3f67489648c9ab25" compoundref="sterf_8tpp" startline="88" endline="95">scale_squared_e</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1abfe3376bd6a03c92460fae606c9ea134" compoundref="sterf_8tpp" startline="70" endline="78">solve_2x2_squared_e_inplace</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a079bd908454a6eb4e87b9fcaa3844f25" compoundref="sterf_8tpp" startline="227" endline="307">sterf</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a700d60d5449ce87cf06705451628e369" compoundref="sterf_8tpp" startline="180" endline="190">sterf_dynamic_step_squared_e_inplace</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a4542c3d6af85ceb8fd44acf1dd3ab5b1" compoundref="uview_8hpp" startline="104" endline="108">batmat::linalg::uview&lt; T, Abi, Order &gt;::store</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a35aca12aac8224561a1be3fe0c399ca4" compoundref="sterf_8hpp" startline="19" endline="33">batmat::linalg::detail::sterf</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a079bd908454a6eb4e87b9fcaa3844f25" compoundref="sterf_8tpp" startline="227" endline="307">sterf</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a98514341ee88222ca2f105f9e7c3677f" prot="public" static="no" nodiscard="yes" constexpr="yes" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto batmat::linalg::micro_kernels::sterf::default_tolerance</definition>
+        <argsstring>(auto user_tol) noexcept</argsstring>
+        <name>default_tolerance</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sterf::default_tolerance</qualifiedname>
+        <param>
+          <type>auto</type>
+          <declname>user_tol</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" line="16" column="17" bodyfile="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" bodystart="16" bodyend="18"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a079bd908454a6eb4e87b9fcaa3844f25" compoundref="sterf_8tpp" startline="227" endline="307">sterf</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a84fedac3bd0f80b387a4972bc46b37d8" prot="public" static="no" nodiscard="yes" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+        <definition>datapar::simd&lt; T, Abi &gt; batmat::linalg::micro_kernels::sterf::safe_scaling_factor</definition>
+        <argsstring>(datapar::simd&lt; T, Abi &gt; anorm) noexcept</argsstring>
+        <name>safe_scaling_factor</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sterf::safe_scaling_factor</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+          <declname>anorm</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" line="21" column="16" bodyfile="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" bodystart="21" bodyend="36"/>
+        <references refid="namespacebatmat_1_1datapar_1ad0c6f39983831e00225b0ebc6088c5eb" compoundref="simd_8hpp" startline="245" endline="248">batmat::datapar::select</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a079bd908454a6eb4e87b9fcaa3844f25" compoundref="sterf_8tpp" startline="227" endline="307">sterf</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1acf89453f12694b1bdc021a6fe472e3e8" prot="public" static="no" nodiscard="yes" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool batmat::linalg::micro_kernels::sterf::all_zero</definition>
+        <argsstring>(datapar::simd&lt; T, Abi &gt; x) noexcept</argsstring>
+        <name>all_zero</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sterf::all_zero</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" line="39" column="7" bodyfile="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" bodystart="39" bodyend="42"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a079bd908454a6eb4e87b9fcaa3844f25" compoundref="sterf_8tpp" startline="227" endline="307">sterf</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1ae572e052c5b681a0255e1906d6b65bed" prot="public" static="no" nodiscard="yes" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool batmat::linalg::micro_kernels::sterf::negligible_squared_e</definition>
+        <argsstring>(datapar::simd&lt; T, Abi &gt; e0_sq, datapar::simd&lt; T, Abi &gt; d0, datapar::simd&lt; T, Abi &gt; d1, T ε_sq) noexcept</argsstring>
+        <name>negligible_squared_e</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sterf::negligible_squared_e</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+          <declname>e0_sq</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+          <declname>d0</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+          <declname>d1</declname>
+        </param>
+        <param>
+          <type>T</type>
+          <declname>ε_sq</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" line="45" column="7" bodyfile="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" bodystart="45" bodyend="50"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a079bd908454a6eb4e87b9fcaa3844f25" compoundref="sterf_8tpp" startline="227" endline="307">sterf</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1abfe7ebb67090f6ed3a12de3fbf3a4ff1" prot="public" static="no" nodiscard="yes" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>std::pair&lt; <ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;, <ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt; &gt;</type>
+        <definition>std::pair&lt; datapar::simd&lt; T, Abi &gt;, datapar::simd&lt; T, Abi &gt; &gt; batmat::linalg::micro_kernels::sterf::stable_2x2_eigenvalues</definition>
+        <argsstring>(datapar::simd&lt; T, Abi &gt; a, datapar::simd&lt; T, Abi &gt; b, datapar::simd&lt; T, Abi &gt; c) noexcept</argsstring>
+        <name>stable_2x2_eigenvalues</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sterf::stable_2x2_eigenvalues</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+          <declname>a</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+          <declname>b</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+<para>Eigenvalues of [a b; b c]. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" line="55" column="1" bodyfile="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" bodystart="55" bodyend="67"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1abfe3376bd6a03c92460fae606c9ea134" compoundref="sterf_8tpp" startline="70" endline="78">solve_2x2_squared_e_inplace</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1abfe3376bd6a03c92460fae606c9ea134" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::sterf::solve_2x2_squared_e_inplace</definition>
+        <argsstring>(uview&lt; T, Abi, StorageOrder::ColMajor &gt; d, uview&lt; T, Abi, StorageOrder::ColMajor &gt; e, index_t l) noexcept</argsstring>
+        <name>solve_2x2_squared_e_inplace</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sterf::solve_2x2_squared_e_inplace</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>d</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>e</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+          <declname>l</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" line="70" column="6" bodyfile="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" bodystart="70" bodyend="78"/>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1abfe7ebb67090f6ed3a12de3fbf3a4ff1" compoundref="sterf_8tpp" startline="55" endline="67">stable_2x2_eigenvalues</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a079bd908454a6eb4e87b9fcaa3844f25" compoundref="sterf_8tpp" startline="227" endline="307">sterf</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1aef6b59b06c70f97e5b4572a26450df7e" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::sterf::scale_diag_only</definition>
+        <argsstring>(uview&lt; T, Abi, StorageOrder::ColMajor &gt; d, index_t l, index_t m, datapar::simd&lt; T, Abi &gt; factor) noexcept</argsstring>
+        <name>scale_diag_only</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sterf::scale_diag_only</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>d</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+          <declname>m</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+          <declname>factor</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" line="81" column="6" bodyfile="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" bodystart="81" bodyend="85"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1ac54f1b498ffa0f5c3f67489648c9ab25" compoundref="sterf_8tpp" startline="88" endline="95">scale_squared_e</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1ac54f1b498ffa0f5c3f67489648c9ab25" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::sterf::scale_squared_e</definition>
+        <argsstring>(uview&lt; T, Abi, StorageOrder::ColMajor &gt; d, uview&lt; T, Abi, StorageOrder::ColMajor &gt; e, index_t l, index_t m, datapar::simd&lt; T, Abi &gt; factor) noexcept</argsstring>
+        <name>scale_squared_e</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sterf::scale_squared_e</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>d</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>e</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+          <declname>m</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+          <declname>factor</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" line="88" column="6" bodyfile="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" bodystart="88" bodyend="95"/>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1aef6b59b06c70f97e5b4572a26450df7e" compoundref="sterf_8tpp" startline="81" endline="85">scale_diag_only</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a079bd908454a6eb4e87b9fcaa3844f25" compoundref="sterf_8tpp" startline="227" endline="307">sterf</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a34de8f8dc3e427338ce4f9116ba446ac" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::sterf::sterf_ql_sweep_squared_e_inplace</definition>
+        <argsstring>(uview&lt; T, Abi, StorageOrder::ColMajor &gt; d, uview&lt; T, Abi, StorageOrder::ColMajor &gt; e, index_t l, index_t m) noexcept</argsstring>
+        <name>sterf_ql_sweep_squared_e_inplace</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sterf::sterf_ql_sweep_squared_e_inplace</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>d</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>e</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+          <declname>m</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" line="98" column="6" bodyfile="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" bodystart="98" bodyend="136"/>
+        <references refid="namespacebatmat_1_1datapar_1ad0c6f39983831e00225b0ebc6088c5eb" compoundref="simd_8hpp" startline="245" endline="248">batmat::datapar::select</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a700d60d5449ce87cf06705451628e369" compoundref="sterf_8tpp" startline="180" endline="190">sterf_dynamic_step_squared_e_inplace</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1ab0b02d4f8b9034c5d8e0ac1c2a4faa49" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::sterf::sterf_qr_sweep_squared_e_inplace</definition>
+        <argsstring>(uview&lt; T, Abi, StorageOrder::ColMajor &gt; d, uview&lt; T, Abi, StorageOrder::ColMajor &gt; e, index_t l, index_t m) noexcept</argsstring>
+        <name>sterf_qr_sweep_squared_e_inplace</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sterf::sterf_qr_sweep_squared_e_inplace</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>d</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>e</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+          <declname>m</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" line="139" column="6" bodyfile="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" bodystart="139" bodyend="177"/>
+        <references refid="namespacebatmat_1_1datapar_1ad0c6f39983831e00225b0ebc6088c5eb" compoundref="simd_8hpp" startline="245" endline="248">batmat::datapar::select</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a700d60d5449ce87cf06705451628e369" compoundref="sterf_8tpp" startline="180" endline="190">sterf_dynamic_step_squared_e_inplace</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a700d60d5449ce87cf06705451628e369" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::sterf::sterf_dynamic_step_squared_e_inplace</definition>
+        <argsstring>(uview&lt; T, Abi, StorageOrder::ColMajor &gt; d, uview&lt; T, Abi, StorageOrder::ColMajor &gt; e, index_t l, index_t m) noexcept</argsstring>
+        <name>sterf_dynamic_step_squared_e_inplace</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sterf::sterf_dynamic_step_squared_e_inplace</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>d</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>e</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+          <declname>m</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" line="180" column="6" bodyfile="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" bodystart="180" bodyend="190"/>
+        <references refid="namespacebatmat_1_1datapar_1a722b9edce8253cf9198fcf60f3052939" compoundref="simd_8hpp" startline="244" endline="244">batmat::datapar::reduce_count</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a34de8f8dc3e427338ce4f9116ba446ac" compoundref="sterf_8tpp" startline="98" endline="136">sterf_ql_sweep_squared_e_inplace</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1ab0b02d4f8b9034c5d8e0ac1c2a4faa49" compoundref="sterf_8tpp" startline="139" endline="177">sterf_qr_sweep_squared_e_inplace</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a079bd908454a6eb4e87b9fcaa3844f25" compoundref="sterf_8tpp" startline="227" endline="307">sterf</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a3a4c378b882fdef1bbb927cf752cdb65" prot="public" static="no" nodiscard="yes" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+        <definition>datapar::simd&lt; T, Abi &gt; batmat::linalg::micro_kernels::sterf::squared_block_norm_estimate_from_squared_e</definition>
+        <argsstring>(uview&lt; T, Abi, StorageOrder::ColMajor &gt; d, uview&lt; T, Abi, StorageOrder::ColMajor &gt; e_sq, index_t l, index_t m) noexcept</argsstring>
+        <name>squared_block_norm_estimate_from_squared_e</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sterf::squared_block_norm_estimate_from_squared_e</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>d</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>e_sq</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+          <declname>m</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" line="194" column="1" bodyfile="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" bodystart="194" bodyend="211"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a9cb65083c8cf52f255c38ac2658ffc8d" compoundref="sterf_8tpp" startline="215" endline="220">block_norm_estimate_from_squared_e</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a9cb65083c8cf52f255c38ac2658ffc8d" prot="public" static="no" nodiscard="yes" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+        <definition>datapar::simd&lt; T, Abi &gt; batmat::linalg::micro_kernels::sterf::block_norm_estimate_from_squared_e</definition>
+        <argsstring>(uview&lt; T, Abi, StorageOrder::ColMajor &gt; d, uview&lt; T, Abi, StorageOrder::ColMajor &gt; e_sq, index_t l, index_t m) noexcept</argsstring>
+        <name>block_norm_estimate_from_squared_e</name>
+        <qualifiedname>batmat::linalg::micro_kernels::sterf::block_norm_estimate_from_squared_e</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>d</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, StorageOrder::ColMajor &gt;</type>
+          <declname>e_sq</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref></type>
+          <declname>m</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" line="215" column="1" bodyfile="batmat/include/batmat/linalg/micro-kernels/sterf.tpp" bodystart="215" bodyend="220"/>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a3a4c378b882fdef1bbb927cf752cdb65" compoundref="sterf_8tpp" startline="194" endline="211">squared_block_norm_estimate_from_squared_e</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a079bd908454a6eb4e87b9fcaa3844f25" compoundref="sterf_8tpp" startline="227" endline="307">sterf</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/micro-kernels/sterf.hpp" line="8" column="1"/>
+  </compounddef>
+</doxygen>

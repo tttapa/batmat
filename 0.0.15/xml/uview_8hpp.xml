@@ -1,0 +1,697 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="uview_8hpp" kind="file" language="C++">
+    <compoundname>uview.hpp</compoundname>
+    <includes refid="assume_8hpp" local="no">batmat/assume.hpp</includes>
+    <includes local="no">batmat/config.hpp</includes>
+    <includes refid="matrix_8hpp" local="no">batmat/matrix/matrix.hpp</includes>
+    <includes refid="view_8hpp" local="no">batmat/matrix/view.hpp</includes>
+    <includes refid="simd_8hpp" local="no">batmat/simd.hpp</includes>
+    <includes refid="unroll_8h" local="no">batmat/unroll.h</includes>
+    <includes local="no">cstddef</includes>
+    <includes local="no">type_traits</includes>
+    <includes local="no">utility</includes>
+    <includedby refid="compress_8hpp" local="no">batmat/include/batmat/linalg/compress.hpp</includedby>
+    <includedby refid="copy_8hpp" local="no">batmat/include/batmat/linalg/copy.hpp</includedby>
+    <includedby refid="gemm-diag_8hpp" local="no">batmat/include/batmat/linalg/gemm-diag.hpp</includedby>
+    <includedby refid="gemm_8hpp" local="no">batmat/include/batmat/linalg/gemm.hpp</includedby>
+    <includedby refid="gemv_8hpp" local="no">batmat/include/batmat/linalg/gemv.hpp</includedby>
+    <includedby refid="hyhound_8hpp" local="no">batmat/include/batmat/linalg/hyhound.hpp</includedby>
+    <includedby refid="micro-kernels_2gemm-diag_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp</includedby>
+    <includedby refid="gemm-diag_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/gemm-diag.tpp</includedby>
+    <includedby refid="micro-kernels_2gemm_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/gemm.hpp</includedby>
+    <includedby refid="gemm_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/gemm.tpp</includedby>
+    <includedby refid="micro-kernels_2gemv_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/gemv.hpp</includedby>
+    <includedby refid="gemv_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/gemv.tpp</includedby>
+    <includedby refid="micro-kernels_2hyhound_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/hyhound.hpp</includedby>
+    <includedby refid="hyhound_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/hyhound.tpp</includedby>
+    <includedby refid="micro-kernels_2potrf_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/potrf.hpp</includedby>
+    <includedby refid="potrf_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/potrf.tpp</includedby>
+    <includedby refid="micro-kernels_2symv_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/symv.hpp</includedby>
+    <includedby refid="symv_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/symv.tpp</includedby>
+    <includedby refid="micro-kernels_2syomv_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/syomv.hpp</includedby>
+    <includedby refid="syomv_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/syomv.tpp</includedby>
+    <includedby refid="micro-kernels_2trsm_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/trsm.hpp</includedby>
+    <includedby refid="trsm_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/trsm.tpp</includedby>
+    <includedby refid="micro-kernels_2trtri_8hpp" local="no">batmat/include/batmat/linalg/micro-kernels/trtri.hpp</includedby>
+    <includedby refid="trtri_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/trtri.tpp</includedby>
+    <includedby refid="potrf_8hpp" local="no">batmat/include/batmat/linalg/potrf.hpp</includedby>
+    <includedby refid="symm_8hpp" local="no">batmat/include/batmat/linalg/symm.hpp</includedby>
+    <includedby refid="symv_8hpp" local="no">batmat/include/batmat/linalg/symv.hpp</includedby>
+    <includedby refid="syomv_8hpp" local="no">batmat/include/batmat/linalg/syomv.hpp</includedby>
+    <includedby refid="trsm_8hpp" local="no">batmat/include/batmat/linalg/trsm.hpp</includedby>
+    <includedby refid="trtri_8hpp" local="no">batmat/include/batmat/linalg/trtri.hpp</includedby>
+    <incdepgraph>
+      <node id="2">
+        <label>batmat/assume.hpp</label>
+        <link refid="assume_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/uview.hpp</label>
+        <link refid="uview_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>batmat/matrix/layout.hpp</label>
+        <link refid="layout_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>batmat/matrix/matrix.hpp</label>
+        <link refid="matrix_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>batmat/matrix/storage.hpp</label>
+        <link refid="storage_8hpp"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>batmat/matrix/view.hpp</label>
+        <link refid="view_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="16">
+        <label>batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>batmat/unroll.h</label>
+        <link refid="unroll_8h"/>
+        <childnode refid="18" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>batmat/config.hpp</label>
+      </node>
+      <node id="7">
+        <label>cstddef</label>
+      </node>
+      <node id="19">
+        <label>experimental/simd</label>
+      </node>
+      <node id="4">
+        <label>guanaqo/assume.hpp</label>
+      </node>
+      <node id="14">
+        <label>guanaqo/mat-view.hpp</label>
+      </node>
+      <node id="18">
+        <label>guanaqo/stringify.h</label>
+      </node>
+      <node id="8">
+        <label>memory</label>
+      </node>
+      <node id="9">
+        <label>new</label>
+      </node>
+      <node id="10">
+        <label>tuple</label>
+      </node>
+      <node id="11">
+        <label>type_traits</label>
+      </node>
+      <node id="15">
+        <label>utility</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>batmat/include/batmat/linalg/compress.hpp</label>
+        <link refid="compress_8hpp"/>
+      </node>
+      <node id="3">
+        <label>batmat/include/batmat/linalg/copy.hpp</label>
+        <link refid="copy_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>batmat/include/batmat/linalg/gemm-diag.hpp</label>
+        <link refid="gemm-diag_8hpp"/>
+      </node>
+      <node id="6">
+        <label>batmat/include/batmat/linalg/gemm.hpp</label>
+        <link refid="gemm_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>batmat/include/batmat/linalg/gemv.hpp</label>
+        <link refid="gemv_8hpp"/>
+      </node>
+      <node id="8">
+        <label>batmat/include/batmat/linalg/hyhound.hpp</label>
+        <link refid="hyhound_8hpp"/>
+      </node>
+      <node id="11">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp</label>
+        <link refid="micro-kernels_2gemm-diag_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm-diag.tpp</label>
+        <link refid="gemm-diag_8tpp"/>
+      </node>
+      <node id="13">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm.hpp</label>
+        <link refid="micro-kernels_2gemm_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+      </node>
+      <node id="14">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm.tpp</label>
+        <link refid="gemm_8tpp"/>
+      </node>
+      <node id="15">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemv.hpp</label>
+        <link refid="micro-kernels_2gemv_8hpp"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="16">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemv.tpp</label>
+        <link refid="gemv_8tpp"/>
+      </node>
+      <node id="17">
+        <label>batmat/include/batmat/linalg/micro-kernels/hyhound.hpp</label>
+        <link refid="micro-kernels_2hyhound_8hpp"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+      </node>
+      <node id="18">
+        <label>batmat/include/batmat/linalg/micro-kernels/hyhound.tpp</label>
+        <link refid="hyhound_8tpp"/>
+      </node>
+      <node id="19">
+        <label>batmat/include/batmat/linalg/micro-kernels/potrf.hpp</label>
+        <link refid="micro-kernels_2potrf_8hpp"/>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="20">
+        <label>batmat/include/batmat/linalg/micro-kernels/potrf.tpp</label>
+        <link refid="potrf_8tpp"/>
+      </node>
+      <node id="21">
+        <label>batmat/include/batmat/linalg/micro-kernels/symv.hpp</label>
+        <link refid="micro-kernels_2symv_8hpp"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>batmat/include/batmat/linalg/micro-kernels/symv.tpp</label>
+        <link refid="symv_8tpp"/>
+      </node>
+      <node id="24">
+        <label>batmat/include/batmat/linalg/micro-kernels/syomv.hpp</label>
+        <link refid="micro-kernels_2syomv_8hpp"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+      </node>
+      <node id="25">
+        <label>batmat/include/batmat/linalg/micro-kernels/syomv.tpp</label>
+        <link refid="syomv_8tpp"/>
+      </node>
+      <node id="27">
+        <label>batmat/include/batmat/linalg/micro-kernels/trsm.hpp</label>
+        <link refid="micro-kernels_2trsm_8hpp"/>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="28">
+        <label>batmat/include/batmat/linalg/micro-kernels/trsm.tpp</label>
+        <link refid="trsm_8tpp"/>
+      </node>
+      <node id="29">
+        <label>batmat/include/batmat/linalg/micro-kernels/trtri.hpp</label>
+        <link refid="micro-kernels_2trtri_8hpp"/>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+      </node>
+      <node id="30">
+        <label>batmat/include/batmat/linalg/micro-kernels/trtri.tpp</label>
+        <link refid="trtri_8tpp"/>
+      </node>
+      <node id="9">
+        <label>batmat/include/batmat/linalg/potrf.hpp</label>
+        <link refid="potrf_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="32">
+        <label>batmat/include/batmat/linalg/symm.hpp</label>
+        <link refid="symm_8hpp"/>
+      </node>
+      <node id="23">
+        <label>batmat/include/batmat/linalg/symv.hpp</label>
+        <link refid="symv_8hpp"/>
+      </node>
+      <node id="26">
+        <label>batmat/include/batmat/linalg/syomv.hpp</label>
+        <link refid="syomv_8hpp"/>
+      </node>
+      <node id="10">
+        <label>batmat/include/batmat/linalg/trsm.hpp</label>
+        <link refid="trsm_8hpp"/>
+      </node>
+      <node id="31">
+        <label>batmat/include/batmat/linalg/trtri.hpp</label>
+        <link refid="trtri_8hpp"/>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/uview.hpp</label>
+        <link refid="uview_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>/home/runner/work/batmat/batmat/test_package/src/example.cpp</label>
+        <link refid="example_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structbatmat_1_1linalg_1_1simd__view__types" prot="public">batmat::linalg::simd_view_types</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1uview" prot="public">batmat::linalg::uview</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1uview__vec" prot="public">batmat::linalg::uview_vec</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1cached__uview" prot="public">batmat::linalg::cached_uview</innerclass>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg">batmat::linalg</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="assume_8hpp" kindref="compound">batmat/assume.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;batmat/config.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="matrix_8hpp" kindref="compound">batmat/matrix/matrix.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="view_8hpp" kindref="compound">batmat/matrix/view.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="simd_8hpp" kindref="compound">batmat/simd.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="unroll_8h" kindref="compound">batmat/unroll.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstddef&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;type_traits&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;utility&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg" kindref="compound">batmat::linalg</ref><sp/>{</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">guanaqo::StorageOrder</ref>;</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="19" refid="structbatmat_1_1linalg_1_1simd__view__types" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1simd__view__types" kindref="compound">simd_view_types</ref><sp/>{</highlight></codeline>
+<codeline lineno="20" refid="structbatmat_1_1linalg_1_1simd__view__types_1a3e4c25c327e2601ad1b9064219ddd175" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a3e4c25c327e2601ad1b9064219ddd175" kindref="member">value_type</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>T;</highlight></codeline>
+<codeline lineno="21" refid="structbatmat_1_1linalg_1_1simd__view__types_1a55758cb5da1d68a5c7725952a85bc5e2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a55758cb5da1d68a5c7725952a85bc5e2" kindref="member">simd</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;T, Abi&gt;</ref>;</highlight></codeline>
+<codeline lineno="22" refid="structbatmat_1_1linalg_1_1simd__view__types_1a19c154e6a5658f01ed58bc60cbebfad4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a19c154e6a5658f01ed58bc60cbebfad4" kindref="member">mask</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>simd::mask_type;</highlight></codeline>
+<codeline lineno="23" refid="structbatmat_1_1linalg_1_1simd__view__types_1a3d993ac48ac2aa24ba37174846a99d5a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a3d993ac48ac2aa24ba37174846a99d5a" kindref="member">isimd</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/><ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">datapar::deduced_simd</ref>&lt;index_t,<sp/>simd::size()&gt;;</highlight></codeline>
+<codeline lineno="24" refid="structbatmat_1_1linalg_1_1simd__view__types_1a42c8cc3abab740150c78041ab96af477" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a42c8cc3abab740150c78041ab96af477" kindref="member">simd_stride_t</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/><ref refid="namespacebatmat_1_1datapar_1a497d8b4d202d9476ad67782ba4d4feef" kindref="member">datapar::simd_size&lt;T, Abi&gt;</ref>;</highlight></codeline>
+<codeline lineno="25" refid="structbatmat_1_1linalg_1_1simd__view__types_1ad69ca1678bb5cf57ac70a816a1455801" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1ad69ca1678bb5cf57ac70a816a1455801" kindref="member">simd_align_t</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/><ref refid="namespacebatmat_1_1datapar_1a3cbb75e6685dbd98807439ac0dca33f0" kindref="member">datapar::simd_align&lt;T, Abi&gt;</ref>;</highlight></codeline>
+<codeline lineno="26" refid="structbatmat_1_1linalg_1_1simd__view__types_1af158ae038bbd6b881088c6425833723c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1af158ae038bbd6b881088c6425833723c" kindref="member">simd_stride</ref><sp/>=<sp/>simd_stride_t::value;</highlight></codeline>
+<codeline lineno="27" refid="structbatmat_1_1linalg_1_1simd__view__types_1a546e2ba05c974811cb6aedc72f60a144" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a546e2ba05c974811cb6aedc72f60a144" kindref="member">simd_align</ref><sp/><sp/>=<sp/>simd_align_t::value;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(<ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a546e2ba05c974811cb6aedc72f60a144" kindref="member">simd_align</ref><sp/>&lt;=<sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1af158ae038bbd6b881088c6425833723c" kindref="member">simd_stride</ref><sp/>*<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(T));</highlight></codeline>
+<codeline lineno="29" refid="structbatmat_1_1linalg_1_1simd__view__types_1aa6529f6b6d3cb02cf031e17adeda9e0d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1aa6529f6b6d3cb02cf031e17adeda9e0d" kindref="member">one_t</ref><sp/>=<sp/>std::integral_constant&lt;index_t,<sp/>1&gt;;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>S<sp/>=<sp/>T,<sp/>StorageOrder<sp/>O<sp/>=<sp/>StorageOrder::ColMajor&gt;</highlight></codeline>
+<codeline lineno="31" refid="structbatmat_1_1linalg_1_1simd__view__types_1a6b4cea60e89e5b26e9780bb5a78f33cf" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a6b4cea60e89e5b26e9780bb5a78f33cf" kindref="member">view</ref><sp/>=<sp/><ref refid="structbatmat_1_1matrix_1_1View" kindref="compound">matrix::View&lt;S, index_t, simd_stride_t, simd_stride_t, matrix::DefaultStride, O&gt;</ref>;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>S<sp/>=<sp/>T,<sp/>StorageOrder<sp/>O<sp/>=<sp/>StorageOrder::ColMajor&gt;</highlight></codeline>
+<codeline lineno="33" refid="structbatmat_1_1linalg_1_1simd__view__types_1a877ab4bf950c52ebb43cdb85928e5a86" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a877ab4bf950c52ebb43cdb85928e5a86" kindref="member">multi_view</ref><sp/>=<sp/><ref refid="structbatmat_1_1matrix_1_1View" kindref="compound">matrix::View&lt;S, index_t, simd_stride_t, index_t, index_t, O&gt;</ref>;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>S<sp/>=<sp/>T,<sp/>StorageOrder<sp/>O<sp/>=<sp/>StorageOrder::ColMajor&gt;</highlight></codeline>
+<codeline lineno="35" refid="structbatmat_1_1linalg_1_1simd__view__types_1a8b5cb1385562b1069a6f28123c4e440c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a8b5cb1385562b1069a6f28123c4e440c" kindref="member">scalar_view</ref><sp/>=<sp/><ref refid="structbatmat_1_1matrix_1_1View" kindref="compound">matrix::View&lt;S, index_t, one_t, simd_stride_t, matrix::DefaultStride, O&gt;</ref>;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>S<sp/>=<sp/>T,<sp/>StorageOrder<sp/>O<sp/>=<sp/>StorageOrder::ColMajor&gt;</highlight></codeline>
+<codeline lineno="37" refid="structbatmat_1_1linalg_1_1simd__view__types_1a3ac560af57195eee28db8b413bfa3cd9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a3ac560af57195eee28db8b413bfa3cd9" kindref="member">multi_scalar_view</ref><sp/>=<sp/><ref refid="structbatmat_1_1matrix_1_1View" kindref="compound">matrix::View&lt;S, index_t, one_t, index_t, index_t, O&gt;</ref>;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>S<sp/>=<sp/>T,<sp/>StorageOrder<sp/>O<sp/>=<sp/>StorageOrder::ColMajor&gt;</highlight></codeline>
+<codeline lineno="39" refid="structbatmat_1_1linalg_1_1simd__view__types_1a811b12ff005bcdf582766586145bc4ba" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a811b12ff005bcdf582766586145bc4ba" kindref="member">matrix</ref><sp/>=<sp/><ref refid="structbatmat_1_1matrix_1_1Matrix" kindref="compound">matrix::Matrix&lt;S, index_t, simd_stride_t, index_t, O, simd_align_t&gt;</ref>;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41" refid="structbatmat_1_1linalg_1_1simd__view__types_1a8783ebeb530f419aaaf36873cdadd876" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a55758cb5da1d68a5c7725952a85bc5e2" kindref="member">simd</ref><sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a8783ebeb530f419aaaf36873cdadd876" kindref="member">aligned_load</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>T<sp/>*p)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1a9e5512aee8f62a9475578de6da9dd666" kindref="member">datapar::aligned_load&lt;simd&gt;</ref>(p);<sp/>}</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>MaskL<sp/>=<sp/>0&gt;</highlight></codeline>
+<codeline lineno="44" refid="structbatmat_1_1linalg_1_1simd__view__types_1a12f35661aee4a078b8b0b15358c3df5f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a12f35661aee4a078b8b0b15358c3df5f" kindref="member">aligned_store</ref>(<ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a55758cb5da1d68a5c7725952a85bc5e2" kindref="member">simd</ref><sp/>x,<sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a3e4c25c327e2601ad1b9064219ddd175" kindref="member">value_type</ref><sp/>*p)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>(MaskL<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1datapar_1a37a115c835b05841a7f348320e1e43b6" kindref="member">datapar::aligned_store</ref>(x,<sp/>p);</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>(MaskL<sp/>&gt;<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>BATMAT_WITH_GSI_HPC_SIMD</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>simd::mask_type<sp/>m{[&amp;](</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>i)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>i<sp/>&gt;=<sp/>MaskL;<sp/>}};</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>simd::mask_type<sp/>m{};</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>static_cast&lt;int&gt;(m.size());<sp/>++i)</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m[i]<sp/>=<sp/>i<sp/>&gt;=<sp/>MaskL;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1datapar_1ac9b1641243fc46c499b326c12e68ff4f" kindref="member">datapar::masked_aligned_store</ref>(x,<sp/>m,<sp/>p);</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>BATMAT_WITH_GSI_HPC_SIMD</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>simd::mask_type<sp/>m{[&amp;](</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>i)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>i<sp/>&lt;<sp/>m.size()<sp/>+<sp/>MaskL;<sp/>}};</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>simd::mask_type<sp/>m{};</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>static_cast&lt;int&gt;(m.size());<sp/>++i)</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m[i]<sp/>=<sp/>i<sp/>&lt;<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(m.size())<sp/>+<sp/>MaskL;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1datapar_1ac9b1641243fc46c499b326c12e68ff4f" kindref="member">datapar::masked_aligned_store</ref>(x,<sp/>m,<sp/>p);</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="67"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>StorageOrder<sp/>Order<sp/>=<sp/>StorageOrder::ColMajor&gt;</highlight></codeline>
+<codeline lineno="70" refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref><sp/>=<sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types" kindref="compound">simd_view_types&lt;std::remove_const_t&lt;T&gt;</ref>,<sp/>Abi&gt;::template<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Order&gt;</ref>;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>StorageOrder<sp/>Order<sp/>=<sp/>StorageOrder::ColMajor&gt;</highlight></codeline>
+<codeline lineno="72" refid="namespacebatmat_1_1linalg_1aa93224d87d900a2dacc032305840169b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1aa93224d87d900a2dacc032305840169b" kindref="member">matrix</ref><sp/>=<sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types" kindref="compound">simd_view_types&lt;std::remove_const_t&lt;T&gt;</ref>,<sp/>Abi&gt;::template<sp/><ref refid="namespacebatmat_1_1linalg_1aa93224d87d900a2dacc032305840169b" kindref="member">matrix&lt;T, Order&gt;</ref>;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>StorageOrder<sp/>Order<sp/>=<sp/>StorageOrder::ColMajor&gt;</highlight></codeline>
+<codeline lineno="75" refid="namespacebatmat_1_1linalg_1addaba7b0622b6b5975594e94337858ac" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1addaba7b0622b6b5975594e94337858ac" kindref="member">real_view</ref><sp/>=<sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types" kindref="compound">simd_view_types&lt;real_t, Abi&gt;::template</ref><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const real_t, Order&gt;</ref>;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>StorageOrder<sp/>Order<sp/>=<sp/>StorageOrder::ColMajor&gt;</highlight></codeline>
+<codeline lineno="77" refid="namespacebatmat_1_1linalg_1a32ee2585cc9b2affcd31f6d9a777306c" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1a32ee2585cc9b2affcd31f6d9a777306c" kindref="member">mut_real_view</ref><sp/>=<sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types" kindref="compound">simd_view_types&lt;real_t, Abi&gt;::template</ref><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;real_t, Order&gt;</ref>;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>StorageOrder<sp/>Order&gt;</highlight></codeline>
+<codeline lineno="80" refid="structbatmat_1_1linalg_1_1uview" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1uview_1ae22841d71a01ed13b2a6cf632bd2925c" kindref="member">uview</ref><sp/>{</highlight></codeline>
+<codeline lineno="81" refid="structbatmat_1_1linalg_1_1uview_1a08c194f0c3d89310e1de67b2418e1629" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1uview_1a08c194f0c3d89310e1de67b2418e1629" kindref="member">value_type</ref><sp/>=<sp/>T;</highlight></codeline>
+<codeline lineno="82" refid="structbatmat_1_1linalg_1_1uview_1ab999f5de40cebdc370e44e17d578a8c5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a08c194f0c3d89310e1de67b2418e1629" kindref="member">value_type</ref><sp/>*<ref refid="structbatmat_1_1linalg_1_1uview_1ab999f5de40cebdc370e44e17d578a8c5" kindref="member">data</ref>;</highlight></codeline>
+<codeline lineno="83" refid="structbatmat_1_1linalg_1_1uview_1a692b9e04ee6f1d2765061c8f73971738" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>index_t<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a692b9e04ee6f1d2765061c8f73971738" kindref="member">outer_stride</ref>;</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85" refid="structbatmat_1_1linalg_1_1uview_1abe088c79c02da2d23e44191a5618f1f8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1uview_1abe088c79c02da2d23e44191a5618f1f8" kindref="member">types</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types" kindref="compound">simd_view_types&lt;std::remove_const_t&lt;T&gt;</ref>,<sp/>Abi&gt;;</highlight></codeline>
+<codeline lineno="86" refid="structbatmat_1_1linalg_1_1uview_1a124093dc1c7f0b3ecf7e1d1fa0e02076" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1uview_1a124093dc1c7f0b3ecf7e1d1fa0e02076" kindref="member">view</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>types::template<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a124093dc1c7f0b3ecf7e1d1fa0e02076" kindref="member">view&lt;T, Order&gt;</ref>;</highlight></codeline>
+<codeline lineno="87" refid="structbatmat_1_1linalg_1_1uview_1a3f80ee6e462af097c6a2ed9531233e16" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1uview_1a3f80ee6e462af097c6a2ed9531233e16" kindref="member">mut_view</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>types::template<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a124093dc1c7f0b3ecf7e1d1fa0e02076" kindref="member">view&lt;std::remove_const_t&lt;T&gt;</ref>,<sp/>Order&gt;;</highlight></codeline>
+<codeline lineno="88" refid="structbatmat_1_1linalg_1_1uview_1a8a22cc99544bb38d717e4776aeebc104" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1uview_1a8a22cc99544bb38d717e4776aeebc104" kindref="member">mut_uview</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1ae22841d71a01ed13b2a6cf632bd2925c" kindref="member">uview&lt;std::remove_const_t&lt;T&gt;</ref>,<sp/>Abi,<sp/>Order&gt;;</highlight></codeline>
+<codeline lineno="89" refid="structbatmat_1_1linalg_1_1uview_1aea334a177c7ae7eecf43ff1b22ba0be4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1uview_1aea334a177c7ae7eecf43ff1b22ba0be4" kindref="member">simd</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a55758cb5da1d68a5c7725952a85bc5e2" kindref="member">types::simd</ref>;</highlight></codeline>
+<codeline lineno="90" refid="structbatmat_1_1linalg_1_1uview_1a9a4ef75a511e1148d3eb14f30752150f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>ptrdiff_t<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a9a4ef75a511e1148d3eb14f30752150f" kindref="member">inner_stride</ref><sp/>=<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a42c8cc3abab740150c78041ab96af477" kindref="member">types::simd_stride_t</ref>();</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92" refid="structbatmat_1_1linalg_1_1uview_1adc090e9a51c470781c49eb33a2d9d9de" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a08c194f0c3d89310e1de67b2418e1629" kindref="member">value_type</ref><sp/>*<ref refid="structbatmat_1_1linalg_1_1uview_1adc090e9a51c470781c49eb33a2d9d9de" kindref="member">get</ref>(index_t<sp/>r,<sp/>index_t<sp/>c)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ptrdiff_t<sp/>i0<sp/>=<sp/>Order<sp/>==<sp/>StorageOrder::RowMajor<sp/>?<sp/>c<sp/>:<sp/>r;</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ptrdiff_t<sp/>i1<sp/>=<sp/>Order<sp/>==<sp/>StorageOrder::RowMajor<sp/>?<sp/>r<sp/>:<sp/>c;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview_1ab999f5de40cebdc370e44e17d578a8c5" kindref="member">data</ref><sp/>+<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a9a4ef75a511e1148d3eb14f30752150f" kindref="member">inner_stride</ref><sp/>*<sp/>(i0<sp/>+<sp/>i1<sp/>*<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">ptrdiff_t</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(<ref refid="structbatmat_1_1linalg_1_1uview_1a692b9e04ee6f1d2765061c8f73971738" kindref="member">outer_stride</ref>));</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="97" refid="structbatmat_1_1linalg_1_1uview_1a9584e5bcf040086a92fabad0ad2555d8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a08c194f0c3d89310e1de67b2418e1629" kindref="member">value_type</ref><sp/>&amp;<ref refid="structbatmat_1_1linalg_1_1uview_1a9584e5bcf040086a92fabad0ad2555d8" kindref="member">operator()</ref>(index_t<sp/>r,<sp/>index_t<sp/>c)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>*<ref refid="structbatmat_1_1linalg_1_1uview_1adc090e9a51c470781c49eb33a2d9d9de" kindref="member">get</ref>(r,<sp/>c);</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="100" refid="structbatmat_1_1linalg_1_1uview_1a84e59bc69f5cb0f4f3dd9da7bf78afdf" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1aea334a177c7ae7eecf43ff1b22ba0be4" kindref="member">simd</ref><sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a84e59bc69f5cb0f4f3dd9da7bf78afdf" kindref="member">load</ref>(index_t<sp/>r,<sp/>index_t<sp/>c)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a8783ebeb530f419aaaf36873cdadd876" kindref="member">types::aligned_load</ref>(<ref refid="structbatmat_1_1linalg_1_1uview_1adc090e9a51c470781c49eb33a2d9d9de" kindref="member">get</ref>(r,<sp/>c));</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>MaskL<sp/>=<sp/>0&gt;</highlight></codeline>
+<codeline lineno="104" refid="structbatmat_1_1linalg_1_1uview_1a4542c3d6af85ceb8fd44acf1dd3ab5b1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a4542c3d6af85ceb8fd44acf1dd3ab5b1" kindref="member">store</ref>(<ref refid="structbatmat_1_1linalg_1_1uview_1aea334a177c7ae7eecf43ff1b22ba0be4" kindref="member">simd</ref><sp/>x,<sp/>index_t<sp/>r,<sp/>index_t<sp/>c)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal">(!std::is_const_v&lt;T&gt;)</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>types::template<sp/>aligned_store&lt;MaskL&gt;(x,<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1adc090e9a51c470781c49eb33a2d9d9de" kindref="member">get</ref>(r,<sp/>c));</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Self&gt;</highlight></codeline>
+<codeline lineno="110" refid="structbatmat_1_1linalg_1_1uview_1a294edbebb26413734307376578d417d1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/>Self<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a294edbebb26413734307376578d417d1" kindref="member">block</ref>(</highlight><highlight class="keyword">this</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Self<sp/>&amp;self,<sp/>index_t<sp/>r,<sp/>index_t<sp/>c)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{self.get(r,<sp/>c),<sp/>self.outer_stride};</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Self&gt;</highlight></codeline>
+<codeline lineno="114" refid="structbatmat_1_1linalg_1_1uview_1a8b369f4dec638935df8ff5ebfb37b6f8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/>Self<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a8b369f4dec638935df8ff5ebfb37b6f8" kindref="member">middle_rows</ref>(</highlight><highlight class="keyword">this</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Self<sp/>&amp;self,<sp/>index_t<sp/>r)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{self.get(r,<sp/>0),<sp/>self.outer_stride};</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Self&gt;</highlight></codeline>
+<codeline lineno="118" refid="structbatmat_1_1linalg_1_1uview_1a919a6b84f8b5f2aef171276479a784e0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/>Self<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a919a6b84f8b5f2aef171276479a784e0" kindref="member">middle_cols</ref>(</highlight><highlight class="keyword">this</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Self<sp/>&amp;self,<sp/>index_t<sp/>c)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{self.get(0,<sp/>c),<sp/>self.outer_stride};</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight></codeline>
+<codeline lineno="122" refid="structbatmat_1_1linalg_1_1uview_1ae22841d71a01ed13b2a6cf632bd2925c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1ae22841d71a01ed13b2a6cf632bd2925c" kindref="member">uview</ref>(<ref refid="structbatmat_1_1linalg_1_1uview_1a08c194f0c3d89310e1de67b2418e1629" kindref="member">value_type</ref><sp/>*<ref refid="structbatmat_1_1linalg_1_1uview_1ab999f5de40cebdc370e44e17d578a8c5" kindref="member">data</ref>,<sp/>index_t<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a692b9e04ee6f1d2765061c8f73971738" kindref="member">outer_stride</ref>)<sp/>noexcept</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1ab999f5de40cebdc370e44e17d578a8c5" kindref="member">data</ref>{<ref refid="structbatmat_1_1linalg_1_1uview_1ab999f5de40cebdc370e44e17d578a8c5" kindref="member">data</ref>},<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a692b9e04ee6f1d2765061c8f73971738" kindref="member">outer_stride</ref>{<ref refid="structbatmat_1_1linalg_1_1uview_1a692b9e04ee6f1d2765061c8f73971738" kindref="member">outer_stride</ref>}<sp/>{}</highlight></codeline>
+<codeline lineno="124" refid="structbatmat_1_1linalg_1_1uview_1a402745026da731de3de479f33afd4af7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a402745026da731de3de479f33afd4af7" kindref="member">uview</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a3f80ee6e462af097c6a2ed9531233e16" kindref="member">mut_view</ref><sp/>&amp;v)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/>std::is_const_v&lt;T&gt;</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1ab999f5de40cebdc370e44e17d578a8c5" kindref="member">data</ref>{v.data()},<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a692b9e04ee6f1d2765061c8f73971738" kindref="member">outer_stride</ref>{v.outer_stride()}<sp/>{}</highlight></codeline>
+<codeline lineno="127" refid="structbatmat_1_1linalg_1_1uview_1a3fc1297ea3f4c94bdd802a55ef042a0e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a3fc1297ea3f4c94bdd802a55ef042a0e" kindref="member">uview</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a124093dc1c7f0b3ecf7e1d1fa0e02076" kindref="member">view</ref><sp/>&amp;v)<sp/>noexcept</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1ab999f5de40cebdc370e44e17d578a8c5" kindref="member">data</ref>{v.data()},<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a692b9e04ee6f1d2765061c8f73971738" kindref="member">outer_stride</ref>{v.outer_stride()}<sp/>{}</highlight></codeline>
+<codeline lineno="129" refid="structbatmat_1_1linalg_1_1uview_1aeb3450b71fc7b3bb44251940d1012c31" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1aeb3450b71fc7b3bb44251940d1012c31" kindref="member">uview</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a8a22cc99544bb38d717e4776aeebc104" kindref="member">mut_uview</ref><sp/>&amp;o)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/>std::is_const_v&lt;T&gt;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1ab999f5de40cebdc370e44e17d578a8c5" kindref="member">data</ref>{o.data},<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1a692b9e04ee6f1d2765061c8f73971738" kindref="member">outer_stride</ref>{o.outer_stride}<sp/>{}</highlight></codeline>
+<codeline lineno="132" refid="structbatmat_1_1linalg_1_1uview_1aa19c47965654852023713266c53984d2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1uview_1aa19c47965654852023713266c53984d2" kindref="member">uview</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview_1ae22841d71a01ed13b2a6cf632bd2925c" kindref="member">uview</ref><sp/>&amp;o)<sp/>=<sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="133"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="136" refid="structbatmat_1_1linalg_1_1uview__vec" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1uview__vec_1afb456648e5bd7e368477bdfb1d728530" kindref="member">uview_vec</ref><sp/>{</highlight></codeline>
+<codeline lineno="137" refid="structbatmat_1_1linalg_1_1uview__vec_1af87d3d030cee9768a06a42cb999a2d65" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1uview__vec_1af87d3d030cee9768a06a42cb999a2d65" kindref="member">value_type</ref><sp/>=<sp/>T;</highlight></codeline>
+<codeline lineno="138" refid="structbatmat_1_1linalg_1_1uview__vec_1a203262cac8b7c62dd6234ac9f8f027a3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1af87d3d030cee9768a06a42cb999a2d65" kindref="member">value_type</ref><sp/>*<ref refid="structbatmat_1_1linalg_1_1uview__vec_1a203262cac8b7c62dd6234ac9f8f027a3" kindref="member">data</ref>;</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight></codeline>
+<codeline lineno="140" refid="structbatmat_1_1linalg_1_1uview__vec_1a10b3f30de2591df56f1519a85bdb253c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1uview__vec_1a10b3f30de2591df56f1519a85bdb253c" kindref="member">types</ref><sp/>=<sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types" kindref="compound">simd_view_types&lt;std::remove_const_t&lt;T&gt;</ref>,<sp/>Abi&gt;;</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;StorageOrder<sp/>Order&gt;</highlight></codeline>
+<codeline lineno="142" refid="structbatmat_1_1linalg_1_1uview__vec_1aa1de2a6ad2423f5ee103c4876c1b5888" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1uview__vec_1aa1de2a6ad2423f5ee103c4876c1b5888" kindref="member">view</ref><sp/>=<sp/>types::template<sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1aa1de2a6ad2423f5ee103c4876c1b5888" kindref="member">view&lt;T, Order&gt;</ref>;</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;StorageOrder<sp/>Order&gt;</highlight></codeline>
+<codeline lineno="144" refid="structbatmat_1_1linalg_1_1uview__vec_1aabbb3a0f084db323ac96b81609c11dad" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1uview__vec_1aabbb3a0f084db323ac96b81609c11dad" kindref="member">mut_view</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>types::template<sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1aa1de2a6ad2423f5ee103c4876c1b5888" kindref="member">view&lt;std::remove_const_t&lt;T&gt;</ref>,<sp/>Order&gt;;</highlight></codeline>
+<codeline lineno="145" refid="structbatmat_1_1linalg_1_1uview__vec_1aa4bb1c17eeea1a14df63453943a3665c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1uview__vec_1aa4bb1c17eeea1a14df63453943a3665c" kindref="member">mut_uview</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1afb456648e5bd7e368477bdfb1d728530" kindref="member">uview_vec&lt;std::remove_const_t&lt;T&gt;</ref>,<sp/>Abi&gt;;</highlight></codeline>
+<codeline lineno="146" refid="structbatmat_1_1linalg_1_1uview__vec_1a4ef4af618768ad1152cc7717c919cea0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1uview__vec_1a4ef4af618768ad1152cc7717c919cea0" kindref="member">simd</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a55758cb5da1d68a5c7725952a85bc5e2" kindref="member">types::simd</ref>;</highlight></codeline>
+<codeline lineno="147" refid="structbatmat_1_1linalg_1_1uview__vec_1a3c028e251a9bb4e9c293b387430c249b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>ptrdiff_t<sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1a3c028e251a9bb4e9c293b387430c249b" kindref="member">inner_stride</ref><sp/>=<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a42c8cc3abab740150c78041ab96af477" kindref="member">types::simd_stride_t</ref>();</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight></codeline>
+<codeline lineno="149" refid="structbatmat_1_1linalg_1_1uview__vec_1a4f610ca76507d8f00ba6e7f0c8f3dee3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1af87d3d030cee9768a06a42cb999a2d65" kindref="member">value_type</ref><sp/>&amp;<ref refid="structbatmat_1_1linalg_1_1uview__vec_1a4f610ca76507d8f00ba6e7f0c8f3dee3" kindref="member">operator()</ref>(index_t<sp/>r)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1a203262cac8b7c62dd6234ac9f8f027a3" kindref="member">data</ref>[<ref refid="structbatmat_1_1linalg_1_1uview__vec_1a3c028e251a9bb4e9c293b387430c249b" kindref="member">inner_stride</ref><sp/>*<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">ptrdiff_t</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(r)];</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="152" refid="structbatmat_1_1linalg_1_1uview__vec_1a7a11a266c4d44facc4b010edf8a7ebad" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1a4ef4af618768ad1152cc7717c919cea0" kindref="member">simd</ref><sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1a7a11a266c4d44facc4b010edf8a7ebad" kindref="member">load</ref>(index_t<sp/>r)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a8783ebeb530f419aaaf36873cdadd876" kindref="member">types::aligned_load</ref>(&amp;</highlight><highlight class="keyword">operator</highlight><highlight class="normal">()(r));</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>MaskL<sp/>=<sp/>0&gt;</highlight></codeline>
+<codeline lineno="156" refid="structbatmat_1_1linalg_1_1uview__vec_1a43626229fee593d7541affe814b6338f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1a43626229fee593d7541affe814b6338f" kindref="member">store</ref>(<ref refid="structbatmat_1_1linalg_1_1uview__vec_1a4ef4af618768ad1152cc7717c919cea0" kindref="member">simd</ref><sp/>x,<sp/>index_t<sp/>r)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal">(!std::is_const_v&lt;T&gt;)</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>types::template<sp/>aligned_store&lt;MaskL&gt;(x,<sp/>&amp;</highlight><highlight class="keyword">operator</highlight><highlight class="normal">()(r));</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Self&gt;</highlight></codeline>
+<codeline lineno="162" refid="structbatmat_1_1linalg_1_1uview__vec_1a6b3b051a61f41e64a7287b99fc57e301" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/>Self<sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1a6b3b051a61f41e64a7287b99fc57e301" kindref="member">segment</ref>(</highlight><highlight class="keyword">this</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>Self<sp/>&amp;self,<sp/>index_t<sp/>r)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{&amp;self(r)};</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"></highlight></codeline>
+<codeline lineno="166" refid="structbatmat_1_1linalg_1_1uview__vec_1afb456648e5bd7e368477bdfb1d728530" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1afb456648e5bd7e368477bdfb1d728530" kindref="member">uview_vec</ref>(<ref refid="structbatmat_1_1linalg_1_1uview__vec_1af87d3d030cee9768a06a42cb999a2d65" kindref="member">value_type</ref><sp/>*<ref refid="structbatmat_1_1linalg_1_1uview__vec_1a203262cac8b7c62dd6234ac9f8f027a3" kindref="member">data</ref>)<sp/>noexcept<sp/>:<sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1a203262cac8b7c62dd6234ac9f8f027a3" kindref="member">data</ref>{<ref refid="structbatmat_1_1linalg_1_1uview__vec_1a203262cac8b7c62dd6234ac9f8f027a3" kindref="member">data</ref>}<sp/>{}</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;StorageOrder<sp/>Order&gt;</highlight></codeline>
+<codeline lineno="168" refid="structbatmat_1_1linalg_1_1uview__vec_1a4e574b051bbb7c487162014d05e973df" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">explicit</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1a4e574b051bbb7c487162014d05e973df" kindref="member">uview_vec</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1aabbb3a0f084db323ac96b81609c11dad" kindref="member">mut_view&lt;Order&gt;</ref><sp/>&amp;v)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/>std::is_const_v&lt;T&gt;</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1a203262cac8b7c62dd6234ac9f8f027a3" kindref="member">data</ref>{v.data()}<sp/>{</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(v.outer_size()<sp/>==<sp/>1);</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;StorageOrder<sp/>Order&gt;</highlight></codeline>
+<codeline lineno="174" refid="structbatmat_1_1linalg_1_1uview__vec_1a63493e6f49644b207fd61cdcbf8ec689" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">explicit</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1a63493e6f49644b207fd61cdcbf8ec689" kindref="member">uview_vec</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1aa1de2a6ad2423f5ee103c4876c1b5888" kindref="member">view&lt;Order&gt;</ref><sp/>&amp;v)<sp/>noexcept<sp/>:<sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1a203262cac8b7c62dd6234ac9f8f027a3" kindref="member">data</ref>{v.data()}<sp/>{</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" kindref="member">BATMAT_ASSUME</ref>(v.outer_size()<sp/>==<sp/>1);</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="177" refid="structbatmat_1_1linalg_1_1uview__vec_1ab0dd1c5cb4bc5e0e68eae1e217e85299" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1ab0dd1c5cb4bc5e0e68eae1e217e85299" kindref="member">uview_vec</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1aa4bb1c17eeea1a14df63453943a3665c" kindref="member">mut_uview</ref><sp/>&amp;o)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/>std::is_const_v&lt;T&gt;</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1a203262cac8b7c62dd6234ac9f8f027a3" kindref="member">data</ref>{o.data}<sp/>{}</highlight></codeline>
+<codeline lineno="180" refid="structbatmat_1_1linalg_1_1uview__vec_1af8c8fa4d9f5c80f7da5e2ec54095d5fc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1af8c8fa4d9f5c80f7da5e2ec54095d5fc" kindref="member">uview_vec</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec_1afb456648e5bd7e368477bdfb1d728530" kindref="member">uview_vec</ref><sp/>&amp;o)<sp/>=<sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="181"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"></highlight></codeline>
+<codeline lineno="183"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;index_t<sp/>Size,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>StorageOrder<sp/>Order&gt;</highlight></codeline>
+<codeline lineno="184" refid="structbatmat_1_1linalg_1_1cached__uview" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1cached__uview_1a2c204d90b25dc7a0d661c3791748b993" kindref="member">cached_uview</ref><sp/>{</highlight></codeline>
+<codeline lineno="185" refid="structbatmat_1_1linalg_1_1cached__uview_1a8e2f9db81dff43b91c0edaac613becd8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1cached__uview_1a8e2f9db81dff43b91c0edaac613becd8" kindref="member">value_type</ref><sp/>=<sp/>T;</highlight></codeline>
+<codeline lineno="186" refid="structbatmat_1_1linalg_1_1cached__uview_1a21e50d2ee4b95d15fd4571f8386eaf57" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1cached__uview_1a8e2f9db81dff43b91c0edaac613becd8" kindref="member">value_type</ref><sp/>*</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1cached__uview_1a21e50d2ee4b95d15fd4571f8386eaf57" kindref="member">data</ref>[Size];</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"></highlight></codeline>
+<codeline lineno="188" refid="structbatmat_1_1linalg_1_1cached__uview_1a36a2f806209fdf679ea23f54474deb2c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1cached__uview_1a36a2f806209fdf679ea23f54474deb2c" kindref="member">types</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types" kindref="compound">simd_view_types&lt;std::remove_const_t&lt;T&gt;</ref>,<sp/>Abi&gt;;</highlight></codeline>
+<codeline lineno="189" refid="structbatmat_1_1linalg_1_1cached__uview_1aa62482ac588c02254c8e9ed8ba45c31f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1cached__uview_1aa62482ac588c02254c8e9ed8ba45c31f" kindref="member">simd</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a55758cb5da1d68a5c7725952a85bc5e2" kindref="member">types::simd</ref>;</highlight></codeline>
+<codeline lineno="190" refid="structbatmat_1_1linalg_1_1cached__uview_1a95a6c418dd1bf524de7746ca3d956257" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>ptrdiff_t<sp/><ref refid="structbatmat_1_1linalg_1_1cached__uview_1a95a6c418dd1bf524de7746ca3d956257" kindref="member">inner_stride</ref><sp/>=<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a42c8cc3abab740150c78041ab96af477" kindref="member">types::simd_stride_t</ref>();</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"></highlight></codeline>
+<codeline lineno="192" refid="structbatmat_1_1linalg_1_1cached__uview_1a25193968b972a0287a22ac7b38b897a6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1cached__uview_1a8e2f9db81dff43b91c0edaac613becd8" kindref="member">value_type</ref><sp/>&amp;<ref refid="structbatmat_1_1linalg_1_1cached__uview_1a25193968b972a0287a22ac7b38b897a6" kindref="member">operator()</ref>(index_t<sp/>r,<sp/>index_t<sp/>c)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ptrdiff_t<sp/>i0<sp/>=<sp/>Order<sp/>==<sp/>StorageOrder::RowMajor<sp/>?<sp/>c<sp/>:<sp/>r;</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>index_t<sp/>i1<sp/><sp/><sp/>=<sp/>Order<sp/>==<sp/>StorageOrder::RowMajor<sp/>?<sp/>r<sp/>:<sp/>c;</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>assert(i1<sp/>&lt;<sp/>Size);</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1cached__uview_1a21e50d2ee4b95d15fd4571f8386eaf57" kindref="member">data</ref>[i1][i0<sp/>*<sp/><ref refid="structbatmat_1_1linalg_1_1cached__uview_1a95a6c418dd1bf524de7746ca3d956257" kindref="member">inner_stride</ref>];</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="198" refid="structbatmat_1_1linalg_1_1cached__uview_1a9243059b2b9e81a0db1654ea15c66161" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1cached__uview_1aa62482ac588c02254c8e9ed8ba45c31f" kindref="member">simd</ref><sp/><ref refid="structbatmat_1_1linalg_1_1cached__uview_1a9243059b2b9e81a0db1654ea15c66161" kindref="member">load</ref>(index_t<sp/>r,<sp/>index_t<sp/>c)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a8783ebeb530f419aaaf36873cdadd876" kindref="member">types::aligned_load</ref>(&amp;</highlight><highlight class="keyword">operator</highlight><highlight class="normal">()(r,<sp/>c));</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>MaskL<sp/>=<sp/>0&gt;</highlight></codeline>
+<codeline lineno="202" refid="structbatmat_1_1linalg_1_1cached__uview_1ab8195f3eafaaef631fc89df4e7984cb7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1cached__uview_1ab8195f3eafaaef631fc89df4e7984cb7" kindref="member">store</ref>(<ref refid="structbatmat_1_1linalg_1_1cached__uview_1aa62482ac588c02254c8e9ed8ba45c31f" kindref="member">simd</ref><sp/>x,<sp/>index_t<sp/>r,<sp/>index_t<sp/>c)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal">(!std::is_const_v&lt;T&gt;)</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>types::template<sp/>aligned_store&lt;MaskL&gt;(x,<sp/>&amp;</highlight><highlight class="keyword">operator</highlight><highlight class="normal">()(r,<sp/>c));</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"></highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;index_t...<sp/>Is&gt;</highlight></codeline>
+<codeline lineno="209" refid="structbatmat_1_1linalg_1_1cached__uview_1a2c204d90b25dc7a0d661c3791748b993" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1cached__uview_1a2c204d90b25dc7a0d661c3791748b993" kindref="member">cached_uview</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, Order&gt;</ref><sp/>&amp;o,</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::integer_sequence&lt;index_t,<sp/>Is...&gt;)<sp/>noexcept</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/><ref refid="structbatmat_1_1linalg_1_1cached__uview_1a21e50d2ee4b95d15fd4571f8386eaf57" kindref="member">data</ref>{(o.data<sp/>+<sp/>Is<sp/>*<sp/>o.inner_stride<sp/>*<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">ptrdiff_t</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(o.outer_stride))...}<sp/>{}</highlight></codeline>
+<codeline lineno="212" refid="structbatmat_1_1linalg_1_1cached__uview_1a6fdf9bb04d18ec5ba460ca105f6714bd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[gnu::always_inline]]<sp/><ref refid="structbatmat_1_1linalg_1_1cached__uview_1a6fdf9bb04d18ec5ba460ca105f6714bd" kindref="member">cached_uview</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, Order&gt;</ref><sp/>&amp;o)<sp/>noexcept</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/><ref refid="structbatmat_1_1linalg_1_1cached__uview_1a2c204d90b25dc7a0d661c3791748b993" kindref="member">cached_uview</ref>{o,<sp/>std::make_integer_sequence&lt;index_t,<sp/>Size&gt;()}<sp/>{}</highlight></codeline>
+<codeline lineno="214"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"></highlight></codeline>
+<codeline lineno="216"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>__INTEL_LLVM_COMPILER</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="217"><highlight class="normal"></highlight><highlight class="comment">//<sp/>No<sp/>caching<sp/>on<sp/>Intel<sp/>icx<sp/>to<sp/>avoid<sp/>issues<sp/>with<sp/>icpx<sp/>codegen.<sp/>See<sp/>test/icpx-repro.cpp.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="218"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;index_t<sp/>Rows,<sp/>index_t<sp/>Cols,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>StorageOrder<sp/>Order&gt;</highlight></codeline>
+<codeline lineno="219"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" kindref="member">with_cached_access</ref>(uview&lt;T,<sp/>Abi,<sp/>Order&gt;<sp/>o)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>o;</highlight></codeline>
+<codeline lineno="221"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="223"><highlight class="normal"></highlight></codeline>
+<codeline lineno="224"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;index_t<sp/>Rows,<sp/>index_t<sp/>Cols,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>StorageOrder<sp/>Order&gt;</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal">(Rows<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>Cols<sp/>&gt;<sp/>0)</highlight></codeline>
+<codeline lineno="226"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1cached__uview" kindref="compound">cached_uview</ref>&lt;Order<sp/>==<sp/>StorageOrder::ColMajor<sp/>?<sp/>Cols<sp/>:<sp/>Rows,<sp/>T,<sp/>Abi,</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Order&gt;</highlight></codeline>
+<codeline lineno="228" refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" refkind="member"><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" kindref="member">with_cached_access</ref>(const<sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt;T,<sp/>Abi,<sp/>Order&gt;<sp/>&amp;o)<sp/>noexcept<sp/>{</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/>{o};</highlight></codeline>
+<codeline lineno="230"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"></highlight></codeline>
+<codeline lineno="232"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;index_t<sp/>Rows,<sp/>index_t<sp/>Cols,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal">(Rows<sp/>==<sp/>0<sp/>&amp;&amp;<sp/>Cols<sp/>&gt;<sp/>0)</highlight></codeline>
+<codeline lineno="234"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>cached_uview&lt;Cols,<sp/>T,<sp/>Abi,<sp/>StorageOrder::ColMajor&gt;</highlight></codeline>
+<codeline lineno="235" refid="namespacebatmat_1_1linalg_1ad40f567e60fa1837b503bbf967068207" refkind="member"><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" kindref="member">with_cached_access</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, StorageOrder::ColMajor&gt;</ref><sp/>&amp;o)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{o};</highlight></codeline>
+<codeline lineno="237"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"></highlight></codeline>
+<codeline lineno="239"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;index_t<sp/>Rows,<sp/>index_t<sp/>Cols,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal">(Rows<sp/>==<sp/>0<sp/>&amp;&amp;<sp/>Cols<sp/>&gt;<sp/>0)</highlight></codeline>
+<codeline lineno="241"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>uview&lt;T,<sp/>Abi,<sp/>StorageOrder::RowMajor&gt;</highlight></codeline>
+<codeline lineno="242" refid="namespacebatmat_1_1linalg_1a9fdaac31d1f50e897eea6151f4b14f5d" refkind="member"><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" kindref="member">with_cached_access</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, StorageOrder::RowMajor&gt;</ref><sp/>&amp;o)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>o;</highlight></codeline>
+<codeline lineno="244"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="245"><highlight class="normal"></highlight></codeline>
+<codeline lineno="246"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;index_t<sp/>Rows,<sp/>index_t<sp/>Cols,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal">(Rows<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>Cols<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="248"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>cached_uview&lt;Rows,<sp/>T,<sp/>Abi,<sp/>StorageOrder::RowMajor&gt;</highlight></codeline>
+<codeline lineno="249" refid="namespacebatmat_1_1linalg_1acc3629657a80e64a88a2b4adc162ac11" refkind="member"><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" kindref="member">with_cached_access</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, StorageOrder::RowMajor&gt;</ref><sp/>&amp;o)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{o};</highlight></codeline>
+<codeline lineno="251"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"></highlight></codeline>
+<codeline lineno="253"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;index_t<sp/>Rows,<sp/>index_t<sp/>Cols,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal">(Rows<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>Cols<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="255"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>uview&lt;T,<sp/>Abi,<sp/>StorageOrder::ColMajor&gt;</highlight></codeline>
+<codeline lineno="256" refid="namespacebatmat_1_1linalg_1a19723a0cad457cfaa3a2e02fc5e8006f" refkind="member"><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" kindref="member">with_cached_access</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, StorageOrder::ColMajor&gt;</ref><sp/>&amp;o)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>o;</highlight></codeline>
+<codeline lineno="258"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"></highlight></codeline>
+<codeline lineno="260"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="261"><highlight class="normal"></highlight></codeline>
+<codeline lineno="262"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::linalg</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/linalg/uview.hpp"/>
+  </compounddef>
+</doxygen>

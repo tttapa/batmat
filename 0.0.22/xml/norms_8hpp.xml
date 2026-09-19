@@ -1,0 +1,209 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="norms_8hpp" kind="file" language="C++">
+    <compoundname>norms.hpp</compoundname>
+    <includes refid="config_8hpp" local="no">batmat/config.hpp</includes>
+    <includes refid="simd_8hpp" local="no">batmat/simd.hpp</includes>
+    <includes local="no">cmath</includes>
+    <includedby refid="reduce_8hpp" local="no">batmat/include/batmat/linalg/reduce.hpp</includedby>
+    <incdepgraph>
+      <node id="2">
+        <label>batmat/config.hpp</label>
+        <link refid="config_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/norms.hpp</label>
+        <link refid="norms_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>batmat/unroll.h</label>
+        <link refid="unroll_8h"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>cmath</label>
+      </node>
+      <node id="9">
+        <label>cstddef</label>
+      </node>
+      <node id="3">
+        <label>cstdint</label>
+      </node>
+      <node id="8">
+        <label>experimental/simd</label>
+      </node>
+      <node id="7">
+        <label>guanaqo/stringify.h</label>
+      </node>
+      <node id="4">
+        <label>stdfloat</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/norms.hpp</label>
+        <link refid="norms_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/include/batmat/linalg/reduce.hpp</label>
+        <link refid="reduce_8hpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structbatmat_1_1linalg_1_1norms" prot="public">batmat::linalg::norms</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1norms_1_1result__simd" prot="public">batmat::linalg::norms::result_simd</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4" prot="public">batmat::linalg::norms&lt; T, void &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result" prot="public">batmat::linalg::norms&lt; T, void &gt;::result</innerclass>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg">batmat::linalg</innernamespace>
+    <briefdescription>
+<para>Vector reductions. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="3"><highlight class="comment">///<sp/>@file</highlight></codeline>
+<codeline lineno="4"><highlight class="comment">///<sp/>Vector<sp/>reductions.</highlight></codeline>
+<codeline lineno="5"><highlight class="comment">///<sp/>@ingroup<sp/>topic-utilities</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="config_8hpp" kindref="compound">batmat/config.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="simd_8hpp" kindref="compound">batmat/simd.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cmath&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg" kindref="compound">batmat::linalg</ref><sp/>{</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="13"><highlight class="comment">///<sp/>@addtogroup<sp/>topic-utilities</highlight></codeline>
+<codeline lineno="14"><highlight class="comment">///<sp/>@{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="16"><highlight class="comment">///<sp/>Utilities<sp/>for<sp/>computing<sp/>vector<sp/>norms.</highlight></codeline>
+<codeline lineno="17"><highlight class="comment">///<sp/>@tparam<sp/>T<sp/>Scalar<sp/>type.</highlight></codeline>
+<codeline lineno="18"><highlight class="comment">///<sp/>@tparam<sp/>simd<sp/>SIMD<sp/>type.<sp/>Void<sp/>for<sp/>scalar-only.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>simd<sp/>=<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1norms" kindref="compound">norms</ref>;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T&gt;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1norms" kindref="compound">norms</ref>&lt;T&gt;;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>simd&gt;</highlight></codeline>
+<codeline lineno="26" refid="structbatmat_1_1linalg_1_1norms" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1norms" kindref="compound">norms</ref><sp/>:<sp/><ref refid="structbatmat_1_1linalg_1_1norms" kindref="compound">norms</ref>&lt;T&gt;<sp/>{</highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="27"><highlight class="comment"><sp/><sp/><sp/><sp/>///<sp/>Accumulator.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28" refid="structbatmat_1_1linalg_1_1norms_1ae223b70fcb64755e0a026f2cc3943fb6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1norms_1ae223b70fcb64755e0a026f2cc3943fb6" kindref="member">result</ref><sp/>=<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1norms_1ae223b70fcb64755e0a026f2cc3943fb6" kindref="member">norms&lt;T&gt;::result</ref>;</highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="29"><highlight class="comment"><sp/><sp/><sp/><sp/>///<sp/>Lane-wise<sp/>accumulators.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30" refid="structbatmat_1_1linalg_1_1norms_1_1result__simd" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd" kindref="compound">result_simd</ref><sp/>{</highlight></codeline>
+<codeline lineno="31" refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a9a4a92884d60d73f1cc317061b6d60a3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/><ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a9a4a92884d60d73f1cc317061b6d60a3" kindref="member">amax</ref>;</highlight></codeline>
+<codeline lineno="32" refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1acaf6ef3de3b2d4ee97b72e9c158b44bd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/><ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1acaf6ef3de3b2d4ee97b72e9c158b44bd" kindref="member">asum</ref>;</highlight></codeline>
+<codeline lineno="33" refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a086b482f626355af733c0ad057ecd570" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simd<sp/><ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a086b482f626355af733c0ad057ecd570" kindref="member">sumsq</ref>;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="35"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>///<sp/>ℓ₁<sp/>norm.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36" refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1aabb471da2adffa47a32ba7c9ea091bda" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/>simd<sp/><ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1aabb471da2adffa47a32ba7c9ea091bda" kindref="member">norm_1</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1acaf6ef3de3b2d4ee97b72e9c158b44bd" kindref="member">asum</ref>;<sp/>}</highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="37"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>///<sp/>ℓ₂<sp/>norm.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38" refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1ae26404016c64cbf7b1d0c14798c79848" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/>simd<sp/><ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1ae26404016c64cbf7b1d0c14798c79848" kindref="member">norm_2</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">std::sqrt;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>sqrt(<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a086b482f626355af733c0ad057ecd570" kindref="member">sumsq</ref>);</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="42"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>///<sp/>max-norm.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43" refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a3e5090751dadb61f0f726862fc0e7047" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/>simd<sp/><ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a3e5090751dadb61f0f726862fc0e7047" kindref="member">norm_inf</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">std::isfinite;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ad0c6f39983831e00225b0ebc6088c5eb" kindref="member">datapar::select</ref>(isfinite(<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1acaf6ef3de3b2d4ee97b72e9c158b44bd" kindref="member">asum</ref>),<sp/><ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a9a4a92884d60d73f1cc317061b6d60a3" kindref="member">amax</ref>,<sp/><ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1acaf6ef3de3b2d4ee97b72e9c158b44bd" kindref="member">asum</ref>);</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1norms" kindref="compound">norms</ref>&lt;T&gt;::operator();</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="51"><highlight class="comment"><sp/><sp/><sp/><sp/>///<sp/>Update<sp/>the<sp/>accumulator<sp/>with<sp/>a<sp/>new<sp/>value.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52" refid="structbatmat_1_1linalg_1_1norms_1a2050dcd3e3d08b85ec264692f3b05b52" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd" kindref="compound">result_simd</ref><sp/><ref refid="structbatmat_1_1linalg_1_1norms_1a2050dcd3e3d08b85ec264692f3b05b52" kindref="member">operator()</ref>(<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd" kindref="compound">result_simd</ref><sp/>accum,<sp/>simd<sp/>t)</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">std::abs;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">std::max;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>at<sp/>=<sp/>abs(t);</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.amax<sp/>=<sp/>max(at,<sp/>accum.<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a9a4a92884d60d73f1cc317061b6d60a3" kindref="member">amax</ref>),<sp/>.asum<sp/>=<sp/>at<sp/>+<sp/>accum.<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1acaf6ef3de3b2d4ee97b72e9c158b44bd" kindref="member">asum</ref>,<sp/>.sumsq<sp/>=<sp/>t<sp/>*<sp/>t<sp/>+<sp/>accum.<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a086b482f626355af733c0ad057ecd570" kindref="member">sumsq</ref>};</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="59"><highlight class="comment"><sp/><sp/><sp/><sp/>///<sp/>Combine<sp/>two<sp/>accumulators.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60" refid="structbatmat_1_1linalg_1_1norms_1a45bc403c090c2204ad41f772e58007fc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd" kindref="compound">result_simd</ref><sp/><ref refid="structbatmat_1_1linalg_1_1norms_1a45bc403c090c2204ad41f772e58007fc" kindref="member">operator()</ref>(<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd" kindref="compound">result_simd</ref><sp/>a,<sp/><ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd" kindref="compound">result_simd</ref><sp/>b)</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">std::max;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.amax<sp/>=<sp/>max(a.<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a9a4a92884d60d73f1cc317061b6d60a3" kindref="member">amax</ref>,<sp/>b.<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a9a4a92884d60d73f1cc317061b6d60a3" kindref="member">amax</ref>),<sp/>.asum<sp/>=<sp/>a.<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1acaf6ef3de3b2d4ee97b72e9c158b44bd" kindref="member">asum</ref><sp/>+<sp/>b.<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1acaf6ef3de3b2d4ee97b72e9c158b44bd" kindref="member">asum</ref>,<sp/>.sumsq<sp/>=<sp/>a.<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a086b482f626355af733c0ad057ecd570" kindref="member">sumsq</ref><sp/>+<sp/>b.<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a086b482f626355af733c0ad057ecd570" kindref="member">sumsq</ref>};</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="65"><highlight class="comment"><sp/><sp/><sp/><sp/>///<sp/>Reduce<sp/>the<sp/>SIMD<sp/>accumulator<sp/>to<sp/>a<sp/>scalar<sp/>result.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66" refid="structbatmat_1_1linalg_1_1norms_1a19b125ae4f22beeff397e7ebe7a24696" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1norms_1ae223b70fcb64755e0a026f2cc3943fb6" kindref="member">result</ref><sp/><ref refid="structbatmat_1_1linalg_1_1norms_1a19b125ae4f22beeff397e7ebe7a24696" kindref="member">operator()</ref>(<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd" kindref="compound">result_simd</ref><sp/>accum)</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">batmat::datapar::hmax;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{hmax(accum.<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a9a4a92884d60d73f1cc317061b6d60a3" kindref="member">amax</ref>),<sp/>reduce(accum.<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1acaf6ef3de3b2d4ee97b72e9c158b44bd" kindref="member">asum</ref>),<sp/>reduce(accum.<ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a086b482f626355af733c0ad057ecd570" kindref="member">sumsq</ref>)};</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1norms" kindref="compound">norms</ref>&lt;T&gt;::zero;</highlight></codeline>
+<codeline lineno="72" refid="structbatmat_1_1linalg_1_1norms_1a373ad15738b94545803a7e65a3b4e7a4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1norms_1_1result__simd" kindref="compound">result_simd</ref><sp/><ref refid="structbatmat_1_1linalg_1_1norms_1a373ad15738b94545803a7e65a3b4e7a4" kindref="member">zero_simd</ref>()<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{};<sp/>}</highlight></codeline>
+<codeline lineno="73"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T&gt;</highlight></codeline>
+<codeline lineno="76" refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1norms" kindref="compound">norms</ref>&lt;T,<sp/>void&gt;<sp/>{</highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="77"><highlight class="comment"><sp/><sp/><sp/><sp/>///<sp/>Accumulator.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="78" refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result" kindref="compound">result</ref><sp/>{</highlight></codeline>
+<codeline lineno="79" refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a5318bc89ad1183d6bbeffd6ff614cb1f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>T<sp/><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a5318bc89ad1183d6bbeffd6ff614cb1f" kindref="member">amax</ref>;<sp/></highlight><highlight class="comment">///&lt;<sp/>Maximum<sp/>absolute<sp/>value<sp/>(ignoring<sp/>NaNs).</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="80" refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a8fcefdf2eb9f87353d06855a9d26e86d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>T<sp/><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a8fcefdf2eb9f87353d06855a9d26e86d" kindref="member">asum</ref>;</highlight></codeline>
+<codeline lineno="81" refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1ab7e83008f054b377039d2174f5f5943e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>T<sp/><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1ab7e83008f054b377039d2174f5f5943e" kindref="member">sumsq</ref>;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="83"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>///<sp/>ℓ₁<sp/>norm.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="84" refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1af8feb59bdcc8f88cc01931e28cd2fe6d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/>T<sp/><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1af8feb59bdcc8f88cc01931e28cd2fe6d" kindref="member">norm_1</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a8fcefdf2eb9f87353d06855a9d26e86d" kindref="member">asum</ref>;<sp/>}</highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="85"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>///<sp/>ℓ₂<sp/>norm.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="86" refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1aadf520c2e543266639608ceaf5db81f1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/>T<sp/><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1aadf520c2e543266639608ceaf5db81f1" kindref="member">norm_2</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">std::sqrt;</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>sqrt(<ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1ab7e83008f054b377039d2174f5f5943e" kindref="member">sumsq</ref>);</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="90"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>///<sp/>max-norm.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91" refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a4506ea29753ffad2446c91a482d898dc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/>T<sp/><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a4506ea29753ffad2446c91a482d898dc" kindref="member">norm_inf</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">std::isfinite;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>isfinite(<ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a8fcefdf2eb9f87353d06855a9d26e86d" kindref="member">asum</ref>)<sp/>?<sp/><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a5318bc89ad1183d6bbeffd6ff614cb1f" kindref="member">amax</ref><sp/>:<sp/><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a8fcefdf2eb9f87353d06855a9d26e86d" kindref="member">asum</ref>;</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="97"><highlight class="comment"><sp/><sp/><sp/><sp/>///<sp/>Update<sp/>the<sp/>accumulator<sp/>with<sp/>a<sp/>new<sp/>value.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="98" refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1a5b9bf9a93bbc012a17c856a3a60063df" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result" kindref="compound">result</ref><sp/><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1a5b9bf9a93bbc012a17c856a3a60063df" kindref="member">operator()</ref>(<ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result" kindref="compound">result</ref><sp/>accum,<sp/>T<sp/>t)</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">std::abs;</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">std::max;</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>at<sp/>=<sp/>abs(t);</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{.amax<sp/>=<sp/>max(at,<sp/>accum.<ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a5318bc89ad1183d6bbeffd6ff614cb1f" kindref="member">amax</ref>),<sp/>.asum<sp/>=<sp/>at<sp/>+<sp/>accum.<ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a8fcefdf2eb9f87353d06855a9d26e86d" kindref="member">asum</ref>,<sp/>.sumsq<sp/>=<sp/>t<sp/>*<sp/>t<sp/>+<sp/>accum.<ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1ab7e83008f054b377039d2174f5f5943e" kindref="member">sumsq</ref>};</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="105"><highlight class="comment"><sp/><sp/><sp/><sp/>///<sp/>Combine<sp/>two<sp/>accumulators.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="106" refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1a1ab34bbdf873c0447789cf4e86a49a42" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result" kindref="compound">result</ref><sp/><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1a1ab34bbdf873c0447789cf4e86a49a42" kindref="member">operator()</ref>(<ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result" kindref="compound">result</ref><sp/>accum,<sp/><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result" kindref="compound">result</ref><sp/>t)</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">std::max;</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{max(accum.<ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a5318bc89ad1183d6bbeffd6ff614cb1f" kindref="member">amax</ref>,<sp/>t.<ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a5318bc89ad1183d6bbeffd6ff614cb1f" kindref="member">amax</ref>),<sp/>accum.<ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a8fcefdf2eb9f87353d06855a9d26e86d" kindref="member">asum</ref><sp/>+<sp/>t.<ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a8fcefdf2eb9f87353d06855a9d26e86d" kindref="member">asum</ref>,<sp/>accum.<ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1ab7e83008f054b377039d2174f5f5943e" kindref="member">sumsq</ref><sp/>+<sp/>t.<ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1ab7e83008f054b377039d2174f5f5943e" kindref="member">sumsq</ref>};</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="111"><highlight class="comment"><sp/><sp/><sp/><sp/>///<sp/>Identity<sp/>element<sp/>for<sp/>the<sp/>reduction.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="112" refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1a0d3617c028c4fa4aab3ca801bf694582" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result" kindref="compound">result</ref><sp/><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1a0d3617c028c4fa4aab3ca801bf694582" kindref="member">zero</ref>()<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>{};<sp/>}</highlight></codeline>
+<codeline lineno="113"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="115"><highlight class="comment">///<sp/>@}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight></codeline>
+<codeline lineno="117"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::linalg</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/linalg/norms.hpp"/>
+  </compounddef>
+</doxygen>

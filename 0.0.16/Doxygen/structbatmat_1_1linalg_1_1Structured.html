@@ -1,0 +1,438 @@
+<!-- HTML header for doxygen 1.16.1-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.16.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>batmat: batmat::linalg::Structured&lt; M, S &gt; Struct Template Reference</title>
+<link rel="icon" href="batmat-small.png" type="image/x-icon" />
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+window.MathJax = {
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  },
+  loader: {
+    load: ['[tex]/ams']
+  },
+  tex: {
+    macros: {    Reals: "{\\mathrm{I\\!R}}",
+    Nats: "{\\mathrm{I\\!N}}",
+    Cplx: "{\\mathbb{C}}",
+    R: "{\\Reals}",
+    N: "{\\Nats}",
+    C: "{\\Cplx}",
+    Rn: "{\\Reals^n}",
+    Rm: "{\\Reals^m}",
+    gph: "{\\operatorname{\\mathbf{gph}}}",
+    zer: "{\\operatorname{\\mathbf{zer}}}",
+    fix: "{\\operatorname{\\mathbf{fix}}}",
+    minimize: "{\\operatorname*{\\mathbf{minimize}}}",
+    st: "{\\operatorname*{\\mathbf{s.\\!t.}}}",
+    argmin: "{\\operatorname*{\\mathbf{arg\\,min}}}",
+    argmax: "{\\operatorname*{\\mathbf{arg\\,max}}}",
+    subjto: "{\\operatorname*{\\mathbf{subject\\;to}}}",
+    prox: "{\\operatorname{\\mathbf{prox}}}",
+    Hilb: "{\\mathcal{H}}",
+    proj: ["{\\operatorname{\\mathbf{\\Pi}_\\mathnormal{#1}}}",1],
+    dist: "{\\operatorname{\\mathbf{dist}}}",
+    Id: "{\\mathrm{Id}}",
+    I: "{\\mathrm{I}}",
+    one: "{\\mathbf{1}}",
+    defeq: "{\\triangleq}",
+    inprod: ["{\\left\\langle {#1} \\,\\middle|\\, {#2} \\right\\rangle}",2],
+    norm: ["{\\left\\| {#1} \\vphantom{X} \\right\\|}",1],
+    normsq: ["{\\norm{#1}^2}",1],
+    defset: ["{\\left\\{ {#1} \\;\\middle|\\; {#2} \\right\\}}",2],
+    tp: ["{#1^\\top}",1],
+    ttp: ["{#1^{\\!\\top\\!}}",1],
+    herm: ["{#1^\\mathrm{H}}",1],
+    invherm: ["{#1^{-\\mathrm{H}}}",1],
+    inv: ["{#1^{-1}}",1],
+    pinv: ["{#1^\\dagger}",1],
+    lconj: "{\\overline}",
+    sconj: ["{#1^*}",1],
+    iddots: "{\\mathinner{\\kern1mu\\raise1pt{.}\\kern2mu\\raise4pt{.}\\kern2mu\\raise7pt{\\Rule{0pt}{7pt}{0pt}.}\\kern1mu}}",
+    imagfun: ["{\\left(#1\\right)\\left(#2\\right)}",2],
+    Lagr: "{\\mathcal{L}}",
+    jac: "{\\mathrm{J}}",
+    dft: "{\\operatorname{\\mathbf{dft}}}",
+    cbrt: ["{\\sqrt[3]{#1}}",1],
+    sgn: "{\\operatorname{\\mathbf{sgn}}}",
+    setmap: "{\\rightrightarrows}",
+    lammin: "{\\lambda_\\text{min}}",
+    lammax: "{\\lambda_\\text{max}}",
+    Sc: "{\\mathcal{S}}",
+    Scstar: "{\\mathcal{S}^*}",
+    diag: "{\\operatorname{\\mathbf{diag}}}",
+    blkdiag: "{\\operatorname{\\mathbf{blkdiag}}}",
+    posdef: "{\\succ}",
+    possdef: "{\\succeq}",
+    half: "{\\tfrac{1}{2}}",
+    hhbar: "{\\hbar}",
+    barxuk: "{\\bar x^k\\!, \\bar u^k}",
+    },
+    packages: ['base','configmacros','newcommand','ams']
+  }
+};
+window.MathJax.tex.tags = 'ams';
+</script>
+<script type="text/javascript" id="MathJax-script" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script type="text/javascript" src="darkmode_toggle.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="batmat-small.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">batmat<span id="projectnumber">&#160;<code><a href="/batmat/index.html">0.0.16</a></code></span>
+   </div>
+   <div id="projectbrief">Batched linear algebra routines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.16.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('structbatmat_1_1linalg_1_1Structured.html','','structbatmat_1_1linalg_1_1Structured-members'); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">batmat::linalg::Structured&lt; M, S &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__topic-linalg.html">Linear algebra</a></div></div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="triangular_8hpp_source.html">batmat/linalg/triangular.hpp</a>&gt;</code></p>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;class M, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> S = MatrixStructure::General&gt;<br />
+struct batmat::linalg::Structured&lt; M, S &gt;</div><p>Light-weight wrapper class used for overload resolution of triangular and symmetric matrices. </p>
+
+<p class="definition">Definition at line <a class="el" href="triangular_8hpp_source.html#l00013">13</a> of file <a class="el" href="triangular_8hpp_source.html">triangular.hpp</a>.</p>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:aede8ee78c22f9ea970c97fd679162cfa" id="r_aede8ee78c22f9ea970c97fd679162cfa"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aede8ee78c22f9ea970c97fd679162cfa">Structured</a> (M &amp;&amp;m)</td></tr>
+<tr class="memitem:ad9a176fb3b45d863096acf053e30b0e2" id="r_ad9a176fb3b45d863096acf053e30b0e2"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ad9a176fb3b45d863096acf053e30b0e2">Structured</a> (const Structured &amp;)=default</td></tr>
+<tr class="memitem:a76a579c4f5045b042173a1ad5dce3e5f" id="r_a76a579c4f5045b042173a1ad5dce3e5f"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a76a579c4f5045b042173a1ad5dce3e5f">Structured</a> (Structured &amp;&amp;)=default</td></tr>
+<tr class="memitem:a4b7bb6d67bc01e85aeb2f4c5480e6047" id="r_a4b7bb6d67bc01e85aeb2f4c5480e6047"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="#a4b7bb6d67bc01e85aeb2f4c5480e6047">transposed</a> () const &amp;</td></tr>
+<tr class="memitem:acba7e7c24c669f93b6740af376cc3fb6" id="r_acba7e7c24c669f93b6740af376cc3fb6"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="#acba7e7c24c669f93b6740af376cc3fb6">transposed</a> () &amp;&amp;</td></tr>
+<tr class="memitem:a81f0feaa9abd00bfa623019877ed7863" id="r_a81f0feaa9abd00bfa623019877ed7863"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="#a81f0feaa9abd00bfa623019877ed7863">ref</a> ()</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a26a5ce98adb8f2c39eb03c645828d82b" id="r_a26a5ce98adb8f2c39eb03c645828d82b"><td class="memItemLeft">M&#160;</td><td class="memItemRight"><a class="el" href="#a26a5ce98adb8f2c39eb03c645828d82b">value</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:ae24a0809b596274f8195c3eae3d170ed" id="r_ae24a0809b596274f8195c3eae3d170ed"><td class="memItemLeft">static constexpr <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a>&#160;</td><td class="memItemRight"><a class="el" href="#ae24a0809b596274f8195c3eae3d170ed">structure</a> = S</td></tr>
+</table>
+<a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="aede8ee78c22f9ea970c97fd679162cfa" name="aede8ee78c22f9ea970c97fd679162cfa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aede8ee78c22f9ea970c97fd679162cfa">&#9670;&#160;</a></span>Structured() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class M, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> S = MatrixStructure::General&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1linalg_1_1Structured.html">batmat::linalg::Structured</a>&lt; M, S &gt;::Structured </td>
+          <td>(</td>
+          <td class="paramtype">M &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel explicit">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="triangular_8hpp_source.html#l00015">15</a> of file <a class="el" href="triangular_8hpp_source.html">triangular.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ad9a176fb3b45d863096acf053e30b0e2" name="ad9a176fb3b45d863096acf053e30b0e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9a176fb3b45d863096acf053e30b0e2">&#9670;&#160;</a></span>Structured() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class M, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> S = MatrixStructure::General&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1linalg_1_1Structured.html">batmat::linalg::Structured</a>&lt; M, S &gt;::Structured </td>
+          <td>(</td>
+          <td class="paramtype">const Structured&lt; M, S &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a76a579c4f5045b042173a1ad5dce3e5f" name="a76a579c4f5045b042173a1ad5dce3e5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76a579c4f5045b042173a1ad5dce3e5f">&#9670;&#160;</a></span>Structured() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class M, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> S = MatrixStructure::General&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1linalg_1_1Structured.html">batmat::linalg::Structured</a>&lt; M, S &gt;::Structured </td>
+          <td>(</td>
+          <td class="paramtype">Structured&lt; M, S &gt; &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a4b7bb6d67bc01e85aeb2f4c5480e6047" name="a4b7bb6d67bc01e85aeb2f4c5480e6047"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b7bb6d67bc01e85aeb2f4c5480e6047">&#9670;&#160;</a></span>transposed() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class M, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> S = MatrixStructure::General&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">batmat::linalg::Structured</a>&lt; M, S &gt;::transposed </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const &amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="triangular_8hpp_source.html#l00019">19</a> of file <a class="el" href="triangular_8hpp_source.html">triangular.hpp</a>.</p>
+
+</div>
+</div>
+<a id="acba7e7c24c669f93b6740af376cc3fb6" name="acba7e7c24c669f93b6740af376cc3fb6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acba7e7c24c669f93b6740af376cc3fb6">&#9670;&#160;</a></span>transposed() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class M, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> S = MatrixStructure::General&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">batmat::linalg::Structured</a>&lt; M, S &gt;::transposed </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> &amp;&amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="triangular_8hpp_source.html#l00024">24</a> of file <a class="el" href="triangular_8hpp_source.html">triangular.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a81f0feaa9abd00bfa623019877ed7863" name="a81f0feaa9abd00bfa623019877ed7863"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81f0feaa9abd00bfa623019877ed7863">&#9670;&#160;</a></span>ref()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class M, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> S = MatrixStructure::General&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">batmat::linalg::Structured</a>&lt; M, S &gt;::ref </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="triangular_8hpp_source.html#l00030">30</a> of file <a class="el" href="triangular_8hpp_source.html">triangular.hpp</a>.</p>
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="ae24a0809b596274f8195c3eae3d170ed" name="ae24a0809b596274f8195c3eae3d170ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae24a0809b596274f8195c3eae3d170ed">&#9670;&#160;</a></span>structure</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class M, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> S = MatrixStructure::General&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">batmat::linalg::Structured</a>&lt; M, S &gt;::structure = S</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="triangular_8hpp_source.html#l00014">14</a> of file <a class="el" href="triangular_8hpp_source.html">triangular.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a26a5ce98adb8f2c39eb03c645828d82b" name="a26a5ce98adb8f2c39eb03c645828d82b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26a5ce98adb8f2c39eb03c645828d82b">&#9670;&#160;</a></span>value</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class M, <a class="el" href="group__topic-linalg.html#ga90f301363f149f1f28ee20000558629c">MatrixStructure</a> S = MatrixStructure::General&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">M <a class="el" href="structbatmat_1_1linalg_1_1Structured.html">batmat::linalg::Structured</a>&lt; M, S &gt;::value</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="triangular_8hpp_source.html#l00018">18</a> of file <a class="el" href="triangular_8hpp_source.html">triangular.hpp</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>batmat/include/batmat/linalg/<a class="el" href="triangular_8hpp_source.html">triangular.hpp</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="namespacebatmat.html">batmat</a></li><li class="navelem"><a href="namespacebatmat_1_1linalg.html">linalg</a></li><li class="navelem"><a href="structbatmat_1_1linalg_1_1Structured.html">Structured</a></li>
+    <li class="footer">Generated on <span class="timestamp"></span> for batmat by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
+  </ul>
+</div>
+</body>
+</html>

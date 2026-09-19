@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="timing_8hpp" kind="file" language="C++">
+    <compoundname>timing.hpp</compoundname>
+    <includes local="no">batmat/config.hpp</includes>
+    <includes local="no">batmat/export.h</includes>
+    <includes local="no">guanaqo/timed.hpp</includes>
+    <includes local="no">chrono</includes>
+    <includedby refid="timing_8cpp" local="no">batmat/src/timing.cpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>batmat/include/batmat/timing.hpp</label>
+        <link refid="timing_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/config.hpp</label>
+      </node>
+      <node id="3">
+        <label>batmat/export.h</label>
+      </node>
+      <node id="5">
+        <label>chrono</label>
+      </node>
+      <node id="4">
+        <label>guanaqo/timed.hpp</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>batmat/include/batmat/timing.hpp</label>
+        <link refid="timing_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/src/timing.cpp</label>
+        <link refid="timing_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structbatmat_1_1DefaultTimings" prot="public">batmat::DefaultTimings</innerclass>
+    <innerclass refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4" prot="public">guanaqo::Timed&lt; batmat::DefaultTimings &gt;</innerclass>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespaceguanaqo">guanaqo</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;batmat/config.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;batmat/export.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;guanaqo/timed.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>BATMAT_WITH_CPU_TIME</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;guanaqo/timed-cpu.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;chrono&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat" kindref="compound">batmat</ref><sp/>{</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>BATMAT_WITH_CPU_TIME<sp/></highlight><highlight class="comment">//<sp/>TODO</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1DefaultTimings" kindref="compound">DefaultTimings</ref><sp/>=<sp/>guanaqo::TimingsCPU;</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="17"><highlight class="comment">///<sp/>Measures<sp/>the<sp/>number<sp/>of<sp/>invocations<sp/>of<sp/>a<sp/>specific<sp/>piece<sp/>of<sp/>code<sp/>and<sp/>its</highlight></codeline>
+<codeline lineno="18"><highlight class="comment">///<sp/>run<sp/>time.</highlight></codeline>
+<codeline lineno="19"><highlight class="comment">///<sp/>@todo<sp/><sp/><sp/>Move<sp/>to<sp/>guanaqo.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20" refid="structbatmat_1_1DefaultTimings" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">BATMAT_EXPORT<sp/><ref refid="structbatmat_1_1DefaultTimings" kindref="compound">DefaultTimings</ref><sp/>{</highlight></codeline>
+<codeline lineno="21" refid="structbatmat_1_1DefaultTimings_1aff53271edfb6ae2d0298aac409810c3d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>int64_t<sp/><ref refid="structbatmat_1_1DefaultTimings_1aff53271edfb6ae2d0298aac409810c3d" kindref="member">num_invocations</ref>{};</highlight></codeline>
+<codeline lineno="22" refid="structbatmat_1_1DefaultTimings_1aef980ddec7421dc88141f844e8f886c3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>std::chrono::nanoseconds<sp/><ref refid="structbatmat_1_1DefaultTimings_1aef980ddec7421dc88141f844e8f886c3" kindref="member">wall_time</ref>{};</highlight></codeline>
+<codeline lineno="23"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal">BATMAT_EXPORT<sp/>std::ostream<sp/>&amp;<ref refid="namespacebatmat_1aafc9b52d8b52e8e01bd08e2cc2067e49" kindref="member">operator&lt;&lt;</ref>(std::ostream<sp/>&amp;,<sp/>DefaultTimings);</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="group__timing_1gae31e47c73a1cdd23a3d6cc6a64a805f9" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">guanaqo::timed</ref>;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>!BATMAT_WITH_CPU_TIME</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceguanaqo" kindref="compound" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">guanaqo</ref><sp/>{</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="37"><highlight class="comment">///<sp/>RAII<sp/>class<sp/>for<sp/>measuring<sp/>wall<sp/>time.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;&gt;</highlight></codeline>
+<codeline lineno="39" refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">BATMAT_EXPORT<sp/><ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a524ce94079d964deeeb2f48c5869708c" kindref="member">Timed</ref>&lt;<ref refid="namespacebatmat" kindref="compound">batmat</ref>::DefaultTimings&gt;<sp/>{</highlight></codeline>
+<codeline lineno="40" refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a524ce94079d964deeeb2f48c5869708c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a524ce94079d964deeeb2f48c5869708c" kindref="member">Timed</ref>(<ref refid="structbatmat_1_1DefaultTimings" kindref="compound">batmat::DefaultTimings</ref><sp/>&amp;<ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a6c935a737948c580834285f330959be9" kindref="member">time</ref>)<sp/>:<sp/><ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a6c935a737948c580834285f330959be9" kindref="member">time</ref>(<ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a6c935a737948c580834285f330959be9" kindref="member">time</ref>)<sp/>{<sp/><ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1ab360b8dcf076d8275460105be3e91ceb" kindref="member">wall_start_time</ref><sp/>=<sp/>clock::now();<sp/>}</highlight></codeline>
+<codeline lineno="41" refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a834faa80ce5a071b1bfc4c23c0c4eefa" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a834faa80ce5a071b1bfc4c23c0c4eefa" kindref="member">~Timed</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>wall_end_time<sp/>=<sp/>clock::now();</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>++<ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a6c935a737948c580834285f330959be9" kindref="member">time</ref>.num_invocations;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a6c935a737948c580834285f330959be9" kindref="member">time</ref>.wall_time<sp/>+=<sp/>wall_end_time<sp/>-<sp/><ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1ab360b8dcf076d8275460105be3e91ceb" kindref="member">wall_start_time</ref>;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="46" refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1ae2627b0cd95df565c95eddaaa541b10a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1ae2627b0cd95df565c95eddaaa541b10a" kindref="member">Timed</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a524ce94079d964deeeb2f48c5869708c" kindref="member">Timed</ref><sp/>&amp;)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="47" refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1abf7a35c24e8318240b4909205c2e9720" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a524ce94079d964deeeb2f48c5869708c" kindref="member">Timed</ref><sp/>&amp;<ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1abf7a35c24e8318240b4909205c2e9720" kindref="member">operator=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a524ce94079d964deeeb2f48c5869708c" kindref="member">Timed</ref><sp/>&amp;)<sp/>=<sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="50" refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1abbeecef34105f4eb7451ee1a116ad29b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1abbeecef34105f4eb7451ee1a116ad29b" kindref="member">clock</ref><sp/>=<sp/>std::chrono::steady_clock;</highlight></codeline>
+<codeline lineno="51" refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a6c935a737948c580834285f330959be9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1DefaultTimings" kindref="compound">batmat::DefaultTimings</ref><sp/>&amp;<ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1a6c935a737948c580834285f330959be9" kindref="member">time</ref>;</highlight></codeline>
+<codeline lineno="52" refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1ab360b8dcf076d8275460105be3e91ceb" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>clock::time_point<sp/><ref refid="structguanaqo_1_1Timed_3_01batmat_1_1DefaultTimings_01_4_1ab360b8dcf076d8275460105be3e91ceb" kindref="member">wall_start_time</ref>;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>guanaqo</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/timing.hpp"/>
+  </compounddef>
+</doxygen>

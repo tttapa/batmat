@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1types_1_1DTypeVectorLength" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::types::DTypeVectorLength</compoundname>
+    <includes refid="dtypes_8hpp" local="no">batmat/dtypes.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>class T</type>
+      </param>
+      <param>
+        <type>index_t</type>
+        <declname>VL</declname>
+        <defname>VL</defname>
+      </param>
+    </templateparamlist>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structbatmat_1_1types_1_1DTypeVectorLength_1af84f81049278d34a6c411a32909f65ca" prot="public" static="no">
+        <type>T</type>
+        <definition>using batmat::types::DTypeVectorLength&lt; T, VL &gt;::dtype = T</definition>
+        <argsstring></argsstring>
+        <name>dtype</name>
+        <qualifiedname>batmat::types::DTypeVectorLength::dtype</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="75" column="5" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1types_1_1DTypeVectorLength_1a5d3a9dd74ac15e54470faeb732f05c53" prot="public" static="no">
+        <type>std::integral_constant&lt; index_t, VL &gt;</type>
+        <definition>using batmat::types::DTypeVectorLength&lt; T, VL &gt;::vl_t = std::integral_constant&lt;index_t, VL&gt;</definition>
+        <argsstring></argsstring>
+        <name>vl_t</name>
+        <qualifiedname>batmat::types::DTypeVectorLength::vl_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="76" column="5" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="76" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1types_1_1DTypeVectorLength_1af5387813b3108abc565470f30eef3558" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>index_t</type>
+        <definition>index_t batmat::types::DTypeVectorLength&lt; T, VL &gt;::vl</definition>
+        <argsstring></argsstring>
+        <name>vl</name>
+        <qualifiedname>batmat::types::DTypeVectorLength::vl</qualifiedname>
+        <initializer>= VL</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="77" column="30" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="77" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::types::DTypeVectorLength&lt; T, VL &gt;</label>
+        <link refid="structbatmat_1_1types_1_1DTypeVectorLength"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/dtypes.hpp" line="74" column="1" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="74" bodyend="78"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1types_1_1DTypeVectorLength_1af84f81049278d34a6c411a32909f65ca" prot="public" virt="non-virtual"><scope>batmat::types::DTypeVectorLength</scope><name>dtype</name></member>
+      <member refid="structbatmat_1_1types_1_1DTypeVectorLength_1af5387813b3108abc565470f30eef3558" prot="public" virt="non-virtual"><scope>batmat::types::DTypeVectorLength</scope><name>vl</name></member>
+      <member refid="structbatmat_1_1types_1_1DTypeVectorLength_1a5d3a9dd74ac15e54470faeb732f05c53" prot="public" virt="non-virtual"><scope>batmat::types::DTypeVectorLength</scope><name>vl_t</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

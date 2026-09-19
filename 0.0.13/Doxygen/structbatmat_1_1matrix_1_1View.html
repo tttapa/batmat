@@ -1,0 +1,2773 @@
+<!-- HTML header for doxygen 1.16.1-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.16.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>batmat: batmat::matrix::View&lt; T, I, S, D, L, O &gt; Struct Template Reference</title>
+<link rel="icon" href="batmat-small.png" type="image/x-icon" />
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+window.MathJax = {
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  },
+  loader: {
+    load: ['[tex]/ams']
+  },
+  tex: {
+    macros: {    Reals: "{\\mathrm{I\\!R}}",
+    Nats: "{\\mathrm{I\\!N}}",
+    Cplx: "{\\mathbb{C}}",
+    R: "{\\Reals}",
+    N: "{\\Nats}",
+    C: "{\\Cplx}",
+    Rn: "{\\Reals^n}",
+    Rm: "{\\Reals^m}",
+    gph: "{\\operatorname{\\mathbf{gph}}}",
+    zer: "{\\operatorname{\\mathbf{zer}}}",
+    fix: "{\\operatorname{\\mathbf{fix}}}",
+    minimize: "{\\operatorname*{\\mathbf{minimize}}}",
+    st: "{\\operatorname*{\\mathbf{s.\\!t.}}}",
+    argmin: "{\\operatorname*{\\mathbf{arg\\,min}}}",
+    argmax: "{\\operatorname*{\\mathbf{arg\\,max}}}",
+    subjto: "{\\operatorname*{\\mathbf{subject\\;to}}}",
+    prox: "{\\operatorname{\\mathbf{prox}}}",
+    Hilb: "{\\mathcal{H}}",
+    proj: ["{\\operatorname{\\mathbf{\\Pi}_\\mathnormal{#1}}}",1],
+    dist: "{\\operatorname{\\mathbf{dist}}}",
+    Id: "{\\mathrm{Id}}",
+    I: "{\\mathrm{I}}",
+    one: "{\\mathbf{1}}",
+    defeq: "{\\triangleq}",
+    inprod: ["{\\left\\langle {#1} \\,\\middle|\\, {#2} \\right\\rangle}",2],
+    norm: ["{\\left\\| {#1} \\vphantom{X} \\right\\|}",1],
+    normsq: ["{\\norm{#1}^2}",1],
+    defset: ["{\\left\\{ {#1} \\;\\middle|\\; {#2} \\right\\}}",2],
+    tp: ["{#1^\\top}",1],
+    ttp: ["{#1^{\\!\\top\\!}}",1],
+    herm: ["{#1^\\mathrm{H}}",1],
+    invherm: ["{#1^{-\\mathrm{H}}}",1],
+    inv: ["{#1^{-1}}",1],
+    pinv: ["{#1^\\dagger}",1],
+    lconj: "{\\overline}",
+    sconj: ["{#1^*}",1],
+    iddots: "{\\mathinner{\\kern1mu\\raise1pt{.}\\kern2mu\\raise4pt{.}\\kern2mu\\raise7pt{\\Rule{0pt}{7pt}{0pt}.}\\kern1mu}}",
+    imagfun: ["{\\left(#1\\right)\\left(#2\\right)}",2],
+    Lagr: "{\\mathcal{L}}",
+    jac: "{\\mathrm{J}}",
+    dft: "{\\operatorname{\\mathbf{dft}}}",
+    cbrt: ["{\\sqrt[3]{#1}}",1],
+    sgn: "{\\operatorname{\\mathbf{sgn}}}",
+    setmap: "{\\rightrightarrows}",
+    lammin: "{\\lambda_\\text{min}}",
+    lammax: "{\\lambda_\\text{max}}",
+    Sc: "{\\mathcal{S}}",
+    Scstar: "{\\mathcal{S}^*}",
+    diag: "{\\operatorname{\\mathbf{diag}}}",
+    blkdiag: "{\\operatorname{\\mathbf{blkdiag}}}",
+    posdef: "{\\succ}",
+    possdef: "{\\succeq}",
+    half: "{\\tfrac{1}{2}}",
+    hhbar: "{\\hbar}",
+    barxuk: "{\\bar x^k\\!, \\bar u^k}",
+    },
+    packages: ['base','configmacros','newcommand','ams']
+  }
+};
+window.MathJax.tex.tags = 'ams';
+</script>
+<script type="text/javascript" id="MathJax-script" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script type="text/javascript" src="darkmode_toggle.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="batmat-small.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">batmat<span id="projectnumber">&#160;<code><a href="/batmat/index.html">0.0.13</a></code></span>
+   </div>
+   <div id="projectbrief">Batched linear algebra routines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.16.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('structbatmat_1_1matrix_1_1View.html','','structbatmat_1_1matrix_1_1View-members'); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">batmat::matrix::View&lt; T, I, S, D, L, O &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__topic-matrix.html">Matrix data structures</a></div></div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="view_8hpp_source.html">batmat/matrix/view.hpp</a>&gt;</code></p>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt;<br />
+struct batmat::matrix::View&lt; T, I, S, D, L, O &gt;</div><p>Non-owning view of a batch of matrices. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Element value type (possibly const-qualified). </td></tr>
+    <tr><td class="paramname">I</td><td>Index and size type. Usually <span class="tt">std::ptrdiff_t</span> or <span class="tt">int</span>. </td></tr>
+    <tr><td class="paramname">S</td><td>Inner stride type (batch size). Usually <span class="tt">std::integral_constant&lt;I, N&gt;</span> for some <span class="tt">N</span>. </td></tr>
+    <tr><td class="paramname">D</td><td>Batch depth type. Usually equal to <code class="param">S</code> for a single batch, or <code class="param">I</code> for a dynamic depth. </td></tr>
+    <tr><td class="paramname">L</td><td>Layer stride type. Usually <a class="el" href="structbatmat_1_1matrix_1_1DefaultStride.html" title="DefaultStride">DefaultStride</a> (which implies that the layer stride is equal to <span class="tt"><a class="el" href="#afa2c308d93a3e7a1ff8a00aa044bea71" title="Outer stride of the matrices (leading dimension in BLAS parlance).">outer_stride()</a> * <a class="el" href="#ace0f2f30fc941f898d62867adc440087" title="The size of the outer dimension, i.e.">outer_size()</a></span>), or <code class="param">I</code> for a dynamic layer stride. Dynamic strides are used for subviews of views with a larger <span class="tt"><a class="el" href="#ace0f2f30fc941f898d62867adc440087" title="The size of the outer dimension, i.e.">outer_size()</a></span>. </td></tr>
+    <tr><td class="paramname">O</td><td>Storage order (column or row major). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00032">32</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
+Batch-wise slicing</h2></td></tr>
+<tr class="memitem:afab4ef784be9c2eb607b32ee01443a14" id="r_afab4ef784be9c2eb607b32ee01443a14"><td class="memItemLeft"><a class="el" href="#a144c1ef95a12cb6134e85f06bf306988">batch_view_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#afab4ef784be9c2eb607b32ee01443a14">batch</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> b) const</td></tr>
+<tr class="memdesc:afab4ef784be9c2eb607b32ee01443a14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access a batch of <a class="el" href="#a652fe35cdc98459e74dd3f193bd67750" title="batch_size()">batch_size()</a> layers, starting at batch index <code class="param">b</code> (i.e.  <br /></td></tr>
+<tr class="memitem:a7413cc3f2de4aa60dddc53515316d09c" id="r_a7413cc3f2de4aa60dddc53515316d09c"><td class="memItemLeft"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt; T, I, S, I, L, O &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a7413cc3f2de4aa60dddc53515316d09c">batch_dyn</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> b) const</td></tr>
+<tr class="memdesc:a7413cc3f2de4aa60dddc53515316d09c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Same as <a class="el" href="#afab4ef784be9c2eb607b32ee01443a14" title="batch()">batch()</a>, but returns a view with a dynamic batch size.  <br /></td></tr>
+<tr class="memitem:a03bc4d77448c6a431ad9afa371c410bd" id="r_a03bc4d77448c6a431ad9afa371c410bd"><td class="memTemplParams" colspan="2">template&lt;class N&gt; </td></tr>
+<tr class="memitem:a03bc4d77448c6a431ad9afa371c410bd template"><td class="memItemLeft"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt; T, I, S, N, L, O &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a03bc4d77448c6a431ad9afa371c410bd">first_layers</a> (N n) const</td></tr>
+<tr class="memdesc:a03bc4d77448c6a431ad9afa371c410bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a view of the first <code class="param">n</code> layers. Note that <code class="param">n</code> can be a compile-time constant.  <br /></td></tr>
+<tr class="memitem:a4fab94433b9358b5d5ae490d4be4612d" id="r_a4fab94433b9358b5d5ae490d4be4612d"><td class="memTemplParams" colspan="2">template&lt;class N&gt; </td></tr>
+<tr class="memitem:a4fab94433b9358b5d5ae490d4be4612d template"><td class="memItemLeft"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt; T, I, S, N, L, O &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a4fab94433b9358b5d5ae490d4be4612d">middle_layers</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> l, N n) const</td></tr>
+<tr class="memdesc:a4fab94433b9358b5d5ae490d4be4612d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a view of <code class="param">n</code> layers starting at layer <code class="param">l</code>.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
+Iterators and buffer access</h2></td></tr>
+<tr class="memitem:abd3d195f148998f1020d39cea4ef0c5b" id="r_abd3d195f148998f1020d39cea4ef0c5b"><td class="memItemLeft">T *&#160;</td><td class="memItemRight"><a class="el" href="#abd3d195f148998f1020d39cea4ef0c5b">data</a> () const</td></tr>
+<tr class="memdesc:abd3d195f148998f1020d39cea4ef0c5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a pointer to the first element of the first layer.  <br /></td></tr>
+<tr class="memitem:a4199ceacf690f7d75d14fa31b6f93d12" id="r_a4199ceacf690f7d75d14fa31b6f93d12"><td class="memItemLeft"><a class="el" href="structbatmat_1_1matrix_1_1View_1_1linear__iterator.html">linear_iterator</a>&#160;</td><td class="memItemRight"><a class="el" href="#a4199ceacf690f7d75d14fa31b6f93d12">begin</a> () const</td></tr>
+<tr class="memdesc:a4199ceacf690f7d75d14fa31b6f93d12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Iterate linearly (in storage order) over all elements of the view.  <br /></td></tr>
+<tr class="memitem:a65c4f7147d2b8eadcf793341615e9265" id="r_a65c4f7147d2b8eadcf793341615e9265"><td class="memItemLeft">std::default_sentinel_t&#160;</td><td class="memItemRight"><a class="el" href="#a65c4f7147d2b8eadcf793341615e9265">end</a> () const</td></tr>
+<tr class="memdesc:a65c4f7147d2b8eadcf793341615e9265"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sentinel for <a class="el" href="#a4199ceacf690f7d75d14fa31b6f93d12" title="begin()">begin()</a>.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
+Dimensions and strides</h2></td></tr>
+<tr class="memitem:a96d36d03d9a8f601b559f2d0a279f27e" id="r_a96d36d03d9a8f601b559f2d0a279f27e"><td class="memItemLeft">constexpr <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a96d36d03d9a8f601b559f2d0a279f27e">size</a> () const</td></tr>
+<tr class="memdesc:a96d36d03d9a8f601b559f2d0a279f27e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Total number of elements in the view (excluding padding).  <br /></td></tr>
+<tr class="memitem:a3c9363a7f6172b2350eddf610812987a" id="r_a3c9363a7f6172b2350eddf610812987a"><td class="memItemLeft">constexpr <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a3c9363a7f6172b2350eddf610812987a">padded_size</a> () const</td></tr>
+<tr class="memdesc:a3c9363a7f6172b2350eddf610812987a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Total number of elements in the view (including all padding).  <br /></td></tr>
+<tr class="memitem:af0e126c614d4d25d1b07d778bf4f7c34" id="r_af0e126c614d4d25d1b07d778bf4f7c34"><td class="memItemLeft">constexpr <a class="el" href="#af3044dd381fe1e3d1442efd22a590cf6">depth_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#af0e126c614d4d25d1b07d778bf4f7c34">depth</a> () const</td></tr>
+<tr class="memdesc:af0e126c614d4d25d1b07d778bf4f7c34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of layers in the view (i.e. depth).  <br /></td></tr>
+<tr class="memitem:a90de7f9a56aeda5ceb9f4d3ca604f82b" id="r_a90de7f9a56aeda5ceb9f4d3ca604f82b"><td class="memItemLeft">constexpr <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a90de7f9a56aeda5ceb9f4d3ca604f82b">ceil_depth</a> () const</td></tr>
+<tr class="memdesc:a90de7f9a56aeda5ceb9f4d3ca604f82b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The depth rounded up to a multiple of the batch size.  <br /></td></tr>
+<tr class="memitem:a2e60a675ceb5f0816761f53b50932290" id="r_a2e60a675ceb5f0816761f53b50932290"><td class="memItemLeft">constexpr <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a2e60a675ceb5f0816761f53b50932290">num_batches</a> () const</td></tr>
+<tr class="memdesc:a2e60a675ceb5f0816761f53b50932290"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of batches in the view, i.e. <span class="tt"><a class="el" href="#a90de7f9a56aeda5ceb9f4d3ca604f82b" title="The depth rounded up to a multiple of the batch size.">ceil_depth()</a> / <a class="el" href="#a652fe35cdc98459e74dd3f193bd67750" title="The batch size, i.e. the number of layers in each batch. Equals the inner stride.">batch_size()</a></span>.  <br /></td></tr>
+<tr class="memitem:a8a985a0de1538c7d48ba72dafeedac04" id="r_a8a985a0de1538c7d48ba72dafeedac04"><td class="memItemLeft">constexpr <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a8a985a0de1538c7d48ba72dafeedac04">rows</a> () const</td></tr>
+<tr class="memdesc:a8a985a0de1538c7d48ba72dafeedac04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of rows of the matrices.  <br /></td></tr>
+<tr class="memitem:a658f96d2f60d1a7e1bfc55ee46ad76d2" id="r_a658f96d2f60d1a7e1bfc55ee46ad76d2"><td class="memItemLeft">constexpr <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a658f96d2f60d1a7e1bfc55ee46ad76d2">cols</a> () const</td></tr>
+<tr class="memdesc:a658f96d2f60d1a7e1bfc55ee46ad76d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of columns of the matrices.  <br /></td></tr>
+<tr class="memitem:afa2c308d93a3e7a1ff8a00aa044bea71" id="r_afa2c308d93a3e7a1ff8a00aa044bea71"><td class="memItemLeft">constexpr <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#afa2c308d93a3e7a1ff8a00aa044bea71">outer_stride</a> () const</td></tr>
+<tr class="memdesc:afa2c308d93a3e7a1ff8a00aa044bea71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Outer stride of the matrices (leading dimension in BLAS parlance).  <br /></td></tr>
+<tr class="memitem:ace0f2f30fc941f898d62867adc440087" id="r_ace0f2f30fc941f898d62867adc440087"><td class="memItemLeft">constexpr <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#ace0f2f30fc941f898d62867adc440087">outer_size</a> () const</td></tr>
+<tr class="memdesc:ace0f2f30fc941f898d62867adc440087"><td class="mdescLeft">&#160;</td><td class="mdescRight">The size of the outer dimension, i.e.  <br /></td></tr>
+<tr class="memitem:a90b6311fd3fe15291caa206e01a9c6f1" id="r_a90b6311fd3fe15291caa206e01a9c6f1"><td class="memItemLeft">constexpr <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a90b6311fd3fe15291caa206e01a9c6f1">inner_size</a> () const</td></tr>
+<tr class="memdesc:a90b6311fd3fe15291caa206e01a9c6f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The size of the inner dimension, i.e.  <br /></td></tr>
+<tr class="memitem:a8730427d93fa34b89c63b24ea353aac5" id="r_a8730427d93fa34b89c63b24ea353aac5"><td class="memItemLeft">constexpr <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a8730427d93fa34b89c63b24ea353aac5">inner_stride</a> () const</td></tr>
+<tr class="memdesc:a8730427d93fa34b89c63b24ea353aac5"><td class="mdescLeft">&#160;</td><td class="mdescRight">The inner stride of the matrices.  <br /></td></tr>
+<tr class="memitem:a652fe35cdc98459e74dd3f193bd67750" id="r_a652fe35cdc98459e74dd3f193bd67750"><td class="memItemLeft">constexpr <a class="el" href="#a0c328fcfd23b220a108167a511021954">batch_size_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a652fe35cdc98459e74dd3f193bd67750">batch_size</a> () const</td></tr>
+<tr class="memdesc:a652fe35cdc98459e74dd3f193bd67750"><td class="mdescLeft">&#160;</td><td class="mdescRight">The batch size, i.e. the number of layers in each batch. Equals the inner stride.  <br /></td></tr>
+<tr class="memitem:ad789388aeaae21bd80f85c604c604995" id="r_ad789388aeaae21bd80f85c604c604995"><td class="memItemLeft">constexpr <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#ad789388aeaae21bd80f85c604c604995">layer_stride</a> () const</td></tr>
+<tr class="memdesc:ad789388aeaae21bd80f85c604c604995"><td class="mdescLeft">&#160;</td><td class="mdescRight">The layer stride, i.e.  <br /></td></tr>
+<tr class="memitem:a85261424b54110a4374afb5be6159f21" id="r_a85261424b54110a4374afb5be6159f21"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><a class="el" href="#a85261424b54110a4374afb5be6159f21">has_full_layer_stride</a> () const</td></tr>
+<tr class="memdesc:a85261424b54110a4374afb5be6159f21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the <span class="tt"><a class="el" href="#ad789388aeaae21bd80f85c604c604995" title="The layer stride, i.e.">layer_stride()</a> == <a class="el" href="#afa2c308d93a3e7a1ff8a00aa044bea71" title="Outer stride of the matrices (leading dimension in BLAS parlance).">outer_stride()</a> * <a class="el" href="#ace0f2f30fc941f898d62867adc440087" title="The size of the outer dimension, i.e.">outer_size()</a></span>.  <br /></td></tr>
+<tr class="memitem:a18f95c4cf1fb5d73b4d80049b35dffb9" id="r_a18f95c4cf1fb5d73b4d80049b35dffb9"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><a class="el" href="#a18f95c4cf1fb5d73b4d80049b35dffb9">has_full_outer_stride</a> () const</td></tr>
+<tr class="memdesc:a18f95c4cf1fb5d73b4d80049b35dffb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the <span class="tt"><a class="el" href="#afa2c308d93a3e7a1ff8a00aa044bea71" title="Outer stride of the matrices (leading dimension in BLAS parlance).">outer_stride()</a> == <a class="el" href="#a8730427d93fa34b89c63b24ea353aac5" title="The inner stride of the matrices.">inner_stride()</a> * <a class="el" href="#a90b6311fd3fe15291caa206e01a9c6f1" title="The size of the inner dimension, i.e.">inner_size()</a></span>.  <br /></td></tr>
+<tr class="memitem:a764fa59ba1b5bae126c04c4b8cf23572" id="r_a764fa59ba1b5bae126c04c4b8cf23572"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><a class="el" href="#a764fa59ba1b5bae126c04c4b8cf23572">has_full_inner_stride</a> () const</td></tr>
+<tr class="memdesc:a764fa59ba1b5bae126c04c4b8cf23572"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the <span class="tt"><a class="el" href="#a8730427d93fa34b89c63b24ea353aac5" title="The inner stride of the matrices.">inner_stride()</a> == 1</span>. Always true.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
+Reshaping and slicing</h2></td></tr>
+<tr class="memitem:a4d2131f86753afbd57090790d75d98a0" id="r_a4d2131f86753afbd57090790d75d98a0"><td class="memItemLeft"><a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a4d2131f86753afbd57090790d75d98a0">reshaped</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> <a class="el" href="#a8a985a0de1538c7d48ba72dafeedac04">rows</a>, <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> <a class="el" href="#a658f96d2f60d1a7e1bfc55ee46ad76d2">cols</a>) const</td></tr>
+<tr class="memdesc:a4d2131f86753afbd57090790d75d98a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reshape the view to the given dimensions. The total size should not change.  <br /></td></tr>
+<tr class="memitem:a8643bd7086c7eece449a9a8b8afff661" id="r_a8643bd7086c7eece449a9a8b8afff661"><td class="memItemLeft"><a class="el" href="#aacba293d849732693abdca99ae237896">row_slice_view_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a8643bd7086c7eece449a9a8b8afff661">top_rows</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> n) const</td></tr>
+<tr class="memdesc:a8643bd7086c7eece449a9a8b8afff661"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a view of the first <code class="param">n</code> rows.  <br /></td></tr>
+<tr class="memitem:a784de6877b93091726b6cfa3579fe8ca" id="r_a784de6877b93091726b6cfa3579fe8ca"><td class="memItemLeft"><a class="el" href="#af2f2324c52e5bb88e70c8191e6337983">col_slice_view_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a784de6877b93091726b6cfa3579fe8ca">left_cols</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> n) const</td></tr>
+<tr class="memdesc:a784de6877b93091726b6cfa3579fe8ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a view of the first <code class="param">n</code> columns.  <br /></td></tr>
+<tr class="memitem:a485295b0ba5180ca31f2c5d3ea04cd28" id="r_a485295b0ba5180ca31f2c5d3ea04cd28"><td class="memItemLeft"><a class="el" href="#aacba293d849732693abdca99ae237896">row_slice_view_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a485295b0ba5180ca31f2c5d3ea04cd28">bottom_rows</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> n) const</td></tr>
+<tr class="memdesc:a485295b0ba5180ca31f2c5d3ea04cd28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a view of the last <code class="param">n</code> rows.  <br /></td></tr>
+<tr class="memitem:a65e8824cd34781ca5901152b8eb4dff2" id="r_a65e8824cd34781ca5901152b8eb4dff2"><td class="memItemLeft"><a class="el" href="#af2f2324c52e5bb88e70c8191e6337983">col_slice_view_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a65e8824cd34781ca5901152b8eb4dff2">right_cols</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> n) const</td></tr>
+<tr class="memdesc:a65e8824cd34781ca5901152b8eb4dff2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a view of the last <code class="param">n</code> columns.  <br /></td></tr>
+<tr class="memitem:a5de296a861344e3a9e599081545480b9" id="r_a5de296a861344e3a9e599081545480b9"><td class="memItemLeft"><a class="el" href="#aacba293d849732693abdca99ae237896">row_slice_view_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a5de296a861344e3a9e599081545480b9">middle_rows</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> r, <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> n) const</td></tr>
+<tr class="memdesc:a5de296a861344e3a9e599081545480b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a view of <code class="param">n</code> rows starting at row <code class="param">r</code>.  <br /></td></tr>
+<tr class="memitem:a3ae9a5ed0a41a37eaf3cc57c60eab3db" id="r_a3ae9a5ed0a41a37eaf3cc57c60eab3db"><td class="memItemLeft"><a class="el" href="#af2f2324c52e5bb88e70c8191e6337983">col_slice_view_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a3ae9a5ed0a41a37eaf3cc57c60eab3db">middle_cols</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> c, <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> n) const</td></tr>
+<tr class="memdesc:a3ae9a5ed0a41a37eaf3cc57c60eab3db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a view of <code class="param">n</code> columns starting at column <code class="param">c</code>.  <br /></td></tr>
+<tr class="memitem:ac17cd50705f2ef876c6b483e4b8394b4" id="r_ac17cd50705f2ef876c6b483e4b8394b4"><td class="memItemLeft"><a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#ac17cd50705f2ef876c6b483e4b8394b4">top_left</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> nr, <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> nc) const</td></tr>
+<tr class="memdesc:ac17cd50705f2ef876c6b483e4b8394b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a view of the top-left <code class="param">nr</code> by <code class="param">nc</code> block of the matrices.  <br /></td></tr>
+<tr class="memitem:aee77fd6ec42b32bc5a5bc826274a914f" id="r_aee77fd6ec42b32bc5a5bc826274a914f"><td class="memItemLeft"><a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#aee77fd6ec42b32bc5a5bc826274a914f">top_right</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> nr, <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> nc) const</td></tr>
+<tr class="memdesc:aee77fd6ec42b32bc5a5bc826274a914f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a view of the top-right <code class="param">nr</code> by <code class="param">nc</code> block of the matrices.  <br /></td></tr>
+<tr class="memitem:a58f8cbcd01d3e93cc584ad1250234af8" id="r_a58f8cbcd01d3e93cc584ad1250234af8"><td class="memItemLeft"><a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a58f8cbcd01d3e93cc584ad1250234af8">bottom_left</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> nr, <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> nc) const</td></tr>
+<tr class="memdesc:a58f8cbcd01d3e93cc584ad1250234af8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a view of the bottom-left <code class="param">nr</code> by <code class="param">nc</code> block of the matrices.  <br /></td></tr>
+<tr class="memitem:a0aaed4ee88727aba4c6066b65a897056" id="r_a0aaed4ee88727aba4c6066b65a897056"><td class="memItemLeft"><a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a0aaed4ee88727aba4c6066b65a897056">bottom_right</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> nr, <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> nc) const</td></tr>
+<tr class="memdesc:a0aaed4ee88727aba4c6066b65a897056"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a view of the bottom-right <code class="param">nr</code> by <code class="param">nc</code> block of the matrices.  <br /></td></tr>
+<tr class="memitem:a1c9de38ddbf785fa09e56a8fa5169c05" id="r_a1c9de38ddbf785fa09e56a8fa5169c05"><td class="memItemLeft"><a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a1c9de38ddbf785fa09e56a8fa5169c05">block</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> r, <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> c, <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> nr, <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> nc) const</td></tr>
+<tr class="memdesc:a1c9de38ddbf785fa09e56a8fa5169c05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a view of the <code class="param">nr</code> by <code class="param">nc</code> block of the matrices starting at row <code class="param">r</code> and column <code class="param">c</code>.  <br /></td></tr>
+<tr class="memitem:a24b36d6e7568ec7941969cf410f42f01" id="r_a24b36d6e7568ec7941969cf410f42f01"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#a24b36d6e7568ec7941969cf410f42f01">transposed</a> () const</td></tr>
+<tr class="memdesc:a24b36d6e7568ec7941969cf410f42f01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a transposed view of the matrices.  <br /></td></tr>
+<tr class="memitem:a8000c4823b91daf5dfea18ccd6b0e45d" id="r_a8000c4823b91daf5dfea18ccd6b0e45d"><td class="memItemLeft">static <a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&#160;</td><td class="memItemRight"><a class="el" href="#a8000c4823b91daf5dfea18ccd6b0e45d">as_column</a> (std::span&lt; T &gt; v)</td></tr>
+<tr class="memdesc:a8000c4823b91daf5dfea18ccd6b0e45d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a view of the given span as a column vector.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
+Value manipulation</h2></td></tr>
+<tr class="memitem:a4100ad6c24e2d0a8050ac1d9ed6a2b46" id="r_a4100ad6c24e2d0a8050ac1d9ed6a2b46"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4100ad6c24e2d0a8050ac1d9ed6a2b46">add_to_diagonal</a> (const <a class="el" href="#a07f5398f5cef2f53d4fc26f5d9ca9c78">value_type</a> &amp;t)</td></tr>
+<tr class="memitem:a1cfba3a1a9ffdcd786c5fe76488a626c" id="r_a1cfba3a1a9ffdcd786c5fe76488a626c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1cfba3a1a9ffdcd786c5fe76488a626c">set_constant</a> (<a class="el" href="#a07f5398f5cef2f53d4fc26f5d9ca9c78">value_type</a> t)</td></tr>
+<tr class="memitem:ab593ea4d085e0f6f56d6cc28479cea6d" id="r_ab593ea4d085e0f6f56d6cc28479cea6d"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab593ea4d085e0f6f56d6cc28479cea6d">negate</a> ()</td></tr>
+<tr class="memitem:af59145deefbfd73abdd5be12f54806cf" id="r_af59145deefbfd73abdd5be12f54806cf"><td class="memTemplParams" colspan="2">template&lt;class Other&gt; </td></tr>
+<tr class="memitem:af59145deefbfd73abdd5be12f54806cf template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#af59145deefbfd73abdd5be12f54806cf">copy_values</a> (const Other &amp;other) const</td></tr>
+<tr class="memitem:a99bc563329bf4abf7d1285745d9ff985" id="r_a99bc563329bf4abf7d1285745d9ff985"><td class="memItemLeft"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a99bc563329bf4abf7d1285745d9ff985">operator=</a> (const <a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a> &amp;other)</td></tr>
+<tr class="memdesc:a99bc563329bf4abf7d1285745d9ff985"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy assignment copies the values from another view with the same layout to this view.  <br /></td></tr>
+<tr class="memitem:a0b2bf5139cb4ae1698c4ca8a365bca0a" id="r_a0b2bf5139cb4ae1698c4ca8a365bca0a"><td class="memTemplParams" colspan="2">template&lt;class U, class J, class R, class E, class M&gt; </td></tr>
+<tr class="memitem:a0b2bf5139cb4ae1698c4ca8a365bca0a template"><td class="memItemLeft"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a0b2bf5139cb4ae1698c4ca8a365bca0a">operator=</a> (<a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt; U, J, R, E, M, O &gt; other)</td></tr>
+<tr class="memdesc:a0b2bf5139cb4ae1698c4ca8a365bca0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy values from another view with a compatible value type and the same layout to this view.  <br /></td></tr>
+<tr class="memitem:acb673b4079389369a6c0fb019fde245d" id="r_acb673b4079389369a6c0fb019fde245d"><td class="memTemplParams" colspan="2">template&lt;class U, class J, class R, class E, class M&gt; </td></tr>
+<tr class="memitem:acb673b4079389369a6c0fb019fde245d template"><td class="memItemLeft"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#acb673b4079389369a6c0fb019fde245d">operator+=</a> (<a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt; U, J, R, E, M, O &gt; other)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:PlainBatchedMatrixView_5Fstructbatmat_5F1_5F1matrix_5F1_5F1View_5F1_5F1PlainBatchedMatrixView" id="r_PlainBatchedMatrixView_5Fstructbatmat_5F1_5F1matrix_5F1_5F1View_5F1_5F1PlainBatchedMatrixView"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="#structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView">PlainBatchedMatrixView</a></td></tr>
+<tr class="memdesc:structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView"><td class="mdescLeft">&#160;</td><td class="mdescRight">POD helper struct to enable designated initializers during construction.  <a href="#structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView">More...</a><br /></td></tr>
+<tr class="memitem:linear_5Fiterator" id="r_linear_5Fiterator"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structbatmat_1_1matrix_1_1View_1_1linear__iterator.html">linear_iterator</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Iterator over all elements of a view.  <a href="structbatmat_1_1matrix_1_1View_1_1linear__iterator.html#details">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a012e075ecef99aebefdef47cbf1e8f5a" id="r_a012e075ecef99aebefdef47cbf1e8f5a"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a012e075ecef99aebefdef47cbf1e8f5a">layout_type</a> = <a class="el" href="structbatmat_1_1matrix_1_1Layout.html">Layout</a>&lt;I, S, D, L, O&gt;</td></tr>
+<tr class="memitem:a07f5398f5cef2f53d4fc26f5d9ca9c78" id="r_a07f5398f5cef2f53d4fc26f5d9ca9c78"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a07f5398f5cef2f53d4fc26f5d9ca9c78">value_type</a> = T</td></tr>
+<tr class="memitem:a8217652dc175e9d9ac2f110e355e9cbb" id="r_a8217652dc175e9d9ac2f110e355e9cbb"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> = typename <a class="el" href="structbatmat_1_1matrix_1_1Layout.html#a226e7a5ce3a87ae357f1e3ce0f6e1f77">layout_type::index_type</a></td></tr>
+<tr class="memitem:a0c328fcfd23b220a108167a511021954" id="r_a0c328fcfd23b220a108167a511021954"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a0c328fcfd23b220a108167a511021954">batch_size_type</a> = typename <a class="el" href="structbatmat_1_1matrix_1_1Layout.html#a5e721839d51c94a99b049d07bcabef34">layout_type::batch_size_type</a></td></tr>
+<tr class="memitem:af3044dd381fe1e3d1442efd22a590cf6" id="r_af3044dd381fe1e3d1442efd22a590cf6"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#af3044dd381fe1e3d1442efd22a590cf6">depth_type</a> = typename <a class="el" href="structbatmat_1_1matrix_1_1Layout.html#aa395557491ef36ac1fe975805f79ce9d">layout_type::depth_type</a></td></tr>
+<tr class="memitem:a09739bf7956973d94ac2a327fe14094a" id="r_a09739bf7956973d94ac2a327fe14094a"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a09739bf7956973d94ac2a327fe14094a">layer_stride_type</a> = typename <a class="el" href="structbatmat_1_1matrix_1_1Layout.html#adbd044655112aa290a95525908ad8da2">layout_type::layer_stride_type</a></td></tr>
+<tr class="memitem:a0d67e8c21c53ceda34cf38d44d69b5d9" id="r_a0d67e8c21c53ceda34cf38d44d69b5d9"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a0d67e8c21c53ceda34cf38d44d69b5d9">standard_stride_type</a> = typename <a class="el" href="structbatmat_1_1matrix_1_1Layout.html#adf0f222ddc1393633a863b59c1ff5f5c">layout_type::standard_stride_type</a></td></tr>
+<tr class="memitem:a5b58d4bfc6aa4d8f90faf3dcf30d649b" id="r_a5b58d4bfc6aa4d8f90faf3dcf30d649b"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a5b58d4bfc6aa4d8f90faf3dcf30d649b">const_view_type</a> = <a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt;const T, I, S, D, L, O&gt;</td></tr>
+<tr class="memitem:a144c1ef95a12cb6134e85f06bf306988" id="r_a144c1ef95a12cb6134e85f06bf306988"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a144c1ef95a12cb6134e85f06bf306988">batch_view_type</a> = <a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt;T, I, S, S, <a class="el" href="structbatmat_1_1matrix_1_1DefaultStride.html">DefaultStride</a>, O&gt;</td></tr>
+<tr class="memdesc:a144c1ef95a12cb6134e85f06bf306988"><td class="mdescLeft">&#160;</td><td class="mdescRight">When extracing a single batch, the depth equals the batch size, and the layer stride is no longer relevant.  <br /></td></tr>
+<tr class="memitem:aa43531137c5afae7c33a90822cdef2fb" id="r_aa43531137c5afae7c33a90822cdef2fb"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a></td></tr>
+<tr class="memdesc:aa43531137c5afae7c33a90822cdef2fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">When slicing along the outer dimension, the layer stride stays the same, but the outer size may be smaller, which means that even if the original view has a default layer stride, the sliced view may require a dynamic layer stride.  <br /></td></tr>
+<tr class="memitem:af2f2324c52e5bb88e70c8191e6337983" id="r_af2f2324c52e5bb88e70c8191e6337983"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#af2f2324c52e5bb88e70c8191e6337983">col_slice_view_type</a> = std::conditional_t&lt;<a class="el" href="#adc94b8ed2cbdba1ad1721b712f3ea558">is_row_major</a>, <a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>, <a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a>&gt;</td></tr>
+<tr class="memdesc:af2f2324c52e5bb88e70c8191e6337983"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structbatmat_1_1matrix_1_1View.html" title="Non-owning view of a batch of matrices.">View</a> with the correct layer stride when slicing along the column dimension.  <br /></td></tr>
+<tr class="memitem:aacba293d849732693abdca99ae237896" id="r_aacba293d849732693abdca99ae237896"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#aacba293d849732693abdca99ae237896">row_slice_view_type</a> = std::conditional_t&lt;<a class="el" href="#a02bf028bb593d05b86d955fd972d622a">is_column_major</a>, <a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>, <a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a>&gt;</td></tr>
+<tr class="memdesc:aacba293d849732693abdca99ae237896"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structbatmat_1_1matrix_1_1View.html" title="Non-owning view of a batch of matrices.">View</a> with the correct layer stride when slicing along the row dimension.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a0033dd840117ba37447a16b70ad4b4d5" id="r_a0033dd840117ba37447a16b70ad4b4d5"><td class="memItemLeft">constexpr&#160;</td><td class="memItemRight"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a> (<a class="el" href="#structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView">PlainBatchedMatrixView</a> p={})</td></tr>
+<tr class="memdesc:a0033dd840117ba37447a16b70ad4b4d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new view.  <br /></td></tr>
+<tr class="memitem:abe2b1bdf5ee7b92845739f9514f9bcb4" id="r_abe2b1bdf5ee7b92845739f9514f9bcb4"><td class="memItemLeft">constexpr&#160;</td><td class="memItemRight"><a class="el" href="#abe2b1bdf5ee7b92845739f9514f9bcb4">View</a> (std::span&lt; T &gt; <a class="el" href="#abd3d195f148998f1020d39cea4ef0c5b">data</a>, <a class="el" href="#a012e075ecef99aebefdef47cbf1e8f5a">layout_type</a> <a class="el" href="#a130d341c328c2e848593a609a3e22a21">layout</a>)</td></tr>
+<tr class="memdesc:abe2b1bdf5ee7b92845739f9514f9bcb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new view with the given layout, using the given buffer.  <br /></td></tr>
+<tr class="memitem:a3006d00fa01758f26342535ac06e0593" id="r_a3006d00fa01758f26342535ac06e0593"><td class="memItemLeft">constexpr&#160;</td><td class="memItemRight"><a class="el" href="#a3006d00fa01758f26342535ac06e0593">View</a> (<a class="el" href="#a07f5398f5cef2f53d4fc26f5d9ca9c78">value_type</a> *<a class="el" href="#abd3d195f148998f1020d39cea4ef0c5b">data</a>, <a class="el" href="#a012e075ecef99aebefdef47cbf1e8f5a">layout_type</a> <a class="el" href="#a130d341c328c2e848593a609a3e22a21">layout</a>)</td></tr>
+<tr class="memdesc:a3006d00fa01758f26342535ac06e0593"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new view with the given layout, using the given buffer.  <br /></td></tr>
+<tr class="memitem:a4fe9a196700464e2cfff6ab203e7594a" id="r_a4fe9a196700464e2cfff6ab203e7594a"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a4fe9a196700464e2cfff6ab203e7594a">View</a> (const View &amp;)=default</td></tr>
+<tr class="memdesc:a4fe9a196700464e2cfff6ab203e7594a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy a view. No data is copied.  <br /></td></tr>
+<tr class="memitem:ab5554d055756ec92e7c6bd233f120a8e" id="r_ab5554d055756ec92e7c6bd233f120a8e"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab5554d055756ec92e7c6bd233f120a8e">operator const_view_type</a> () const</td></tr>
+<tr class="memdesc:ab5554d055756ec92e7c6bd233f120a8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-const views implicitly convert to const views.  <br /></td></tr>
+<tr class="memitem:ae7446046ddf4b9d0d701af66e76cebd5" id="r_ae7446046ddf4b9d0d701af66e76cebd5"><td class="memItemLeft"><a class="el" href="#a5b58d4bfc6aa4d8f90faf3dcf30d649b">const_view_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#ae7446046ddf4b9d0d701af66e76cebd5">as_const</a> () const</td></tr>
+<tr class="memdesc:ae7446046ddf4b9d0d701af66e76cebd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Explicit conversion to a const view.  <br /></td></tr>
+<tr class="memitem:a0cbde49e22764991c58d0bcd94c13877" id="r_a0cbde49e22764991c58d0bcd94c13877"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a0cbde49e22764991c58d0bcd94c13877">operator guanaqo::MatrixView&lt; T, I, standard_stride_type, O &gt;</a> () const</td></tr>
+<tr class="memdesc:a0cbde49e22764991c58d0bcd94c13877"><td class="mdescLeft">&#160;</td><td class="mdescRight">If we have a single layer at compile time, we can implicitly convert to a non-batched view.  <br /></td></tr>
+<tr class="memitem:a09c75dd7db867e42e86378288f98e7b5" id="r_a09c75dd7db867e42e86378288f98e7b5"><td class="memItemLeft"><a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/structguanaqo_1_1MatrixView.html">guanaqo::MatrixView</a>&lt; T, I, <a class="el" href="#a0d67e8c21c53ceda34cf38d44d69b5d9">standard_stride_type</a>, O &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a09c75dd7db867e42e86378288f98e7b5">operator()</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> l) const</td></tr>
+<tr class="memdesc:a09c75dd7db867e42e86378288f98e7b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access a single layer <code class="param">l</code> as a non-batched view.  <br /></td></tr>
+<tr class="memitem:a1f1965ca1df1441baae9b38248a27e30" id="r_a1f1965ca1df1441baae9b38248a27e30"><td class="memItemLeft"><a class="el" href="#a07f5398f5cef2f53d4fc26f5d9ca9c78">value_type</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a1f1965ca1df1441baae9b38248a27e30">operator()</a> (<a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> l, <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> r, <a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> c) const</td></tr>
+<tr class="memdesc:a1f1965ca1df1441baae9b38248a27e30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access a single element at layer <code class="param">l</code>, row <code class="param">r</code> and column <code class="param">c</code>.  <br /></td></tr>
+<tr class="memitem:af72c9ff6839b732973ee1582655d4f50" id="r_af72c9ff6839b732973ee1582655d4f50"><td class="memItemLeft"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#af72c9ff6839b732973ee1582655d4f50">reassign</a> (<a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a> other)</td></tr>
+<tr class="memdesc:af72c9ff6839b732973ee1582655d4f50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reassign the buffer and layout of this view to those of another view. No data is copied.  <br /></td></tr>
+<tr class="memitem:a1e373fba18186c9f4602603f9546a524" id="r_a1e373fba18186c9f4602603f9546a524"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a1e373fba18186c9f4602603f9546a524">operator View&lt; T, I, S, integral_value_type_t&lt; D &gt;, L, O &gt;</a> () const</td></tr>
+<tr class="memdesc:a1e373fba18186c9f4602603f9546a524"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implicit conversion to a view with a dynamic depth.  <br /></td></tr>
+<tr class="memitem:a8d52ae35f6857501961deed76b32bb37" id="r_a8d52ae35f6857501961deed76b32bb37"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a8d52ae35f6857501961deed76b32bb37">operator View&lt; const T, I, S, integral_value_type_t&lt; D &gt;, L, O &gt;</a> () const</td></tr>
+<tr class="memdesc:a8d52ae35f6857501961deed76b32bb37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implicit conversion to a view with a dynamic depth, going from non-const to const.  <br /></td></tr>
+<tr class="memitem:a158efefd16b427b3f8607ace43b07769" id="r_a158efefd16b427b3f8607ace43b07769"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a158efefd16b427b3f8607ace43b07769">operator View&lt; T, I, S, D, I, O &gt;</a> () const</td></tr>
+<tr class="memdesc:a158efefd16b427b3f8607ace43b07769"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implicit conversion to a view with a dynamic layer stride.  <br /></td></tr>
+<tr class="memitem:a8927d61cfcc0fd7b44464b478096343f" id="r_a8927d61cfcc0fd7b44464b478096343f"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a8927d61cfcc0fd7b44464b478096343f">operator View&lt; const T, I, S, D, I, O &gt;</a> () const</td></tr>
+<tr class="memdesc:a8927d61cfcc0fd7b44464b478096343f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implicit conversion to a view with a dynamic layer stride, going from non-const to const.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a75590180ddf188388521f81f7c181d6c" id="r_a75590180ddf188388521f81f7c181d6c"><td class="memItemLeft"><a class="el" href="#a07f5398f5cef2f53d4fc26f5d9ca9c78">value_type</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a75590180ddf188388521f81f7c181d6c">data_ptr</a></td></tr>
+<tr class="memdesc:a75590180ddf188388521f81f7c181d6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to the first element of the first layer.  <br /></td></tr>
+<tr class="memitem:a130d341c328c2e848593a609a3e22a21" id="r_a130d341c328c2e848593a609a3e22a21"><td class="memItemLeft"><a class="el" href="#a012e075ecef99aebefdef47cbf1e8f5a">layout_type</a>&#160;</td><td class="memItemRight"><a class="el" href="#a130d341c328c2e848593a609a3e22a21">layout</a></td></tr>
+<tr class="memdesc:a130d341c328c2e848593a609a3e22a21"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structbatmat_1_1matrix_1_1Layout.html" title="Shape and strides describing a batch of matrices, independent of any storage.">Layout</a> describing the dimensions and strides of the view.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:af9023b390e4eb12fddec55d0ec1adfa6" id="r_af9023b390e4eb12fddec55d0ec1adfa6"><td class="memItemLeft">static constexpr <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a>&#160;</td><td class="memItemRight"><a class="el" href="#af9023b390e4eb12fddec55d0ec1adfa6">storage_order</a> = <a class="el" href="structbatmat_1_1matrix_1_1Layout.html#ad635fd9e2c04bb18318948e8d24eedd2">layout_type::storage_order</a></td></tr>
+<tr class="memitem:a02bf028bb593d05b86d955fd972d622a" id="r_a02bf028bb593d05b86d955fd972d622a"><td class="memItemLeft">static constexpr bool&#160;</td><td class="memItemRight"><a class="el" href="#a02bf028bb593d05b86d955fd972d622a">is_column_major</a> = <a class="el" href="structbatmat_1_1matrix_1_1Layout.html#a4ab5b96fbdbb92e59359e2968358815f">layout_type::is_column_major</a></td></tr>
+<tr class="memitem:adc94b8ed2cbdba1ad1721b712f3ea558" id="r_adc94b8ed2cbdba1ad1721b712f3ea558"><td class="memItemLeft">static constexpr bool&#160;</td><td class="memItemRight"><a class="el" href="#adc94b8ed2cbdba1ad1721b712f3ea558">is_row_major</a> = <a class="el" href="structbatmat_1_1matrix_1_1Layout.html#a7876840d7f3a002ffd73707c0d578051">layout_type::is_row_major</a></td></tr>
+<tr class="memitem:a505fee81af0f8fe2860572b6cbe497d8" id="r_a505fee81af0f8fe2860572b6cbe497d8"><td class="memItemLeft">static constexpr bool&#160;</td><td class="memItemRight"><a class="el" href="#a505fee81af0f8fe2860572b6cbe497d8">has_single_batch_at_compile_time</a></td></tr>
+<tr class="memdesc:a505fee81af0f8fe2860572b6cbe497d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if <a class="el" href="#a652fe35cdc98459e74dd3f193bd67750" title="batch_size()">batch_size()</a> and <a class="el" href="#af0e126c614d4d25d1b07d778bf4f7c34" title="depth()">depth()</a> are compile-time constants and are equal.  <br /></td></tr>
+<tr class="memitem:a85a50d696f7c76de8c7093b65eb14615" id="r_a85a50d696f7c76de8c7093b65eb14615"><td class="memItemLeft">static constexpr bool&#160;</td><td class="memItemRight"><a class="el" href="#a85a50d696f7c76de8c7093b65eb14615">has_single_layer_at_compile_time</a> = requires { D::value; } &amp;&amp; D{} == 1</td></tr>
+<tr class="memdesc:a85a50d696f7c76de8c7093b65eb14615"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if <a class="el" href="#af0e126c614d4d25d1b07d778bf4f7c34" title="depth()">depth()</a> is a compile-time constant and is equal to one.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pri-methods" class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a42204aefac8e4fa20bfa343082e744f0" id="r_a42204aefac8e4fa20bfa343082e744f0"><td class="memTemplParams" colspan="2">template&lt;class V&gt; </td></tr>
+<tr class="memitem:a42204aefac8e4fa20bfa343082e744f0 template"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="#a42204aefac8e4fa20bfa343082e744f0">get_layer_stride_for</a> () const</td></tr>
+</table>
+<hr/><h2 id="header-inline_5Fclasses" class="groupheader">Class Documentation</h2>
+<a name="structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView" id="structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView">&#9670;&#160;</a></span>batmat::matrix::View::PlainBatchedMatrixView</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct batmat::matrix::View::PlainBatchedMatrixView</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="a7756d036bd488304f983d9e32e853de8" name="a7756d036bd488304f983d9e32e853de8"></a><a class="el" href="#a07f5398f5cef2f53d4fc26f5d9ca9c78">value_type</a> *</td>
+<td class="fieldname">
+data = nullptr</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a2489ee25d63f63134996256872e20ea9" name="a2489ee25d63f63134996256872e20ea9"></a><a class="el" href="#af3044dd381fe1e3d1442efd22a590cf6">depth_type</a></td>
+<td class="fieldname">
+depth = <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html">guanaqo::default_stride</a>&lt;<a class="el" href="#af3044dd381fe1e3d1442efd22a590cf6">depth_type</a>&gt;::value</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a7136c77edcd42fb6c3101a9e34f29b43" name="a7136c77edcd42fb6c3101a9e34f29b43"></a><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>
+<td class="fieldname">
+rows = 0</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ad030bd28717dc83159c13be3bfd48427" name="ad030bd28717dc83159c13be3bfd48427"></a><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>
+<td class="fieldname">
+cols = <a class="el" href="#a7136c77edcd42fb6c3101a9e34f29b43">rows</a> == 0 ? 0 : 1</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="aa7083df49ccd2827b40d2f410a6af597" name="aa7083df49ccd2827b40d2f410a6af597"></a><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>
+<td class="fieldname">
+outer_stride = <a class="el" href="#adc94b8ed2cbdba1ad1721b712f3ea558">is_row_major</a> ? <a class="el" href="#ad030bd28717dc83159c13be3bfd48427">cols</a> : <a class="el" href="#a7136c77edcd42fb6c3101a9e34f29b43">rows</a></td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ac5158829f15b39691a0612cb0e56f482" name="ac5158829f15b39691a0612cb0e56f482"></a><a class="el" href="#a0c328fcfd23b220a108167a511021954">batch_size_type</a></td>
+<td class="fieldname">
+batch_size</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a74a1b4972f447d16480ca9cbbe7cbcd9" name="a74a1b4972f447d16480ca9cbbe7cbcd9"></a><a class="el" href="#a09739bf7956973d94ac2a327fe14094a">layer_stride_type</a></td>
+<td class="fieldname">
+layer_stride</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
+<a id="a012e075ecef99aebefdef47cbf1e8f5a" name="a012e075ecef99aebefdef47cbf1e8f5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a012e075ecef99aebefdef47cbf1e8f5a">&#9670;&#160;</a></span>layout_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::layout_type = <a class="el" href="structbatmat_1_1matrix_1_1Layout.html">Layout</a>&lt;I, S, D, L, O&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00033">33</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a07f5398f5cef2f53d4fc26f5d9ca9c78" name="a07f5398f5cef2f53d4fc26f5d9ca9c78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07f5398f5cef2f53d4fc26f5d9ca9c78">&#9670;&#160;</a></span>value_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::value_type = T</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00034">34</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a8217652dc175e9d9ac2f110e355e9cbb" name="a8217652dc175e9d9ac2f110e355e9cbb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8217652dc175e9d9ac2f110e355e9cbb">&#9670;&#160;</a></span>index_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::index_type = typename <a class="el" href="structbatmat_1_1matrix_1_1Layout.html#a226e7a5ce3a87ae357f1e3ce0f6e1f77">layout_type::index_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00035">35</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a0c328fcfd23b220a108167a511021954" name="a0c328fcfd23b220a108167a511021954"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c328fcfd23b220a108167a511021954">&#9670;&#160;</a></span>batch_size_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::batch_size_type = typename <a class="el" href="structbatmat_1_1matrix_1_1Layout.html#a5e721839d51c94a99b049d07bcabef34">layout_type::batch_size_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00036">36</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="af3044dd381fe1e3d1442efd22a590cf6" name="af3044dd381fe1e3d1442efd22a590cf6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3044dd381fe1e3d1442efd22a590cf6">&#9670;&#160;</a></span>depth_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::depth_type = typename <a class="el" href="structbatmat_1_1matrix_1_1Layout.html#aa395557491ef36ac1fe975805f79ce9d">layout_type::depth_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00037">37</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a09739bf7956973d94ac2a327fe14094a" name="a09739bf7956973d94ac2a327fe14094a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09739bf7956973d94ac2a327fe14094a">&#9670;&#160;</a></span>layer_stride_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::layer_stride_type = typename <a class="el" href="structbatmat_1_1matrix_1_1Layout.html#adbd044655112aa290a95525908ad8da2">layout_type::layer_stride_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00038">38</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a0d67e8c21c53ceda34cf38d44d69b5d9" name="a0d67e8c21c53ceda34cf38d44d69b5d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d67e8c21c53ceda34cf38d44d69b5d9">&#9670;&#160;</a></span>standard_stride_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::standard_stride_type = typename <a class="el" href="structbatmat_1_1matrix_1_1Layout.html#adf0f222ddc1393633a863b59c1ff5f5c">layout_type::standard_stride_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00039">39</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a5b58d4bfc6aa4d8f90faf3dcf30d649b" name="a5b58d4bfc6aa4d8f90faf3dcf30d649b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b58d4bfc6aa4d8f90faf3dcf30d649b">&#9670;&#160;</a></span>const_view_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::const_view_type = <a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt;const T, I, S, D, L, O&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00040">40</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a144c1ef95a12cb6134e85f06bf306988" name="a144c1ef95a12cb6134e85f06bf306988"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a144c1ef95a12cb6134e85f06bf306988">&#9670;&#160;</a></span>batch_view_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::batch_view_type = <a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt;T, I, S, S, <a class="el" href="structbatmat_1_1matrix_1_1DefaultStride.html">DefaultStride</a>, O&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>When extracing a single batch, the depth equals the batch size, and the layer stride is no longer relevant. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00056">56</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aa43531137c5afae7c33a90822cdef2fb" name="aa43531137c5afae7c33a90822cdef2fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa43531137c5afae7c33a90822cdef2fb">&#9670;&#160;</a></span>general_slice_view_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::general_slice_view_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"> </div>
+<div class="line">std::conditional_t&lt;has_single_batch_at_compile_time, View, View&lt;T, I, S, D, I, O&gt;&gt;</div>
+</div><!-- fragment -->
+<p>When slicing along the outer dimension, the layer stride stays the same, but the outer size may be smaller, which means that even if the original view has a default layer stride, the sliced view may require a dynamic layer stride. </p>
+<p>For a single batch, the layer stride is not relevant, so it is preserved. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00061">61</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="af2f2324c52e5bb88e70c8191e6337983" name="af2f2324c52e5bb88e70c8191e6337983"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2f2324c52e5bb88e70c8191e6337983">&#9670;&#160;</a></span>col_slice_view_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::col_slice_view_type = std::conditional_t&lt;<a class="el" href="#adc94b8ed2cbdba1ad1721b712f3ea558">is_row_major</a>, <a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>, <a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structbatmat_1_1matrix_1_1View.html" title="Non-owning view of a batch of matrices.">View</a> with the correct layer stride when slicing along the column dimension. </p>
+<p>For row-major storage, slicing along columns does not change the outer size, in which case the layer stride is still correct. For column-major storage, slicing along columns does change the outer size, in which case we need a dynamic layer stride. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00067">67</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aacba293d849732693abdca99ae237896" name="aacba293d849732693abdca99ae237896"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacba293d849732693abdca99ae237896">&#9670;&#160;</a></span>row_slice_view_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::row_slice_view_type = std::conditional_t&lt;<a class="el" href="#a02bf028bb593d05b86d955fd972d622a">is_column_major</a>, <a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>, <a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structbatmat_1_1matrix_1_1View.html" title="Non-owning view of a batch of matrices.">View</a> with the correct layer stride when slicing along the row dimension. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#af2f2324c52e5bb88e70c8191e6337983" title="col_slice_view_type">col_slice_view_type</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00070">70</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a0033dd840117ba37447a16b70ad4b4d5" name="a0033dd840117ba37447a16b70ad4b4d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0033dd840117ba37447a16b70ad4b4d5">&#9670;&#160;</a></span>View() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::View </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#structbatmat_1_1matrix_1_1View_1_1PlainBatchedMatrixView">PlainBatchedMatrixView</a>&lt; T, I, S, D, L, O &gt;</td>          <td class="paramname"><span class="paramname"><em>p</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a new view. </p>
+<dl class="section note"><dt>Note</dt><dd>It is recommended to use designated initializers for the arguments to avoid mistakes. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00092">92</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="abe2b1bdf5ee7b92845739f9514f9bcb4" name="abe2b1bdf5ee7b92845739f9514f9bcb4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe2b1bdf5ee7b92845739f9514f9bcb4">&#9670;&#160;</a></span>View() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::View </td>
+          <td>(</td>
+          <td class="paramtype">std::span&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a012e075ecef99aebefdef47cbf1e8f5a">layout_type</a></td>          <td class="paramname"><span class="paramname"><em>layout</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a new view with the given layout, using the given buffer. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00100">100</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a3006d00fa01758f26342535ac06e0593" name="a3006d00fa01758f26342535ac06e0593"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3006d00fa01758f26342535ac06e0593">&#9670;&#160;</a></span>View() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::View </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a07f5398f5cef2f53d4fc26f5d9ca9c78">value_type</a> *</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a012e075ecef99aebefdef47cbf1e8f5a">layout_type</a></td>          <td class="paramname"><span class="paramname"><em>layout</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a new view with the given layout, using the given buffer. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00104">104</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a4fe9a196700464e2cfff6ab203e7594a" name="a4fe9a196700464e2cfff6ab203e7594a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fe9a196700464e2cfff6ab203e7594a">&#9670;&#160;</a></span>View() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::View </td>
+          <td>(</td>
+          <td class="paramtype">const View&lt; T, I, S, D, L, O &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copy a view. No data is copied. </p>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="ab5554d055756ec92e7c6bd233f120a8e" name="ab5554d055756ec92e7c6bd233f120a8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5554d055756ec92e7c6bd233f120a8e">&#9670;&#160;</a></span>operator const_view_type()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::operator <a class="el" href="#a5b58d4bfc6aa4d8f90faf3dcf30d649b">const_view_type</a> </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Non-const views implicitly convert to const views. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00110">110</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ae7446046ddf4b9d0d701af66e76cebd5" name="ae7446046ddf4b9d0d701af66e76cebd5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7446046ddf4b9d0d701af66e76cebd5">&#9670;&#160;</a></span>as_const()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a5b58d4bfc6aa4d8f90faf3dcf30d649b">const_view_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::as_const </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Explicit conversion to a const view. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00116">116</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a0cbde49e22764991c58d0bcd94c13877" name="a0cbde49e22764991c58d0bcd94c13877"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0cbde49e22764991c58d0bcd94c13877">&#9670;&#160;</a></span>operator guanaqo::MatrixView&lt; T, I, standard_stride_type, O &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::operator <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/structguanaqo_1_1MatrixView.html">guanaqo::MatrixView</a>&lt; T, I, <a class="el" href="#a0d67e8c21c53ceda34cf38d44d69b5d9">standard_stride_type</a>, O &gt; </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>If we have a single layer at compile time, we can implicitly convert to a non-batched view. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00119">119</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a09c75dd7db867e42e86378288f98e7b5" name="a09c75dd7db867e42e86378288f98e7b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09c75dd7db867e42e86378288f98e7b5">&#9670;&#160;</a></span>operator()() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/structguanaqo_1_1MatrixView.html">guanaqo::MatrixView</a>&lt; T, I, <a class="el" href="#a0d67e8c21c53ceda34cf38d44d69b5d9">standard_stride_type</a>, O &gt; <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::operator() </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>l</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Access a single layer <code class="param">l</code> as a non-batched view. </p>
+<dl class="section note"><dt>Note</dt><dd>The inner stride of the returned view is equal to the batch size of this view, so it cannot be used directly with functions that require unit inner stride (e.g. BLAS). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00129">129</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a1f1965ca1df1441baae9b38248a27e30" name="a1f1965ca1df1441baae9b38248a27e30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f1965ca1df1441baae9b38248a27e30">&#9670;&#160;</a></span>operator()() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a07f5398f5cef2f53d4fc26f5d9ca9c78">value_type</a> &amp; <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::operator() </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>r</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>c</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Access a single element at layer <code class="param">l</code>, row <code class="param">r</code> and column <code class="param">c</code>. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00134">134</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="afab4ef784be9c2eb607b32ee01443a14" name="afab4ef784be9c2eb607b32ee01443a14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afab4ef784be9c2eb607b32ee01443a14">&#9670;&#160;</a></span>batch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a144c1ef95a12cb6134e85f06bf306988">batch_view_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::batch </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>b</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Access a batch of <a class="el" href="#a652fe35cdc98459e74dd3f193bd67750" title="batch_size()">batch_size()</a> layers, starting at batch index <code class="param">b</code> (i.e. </p>
+<p>starting at layer <span class="tt">b * <a class="el" href="#a652fe35cdc98459e74dd3f193bd67750" title="The batch size, i.e. the number of layers in each batch. Equals the inner stride.">batch_size()</a></span>). </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00143">143</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a7413cc3f2de4aa60dddc53515316d09c" name="a7413cc3f2de4aa60dddc53515316d09c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7413cc3f2de4aa60dddc53515316d09c">&#9670;&#160;</a></span>batch_dyn()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt; T, I, S, I, L, O &gt; <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::batch_dyn </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>b</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Same as <a class="el" href="#afab4ef784be9c2eb607b32ee01443a14" title="batch()">batch()</a>, but returns a view with a dynamic batch size. </p>
+<p>If the total depth is not a multiple of the batch size, the last batch will have a smaller size. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00155">155</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a03bc4d77448c6a431ad9afa371c410bd" name="a03bc4d77448c6a431ad9afa371c410bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03bc4d77448c6a431ad9afa371c410bd">&#9670;&#160;</a></span>first_layers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<div class="memtemplate">
+template&lt;class N&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt; T, I, S, N, L, O &gt; <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::first_layers </td>
+          <td>(</td>
+          <td class="paramtype">N</td>          <td class="paramname"><span class="paramname"><em>n</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a view of the first <code class="param">n</code> layers. Note that <code class="param">n</code> can be a compile-time constant. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00170">170</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a4fab94433b9358b5d5ae490d4be4612d" name="a4fab94433b9358b5d5ae490d4be4612d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fab94433b9358b5d5ae490d4be4612d">&#9670;&#160;</a></span>middle_layers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<div class="memtemplate">
+template&lt;class N&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt; T, I, S, N, L, O &gt; <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::middle_layers </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">N</td>          <td class="paramname"><span class="paramname"><em>n</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a view of <code class="param">n</code> layers starting at layer <code class="param">l</code>. </p>
+<p>Note that <code class="param">n</code> can be a compile-time constant. </p><dl class="section pre"><dt>Precondition</dt><dd><span class="tt">l % <a class="el" href="#a652fe35cdc98459e74dd3f193bd67750" title="The batch size, i.e. the number of layers in each batch. Equals the inner stride.">batch_size()</a> == 0</span> (i.e. the starting layer must be at the start of a batch). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00185">185</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="abd3d195f148998f1020d39cea4ef0c5b" name="abd3d195f148998f1020d39cea4ef0c5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd3d195f148998f1020d39cea4ef0c5b">&#9670;&#160;</a></span>data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T * <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::data </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a pointer to the first element of the first layer. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00203">203</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a4199ceacf690f7d75d14fa31b6f93d12" name="a4199ceacf690f7d75d14fa31b6f93d12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4199ceacf690f7d75d14fa31b6f93d12">&#9670;&#160;</a></span>begin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1matrix_1_1View_1_1linear__iterator.html">linear_iterator</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::begin </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Iterate linearly (in storage order) over all elements of the view. </p>
+<dl class="section pre"><dt>Precondition</dt><dd><span class="tt"><a class="el" href="#a18f95c4cf1fb5d73b4d80049b35dffb9" title="Whether the outer_stride() == inner_stride() * inner_size().">has_full_outer_stride()</a></span> (i.e. no padding within layers). </dd>
+<dd>
+<span class="tt"><a class="el" href="#a85261424b54110a4374afb5be6159f21" title="Whether the layer_stride() == outer_stride() * outer_size().">has_full_layer_stride()</a></span> (i.e. no padding between batches). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00236">236</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a65c4f7147d2b8eadcf793341615e9265" name="a65c4f7147d2b8eadcf793341615e9265"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65c4f7147d2b8eadcf793341615e9265">&#9670;&#160;</a></span>end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::default_sentinel_t <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::end </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sentinel for <a class="el" href="#a4199ceacf690f7d75d14fa31b6f93d12" title="begin()">begin()</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00263">263</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a96d36d03d9a8f601b559f2d0a279f27e" name="a96d36d03d9a8f601b559f2d0a279f27e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96d36d03d9a8f601b559f2d0a279f27e">&#9670;&#160;</a></span>size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::size </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Total number of elements in the view (excluding padding). </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00269">269</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a3c9363a7f6172b2350eddf610812987a" name="a3c9363a7f6172b2350eddf610812987a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c9363a7f6172b2350eddf610812987a">&#9670;&#160;</a></span>padded_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::padded_size </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Total number of elements in the view (including all padding). </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00271">271</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="af0e126c614d4d25d1b07d778bf4f7c34" name="af0e126c614d4d25d1b07d778bf4f7c34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0e126c614d4d25d1b07d778bf4f7c34">&#9670;&#160;</a></span>depth()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#af3044dd381fe1e3d1442efd22a590cf6">depth_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::depth </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of layers in the view (i.e. depth). </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00274">274</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a90de7f9a56aeda5ceb9f4d3ca604f82b" name="a90de7f9a56aeda5ceb9f4d3ca604f82b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90de7f9a56aeda5ceb9f4d3ca604f82b">&#9670;&#160;</a></span>ceil_depth()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::ceil_depth </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The depth rounded up to a multiple of the batch size. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00276">276</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a2e60a675ceb5f0816761f53b50932290" name="a2e60a675ceb5f0816761f53b50932290"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e60a675ceb5f0816761f53b50932290">&#9670;&#160;</a></span>num_batches()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::num_batches </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of batches in the view, i.e. <span class="tt"><a class="el" href="#a90de7f9a56aeda5ceb9f4d3ca604f82b" title="The depth rounded up to a multiple of the batch size.">ceil_depth()</a> / <a class="el" href="#a652fe35cdc98459e74dd3f193bd67750" title="The batch size, i.e. the number of layers in each batch. Equals the inner stride.">batch_size()</a></span>. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00280">280</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a8a985a0de1538c7d48ba72dafeedac04" name="a8a985a0de1538c7d48ba72dafeedac04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a985a0de1538c7d48ba72dafeedac04">&#9670;&#160;</a></span>rows()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::rows </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of rows of the matrices. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00284">284</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a658f96d2f60d1a7e1bfc55ee46ad76d2" name="a658f96d2f60d1a7e1bfc55ee46ad76d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a658f96d2f60d1a7e1bfc55ee46ad76d2">&#9670;&#160;</a></span>cols()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::cols </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of columns of the matrices. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00286">286</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="afa2c308d93a3e7a1ff8a00aa044bea71" name="afa2c308d93a3e7a1ff8a00aa044bea71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa2c308d93a3e7a1ff8a00aa044bea71">&#9670;&#160;</a></span>outer_stride()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::outer_stride </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Outer stride of the matrices (leading dimension in BLAS parlance). </p>
+<p>Should be multiplied by the batch size to get the actual number of elements. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00289">289</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ace0f2f30fc941f898d62867adc440087" name="ace0f2f30fc941f898d62867adc440087"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace0f2f30fc941f898d62867adc440087">&#9670;&#160;</a></span>outer_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::outer_size </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The size of the outer dimension, i.e. </p>
+<p>the number of columns for column-major storage, or the number of rows for row-major storage. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00294">294</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a90b6311fd3fe15291caa206e01a9c6f1" name="a90b6311fd3fe15291caa206e01a9c6f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90b6311fd3fe15291caa206e01a9c6f1">&#9670;&#160;</a></span>inner_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::inner_size </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The size of the inner dimension, i.e. </p>
+<p>the number of rows for column-major storage, or the number of columns for row-major storage. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00299">299</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a8730427d93fa34b89c63b24ea353aac5" name="a8730427d93fa34b89c63b24ea353aac5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8730427d93fa34b89c63b24ea353aac5">&#9670;&#160;</a></span>inner_stride()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::inner_stride </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The inner stride of the matrices. </p>
+<p>Should be multiplied by the batch size to get the actual number of elements. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00304">304</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a652fe35cdc98459e74dd3f193bd67750" name="a652fe35cdc98459e74dd3f193bd67750"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a652fe35cdc98459e74dd3f193bd67750">&#9670;&#160;</a></span>batch_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a0c328fcfd23b220a108167a511021954">batch_size_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::batch_size </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The batch size, i.e. the number of layers in each batch. Equals the inner stride. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00306">306</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ad789388aeaae21bd80f85c604c604995" name="ad789388aeaae21bd80f85c604c604995"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad789388aeaae21bd80f85c604c604995">&#9670;&#160;</a></span>layer_stride()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::layer_stride </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The layer stride, i.e. </p>
+<p>the distance between the first layer of one batch and the first layer of the next batch. Should be multiplied by the batch size to get the actual number of elements. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00312">312</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a85261424b54110a4374afb5be6159f21" name="a85261424b54110a4374afb5be6159f21"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85261424b54110a4374afb5be6159f21">&#9670;&#160;</a></span>has_full_layer_stride()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::has_full_layer_stride </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether the <span class="tt"><a class="el" href="#ad789388aeaae21bd80f85c604c604995" title="The layer stride, i.e.">layer_stride()</a> == <a class="el" href="#afa2c308d93a3e7a1ff8a00aa044bea71" title="Outer stride of the matrices (leading dimension in BLAS parlance).">outer_stride()</a> * <a class="el" href="#ace0f2f30fc941f898d62867adc440087" title="The size of the outer dimension, i.e.">outer_size()</a></span>. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00316">316</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a18f95c4cf1fb5d73b4d80049b35dffb9" name="a18f95c4cf1fb5d73b4d80049b35dffb9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18f95c4cf1fb5d73b4d80049b35dffb9">&#9670;&#160;</a></span>has_full_outer_stride()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::has_full_outer_stride </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether the <span class="tt"><a class="el" href="#afa2c308d93a3e7a1ff8a00aa044bea71" title="Outer stride of the matrices (leading dimension in BLAS parlance).">outer_stride()</a> == <a class="el" href="#a8730427d93fa34b89c63b24ea353aac5" title="The inner stride of the matrices.">inner_stride()</a> * <a class="el" href="#a90b6311fd3fe15291caa206e01a9c6f1" title="The size of the inner dimension, i.e.">inner_size()</a></span>. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00320">320</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a764fa59ba1b5bae126c04c4b8cf23572" name="a764fa59ba1b5bae126c04c4b8cf23572"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a764fa59ba1b5bae126c04c4b8cf23572">&#9670;&#160;</a></span>has_full_inner_stride()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::has_full_inner_stride </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether the <span class="tt"><a class="el" href="#a8730427d93fa34b89c63b24ea353aac5" title="The inner stride of the matrices.">inner_stride()</a> == 1</span>. Always true. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00324">324</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a42204aefac8e4fa20bfa343082e744f0" name="a42204aefac8e4fa20bfa343082e744f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42204aefac8e4fa20bfa343082e744f0">&#9670;&#160;</a></span>get_layer_stride_for()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<div class="memtemplate">
+template&lt;class V&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::get_layer_stride_for </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00332">332</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a4d2131f86753afbd57090790d75d98a0" name="a4d2131f86753afbd57090790d75d98a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d2131f86753afbd57090790d75d98a0">&#9670;&#160;</a></span>reshaped()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::reshaped </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>rows</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>cols</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reshape the view to the given dimensions. The total size should not change. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00344">344</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a8643bd7086c7eece449a9a8b8afff661" name="a8643bd7086c7eece449a9a8b8afff661"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8643bd7086c7eece449a9a8b8afff661">&#9670;&#160;</a></span>top_rows()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aacba293d849732693abdca99ae237896">row_slice_view_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::top_rows </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a view of the first <code class="param">n</code> rows. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00358">358</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a784de6877b93091726b6cfa3579fe8ca" name="a784de6877b93091726b6cfa3579fe8ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a784de6877b93091726b6cfa3579fe8ca">&#9670;&#160;</a></span>left_cols()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#af2f2324c52e5bb88e70c8191e6337983">col_slice_view_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::left_cols </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a view of the first <code class="param">n</code> columns. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00371">371</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a485295b0ba5180ca31f2c5d3ea04cd28" name="a485295b0ba5180ca31f2c5d3ea04cd28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a485295b0ba5180ca31f2c5d3ea04cd28">&#9670;&#160;</a></span>bottom_rows()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aacba293d849732693abdca99ae237896">row_slice_view_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::bottom_rows </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a view of the last <code class="param">n</code> rows. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00384">384</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a65e8824cd34781ca5901152b8eb4dff2" name="a65e8824cd34781ca5901152b8eb4dff2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65e8824cd34781ca5901152b8eb4dff2">&#9670;&#160;</a></span>right_cols()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#af2f2324c52e5bb88e70c8191e6337983">col_slice_view_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::right_cols </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a view of the last <code class="param">n</code> columns. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00399">399</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a5de296a861344e3a9e599081545480b9" name="a5de296a861344e3a9e599081545480b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5de296a861344e3a9e599081545480b9">&#9670;&#160;</a></span>middle_rows()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aacba293d849732693abdca99ae237896">row_slice_view_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::middle_rows </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>r</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a view of <code class="param">n</code> rows starting at row <code class="param">r</code>. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00414">414</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a3ae9a5ed0a41a37eaf3cc57c60eab3db" name="a3ae9a5ed0a41a37eaf3cc57c60eab3db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ae9a5ed0a41a37eaf3cc57c60eab3db">&#9670;&#160;</a></span>middle_cols()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#af2f2324c52e5bb88e70c8191e6337983">col_slice_view_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::middle_cols </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>c</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a view of <code class="param">n</code> columns starting at column <code class="param">c</code>. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00419">419</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ac17cd50705f2ef876c6b483e4b8394b4" name="ac17cd50705f2ef876c6b483e4b8394b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac17cd50705f2ef876c6b483e4b8394b4">&#9670;&#160;</a></span>top_left()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::top_left </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>nr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>nc</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a view of the top-left <code class="param">nr</code> by <code class="param">nc</code> block of the matrices. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00424">424</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aee77fd6ec42b32bc5a5bc826274a914f" name="aee77fd6ec42b32bc5a5bc826274a914f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee77fd6ec42b32bc5a5bc826274a914f">&#9670;&#160;</a></span>top_right()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::top_right </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>nr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>nc</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a view of the top-right <code class="param">nr</code> by <code class="param">nc</code> block of the matrices. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00429">429</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a58f8cbcd01d3e93cc584ad1250234af8" name="a58f8cbcd01d3e93cc584ad1250234af8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58f8cbcd01d3e93cc584ad1250234af8">&#9670;&#160;</a></span>bottom_left()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::bottom_left </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>nr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>nc</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a view of the bottom-left <code class="param">nr</code> by <code class="param">nc</code> block of the matrices. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00434">434</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a0aaed4ee88727aba4c6066b65a897056" name="a0aaed4ee88727aba4c6066b65a897056"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0aaed4ee88727aba4c6066b65a897056">&#9670;&#160;</a></span>bottom_right()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::bottom_right </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>nr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>nc</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a view of the bottom-right <code class="param">nr</code> by <code class="param">nc</code> block of the matrices. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00439">439</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a1c9de38ddbf785fa09e56a8fa5169c05" name="a1c9de38ddbf785fa09e56a8fa5169c05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c9de38ddbf785fa09e56a8fa5169c05">&#9670;&#160;</a></span>block()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aa43531137c5afae7c33a90822cdef2fb">general_slice_view_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::block </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>r</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>c</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>nr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a8217652dc175e9d9ac2f110e355e9cbb">index_type</a></td>          <td class="paramname"><span class="paramname"><em>nc</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a view of the <code class="param">nr</code> by <code class="param">nc</code> block of the matrices starting at row <code class="param">r</code> and column <code class="param">c</code>. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00444">444</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a8000c4823b91daf5dfea18ccd6b0e45d" name="a8000c4823b91daf5dfea18ccd6b0e45d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8000c4823b91daf5dfea18ccd6b0e45d">&#9670;&#160;</a></span>as_column()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::as_column </td>
+          <td>(</td>
+          <td class="paramtype">std::span&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a view of the given span as a column vector. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00450">450</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a24b36d6e7568ec7941969cf410f42f01" name="a24b36d6e7568ec7941969cf410f42f01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24b36d6e7568ec7941969cf410f42f01">&#9670;&#160;</a></span>transposed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::transposed </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a transposed view of the matrices. </p>
+<p>Note that the data itself is not modified, the returned view simply accesses the same data with rows and column indices swapped. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00456">456</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a4100ad6c24e2d0a8050ac1d9ed6a2b46" name="a4100ad6c24e2d0a8050ac1d9ed6a2b46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4100ad6c24e2d0a8050ac1d9ed6a2b46">&#9670;&#160;</a></span>add_to_diagonal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::add_to_diagonal </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a07f5398f5cef2f53d4fc26f5d9ca9c78">value_type</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>t</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00472">472</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a1cfba3a1a9ffdcd786c5fe76488a626c" name="a1cfba3a1a9ffdcd786c5fe76488a626c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1cfba3a1a9ffdcd786c5fe76488a626c">&#9670;&#160;</a></span>set_constant()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::set_constant </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a07f5398f5cef2f53d4fc26f5d9ca9c78">value_type</a></td>          <td class="paramname"><span class="paramname"><em>t</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00485">485</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ab593ea4d085e0f6f56d6cc28479cea6d" name="ab593ea4d085e0f6f56d6cc28479cea6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab593ea4d085e0f6f56d6cc28479cea6d">&#9670;&#160;</a></span>negate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::negate </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00499">499</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="af59145deefbfd73abdd5be12f54806cf" name="af59145deefbfd73abdd5be12f54806cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af59145deefbfd73abdd5be12f54806cf">&#9670;&#160;</a></span>copy_values()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<div class="memtemplate">
+template&lt;class Other&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::copy_values </td>
+          <td>(</td>
+          <td class="paramtype">const Other &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00514">514</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a99bc563329bf4abf7d1285745d9ff985" name="a99bc563329bf4abf7d1285745d9ff985"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99bc563329bf4abf7d1285745d9ff985">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a> &amp; <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt; T, I, S, D, L, O &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copy assignment copies the values from another view with the same layout to this view. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00536">536</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a0b2bf5139cb4ae1698c4ca8a365bca0a" name="a0b2bf5139cb4ae1698c4ca8a365bca0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b2bf5139cb4ae1698c4ca8a365bca0a">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<div class="memtemplate">
+template&lt;class U, class J, class R, class E, class M&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a> &amp; <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt; U, J, R, E, M, O &gt;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copy values from another view with a compatible value type and the same layout to this view. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00545">545</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="acb673b4079389369a6c0fb019fde245d" name="acb673b4079389369a6c0fb019fde245d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb673b4079389369a6c0fb019fde245d">&#9670;&#160;</a></span>operator+=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<div class="memtemplate">
+template&lt;class U, class J, class R, class E, class M&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a> &amp; <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::operator+= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt; U, J, R, E, M, O &gt;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00553">553</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="af72c9ff6839b732973ee1582655d4f50" name="af72c9ff6839b732973ee1582655d4f50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af72c9ff6839b732973ee1582655d4f50">&#9670;&#160;</a></span>reassign()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a> &amp; <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::reassign </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt; T, I, S, D, L, O &gt;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reassign the buffer and layout of this view to those of another view. No data is copied. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00577">577</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a1e373fba18186c9f4602603f9546a524" name="a1e373fba18186c9f4602603f9546a524"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e373fba18186c9f4602603f9546a524">&#9670;&#160;</a></span>operator View&lt; T, I, S, integral_value_type_t&lt; D &gt;, L, O &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::operator <a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt; T, I, S, <a class="el" href="namespacebatmat_1_1matrix.html#a3bf2b5f85e94200874b4a9bc591cc79c">integral_value_type_t</a>&lt; D &gt;, L, O &gt; </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implicit conversion to a view with a dynamic depth. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00584">584</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a8d52ae35f6857501961deed76b32bb37" name="a8d52ae35f6857501961deed76b32bb37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d52ae35f6857501961deed76b32bb37">&#9670;&#160;</a></span>operator View&lt; const T, I, S, integral_value_type_t&lt; D &gt;, L, O &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::operator <a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt; const T, I, S, <a class="el" href="namespacebatmat_1_1matrix.html#a3bf2b5f85e94200874b4a9bc591cc79c">integral_value_type_t</a>&lt; D &gt;, L, O &gt; </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implicit conversion to a view with a dynamic depth, going from non-const to const. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00597">597</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a158efefd16b427b3f8607ace43b07769" name="a158efefd16b427b3f8607ace43b07769"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a158efefd16b427b3f8607ace43b07769">&#9670;&#160;</a></span>operator View&lt; T, I, S, D, I, O &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::operator <a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt; T, I, S, D, I, O &gt; </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implicit conversion to a view with a dynamic layer stride. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00610">610</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a8927d61cfcc0fd7b44464b478096343f" name="a8927d61cfcc0fd7b44464b478096343f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8927d61cfcc0fd7b44464b478096343f">&#9670;&#160;</a></span>operator View&lt; const T, I, S, D, I, O &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::operator <a class="el" href="#a0033dd840117ba37447a16b70ad4b4d5">View</a>&lt; const T, I, S, D, I, O &gt; </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implicit conversion to a view with a dynamic layer stride, going from non-const to const. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00622">622</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="af9023b390e4eb12fddec55d0ec1adfa6" name="af9023b390e4eb12fddec55d0ec1adfa6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9023b390e4eb12fddec55d0ec1adfa6">&#9670;&#160;</a></span>storage_order</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::storage_order = <a class="el" href="structbatmat_1_1matrix_1_1Layout.html#ad635fd9e2c04bb18318948e8d24eedd2">layout_type::storage_order</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00041">41</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a02bf028bb593d05b86d955fd972d622a" name="a02bf028bb593d05b86d955fd972d622a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02bf028bb593d05b86d955fd972d622a">&#9670;&#160;</a></span>is_column_major</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::is_column_major = <a class="el" href="structbatmat_1_1matrix_1_1Layout.html#a4ab5b96fbdbb92e59359e2968358815f">layout_type::is_column_major</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00042">42</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="adc94b8ed2cbdba1ad1721b712f3ea558" name="adc94b8ed2cbdba1ad1721b712f3ea558"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc94b8ed2cbdba1ad1721b712f3ea558">&#9670;&#160;</a></span>is_row_major</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::is_row_major = <a class="el" href="structbatmat_1_1matrix_1_1Layout.html#a7876840d7f3a002ffd73707c0d578051">layout_type::is_row_major</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00043">43</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a505fee81af0f8fe2860572b6cbe497d8" name="a505fee81af0f8fe2860572b6cbe497d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a505fee81af0f8fe2860572b6cbe497d8">&#9670;&#160;</a></span>has_single_batch_at_compile_time</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::has_single_batch_at_compile_time</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">                                                       = <span class="keyword">requires</span> {</div>
+<div class="line">    S::value;</div>
+<div class="line">    D::value;</div>
+<div class="line">} &amp;&amp; S{} == D{}</div>
+</div><!-- fragment -->
+<p>True if <a class="el" href="#a652fe35cdc98459e74dd3f193bd67750" title="batch_size()">batch_size()</a> and <a class="el" href="#af0e126c614d4d25d1b07d778bf4f7c34" title="depth()">depth()</a> are compile-time constants and are equal. </p>
+<dl class="section note"><dt>Note</dt><dd>Views with dynamic batch size and depth may still have a single batch at runtime, but this cannot be statically asserted. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00048">48</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a85a50d696f7c76de8c7093b65eb14615" name="a85a50d696f7c76de8c7093b65eb14615"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85a50d696f7c76de8c7093b65eb14615">&#9670;&#160;</a></span>has_single_layer_at_compile_time</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::has_single_layer_at_compile_time = requires { D::value; } &amp;&amp; D{} == 1</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>True if <a class="el" href="#af0e126c614d4d25d1b07d778bf4f7c34" title="depth()">depth()</a> is a compile-time constant and is equal to one. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00053">53</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a75590180ddf188388521f81f7c181d6c" name="a75590180ddf188388521f81f7c181d6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75590180ddf188388521f81f7c181d6c">&#9670;&#160;</a></span>data_ptr</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a07f5398f5cef2f53d4fc26f5d9ca9c78">value_type</a>* <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::data_ptr</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Pointer to the first element of the first layer. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00073">73</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a130d341c328c2e848593a609a3e22a21" name="a130d341c328c2e848593a609a3e22a21"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a130d341c328c2e848593a609a3e22a21">&#9670;&#160;</a></span>layout</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class I = index_t, class S = std::integral_constant&lt;I, 1&gt;, class D = I, class L = DefaultStride, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> O = StorageOrder::ColMajor&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a012e075ecef99aebefdef47cbf1e8f5a">layout_type</a> <a class="el" href="structbatmat_1_1matrix_1_1View.html">batmat::matrix::View</a>&lt; T, I, S, D, L, O &gt;::layout</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structbatmat_1_1matrix_1_1Layout.html" title="Shape and strides describing a batch of matrices, independent of any storage.">Layout</a> describing the dimensions and strides of the view. </p>
+
+<p class="definition">Definition at line <a class="el" href="view_8hpp_source.html#l00075">75</a> of file <a class="el" href="view_8hpp_source.html">view.hpp</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>batmat/include/batmat/matrix/<a class="el" href="view_8hpp_source.html">view.hpp</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="namespacebatmat.html">batmat</a></li><li class="navelem"><a href="namespacebatmat_1_1matrix.html">matrix</a></li><li class="navelem"><a href="structbatmat_1_1matrix_1_1View.html">View</a></li>
+    <li class="footer">Generated on <span class="timestamp"></span> for batmat by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
+  </ul>
+</div>
+</body>
+</html>

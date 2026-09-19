@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="group__topic-matrix-utils" kind="group">
+    <compoundname>topic-matrix-utils</compoundname>
+    <title>Matrix utilities</title>
+    <innerfile refid="storage_8hpp">storage.hpp</innerfile>
+    <innerclass refid="structbatmat_1_1matrix_1_1uninitialized__t" prot="public">batmat::matrix::uninitialized_t</innerclass>
+    <innerclass refid="structbatmat_1_1matrix_1_1aligned__deleter" prot="public">batmat::matrix::aligned_deleter</innerclass>
+    <innerclass refid="structbatmat_1_1matrix_1_1aligned__deleter_3_01void_00_01A_01_4" prot="public">batmat::matrix::aligned_deleter&lt; void, A &gt;</innerclass>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="group__topic-matrix-utils_1gae1611b15c38c77550ccbe46aff4bdcea" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structbatmat_1_1matrix_1_1uninitialized__t" kindref="compound">batmat::matrix::uninitialized_t</ref></type>
+        <definition>struct batmat::matrix::uninitialized_t batmat::matrix::uninitialized</definition>
+        <argsstring></argsstring>
+        <name>uninitialized</name>
+        <qualifiedname>batmat::matrix::uninitialized</qualifiedname>
+        <briefdescription>
+<para>Tag type to indicate that memory should not be initialized. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/storage.hpp" line="27" column="38"/>
+        <referencedby refid="example_8cpp_1ae66f6b31b5ad750f1fe042a706a4e3d4" compoundref="example_8cpp" startline="20" endline="67">main</referencedby>
+        <referencedby refid="namespacebatmat_1_1matrix_1_1detail_1a2cf98dab88a4f9d05671cbd56f967e31" compoundref="storage_8hpp" startline="51" endline="68">batmat::matrix::detail::make_aligned_unique_ptr</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group__topic-matrix-utils_1ga3e92d037864fc4f6d218f961d069e7bb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class A</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::matrix::make_aligned_unique_ptr</definition>
+        <argsstring>(size_t size, A align)</argsstring>
+        <name>make_aligned_unique_ptr</name>
+        <qualifiedname>batmat::matrix::make_aligned_unique_ptr</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>size</declname>
+        </param>
+        <param>
+          <type>A</type>
+          <declname>align</declname>
+        </param>
+        <briefdescription>
+<para>Returns a smart pointer to an array of <computeroutput>T</computeroutput> that satisfies the given alignment requirements. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/storage.hpp" line="77" column="6" bodyfile="batmat/include/batmat/matrix/storage.hpp" bodystart="77" bodyend="79"/>
+        <references refid="namespacebatmat_1_1matrix_1_1detail_1a2cf98dab88a4f9d05671cbd56f967e31" compoundref="storage_8hpp" startline="51" endline="68">batmat::matrix::detail::make_aligned_unique_ptr</references>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1a49e03d07ae5c5846d9a62b1dbb60d2ca" compoundref="matrix_8hpp" startline="90" endline="93">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::allocate</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Matrix_1ac91d5861e58229c1c2c54f3d1f57a81a" compoundref="matrix_8hpp" startline="94" endline="97">batmat::matrix::Matrix&lt; S, index_t, simd_stride_t, index_t, O, simd_align_t &gt;::allocate</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-matrix-utils_1ga98675c4ff0dc3e7e479110770a1861d6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class A</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::matrix::make_aligned_unique_ptr</definition>
+        <argsstring>(size_t size, A align, uninitialized_t)</argsstring>
+        <name>make_aligned_unique_ptr</name>
+        <qualifiedname>batmat::matrix::make_aligned_unique_ptr</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>size</declname>
+        </param>
+        <param>
+          <type>A</type>
+          <declname>align</declname>
+        </param>
+        <param>
+          <type>uninitialized_t</type>
+        </param>
+        <briefdescription>
+<para>Returns a smart pointer to an array of <computeroutput>T</computeroutput> that satisfies the given alignment requirements. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/storage.hpp" line="84" column="6" bodyfile="batmat/include/batmat/matrix/storage.hpp" bodystart="84" bodyend="86"/>
+        <references refid="namespacebatmat_1_1matrix_1_1detail_1a2cf98dab88a4f9d05671cbd56f967e31" compoundref="storage_8hpp" startline="51" endline="68">batmat::matrix::detail::make_aligned_unique_ptr</references>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Low-level utilities for matrix storage. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

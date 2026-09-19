@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::norms&lt; T, void &gt;</compoundname>
+    <includes refid="norms_8hpp" local="no">batmat/linalg/norms.hpp</includes>
+    <innerclass refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result" prot="public">batmat::linalg::norms&lt; T, void &gt;::result</innerclass>
+    <templateparamlist>
+      <param>
+        <type>class T</type>
+      </param>
+    </templateparamlist>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1a5b9bf9a93bbc012a17c856a3a60063df" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result" kindref="compound">result</ref></type>
+        <definition>result batmat::linalg::norms&lt; T, void &gt;::operator()</definition>
+        <argsstring>(result accum, T t) const</argsstring>
+        <name>operator()</name>
+        <qualifiedname>batmat::linalg::norms&lt; T, void &gt;::operator()</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result" kindref="compound">result</ref></type>
+          <declname>accum</declname>
+        </param>
+        <param>
+          <type>T</type>
+          <declname>t</declname>
+        </param>
+        <briefdescription>
+<para>Update the accumulator with a new value. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/norms.hpp" line="78" column="12" bodyfile="batmat/include/batmat/linalg/norms.hpp" bodystart="78" bodyend="83"/>
+        <references refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a5318bc89ad1183d6bbeffd6ff614cb1f" compoundref="norms_8hpp" startline="60">batmat::linalg::norms&lt; T, void &gt;::result::amax</references>
+        <references refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a8fcefdf2eb9f87353d06855a9d26e86d" compoundref="norms_8hpp" startline="61">batmat::linalg::norms&lt; T, void &gt;::result::asum</references>
+        <references refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1ab7e83008f054b377039d2174f5f5943e" compoundref="norms_8hpp" startline="62">batmat::linalg::norms&lt; T, void &gt;::result::sumsq</references>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1a1ab34bbdf873c0447789cf4e86a49a42" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result" kindref="compound">result</ref></type>
+        <definition>result batmat::linalg::norms&lt; T, void &gt;::operator()</definition>
+        <argsstring>(result accum, result t) const</argsstring>
+        <name>operator()</name>
+        <qualifiedname>batmat::linalg::norms&lt; T, void &gt;::operator()</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result" kindref="compound">result</ref></type>
+          <declname>accum</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result" kindref="compound">result</ref></type>
+          <declname>t</declname>
+        </param>
+        <briefdescription>
+<para>Combine two accumulators. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/norms.hpp" line="86" column="12" bodyfile="batmat/include/batmat/linalg/norms.hpp" bodystart="86" bodyend="89"/>
+        <references refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a5318bc89ad1183d6bbeffd6ff614cb1f" compoundref="norms_8hpp" startline="60">batmat::linalg::norms&lt; T, void &gt;::result::amax</references>
+        <references refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1a8fcefdf2eb9f87353d06855a9d26e86d" compoundref="norms_8hpp" startline="61">batmat::linalg::norms&lt; T, void &gt;::result::asum</references>
+        <references refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result_1ab7e83008f054b377039d2174f5f5943e" compoundref="norms_8hpp" startline="62">batmat::linalg::norms&lt; T, void &gt;::result::sumsq</references>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1a0d3617c028c4fa4aab3ca801bf694582" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result" kindref="compound">result</ref></type>
+        <definition>static result batmat::linalg::norms&lt; T, void &gt;::zero</definition>
+        <argsstring>()</argsstring>
+        <name>zero</name>
+        <qualifiedname>batmat::linalg::norms&lt; T, void &gt;::zero</qualifiedname>
+        <briefdescription>
+<para>Identity element for the reduction. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/norms.hpp" line="92" column="19" bodyfile="batmat/include/batmat/linalg/norms.hpp" bodystart="92" bodyend="92"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1norms_1a373ad15738b94545803a7e65a3b4e7a4" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>result_simd</type>
+        <definition>static result_simd batmat::linalg::norms&lt; T, void &gt;::zero_simd</definition>
+        <argsstring>()</argsstring>
+        <name>zero_simd</name>
+        <qualifiedname>batmat::linalg::norms&lt; T, void &gt;::zero_simd</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/norms.hpp" line="53" column="24" bodyfile="batmat/include/batmat/linalg/norms.hpp" bodystart="53" bodyend="53"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1norms_1ae223b70fcb64755e0a026f2cc3943fb6" prot="public" static="no">
+        <type>typename <ref refid="structbatmat_1_1linalg_1_1norms" kindref="compound">norms</ref>&lt; T &gt;::result</type>
+        <definition>using batmat::linalg::norms&lt; T, void &gt;::result = </definition>
+        <argsstring></argsstring>
+        <name>result</name>
+        <qualifiedname>batmat::linalg::norms&lt; T, void &gt;::result</qualifiedname>
+        <briefdescription>
+<para>Accumulator. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/norms.hpp" line="28" column="5" bodyfile="batmat/include/batmat/linalg/norms.hpp" bodystart="28" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::norms&lt; T, void &gt;</label>
+        <link refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/norms.hpp" line="57" column="1" bodyfile="batmat/include/batmat/linalg/norms.hpp" bodystart="57" bodyend="93"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1a5b9bf9a93bbc012a17c856a3a60063df" prot="public" virt="non-virtual"><scope>batmat::linalg::norms&lt; T, void &gt;</scope><name>operator()</name></member>
+      <member refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1a1ab34bbdf873c0447789cf4e86a49a42" prot="public" virt="non-virtual"><scope>batmat::linalg::norms&lt; T, void &gt;</scope><name>operator()</name></member>
+      <member refid="structbatmat_1_1linalg_1_1norms_1ae223b70fcb64755e0a026f2cc3943fb6" prot="public" virt="non-virtual"><scope>batmat::linalg::norms&lt; T, void &gt;</scope><name>result</name></member>
+      <member refid="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1a0d3617c028c4fa4aab3ca801bf694582" prot="public" virt="non-virtual"><scope>batmat::linalg::norms&lt; T, void &gt;</scope><name>zero</name></member>
+      <member refid="structbatmat_1_1linalg_1_1norms_1a373ad15738b94545803a7e65a3b4e7a4" prot="public" virt="non-virtual"><scope>batmat::linalg::norms&lt; T, void &gt;</scope><name>zero_simd</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

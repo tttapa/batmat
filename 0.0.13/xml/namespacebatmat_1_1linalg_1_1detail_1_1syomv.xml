@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg_1_1detail_1_1syomv" kind="namespace" language="C++">
+    <compoundname>batmat::linalg::detail::syomv</compoundname>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1_1syomv_1afc288b1dae62ec92c03b3a5a97723bdc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>micro_kernels::syomv::KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+            <defval>{}</defval>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::syomv::syomv</definition>
+        <argsstring>(view&lt; const T, Abi, OA &gt; A, view&lt; const T, Abi, OB &gt; B, view&lt; T, Abi, OD &gt; D)</argsstring>
+        <name>syomv</name>
+        <qualifiedname>batmat::linalg::detail::syomv::syomv</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OB &gt;</type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/syomv.hpp" line="16" column="6" bodyfile="batmat/include/batmat/linalg/syomv.hpp" bodystart="16" bodyend="34"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="namespacebatmat_1_1linalg_1_1detail_1_1syomv_1afc288b1dae62ec92c03b3a5a97723bdc" compoundref="syomv_8hpp" startline="16" endline="34">syomv</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1af5a554923dce53d14cc5a7a90e5169cb" compoundref="syomv_8tpp" startline="56" endline="84">batmat::linalg::micro_kernels::syomv::syomv_register</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1syomv_1afc288b1dae62ec92c03b3a5a97723bdc" compoundref="syomv_8hpp" startline="16" endline="34">syomv</referencedby>
+        <referencedby refid="group__topic-linalg_1ga1c157567ed0f419c4136ec2a69dc8a59" compoundref="syomv_8hpp" startline="46" endline="50">batmat::linalg::syomv</referencedby>
+        <referencedby refid="group__topic-linalg_1gae8fed320ade4ba886dfe45d35f31ccc5" compoundref="syomv_8hpp" startline="55" endline="59">batmat::linalg::syomv_neg</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/syomv.hpp" line="13" column="1"/>
+  </compounddef>
+</doxygen>

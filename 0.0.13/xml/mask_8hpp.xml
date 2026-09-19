@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="mask_8hpp" kind="file" language="C++">
+    <compoundname>mask.hpp</compoundname>
+    <includes refid="simd_8hpp" local="no">batmat/simd.hpp</includes>
+    <includes local="no">type_traits</includes>
+    <includedby refid="gather_8hpp" local="no">batmat/include/batmat/ops/gather.hpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>batmat/include/batmat/ops/mask.hpp</label>
+        <link refid="mask_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>batmat/unroll.h</label>
+        <link refid="unroll_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>batmat/config.hpp</label>
+      </node>
+      <node id="7">
+        <label>cstddef</label>
+      </node>
+      <node id="6">
+        <label>experimental/simd</label>
+      </node>
+      <node id="5">
+        <label>guanaqo/stringify.h</label>
+      </node>
+      <node id="8">
+        <label>type_traits</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="3">
+        <label>batmat/include/batmat/linalg/compress.hpp</label>
+        <link refid="compress_8hpp"/>
+      </node>
+      <node id="2">
+        <label>batmat/include/batmat/ops/gather.hpp</label>
+        <link refid="gather_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/ops/mask.hpp</label>
+        <link refid="mask_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structbatmat_1_1ops_1_1detail_1_1mask__type" prot="public">batmat::ops::detail::mask_type</innerclass>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1ops">batmat::ops</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1ops_1_1detail">batmat::ops::detail</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="simd_8hpp" kindref="compound">batmat/simd.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;type_traits&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1ops_1_1detail" kindref="compound">batmat::ops::detail</ref><sp/>{</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="9" refid="structbatmat_1_1ops_1_1detail_1_1mask__type" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1ops_1_1detail_1_1mask__type" kindref="compound">mask_type</ref><sp/>{</highlight></codeline>
+<codeline lineno="10" refid="structbatmat_1_1ops_1_1detail_1_1mask__type_1a7fda4eff7c09e3a80b13dd924d9f6ab6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1ops_1_1detail_1_1mask__type_1a7fda4eff7c09e3a80b13dd924d9f6ab6" kindref="member">type</ref><sp/>=<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;T, Abi&gt;::mask_type</ref>;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>AbiT&gt;</highlight></codeline>
+<codeline lineno="14" refid="namespacebatmat_1_1ops_1_1detail_1aedd67c16728b3e5de575579fc5728a6b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1ops_1_1detail_1aedd67c16728b3e5de575579fc5728a6b" kindref="member">mask_type_t</ref><sp/>=<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1ops_1_1detail_1_1mask__type_1a7fda4eff7c09e3a80b13dd924d9f6ab6" kindref="member">mask_type&lt;T, AbiT&gt;::type</ref>;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="16"><highlight class="comment">///<sp/>Convert<sp/>a<sp/>SIMD<sp/>mask<sp/>to<sp/>the<sp/>appropriate<sp/>intrinsic<sp/>type.<sp/>If<sp/>@p<sp/>M<sp/>is<sp/>not<sp/>a<sp/>mask<sp/>type,<sp/>its<sp/>values</highlight></codeline>
+<codeline lineno="17"><highlight class="comment">///<sp/>are<sp/>compared<sp/>to<sp/>zero<sp/>to<sp/>create<sp/>a<sp/>mask.</highlight></codeline>
+<codeline lineno="18"><highlight class="comment">///<sp/>@todo<sp/><sp/><sp/>GCC&apos;s<sp/>&lt;experimental/simd&gt;<sp/>does<sp/>not<sp/>allow<sp/>casting<sp/>from<sp/>std::experimental::simd_mask<sp/>to</highlight></codeline>
+<codeline lineno="19"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>intrinsic<sp/>types,<sp/>so<sp/>I&apos;m<sp/>not<sp/>using<sp/>simd_mask<sp/>for<sp/>now.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>AbiT,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>M&gt;</highlight></codeline>
+<codeline lineno="21" refid="namespacebatmat_1_1ops_1_1detail_1a7a2eefc87ffd67db8b263046db94a373" refkind="member"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1aedd67c16728b3e5de575579fc5728a6b" kindref="member">mask_type_t&lt;T, AbiT&gt;</ref><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1a7a2eefc87ffd67db8b263046db94a373" kindref="member">convert_mask</ref>(M<sp/>mask)<sp/>{</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>BATMAT_WITH_GSI_HPC_SIMD</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>m<sp/>=<sp/>mask<sp/>!=<sp/>M{0};</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>(std::is_convertible_v&lt;</highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(m),<sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1aedd67c16728b3e5de575579fc5728a6b" kindref="member">mask_type_t&lt;T, AbiT&gt;</ref>&gt;)</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1aedd67c16728b3e5de575579fc5728a6b" kindref="member">mask_type_t&lt;T, AbiT&gt;</ref>{m};</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1aedd67c16728b3e5de575579fc5728a6b" kindref="member">mask_type_t&lt;T, AbiT&gt;</ref>{[&amp;](</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>i)<sp/>-&gt;<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>m[i];<sp/>}};<sp/></highlight><highlight class="comment">//<sp/>TODO:<sp/>suboptimal</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(mask<sp/>!=<sp/>0).__cvt();</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="34" refid="namespacebatmat_1_1ops_1_1detail_1ae37fca8a2efbc9ce698af24433ea5c2f" refkind="member"><highlight class="normal">[[gnu::always_inline]]<sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1ops_1_1detail_1ae37fca8a2efbc9ce698af24433ea5c2f" kindref="member">compare_ge_0</ref>(<ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;T, Abi&gt;</ref><sp/>x)<sp/>{</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>x<sp/>&gt;=<sp/><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd&lt;T, Abi&gt;</ref>{};</highlight></codeline>
+<codeline lineno="36"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::ops::detail</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(__AVX512F__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;batmat/ops/avx-512/mask.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="preprocessor">#elif<sp/>defined(__AVX2__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;batmat/ops/avx2/mask.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/ops/mask.hpp"/>
+  </compounddef>
+</doxygen>

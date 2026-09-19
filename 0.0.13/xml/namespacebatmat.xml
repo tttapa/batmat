@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat" kind="namespace" language="C++">
+    <compoundname>batmat</compoundname>
+    <innerclass refid="classbatmat_1_1thread__pool" prot="public">batmat::thread_pool</innerclass>
+    <innerclass refid="structbatmat_1_1DefaultTimings" prot="public">batmat::DefaultTimings</innerclass>
+    <innernamespace refid="namespacebatmat_1_1linalg">batmat::linalg</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1matrix">batmat::matrix</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1ops">batmat::ops</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1datapar">batmat::datapar</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1detail">batmat::detail</innernamespace>
+    <sectiondef kind="enum">
+      <member refid="group__topic-utils_1gaa625a055ebbfa5ba05a1fd8f1f104807" kind="enum"><name>LoopDir</name></member>
+    </sectiondef>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>index_t</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+        </templateparamlist>
+        <type>std::integral_constant&lt; index_t, I &gt;</type>
+        <definition>using batmat::index_constant = std::integral_constant&lt;index_t, I&gt;</definition>
+        <argsstring></argsstring>
+        <name>index_constant</name>
+        <qualifiedname>batmat::index_constant</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/lut.hpp" line="10" column="1" bodyfile="batmat/include/batmat/lut.hpp" bodystart="10" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <member refid="group__topic-utils_1ga65fdbfd18ede71fc4fb894153854c2ee" kind="function"><name>foreach_chunked</name></member>
+      <member refid="group__topic-utils_1gab76a36340644bbf7c8093caa45aef12f" kind="function"><name>foreach_chunked_merged</name></member>
+      <memberdef kind="function" id="namespacebatmat_1adb8a0dae1b391ee1b2d08ae57964b218" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void batmat::foreach_chunked_merged_parallel</definition>
+        <argsstring>(index_t i_begin, index_t i_end, auto chunk_size, auto func_chunk, LoopDir dir=LoopDir::Forward)</argsstring>
+        <name>foreach_chunked_merged_parallel</name>
+        <qualifiedname>batmat::foreach_chunked_merged_parallel</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>i_begin</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>i_end</declname>
+        </param>
+        <param>
+          <type>auto</type>
+          <declname>chunk_size</declname>
+        </param>
+        <param>
+          <type>auto</type>
+          <declname>func_chunk</declname>
+        </param>
+        <param>
+          <type><ref refid="group__topic-utils_1gaa625a055ebbfa5ba05a1fd8f1f104807" kindref="member">LoopDir</ref></type>
+          <declname>dir</declname>
+          <defval><ref refid="group__topic-utils_1ggaa625a055ebbfa5ba05a1fd8f1f104807a67d2f6740a8eaebf4d5c6f79be8da481" kindref="member">LoopDir::Forward</ref></defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/loop.hpp" line="65" column="1" bodyfile="batmat/include/batmat/loop.hpp" bodystart="65" bodyend="90"/>
+        <references refid="openmp_8h_1aeba6741fe24ed21a53724572c25855bd" compoundref="openmp_8h" startline="8">BATMAT_OMP</references>
+        <references refid="group__topic-utils_1ggaa625a055ebbfa5ba05a1fd8f1f104807a67d2f6740a8eaebf4d5c6f79be8da481" compoundref="loop_8hpp" startline="13">Forward</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1ab410ecec2f820373d48cbe68b4b2fee4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void batmat::foreach_thread</definition>
+        <argsstring>(auto &amp;&amp;func)</argsstring>
+        <name>foreach_thread</name>
+        <qualifiedname>batmat::foreach_thread</qualifiedname>
+        <param>
+          <type>auto &amp;&amp;</type>
+          <declname>func</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/loop.hpp" line="93" column="14" bodyfile="batmat/include/batmat/loop.hpp" bodystart="93" bodyend="108"/>
+        <references refid="openmp_8h_1aeba6741fe24ed21a53724572c25855bd" compoundref="openmp_8h" startline="8">BATMAT_OMP</references>
+        <references refid="group__topic-utils_1ga536ae1dd079e87845527154b7f4ecc06" compoundref="thread-pool_8hpp" startline="117" endline="122">pool_sync_run_all</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1ad09de96d614741ac248be14af9e8888a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void batmat::foreach_thread</definition>
+        <argsstring>(index_t num_threads, auto &amp;&amp;func)</argsstring>
+        <name>foreach_thread</name>
+        <qualifiedname>batmat::foreach_thread</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>num_threads</declname>
+        </param>
+        <param>
+          <type>auto &amp;&amp;</type>
+          <declname>func</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/loop.hpp" line="111" column="14" bodyfile="batmat/include/batmat/loop.hpp" bodystart="111" bodyend="126"/>
+        <references refid="openmp_8h_1aeba6741fe24ed21a53724572c25855bd" compoundref="openmp_8h" startline="8">BATMAT_OMP</references>
+        <references refid="group__topic-utils_1ga72f329f3122a76019f71f597fa44bae7" compoundref="thread-pool_8hpp" startline="129" endline="134">pool_sync_run_n</references>
+      </memberdef>
+      <member refid="group__topic-utils_1gae259627b9bd8c02e66d1e244c969e2bc" kind="function"><name>make_2d_lut</name></member>
+      <member refid="group__topic-utils_1ga91b0a07e3a00c803e9859ace6b86828f" kind="function"><name>make_1d_lut</name></member>
+      <member refid="group__topic-utils_1ga9d3db6b0fa567b730dae54e1f1012165" kind="function"><name>pool_set_num_threads</name></member>
+      <member refid="group__topic-utils_1ga536ae1dd079e87845527154b7f4ecc06" kind="function"><name>pool_sync_run_all</name></member>
+      <member refid="group__topic-utils_1ga72f329f3122a76019f71f597fa44bae7" kind="function"><name>pool_sync_run_n</name></member>
+      <memberdef kind="function" id="namespacebatmat_1aafc9b52d8b52e8e01bd08e2cc2067e49" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::ostream &amp;</type>
+        <definition>std::ostream &amp; batmat::operator&lt;&lt;</definition>
+        <argsstring>(std::ostream &amp;, DefaultTimings)</argsstring>
+        <name>operator&lt;&lt;</name>
+        <qualifiedname>batmat::operator&lt;&lt;</qualifiedname>
+        <param>
+          <type>std::ostream &amp;</type>
+          <defname>os</defname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1DefaultTimings" kindref="compound">DefaultTimings</ref></type>
+          <defname>t</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/src/timing.cpp" line="8" column="1" bodyfile="batmat/src/timing.cpp" bodystart="8" bodyend="18" declfile="batmat/include/batmat/timing.hpp" declline="25" declcolumn="2"/>
+        <references refid="structbatmat_1_1DefaultTimings_1aff53271edfb6ae2d0298aac409810c3d" compoundref="timing_8hpp" startline="21" endline="21">batmat::DefaultTimings::num_invocations</references>
+        <references refid="structbatmat_1_1DefaultTimings_1aef980ddec7421dc88141f844e8f886c3" compoundref="timing_8hpp" startline="22" endline="22">batmat::DefaultTimings::wall_time</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1a19592f22ba225cca6878c88155d0f5a3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>decltype(auto)</type>
+        <definition>decltype(auto) guanaqo::timed</definition>
+        <argsstring>(T &amp;time, F &amp;&amp;func, Args &amp;&amp;...args)</argsstring>
+        <name>timed</name>
+        <qualifiedname>batmat::timed</qualifiedname>
+        <param>
+          <type>T &amp;</type>
+          <declname>time</declname>
+        </param>
+        <param>
+          <type>F &amp;&amp;</type>
+          <declname>func</declname>
+        </param>
+        <param>
+          <type>Args &amp;&amp;...</type>
+          <declname>args</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/timing.hpp" line="29" column="1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/kib.hpp" line="5" column="1"/>
+  </compounddef>
+</doxygen>

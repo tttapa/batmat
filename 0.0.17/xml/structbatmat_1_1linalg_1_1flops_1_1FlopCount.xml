@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1flops_1_1FlopCount" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::flops::FlopCount</compoundname>
+    <includes refid="flops_8hpp" local="no">batmat/linalg/flops.hpp</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a28da3437266fe88ae51442fc0d2c8b31" prot="public" static="no" mutable="no">
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::flops::FlopCount::fma</definition>
+        <argsstring></argsstring>
+        <name>fma</name>
+        <qualifiedname>batmat::linalg::flops::FlopCount::fma</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="15" column="13" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="15" bodyend="-1"/>
+        <referencedby refid="group__topic-linalg-flops_1ga837cc287e8d3e7e62cf013aa2c1f58d3" compoundref="flops_8hpp" startline="23" endline="29">batmat::linalg::flops::operator+</referencedby>
+        <referencedby refid="group__topic-linalg-flops_1ga3f5450fd91a87ba9dc28e346bf46bf31" compoundref="flops_8hpp" startline="33" endline="33">batmat::linalg::flops::total</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a6e018b00e1d427244c2957c78a9ae572" prot="public" static="no" mutable="no">
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::flops::FlopCount::mul</definition>
+        <argsstring></argsstring>
+        <name>mul</name>
+        <qualifiedname>batmat::linalg::flops::FlopCount::mul</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="16" column="13" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="16" bodyend="-1"/>
+        <referencedby refid="group__topic-linalg-flops_1ga837cc287e8d3e7e62cf013aa2c1f58d3" compoundref="flops_8hpp" startline="23" endline="29">batmat::linalg::flops::operator+</referencedby>
+        <referencedby refid="group__topic-linalg-flops_1ga3f5450fd91a87ba9dc28e346bf46bf31" compoundref="flops_8hpp" startline="33" endline="33">batmat::linalg::flops::total</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a50d077939e212aaa9b4a1184521cbdbd" prot="public" static="no" mutable="no">
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::flops::FlopCount::add</definition>
+        <argsstring></argsstring>
+        <name>add</name>
+        <qualifiedname>batmat::linalg::flops::FlopCount::add</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="17" column="13" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="17" bodyend="-1"/>
+        <referencedby refid="group__topic-linalg-flops_1ga837cc287e8d3e7e62cf013aa2c1f58d3" compoundref="flops_8hpp" startline="23" endline="29">batmat::linalg::flops::operator+</referencedby>
+        <referencedby refid="group__topic-linalg-flops_1ga3f5450fd91a87ba9dc28e346bf46bf31" compoundref="flops_8hpp" startline="33" endline="33">batmat::linalg::flops::total</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a2dadccf6759992d6143bdd662b25479b" prot="public" static="no" mutable="no">
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::flops::FlopCount::div</definition>
+        <argsstring></argsstring>
+        <name>div</name>
+        <qualifiedname>batmat::linalg::flops::FlopCount::div</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="18" column="13" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="18" bodyend="-1"/>
+        <referencedby refid="group__topic-linalg-flops_1ga837cc287e8d3e7e62cf013aa2c1f58d3" compoundref="flops_8hpp" startline="23" endline="29">batmat::linalg::flops::operator+</referencedby>
+        <referencedby refid="group__topic-linalg-flops_1ga3f5450fd91a87ba9dc28e346bf46bf31" compoundref="flops_8hpp" startline="33" endline="33">batmat::linalg::flops::total</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1ae62283feb062751c55b8d56e5fdb9b4a" prot="public" static="no" mutable="no">
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::flops::FlopCount::sqrt</definition>
+        <argsstring></argsstring>
+        <name>sqrt</name>
+        <qualifiedname>batmat::linalg::flops::FlopCount::sqrt</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/flops.hpp" line="19" column="13" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="19" bodyend="-1"/>
+        <referencedby refid="group__topic-linalg-flops_1ga837cc287e8d3e7e62cf013aa2c1f58d3" compoundref="flops_8hpp" startline="23" endline="29">batmat::linalg::flops::operator+</referencedby>
+        <referencedby refid="group__topic-linalg-flops_1ga3f5450fd91a87ba9dc28e346bf46bf31" compoundref="flops_8hpp" startline="33" endline="33">batmat::linalg::flops::total</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Count of individual floating point operations, broken down by type. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::flops::FlopCount</label>
+        <link refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/flops.hpp" line="14" column="1" bodyfile="batmat/include/batmat/linalg/flops.hpp" bodystart="14" bodyend="20"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a50d077939e212aaa9b4a1184521cbdbd" prot="public" virt="non-virtual"><scope>batmat::linalg::flops::FlopCount</scope><name>add</name></member>
+      <member refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a2dadccf6759992d6143bdd662b25479b" prot="public" virt="non-virtual"><scope>batmat::linalg::flops::FlopCount</scope><name>div</name></member>
+      <member refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a28da3437266fe88ae51442fc0d2c8b31" prot="public" virt="non-virtual"><scope>batmat::linalg::flops::FlopCount</scope><name>fma</name></member>
+      <member refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1a6e018b00e1d427244c2957c78a9ae572" prot="public" virt="non-virtual"><scope>batmat::linalg::flops::FlopCount</scope><name>mul</name></member>
+      <member refid="structbatmat_1_1linalg_1_1flops_1_1FlopCount_1ae62283feb062751c55b8d56e5fdb9b4a" prot="public" virt="non-virtual"><scope>batmat::linalg::flops::FlopCount</scope><name>sqrt</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,630 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="hyhound_8hpp" kind="file" language="C++">
+    <compoundname>hyhound.hpp</compoundname>
+    <includes refid="copy_8hpp" local="no">batmat/linalg/copy.hpp</includes>
+    <includes refid="flops_8hpp" local="no">batmat/linalg/flops.hpp</includes>
+    <includes refid="micro-kernels_2hyhound_8hpp" local="no">batmat/linalg/micro-kernels/hyhound.hpp</includes>
+    <includes refid="shift_8hpp" local="no">batmat/linalg/shift.hpp</includes>
+    <includes refid="simdify_8hpp" local="no">batmat/linalg/simdify.hpp</includes>
+    <includes refid="triangular_8hpp" local="no">batmat/linalg/triangular.hpp</includes>
+    <includes refid="uview_8hpp" local="no">batmat/linalg/uview.hpp</includes>
+    <includes refid="loop_8hpp" local="no">batmat/loop.hpp</includes>
+    <includes refid="storage_8hpp" local="no">batmat/matrix/storage.hpp</includes>
+    <includes local="no">guanaqo/trace.hpp</includes>
+    <incdepgraph>
+      <node id="14">
+        <label>batmat/assume.hpp</label>
+        <link refid="assume_8hpp"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/linalg/copy.hpp</label>
+        <link refid="copy_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+      </node>
+      <node id="41">
+        <label>batmat/linalg/flops.hpp</label>
+        <link refid="flops_8hpp"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/hyhound.hpp</label>
+        <link refid="hyhound_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+      </node>
+      <node id="42">
+        <label>batmat/linalg/micro-kernels/hyhound.hpp</label>
+        <link refid="micro-kernels_2hyhound_8hpp"/>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>batmat/linalg/shift.hpp</label>
+        <link refid="shift_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>batmat/linalg/simdify.hpp</label>
+        <link refid="simdify_8hpp"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="24">
+        <label>batmat/linalg/structure.hpp</label>
+        <link refid="structure_8hpp"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="26">
+        <label>batmat/linalg/triangular.hpp</label>
+        <link refid="triangular_8hpp"/>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+      </node>
+      <node id="27">
+        <label>batmat/linalg/uview.hpp</label>
+        <link refid="uview_8hpp"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+      </node>
+      <node id="28">
+        <label>batmat/loop.hpp</label>
+        <link refid="loop_8hpp"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+      </node>
+      <node id="31">
+        <label>batmat/lut.hpp</label>
+        <link refid="lut_8hpp"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>batmat/matrix/layout.hpp</label>
+        <link refid="layout_8hpp"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>batmat/matrix/matrix.hpp</label>
+        <link refid="matrix_8hpp"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>batmat/matrix/storage.hpp</label>
+        <link refid="storage_8hpp"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>batmat/matrix/view.hpp</label>
+        <link refid="view_8hpp"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="29">
+        <label>batmat/openmp.h</label>
+        <link refid="openmp_8h"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+      </node>
+      <node id="33">
+        <label>batmat/ops/rotate.hpp</label>
+        <link refid="rotate_8hpp"/>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+      </node>
+      <node id="35">
+        <label>batmat/ops/transpose.hpp</label>
+        <link refid="transpose_8hpp"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="37">
+        <label>generic.hpp</label>
+        <link refid="generic_8hpp"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="36">
+        <label>batmat/platform/platform.hpp</label>
+        <link refid="platform_8hpp"/>
+        <childnode refid="37" relation="include">
+        </childnode>
+      </node>
+      <node id="20">
+        <label>batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>batmat/unroll.h</label>
+        <link refid="unroll_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="39">
+        <label>algorithm</label>
+      </node>
+      <node id="15">
+        <label>batmat/config.hpp</label>
+      </node>
+      <node id="34">
+        <label>cassert</label>
+      </node>
+      <node id="40">
+        <label>concepts</label>
+      </node>
+      <node id="9">
+        <label>cstddef</label>
+      </node>
+      <node id="25">
+        <label>cstdint</label>
+      </node>
+      <node id="23">
+        <label>experimental/simd</label>
+      </node>
+      <node id="16">
+        <label>guanaqo/assume.hpp</label>
+      </node>
+      <node id="32">
+        <label>guanaqo/lut.hpp</label>
+      </node>
+      <node id="18">
+        <label>guanaqo/mat-view.hpp</label>
+      </node>
+      <node id="22">
+        <label>guanaqo/stringify.h</label>
+      </node>
+      <node id="38">
+        <label>guanaqo/trace.hpp</label>
+      </node>
+      <node id="10">
+        <label>memory</label>
+      </node>
+      <node id="11">
+        <label>new</label>
+      </node>
+      <node id="30">
+        <label>omp.h</label>
+      </node>
+      <node id="4">
+        <label>optional</label>
+      </node>
+      <node id="12">
+        <label>tuple</label>
+      </node>
+      <node id="5">
+        <label>type_traits</label>
+      </node>
+      <node id="19">
+        <label>utility</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg">batmat::linalg</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1detail">batmat::linalg::detail</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="copy_8hpp" kindref="compound">batmat/linalg/copy.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="flops_8hpp" kindref="compound">batmat/linalg/flops.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="micro-kernels_2hyhound_8hpp" kindref="compound">batmat/linalg/micro-kernels/hyhound.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="shift_8hpp" kindref="compound">batmat/linalg/shift.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="simdify_8hpp" kindref="compound">batmat/linalg/simdify.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="triangular_8hpp" kindref="compound">batmat/linalg/triangular.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="uview_8hpp" kindref="compound">batmat/linalg/uview.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="loop_8hpp" kindref="compound">batmat/loop.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="storage_8hpp" kindref="compound">batmat/matrix/storage.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;guanaqo/trace.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg" kindref="compound">batmat::linalg</ref><sp/>{</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1detail" kindref="compound">detail</ref><sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/>micro_kernels::hyhound::KernelConfig<sp/>Conf,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OL,</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OA&gt;</highlight></codeline>
+<codeline lineno="20" refid="namespacebatmat_1_1linalg_1_1detail_1a6356ece5808d89381635b59246a158d6" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a6356ece5808d89381635b59246a158d6" kindref="member">hyhound_diag</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL&gt;</ref><sp/>L,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OA&gt;</ref><sp/>A,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>D)<sp/>{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>index_t<sp/>k<sp/>=<sp/>A.cols();</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L.rows()<sp/>&gt;=<sp/>L.cols());</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L.rows()<sp/>==<sp/>A.rows());</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(A.cols()<sp/>==<sp/>D.rows());</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>[[maybe_unused]]<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>index_t<sp/>flop_count<sp/>=<sp/>total(<ref refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" kindref="member">flops::hyh</ref>(L.rows(),<sp/>L.cols(),<sp/>k));</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__trace__perfetto_1gaa51e3bdc848c54b9290a36579d145375" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">GUANAQO_TRACE_LINALG</ref>(</highlight><highlight class="stringliteral">&quot;hyhound_diag&quot;</highlight><highlight class="normal">,<sp/>flop_count<sp/>*<sp/>L.depth());</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(k<sp/>==<sp/>0)<sp/>[[unlikely]]</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a2c5a2006331870dacb985bf041677d2f" kindref="member">micro_kernels::hyhound::hyhound_diag_register&lt;T, Abi, Conf&gt;</ref>(L,<sp/>A,<sp/>D);</highlight></codeline>
+<codeline lineno="30"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig" kindref="compound">micro_kernels::hyhound::KernelConfig</ref><sp/>Conf,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OL,</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OA&gt;</highlight></codeline>
+<codeline lineno="34" refid="namespacebatmat_1_1linalg_1_1detail_1ae9bdcfd57ff8c62767691f16fd19676b" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a6356ece5808d89381635b59246a158d6" kindref="member">hyhound_diag</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL&gt;</ref><sp/>L,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OA&gt;</ref><sp/>A,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>D,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi&gt;</ref><sp/>W)<sp/>{</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound" kindref="compound">micro_kernels::hyhound</ref>;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>index_t<sp/>k<sp/>=<sp/>A.cols();</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L.rows()<sp/>&gt;=<sp/>L.cols());</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L.rows()<sp/>==<sp/>A.rows());</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(A.cols()<sp/>==<sp/>D.rows());</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(std::make_pair(W.rows(),<sp/>W.cols())<sp/>==<sp/>(hyhound_W_size&lt;T,<sp/>Abi&gt;)(L));</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>[[maybe_unused]]<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>index_t<sp/>flop_count<sp/>=<sp/>total(<ref refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" kindref="member">flops::hyh</ref>(L.rows(),<sp/>L.cols(),<sp/>k));</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__trace__perfetto_1gaa51e3bdc848c54b9290a36579d145375" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">GUANAQO_TRACE_LINALG</ref>(</highlight><highlight class="stringliteral">&quot;hyhound_diag&quot;</highlight><highlight class="normal">,<sp/>flop_count<sp/>*<sp/>L.depth());</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(k<sp/>==<sp/>0)<sp/>[[unlikely]]</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>hyhound_diag_register&lt;T,<sp/>Abi,<sp/>Conf&gt;(L,<sp/>A,<sp/>D,<sp/>W);</highlight></codeline>
+<codeline lineno="46"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig" kindref="compound">micro_kernels::hyhound::KernelConfig</ref><sp/>Conf,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OL,</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OA&gt;</highlight></codeline>
+<codeline lineno="50" refid="namespacebatmat_1_1linalg_1_1detail_1a02dfdae9c62e6e04a1883300a5596774" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a02dfdae9c62e6e04a1883300a5596774" kindref="member">hyhound_diag_apply</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL&gt;</ref><sp/>L,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OA&gt;</ref><sp/>Ain,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OA&gt;</ref><sp/>Aout,</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OA&gt;</ref><sp/>B,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>D,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>W,</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>index_t<sp/>kA_in_offset<sp/>=<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound" kindref="compound">micro_kernels::hyhound</ref>;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>index_t<sp/>k<sp/>=<sp/>Aout.cols();</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(Aout.rows()<sp/>==<sp/>Ain.rows());</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(Ain.rows()<sp/>==<sp/>L.rows());</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(B.rows()<sp/>==<sp/>L.cols());</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(B.cols()<sp/>==<sp/>Aout.cols());</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(D.rows()<sp/>==<sp/>Aout.cols());</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(0<sp/>&lt;=<sp/>kA_in_offset);</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(kA_in_offset<sp/>+<sp/>Ain.cols()<sp/>&lt;=<sp/>Aout.cols());</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(std::make_pair(W.rows(),<sp/>W.cols())<sp/>==<sp/>(hyhound_W_size&lt;T,<sp/>Abi&gt;)(L));</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Note:<sp/>ignoring<sp/>initial<sp/>zero<sp/>values<sp/>of<sp/>A<sp/>in<sp/>the<sp/>FLOP<sp/>count<sp/>for<sp/>simplicity<sp/>(for<sp/>large<sp/>matrices</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/>this<sp/>does<sp/>not<sp/>matter)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/>[[maybe_unused]]<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>index_t<sp/>flop_count<sp/>=<sp/>total(<ref refid="group__topic-linalg-flops_1ga907a77af15c3cba01ac8b66c3388adb4" kindref="member">flops::hyh_apply</ref>(L.rows(),<sp/>L.cols(),<sp/>k));</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__trace__perfetto_1gaa51e3bdc848c54b9290a36579d145375" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">GUANAQO_TRACE_LINALG</ref>(</highlight><highlight class="stringliteral">&quot;hyhound_diag_apply&quot;</highlight><highlight class="normal">,<sp/>flop_count<sp/>*<sp/>L.depth());</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(k<sp/>==<sp/>0)<sp/>[[unlikely]]</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>hyhound_diag_apply_register&lt;T,<sp/>Abi,<sp/>Conf&gt;(L,<sp/>Ain,<sp/>Aout,<sp/>B,<sp/>D,<sp/>W,<sp/>kA_in_offset);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig" kindref="compound">micro_kernels::hyhound::KernelConfig</ref><sp/>Conf,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OL1,</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OA1,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OL2,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OA2&gt;</highlight></codeline>
+<codeline lineno="74" refid="namespacebatmat_1_1linalg_1_1detail_1ae08f58a280ea099e7cefd16ac7e2810f" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1ae08f58a280ea099e7cefd16ac7e2810f" kindref="member">hyhound_diag_2</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL1&gt;</ref><sp/>L11,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OA1&gt;</ref><sp/>A1,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL2&gt;</ref><sp/>L21,</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OA2&gt;</ref><sp/>A2,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>D)<sp/>{</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>index_t<sp/>k<sp/>=<sp/>A1.cols(),<sp/>m<sp/>=<sp/>L11.rows()<sp/>+<sp/>L21.rows();</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L11.rows()<sp/>&gt;=<sp/>L11.cols());</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L11.rows()<sp/>==<sp/>A1.rows());</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(A1.cols()<sp/>==<sp/>D.rows());</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(A2.cols()<sp/>==<sp/>A1.cols());</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L21.cols()<sp/>==<sp/>L11.cols());</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/>[[maybe_unused]]<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>index_t<sp/>flop_count<sp/>=<sp/>total(<ref refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" kindref="member">flops::hyh</ref>(m,<sp/>L11.cols(),<sp/>k));</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__trace__perfetto_1gaa51e3bdc848c54b9290a36579d145375" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">GUANAQO_TRACE_LINALG</ref>(</highlight><highlight class="stringliteral">&quot;hyhound_diag_2&quot;</highlight><highlight class="normal">,<sp/>flop_count<sp/>*<sp/>L11.depth());</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(k<sp/>==<sp/>0)<sp/>[[unlikely]]</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1ae92a1b550b2c03dd1a8bc9497d365b64" kindref="member">micro_kernels::hyhound::hyhound_diag_2_register&lt;T, Abi, OL1, OA1, OL2, OA2, Conf&gt;</ref>(</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>L11,<sp/>A1,<sp/>L21,<sp/>A2,<sp/>D);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig" kindref="compound">micro_kernels::hyhound::KernelConfig</ref><sp/>Conf,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OL,</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OW,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OY,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OU&gt;</highlight></codeline>
+<codeline lineno="92" refid="namespacebatmat_1_1linalg_1_1detail_1a899e19f752b26f44ee94ecb94c7a1c8b" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a899e19f752b26f44ee94ecb94c7a1c8b" kindref="member">hyhound_diag_cyclic</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL&gt;</ref><sp/>L11,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OW&gt;</ref><sp/>A1,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OY&gt;</ref><sp/>L21,</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OW&gt;</ref><sp/>A22,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OW&gt;</ref><sp/>A2_out,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OU&gt;</ref><sp/>L31,</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OW&gt;</ref><sp/>A31,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OW&gt;</ref><sp/>A3_out,</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>D)<sp/>{</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>index_t<sp/>k<sp/>=<sp/>A1.cols(),<sp/>m<sp/>=<sp/>L11.rows()<sp/>+<sp/>L21.rows()<sp/>+<sp/>L31.rows();</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L11.rows()<sp/>&gt;=<sp/>L11.cols());</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L11.rows()<sp/>==<sp/>A1.rows());</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L21.rows()<sp/>==<sp/>A22.rows());</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L31.rows()<sp/>==<sp/>A31.rows());</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(A1.cols()<sp/>==<sp/>D.rows());</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(A22.cols()<sp/>+<sp/>A31.cols()<sp/>==<sp/>A1.cols());</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L21.cols()<sp/>==<sp/>L11.cols());</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L31.cols()<sp/>==<sp/>L11.cols());</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Note:<sp/>ignoring<sp/>initial<sp/>zero<sp/>values<sp/>of<sp/>A<sp/>in<sp/>the<sp/>FLOP<sp/>count<sp/>for<sp/>simplicity<sp/>(for<sp/>large<sp/>matrices</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/>this<sp/>does<sp/>not<sp/>matter)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/>[[maybe_unused]]<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>index_t<sp/>flop_count<sp/>=<sp/>total(<ref refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" kindref="member">flops::hyh</ref>(m,<sp/>L11.cols(),<sp/>k));</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__trace__perfetto_1gaa51e3bdc848c54b9290a36579d145375" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">GUANAQO_TRACE_LINALG</ref>(</highlight><highlight class="stringliteral">&quot;hyhound_diag_cyclic&quot;</highlight><highlight class="normal">,<sp/>flop_count<sp/>*<sp/>L11.depth());</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(k<sp/>==<sp/>0)<sp/>[[unlikely]]</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a296680bfcaddeb3c87b4da48edd2c531" kindref="member">micro_kernels::hyhound::hyhound_diag_cyclic_register&lt;T, Abi, OL, OW, OY, OU, Conf&gt;</ref>(</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>L11,<sp/>A1,<sp/>L21,<sp/>A22,<sp/>A2_out,<sp/>L31,<sp/>A31,<sp/>A3_out,<sp/>D);</highlight></codeline>
+<codeline lineno="113"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1KernelConfig" kindref="compound">micro_kernels::hyhound::KernelConfig</ref><sp/>Conf,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OL,</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OA,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OLu,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>OAu&gt;</highlight></codeline>
+<codeline lineno="117" refid="namespacebatmat_1_1linalg_1_1detail_1a533820c033d4bc11f8969555ab6c47cc" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a533820c033d4bc11f8969555ab6c47cc" kindref="member">hyhound_diag_riccati</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL&gt;</ref><sp/>L11,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OA&gt;</ref><sp/>A1,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OL&gt;</ref><sp/>L21,</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OA&gt;</ref><sp/>A2,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OA&gt;</ref><sp/>A2_out,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OLu&gt;</ref><sp/>Lu1,</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OAu&gt;</ref><sp/>Au_out,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>D,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>shift_A_out)<sp/>{</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>index_t<sp/>k<sp/>=<sp/>A1.cols(),<sp/>m<sp/>=<sp/>L11.rows()<sp/>+<sp/>L21.rows()<sp/>+<sp/>Lu1.rows();</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L11.rows()<sp/>&gt;=<sp/>L11.cols());</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L11.rows()<sp/>==<sp/>A1.rows());</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L21.rows()<sp/>==<sp/>A2.rows());</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(A2_out.rows()<sp/>==<sp/>A2.rows());</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(A2_out.cols()<sp/>==<sp/>A2.cols());</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(Lu1.rows()<sp/>==<sp/>Au_out.rows());</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(A1.cols()<sp/>==<sp/>D.rows());</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(A2.cols()<sp/>==<sp/>A1.cols());</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(L21.cols()<sp/>==<sp/>L11.cols());</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(Lu1.cols()<sp/>==<sp/>L11.cols());</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Note:<sp/>ignoring<sp/>upper<sp/>trapezoidal<sp/>shape<sp/>of<sp/>Lu<sp/>and<sp/>initial<sp/>zero<sp/>value<sp/>of<sp/>Au<sp/>for<sp/>simplicity</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/>(for<sp/>large<sp/>matrices<sp/>this<sp/>does<sp/>not<sp/>matter)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/>[[maybe_unused]]<sp/>index_t<sp/>flop_count<sp/>=<sp/>total(<ref refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" kindref="member">flops::hyh</ref>(m,<sp/>L11.cols(),<sp/>k));</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__trace__perfetto_1gaa51e3bdc848c54b9290a36579d145375" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">GUANAQO_TRACE_LINALG</ref>(</highlight><highlight class="stringliteral">&quot;hyhound_diag_riccati&quot;</highlight><highlight class="normal">,<sp/>flop_count<sp/>*<sp/>L11.depth());</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(k<sp/>==<sp/>0)<sp/>[[unlikely]]</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a5180c328f7daee0ec80eb04fe70a8707" kindref="member">micro_kernels::hyhound::hyhound_diag_riccati_register&lt;T, Abi, OL, OA, OLu, OAu, Conf&gt;</ref>(</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>L11,<sp/>A1,<sp/>L21,<sp/>A2,<sp/>A2_out,<sp/>Lu1,<sp/>Au_out,<sp/>D,<sp/>shift_A_out);</highlight></codeline>
+<codeline lineno="139"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>detail</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="143"><highlight class="comment">///<sp/>@addtogroup<sp/>topic-linalg</highlight></codeline>
+<codeline lineno="144"><highlight class="comment">///<sp/>@{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="146"><highlight class="comment">///<sp/>@name<sp/>Cholesky<sp/>factorization<sp/>updates</highlight></codeline>
+<codeline lineno="147"><highlight class="comment">///<sp/>@{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="149"><highlight class="comment">///<sp/>Update<sp/>Cholesky<sp/>factor<sp/>L<sp/>using<sp/>low-rank<sp/>term<sp/>A<sp/>diag(d)<sp/>Aᵀ.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="150"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;MatrixStructure<sp/>SL,<sp/>simdifiable<sp/>VL,<sp/>simdifiable<sp/>VA,<sp/>simdifiable<sp/>Vd&gt;</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VL, VA, Vd&gt;</ref></highlight></codeline>
+<codeline lineno="152" refid="group__topic-linalg_1gae6733a70513ebef849110b4842708820" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1gae6733a70513ebef849110b4842708820" kindref="member">hyhound_diag</ref>(<ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured&lt;VL, SL&gt;</ref><sp/>L,<sp/>VA<sp/>&amp;&amp;A,<sp/>Vd<sp/>&amp;&amp;d)<sp/>{</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(SL<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">MatrixStructure::LowerTriangular</ref>);<sp/></highlight><highlight class="comment">//<sp/>TODO</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a6356ece5808d89381635b59246a158d6" kindref="member">detail::hyhound_diag&lt;simdified_value_t&lt;VL&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VL&gt;</ref>,<sp/>{}&gt;(</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(L.<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(d).as_const());</highlight></codeline>
+<codeline lineno="156"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="158"><highlight class="comment">///<sp/>Update<sp/>Cholesky<sp/>factor<sp/>L<sp/>using<sp/>low-rank<sp/>term<sp/>A<sp/>diag(d)<sp/>Aᵀ,<sp/>with<sp/>full<sp/>Householder<sp/>representation.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;MatrixStructure<sp/>SL,<sp/>simdifiable<sp/>VL,<sp/>simdifiable<sp/>VA,<sp/>simdifiable<sp/>Vd,<sp/>simdifiable<sp/>VW&gt;</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VL, VA, Vd, VW&gt;</ref></highlight></codeline>
+<codeline lineno="161" refid="group__topic-linalg_1ga333ab34077b524480da3a9835b51e166" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1gae6733a70513ebef849110b4842708820" kindref="member">hyhound_diag</ref>(<ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured&lt;VL, SL&gt;</ref><sp/>L,<sp/>VA<sp/>&amp;&amp;A,<sp/>Vd<sp/>&amp;&amp;d,<sp/>VW<sp/>&amp;&amp;W)<sp/>{</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(SL<sp/>==<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">MatrixStructure::LowerTriangular</ref>);<sp/></highlight><highlight class="comment">//<sp/>TODO</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a6356ece5808d89381635b59246a158d6" kindref="member">detail::hyhound_diag&lt;simdified_value_t&lt;VL&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VL&gt;</ref>,<sp/>{}&gt;(</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(L.<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(d).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(W));</highlight></codeline>
+<codeline lineno="165"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="167"><highlight class="comment">///<sp/>Get<sp/>the<sp/>size<sp/>of<sp/>the<sp/>storage<sp/>for<sp/>the<sp/>matrix<sp/>W<sp/>returned<sp/>by</highlight></codeline>
+<codeline lineno="168"><highlight class="comment">///<sp/>@ref<sp/>hyhound_diag(Structured&lt;VL,SL&gt;,<sp/>VA&amp;&amp;,<sp/>Vd&amp;&amp;,<sp/>VW&amp;&amp;).</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="169"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;MatrixStructure<sp/>SL,<sp/>simdifiable<sp/>VL&gt;</highlight></codeline>
+<codeline lineno="170" refid="group__topic-linalg_1gaab95bb8df58e52f0b5c2f156f8c6dea0" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1gaab95bb8df58e52f0b5c2f156f8c6dea0" kindref="member">hyhound_size_W</ref>(<ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured&lt;VL, SL&gt;</ref><sp/>L)<sp/>{</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a87d65ca6b3a6b9d06c62258aed33fab8" kindref="member">micro_kernels::hyhound::hyhound_W_size&lt;const simdified_value_t&lt;VL&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VL&gt;</ref>&gt;(</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(L.<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>).as_const());</highlight></codeline>
+<codeline lineno="173"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="175"><highlight class="comment">///<sp/>Apply<sp/>Householder<sp/>transformation<sp/>generated<sp/>by<sp/>@ref<sp/>hyhound_diag,<sp/>computing<sp/>(L̃,<sp/>D)<sp/>=<sp/>(L,<sp/>A)<sp/>Q̆.</highlight></codeline>
+<codeline lineno="176"><highlight class="comment">///<sp/>@param[in,out]<sp/><sp/>L<sp/><sp/><sp/>Part<sp/>of<sp/>the<sp/>Cholesky<sp/>factor<sp/>to<sp/>be<sp/>updated<sp/>(rectangular).<sp/>Overwritten<sp/>by<sp/>L̃.</highlight></codeline>
+<codeline lineno="177"><highlight class="comment">///<sp/>@param[in]<sp/><sp/><sp/><sp/><sp/><sp/>A<sp/><sp/><sp/>Update<sp/>matrix<sp/>(rectangular).</highlight></codeline>
+<codeline lineno="178"><highlight class="comment">///<sp/>@param[out]<sp/><sp/><sp/><sp/><sp/>D<sp/><sp/><sp/>Updated<sp/>update<sp/>matrix<sp/>(rectangular).</highlight></codeline>
+<codeline lineno="179"><highlight class="comment">///<sp/>@param[in]<sp/><sp/><sp/><sp/><sp/><sp/>B<sp/><sp/><sp/>Householder<sp/>reflector<sp/>vectors<sp/>returned<sp/>by<sp/>@ref<sp/>hyhound_diag.</highlight></codeline>
+<codeline lineno="180"><highlight class="comment">///<sp/>@param[in]<sp/><sp/><sp/><sp/><sp/><sp/>d<sp/><sp/><sp/>Diagonal<sp/>update<sp/>matrix.</highlight></codeline>
+<codeline lineno="181"><highlight class="comment">///<sp/>@param[in]<sp/><sp/><sp/><sp/><sp/><sp/>W<sp/><sp/><sp/>Householder<sp/>representation<sp/>returned<sp/>by<sp/>@ref<sp/>hyhound_diag.</highlight></codeline>
+<codeline lineno="182"><highlight class="comment">///<sp/>@param[in]<sp/><sp/><sp/><sp/><sp/><sp/>kA_in_offset<sp/><sp/><sp/><sp/>If<sp/>A<sp/>is<sp/>smaller<sp/>than<sp/>D,<sp/>A<sp/>is<sp/>implicitly<sp/>padded<sp/>with<sp/>zero</highlight></codeline>
+<codeline lineno="183"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>columns:<sp/>the<sp/>offset<sp/>of<sp/>the<sp/>nonzero<sp/>part<sp/>of<sp/>A<sp/>in<sp/>the<sp/>padded</highlight></codeline>
+<codeline lineno="184"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>matrix<sp/>can<sp/>be<sp/>specified<sp/>using<sp/>@p<sp/>kA_in_offset.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="185"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;simdifiable<sp/>VL,<sp/>simdifiable<sp/>VA,<sp/>simdifiable<sp/>VD,<sp/>simdifiable<sp/>VB,<sp/>simdifiable<sp/>Vd,</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simdifiable<sp/>VW&gt;</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VL, VA, VD, VB, Vd, VW&gt;</ref></highlight></codeline>
+<codeline lineno="188" refid="group__topic-linalg_1ga3e2338ff100c3544cad0105effc729c0" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1ga3e2338ff100c3544cad0105effc729c0" kindref="member">hyhound_diag_apply</ref>(VL<sp/>&amp;&amp;L,<sp/>VA<sp/>&amp;&amp;A,<sp/>VD<sp/>&amp;&amp;D,<sp/>VB<sp/>&amp;&amp;B,<sp/>Vd<sp/>&amp;&amp;d,<sp/>VW<sp/>&amp;&amp;W,<sp/>index_t<sp/>kA_in_offset<sp/>=<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a02dfdae9c62e6e04a1883300a5596774" kindref="member">detail::hyhound_diag_apply&lt;simdified_value_t&lt;VL&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VL&gt;</ref>,<sp/>{}&gt;(</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(L),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(D),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(B).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(d).as_const(),</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(W).as_const(),<sp/>kA_in_offset);</highlight></codeline>
+<codeline lineno="192"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="194"><highlight class="comment">///<sp/>Apply<sp/>Householder<sp/>transformation<sp/>generated<sp/>by<sp/>@ref<sp/>hyhound_diag,<sp/>computing<sp/>(L̃,<sp/>Ã)<sp/>=<sp/>(L,<sp/>A)<sp/>Q̆.</highlight></codeline>
+<codeline lineno="195"><highlight class="comment">///<sp/>@param[in,out]<sp/><sp/>L<sp/><sp/><sp/>Part<sp/>of<sp/>the<sp/>Cholesky<sp/>factor<sp/>to<sp/>be<sp/>updated<sp/>(rectangular).<sp/>Overwritten<sp/>by<sp/>L̃.</highlight></codeline>
+<codeline lineno="196"><highlight class="comment">///<sp/>@param[in,out]<sp/><sp/>A<sp/><sp/><sp/>Update<sp/>matrix<sp/>(rectangular).<sp/>Overwritten<sp/>by<sp/>Ã.</highlight></codeline>
+<codeline lineno="197"><highlight class="comment">///<sp/>@param[in]<sp/><sp/><sp/><sp/><sp/><sp/>B<sp/><sp/><sp/>Householder<sp/>reflector<sp/>vectors<sp/>returned<sp/>by<sp/>@ref<sp/>hyhound_diag.</highlight></codeline>
+<codeline lineno="198"><highlight class="comment">///<sp/>@param[in]<sp/><sp/><sp/><sp/><sp/><sp/>d<sp/><sp/><sp/>Diagonal<sp/>update<sp/>matrix.</highlight></codeline>
+<codeline lineno="199"><highlight class="comment">///<sp/>@param[in]<sp/><sp/><sp/><sp/><sp/><sp/>W<sp/><sp/><sp/>Householder<sp/>representation<sp/>returned<sp/>by<sp/>@ref<sp/>hyhound_diag.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="200"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;simdifiable<sp/>VL,<sp/>simdifiable<sp/>VA,<sp/>simdifiable<sp/>VB,<sp/>simdifiable<sp/>Vd,<sp/>simdifiable<sp/>VW&gt;</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VL, VA, VB, Vd, VW&gt;</ref></highlight></codeline>
+<codeline lineno="202" refid="group__topic-linalg_1gaa675e1f6e044ea392f0ee072bcd38890" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1ga3e2338ff100c3544cad0105effc729c0" kindref="member">hyhound_diag_apply</ref>(VL<sp/>&amp;&amp;L,<sp/>VA<sp/>&amp;&amp;A,<sp/>VB<sp/>&amp;&amp;B,<sp/>Vd<sp/>&amp;&amp;d,<sp/>VW<sp/>&amp;&amp;W)<sp/>{</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a02dfdae9c62e6e04a1883300a5596774" kindref="member">detail::hyhound_diag_apply&lt;simdified_value_t&lt;VL&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VL&gt;</ref>,<sp/>{}&gt;(</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(L),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(B).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(d).as_const(),</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(W).as_const(),<sp/>0);</highlight></codeline>
+<codeline lineno="206"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="208"><highlight class="comment">///<sp/>Update<sp/>Cholesky<sp/>factor<sp/>L<sp/>using<sp/>low-rank<sp/>term<sp/>A<sp/>diag(copysign(1,<sp/>d))<sp/>Aᵀ,</highlight></codeline>
+<codeline lineno="209"><highlight class="comment">///<sp/>where<sp/>d<sp/>contains<sp/>only<sp/>±0<sp/>values.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="210"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;MatrixStructure<sp/>SL,<sp/>simdifiable<sp/>VL,<sp/>simdifiable<sp/>VA,<sp/>simdifiable<sp/>Vd&gt;</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VL, VA, Vd&gt;</ref></highlight></codeline>
+<codeline lineno="212" refid="group__topic-linalg_1ga71aaa795868e76c82b95bdd6230b9519" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1ga71aaa795868e76c82b95bdd6230b9519" kindref="member">hyhound_sign</ref>(<ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured&lt;VL, SL&gt;</ref><sp/>L,<sp/>VA<sp/>&amp;&amp;A,<sp/>Vd<sp/>&amp;&amp;d)<sp/>{</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a6356ece5808d89381635b59246a158d6" kindref="member">detail::hyhound_diag&lt;simdified_value_t&lt;VL&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VL&gt;</ref>,<sp/>{.sign_only<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">}&gt;(</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(L.<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(d).as_const());</highlight></codeline>
+<codeline lineno="215"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="217"><highlight class="comment">///<sp/>Update<sp/>Cholesky<sp/>factor<sp/>L<sp/>using<sp/>low-rank<sp/>term<sp/>A<sp/>diag(d)<sp/>Aᵀ,<sp/>where<sp/>L<sp/>and<sp/>A<sp/>are<sp/>stored<sp/>as<sp/>two</highlight></codeline>
+<codeline lineno="218"><highlight class="comment">///<sp/>separate<sp/>block<sp/>rows.</highlight></codeline>
+<codeline lineno="219"><highlight class="comment">///<sp/>@f[</highlight></codeline>
+<codeline lineno="220"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/>L<sp/>=<sp/>\begin{pmatrix}<sp/>L_{11}<sp/>\\<sp/>L_{21}<sp/>\end{pmatrix},<sp/>\quad</highlight></codeline>
+<codeline lineno="221"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/>A<sp/>=<sp/>\begin{pmatrix}<sp/>A_{1}<sp/>\\<sp/>A_{2}<sp/>\end{pmatrix}.</highlight></codeline>
+<codeline lineno="222"><highlight class="comment">///<sp/>@f]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="223"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;<ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>SL,<sp/>simdifiable<sp/>VL1,<sp/>simdifiable<sp/>VA1,<sp/>simdifiable<sp/>VL2,<sp/>simdifiable<sp/>VA2,</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simdifiable<sp/>Vd&gt;</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VL1, VA1, VL2, VA2, Vd&gt;</ref></highlight></codeline>
+<codeline lineno="226" refid="group__topic-linalg_1gae5ae03b84e9ada852009a47cfb1a101b" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1gae5ae03b84e9ada852009a47cfb1a101b" kindref="member">hyhound_diag_2</ref>(<ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured&lt;VL1, SL&gt;</ref><sp/>L1,<sp/>VA1<sp/>&amp;&amp;A1,<sp/>VL2<sp/>&amp;&amp;L2,<sp/>VA2<sp/>&amp;&amp;A2,<sp/>Vd<sp/>&amp;&amp;d)<sp/>{</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1ae08f58a280ea099e7cefd16ac7e2810f" kindref="member">detail::hyhound_diag_2&lt;simdified_value_t&lt;VL1&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VL1&gt;</ref>,<sp/>{}&gt;(</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(L1.<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A1),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(L2),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A2),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(d).as_const());</highlight></codeline>
+<codeline lineno="229"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="231"><highlight class="comment">///<sp/>Update<sp/>structured<sp/>Cholesky<sp/>factor<sp/>L<sp/>using<sp/>structured<sp/>low-rank<sp/>term<sp/>A<sp/>diag(d)<sp/>Aᵀ,</highlight></codeline>
+<codeline lineno="232"><highlight class="comment">///<sp/>@f[</highlight></codeline>
+<codeline lineno="233"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/>L<sp/>=<sp/>\begin{pmatrix}<sp/>L_{11}<sp/>\\<sp/>L_{21}<sp/>\\<sp/>L_{31}<sp/>\end{pmatrix},<sp/>\quad</highlight></codeline>
+<codeline lineno="234"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/>A<sp/>=<sp/>\begin{pmatrix}<sp/>A_{11}<sp/>&amp;<sp/>A_{12}<sp/>\\<sp/>0<sp/>&amp;<sp/>A_{22}<sp/>\\<sp/>A_{31}<sp/>&amp;<sp/>0<sp/>\end{pmatrix},<sp/>\quad</highlight></codeline>
+<codeline lineno="235"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/>\tilde<sp/>A<sp/>=<sp/>\begin{pmatrix}<sp/>0<sp/>\\<sp/>\tilde<sp/>A_{2}<sp/>\\<sp/>\tilde<sp/>A_{3}<sp/>\end{pmatrix}.</highlight></codeline>
+<codeline lineno="236"><highlight class="comment">///<sp/>@f]</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="237"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;<ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>SL,<sp/>simdifiable<sp/>VL11,<sp/>simdifiable<sp/>VA1,<sp/>simdifiable<sp/>VL21,<sp/>simdifiable<sp/>VA2,</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simdifiable<sp/>VA2o,<sp/>simdifiable<sp/>VU,<sp/>simdifiable<sp/>VA3,<sp/>simdifiable<sp/>VA3o,<sp/>simdifiable<sp/>Vd&gt;</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VL11, VA1, VL21, VA2, VA2o, VU, VA3, VA3o, Vd&gt;</ref></highlight></codeline>
+<codeline lineno="240" refid="group__topic-linalg_1gaf619c0c15ef61d2dd2eaa585f525a93f" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1gaf619c0c15ef61d2dd2eaa585f525a93f" kindref="member">hyhound_diag_cyclic</ref>(<ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured&lt;VL11, SL&gt;</ref><sp/>L11,<sp/>VA1<sp/>&amp;&amp;A1,<sp/>VL21<sp/>&amp;&amp;L21,<sp/>VA2<sp/>&amp;&amp;A22,<sp/>VA2o<sp/>&amp;&amp;A2_out,</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>VU<sp/>&amp;&amp;L31,<sp/>VA3<sp/>&amp;&amp;A31,<sp/>VA3o<sp/>&amp;&amp;A3_out,<sp/>Vd<sp/>&amp;&amp;d)<sp/>{</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a899e19f752b26f44ee94ecb94c7a1c8b" kindref="member">detail::hyhound_diag_cyclic&lt;simdified_value_t&lt;VL11&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VL11&gt;</ref>,<sp/>{}&gt;(</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(L11.<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A1),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(L21),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A22).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A2_out),</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(L31),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A31).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A3_out),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(d).as_const());</highlight></codeline>
+<codeline lineno="245"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="247"><highlight class="comment">///<sp/>Update<sp/>structured<sp/>Cholesky<sp/>factor<sp/>L<sp/>using<sp/>structured<sp/>low-rank<sp/>term<sp/>A<sp/>diag(d)<sp/>Aᵀ,</highlight></codeline>
+<codeline lineno="248"><highlight class="comment">///<sp/>@f[</highlight></codeline>
+<codeline lineno="249"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/>L<sp/>=<sp/>\begin{pmatrix}<sp/>L_{11}<sp/>\\<sp/>L_{21}<sp/>\\<sp/>L_{u}<sp/>\end{pmatrix},<sp/>\quad</highlight></codeline>
+<codeline lineno="250"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/>A<sp/>=<sp/>\begin{pmatrix}<sp/>A_{1}<sp/>\\<sp/>A_{2}<sp/>\\<sp/>0<sp/>\end{pmatrix},<sp/>\quad</highlight></codeline>
+<codeline lineno="251"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/>\tilde<sp/>A<sp/>=<sp/>\begin{pmatrix}<sp/>0<sp/>\\<sp/>\tilde<sp/>A_{2}<sp/>\\<sp/>\tilde<sp/>A_{u}<sp/>\end{pmatrix}.</highlight></codeline>
+<codeline lineno="252"><highlight class="comment">///<sp/>@f]</highlight></codeline>
+<codeline lineno="253"><highlight class="comment">///<sp/>The<sp/>@p<sp/>shift_A_out<sp/>parameter<sp/>indicates<sp/>whether<sp/>the<sp/>output<sp/>matrix<sp/>A2_out<sp/>should<sp/>be<sp/>shifted<sp/>along</highlight></codeline>
+<codeline lineno="254"><highlight class="comment">///<sp/>the<sp/>batch<sp/>dimension.<sp/>This<sp/>is<sp/>used<sp/>in<sp/>the<sp/>Cyqlone<sp/>solver.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="255"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;<ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/>SL,<sp/>simdifiable<sp/>VL11,<sp/>simdifiable<sp/>VA1,<sp/>simdifiable<sp/>VL21,<sp/>simdifiable<sp/>VA2,</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>simdifiable<sp/>VA2o,<sp/>simdifiable<sp/>VLu1,<sp/>simdifiable<sp/>VAuo,<sp/>simdifiable<sp/>Vd&gt;</highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VL11, VA1, VL21, VA2, VA2o, VLu1, VAuo, Vd&gt;</ref></highlight></codeline>
+<codeline lineno="258" refid="group__topic-linalg_1ga623445a546acac724601551447aaef5a" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1ga623445a546acac724601551447aaef5a" kindref="member">hyhound_diag_riccati</ref>(<ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured&lt;VL11, SL&gt;</ref><sp/>L11,<sp/>VA1<sp/>&amp;&amp;A1,<sp/>VL21<sp/>&amp;&amp;L21,<sp/>VA2<sp/>&amp;&amp;A2,<sp/>VA2o<sp/>&amp;&amp;A2_out,</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>VLu1<sp/>&amp;&amp;Lu1,<sp/>VAuo<sp/>&amp;&amp;Au_out,<sp/>Vd<sp/>&amp;&amp;d,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>shift_A_out<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a533820c033d4bc11f8969555ab6c47cc" kindref="member">detail::hyhound_diag_riccati&lt;simdified_value_t&lt;VL11&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VL11&gt;</ref>,<sp/>{}&gt;(</highlight></codeline>
+<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(L11.<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A1),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(L21),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A2).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A2_out),</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(Lu1),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(Au_out),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(d).as_const(),<sp/>shift_A_out);</highlight></codeline>
+<codeline lineno="263"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="264"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="265"><highlight class="comment">///<sp/>@}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="266"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="267"><highlight class="comment">///<sp/>@}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="268"><highlight class="normal"></highlight></codeline>
+<codeline lineno="269"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::linalg</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/linalg/hyhound.hpp"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="dir_2285d197d30045dcff418b8c8e7f58c8" kind="dir">
+    <compoundname>batmat/include/batmat/matrix</compoundname>
+    <innerfile refid="layout_8hpp">layout.hpp</innerfile>
+    <innerfile refid="matrix_8hpp">matrix.hpp</innerfile>
+    <innerfile refid="storage_8hpp">storage.hpp</innerfile>
+    <innerfile refid="view_8hpp">view.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/matrix/"/>
+  </compounddef>
+</doxygen>

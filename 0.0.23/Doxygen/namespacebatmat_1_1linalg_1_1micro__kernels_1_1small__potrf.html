@@ -1,0 +1,453 @@
+<!-- HTML header for doxygen 1.16.1-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.16.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>batmat: batmat::linalg::micro_kernels::small_potrf Namespace Reference</title>
+<link rel="icon" href="batmat-small.png" type="image/x-icon" />
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+window.MathJax = {
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  },
+  loader: {
+    load: ['[tex]/ams']
+  },
+  tex: {
+    macros: {    Reals: "{\\mathrm{I\\!R}}",
+    Nats: "{\\mathrm{I\\!N}}",
+    Cplx: "{\\mathbb{C}}",
+    R: "{\\Reals}",
+    N: "{\\Nats}",
+    C: "{\\Cplx}",
+    Rn: "{\\Reals^n}",
+    Rm: "{\\Reals^m}",
+    gph: "{\\operatorname{\\mathbf{gph}}}",
+    zer: "{\\operatorname{\\mathbf{zer}}}",
+    fix: "{\\operatorname{\\mathbf{fix}}}",
+    minimize: "{\\operatorname*{\\mathbf{minimize}}}",
+    st: "{\\operatorname*{\\mathbf{s.\\!t.}}}",
+    argmin: "{\\operatorname*{\\mathbf{arg\\,min}}}",
+    argmax: "{\\operatorname*{\\mathbf{arg\\,max}}}",
+    subjto: "{\\operatorname*{\\mathbf{subject\\;to}}}",
+    prox: "{\\operatorname{\\mathbf{prox}}}",
+    Hilb: "{\\mathcal{H}}",
+    proj: ["{\\operatorname{\\mathbf{\\Pi}_\\mathnormal{#1}}}",1],
+    dist: "{\\operatorname{\\mathbf{dist}}}",
+    Id: "{\\mathrm{Id}}",
+    I: "{\\mathrm{I}}",
+    one: "{\\mathbf{1}}",
+    defeq: "{\\triangleq}",
+    inprod: ["{\\left\\langle {#1} \\,\\middle|\\, {#2} \\right\\rangle}",2],
+    norm: ["{\\left\\| {#1} \\vphantom{X} \\right\\|}",1],
+    normsq: ["{\\norm{#1}^2}",1],
+    defset: ["{\\left\\{ {#1} \\;\\middle|\\; {#2} \\right\\}}",2],
+    tp: ["{#1^\\top}",1],
+    ttp: ["{#1^{\\!\\top\\!}}",1],
+    herm: ["{#1^\\mathrm{H}}",1],
+    invherm: ["{#1^{-\\mathrm{H}}}",1],
+    inv: ["{#1^{-1}}",1],
+    pinv: ["{#1^\\dagger}",1],
+    lconj: "{\\overline}",
+    sconj: ["{#1^*}",1],
+    iddots: "{\\mathinner{\\kern1mu\\raise1pt{.}\\kern2mu\\raise4pt{.}\\kern2mu\\raise7pt{\\Rule{0pt}{7pt}{0pt}.}\\kern1mu}}",
+    imagfun: ["{\\left(#1\\right)\\left(#2\\right)}",2],
+    Lagr: "{\\mathcal{L}}",
+    jac: "{\\mathrm{J}}",
+    dft: "{\\operatorname{\\mathbf{dft}}}",
+    cbrt: ["{\\sqrt[3]{#1}}",1],
+    sgn: "{\\operatorname{\\mathbf{sgn}}}",
+    setmap: "{\\rightrightarrows}",
+    lammin: "{\\lambda_\\text{min}}",
+    lammax: "{\\lambda_\\text{max}}",
+    Sc: "{\\mathcal{S}}",
+    Scstar: "{\\mathcal{S}^*}",
+    diag: "{\\operatorname{\\mathbf{diag}}}",
+    blkdiag: "{\\operatorname{\\mathbf{blkdiag}}}",
+    posdef: "{\\succ}",
+    possdef: "{\\succeq}",
+    half: "{\\tfrac{1}{2}}",
+    hhbar: "{\\hbar}",
+    barxuk: "{\\bar x^k\\!, \\bar u^k}",
+    },
+    packages: ['base','configmacros','newcommand','ams']
+  }
+};
+window.MathJax.tex.tags = 'ams';
+</script>
+<script type="text/javascript" id="MathJax-script" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script type="text/javascript" src="darkmode_toggle.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="batmat-small.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">batmat<span id="projectnumber">&#160;<code><a href="/batmat/index.html">0.0.23</a></code></span>
+   </div>
+   <div id="projectbrief">Batched linear algebra routines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.16.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('namespacebatmat_1_1linalg_1_1micro__kernels_1_1small__potrf.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">batmat::linalg::micro_kernels::small_potrf Namespace Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a2e8154d0f4857fdbcb4346a23d209ca9" id="r_a2e8154d0f4857fdbcb4346a23d209ca9"><td class="memTemplParams" colspan="2">template&lt;class T&gt; </td></tr>
+<tr class="memitem:a2e8154d0f4857fdbcb4346a23d209ca9 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a> = <a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt;T, <a class="el" href="namespacebatmat_1_1datapar.html#a55556a636c771c6e0f5805c2d186f1ec">datapar::scalar_abi</a>&lt;std::remove_const_t&lt;T&gt;&gt;, StorageOrder::ColMajor&gt;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a731b8daf7abc4dd88a8f430adaeefd64" id="r_a731b8daf7abc4dd88a8f430adaeefd64"><td class="memTemplParams" colspan="2">template&lt;class T, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> NC&gt; </td></tr>
+<tr class="memitem:a731b8daf7abc4dd88a8f430adaeefd64 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a731b8daf7abc4dd88a8f430adaeefd64">potrf_trsm_microkernel</a> (<a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> k, <a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a>&lt; const T &gt; A, <a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a>&lt; T &gt; L) noexcept</td></tr>
+<tr class="memitem:a6b16d5bb281a8c8dc8fb284f88ae8e0f" id="r_a6b16d5bb281a8c8dc8fb284f88ae8e0f"><td class="memTemplParams" colspan="2">template&lt;class T, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> RowsReg, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> ColsReg&gt; </td></tr>
+<tr class="memitem:a6b16d5bb281a8c8dc8fb284f88ae8e0f template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a6b16d5bb281a8c8dc8fb284f88ae8e0f">potrf_syrk_microkernel</a> (<a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> k, <a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a>&lt; const T &gt; L21, <a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a>&lt; const T &gt; A22, <a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a>&lt; T &gt; L22) noexcept</td></tr>
+<tr class="memdesc:a6b16d5bb281a8c8dc8fb284f88ae8e0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Outer product for updating the bottom right tail during Cholesky factorization.  <br /></td></tr>
+<tr class="memitem:abf026aa4b3c76aa501a83ab1cda01f9c" id="r_abf026aa4b3c76aa501a83ab1cda01f9c"><td class="memTemplParams" colspan="2">template&lt;class T, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> RowsReg = 4&gt; </td></tr>
+<tr class="memitem:abf026aa4b3c76aa501a83ab1cda01f9c template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#abf026aa4b3c76aa501a83ab1cda01f9c">small_potrf</a> (<a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; const T, <a class="el" href="namespacebatmat_1_1datapar.html#a55556a636c771c6e0f5805c2d186f1ec">datapar::scalar_abi</a>&lt; T &gt; &gt; A, <a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; T, <a class="el" href="namespacebatmat_1_1datapar.html#a55556a636c771c6e0f5805c2d186f1ec">datapar::scalar_abi</a>&lt; T &gt; &gt; L, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> n=-1) noexcept</td></tr>
+<tr class="memitem:ac6b1718d811d07b3780cd126178c6289" id="r_ac6b1718d811d07b3780cd126178c6289"><td class="memTemplParams" colspan="2">template&lt;class T, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> NC, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> NR&gt; </td></tr>
+<tr class="memitem:ac6b1718d811d07b3780cd126178c6289 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ac6b1718d811d07b3780cd126178c6289">syrk_potrf_trsm_microkernel</a> (<a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> m, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> k, <a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a>&lt; const T &gt; L21, <a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a>&lt; const T &gt; A22, <a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a>&lt; T &gt; L22) noexcept</td></tr>
+<tr class="memdesc:ac6b1718d811d07b3780cd126178c6289"><td class="mdescLeft">&#160;</td><td class="mdescRight">Left-looking variant of <a class="el" href="namespacebatmat_1_1linalg_1_1micro__kernels_1_1small__potrf.html">small_potrf</a>, which updates the current block with the outer product of the previously computed part L21.  <br /></td></tr>
+<tr class="memitem:ad44c0278e2a88ba19405f8ebc8944e2d" id="r_ad44c0278e2a88ba19405f8ebc8944e2d"><td class="memTemplParams" colspan="2">template&lt;class T, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> RowsReg = 4, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> S = 8&gt; </td></tr>
+<tr class="memitem:ad44c0278e2a88ba19405f8ebc8944e2d template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad44c0278e2a88ba19405f8ebc8944e2d">small_potrf_left</a> (<a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; const T, <a class="el" href="namespacebatmat_1_1datapar.html#a55556a636c771c6e0f5805c2d186f1ec">datapar::scalar_abi</a>&lt; T &gt; &gt; A, <a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; T, <a class="el" href="namespacebatmat_1_1datapar.html#a55556a636c771c6e0f5805c2d186f1ec">datapar::scalar_abi</a>&lt; T &gt; &gt; L) noexcept</td></tr>
+</table>
+<a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
+<a id="a2e8154d0f4857fdbcb4346a23d209ca9" name="a2e8154d0f4857fdbcb4346a23d209ca9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e8154d0f4857fdbcb4346a23d209ca9">&#9670;&#160;</a></span>scalar_view</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">batmat::linalg::micro_kernels::small_potrf::scalar_view</a> = <a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt;T, <a class="el" href="namespacebatmat_1_1datapar.html#a55556a636c771c6e0f5805c2d186f1ec">datapar::scalar_abi</a>&lt;std::remove_const_t&lt;T&gt;&gt;, StorageOrder::ColMajor&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="micro-kernels_2small-potrf_8hpp_source.html#l00011">11</a> of file <a class="el" href="micro-kernels_2small-potrf_8hpp_source.html">small-potrf.hpp</a>.</p>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a731b8daf7abc4dd88a8f430adaeefd64" name="a731b8daf7abc4dd88a8f430adaeefd64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a731b8daf7abc4dd88a8f430adaeefd64">&#9670;&#160;</a></span>potrf_trsm_microkernel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> NC&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void batmat::linalg::micro_kernels::small_potrf::potrf_trsm_microkernel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>k</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a>&lt; const T &gt;</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a>&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>L</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="small-potrf_8tpp_source.html#l00018">18</a> of file <a class="el" href="small-potrf_8tpp_source.html">small-potrf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="a6b16d5bb281a8c8dc8fb284f88ae8e0f" name="a6b16d5bb281a8c8dc8fb284f88ae8e0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b16d5bb281a8c8dc8fb284f88ae8e0f">&#9670;&#160;</a></span>potrf_syrk_microkernel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> RowsReg, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> ColsReg&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void batmat::linalg::micro_kernels::small_potrf::potrf_syrk_microkernel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>k</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a>&lt; const T &gt;</td>          <td class="paramname"><span class="paramname"><em>L21</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a>&lt; const T &gt;</td>          <td class="paramname"><span class="paramname"><em>A22</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a>&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>L22</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Outer product for updating the bottom right tail during Cholesky factorization. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">A21</td><td>rows×ColsReg </td></tr>
+    <tr><td class="paramname">A22</td><td>rows×RowsReg </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="small-potrf_8tpp_source.html#l00072">72</a> of file <a class="el" href="small-potrf_8tpp_source.html">small-potrf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="abf026aa4b3c76aa501a83ab1cda01f9c" name="abf026aa4b3c76aa501a83ab1cda01f9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf026aa4b3c76aa501a83ab1cda01f9c">&#9670;&#160;</a></span>small_potrf()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> RowsReg = 4&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void batmat::linalg::micro_kernels::small_potrf::small_potrf </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; const T, <a class="el" href="namespacebatmat_1_1datapar.html#a55556a636c771c6e0f5805c2d186f1ec">datapar::scalar_abi</a>&lt; T &gt; &gt;</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; T, <a class="el" href="namespacebatmat_1_1datapar.html#a55556a636c771c6e0f5805c2d186f1ec">datapar::scalar_abi</a>&lt; T &gt; &gt;</td>          <td class="paramname"><span class="paramname"><em>L</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="small-potrf_8tpp_source.html#l00118">118</a> of file <a class="el" href="small-potrf_8tpp_source.html">small-potrf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="ac6b1718d811d07b3780cd126178c6289" name="ac6b1718d811d07b3780cd126178c6289"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6b1718d811d07b3780cd126178c6289">&#9670;&#160;</a></span>syrk_potrf_trsm_microkernel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> NC, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> NR&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void batmat::linalg::micro_kernels::small_potrf::syrk_potrf_trsm_microkernel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>m</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>k</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a>&lt; const T &gt;</td>          <td class="paramname"><span class="paramname"><em>L21</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a>&lt; const T &gt;</td>          <td class="paramname"><span class="paramname"><em>A22</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a2e8154d0f4857fdbcb4346a23d209ca9">scalar_view</a>&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>L22</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Left-looking variant of <a class="el" href="namespacebatmat_1_1linalg_1_1micro__kernels_1_1small__potrf.html">small_potrf</a>, which updates the current block with the outer product of the previously computed part L21. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">L21</td><td>m×k </td></tr>
+    <tr><td class="paramname">A22</td><td>m×NC </td></tr>
+    <tr><td class="paramname">L22</td><td>m×NC </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="small-potrf_8tpp_source.html#l00209">209</a> of file <a class="el" href="small-potrf_8tpp_source.html">small-potrf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="ad44c0278e2a88ba19405f8ebc8944e2d" name="ad44c0278e2a88ba19405f8ebc8944e2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad44c0278e2a88ba19405f8ebc8944e2d">&#9670;&#160;</a></span>small_potrf_left()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> RowsReg = 4, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> S = 8&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void batmat::linalg::micro_kernels::small_potrf::small_potrf_left </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; const T, <a class="el" href="namespacebatmat_1_1datapar.html#a55556a636c771c6e0f5805c2d186f1ec">datapar::scalar_abi</a>&lt; T &gt; &gt;</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; T, <a class="el" href="namespacebatmat_1_1datapar.html#a55556a636c771c6e0f5805c2d186f1ec">datapar::scalar_abi</a>&lt; T &gt; &gt;</td>          <td class="paramname"><span class="paramname"><em>L</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="small-potrf_8tpp_source.html#l00281">281</a> of file <a class="el" href="small-potrf_8tpp_source.html">small-potrf.tpp</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="namespacebatmat.html">batmat</a></li><li class="navelem"><a href="namespacebatmat_1_1linalg.html">linalg</a></li><li class="navelem"><a href="namespacebatmat_1_1linalg_1_1micro__kernels.html">micro_kernels</a></li><li class="navelem"><a href="namespacebatmat_1_1linalg_1_1micro__kernels_1_1small__potrf.html">small_potrf</a></li>
+    <li class="footer">Generated on <span class="timestamp"></span> for batmat by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
+  </ul>
+</div>
+</body>
+</html>

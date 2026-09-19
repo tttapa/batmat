@@ -1,0 +1,875 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="config_8hpp" kind="file" language="C++">
+    <compoundname>config.hpp</compoundname>
+    <includes local="no">cstdint</includes>
+    <includes local="no">stdfloat</includes>
+    <includedby refid="assume_8hpp" local="no">batmat/include/batmat/assume.hpp</includedby>
+    <includedby refid="dtypes_8hpp" local="no">batmat/include/batmat/dtypes.hpp</includedby>
+    <includedby refid="kib_8hpp" local="no">batmat/include/batmat/kib.hpp</includedby>
+    <includedby refid="elementwise_8hpp" local="no">batmat/include/batmat/linalg/elementwise.hpp</includedby>
+    <includedby refid="flops_8hpp" local="no">batmat/include/batmat/linalg/flops.hpp</includedby>
+    <includedby refid="norms_8hpp" local="no">batmat/include/batmat/linalg/norms.hpp</includedby>
+    <includedby refid="uview_8hpp" local="no">batmat/include/batmat/linalg/uview.hpp</includedby>
+    <includedby refid="loop_8hpp" local="no">batmat/include/batmat/loop.hpp</includedby>
+    <includedby refid="lut_8hpp" local="no">batmat/include/batmat/lut.hpp</includedby>
+    <includedby refid="layout_8hpp" local="no">batmat/include/batmat/matrix/layout.hpp</includedby>
+    <includedby refid="view_8hpp" local="no">batmat/include/batmat/matrix/view.hpp</includedby>
+    <includedby refid="openmp_8h" local="no">batmat/include/batmat/openmp.h</includedby>
+    <includedby refid="transpose_8hpp" local="no">batmat/include/batmat/ops/transpose.hpp</includedby>
+    <includedby refid="avx-512_8hpp" local="no">batmat/include/batmat/platform/avx-512.hpp</includedby>
+    <includedby refid="avx2_8hpp" local="no">batmat/include/batmat/platform/avx2.hpp</includedby>
+    <includedby refid="generic_8hpp" local="no">batmat/include/batmat/platform/generic.hpp</includedby>
+    <includedby refid="neon_8hpp" local="no">batmat/include/batmat/platform/neon.hpp</includedby>
+    <includedby refid="simd_8hpp" local="no">batmat/include/batmat/simd.hpp</includedby>
+    <includedby refid="timing_8hpp" local="no">batmat/include/batmat/timing.hpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp</label>
+        <link refid="config_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>cstdint</label>
+      </node>
+      <node id="3">
+        <label>stdfloat</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp</label>
+        <link refid="config_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="46" relation="include">
+        </childnode>
+        <childnode refid="47" relation="include">
+        </childnode>
+        <childnode refid="48" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="49" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="51" relation="include">
+        </childnode>
+        <childnode refid="52" relation="include">
+        </childnode>
+        <childnode refid="53" relation="include">
+        </childnode>
+        <childnode refid="55" relation="include">
+        </childnode>
+        <childnode refid="56" relation="include">
+        </childnode>
+        <childnode refid="61" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/include/batmat/assume.hpp</label>
+        <link refid="assume_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+      </node>
+      <node id="43">
+        <label>batmat/include/batmat/dtypes.hpp</label>
+        <link refid="dtypes_8hpp"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="44">
+        <label>batmat/include/batmat/kib.hpp</label>
+        <link refid="kib_8hpp"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>batmat/include/batmat/linalg/compress.hpp</label>
+        <link refid="compress_8hpp"/>
+      </node>
+      <node id="24">
+        <label>batmat/include/batmat/linalg/copy.hpp</label>
+        <link refid="copy_8hpp"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>batmat/include/batmat/linalg/elementwise.hpp</label>
+        <link refid="elementwise_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>batmat/include/batmat/linalg/flops.hpp</label>
+        <link refid="flops_8hpp"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>batmat/include/batmat/linalg/gemm-diag.hpp</label>
+        <link refid="gemm-diag_8hpp"/>
+      </node>
+      <node id="8">
+        <label>batmat/include/batmat/linalg/gemm.hpp</label>
+        <link refid="gemm_8hpp"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="25">
+        <label>batmat/include/batmat/linalg/gemv.hpp</label>
+        <link refid="gemv_8hpp"/>
+      </node>
+      <node id="10">
+        <label>batmat/include/batmat/linalg/hyhound.hpp</label>
+        <link refid="hyhound_8hpp"/>
+      </node>
+      <node id="26">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp</label>
+        <link refid="micro-kernels_2gemm-diag_8hpp"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+      </node>
+      <node id="14">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm-diag.tpp</label>
+        <link refid="gemm-diag_8tpp"/>
+      </node>
+      <node id="27">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm.hpp</label>
+        <link refid="micro-kernels_2gemm_8hpp"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemm.tpp</label>
+        <link refid="gemm_8tpp"/>
+      </node>
+      <node id="28">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemv.hpp</label>
+        <link refid="micro-kernels_2gemv_8hpp"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="16">
+        <label>batmat/include/batmat/linalg/micro-kernels/gemv.tpp</label>
+        <link refid="gemv_8tpp"/>
+      </node>
+      <node id="29">
+        <label>batmat/include/batmat/linalg/micro-kernels/hyhound.hpp</label>
+        <link refid="micro-kernels_2hyhound_8hpp"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>batmat/include/batmat/linalg/micro-kernels/hyhound.tpp</label>
+        <link refid="hyhound_8tpp"/>
+      </node>
+      <node id="30">
+        <label>batmat/include/batmat/linalg/micro-kernels/potrf.hpp</label>
+        <link refid="micro-kernels_2potrf_8hpp"/>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="18">
+        <label>batmat/include/batmat/linalg/micro-kernels/potrf.tpp</label>
+        <link refid="potrf_8tpp"/>
+      </node>
+      <node id="31">
+        <label>batmat/include/batmat/linalg/micro-kernels/symv.hpp</label>
+        <link refid="micro-kernels_2symv_8hpp"/>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+      </node>
+      <node id="19">
+        <label>batmat/include/batmat/linalg/micro-kernels/symv.tpp</label>
+        <link refid="symv_8tpp"/>
+      </node>
+      <node id="33">
+        <label>batmat/include/batmat/linalg/micro-kernels/syomv.hpp</label>
+        <link refid="micro-kernels_2syomv_8hpp"/>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+      </node>
+      <node id="20">
+        <label>batmat/include/batmat/linalg/micro-kernels/syomv.tpp</label>
+        <link refid="syomv_8tpp"/>
+      </node>
+      <node id="35">
+        <label>batmat/include/batmat/linalg/micro-kernels/trsm.hpp</label>
+        <link refid="micro-kernels_2trsm_8hpp"/>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>batmat/include/batmat/linalg/micro-kernels/trsm.tpp</label>
+        <link refid="trsm_8tpp"/>
+      </node>
+      <node id="36">
+        <label>batmat/include/batmat/linalg/micro-kernels/trtri.hpp</label>
+        <link refid="micro-kernels_2trtri_8hpp"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>batmat/include/batmat/linalg/micro-kernels/trtri.tpp</label>
+        <link refid="trtri_8tpp"/>
+      </node>
+      <node id="45">
+        <label>batmat/include/batmat/linalg/norms.hpp</label>
+        <link refid="norms_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>batmat/include/batmat/linalg/potrf.hpp</label>
+        <link refid="potrf_8hpp"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>batmat/include/batmat/linalg/reduce.hpp</label>
+        <link refid="reduce_8hpp"/>
+      </node>
+      <node id="39">
+        <label>batmat/include/batmat/linalg/simdify.hpp</label>
+        <link refid="simdify_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="37">
+        <label>batmat/include/batmat/linalg/symm.hpp</label>
+        <link refid="symm_8hpp"/>
+      </node>
+      <node id="32">
+        <label>batmat/include/batmat/linalg/symv.hpp</label>
+        <link refid="symv_8hpp"/>
+      </node>
+      <node id="34">
+        <label>batmat/include/batmat/linalg/syomv.hpp</label>
+        <link refid="syomv_8hpp"/>
+      </node>
+      <node id="12">
+        <label>batmat/include/batmat/linalg/trsm.hpp</label>
+        <link refid="trsm_8hpp"/>
+      </node>
+      <node id="13">
+        <label>batmat/include/batmat/linalg/trtri.hpp</label>
+        <link refid="trtri_8hpp"/>
+      </node>
+      <node id="23">
+        <label>batmat/include/batmat/linalg/uview.hpp</label>
+        <link refid="uview_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="46">
+        <label>batmat/include/batmat/loop.hpp</label>
+        <link refid="loop_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+      </node>
+      <node id="47">
+        <label>batmat/include/batmat/lut.hpp</label>
+        <link refid="lut_8hpp"/>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="48">
+        <label>batmat/include/batmat/matrix/layout.hpp</label>
+        <link refid="layout_8hpp"/>
+        <childnode refid="38" relation="include">
+        </childnode>
+      </node>
+      <node id="40">
+        <label>batmat/include/batmat/matrix/matrix.hpp</label>
+        <link refid="matrix_8hpp"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="38">
+        <label>batmat/include/batmat/matrix/view.hpp</label>
+        <link refid="view_8hpp"/>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+      </node>
+      <node id="49">
+        <label>batmat/include/batmat/openmp.h</label>
+        <link refid="openmp_8h"/>
+        <childnode refid="46" relation="include">
+        </childnode>
+        <childnode refid="50" relation="include">
+        </childnode>
+      </node>
+      <node id="41">
+        <label>batmat/include/batmat/ops/cneg.hpp</label>
+        <link refid="cneg_8hpp"/>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+      </node>
+      <node id="57">
+        <label>batmat/include/batmat/ops/gather.hpp</label>
+        <link refid="gather_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="58">
+        <label>batmat/include/batmat/ops/mask.hpp</label>
+        <link refid="mask_8hpp"/>
+        <childnode refid="57" relation="include">
+        </childnode>
+      </node>
+      <node id="59">
+        <label>batmat/include/batmat/ops/rotate.hpp</label>
+        <link refid="rotate_8hpp"/>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="60">
+        <label>batmat/include/batmat/ops/rsqrt.hpp</label>
+        <link refid="rsqrt_8hpp"/>
+        <childnode refid="18" relation="include">
+        </childnode>
+      </node>
+      <node id="42">
+        <label>batmat/include/batmat/ops/transpose.hpp</label>
+        <link refid="transpose_8hpp"/>
+        <childnode refid="24" relation="include">
+        </childnode>
+      </node>
+      <node id="51">
+        <label>batmat/include/batmat/platform/avx-512.hpp</label>
+        <link refid="avx-512_8hpp"/>
+      </node>
+      <node id="52">
+        <label>batmat/include/batmat/platform/avx2.hpp</label>
+        <link refid="avx2_8hpp"/>
+      </node>
+      <node id="53">
+        <label>batmat/include/batmat/platform/generic.hpp</label>
+        <link refid="generic_8hpp"/>
+        <childnode refid="54" relation="include">
+        </childnode>
+      </node>
+      <node id="55">
+        <label>batmat/include/batmat/platform/neon.hpp</label>
+        <link refid="neon_8hpp"/>
+      </node>
+      <node id="54">
+        <label>batmat/include/batmat/platform/platform.hpp</label>
+        <link refid="platform_8hpp"/>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+      </node>
+      <node id="56">
+        <label>batmat/include/batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="57" relation="include">
+        </childnode>
+        <childnode refid="58" relation="include">
+        </childnode>
+        <childnode refid="59" relation="include">
+        </childnode>
+        <childnode refid="60" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="51" relation="include">
+        </childnode>
+        <childnode refid="52" relation="include">
+        </childnode>
+        <childnode refid="55" relation="include">
+        </childnode>
+      </node>
+      <node id="61">
+        <label>batmat/include/batmat/timing.hpp</label>
+        <link refid="timing_8hpp"/>
+        <childnode refid="62" relation="include">
+        </childnode>
+      </node>
+      <node id="50">
+        <label>batmat/src/thread-pool.cpp</label>
+        <link refid="thread-pool_8cpp"/>
+      </node>
+      <node id="62">
+        <label>batmat/src/timing.cpp</label>
+        <link refid="timing_8cpp"/>
+      </node>
+      <node id="9">
+        <label>/home/runner/work/batmat/batmat/test_package/src/example.cpp</label>
+        <link refid="example_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="config_8hpp_1adba03339e63febaefb5c88ad45b310b2" prot="public" static="no">
+        <name>BATMAT_VERIFY_ASSUMPTIONS</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" line="18" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="config_8hpp_1a8c6127d59146ecdf59acad8cb5ddb57a" prot="public" static="no">
+        <name>BATMAT_WITH_OPENMP</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" line="21" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="config_8hpp_1af2c40f1b96fae4e3357b55c6ca918c00" prot="public" static="no">
+        <name>BATMAT_WITH_GSI_HPC_SIMD</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" line="24" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="config_8hpp_1a821c7104bc22a1d604096bd28a5e5237" prot="public" static="no">
+        <name>BATMAT_HAS_DOUBLE_VL_1</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" line="27" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="config_8hpp_1a08e5bbdc045ff53034277ab547bccbba" prot="public" static="no">
+        <name>BATMAT_HAS_DOUBLE_VL_4</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" line="28" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="config_8hpp_1a7abdd3842bd0eb16e77c1e30fd69ab8e" prot="public" static="no">
+        <name>BATMAT_HAS_DOUBLE_VL_8</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" line="29" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="config_8hpp_1a2695540fab11b3d76ca11c94644245ae" prot="public" static="no">
+        <name>BATMAT_FOREACH_VL_DOUBLE</name>
+        <param><defname>X</defname></param>
+        <param><defname>...</defname></param>
+        <initializer>X(1 __VA_OPT__(,) __VA_ARGS__) \
+X(4 __VA_OPT__(,) __VA_ARGS__) \
+X(8 __VA_OPT__(,) __VA_ARGS__)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" line="31" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" bodystart="31" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="define" id="config_8hpp_1a9017ad920be1505e9114f038964422ba" prot="public" static="no">
+        <name>BATMAT_FOREACH_VL_DEFAULT</name>
+        <param><defname>X</defname></param>
+        <param><defname>...</defname></param>
+        <initializer><ref refid="config_8hpp_1a2695540fab11b3d76ca11c94644245ae" kindref="member">BATMAT_FOREACH_VL_DOUBLE</ref>(X, __VA_ARGS__)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" line="36" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="config_8hpp_1a6c8ebfab882d49a4e2536f1d5d9b1ab6" prot="public" static="no">
+        <name>BATMAT_FOREACH_DTYPE</name>
+        <param><defname>X</defname></param>
+        <param><defname>...</defname></param>
+        <initializer>X(double __VA_OPT__(,) __VA_ARGS__)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" line="38" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" bodystart="38" bodyend="39"/>
+      </memberdef>
+      <memberdef kind="define" id="config_8hpp_1a550290f53a5cc77b996387216c63424c" prot="public" static="no">
+        <name>BATMAT_FOREACH_DTYPE_VL</name>
+        <param><defname>X</defname></param>
+        <param><defname>...</defname></param>
+        <initializer>X(double, 1 __VA_OPT__(,) __VA_ARGS__) \
+X(double, 4 __VA_OPT__(,) __VA_ARGS__) \
+X(double, 8 __VA_OPT__(,) __VA_ARGS__)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" line="41" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp" bodystart="41" bodyend="44"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstdint&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdfloat&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat" kindref="compound">batmat</ref><sp/>{</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>__clangd__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1a31461fabd319f19bc15256fde4d75495" kindref="member">real_t</ref><sp/>=<sp/>double;<sp/></highlight><highlight class="comment">//<sp/>clangd<sp/>does<sp/>not<sp/>support<sp/>std::float128_t<sp/>etc.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11" refid="namespacebatmat_1a31461fabd319f19bc15256fde4d75495" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1a31461fabd319f19bc15256fde4d75495" kindref="member">real_t</ref><sp/><sp/>=<sp/>double;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>=<sp/>int;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>BATMAT_VERIFY_ASSUMPTIONS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18" refid="config_8hpp_1adba03339e63febaefb5c88ad45b310b2" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_VERIFY_ASSUMPTIONS<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>BATMAT_WITH_OPENMP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21" refid="config_8hpp_1a8c6127d59146ecdf59acad8cb5ddb57a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_WITH_OPENMP<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>BATMAT_WITH_GSI_HPC_SIMD</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24" refid="config_8hpp_1af2c40f1b96fae4e3357b55c6ca918c00" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_WITH_GSI_HPC_SIMD<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="config_8hpp_1a821c7104bc22a1d604096bd28a5e5237" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_HAS_DOUBLE_VL_1<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28" refid="config_8hpp_1a08e5bbdc045ff53034277ab547bccbba" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_HAS_DOUBLE_VL_4<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29" refid="config_8hpp_1a7abdd3842bd0eb16e77c1e30fd69ab8e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_HAS_DOUBLE_VL_8<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31" refid="config_8hpp_1a2695540fab11b3d76ca11c94644245ae" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_FOREACH_VL_DOUBLE(X,<sp/>...)<sp/>\</highlight></codeline>
+<codeline lineno="32"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>X(1<sp/>__VA_OPT__(,)<sp/>__VA_ARGS__)<sp/>\</highlight></codeline>
+<codeline lineno="33"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>X(4<sp/>__VA_OPT__(,)<sp/>__VA_ARGS__)<sp/>\</highlight></codeline>
+<codeline lineno="34"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>X(8<sp/>__VA_OPT__(,)<sp/>__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36" refid="config_8hpp_1a9017ad920be1505e9114f038964422ba" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_FOREACH_VL_DEFAULT(X,<sp/>...)<sp/>BATMAT_FOREACH_VL_DOUBLE(X,<sp/>__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38" refid="config_8hpp_1a6c8ebfab882d49a4e2536f1d5d9b1ab6" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_FOREACH_DTYPE(X,<sp/>...)<sp/>\</highlight></codeline>
+<codeline lineno="39"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>X(double<sp/>__VA_OPT__(,)<sp/>__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41" refid="config_8hpp_1a550290f53a5cc77b996387216c63424c" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_FOREACH_DTYPE_VL(X,<sp/>...)<sp/>\</highlight></codeline>
+<codeline lineno="42"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>X(double,<sp/>1<sp/>__VA_OPT__(,)<sp/>__VA_ARGS__)<sp/>\</highlight></codeline>
+<codeline lineno="43"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>X(double,<sp/>4<sp/>__VA_OPT__(,)<sp/>__VA_ARGS__)<sp/>\</highlight></codeline>
+<codeline lineno="44"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>X(double,<sp/>8<sp/>__VA_OPT__(,)<sp/>__VA_ARGS__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>__clangd__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>BATMAT_WITH_OPENMP<sp/></highlight><highlight class="comment">//<sp/>clangd<sp/>sometimes<sp/>crashes<sp/>on<sp/>OpenMP<sp/>constructs</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_WITH_OPENMP<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/home/runner/work/batmat/batmat/build/src/include/batmat/config.hpp"/>
+  </compounddef>
+</doxygen>

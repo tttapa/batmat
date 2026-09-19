@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="examples" kind="page">
+    <compoundname>examples</compoundname>
+    <title>Examples</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="examples_1md__2home_2runner_2work_2batmat_2batmat_2docs_2source_2doxygen_2examples"/></para>
+<sect1 id="examples_1autotoc_md-work-in-progress-">
+<title>🚧 Work in progress 🚧</title><para><itemizedlist>
+<listitem><para><ref refid="example_8cpp-example" kindref="compound">example.cpp</ref> </para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+    </detaileddescription>
+    <location file=""/>
+  </compounddef>
+</doxygen>

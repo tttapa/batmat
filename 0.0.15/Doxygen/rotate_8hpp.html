@@ -1,0 +1,236 @@
+<!-- HTML header for doxygen 1.16.1-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.16.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>batmat: batmat/include/batmat/ops/rotate.hpp File Reference</title>
+<link rel="icon" href="batmat-small.png" type="image/x-icon" />
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+window.MathJax = {
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  },
+  loader: {
+    load: ['[tex]/ams']
+  },
+  tex: {
+    macros: {    Reals: "{\\mathrm{I\\!R}}",
+    Nats: "{\\mathrm{I\\!N}}",
+    Cplx: "{\\mathbb{C}}",
+    R: "{\\Reals}",
+    N: "{\\Nats}",
+    C: "{\\Cplx}",
+    Rn: "{\\Reals^n}",
+    Rm: "{\\Reals^m}",
+    gph: "{\\operatorname{\\mathbf{gph}}}",
+    zer: "{\\operatorname{\\mathbf{zer}}}",
+    fix: "{\\operatorname{\\mathbf{fix}}}",
+    minimize: "{\\operatorname*{\\mathbf{minimize}}}",
+    st: "{\\operatorname*{\\mathbf{s.\\!t.}}}",
+    argmin: "{\\operatorname*{\\mathbf{arg\\,min}}}",
+    argmax: "{\\operatorname*{\\mathbf{arg\\,max}}}",
+    subjto: "{\\operatorname*{\\mathbf{subject\\;to}}}",
+    prox: "{\\operatorname{\\mathbf{prox}}}",
+    Hilb: "{\\mathcal{H}}",
+    proj: ["{\\operatorname{\\mathbf{\\Pi}_\\mathnormal{#1}}}",1],
+    dist: "{\\operatorname{\\mathbf{dist}}}",
+    Id: "{\\mathrm{Id}}",
+    I: "{\\mathrm{I}}",
+    one: "{\\mathbf{1}}",
+    defeq: "{\\triangleq}",
+    inprod: ["{\\left\\langle {#1} \\,\\middle|\\, {#2} \\right\\rangle}",2],
+    norm: ["{\\left\\| {#1} \\vphantom{X} \\right\\|}",1],
+    normsq: ["{\\norm{#1}^2}",1],
+    defset: ["{\\left\\{ {#1} \\;\\middle|\\; {#2} \\right\\}}",2],
+    tp: ["{#1^\\top}",1],
+    ttp: ["{#1^{\\!\\top\\!}}",1],
+    herm: ["{#1^\\mathrm{H}}",1],
+    invherm: ["{#1^{-\\mathrm{H}}}",1],
+    inv: ["{#1^{-1}}",1],
+    pinv: ["{#1^\\dagger}",1],
+    lconj: "{\\overline}",
+    sconj: ["{#1^*}",1],
+    iddots: "{\\mathinner{\\kern1mu\\raise1pt{.}\\kern2mu\\raise4pt{.}\\kern2mu\\raise7pt{\\Rule{0pt}{7pt}{0pt}.}\\kern1mu}}",
+    imagfun: ["{\\left(#1\\right)\\left(#2\\right)}",2],
+    Lagr: "{\\mathcal{L}}",
+    jac: "{\\mathrm{J}}",
+    dft: "{\\operatorname{\\mathbf{dft}}}",
+    cbrt: ["{\\sqrt[3]{#1}}",1],
+    sgn: "{\\operatorname{\\mathbf{sgn}}}",
+    setmap: "{\\rightrightarrows}",
+    lammin: "{\\lambda_\\text{min}}",
+    lammax: "{\\lambda_\\text{max}}",
+    Sc: "{\\mathcal{S}}",
+    Scstar: "{\\mathcal{S}^*}",
+    diag: "{\\operatorname{\\mathbf{diag}}}",
+    blkdiag: "{\\operatorname{\\mathbf{blkdiag}}}",
+    posdef: "{\\succ}",
+    possdef: "{\\succeq}",
+    half: "{\\tfrac{1}{2}}",
+    hhbar: "{\\hbar}",
+    barxuk: "{\\bar x^k\\!, \\bar u^k}",
+    },
+    packages: ['base','configmacros','newcommand','ams']
+  }
+};
+window.MathJax.tex.tags = 'ams';
+</script>
+<script type="text/javascript" id="MathJax-script" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script type="text/javascript" src="darkmode_toggle.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="batmat-small.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">batmat<span id="projectnumber">&#160;<code><a href="/batmat/index.html">0.0.15</a></code></span>
+   </div>
+   <div id="projectbrief">Batched linear algebra routines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.16.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('rotate_8hpp.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">rotate.hpp File Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &lt;<a class="el" href="simd_8hpp_source.html">batmat/simd.hpp</a>&gt;</code><br />
+<code>#include &lt;cassert&gt;</code><br />
+</div>
+<p><a href="rotate_8hpp_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
+Lane-wise rotations of SIMD vectors</h2></td></tr>
+<tr class="memitem:ga247b1215d2f350a55c60a922efc98e4e" id="r_ga247b1215d2f350a55c60a922efc98e4e"><td class="memTemplParams" colspan="2">template&lt;int S, class F, class Abi&gt; </td></tr>
+<tr class="memitem:ga247b1215d2f350a55c60a922efc98e4e template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-low-level-ops.html#ga247b1215d2f350a55c60a922efc98e4e">batmat::ops::rotl</a> (<a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt; x)</td></tr>
+<tr class="memdesc:ga247b1215d2f350a55c60a922efc98e4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotates the elements of <code class="param">x</code> by <code class="param">s</code> positions to the left.  <br /></td></tr>
+<tr class="memitem:ga99482a68bf78d2c163dcd663b24131c5" id="r_ga99482a68bf78d2c163dcd663b24131c5"><td class="memTemplParams" colspan="2">template&lt;int S, class F, class Abi&gt; </td></tr>
+<tr class="memitem:ga99482a68bf78d2c163dcd663b24131c5 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-low-level-ops.html#ga99482a68bf78d2c163dcd663b24131c5">batmat::ops::rotr</a> (<a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt; x)</td></tr>
+<tr class="memdesc:ga99482a68bf78d2c163dcd663b24131c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotate the elements of <code class="param">x</code> to the right by <code class="param">S</code> positions.  <br /></td></tr>
+<tr class="memitem:gaaa3114a23628a7f5db3d380c07e6d03a" id="r_gaaa3114a23628a7f5db3d380c07e6d03a"><td class="memTemplParams" colspan="2">template&lt;int S, class F, class Abi&gt; </td></tr>
+<tr class="memitem:gaaa3114a23628a7f5db3d380c07e6d03a template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-low-level-ops.html#gaaa3114a23628a7f5db3d380c07e6d03a">batmat::ops::shiftl</a> (<a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt; x)</td></tr>
+<tr class="memdesc:gaaa3114a23628a7f5db3d380c07e6d03a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shift the elements of <code class="param">x</code> to the left by <code class="param">S</code> positions, shifting in zeros.  <br /></td></tr>
+<tr class="memitem:gafd42e3bbc4c662e3384ffc8653fdc6a8" id="r_gafd42e3bbc4c662e3384ffc8653fdc6a8"><td class="memTemplParams" colspan="2">template&lt;int S, class F, class Abi&gt; </td></tr>
+<tr class="memitem:gafd42e3bbc4c662e3384ffc8653fdc6a8 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-low-level-ops.html#gafd42e3bbc4c662e3384ffc8653fdc6a8">batmat::ops::shiftr</a> (<a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt; x)</td></tr>
+<tr class="memdesc:gafd42e3bbc4c662e3384ffc8653fdc6a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shift the elements of <code class="param">x</code> to the right by <code class="param">S</code> positions, shifting in zeros.  <br /></td></tr>
+<tr class="memitem:gaf86c438318c89dd7be953a0633285ef8" id="r_gaf86c438318c89dd7be953a0633285ef8"><td class="memTemplParams" colspan="2">template&lt;class F, class Abi&gt; </td></tr>
+<tr class="memitem:gaf86c438318c89dd7be953a0633285ef8 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt;&#160;</td><td class="memItemRight"><a class="el" href="group__topic-low-level-ops.html#gaf86c438318c89dd7be953a0633285ef8">batmat::ops::rot</a> (<a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt; x, int s)</td></tr>
+<tr class="memdesc:gaf86c438318c89dd7be953a0633285ef8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotate the elements of <code class="param">x</code> to the right by <code class="param">s</code> positions.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:batmat" id="r_batmat"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat.html">batmat</a></td></tr>
+<tr class="memitem:batmat_3A_3Aops" id="r_batmat_3A_3Aops"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1ops.html">batmat::ops</a></td></tr>
+<tr class="memitem:batmat_3A_3Aops_3A_3Adetail" id="r_batmat_3A_3Aops_3A_3Adetail"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1ops_1_1detail.html">batmat::ops::detail</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:af86c438318c89dd7be953a0633285ef8" id="r_af86c438318c89dd7be953a0633285ef8"><td class="memTemplParams" colspan="2">template&lt;class F, class Abi&gt; </td></tr>
+<tr class="memitem:af86c438318c89dd7be953a0633285ef8 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt;&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1ops_1_1detail.html#af86c438318c89dd7be953a0633285ef8">batmat::ops::detail::rot</a> (<a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt; x, int s)</td></tr>
+<tr class="memdesc:af86c438318c89dd7be953a0633285ef8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotate the elements of <code class="param">x</code> to the right by <code class="param">s</code> positions.  <br /></td></tr>
+<tr class="memitem:a9210fe01d8e36639fb10c5145d2fd373" id="r_a9210fe01d8e36639fb10c5145d2fd373"><td class="memTemplParams" colspan="2">template&lt;int S, class F, class Abi&gt; </td></tr>
+<tr class="memitem:a9210fe01d8e36639fb10c5145d2fd373 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt;&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1ops_1_1detail.html#a9210fe01d8e36639fb10c5145d2fd373">batmat::ops::detail::rotl</a> (<a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt; x)</td></tr>
+<tr class="memitem:a5cbbec102f5a2e6220a1d32149ad373d" id="r_a5cbbec102f5a2e6220a1d32149ad373d"><td class="memTemplParams" colspan="2">template&lt;int S, class F, class Abi&gt; </td></tr>
+<tr class="memitem:a5cbbec102f5a2e6220a1d32149ad373d template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt;&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1ops_1_1detail.html#a5cbbec102f5a2e6220a1d32149ad373d">batmat::ops::detail::rotr</a> (<a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt; x)</td></tr>
+<tr class="memitem:a25773d280715f4b8bbf625cbb8653e42" id="r_a25773d280715f4b8bbf625cbb8653e42"><td class="memTemplParams" colspan="2">template&lt;int S, class F, class Abi&gt; </td></tr>
+<tr class="memitem:a25773d280715f4b8bbf625cbb8653e42 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt;&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1ops_1_1detail.html#a25773d280715f4b8bbf625cbb8653e42">batmat::ops::detail::shiftl</a> (<a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt; x)</td></tr>
+<tr class="memitem:a952bfdf95e53d22d4e6b28c39c701dae" id="r_a952bfdf95e53d22d4e6b28c39c701dae"><td class="memTemplParams" colspan="2">template&lt;int S, class F, class Abi&gt; </td></tr>
+<tr class="memitem:a952bfdf95e53d22d4e6b28c39c701dae template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt;&#160;</td><td class="memItemRight"><a class="el" href="namespacebatmat_1_1ops_1_1detail.html#a952bfdf95e53d22d4e6b28c39c701dae">batmat::ops::detail::shiftr</a> (<a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; F, Abi &gt; x)</td></tr>
+</table>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="dir_fb227e489dae4e94b57f952e55a850cd.html">batmat</a></li><li class="navelem"><a href="dir_72d467c23e78781a791bd9375234cac1.html">include</a></li><li class="navelem"><a href="dir_63a8bd2941168c96d494403d8e78330f.html">batmat</a></li><li class="navelem"><a href="dir_49963b07cc1ee01c8c0c2caacff1ea40.html">ops</a></li><li class="navelem"><a href="rotate_8hpp.html">rotate.hpp</a></li>
+    <li class="footer">Generated on <span class="timestamp"></span> for batmat by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
+  </ul>
+</div>
+</body>
+</html>
