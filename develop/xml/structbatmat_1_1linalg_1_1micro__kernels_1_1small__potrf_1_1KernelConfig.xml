@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1micro__kernels_1_1small__potrf_1_1KernelConfig" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::micro_kernels::small_potrf::KernelConfig</compoundname>
+    <includes refid="micro-kernels_2small-potrf_8hpp" local="no">batmat/linalg/micro-kernels/small-potrf.hpp</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1micro__kernels_1_1small__potrf_1_1KernelConfig_1a815ab4f869f7a8cf2bdd9da41ef4266c" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool batmat::linalg::micro_kernels::small_potrf::KernelConfig::negate_A</definition>
+        <argsstring></argsstring>
+        <name>negate_A</name>
+        <qualifiedname>batmat::linalg::micro_kernels::small_potrf::KernelConfig::negate_A</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+<para>Whether to compute chol(C - AAᵀ) instead of chol(C + AAᵀ). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/small-potrf.hpp" line="11" column="10" bodyfile="batmat/include/batmat/linalg/micro-kernels/small-potrf.hpp" bodystart="11" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::micro_kernels::small_potrf::KernelConfig</label>
+        <link refid="structbatmat_1_1linalg_1_1micro__kernels_1_1small__potrf_1_1KernelConfig"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/micro-kernels/small-potrf.hpp" line="10" column="1" bodyfile="batmat/include/batmat/linalg/micro-kernels/small-potrf.hpp" bodystart="10" bodyend="12"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1small__potrf_1_1KernelConfig_1a815ab4f869f7a8cf2bdd9da41ef4266c" prot="public" virt="non-virtual"><scope>batmat::linalg::micro_kernels::small_potrf::KernelConfig</scope><name>negate_A</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

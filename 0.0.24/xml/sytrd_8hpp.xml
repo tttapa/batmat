@@ -1,0 +1,518 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="sytrd_8hpp" kind="file" language="C++">
+    <compoundname>sytrd.hpp</compoundname>
+    <includes refid="assume_8hpp" local="no">batmat/assume.hpp</includes>
+    <includes refid="copy_8hpp" local="no">batmat/linalg/copy.hpp</includes>
+    <includes refid="flops_8hpp" local="no">batmat/linalg/flops.hpp</includes>
+    <includes refid="geqrf_8hpp" local="no">batmat/linalg/geqrf.hpp</includes>
+    <includes refid="micro-kernels_2sytrd_8hpp" local="no">batmat/linalg/micro-kernels/sytrd.hpp</includes>
+    <includes refid="simdify_8hpp" local="no">batmat/linalg/simdify.hpp</includes>
+    <includes refid="triangular_8hpp" local="no">batmat/linalg/triangular.hpp</includes>
+    <includes refid="uview_8hpp" local="no">batmat/linalg/uview.hpp</includes>
+    <includes local="no">guanaqo/trace.hpp</includes>
+    <incdepgraph>
+      <node id="3">
+        <label>batmat/config.hpp</label>
+        <link refid="config_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/assume.hpp</label>
+        <link refid="assume_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>batmat/linalg/copy.hpp</label>
+        <link refid="copy_8hpp"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+      </node>
+      <node id="42">
+        <label>batmat/linalg/flops.hpp</label>
+        <link refid="flops_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+      </node>
+      <node id="43">
+        <label>batmat/linalg/geqrf.hpp</label>
+        <link refid="geqrf_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+      </node>
+      <node id="44">
+        <label>batmat/linalg/micro-kernels/geqrf.hpp</label>
+        <link refid="micro-kernels_2geqrf_8hpp"/>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="46">
+        <label>batmat/linalg/micro-kernels/sytrd.hpp</label>
+        <link refid="micro-kernels_2sytrd_8hpp"/>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="47" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>batmat/linalg/shift.hpp</label>
+        <link refid="shift_8hpp"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>batmat/linalg/simdify.hpp</label>
+        <link refid="simdify_8hpp"/>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="26">
+        <label>batmat/linalg/structure.hpp</label>
+        <link refid="structure_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/sytrd.hpp</label>
+        <link refid="sytrd_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+        <childnode refid="46" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+      </node>
+      <node id="27">
+        <label>batmat/linalg/triangular.hpp</label>
+        <link refid="triangular_8hpp"/>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="28">
+        <label>batmat/linalg/uview.hpp</label>
+        <link refid="uview_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="29">
+        <label>batmat/loop.hpp</label>
+        <link refid="loop_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+      </node>
+      <node id="32">
+        <label>batmat/lut.hpp</label>
+        <link refid="lut_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="19">
+        <label>batmat/matrix/layout.hpp</label>
+        <link refid="layout_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>batmat/matrix/matrix.hpp</label>
+        <link refid="matrix_8hpp"/>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>batmat/matrix/storage.hpp</label>
+        <link refid="storage_8hpp"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="18">
+        <label>batmat/matrix/view.hpp</label>
+        <link refid="view_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="30">
+        <label>batmat/openmp.h</label>
+        <link refid="openmp_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+      </node>
+      <node id="34">
+        <label>batmat/ops/rotate.hpp</label>
+        <link refid="rotate_8hpp"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+      </node>
+      <node id="36">
+        <label>batmat/ops/transpose.hpp</label>
+        <link refid="transpose_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="38">
+        <label>generic.hpp</label>
+        <link refid="generic_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="37">
+        <label>batmat/platform/platform.hpp</label>
+        <link refid="platform_8hpp"/>
+        <childnode refid="38" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>batmat/unroll.h</label>
+        <link refid="unroll_8h"/>
+        <childnode refid="24" relation="include">
+        </childnode>
+      </node>
+      <node id="40">
+        <label>algorithm</label>
+      </node>
+      <node id="45">
+        <label>batmat/micro-kernels/geqrf/export.h</label>
+      </node>
+      <node id="47">
+        <label>batmat/micro-kernels/sytrd/export.h</label>
+      </node>
+      <node id="35">
+        <label>cassert</label>
+      </node>
+      <node id="41">
+        <label>concepts</label>
+      </node>
+      <node id="14">
+        <label>cstddef</label>
+      </node>
+      <node id="4">
+        <label>cstdint</label>
+      </node>
+      <node id="25">
+        <label>experimental/simd</label>
+      </node>
+      <node id="6">
+        <label>guanaqo/assume.hpp</label>
+      </node>
+      <node id="33">
+        <label>guanaqo/lut.hpp</label>
+      </node>
+      <node id="20">
+        <label>guanaqo/mat-view.hpp</label>
+      </node>
+      <node id="24">
+        <label>guanaqo/stringify.h</label>
+      </node>
+      <node id="39">
+        <label>guanaqo/trace.hpp</label>
+      </node>
+      <node id="15">
+        <label>memory</label>
+      </node>
+      <node id="16">
+        <label>new</label>
+      </node>
+      <node id="31">
+        <label>omp.h</label>
+      </node>
+      <node id="9">
+        <label>optional</label>
+      </node>
+      <node id="5">
+        <label>stdfloat</label>
+      </node>
+      <node id="17">
+        <label>tuple</label>
+      </node>
+      <node id="10">
+        <label>type_traits</label>
+      </node>
+      <node id="21">
+        <label>utility</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg">batmat::linalg</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1detail">batmat::linalg::detail</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="assume_8hpp" kindref="compound">batmat/assume.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="copy_8hpp" kindref="compound">batmat/linalg/copy.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="flops_8hpp" kindref="compound">batmat/linalg/flops.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="geqrf_8hpp" kindref="compound">batmat/linalg/geqrf.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="micro-kernels_2sytrd_8hpp" kindref="compound">batmat/linalg/micro-kernels/sytrd.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="simdify_8hpp" kindref="compound">batmat/linalg/simdify.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="triangular_8hpp" kindref="compound">batmat/linalg/triangular.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="uview_8hpp" kindref="compound">batmat/linalg/uview.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;guanaqo/trace.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg" kindref="compound">batmat::linalg</ref><sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1detail" kindref="compound">detail</ref><sp/>{</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>micro_kernels::sytrd::KernelConfig<sp/>Conf,<sp/>StorageOrder<sp/>OD&gt;</highlight></codeline>
+<codeline lineno="17" refid="namespacebatmat_1_1linalg_1_1detail_1ae4eaefe1058ce21f91f0097bc6c0f00b" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1ae4eaefe1058ce21f91f0097bc6c0f00b" kindref="member">sytrd</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OD&gt;</ref><sp/>D,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi&gt;</ref><sp/>W,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi&gt;</ref><sp/>Y)<sp/>{</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Check<sp/>dimensions</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(D.rows()<sp/>==<sp/>D.cols());</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>W.rows()<sp/>==<sp/>0<sp/>||<sp/>(W.cols()<sp/>==<sp/>1<sp/>&amp;&amp;<sp/>W.rows()<sp/>==<sp/>std::max&lt;index_t&gt;(D.cols(),<sp/>1)<sp/>-<sp/>1)<sp/>||</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::make_pair(W.rows(),<sp/>W.cols())<sp/>==<sp/>(<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a257774934be691eab0d88645e5d66585" kindref="member">micro_kernels::sytrd::sytrd_W_size&lt;T, Abi&gt;</ref>)(D));</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" kindref="member">BATMAT_ASSERT</ref>(std::make_pair(Y.rows(),<sp/>Y.cols())<sp/>==</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1aec6b3434b38927a4a28761a901d09825" kindref="member">micro_kernels::sytrd::sytrd_Y_size&lt;T, Abi, OD&gt;</ref>)(D));</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>M<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>D.rows();</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/>[[maybe_unused]]<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>fc<sp/>=<sp/><ref refid="group__topic-linalg-flops_1gad404bc29b57e7ea05e9de3e17855af6f" kindref="member">flops::sytrd</ref>(M);</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__trace__perfetto_1gaa51e3bdc848c54b9290a36579d145375" kindref="member" external="/home/runner/work/batmat/batmat/build/Debug/docs/guanaqo.tag">GUANAQO_TRACE_LINALG</ref>(</highlight><highlight class="stringliteral">&quot;sytrd&quot;</highlight><highlight class="normal">,<sp/>total(fc)<sp/>*<sp/>D.depth());</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Degenerate<sp/>case</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(M<sp/>&lt;<sp/>3)<sp/>[[unlikely]]<sp/>{</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(W.rows()<sp/>&gt;<sp/>0<sp/>&amp;&amp;<sp/>W.cols()<sp/>&gt;<sp/>0)</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>W.set_constant(T{});<sp/></highlight><highlight class="comment">//<sp/>identity</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a42acbf47f23092e96ab27c521034456f" kindref="member">micro_kernels::sytrd::sytrd_register&lt;T, Abi, Conf&gt;</ref>(D,<sp/>W,<sp/>Y);</highlight></codeline>
+<codeline lineno="35"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1_1KernelConfig" kindref="compound">micro_kernels::geqrf::KernelConfig</ref><sp/>Conf,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/Debug/docs/guanaqo.tag">StorageOrder</ref><sp/>OA,</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/Debug/docs/guanaqo.tag">StorageOrder</ref><sp/>OD,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/Debug/docs/guanaqo.tag">StorageOrder</ref><sp/>OB&gt;</highlight></codeline>
+<codeline lineno="39" refid="namespacebatmat_1_1linalg_1_1detail_1aebd16ea2d56a2fd66e4721e93c994757" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1aebd16ea2d56a2fd66e4721e93c994757" kindref="member">sytrd_apply</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OA&gt;</ref><sp/>A,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OD&gt;</ref><sp/>D,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OB&gt;</ref><sp/>B,</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi&gt;</ref><sp/>W,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>transposed)<sp/>{</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1a67314e2becdee2c795c5ea0bd5626451" kindref="member">index_t</ref><sp/>k<sp/>=<sp/>A.rows();</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(k<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(A.data()<sp/>!=<sp/>D.data())</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__topic-linalg_1ga9df61b993f7e79ad21eddb76b4c2089e" kindref="member">linalg::copy</ref>(A.top_rows(1),<sp/>D.top_rows(1));</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1a03de25698d9399975e1b958dc9844ea7" kindref="member">geqrf_apply&lt;T, Abi, Conf&gt;</ref>(A.bottom_rows(k<sp/>-<sp/>1),<sp/>D.bottom_rows(k<sp/>-<sp/>1),</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>B.bottom_left(k<sp/>-<sp/>1,<sp/>k<sp/>-<sp/>1),<sp/>W,<sp/>transposed,<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="48"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="49"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>detail</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="51"><highlight class="comment">///<sp/>@addtogroup<sp/>topic-linalg</highlight></codeline>
+<codeline lineno="52"><highlight class="comment">///<sp/>@{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="54"><highlight class="comment">///<sp/>@name<sp/>Tridiagonalization<sp/>of<sp/>batches<sp/>of<sp/>matrices</highlight></codeline>
+<codeline lineno="55"><highlight class="comment">///<sp/>@{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="57"><highlight class="comment">///<sp/>Tridiagonalization.<sp/>The<sp/>resulting<sp/>diagonal<sp/>and<sp/>subdiagonal<sp/>elements<sp/>overwrite<sp/>D,<sp/>and<sp/>the</highlight></codeline>
+<codeline lineno="58"><highlight class="comment">///<sp/>Householder<sp/>vectors<sp/>are<sp/>stored<sp/>below<sp/>the<sp/>subdiagonal<sp/>(with<sp/>the<sp/>first<sp/>component<sp/>implicitly<sp/>equal</highlight></codeline>
+<codeline lineno="59"><highlight class="comment">///<sp/>to<sp/>1).<sp/>The<sp/>Householder<sp/>coefficients<sp/>are<sp/>stored<sp/>in<sp/>W,<sp/>which<sp/>should<sp/>either<sp/>be<sp/>a<sp/>vector<sp/>of</highlight></codeline>
+<codeline lineno="60"><highlight class="comment">///<sp/>`A.cols()<sp/>-<sp/>1`<sp/>elements,<sp/>or<sp/>a<sp/>matrix<sp/>of<sp/>size<sp/>`sytrd_size_W(A)`.<sp/>If<sp/>W<sp/>has<sp/>zero<sp/>rows,<sp/>the</highlight></codeline>
+<codeline lineno="61"><highlight class="comment">///<sp/>coefficients<sp/>are<sp/>discarded.<sp/>The<sp/>workspace<sp/>Y<sp/>is<sp/>used<sp/>internally<sp/>and<sp/>should<sp/>have<sp/>size</highlight></codeline>
+<codeline lineno="62"><highlight class="comment">///<sp/>`sytrd_Y_size(D)`.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;simdifiable<sp/>VD,<sp/>simdifiable<sp/>VW,<sp/>simdifiable<sp/>VY&gt;</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VD, VW, VY&gt;</ref></highlight></codeline>
+<codeline lineno="65" refid="group__topic-linalg_1gafe1046df4d9d110bf0de31c574a7bcab" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1gafe1046df4d9d110bf0de31c574a7bcab" kindref="member">sytrd</ref>(<ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured&lt;VD, MatrixStructure::LowerTriangular&gt;</ref><sp/>D,<sp/>VW<sp/>&amp;&amp;W,<sp/>VY<sp/>&amp;&amp;Y)<sp/>{</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1ae4eaefe1058ce21f91f0097bc6c0f00b" kindref="member">detail::sytrd&lt;simdified_value_t&lt;VD&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VD&gt;</ref>,<sp/>{}&gt;(<ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(D.<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(W),</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(Y));</highlight></codeline>
+<codeline lineno="68"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;simdifiable<sp/>VA,<sp/>simdifiable<sp/>VD,<sp/>simdifiable<sp/>VB,<sp/>simdifiable<sp/>VW&gt;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VA, VD, VB, VW&gt;</ref></highlight></codeline>
+<codeline lineno="72" refid="group__topic-linalg_1ga7c8d26958b6d77af3d4c9546478a5bc3" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1ga7c8d26958b6d77af3d4c9546478a5bc3" kindref="member">sytrd_apply</ref>(VA<sp/>&amp;&amp;A,<sp/>VD<sp/>&amp;&amp;D,<sp/><ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured&lt;VB, MatrixStructure::LowerTriangular&gt;</ref><sp/>B,<sp/>VW<sp/>&amp;&amp;W,</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>transposed<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1aebd16ea2d56a2fd66e4721e93c994757" kindref="member">detail::sytrd_apply&lt;simdified_value_t&lt;VD&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VD&gt;</ref>,<sp/>{}&gt;(</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(A).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(D),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(B.<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(W).as_const(),</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>transposed);</highlight></codeline>
+<codeline lineno="77"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;simdifiable<sp/>VD,<sp/>simdifiable<sp/>VB,<sp/>simdifiable<sp/>VW&gt;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1a4d10b3bda16dcb168d1b1e078e637bed" kindref="member">simdify_compatible&lt;VD, VB, VW&gt;</ref></highlight></codeline>
+<codeline lineno="81" refid="group__topic-linalg_1gab3146a998647683bfa14886eba07b3e2" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1ga7c8d26958b6d77af3d4c9546478a5bc3" kindref="member">sytrd_apply</ref>(VD<sp/>&amp;&amp;D,<sp/><ref refid="structbatmat_1_1linalg_1_1Structured" kindref="compound">Structured&lt;VB, MatrixStructure::LowerTriangular&gt;</ref><sp/>B,<sp/>VW<sp/>&amp;&amp;W,</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>transposed<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1detail_1aebd16ea2d56a2fd66e4721e93c994757" kindref="member">detail::sytrd_apply&lt;simdified_value_t&lt;VD&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VD&gt;</ref>,<sp/>{}&gt;(</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(D).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(D),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(B.<ref refid="structbatmat_1_1linalg_1_1Structured_1a26a5ce98adb8f2c39eb03c645828d82b" kindref="member">value</ref>).as_const(),<sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(W).as_const(),</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>transposed);</highlight></codeline>
+<codeline lineno="86"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="88"><highlight class="comment">///<sp/>Get<sp/>the<sp/>size<sp/>of<sp/>the<sp/>storage<sp/>for<sp/>the<sp/>matrix<sp/>W<sp/>returned<sp/>by</highlight></codeline>
+<codeline lineno="89"><highlight class="comment">///<sp/>@ref<sp/>sytrd(Structured&lt;VD,<sp/>MatrixStructure::LowerTriangular&gt;<sp/>D,<sp/>VW<sp/>&amp;&amp;W,<sp/>VY<sp/>&amp;&amp;Y).</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;simdifiable<sp/>VD&gt;</highlight></codeline>
+<codeline lineno="91" refid="group__topic-linalg_1gae6813e3ff075204c72a0f2027add45c2" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1gae6813e3ff075204c72a0f2027add45c2" kindref="member">sytrd_size_W</ref>(VD<sp/>&amp;&amp;D)<sp/>{</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a257774934be691eab0d88645e5d66585" kindref="member">micro_kernels::sytrd::sytrd_W_size&lt;const simdified_value_t&lt;VD&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VD&gt;</ref>&gt;(</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(D).as_const());</highlight></codeline>
+<codeline lineno="94"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="96"><highlight class="comment">///<sp/>Get<sp/>the<sp/>size<sp/>of<sp/>the<sp/>storage<sp/>for<sp/>the<sp/>matrix<sp/>Y<sp/>used<sp/>by</highlight></codeline>
+<codeline lineno="97"><highlight class="comment">///<sp/>@ref<sp/>sytrd(Structured&lt;VD,<sp/>MatrixStructure::LowerTriangular&gt;<sp/>D,<sp/>VW<sp/>&amp;&amp;W,<sp/>VY<sp/>&amp;&amp;Y).</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;simdifiable<sp/>VD&gt;</highlight></codeline>
+<codeline lineno="99" refid="group__topic-linalg_1ga78892dba384b75fc12369843671added" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="group__topic-linalg_1ga78892dba384b75fc12369843671added" kindref="member">sytrd_size_Y</ref>(VD<sp/>&amp;&amp;D)<sp/>{</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1aec6b3434b38927a4a28761a901d09825" kindref="member">micro_kernels::sytrd::sytrd_Y_size&lt;const simdified_value_t&lt;VD&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1a06f216a8a2eeca439dd50bfefa8f00a8" kindref="member">simdified_abi_t&lt;VD&gt;</ref>&gt;(</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1a83105b13bb65f22f974c2faffffd40fe" kindref="member">simdify</ref>(D).as_const());</highlight></codeline>
+<codeline lineno="102"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="104"><highlight class="comment">///<sp/>@}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="106"><highlight class="comment">///<sp/>@}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::linalg</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/linalg/sytrd.hpp"/>
+  </compounddef>
+</doxygen>

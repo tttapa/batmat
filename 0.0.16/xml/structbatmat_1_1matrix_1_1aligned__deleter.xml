@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1matrix_1_1aligned__deleter" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::matrix::aligned_deleter</compoundname>
+    <includes refid="storage_8hpp" local="no">batmat/matrix/storage.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>class T</type>
+      </param>
+      <param>
+        <type>class A</type>
+      </param>
+    </templateparamlist>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1aligned__deleter_1a408cdf1797d876f490912433d5a5f95b" prot="public" static="no" mutable="no">
+        <type>size_t</type>
+        <definition>size_t batmat::matrix::aligned_deleter&lt; T, A &gt;::size</definition>
+        <argsstring></argsstring>
+        <name>size</name>
+        <qualifiedname>batmat::matrix::aligned_deleter::size</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/storage.hpp" line="32" column="12" bodyfile="batmat/include/batmat/matrix/storage.hpp" bodystart="32" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1aligned__deleter_1a9916ff7ca02d0e0d8d52ef8ebec223db" compoundref="storage_8hpp" startline="34" endline="37">batmat::matrix::aligned_deleter&lt; T, A &gt;::operator()</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1aligned__deleter_1a9eaec28c3330a1247ab078aa630bc84c" prot="public" static="no" mutable="no">
+        <type>A</type>
+        <definition>A batmat::matrix::aligned_deleter&lt; T, A &gt;::align</definition>
+        <argsstring></argsstring>
+        <name>align</name>
+        <qualifiedname>batmat::matrix::aligned_deleter::align</qualifiedname>
+        <initializer>= {}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/storage.hpp" line="33" column="8" bodyfile="batmat/include/batmat/matrix/storage.hpp" bodystart="33" bodyend="33"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1aligned__deleter_1a9916ff7ca02d0e0d8d52ef8ebec223db" compoundref="storage_8hpp" startline="34" endline="37">batmat::matrix::aligned_deleter&lt; T, A &gt;::operator()</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1aligned__deleter_1a9916ff7ca02d0e0d8d52ef8ebec223db" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void batmat::matrix::aligned_deleter&lt; T, A &gt;::operator()</definition>
+        <argsstring>(T *p) const</argsstring>
+        <name>operator()</name>
+        <qualifiedname>batmat::matrix::aligned_deleter::operator()</qualifiedname>
+        <param>
+          <type>T *</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/storage.hpp" line="34" column="10" bodyfile="batmat/include/batmat/matrix/storage.hpp" bodystart="34" bodyend="37"/>
+        <references refid="structbatmat_1_1matrix_1_1aligned__deleter_1a9eaec28c3330a1247ab078aa630bc84c" compoundref="storage_8hpp" startline="33" endline="33">batmat::matrix::aligned_deleter&lt; T, A &gt;::align</references>
+        <references refid="namespacebatmat_1_1matrix_1aeedf60a3269d97c9ce101e6e58ae60c7" compoundref="storage_8hpp" startline="16" endline="21">batmat::matrix::as_align_val</references>
+        <references refid="structbatmat_1_1matrix_1_1aligned__deleter_1a408cdf1797d876f490912433d5a5f95b" compoundref="storage_8hpp" startline="32">batmat::matrix::aligned_deleter&lt; T, A &gt;::size</references>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Deleter for aligned memory allocated with <computeroutput>operator new(size, align_val)</computeroutput>. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::matrix::aligned_deleter&lt; T, A &gt;</label>
+        <link refid="structbatmat_1_1matrix_1_1aligned__deleter"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/matrix/storage.hpp" line="31" column="1" bodyfile="batmat/include/batmat/matrix/storage.hpp" bodystart="31" bodyend="38"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1matrix_1_1aligned__deleter_1a9eaec28c3330a1247ab078aa630bc84c" prot="public" virt="non-virtual"><scope>batmat::matrix::aligned_deleter</scope><name>align</name></member>
+      <member refid="structbatmat_1_1matrix_1_1aligned__deleter_1a9916ff7ca02d0e0d8d52ef8ebec223db" prot="public" virt="non-virtual"><scope>batmat::matrix::aligned_deleter</scope><name>operator()</name></member>
+      <member refid="structbatmat_1_1matrix_1_1aligned__deleter_1a408cdf1797d876f490912433d5a5f95b" prot="public" virt="non-virtual"><scope>batmat::matrix::aligned_deleter</scope><name>size</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

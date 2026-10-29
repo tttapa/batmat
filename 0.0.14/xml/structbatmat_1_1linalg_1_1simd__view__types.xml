@@ -1,0 +1,356 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1simd__view__types" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::simd_view_types</compoundname>
+    <includes refid="uview_8hpp" local="no">batmat/linalg/uview.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>class T</type>
+      </param>
+      <param>
+        <type>class Abi</type>
+      </param>
+    </templateparamlist>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1simd__view__types_1a3e4c25c327e2601ad1b9064219ddd175" prot="public" static="no">
+        <type>T</type>
+        <definition>using batmat::linalg::simd_view_types&lt; T, Abi &gt;::value_type = T</definition>
+        <argsstring></argsstring>
+        <name>value_type</name>
+        <qualifiedname>batmat::linalg::simd_view_types::value_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="20" column="5" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1simd__view__types_1a55758cb5da1d68a5c7725952a85bc5e2" prot="public" static="no">
+        <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+        <definition>using batmat::linalg::simd_view_types&lt; T, Abi &gt;::simd = datapar::simd&lt;T, Abi&gt;</definition>
+        <argsstring></argsstring>
+        <name>simd</name>
+        <qualifiedname>batmat::linalg::simd_view_types::simd</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="21" column="5" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1simd__view__types_1a19c154e6a5658f01ed58bc60cbebfad4" prot="public" static="no">
+        <type>typename simd::mask_type</type>
+        <definition>using batmat::linalg::simd_view_types&lt; T, Abi &gt;::mask = typename simd::mask_type</definition>
+        <argsstring></argsstring>
+        <name>mask</name>
+        <qualifiedname>batmat::linalg::simd_view_types::mask</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="22" column="5" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1simd__view__types_1a3d993ac48ac2aa24ba37174846a99d5a" prot="public" static="no">
+        <type><ref refid="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" kindref="member">datapar::deduced_simd</ref>&lt; index_t, simd::size()&gt;</type>
+        <definition>using batmat::linalg::simd_view_types&lt; T, Abi &gt;::isimd = datapar::deduced_simd&lt;index_t, simd::size()&gt;</definition>
+        <argsstring></argsstring>
+        <name>isimd</name>
+        <qualifiedname>batmat::linalg::simd_view_types::isimd</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="23" column="5" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1simd__view__types_1a42c8cc3abab740150c78041ab96af477" prot="public" static="no">
+        <type><ref refid="namespacebatmat_1_1datapar_1a497d8b4d202d9476ad67782ba4d4feef" kindref="member">datapar::simd_size</ref>&lt; T, Abi &gt;</type>
+        <definition>using batmat::linalg::simd_view_types&lt; T, Abi &gt;::simd_stride_t = datapar::simd_size&lt;T, Abi&gt;</definition>
+        <argsstring></argsstring>
+        <name>simd_stride_t</name>
+        <qualifiedname>batmat::linalg::simd_view_types::simd_stride_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="24" column="5" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1simd__view__types_1ad69ca1678bb5cf57ac70a816a1455801" prot="public" static="no">
+        <type><ref refid="namespacebatmat_1_1datapar_1a3cbb75e6685dbd98807439ac0dca33f0" kindref="member">datapar::simd_align</ref>&lt; T, Abi &gt;</type>
+        <definition>using batmat::linalg::simd_view_types&lt; T, Abi &gt;::simd_align_t = datapar::simd_align&lt;T, Abi&gt;</definition>
+        <argsstring></argsstring>
+        <name>simd_align_t</name>
+        <qualifiedname>batmat::linalg::simd_view_types::simd_align_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="25" column="5" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1simd__view__types_1aa6529f6b6d3cb02cf031e17adeda9e0d" prot="public" static="no">
+        <type>std::integral_constant&lt; index_t, 1 &gt;</type>
+        <definition>using batmat::linalg::simd_view_types&lt; T, Abi &gt;::one_t = std::integral_constant&lt;index_t, 1&gt;</definition>
+        <argsstring></argsstring>
+        <name>one_t</name>
+        <qualifiedname>batmat::linalg::simd_view_types::one_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="29" column="5" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1simd__view__types_1a6b4cea60e89e5b26e9780bb5a78f33cf" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class S</type>
+            <defval>T</defval>
+          </param>
+          <param>
+            <type><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref></type>
+            <declname>O</declname>
+            <defname>O</defname>
+            <defval>StorageOrder::ColMajor</defval>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1matrix_1_1View" kindref="compound">matrix::View</ref>&lt; S, index_t, <ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a42c8cc3abab740150c78041ab96af477" kindref="member">simd_stride_t</ref>, <ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a42c8cc3abab740150c78041ab96af477" kindref="member">simd_stride_t</ref>, <ref refid="structbatmat_1_1matrix_1_1DefaultStride" kindref="compound">matrix::DefaultStride</ref>, O &gt;</type>
+        <definition>using batmat::linalg::simd_view_types&lt; T, Abi &gt;::view = matrix::View&lt;S, index_t, simd_stride_t, simd_stride_t, matrix::DefaultStride, O&gt;</definition>
+        <argsstring></argsstring>
+        <name>view</name>
+        <qualifiedname>batmat::linalg::simd_view_types::view</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="31" column="5" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1simd__view__types_1a877ab4bf950c52ebb43cdb85928e5a86" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class S</type>
+            <defval>T</defval>
+          </param>
+          <param>
+            <type><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref></type>
+            <declname>O</declname>
+            <defname>O</defname>
+            <defval>StorageOrder::ColMajor</defval>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1matrix_1_1View" kindref="compound">matrix::View</ref>&lt; S, index_t, <ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a42c8cc3abab740150c78041ab96af477" kindref="member">simd_stride_t</ref>, index_t, index_t, O &gt;</type>
+        <definition>using batmat::linalg::simd_view_types&lt; T, Abi &gt;::multi_view = matrix::View&lt;S, index_t, simd_stride_t, index_t, index_t, O&gt;</definition>
+        <argsstring></argsstring>
+        <name>multi_view</name>
+        <qualifiedname>batmat::linalg::simd_view_types::multi_view</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="33" column="5" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1simd__view__types_1a8b5cb1385562b1069a6f28123c4e440c" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class S</type>
+            <defval>T</defval>
+          </param>
+          <param>
+            <type><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref></type>
+            <declname>O</declname>
+            <defname>O</defname>
+            <defval>StorageOrder::ColMajor</defval>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1matrix_1_1View" kindref="compound">matrix::View</ref>&lt; S, index_t, <ref refid="structbatmat_1_1linalg_1_1simd__view__types_1aa6529f6b6d3cb02cf031e17adeda9e0d" kindref="member">one_t</ref>, <ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a42c8cc3abab740150c78041ab96af477" kindref="member">simd_stride_t</ref>, <ref refid="structbatmat_1_1matrix_1_1DefaultStride" kindref="compound">matrix::DefaultStride</ref>, O &gt;</type>
+        <definition>using batmat::linalg::simd_view_types&lt; T, Abi &gt;::scalar_view = matrix::View&lt;S, index_t, one_t, simd_stride_t, matrix::DefaultStride, O&gt;</definition>
+        <argsstring></argsstring>
+        <name>scalar_view</name>
+        <qualifiedname>batmat::linalg::simd_view_types::scalar_view</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="35" column="5" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1simd__view__types_1a3ac560af57195eee28db8b413bfa3cd9" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class S</type>
+            <defval>T</defval>
+          </param>
+          <param>
+            <type><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref></type>
+            <declname>O</declname>
+            <defname>O</defname>
+            <defval>StorageOrder::ColMajor</defval>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1matrix_1_1View" kindref="compound">matrix::View</ref>&lt; S, index_t, <ref refid="structbatmat_1_1linalg_1_1simd__view__types_1aa6529f6b6d3cb02cf031e17adeda9e0d" kindref="member">one_t</ref>, index_t, index_t, O &gt;</type>
+        <definition>using batmat::linalg::simd_view_types&lt; T, Abi &gt;::multi_scalar_view = matrix::View&lt;S, index_t, one_t, index_t, index_t, O&gt;</definition>
+        <argsstring></argsstring>
+        <name>multi_scalar_view</name>
+        <qualifiedname>batmat::linalg::simd_view_types::multi_scalar_view</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="37" column="5" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1simd__view__types_1a811b12ff005bcdf582766586145bc4ba" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class S</type>
+            <defval>T</defval>
+          </param>
+          <param>
+            <type><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref></type>
+            <declname>O</declname>
+            <defname>O</defname>
+            <defval>StorageOrder::ColMajor</defval>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1matrix_1_1Matrix" kindref="compound">matrix::Matrix</ref>&lt; S, index_t, <ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a42c8cc3abab740150c78041ab96af477" kindref="member">simd_stride_t</ref>, index_t, O, <ref refid="structbatmat_1_1linalg_1_1simd__view__types_1ad69ca1678bb5cf57ac70a816a1455801" kindref="member">simd_align_t</ref> &gt;</type>
+        <definition>using batmat::linalg::simd_view_types&lt; T, Abi &gt;::matrix = matrix::Matrix&lt;S, index_t, simd_stride_t, index_t, O, simd_align_t&gt;</definition>
+        <argsstring></argsstring>
+        <name>matrix</name>
+        <qualifiedname>batmat::linalg::simd_view_types::matrix</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="39" column="5" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="39" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1simd__view__types_1af158ae038bbd6b881088c6425833723c" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>auto</type>
+        <definition>auto batmat::linalg::simd_view_types&lt; T, Abi &gt;::simd_stride</definition>
+        <argsstring></argsstring>
+        <name>simd_stride</name>
+        <qualifiedname>batmat::linalg::simd_view_types::simd_stride</qualifiedname>
+        <initializer>= simd_stride_t::value</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="26" column="27" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1simd__view__types_1a546e2ba05c974811cb6aedc72f60a144" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>auto</type>
+        <definition>auto batmat::linalg::simd_view_types&lt; T, Abi &gt;::simd_align</definition>
+        <argsstring></argsstring>
+        <name>simd_align</name>
+        <qualifiedname>batmat::linalg::simd_view_types::simd_align</qualifiedname>
+        <initializer>= simd_align_t::value</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="27" column="27" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="27" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1simd__view__types_1a8783ebeb530f419aaaf36873cdadd876" prot="public" static="yes" const="no" explicit="no" inline="yes" noexcept="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a55758cb5da1d68a5c7725952a85bc5e2" kindref="member">simd</ref></type>
+        <definition>static simd batmat::linalg::simd_view_types&lt; T, Abi &gt;::aligned_load</definition>
+        <argsstring>(const T *p) noexcept</argsstring>
+        <name>aligned_load</name>
+        <qualifiedname>batmat::linalg::simd_view_types::aligned_load</qualifiedname>
+        <param>
+          <type>const T *</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="41" column="17" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="41" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1simd__view__types_1a12f35661aee4a078b8b0b15358c3df5f" prot="public" static="yes" const="no" explicit="no" inline="yes" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>MaskL</declname>
+            <defname>MaskL</defname>
+            <defval>0</defval>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>static void batmat::linalg::simd_view_types&lt; T, Abi &gt;::aligned_store</definition>
+        <argsstring>(simd x, value_type *p) noexcept</argsstring>
+        <name>aligned_store</name>
+        <qualifiedname>batmat::linalg::simd_view_types::aligned_store</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a55758cb5da1d68a5c7725952a85bc5e2" kindref="member">simd</ref></type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a3e4c25c327e2601ad1b9064219ddd175" kindref="member">value_type</ref> *</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="44" column="18" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="44" bodyend="66"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::simd_view_types&lt; T, Abi &gt;</label>
+        <link refid="structbatmat_1_1linalg_1_1simd__view__types"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/uview.hpp" line="19" column="1" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="19" bodyend="67"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a8783ebeb530f419aaaf36873cdadd876" prot="public" virt="non-virtual"><scope>batmat::linalg::simd_view_types</scope><name>aligned_load</name></member>
+      <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a12f35661aee4a078b8b0b15358c3df5f" prot="public" virt="non-virtual"><scope>batmat::linalg::simd_view_types</scope><name>aligned_store</name></member>
+      <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a3d993ac48ac2aa24ba37174846a99d5a" prot="public" virt="non-virtual"><scope>batmat::linalg::simd_view_types</scope><name>isimd</name></member>
+      <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a19c154e6a5658f01ed58bc60cbebfad4" prot="public" virt="non-virtual"><scope>batmat::linalg::simd_view_types</scope><name>mask</name></member>
+      <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a811b12ff005bcdf582766586145bc4ba" prot="public" virt="non-virtual"><scope>batmat::linalg::simd_view_types</scope><name>matrix</name></member>
+      <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a3ac560af57195eee28db8b413bfa3cd9" prot="public" virt="non-virtual"><scope>batmat::linalg::simd_view_types</scope><name>multi_scalar_view</name></member>
+      <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a877ab4bf950c52ebb43cdb85928e5a86" prot="public" virt="non-virtual"><scope>batmat::linalg::simd_view_types</scope><name>multi_view</name></member>
+      <member refid="structbatmat_1_1linalg_1_1simd__view__types_1aa6529f6b6d3cb02cf031e17adeda9e0d" prot="public" virt="non-virtual"><scope>batmat::linalg::simd_view_types</scope><name>one_t</name></member>
+      <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a8b5cb1385562b1069a6f28123c4e440c" prot="public" virt="non-virtual"><scope>batmat::linalg::simd_view_types</scope><name>scalar_view</name></member>
+      <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a55758cb5da1d68a5c7725952a85bc5e2" prot="public" virt="non-virtual"><scope>batmat::linalg::simd_view_types</scope><name>simd</name></member>
+      <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a546e2ba05c974811cb6aedc72f60a144" prot="public" virt="non-virtual"><scope>batmat::linalg::simd_view_types</scope><name>simd_align</name></member>
+      <member refid="structbatmat_1_1linalg_1_1simd__view__types_1ad69ca1678bb5cf57ac70a816a1455801" prot="public" virt="non-virtual"><scope>batmat::linalg::simd_view_types</scope><name>simd_align_t</name></member>
+      <member refid="structbatmat_1_1linalg_1_1simd__view__types_1af158ae038bbd6b881088c6425833723c" prot="public" virt="non-virtual"><scope>batmat::linalg::simd_view_types</scope><name>simd_stride</name></member>
+      <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a42c8cc3abab740150c78041ab96af477" prot="public" virt="non-virtual"><scope>batmat::linalg::simd_view_types</scope><name>simd_stride_t</name></member>
+      <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a3e4c25c327e2601ad1b9064219ddd175" prot="public" virt="non-virtual"><scope>batmat::linalg::simd_view_types</scope><name>value_type</name></member>
+      <member refid="structbatmat_1_1linalg_1_1simd__view__types_1a6b4cea60e89e5b26e9780bb5a78f33cf" prot="public" virt="non-virtual"><scope>batmat::linalg::simd_view_types</scope><name>view</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

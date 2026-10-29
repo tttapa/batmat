@@ -1,0 +1,299 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="group__topic-utils" kind="group">
+    <compoundname>topic-utils</compoundname>
+    <title>Utilities</title>
+    <innerclass refid="classbatmat_1_1thread__pool" prot="public">batmat::thread_pool</innerclass>
+    <sectiondef kind="enum">
+      <memberdef kind="enum" id="group__topic-utils_1gaa625a055ebbfa5ba05a1fd8f1f104807" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>LoopDir</name>
+        <qualifiedname>batmat::LoopDir</qualifiedname>
+        <enumvalue id="group__topic-utils_1ggaa625a055ebbfa5ba05a1fd8f1f104807a67d2f6740a8eaebf4d5c6f79be8da481" prot="public">
+          <name>Forward</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__topic-utils_1ggaa625a055ebbfa5ba05a1fd8f1f104807ab3263eb38f8903efc271cc7a760da510" prot="public">
+          <name>Backward</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/loop.hpp" line="12" column="1" bodyfile="batmat/include/batmat/loop.hpp" bodystart="12" bodyend="15"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group__topic-utils_1ga65fdbfd18ede71fc4fb894153854c2ee" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void batmat::foreach_chunked</definition>
+        <argsstring>(index_t i_begin, index_t i_end, auto chunk_size, auto func_chunk, auto func_rem, LoopDir dir=LoopDir::Forward)</argsstring>
+        <name>foreach_chunked</name>
+        <qualifiedname>batmat::foreach_chunked</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>i_begin</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>i_end</declname>
+        </param>
+        <param>
+          <type>auto</type>
+          <declname>chunk_size</declname>
+        </param>
+        <param>
+          <type>auto</type>
+          <declname>func_chunk</declname>
+        </param>
+        <param>
+          <type>auto</type>
+          <declname>func_rem</declname>
+        </param>
+        <param>
+          <type>LoopDir</type>
+          <declname>dir</declname>
+          <defval>LoopDir::Forward</defval>
+        </param>
+        <briefdescription>
+<para>Iterate over the range <computeroutput>[i_begin, i_end)</computeroutput> in chunks of size <computeroutput>chunk_size</computeroutput>, calling <computeroutput>func_chunk</computeroutput> for each full chunk and <computeroutput>func_rem</computeroutput> for the remaining elements (if any). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/loop.hpp" line="20" column="14" bodyfile="batmat/include/batmat/loop.hpp" bodystart="20" bodyend="38"/>
+        <references refid="group__topic-utils_1ggaa625a055ebbfa5ba05a1fd8f1f104807a67d2f6740a8eaebf4d5c6f79be8da481" compoundref="loop_8hpp" startline="13">batmat::Forward</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a2c5a2006331870dacb985bf041677d2f" compoundref="hyhound_8tpp" startline="264" endline="329">batmat::linalg::micro_kernels::hyhound::hyhound_diag_register</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-utils_1gab76a36340644bbf7c8093caa45aef12f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void batmat::foreach_chunked_merged</definition>
+        <argsstring>(index_t i_begin, index_t i_end, auto chunk_size, auto func_chunk, LoopDir dir=LoopDir::Forward)</argsstring>
+        <name>foreach_chunked_merged</name>
+        <qualifiedname>batmat::foreach_chunked_merged</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>i_begin</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>i_end</declname>
+        </param>
+        <param>
+          <type>auto</type>
+          <declname>chunk_size</declname>
+        </param>
+        <param>
+          <type>auto</type>
+          <declname>func_chunk</declname>
+        </param>
+        <param>
+          <type>LoopDir</type>
+          <declname>dir</declname>
+          <defval>LoopDir::Forward</defval>
+        </param>
+        <briefdescription>
+<para>Iterate over the range <computeroutput>[i_begin, i_end)</computeroutput> in chunks of size <computeroutput>chunk_size</computeroutput>, calling <computeroutput>func_chunk</computeroutput> for each chunk (including the last chunk, which may be smaller than <computeroutput>chunk_size</computeroutput>). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/loop.hpp" line="43" column="14" bodyfile="batmat/include/batmat/loop.hpp" bodystart="43" bodyend="61"/>
+        <references refid="group__topic-utils_1ggaa625a055ebbfa5ba05a1fd8f1f104807a67d2f6740a8eaebf4d5c6f79be8da481" compoundref="loop_8hpp" startline="13">batmat::Forward</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a026a036e2e49617672190bba15b87859" compoundref="copy_8hpp" startline="133" endline="166">batmat::linalg::detail::copy::copy</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a9a004fcdd3237c9903bdd7bc81aa43c3" compoundref="gemm_8tpp" startline="165" endline="295">batmat::linalg::micro_kernels::gemm::gemm_copy_register</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1ac3b0cbc0431188ba51f8861d18a002c6" compoundref="gemm-diag_8tpp" startline="100" endline="184">batmat::linalg::micro_kernels::gemm_diag::gemm_diag_copy_register</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemv_1aafe5591645f17ff88569e8c9fd026e2a" compoundref="gemv_8tpp" startline="79" endline="113">batmat::linalg::micro_kernels::gemv::gemv_copy_register</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1ae92a1b550b2c03dd1a8bc9497d365b64" compoundref="hyhound_8tpp" startline="428" endline="479">batmat::linalg::micro_kernels::hyhound::hyhound_diag_2_register</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1aaf3bb7241f5671570517c0b5a3319741" compoundref="hyhound_8tpp" startline="377" endline="423">batmat::linalg::micro_kernels::hyhound::hyhound_diag_apply_register</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a296680bfcaddeb3c87b4da48edd2c531" compoundref="hyhound_8tpp" startline="490" endline="571">batmat::linalg::micro_kernels::hyhound::hyhound_diag_cyclic_register</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1abb8a02f51481706c9fcde21d335e6bde" compoundref="hyhound_8tpp" startline="334" endline="373">batmat::linalg::micro_kernels::hyhound::hyhound_diag_register</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a5180c328f7daee0ec80eb04fe70a8707" compoundref="hyhound_8tpp" startline="584" endline="662">batmat::linalg::micro_kernels::hyhound::hyhound_diag_riccati_register</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a700219e236a2235161b7db469747c2eb" compoundref="potrf_8tpp" startline="185" endline="228">batmat::linalg::micro_kernels::potrf::potrf_copy_register</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1a7983f41d91ff84c3ab71e3ce41bc8718" compoundref="symv_8tpp" startline="65" endline="91">batmat::linalg::micro_kernels::symv::symv_copy_register</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1af5a554923dce53d14cc5a7a90e5169cb" compoundref="syomv_8tpp" startline="56" endline="84">batmat::linalg::micro_kernels::syomv::syomv_register</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trsm_1a99e84b46532140e0b84a1a60002bd82f" compoundref="trsm_8tpp" startline="85" endline="142">batmat::linalg::micro_kernels::trsm::trsm_copy_register</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1abad0e2c032d6297bf7a2f0a68b771d40" compoundref="trtri_8tpp" startline="132" endline="178">batmat::linalg::micro_kernels::trtri::trtri_copy_register</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-utils_1gae259627b9bd8c02e66d1e244c969e2bc" prot="public" static="no" consteval="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>R</declname>
+            <defname>R</defname>
+          </param>
+          <param>
+            <type>int</type>
+            <declname>C</declname>
+            <defname>C</defname>
+          </param>
+          <param>
+            <type>class F</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::make_2d_lut</definition>
+        <argsstring>(F f)</argsstring>
+        <name>make_2d_lut</name>
+        <qualifiedname>batmat::make_2d_lut</qualifiedname>
+        <param>
+          <type>F</type>
+          <declname>f</declname>
+        </param>
+        <briefdescription>
+<para>Returns a 2D array of the form: </para>
+        </briefdescription>
+        <detaileddescription>
+<para><programlisting><codeline><highlight class="normal">{{<sp/><sp/><sp/>f(0,<sp/>0),<sp/><sp/><sp/><sp/><sp/>f(0,<sp/>1),<sp/><sp/><sp/><sp/>...,<sp/><sp/><sp/>f(0,<sp/>C<sp/>-<sp/>1)<sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/>{<sp/><sp/><sp/>f(1,<sp/>0),<sp/><sp/><sp/><sp/><sp/>f(1,<sp/>1),<sp/><sp/><sp/><sp/>...,<sp/><sp/><sp/>f(1,<sp/>C<sp/>-<sp/>1)<sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/>{<sp/><sp/><sp/><sp/><sp/>...,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>...,<sp/><sp/><sp/><sp/><sp/><sp/>...,<sp/><sp/><sp/><sp/><sp/><sp/><sp/>...<sp/><sp/><sp/><sp/><sp/><sp/><sp/>},</highlight></codeline>
+<codeline><highlight class="normal"><sp/>{<sp/>f(R<sp/>-<sp/>1,<sp/>0),<sp/>f(R<sp/>-<sp/>1,<sp/>1)},<sp/>...,<sp/>f(R<sp/>-<sp/>1,<sp/>C<sp/>-<sp/>1)<sp/>}}</highlight></codeline>
+</programlisting></para>
+<para>The argument <computeroutput>f</computeroutput> should be a function (or callable) that accepts two arguments of type <ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant</ref>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/lut.hpp" line="25" column="16" bodyfile="batmat/include/batmat/lut.hpp" bodystart="25" bodyend="27"/>
+        <references refid="group__core_1ga2c5258d91a8f99e3881957ef0f7865e8">guanaqo::make_2d_lut</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a026a036e2e49617672190bba15b87859" compoundref="copy_8hpp" startline="133" endline="166">batmat::linalg::detail::copy::copy</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-utils_1ga91b0a07e3a00c803e9859ace6b86828f" prot="public" static="no" consteval="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>N</declname>
+            <defname>N</defname>
+          </param>
+          <param>
+            <type>class F</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::make_1d_lut</definition>
+        <argsstring>(F f)</argsstring>
+        <name>make_1d_lut</name>
+        <qualifiedname>batmat::make_1d_lut</qualifiedname>
+        <param>
+          <type>F</type>
+          <declname>f</declname>
+        </param>
+        <briefdescription>
+<para>Returns an array of the form: </para>
+        </briefdescription>
+        <detaileddescription>
+<para><programlisting><codeline><highlight class="normal">{<sp/><sp/><sp/>f(0),<sp/><sp/><sp/><sp/><sp/>f(1),<sp/><sp/><sp/><sp/>...,<sp/><sp/><sp/>f(C<sp/>-<sp/>1)<sp/><sp/><sp/>}</highlight></codeline>
+</programlisting></para>
+<para>The argument <computeroutput>f</computeroutput> should be a function (or callable) that accepts an argument of type <ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant</ref>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/lut.hpp" line="39" column="16" bodyfile="batmat/include/batmat/lut.hpp" bodystart="39" bodyend="41"/>
+        <references refid="group__core_1ga25263b3f2d66d569fe7bff68f626f679">guanaqo::make_1d_lut</references>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-utils_1ga9d3db6b0fa567b730dae54e1f1012165" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void batmat::pool_set_num_threads</definition>
+        <argsstring>(size_t num_threads)</argsstring>
+        <name>pool_set_num_threads</name>
+        <qualifiedname>batmat::pool_set_num_threads</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>num_threads</declname>
+        </param>
+        <briefdescription>
+<para>Set the number of threads in the global thread pool. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/src/thread-pool.cpp" line="11" column="6" bodyfile="batmat/src/thread-pool.cpp" bodystart="11" bodyend="15" declfile="batmat/include/batmat/thread-pool.hpp" declline="111" declcolumn="7"/>
+        <references refid="namespacebatmat_1_1detail_1a20bcf72347bb0bdb2eebbeadcdd5e0b2" compoundref="thread-pool_8cpp" startline="7" endline="9">batmat::detail::pool</references>
+        <references refid="namespacebatmat_1_1detail_1af4ebcc103086a296893602f9b5866fb9" compoundref="thread-pool_8cpp" startline="6">batmat::detail::pool_mtx</references>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-utils_1ga536ae1dd079e87845527154b7f4ecc06" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class I</type>
+            <defval>size_t</defval>
+          </param>
+          <param>
+            <type>class F</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::pool_sync_run_all</definition>
+        <argsstring>(F &amp;&amp;f)</argsstring>
+        <name>pool_sync_run_all</name>
+        <qualifiedname>batmat::pool_sync_run_all</qualifiedname>
+        <param>
+          <type>F &amp;&amp;</type>
+          <declname>f</declname>
+        </param>
+        <briefdescription>
+<para>Run a function on all threads in the global thread pool, synchronously waiting for all threads. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="117" column="7" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="117" bodyend="122"/>
+        <references refid="namespacebatmat_1_1detail_1a20bcf72347bb0bdb2eebbeadcdd5e0b2" compoundref="thread-pool_8cpp" startline="7" endline="9">batmat::detail::pool</references>
+        <references refid="namespacebatmat_1_1detail_1af4ebcc103086a296893602f9b5866fb9" compoundref="thread-pool_8cpp" startline="6">batmat::detail::pool_mtx</references>
+        <referencedby refid="namespacebatmat_1ab410ecec2f820373d48cbe68b4b2fee4" compoundref="loop_8hpp" startline="93" endline="108">batmat::foreach_thread</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-utils_1ga72f329f3122a76019f71f597fa44bae7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class I</type>
+            <defval>size_t</defval>
+          </param>
+          <param>
+            <type>class F</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::pool_sync_run_n</definition>
+        <argsstring>(I n, F &amp;&amp;f)</argsstring>
+        <name>pool_sync_run_n</name>
+        <qualifiedname>batmat::pool_sync_run_n</qualifiedname>
+        <param>
+          <type>I</type>
+          <declname>n</declname>
+        </param>
+        <param>
+          <type>F &amp;&amp;</type>
+          <declname>f</declname>
+        </param>
+        <briefdescription>
+<para>Run a function on the first <computeroutput>n</computeroutput> threads in the global thread pool, synchronously waiting for those threads. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>If <computeroutput>n</computeroutput> is greater than the number of threads in the pool, the pool is expanded.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="129" column="7" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="129" bodyend="134"/>
+        <references refid="namespacebatmat_1_1detail_1a20bcf72347bb0bdb2eebbeadcdd5e0b2" compoundref="thread-pool_8cpp" startline="7" endline="9">batmat::detail::pool</references>
+        <references refid="namespacebatmat_1_1detail_1af4ebcc103086a296893602f9b5866fb9" compoundref="thread-pool_8cpp" startline="6">batmat::detail::pool_mtx</references>
+        <referencedby refid="namespacebatmat_1ad09de96d614741ac248be14af9e8888a" compoundref="loop_8hpp" startline="111" endline="126">batmat::foreach_thread</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Various utilities. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

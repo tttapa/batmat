@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1types_1_1Tail_3_01Types_3_01T_00_01Ts_8_8_8_01_4_01_4" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::types::Tail&lt; Types&lt; T, Ts... &gt; &gt;</compoundname>
+    <includes refid="dtypes_8hpp" local="no">batmat/dtypes.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>class T</type>
+      </param>
+      <param>
+        <type>class...</type>
+        <declname>Ts</declname>
+        <defname>Ts</defname>
+      </param>
+    </templateparamlist>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structbatmat_1_1types_1_1Tail_3_01Types_3_01T_00_01Ts_8_8_8_01_4_01_4_1aa6e18ffa3f0d333183138f49f3b6fb36" prot="public" static="no">
+        <type><ref refid="structbatmat_1_1types_1_1Types" kindref="compound">Types</ref>&lt; Ts... &gt;</type>
+        <definition>using batmat::types::Tail&lt; Types&lt; T, Ts... &gt; &gt;::type = Types&lt;Ts...&gt;</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>batmat::types::Tail&lt; Types&lt; T, Ts... &gt; &gt;::type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="28" column="5" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="28" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::types::Tail&lt; Types&lt; T, Ts... &gt; &gt;</label>
+        <link refid="structbatmat_1_1types_1_1Tail_3_01Types_3_01T_00_01Ts_8_8_8_01_4_01_4"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/dtypes.hpp" line="27" column="1" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="27" bodyend="29"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1types_1_1Tail_3_01Types_3_01T_00_01Ts_8_8_8_01_4_01_4_1aa6e18ffa3f0d333183138f49f3b6fb36" prot="public" virt="non-virtual"><scope>batmat::types::Tail&lt; Types&lt; T, Ts... &gt; &gt;</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

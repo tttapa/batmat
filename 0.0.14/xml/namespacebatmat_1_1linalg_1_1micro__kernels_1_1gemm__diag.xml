@@ -1,0 +1,349 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag" kind="namespace" language="C++">
+    <compoundname>batmat::linalg::micro_kernels::gemm_diag</compoundname>
+    <innerclass refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1_1KernelConfig" prot="public">batmat::linalg::micro_kernels::gemm_diag::KernelConfig</innerclass>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a9bdc8e1700f6f5f0bd26eb0e3632ad5a" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::micro_kernels::gemm_diag::ColsReg</definition>
+        <argsstring></argsstring>
+        <name>ColsReg</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm_diag::ColsReg</qualifiedname>
+        <initializer>= <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>&lt;T, Abi&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" line="35" column="19" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" bodystart="35" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1ab44ba86816595cc9551b7630a3a68857" compoundref="gemm-diag_8tpp" startline="27" endline="95">gemm_diag_copy_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1ac3b0cbc0431188ba51f8861d18a002c6" compoundref="gemm-diag_8tpp" startline="100" endline="184">gemm_diag_copy_register</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a9605630dbb1bcb3b812451fb6bba0b19" prot="public" static="no" constinit="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OC</declname>
+            <defname>OC</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>const constinit auto</type>
+        <definition>const constinit auto batmat::linalg::micro_kernels::gemm_diag::gemm_diag_copy_lut</definition>
+        <argsstring></argsstring>
+        <name>gemm_diag_copy_lut</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm_diag::gemm_diag_copy_lut</qualifiedname>
+        <initializer>                                           = <ref refid="group__topic-utils_1gae259627b9bd8c02e66d1e244c969e2bc" kindref="member">make_2d_lut</ref>&lt;<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>&lt;T, Abi&gt;, <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a9bdc8e1700f6f5f0bd26eb0e3632ad5a" kindref="member">ColsReg</ref>&lt;T, Abi&gt;&gt;(
+[]&lt;index_t Row, index_t Col&gt;(<ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant</ref>&lt;Row&gt;, <ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant</ref>&lt;Col&gt;) {
+    return <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1ab44ba86816595cc9551b7630a3a68857" kindref="member">gemm_diag_copy_microkernel</ref>&lt;T, Abi, Conf, Row + 1, Col + 1, OA, OB, OC, OD&gt;;
+})</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" line="39" column="29" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" bodystart="39" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1ac3b0cbc0431188ba51f8861d18a002c6" compoundref="gemm-diag_8tpp" startline="100" endline="184">gemm_diag_copy_register</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a6bb287d24616b9f621b152bed9359ac9" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>MatrixStructure</type>
+            <declname>Struc</declname>
+            <defname>Struc</defname>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::linalg::micro_kernels::gemm_diag::first_column</definition>
+        <argsstring></argsstring>
+        <name>first_column</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm_diag::first_column</qualifiedname>
+        <initializer>                               =
+[](index_t row_index) { return Struc == <ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629cace546798a67931b38dee5a153f9cf688" kindref="member">MatrixStructure::UpperTriangular</ref> ? row_index : 0; }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm-diag.tpp" line="14" column="23" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm-diag.tpp" bodystart="14" bodyend="15"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1ab44ba86816595cc9551b7630a3a68857" compoundref="gemm-diag_8tpp" startline="27" endline="95">gemm_diag_copy_microkernel</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a536c6b4c514dbe03ac382ab028165a20" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>index_t</type>
+            <declname>ColsReg</declname>
+            <defname>ColsReg</defname>
+          </param>
+          <param>
+            <type>MatrixStructure</type>
+            <declname>Struc</declname>
+            <defname>Struc</defname>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::linalg::micro_kernels::gemm_diag::last_column</definition>
+        <argsstring></argsstring>
+        <name>last_column</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm_diag::last_column</qualifiedname>
+        <initializer>                                  = [](index_t row_index) {
+    return Struc == <ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">MatrixStructure::LowerTriangular</ref> ? std::min(row_index, <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a9bdc8e1700f6f5f0bd26eb0e3632ad5a" kindref="member">ColsReg</ref> - 1)
+                                                     : <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a9bdc8e1700f6f5f0bd26eb0e3632ad5a" kindref="member">ColsReg</ref> - 1;
+}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm-diag.tpp" line="18" column="23" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm-diag.tpp" bodystart="18" bodyend="21"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1ab44ba86816595cc9551b7630a3a68857" compoundref="gemm-diag_8tpp" startline="27" endline="95">gemm_diag_copy_microkernel</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a52c9ed1b17421bb6dbc28e5a7c75fdac" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::micro_kernels::gemm::RowsReg</definition>
+        <argsstring></argsstring>
+        <name>RowsReg</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm_diag::RowsReg</qualifiedname>
+        <briefdescription>
+<para>Register block size of the matrix-matrix multiplication micro-kernels. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>AVX-512 has 32 vector registers, we use 25 registers for a 5×5 accumulator block of matrix C (leaving some registers for loading A and B):</para>
+<para>AVX2 has 16 vector registers, we use 9 registers for a 3×3 accumulator block of matrix C (leaving some registers for loading A and B): <simplesect kind="note"><para>A block size of 4×4 is slightly faster than 3×3 for large matrices, because the even block size results in full cache lines being consumed. For small matrices, 3×3 is faster because it does not spill any registers in the micro-kernels. 2×2 is slower than 3×3 for both small and large matrices (tested using GCC 15.1 on an i7-10750H).</para>
+</simplesect>
+Assumes that the platform has at least 16 vector registers, we use 9 registers for a 3×3 accumulator block of matrix C (leaving some registers for loading A and B):</para>
+<para>NEON has 32 vector registers, we use 16 registers for a 4×4 accumulator block of matrix C (leaving plenty of registers for loading A and B):  </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" line="33" column="1" bodyfile="batmat/include/batmat/platform/avx-512.hpp" bodystart="13" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1ab44ba86816595cc9551b7630a3a68857" compoundref="gemm-diag_8tpp" startline="27" endline="95">gemm_diag_copy_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1ac3b0cbc0431188ba51f8861d18a002c6" compoundref="gemm-diag_8tpp" startline="100" endline="184">gemm_diag_copy_register</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1ab44ba86816595cc9551b7630a3a68857" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>RowsReg</declname>
+            <defname>RowsReg</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>ColsReg</declname>
+            <defname>ColsReg</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OC</declname>
+            <defname>OC</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>std::conditional_t&lt; Conf.track_zeros, std::pair&lt; index_t, index_t &gt;, void &gt;</type>
+        <definition>std::conditional_t&lt; Conf.track_zeros, std::pair&lt; index_t, index_t &gt;, void &gt; batmat::linalg::micro_kernels::gemm_diag::gemm_diag_copy_microkernel</definition>
+        <argsstring>(const uview&lt; const T, Abi, OA &gt; A, const uview&lt; const T, Abi, OB &gt; B, const std::optional&lt; uview&lt; const T, Abi, OC &gt; &gt; C, const uview&lt; T, Abi, OD &gt; D, const uview_vec&lt; const T, Abi &gt; d, const index_t k) noexcept</argsstring>
+        <name>gemm_diag_copy_microkernel</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm_diag::gemm_diag_copy_microkernel</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, OB &gt;</type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; <ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, OC &gt; &gt;</type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview__vec" kindref="compound">uview_vec</ref>&lt; const T, Abi &gt;</type>
+          <declname>diag</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k</declname>
+        </param>
+        <briefdescription>
+<para>Generalized matrix multiplication D = C ± A⁽ᵀ⁾ diag(d) B⁽ᵀ⁾. Single register block. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm-diag.tpp" line="27" column="1" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm-diag.tpp" bodystart="27" bodyend="95" declfile="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" declline="22" declcolumn="1"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a9bdc8e1700f6f5f0bd26eb0e3632ad5a" compoundref="micro-kernels_2gemm-diag_8hpp" startline="35">ColsReg</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a6bb287d24616b9f621b152bed9359ac9" compoundref="gemm-diag_8tpp" startline="14" endline="15">first_column</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a536c6b4c514dbe03ac382ab028165a20" compoundref="gemm-diag_8tpp" startline="18" endline="21">last_column</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a52c9ed1b17421bb6dbc28e5a7c75fdac" compoundref="avx-512_8hpp" startline="13">RowsReg</references>
+        <references refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" compoundref="gemm-diag_8tpp" startline="9">UNROLL_FOR</references>
+        <references refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" compoundref="uview_8hpp" startline="228" endline="230">batmat::linalg::with_cached_access</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1ac3b0cbc0431188ba51f8861d18a002c6" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OC</declname>
+            <defname>OC</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::gemm_diag::gemm_diag_copy_register</definition>
+        <argsstring>(const view&lt; const T, Abi, OA &gt; A, const view&lt; const T, Abi, OB &gt; B, const std::optional&lt; view&lt; const T, Abi, OC &gt; &gt; C, const view&lt; T, Abi, OD &gt; D, view&lt; const T, Abi &gt; d) noexcept</argsstring>
+        <name>gemm_diag_copy_register</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm_diag::gemm_diag_copy_register</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OB &gt;</type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; <ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OC &gt; &gt;</type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>diag</declname>
+        </param>
+        <briefdescription>
+<para>Generalized matrix multiplication D = C ± A⁽ᵀ⁾ diag(d) B⁽ᵀ⁾. Using register blocking. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm-diag.tpp" line="100" column="6" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm-diag.tpp" bodystart="100" bodyend="184" declfile="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" declline="28" declcolumn="6"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a294edbebb26413734307376578d417d1" compoundref="uview_8hpp" startline="110" endline="112">batmat::linalg::uview&lt; T, Abi, Order &gt;::block</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a9bdc8e1700f6f5f0bd26eb0e3632ad5a" compoundref="micro-kernels_2gemm-diag_8hpp" startline="35">ColsReg</references>
+        <references refid="group__topic-utils_1gab76a36340644bbf7c8093caa45aef12f" compoundref="loop_8hpp" startline="43" endline="61">batmat::foreach_chunked_merged</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a9605630dbb1bcb3b812451fb6bba0b19" compoundref="micro-kernels_2gemm-diag_8hpp" startline="39">gemm_diag_copy_lut</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" compoundref="structure_8hpp" startline="8">batmat::linalg::General</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" compoundref="structure_8hpp" startline="8">batmat::linalg::LowerTriangular</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a919a6b84f8b5f2aef171276479a784e0" compoundref="uview_8hpp" startline="118" endline="120">batmat::linalg::uview&lt; T, Abi, Order &gt;::middle_cols</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a8b369f4dec638935df8ff5ebfb37b6f8" compoundref="uview_8hpp" startline="114" endline="116">batmat::linalg::uview&lt; T, Abi, Order &gt;::middle_rows</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1a52c9ed1b17421bb6dbc28e5a7c75fdac" compoundref="avx-512_8hpp" startline="13">RowsReg</references>
+        <references refid="structbatmat_1_1linalg_1_1uview__vec_1a6b3b051a61f41e64a7287b99fc57e301" compoundref="uview_8hpp" startline="162" endline="164">batmat::linalg::uview_vec&lt; T, Abi &gt;::segment</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a4542c3d6af85ceb8fd44acf1dd3ab5b1" compoundref="uview_8hpp" startline="104" endline="108">batmat::linalg::uview&lt; T, Abi, Order &gt;::store</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629cace546798a67931b38dee5a153f9cf688" compoundref="structure_8hpp" startline="8">batmat::linalg::UpperTriangular</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1a2c3d3424f62a8393a28b1d360f411f69" compoundref="gemm-diag_8hpp" startline="21" endline="49">batmat::linalg::detail::gemm_diag::gemm_diag</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" line="11" column="1"/>
+  </compounddef>
+</doxygen>

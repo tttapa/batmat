@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="conceptbatmat_1_1linalg_1_1rotate__opt" kind="concept">
+    <compoundname>batmat::linalg::rotate_opt</compoundname>
+    <includes refid="shift_8hpp" local="no">batmat/linalg/shift.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>class Opt</type>
+      </param>
+    </templateparamlist>
+    <initializer>template&lt;class Opt&gt;
+concept <ref refid="conceptbatmat_1_1linalg_1_1rotate__opt" kindref="compound">batmat::linalg::rotate_opt</ref> =  <ref refid="namespacebatmat_1_1linalg_1a025c96e7210b4e290963004865dfa8c4" kindref="member">is_rotate_opt</ref>&lt;Opt&gt;</initializer>
+    <conceptparts>
+      <codepart line="113">    <programlisting>
+<codeline><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Opt&gt;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">concept<sp/></highlight><highlight class="normal">rotate_opt<sp/>=<sp/>is_rotate_opt&lt;Opt&gt;</highlight></codeline>
+    </programlisting>
+</codepart>
+    </conceptparts>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/shift.hpp" line="113" column="1"/>
+  </compounddef>
+</doxygen>

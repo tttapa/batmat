@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="dir_b8f890d267c2f423150d987ef3045acc" kind="dir">
+    <compoundname>batmat/include/batmat/linalg/micro-kernels</compoundname>
+    <innerfile refid="micro-kernels_2gemm-diag_8hpp">gemm-diag.hpp</innerfile>
+    <innerfile refid="gemm-diag_8tpp">gemm-diag.tpp</innerfile>
+    <innerfile refid="micro-kernels_2gemm_8hpp">gemm.hpp</innerfile>
+    <innerfile refid="gemm_8tpp">gemm.tpp</innerfile>
+    <innerfile refid="micro-kernels_2gemv_8hpp">gemv.hpp</innerfile>
+    <innerfile refid="gemv_8tpp">gemv.tpp</innerfile>
+    <innerfile refid="micro-kernels_2hyhound_8hpp">hyhound.hpp</innerfile>
+    <innerfile refid="hyhound_8tpp">hyhound.tpp</innerfile>
+    <innerfile refid="micro-kernels_2potrf_8hpp">potrf.hpp</innerfile>
+    <innerfile refid="potrf_8tpp">potrf.tpp</innerfile>
+    <innerfile refid="micro-kernels_2symv_8hpp">symv.hpp</innerfile>
+    <innerfile refid="symv_8tpp">symv.tpp</innerfile>
+    <innerfile refid="micro-kernels_2syomv_8hpp">syomv.hpp</innerfile>
+    <innerfile refid="syomv_8tpp">syomv.tpp</innerfile>
+    <innerfile refid="micro-kernels_2trsm_8hpp">trsm.hpp</innerfile>
+    <innerfile refid="trsm_8tpp">trsm.tpp</innerfile>
+    <innerfile refid="micro-kernels_2trtri_8hpp">trtri.hpp</innerfile>
+    <innerfile refid="trtri_8tpp">trtri.tpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/micro-kernels/"/>
+  </compounddef>
+</doxygen>

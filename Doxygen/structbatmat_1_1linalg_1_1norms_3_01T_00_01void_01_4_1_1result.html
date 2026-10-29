@@ -1,0 +1,371 @@
+<!-- HTML header for doxygen 1.16.1-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.16.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>batmat: batmat::linalg::norms&lt; T, void &gt;::result Struct Reference</title>
+<link rel="icon" href="batmat-small.png" type="image/x-icon" />
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+window.MathJax = {
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  },
+  loader: {
+    load: ['[tex]/ams']
+  },
+  tex: {
+    macros: {    Reals: "{\\mathrm{I\\!R}}",
+    Nats: "{\\mathrm{I\\!N}}",
+    Cplx: "{\\mathbb{C}}",
+    R: "{\\Reals}",
+    N: "{\\Nats}",
+    C: "{\\Cplx}",
+    Rn: "{\\Reals^n}",
+    Rm: "{\\Reals^m}",
+    gph: "{\\operatorname{\\mathbf{gph}}}",
+    zer: "{\\operatorname{\\mathbf{zer}}}",
+    fix: "{\\operatorname{\\mathbf{fix}}}",
+    minimize: "{\\operatorname*{\\mathbf{minimize}}}",
+    st: "{\\operatorname*{\\mathbf{s.\\!t.}}}",
+    argmin: "{\\operatorname*{\\mathbf{arg\\,min}}}",
+    argmax: "{\\operatorname*{\\mathbf{arg\\,max}}}",
+    subjto: "{\\operatorname*{\\mathbf{subject\\;to}}}",
+    prox: "{\\operatorname{\\mathbf{prox}}}",
+    Hilb: "{\\mathcal{H}}",
+    proj: ["{\\operatorname{\\mathbf{\\Pi}_\\mathnormal{#1}}}",1],
+    dist: "{\\operatorname{\\mathbf{dist}}}",
+    Id: "{\\mathrm{Id}}",
+    I: "{\\mathrm{I}}",
+    one: "{\\mathbf{1}}",
+    defeq: "{\\triangleq}",
+    inprod: ["{\\left\\langle {#1} \\,\\middle|\\, {#2} \\right\\rangle}",2],
+    norm: ["{\\left\\| {#1} \\vphantom{X} \\right\\|}",1],
+    normsq: ["{\\norm{#1}^2}",1],
+    defset: ["{\\left\\{ {#1} \\;\\middle|\\; {#2} \\right\\}}",2],
+    tp: ["{#1^\\top}",1],
+    ttp: ["{#1^{\\!\\top\\!}}",1],
+    herm: ["{#1^\\mathrm{H}}",1],
+    invherm: ["{#1^{-\\mathrm{H}}}",1],
+    inv: ["{#1^{-1}}",1],
+    pinv: ["{#1^\\dagger}",1],
+    lconj: "{\\overline}",
+    sconj: ["{#1^*}",1],
+    iddots: "{\\mathinner{\\kern1mu\\raise1pt{.}\\kern2mu\\raise4pt{.}\\kern2mu\\raise7pt{\\Rule{0pt}{7pt}{0pt}.}\\kern1mu}}",
+    imagfun: ["{\\left(#1\\right)\\left(#2\\right)}",2],
+    Lagr: "{\\mathcal{L}}",
+    jac: "{\\mathrm{J}}",
+    dft: "{\\operatorname{\\mathbf{dft}}}",
+    cbrt: ["{\\sqrt[3]{#1}}",1],
+    sgn: "{\\operatorname{\\mathbf{sgn}}}",
+    setmap: "{\\rightrightarrows}",
+    lammin: "{\\lambda_\\text{min}}",
+    lammax: "{\\lambda_\\text{max}}",
+    Sc: "{\\mathcal{S}}",
+    Scstar: "{\\mathcal{S}^*}",
+    diag: "{\\operatorname{\\mathbf{diag}}}",
+    blkdiag: "{\\operatorname{\\mathbf{blkdiag}}}",
+    posdef: "{\\succ}",
+    possdef: "{\\succeq}",
+    half: "{\\tfrac{1}{2}}",
+    hhbar: "{\\hbar}",
+    barxuk: "{\\bar x^k\\!, \\bar u^k}",
+    },
+    packages: ['base','configmacros','newcommand','ams']
+  }
+};
+window.MathJax.tex.tags = 'ams';
+</script>
+<script type="text/javascript" id="MathJax-script" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script type="text/javascript" src="darkmode_toggle.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="batmat-small.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">batmat<span id="projectnumber">&#160;<code><a href="/batmat/index.html">main</a></code></span>
+   </div>
+   <div id="projectbrief">Batched linear algebra routines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.16.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result.html','','structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result-members'); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">batmat::linalg::norms&lt; T, void &gt;::result Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="norms_8hpp_source.html">batmat/linalg/norms.hpp</a>&gt;</code></p>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;class T&gt;<br />
+struct batmat::linalg::norms&lt; T, void &gt;::result</div><p>Accumulator. </p>
+
+<p class="definition">Definition at line <a class="el" href="norms_8hpp_source.html#l00078">78</a> of file <a class="el" href="norms_8hpp_source.html">norms.hpp</a>.</p>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:af8feb59bdcc8f88cc01931e28cd2fe6d" id="r_af8feb59bdcc8f88cc01931e28cd2fe6d"><td class="memItemLeft">T&#160;</td><td class="memItemRight"><a class="el" href="#af8feb59bdcc8f88cc01931e28cd2fe6d">norm_1</a> () const</td></tr>
+<tr class="memdesc:af8feb59bdcc8f88cc01931e28cd2fe6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">ℓ₁ norm.  <br /></td></tr>
+<tr class="memitem:aadf520c2e543266639608ceaf5db81f1" id="r_aadf520c2e543266639608ceaf5db81f1"><td class="memItemLeft">T&#160;</td><td class="memItemRight"><a class="el" href="#aadf520c2e543266639608ceaf5db81f1">norm_2</a> () const</td></tr>
+<tr class="memdesc:aadf520c2e543266639608ceaf5db81f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">ℓ₂ norm.  <br /></td></tr>
+<tr class="memitem:a4506ea29753ffad2446c91a482d898dc" id="r_a4506ea29753ffad2446c91a482d898dc"><td class="memItemLeft">T&#160;</td><td class="memItemRight"><a class="el" href="#a4506ea29753ffad2446c91a482d898dc">norm_inf</a> () const</td></tr>
+<tr class="memdesc:a4506ea29753ffad2446c91a482d898dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">max-norm.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a5318bc89ad1183d6bbeffd6ff614cb1f" id="r_a5318bc89ad1183d6bbeffd6ff614cb1f"><td class="memItemLeft">T&#160;</td><td class="memItemRight"><a class="el" href="#a5318bc89ad1183d6bbeffd6ff614cb1f">amax</a></td></tr>
+<tr class="memdesc:a5318bc89ad1183d6bbeffd6ff614cb1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum absolute value (ignoring NaNs).  <br /></td></tr>
+<tr class="memitem:a8fcefdf2eb9f87353d06855a9d26e86d" id="r_a8fcefdf2eb9f87353d06855a9d26e86d"><td class="memItemLeft">T&#160;</td><td class="memItemRight"><a class="el" href="#a8fcefdf2eb9f87353d06855a9d26e86d">asum</a></td></tr>
+<tr class="memitem:ab7e83008f054b377039d2174f5f5943e" id="r_ab7e83008f054b377039d2174f5f5943e"><td class="memItemLeft">T&#160;</td><td class="memItemRight"><a class="el" href="#ab7e83008f054b377039d2174f5f5943e">sumsq</a></td></tr>
+</table>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="af8feb59bdcc8f88cc01931e28cd2fe6d" name="af8feb59bdcc8f88cc01931e28cd2fe6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8feb59bdcc8f88cc01931e28cd2fe6d">&#9670;&#160;</a></span>norm_1()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T <a class="el" href="structbatmat_1_1linalg_1_1norms.html">batmat::linalg::norms</a>&lt; T, void &gt;::result::norm_1 </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>ℓ₁ norm. </p>
+
+<p class="definition">Definition at line <a class="el" href="norms_8hpp_source.html#l00084">84</a> of file <a class="el" href="norms_8hpp_source.html">norms.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aadf520c2e543266639608ceaf5db81f1" name="aadf520c2e543266639608ceaf5db81f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aadf520c2e543266639608ceaf5db81f1">&#9670;&#160;</a></span>norm_2()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T <a class="el" href="structbatmat_1_1linalg_1_1norms.html">batmat::linalg::norms</a>&lt; T, void &gt;::result::norm_2 </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>ℓ₂ norm. </p>
+
+<p class="definition">Definition at line <a class="el" href="norms_8hpp_source.html#l00086">86</a> of file <a class="el" href="norms_8hpp_source.html">norms.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a4506ea29753ffad2446c91a482d898dc" name="a4506ea29753ffad2446c91a482d898dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4506ea29753ffad2446c91a482d898dc">&#9670;&#160;</a></span>norm_inf()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T <a class="el" href="structbatmat_1_1linalg_1_1norms.html">batmat::linalg::norms</a>&lt; T, void &gt;::result::norm_inf </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>max-norm. </p>
+
+<p class="definition">Definition at line <a class="el" href="norms_8hpp_source.html#l00091">91</a> of file <a class="el" href="norms_8hpp_source.html">norms.hpp</a>.</p>
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="a5318bc89ad1183d6bbeffd6ff614cb1f" name="a5318bc89ad1183d6bbeffd6ff614cb1f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5318bc89ad1183d6bbeffd6ff614cb1f">&#9670;&#160;</a></span>amax</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">T <a class="el" href="structbatmat_1_1linalg_1_1norms.html">batmat::linalg::norms</a>&lt; T, void &gt;::result::amax</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Maximum absolute value (ignoring NaNs). </p>
+
+<p class="definition">Definition at line <a class="el" href="norms_8hpp_source.html#l00079">79</a> of file <a class="el" href="norms_8hpp_source.html">norms.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a8fcefdf2eb9f87353d06855a9d26e86d" name="a8fcefdf2eb9f87353d06855a9d26e86d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8fcefdf2eb9f87353d06855a9d26e86d">&#9670;&#160;</a></span>asum</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">T <a class="el" href="structbatmat_1_1linalg_1_1norms.html">batmat::linalg::norms</a>&lt; T, void &gt;::result::asum</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="norms_8hpp_source.html#l00080">80</a> of file <a class="el" href="norms_8hpp_source.html">norms.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ab7e83008f054b377039d2174f5f5943e" name="ab7e83008f054b377039d2174f5f5943e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7e83008f054b377039d2174f5f5943e">&#9670;&#160;</a></span>sumsq</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">T <a class="el" href="structbatmat_1_1linalg_1_1norms.html">batmat::linalg::norms</a>&lt; T, void &gt;::result::sumsq</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="norms_8hpp_source.html#l00081">81</a> of file <a class="el" href="norms_8hpp_source.html">norms.hpp</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>batmat/include/batmat/linalg/<a class="el" href="norms_8hpp_source.html">norms.hpp</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="namespacebatmat.html">batmat</a></li><li class="navelem"><a href="namespacebatmat_1_1linalg.html">linalg</a></li><li class="navelem"><a href="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4.html">norms&lt; T, void &gt;</a></li><li class="navelem"><a href="structbatmat_1_1linalg_1_1norms_3_01T_00_01void_01_4_1_1result.html">result</a></li>
+    <li class="footer">Generated on <span class="timestamp"></span> for batmat by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
+  </ul>
+</div>
+</body>
+</html>

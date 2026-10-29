@@ -1,0 +1,812 @@
+<!-- HTML header for doxygen 1.16.1-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.16.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>batmat: batmat::linalg::uview&lt; T, Abi, Order &gt; Struct Template Reference</title>
+<link rel="icon" href="batmat-small.png" type="image/x-icon" />
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+window.MathJax = {
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  },
+  loader: {
+    load: ['[tex]/ams']
+  },
+  tex: {
+    macros: {    Reals: "{\\mathrm{I\\!R}}",
+    Nats: "{\\mathrm{I\\!N}}",
+    Cplx: "{\\mathbb{C}}",
+    R: "{\\Reals}",
+    N: "{\\Nats}",
+    C: "{\\Cplx}",
+    Rn: "{\\Reals^n}",
+    Rm: "{\\Reals^m}",
+    gph: "{\\operatorname{\\mathbf{gph}}}",
+    zer: "{\\operatorname{\\mathbf{zer}}}",
+    fix: "{\\operatorname{\\mathbf{fix}}}",
+    minimize: "{\\operatorname*{\\mathbf{minimize}}}",
+    st: "{\\operatorname*{\\mathbf{s.\\!t.}}}",
+    argmin: "{\\operatorname*{\\mathbf{arg\\,min}}}",
+    argmax: "{\\operatorname*{\\mathbf{arg\\,max}}}",
+    subjto: "{\\operatorname*{\\mathbf{subject\\;to}}}",
+    prox: "{\\operatorname{\\mathbf{prox}}}",
+    Hilb: "{\\mathcal{H}}",
+    proj: ["{\\operatorname{\\mathbf{\\Pi}_\\mathnormal{#1}}}",1],
+    dist: "{\\operatorname{\\mathbf{dist}}}",
+    Id: "{\\mathrm{Id}}",
+    I: "{\\mathrm{I}}",
+    one: "{\\mathbf{1}}",
+    defeq: "{\\triangleq}",
+    inprod: ["{\\left\\langle {#1} \\,\\middle|\\, {#2} \\right\\rangle}",2],
+    norm: ["{\\left\\| {#1} \\vphantom{X} \\right\\|}",1],
+    normsq: ["{\\norm{#1}^2}",1],
+    defset: ["{\\left\\{ {#1} \\;\\middle|\\; {#2} \\right\\}}",2],
+    tp: ["{#1^\\top}",1],
+    ttp: ["{#1^{\\!\\top\\!}}",1],
+    herm: ["{#1^\\mathrm{H}}",1],
+    invherm: ["{#1^{-\\mathrm{H}}}",1],
+    inv: ["{#1^{-1}}",1],
+    pinv: ["{#1^\\dagger}",1],
+    lconj: "{\\overline}",
+    sconj: ["{#1^*}",1],
+    iddots: "{\\mathinner{\\kern1mu\\raise1pt{.}\\kern2mu\\raise4pt{.}\\kern2mu\\raise7pt{\\Rule{0pt}{7pt}{0pt}.}\\kern1mu}}",
+    imagfun: ["{\\left(#1\\right)\\left(#2\\right)}",2],
+    Lagr: "{\\mathcal{L}}",
+    jac: "{\\mathrm{J}}",
+    dft: "{\\operatorname{\\mathbf{dft}}}",
+    cbrt: ["{\\sqrt[3]{#1}}",1],
+    sgn: "{\\operatorname{\\mathbf{sgn}}}",
+    setmap: "{\\rightrightarrows}",
+    lammin: "{\\lambda_\\text{min}}",
+    lammax: "{\\lambda_\\text{max}}",
+    Sc: "{\\mathcal{S}}",
+    Scstar: "{\\mathcal{S}^*}",
+    diag: "{\\operatorname{\\mathbf{diag}}}",
+    blkdiag: "{\\operatorname{\\mathbf{blkdiag}}}",
+    posdef: "{\\succ}",
+    possdef: "{\\succeq}",
+    half: "{\\tfrac{1}{2}}",
+    hhbar: "{\\hbar}",
+    barxuk: "{\\bar x^k\\!, \\bar u^k}",
+    },
+    packages: ['base','configmacros','newcommand','ams']
+  }
+};
+window.MathJax.tex.tags = 'ams';
+</script>
+<script type="text/javascript" id="MathJax-script" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script type="text/javascript" src="darkmode_toggle.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="batmat-small.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">batmat<span id="projectnumber">&#160;<code><a href="/batmat/index.html">0.0.14</a></code></span>
+   </div>
+   <div id="projectbrief">Batched linear algebra routines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.16.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('structbatmat_1_1linalg_1_1uview.html','','structbatmat_1_1linalg_1_1uview-members'); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">batmat::linalg::uview&lt; T, Abi, Order &gt; Struct Template Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="uview_8hpp_source.html">batmat/linalg/uview.hpp</a>&gt;</code></p>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt;<br />
+struct batmat::linalg::uview&lt; T, Abi, Order &gt;</div>
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00080">80</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a08c194f0c3d89310e1de67b2418e1629" id="r_a08c194f0c3d89310e1de67b2418e1629"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a08c194f0c3d89310e1de67b2418e1629">value_type</a> = T</td></tr>
+<tr class="memitem:abe088c79c02da2d23e44191a5618f1f8" id="r_abe088c79c02da2d23e44191a5618f1f8"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#abe088c79c02da2d23e44191a5618f1f8">types</a> = <a class="el" href="structbatmat_1_1linalg_1_1simd__view__types.html">simd_view_types</a>&lt;std::remove_const_t&lt;T&gt;, Abi&gt;</td></tr>
+<tr class="memitem:a124093dc1c7f0b3ecf7e1d1fa0e02076" id="r_a124093dc1c7f0b3ecf7e1d1fa0e02076"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a124093dc1c7f0b3ecf7e1d1fa0e02076">view</a> = types::template <a class="el" href="#a124093dc1c7f0b3ecf7e1d1fa0e02076">view</a>&lt;T, Order&gt;</td></tr>
+<tr class="memitem:a3f80ee6e462af097c6a2ed9531233e16" id="r_a3f80ee6e462af097c6a2ed9531233e16"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a3f80ee6e462af097c6a2ed9531233e16">mut_view</a> = types::template <a class="el" href="#a124093dc1c7f0b3ecf7e1d1fa0e02076">view</a>&lt;std::remove_const_t&lt;T&gt;, Order&gt;</td></tr>
+<tr class="memitem:a8a22cc99544bb38d717e4776aeebc104" id="r_a8a22cc99544bb38d717e4776aeebc104"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a8a22cc99544bb38d717e4776aeebc104">mut_uview</a> = <a class="el" href="#ae22841d71a01ed13b2a6cf632bd2925c">uview</a>&lt;std::remove_const_t&lt;T&gt;, Abi, Order&gt;</td></tr>
+<tr class="memitem:aea334a177c7ae7eecf43ff1b22ba0be4" id="r_aea334a177c7ae7eecf43ff1b22ba0be4"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#aea334a177c7ae7eecf43ff1b22ba0be4">simd</a> = typename <a class="el" href="structbatmat_1_1linalg_1_1simd__view__types.html#a55758cb5da1d68a5c7725952a85bc5e2">types::simd</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:adc090e9a51c470781c49eb33a2d9d9de" id="r_adc090e9a51c470781c49eb33a2d9d9de"><td class="memItemLeft"><a class="el" href="#a08c194f0c3d89310e1de67b2418e1629">value_type</a> *&#160;</td><td class="memItemRight"><a class="el" href="#adc090e9a51c470781c49eb33a2d9d9de">get</a> (index_t r, index_t c) const noexcept</td></tr>
+<tr class="memitem:a9584e5bcf040086a92fabad0ad2555d8" id="r_a9584e5bcf040086a92fabad0ad2555d8"><td class="memItemLeft"><a class="el" href="#a08c194f0c3d89310e1de67b2418e1629">value_type</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a9584e5bcf040086a92fabad0ad2555d8">operator()</a> (index_t r, index_t c) const noexcept</td></tr>
+<tr class="memitem:a84e59bc69f5cb0f4f3dd9da7bf78afdf" id="r_a84e59bc69f5cb0f4f3dd9da7bf78afdf"><td class="memItemLeft"><a class="el" href="#aea334a177c7ae7eecf43ff1b22ba0be4">simd</a>&#160;</td><td class="memItemRight"><a class="el" href="#a84e59bc69f5cb0f4f3dd9da7bf78afdf">load</a> (index_t r, index_t c) const noexcept</td></tr>
+<tr class="memitem:a4542c3d6af85ceb8fd44acf1dd3ab5b1" id="r_a4542c3d6af85ceb8fd44acf1dd3ab5b1"><td class="memTemplParams" colspan="2">template&lt;int MaskL = 0&gt; <br />
+requires (!std::is_const_v&lt;T&gt;)</td></tr>
+<tr class="memitem:a4542c3d6af85ceb8fd44acf1dd3ab5b1 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4542c3d6af85ceb8fd44acf1dd3ab5b1">store</a> (<a class="el" href="#aea334a177c7ae7eecf43ff1b22ba0be4">simd</a> x, index_t r, index_t c) const noexcept</td></tr>
+<tr class="memitem:a294edbebb26413734307376578d417d1" id="r_a294edbebb26413734307376578d417d1"><td class="memTemplParams" colspan="2">template&lt;class Self&gt; </td></tr>
+<tr class="memitem:a294edbebb26413734307376578d417d1 template"><td class="memItemLeft">Self&#160;</td><td class="memItemRight"><a class="el" href="#a294edbebb26413734307376578d417d1">block</a> (this const Self &amp;self, index_t r, index_t c) noexcept</td></tr>
+<tr class="memitem:a8b369f4dec638935df8ff5ebfb37b6f8" id="r_a8b369f4dec638935df8ff5ebfb37b6f8"><td class="memTemplParams" colspan="2">template&lt;class Self&gt; </td></tr>
+<tr class="memitem:a8b369f4dec638935df8ff5ebfb37b6f8 template"><td class="memItemLeft">Self&#160;</td><td class="memItemRight"><a class="el" href="#a8b369f4dec638935df8ff5ebfb37b6f8">middle_rows</a> (this const Self &amp;self, index_t r) noexcept</td></tr>
+<tr class="memitem:a919a6b84f8b5f2aef171276479a784e0" id="r_a919a6b84f8b5f2aef171276479a784e0"><td class="memTemplParams" colspan="2">template&lt;class Self&gt; </td></tr>
+<tr class="memitem:a919a6b84f8b5f2aef171276479a784e0 template"><td class="memItemLeft">Self&#160;</td><td class="memItemRight"><a class="el" href="#a919a6b84f8b5f2aef171276479a784e0">middle_cols</a> (this const Self &amp;self, index_t c) noexcept</td></tr>
+<tr class="memitem:ae22841d71a01ed13b2a6cf632bd2925c" id="r_ae22841d71a01ed13b2a6cf632bd2925c"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ae22841d71a01ed13b2a6cf632bd2925c">uview</a> (<a class="el" href="#a08c194f0c3d89310e1de67b2418e1629">value_type</a> *<a class="el" href="#ab999f5de40cebdc370e44e17d578a8c5">data</a>, index_t <a class="el" href="#a692b9e04ee6f1d2765061c8f73971738">outer_stride</a>) noexcept</td></tr>
+<tr class="memitem:a402745026da731de3de479f33afd4af7" id="r_a402745026da731de3de479f33afd4af7"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a402745026da731de3de479f33afd4af7">uview</a> (const <a class="el" href="#a3f80ee6e462af097c6a2ed9531233e16">mut_view</a> &amp;v) noexcept</td></tr>
+<tr class="memitem:a3fc1297ea3f4c94bdd802a55ef042a0e" id="r_a3fc1297ea3f4c94bdd802a55ef042a0e"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a3fc1297ea3f4c94bdd802a55ef042a0e">uview</a> (const <a class="el" href="#a124093dc1c7f0b3ecf7e1d1fa0e02076">view</a> &amp;v) noexcept</td></tr>
+<tr class="memitem:aeb3450b71fc7b3bb44251940d1012c31" id="r_aeb3450b71fc7b3bb44251940d1012c31"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aeb3450b71fc7b3bb44251940d1012c31">uview</a> (const <a class="el" href="#a8a22cc99544bb38d717e4776aeebc104">mut_uview</a> &amp;o) noexcept</td></tr>
+<tr class="memitem:aa19c47965654852023713266c53984d2" id="r_aa19c47965654852023713266c53984d2"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aa19c47965654852023713266c53984d2">uview</a> (const uview &amp;o)=default</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ab999f5de40cebdc370e44e17d578a8c5" id="r_ab999f5de40cebdc370e44e17d578a8c5"><td class="memItemLeft"><a class="el" href="#a08c194f0c3d89310e1de67b2418e1629">value_type</a> *&#160;</td><td class="memItemRight"><a class="el" href="#ab999f5de40cebdc370e44e17d578a8c5">data</a></td></tr>
+<tr class="memitem:a692b9e04ee6f1d2765061c8f73971738" id="r_a692b9e04ee6f1d2765061c8f73971738"><td class="memItemLeft">index_t&#160;</td><td class="memItemRight"><a class="el" href="#a692b9e04ee6f1d2765061c8f73971738">outer_stride</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a9a4ef75a511e1148d3eb14f30752150f" id="r_a9a4ef75a511e1148d3eb14f30752150f"><td class="memItemLeft">static constexpr ptrdiff_t&#160;</td><td class="memItemRight"><a class="el" href="#a9a4ef75a511e1148d3eb14f30752150f">inner_stride</a> = typename <a class="el" href="structbatmat_1_1linalg_1_1simd__view__types.html#a42c8cc3abab740150c78041ab96af477">types::simd_stride_t</a>()</td></tr>
+</table>
+<a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
+<a id="a08c194f0c3d89310e1de67b2418e1629" name="a08c194f0c3d89310e1de67b2418e1629"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08c194f0c3d89310e1de67b2418e1629">&#9670;&#160;</a></span>value_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::value_type = T</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00081">81</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="abe088c79c02da2d23e44191a5618f1f8" name="abe088c79c02da2d23e44191a5618f1f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe088c79c02da2d23e44191a5618f1f8">&#9670;&#160;</a></span>types</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::types = <a class="el" href="structbatmat_1_1linalg_1_1simd__view__types.html">simd_view_types</a>&lt;std::remove_const_t&lt;T&gt;, Abi&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00085">85</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a124093dc1c7f0b3ecf7e1d1fa0e02076" name="a124093dc1c7f0b3ecf7e1d1fa0e02076"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a124093dc1c7f0b3ecf7e1d1fa0e02076">&#9670;&#160;</a></span>view</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::view = types::template <a class="el" href="#a124093dc1c7f0b3ecf7e1d1fa0e02076">view</a>&lt;T, Order&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00086">86</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a3f80ee6e462af097c6a2ed9531233e16" name="a3f80ee6e462af097c6a2ed9531233e16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f80ee6e462af097c6a2ed9531233e16">&#9670;&#160;</a></span>mut_view</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::mut_view = types::template <a class="el" href="#a124093dc1c7f0b3ecf7e1d1fa0e02076">view</a>&lt;std::remove_const_t&lt;T&gt;, Order&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00087">87</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a8a22cc99544bb38d717e4776aeebc104" name="a8a22cc99544bb38d717e4776aeebc104"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a22cc99544bb38d717e4776aeebc104">&#9670;&#160;</a></span>mut_uview</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::mut_uview = <a class="el" href="#ae22841d71a01ed13b2a6cf632bd2925c">uview</a>&lt;std::remove_const_t&lt;T&gt;, Abi, Order&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00088">88</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aea334a177c7ae7eecf43ff1b22ba0be4" name="aea334a177c7ae7eecf43ff1b22ba0be4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea334a177c7ae7eecf43ff1b22ba0be4">&#9670;&#160;</a></span>simd</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::simd = typename <a class="el" href="structbatmat_1_1linalg_1_1simd__view__types.html#a55758cb5da1d68a5c7725952a85bc5e2">types::simd</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00089">89</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ae22841d71a01ed13b2a6cf632bd2925c" name="ae22841d71a01ed13b2a6cf632bd2925c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae22841d71a01ed13b2a6cf632bd2925c">&#9670;&#160;</a></span>uview() <span class="overload">[1/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::uview </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a08c194f0c3d89310e1de67b2418e1629">value_type</a> *</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">index_t</td>          <td class="paramname"><span class="paramname"><em>outer_stride</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00122">122</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a402745026da731de3de479f33afd4af7" name="a402745026da731de3de479f33afd4af7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a402745026da731de3de479f33afd4af7">&#9670;&#160;</a></span>uview() <span class="overload">[2/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::uview </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a3f80ee6e462af097c6a2ed9531233e16">mut_view</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00124">124</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a3fc1297ea3f4c94bdd802a55ef042a0e" name="a3fc1297ea3f4c94bdd802a55ef042a0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fc1297ea3f4c94bdd802a55ef042a0e">&#9670;&#160;</a></span>uview() <span class="overload">[3/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::uview </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a124093dc1c7f0b3ecf7e1d1fa0e02076">view</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00127">127</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aeb3450b71fc7b3bb44251940d1012c31" name="aeb3450b71fc7b3bb44251940d1012c31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb3450b71fc7b3bb44251940d1012c31">&#9670;&#160;</a></span>uview() <span class="overload">[4/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::uview </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a8a22cc99544bb38d717e4776aeebc104">mut_uview</a>&lt; T, Abi, Order &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>o</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00129">129</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aa19c47965654852023713266c53984d2" name="aa19c47965654852023713266c53984d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa19c47965654852023713266c53984d2">&#9670;&#160;</a></span>uview() <span class="overload">[5/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::uview </td>
+          <td>(</td>
+          <td class="paramtype">const uview&lt; T, Abi, Order &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>o</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="adc090e9a51c470781c49eb33a2d9d9de" name="adc090e9a51c470781c49eb33a2d9d9de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc090e9a51c470781c49eb33a2d9d9de">&#9670;&#160;</a></span>get()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a08c194f0c3d89310e1de67b2418e1629">value_type</a> * <a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::get </td>
+          <td>(</td>
+          <td class="paramtype">index_t</td>          <td class="paramname"><span class="paramname"><em>r</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">index_t</td>          <td class="paramname"><span class="paramname"><em>c</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00092">92</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a9584e5bcf040086a92fabad0ad2555d8" name="a9584e5bcf040086a92fabad0ad2555d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9584e5bcf040086a92fabad0ad2555d8">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a08c194f0c3d89310e1de67b2418e1629">value_type</a> &amp; <a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::operator() </td>
+          <td>(</td>
+          <td class="paramtype">index_t</td>          <td class="paramname"><span class="paramname"><em>r</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">index_t</td>          <td class="paramname"><span class="paramname"><em>c</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00097">97</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a84e59bc69f5cb0f4f3dd9da7bf78afdf" name="a84e59bc69f5cb0f4f3dd9da7bf78afdf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84e59bc69f5cb0f4f3dd9da7bf78afdf">&#9670;&#160;</a></span>load()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aea334a177c7ae7eecf43ff1b22ba0be4">simd</a> <a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::load </td>
+          <td>(</td>
+          <td class="paramtype">index_t</td>          <td class="paramname"><span class="paramname"><em>r</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">index_t</td>          <td class="paramname"><span class="paramname"><em>c</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00100">100</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a4542c3d6af85ceb8fd44acf1dd3ab5b1" name="a4542c3d6af85ceb8fd44acf1dd3ab5b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4542c3d6af85ceb8fd44acf1dd3ab5b1">&#9670;&#160;</a></span>store()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+<div class="memtemplate">
+template&lt;int MaskL = 0&gt; <br />
+requires (!std::is_const_v&lt;T&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::store </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#aea334a177c7ae7eecf43ff1b22ba0be4">simd</a></td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">index_t</td>          <td class="paramname"><span class="paramname"><em>r</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">index_t</td>          <td class="paramname"><span class="paramname"><em>c</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00104">104</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a294edbebb26413734307376578d417d1" name="a294edbebb26413734307376578d417d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a294edbebb26413734307376578d417d1">&#9670;&#160;</a></span>block()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+<div class="memtemplate">
+template&lt;class Self&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Self <a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::block </td>
+          <td>(</td>
+          <td class="paramtype">this const Self &amp;</td>          <td class="paramname"><span class="paramname"><em>self</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">index_t</td>          <td class="paramname"><span class="paramname"><em>r</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">index_t</td>          <td class="paramname"><span class="paramname"><em>c</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00110">110</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a8b369f4dec638935df8ff5ebfb37b6f8" name="a8b369f4dec638935df8ff5ebfb37b6f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b369f4dec638935df8ff5ebfb37b6f8">&#9670;&#160;</a></span>middle_rows()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+<div class="memtemplate">
+template&lt;class Self&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Self <a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::middle_rows </td>
+          <td>(</td>
+          <td class="paramtype">this const Self &amp;</td>          <td class="paramname"><span class="paramname"><em>self</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">index_t</td>          <td class="paramname"><span class="paramname"><em>r</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00114">114</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a919a6b84f8b5f2aef171276479a784e0" name="a919a6b84f8b5f2aef171276479a784e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a919a6b84f8b5f2aef171276479a784e0">&#9670;&#160;</a></span>middle_cols()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+<div class="memtemplate">
+template&lt;class Self&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Self <a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::middle_cols </td>
+          <td>(</td>
+          <td class="paramtype">this const Self &amp;</td>          <td class="paramname"><span class="paramname"><em>self</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">index_t</td>          <td class="paramname"><span class="paramname"><em>c</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00118">118</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="ab999f5de40cebdc370e44e17d578a8c5" name="ab999f5de40cebdc370e44e17d578a8c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab999f5de40cebdc370e44e17d578a8c5">&#9670;&#160;</a></span>data</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a08c194f0c3d89310e1de67b2418e1629">value_type</a>* <a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::data</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00082">82</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a692b9e04ee6f1d2765061c8f73971738" name="a692b9e04ee6f1d2765061c8f73971738"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a692b9e04ee6f1d2765061c8f73971738">&#9670;&#160;</a></span>outer_stride</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">index_t <a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::outer_stride</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00083">83</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a9a4ef75a511e1148d3eb14f30752150f" name="a9a4ef75a511e1148d3eb14f30752150f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a4ef75a511e1148d3eb14f30752150f">&#9670;&#160;</a></span>inner_stride</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi, <a class="elRef" href="https://tttapa.github.io/guanaqo/1.0.0-alpha.24/Doxygen/group__linalg__views.html#gac0a39236f11af6725f2dc1d339c95bae">StorageOrder</a> Order&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ptrdiff_t <a class="el" href="structbatmat_1_1linalg_1_1uview.html">batmat::linalg::uview</a>&lt; T, Abi, Order &gt;::inner_stride = typename <a class="el" href="structbatmat_1_1linalg_1_1simd__view__types.html#a42c8cc3abab740150c78041ab96af477">types::simd_stride_t</a>()</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uview_8hpp_source.html#l00090">90</a> of file <a class="el" href="uview_8hpp_source.html">uview.hpp</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>batmat/include/batmat/linalg/<a class="el" href="uview_8hpp_source.html">uview.hpp</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="namespacebatmat.html">batmat</a></li><li class="navelem"><a href="namespacebatmat_1_1linalg.html">linalg</a></li><li class="navelem"><a href="structbatmat_1_1linalg_1_1uview.html">uview</a></li>
+    <li class="footer">Generated on <span class="timestamp"></span> for batmat by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
+  </ul>
+</div>
+</body>
+</html>

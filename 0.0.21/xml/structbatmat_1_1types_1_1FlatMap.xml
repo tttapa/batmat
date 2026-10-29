@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1types_1_1FlatMap" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::types::FlatMap</compoundname>
+    <templateparamlist>
+      <param>
+        <type>template&lt; class &gt; class</type>
+        <declname>Func</declname>
+        <defname>Func</defname>
+      </param>
+      <param>
+        <type>class</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::types::FlatMap&lt; Func, class &gt;</label>
+        <link refid="structbatmat_1_1types_1_1FlatMap"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/dtypes.hpp" line="56" column="1" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="56" bodyend="-1"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

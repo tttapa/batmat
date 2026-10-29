@@ -1,0 +1,1302 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg_1_1detail" kind="namespace" language="C++">
+    <compoundname>batmat::linalg::detail</compoundname>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type" prot="public">batmat::linalg::detail::simdified_view_type</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1View_3_01T_00_6c276fa58d30c8a61a58492532979869" prot="public">batmat::linalg::detail::simdified_view_type&lt; batmat::matrix::View&lt; T, index_t, S, S, L, O &gt; &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1View_32dba1d643fdf8dda24f3695f783071e9" prot="public">batmat::linalg::detail::simdified_view_type&lt; const batmat::matrix::View&lt; T, index_t, S, S, L, O &gt; &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01guanaqo_1_1MatrixView_3_01T_00_01If7b43d4de87d72ee5b21d1b3c0074753" prot="public">batmat::linalg::detail::simdified_view_type&lt; guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01guanaqo_1_1MatrixView_3_010856bf788b5ff2bc105d0749e18010ef" prot="public">batmat::linalg::detail::simdified_view_type&lt; const guanaqo::MatrixView&lt; T, I, std::integral_constant&lt; I, 1 &gt;, O &gt; &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01batmat_1_1matrix_1_1Matrix_3_01T_02011ca1015d066513d24349619a4283a" prot="public">batmat::linalg::detail::simdified_view_type&lt; batmat::matrix::Matrix&lt; T, I, S, S, O, A &gt; &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1simdified__view__type_3_01const_01batmat_1_1matrix_1_1Matrix2f013e9bf729f69bd71be2becf75521d" prot="public">batmat::linalg::detail::simdified_view_type&lt; const batmat::matrix::Matrix&lt; T, I, S, S, O, A &gt; &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type" prot="public">batmat::linalg::detail::simdified_multi_view_type</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1View_3_22d8282ba65d154ec9580e6f7da6b8b5" prot="public">batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_33bea5f89420c1479536e5641dd6559d" prot="public">batmat::linalg::detail::simdified_multi_view_type&lt; const batmat::matrix::View&lt; T, index_t, S, index_t, L, O &gt; &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01batmat_1_1matrix_1_1Matrix_a2d75434e5018f0cd47dbc6912dd16bf" prot="public">batmat::linalg::detail::simdified_multi_view_type&lt; batmat::matrix::Matrix&lt; T, I, S, I, O, A &gt; &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1simdified__multi__view__type_3_01const_01batmat_1_1matrix_1_68d714009fb08972c65f60674f881d94" prot="public">batmat::linalg::detail::simdified_multi_view_type&lt; const batmat::matrix::Matrix&lt; T, I, S, I, O, A &gt; &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1simdified__value" prot="public">batmat::linalg::detail::simdified_value</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1simdified__value_3_01V_01_4" prot="public">batmat::linalg::detail::simdified_value&lt; V &gt;</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1simdified__abi" prot="public">batmat::linalg::detail::simdified_abi</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1simdified__abi_3_01V_01_4" prot="public">batmat::linalg::detail::simdified_abi&lt; V &gt;</innerclass>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1detail_1_1copy">batmat::linalg::detail::copy</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag">batmat::linalg::detail::gemm_diag</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1detail_1_1syomv">batmat::linalg::detail::syomv</innernamespace>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1a71184afe3c389f21d064930a43a7049c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>N</declname>
+            <defname>N</defname>
+            <defval>8</defval>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OAi</declname>
+            <defname>OAi</defname>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::detail::compress_masks_impl</definition>
+        <argsstring>(view&lt; const T, Abi, OAi &gt; A_in, view&lt; const T, Abi &gt; S_in, auto writeS, auto writeA)</argsstring>
+        <name>compress_masks_impl</name>
+        <qualifiedname>batmat::linalg::detail::compress_masks_impl</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OAi &gt;</type>
+          <declname>A_in</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>S_in</declname>
+        </param>
+        <param>
+          <type>auto</type>
+          <declname>writeS</declname>
+        </param>
+        <param>
+          <type>auto</type>
+          <declname>writeA</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/compress.hpp" line="16" column="17" bodyfile="batmat/include/batmat/linalg/compress.hpp" bodystart="16" bodyend="120"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="unroll_8h_1addb39c3474d8e234f06b9ca62ed0bf75" compoundref="unroll_8h" startline="27">BATMAT_FULLY_UNROLLED_FOR</references>
+        <references refid="group__topic-low-level-ops_1ga7edc1a8ca0fbd5557bd397cfd28a743e" compoundref="gather_8hpp" startline="56" endline="69">batmat::ops::gather</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ad5285a8604b72e9ed9102afde642b324" compoundref="compress_8hpp" startline="188" endline="205">compress_masks</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1a86f65f38e1de024143f611d38d6ec764" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>N</declname>
+            <defname>N</defname>
+            <defval>8</defval>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::detail::compress_masks_count</definition>
+        <argsstring>(view&lt; const T, Abi &gt; S_in)</argsstring>
+        <name>compress_masks_count</name>
+        <qualifiedname>batmat::linalg::detail::compress_masks_count</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>S_in</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/compress.hpp" line="123" column="9" bodyfile="batmat/include/batmat/linalg/compress.hpp" bodystart="123" bodyend="185"/>
+        <references refid="unroll_8h_1addb39c3474d8e234f06b9ca62ed0bf75" compoundref="unroll_8h" startline="27">BATMAT_FULLY_UNROLLED_FOR</references>
+        <referencedby refid="group__topic-linalg_1ga1b26575da2cfc351d0a18eda0475b8d3" compoundref="compress_8hpp" startline="246" endline="249">batmat::linalg::compress_masks_count</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1ad5285a8604b72e9ed9102afde642b324" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>N</declname>
+            <defname>N</defname>
+            <defval>8</defval>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OAi</declname>
+            <defname>OAi</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OAo</declname>
+            <defname>OAo</defname>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::detail::compress_masks</definition>
+        <argsstring>(view&lt; const T, Abi, OAi &gt; A_in, view&lt; const T, Abi &gt; S_in, view&lt; T, Abi, OAo &gt; A_out, view&lt; T, Abi &gt; S_out)</argsstring>
+        <name>compress_masks</name>
+        <qualifiedname>batmat::linalg::detail::compress_masks</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OAi &gt;</type>
+          <declname>A_in</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>S_in</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OAo &gt;</type>
+          <declname>A_out</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi &gt;</type>
+          <declname>S_out</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/compress.hpp" line="188" column="9" bodyfile="batmat/include/batmat/linalg/compress.hpp" bodystart="188" bodyend="205"/>
+        <references refid="namespacebatmat_1_1datapar_1a37a115c835b05841a7f348320e1e43b6" compoundref="simd_8hpp" startline="121" endline="123">batmat::datapar::aligned_store</references>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="namespacebatmat_1_1linalg_1_1detail_1a71184afe3c389f21d064930a43a7049c" compoundref="compress_8hpp" startline="16" endline="120">compress_masks_impl</references>
+        <referencedby refid="group__topic-linalg_1ga7305be66e2eab7d32be3409e555d8136" compoundref="compress_8hpp" startline="240" endline="243">batmat::linalg::compress_masks</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1afa8def53ae5fe3f658b732ea5cc20da2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>N</declname>
+            <defname>N</defname>
+            <defval>8</defval>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OAi</declname>
+            <defname>OAi</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OAo</declname>
+            <defname>OAo</defname>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::detail::compress_masks_sqrt</definition>
+        <argsstring>(view&lt; const T, Abi, OAi &gt; A_in, view&lt; const T, Abi &gt; S_in, view&lt; T, Abi, OAo &gt; A_out, view&lt; T, Abi &gt; S_sign_out={})</argsstring>
+        <name>compress_masks_sqrt</name>
+        <qualifiedname>batmat::linalg::detail::compress_masks_sqrt</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OAi &gt;</type>
+          <declname>A_in</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>S_in</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OAo &gt;</type>
+          <declname>A_out</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi &gt;</type>
+          <declname>S_sign_out</declname>
+          <defval>{}</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/compress.hpp" line="208" column="9" bodyfile="batmat/include/batmat/linalg/compress.hpp" bodystart="208" bodyend="229"/>
+        <referencedby refid="group__topic-linalg_1gaaac6172ca3a3098c8c85f4c703ac7575" compoundref="compress_8hpp" startline="252" endline="255">batmat::linalg::compress_masks_sqrt</referencedby>
+        <referencedby refid="group__topic-linalg_1ga318bdad6a6e249fcd8652b2b49012418" compoundref="compress_8hpp" startline="258" endline="261">batmat::linalg::compress_masks_sqrt</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1af26685ecf86832d020eeed2c759f1c4a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>micro_kernels::gemm::KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+            <defval>{}</defval>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OC</declname>
+            <defname>OC</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::gemm</definition>
+        <argsstring>(view&lt; const T, Abi, OA &gt; A, view&lt; const T, Abi, OB &gt; B, std::optional&lt; view&lt; const T, Abi, OC &gt; &gt; C, view&lt; T, Abi, OD &gt; D, TilingOptions packing={})</argsstring>
+        <name>gemm</name>
+        <qualifiedname>batmat::linalg::detail::gemm</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OB &gt;</type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; <ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OC &gt; &gt;</type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1TilingOptions" kindref="compound">TilingOptions</ref></type>
+          <declname>packing</declname>
+          <defval>{}</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm.hpp" line="42" column="6" bodyfile="batmat/include/batmat/linalg/gemm.hpp" bodystart="42" bodyend="155"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1aafe5abf07c832375ed47675bfc9f5a86" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>micro_kernels::gemm::KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+            <defval>{}</defval>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OC</declname>
+            <defname>OC</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::gemmt</definition>
+        <argsstring>(view&lt; const T, Abi, OA &gt; A, view&lt; const T, Abi, OB &gt; B, std::optional&lt; view&lt; const T, Abi, OC &gt; &gt; C, view&lt; T, Abi, OD &gt; D)</argsstring>
+        <name>gemmt</name>
+        <qualifiedname>batmat::linalg::detail::gemmt</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OB &gt;</type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; <ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OC &gt; &gt;</type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm.hpp" line="160" column="6" bodyfile="batmat/include/batmat/linalg/gemm.hpp" bodystart="160" bodyend="190"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1ac74ffd0a7e0af8bcd39fb94b587e66b1" compoundref="copy_8hpp" startline="68" endline="107">batmat::linalg::detail::copy::copy</references>
+        <references refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a2734a86018fe0537b59c91e9f85c5fbb" compoundref="copy_8hpp" startline="27" endline="59">batmat::linalg::detail::copy::fill</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a9a004fcdd3237c9903bdd7bc81aa43c3" compoundref="gemm_8tpp" startline="165" endline="295">batmat::linalg::micro_kernels::gemm::gemm_copy_register</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" compoundref="structure_8hpp" startline="8">batmat::linalg::General</references>
+        <references refid="group__topic-linalg-flops_1ga7ab4fbff09383b46ed353e5c8b1cb44a" compoundref="flops_8hpp" startline="45" endline="97">batmat::linalg::flops::trmm</references>
+        <referencedby refid="group__topic-linalg_1ga59ec2e76f7d857d495fcc518d19f2a77" compoundref="gemm_8hpp" startline="310" endline="319">batmat::linalg::syrk</referencedby>
+        <referencedby refid="group__topic-linalg_1ga24000b15cd231d821eb1292ad3631c2b" compoundref="gemm_8hpp" startline="329" endline="338">batmat::linalg::syrk</referencedby>
+        <referencedby refid="group__topic-linalg_1ga94668e960bcf7b6a7ffe8902d799079a" compoundref="gemm_8hpp" startline="376" endline="383">batmat::linalg::syrk_add</referencedby>
+        <referencedby refid="group__topic-linalg_1ga038f5f115bd19ed4f3ca205ca4728fc3" compoundref="gemm_8hpp" startline="343" endline="352">batmat::linalg::syrk_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga8d63dfa8eaa22949ca78e2241a608a0f" compoundref="gemm_8hpp" startline="362" endline="371">batmat::linalg::syrk_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga19841b227bc4cf6d0949b85b6e201033" compoundref="gemm_8hpp" startline="393" endline="400">batmat::linalg::syrk_sub</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1a986cbb6d34a89fe9f0a7e475746934e7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>micro_kernels::gemm::KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+            <defval>{}</defval>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OC</declname>
+            <defname>OC</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::trmm</definition>
+        <argsstring>(view&lt; const T, Abi, OA &gt; A, view&lt; const T, Abi, OB &gt; B, std::optional&lt; view&lt; const T, Abi, OC &gt; &gt; C, view&lt; T, Abi, OD &gt; D)</argsstring>
+        <name>trmm</name>
+        <qualifiedname>batmat::linalg::detail::trmm</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OB &gt;</type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; <ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OC &gt; &gt;</type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm.hpp" line="195" column="6" bodyfile="batmat/include/batmat/linalg/gemm.hpp" bodystart="195" bodyend="226"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1ac74ffd0a7e0af8bcd39fb94b587e66b1" compoundref="copy_8hpp" startline="68" endline="107">batmat::linalg::detail::copy::copy</references>
+        <references refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a2734a86018fe0537b59c91e9f85c5fbb" compoundref="copy_8hpp" startline="27" endline="59">batmat::linalg::detail::copy::fill</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a9a004fcdd3237c9903bdd7bc81aa43c3" compoundref="gemm_8tpp" startline="165" endline="295">batmat::linalg::micro_kernels::gemm::gemm_copy_register</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" compoundref="structure_8hpp" startline="8">batmat::linalg::General</references>
+        <references refid="group__topic-linalg-flops_1ga7ab4fbff09383b46ed353e5c8b1cb44a" compoundref="flops_8hpp" startline="45" endline="97">batmat::linalg::flops::trmm</references>
+        <referencedby refid="group__topic-linalg_1ga677da05414c67192ed400e3a0b0a2c51" compoundref="gemm_8hpp" startline="416" endline="422">batmat::linalg::trmm</referencedby>
+        <referencedby refid="group__topic-linalg_1gab8de92b40ec44dc42b8194ca149e2195" compoundref="gemm_8hpp" startline="462" endline="469">batmat::linalg::trmm_add</referencedby>
+        <referencedby refid="group__topic-linalg_1ga1474b560ee985d29dad901fec92a6e09" compoundref="gemm_8hpp" startline="444" endline="450">batmat::linalg::trmm_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga4c466c8c3c49448dbe08d2a69f0dc753" compoundref="gemm_8hpp" startline="481" endline="488">batmat::linalg::trmm_sub</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1ace93b35f0993d2bcf550c1ea6ed92d96" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>shift_opt...</type>
+            <declname>Opts</declname>
+            <defname>Opts</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig" kindref="compound">micro_kernels::gemm::KernelConfig</ref></type>
+        <definition>micro_kernels::gemm::KernelConfig batmat::linalg::detail::apply_gemm_options</definition>
+        <argsstring>(micro_kernels::gemm::KernelConfig conf, Opts...)</argsstring>
+        <name>apply_gemm_options</name>
+        <qualifiedname>batmat::linalg::detail::apply_gemm_options</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig" kindref="compound">micro_kernels::gemm::KernelConfig</ref></type>
+          <declname>conf</declname>
+        </param>
+        <param>
+          <type>Opts...</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemm.hpp" line="230" column="1" bodyfile="batmat/include/batmat/linalg/gemm.hpp" bodystart="230" bodyend="242"/>
+        <references refid="namespacebatmat_1_1linalg_1a5f3d7bfa8cda00a0b262b6eac578e96e" compoundref="shift_8hpp" startline="59">batmat::linalg::mask_D</references>
+        <references refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a0f5606d67c564645801e662208877740" compoundref="micro-kernels_2gemm_8hpp" startline="17">batmat::linalg::micro_kernels::gemm::KernelConfig::mask_D</references>
+        <references refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a42650cfb9258d04d593659b9990c8126" compoundref="micro-kernels_2gemm_8hpp" startline="15">batmat::linalg::micro_kernels::gemm::KernelConfig::rotate_C</references>
+        <references refid="namespacebatmat_1_1linalg_1a46cf975c68ece97777d8e4dfd6b1dadf" compoundref="shift_8hpp" startline="45">batmat::linalg::rotate_C</references>
+        <references refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a95102697df9e6fda3d450aa887a3da47" compoundref="micro-kernels_2gemm_8hpp" startline="16">batmat::linalg::micro_kernels::gemm::KernelConfig::rotate_D</references>
+        <references refid="namespacebatmat_1_1linalg_1ab04a87d2e13b965d6fe2684355159478" compoundref="shift_8hpp" startline="52">batmat::linalg::rotate_D</references>
+        <references refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1ac07d69d32b78b4fd372f97c9d68ecad6" compoundref="micro-kernels_2gemm_8hpp" startline="13">batmat::linalg::micro_kernels::gemm::KernelConfig::shift_A</references>
+        <references refid="namespacebatmat_1_1linalg_1ae3b515432262221f9e530afd77291b7c" compoundref="shift_8hpp" startline="31">batmat::linalg::shift_A</references>
+        <references refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1af7c4e1bd5fbdcbaac8a9d59cbcbaf731" compoundref="micro-kernels_2gemm_8hpp" startline="14">batmat::linalg::micro_kernels::gemm::KernelConfig::shift_B</references>
+        <references refid="namespacebatmat_1_1linalg_1a9e7784af0901e8887da8390a2554f8eb" compoundref="shift_8hpp" startline="38">batmat::linalg::shift_B</references>
+        <referencedby refid="group__topic-linalg_1ga59ec2e76f7d857d495fcc518d19f2a77" compoundref="gemm_8hpp" startline="310" endline="319">batmat::linalg::syrk</referencedby>
+        <referencedby refid="group__topic-linalg_1ga24000b15cd231d821eb1292ad3631c2b" compoundref="gemm_8hpp" startline="329" endline="338">batmat::linalg::syrk</referencedby>
+        <referencedby refid="group__topic-linalg_1ga94668e960bcf7b6a7ffe8902d799079a" compoundref="gemm_8hpp" startline="376" endline="383">batmat::linalg::syrk_add</referencedby>
+        <referencedby refid="group__topic-linalg_1ga038f5f115bd19ed4f3ca205ca4728fc3" compoundref="gemm_8hpp" startline="343" endline="352">batmat::linalg::syrk_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga8d63dfa8eaa22949ca78e2241a608a0f" compoundref="gemm_8hpp" startline="362" endline="371">batmat::linalg::syrk_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga19841b227bc4cf6d0949b85b6e201033" compoundref="gemm_8hpp" startline="393" endline="400">batmat::linalg::syrk_sub</referencedby>
+        <referencedby refid="group__topic-linalg_1ga677da05414c67192ed400e3a0b0a2c51" compoundref="gemm_8hpp" startline="416" endline="422">batmat::linalg::trmm</referencedby>
+        <referencedby refid="group__topic-linalg_1gab8de92b40ec44dc42b8194ca149e2195" compoundref="gemm_8hpp" startline="462" endline="469">batmat::linalg::trmm_add</referencedby>
+        <referencedby refid="group__topic-linalg_1ga1474b560ee985d29dad901fec92a6e09" compoundref="gemm_8hpp" startline="444" endline="450">batmat::linalg::trmm_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga4c466c8c3c49448dbe08d2a69f0dc753" compoundref="gemm_8hpp" startline="481" endline="488">batmat::linalg::trmm_sub</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1ab2140481ceabb6a2dbe49a62479b2d47" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>micro_kernels::gemv::KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+            <defval>{}</defval>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::gemv</definition>
+        <argsstring>(view&lt; const T, Abi, OA &gt; A, view&lt; const T, Abi &gt; B, std::optional&lt; view&lt; const T, Abi &gt; &gt; C, view&lt; T, Abi &gt; D)</argsstring>
+        <name>gemv</name>
+        <qualifiedname>batmat::linalg::detail::gemv</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; <ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt; &gt;</type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi &gt;</type>
+          <declname>D</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemv.hpp" line="17" column="6" bodyfile="batmat/include/batmat/linalg/gemv.hpp" bodystart="17" bodyend="44"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1ac74ffd0a7e0af8bcd39fb94b587e66b1" compoundref="copy_8hpp" startline="68" endline="107">batmat::linalg::detail::copy::copy</references>
+        <references refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a2734a86018fe0537b59c91e9f85c5fbb" compoundref="copy_8hpp" startline="27" endline="59">batmat::linalg::detail::copy::fill</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemv_1aafe5591645f17ff88569e8c9fd026e2a" compoundref="gemv_8tpp" startline="79" endline="113">batmat::linalg::micro_kernels::gemv::gemv_copy_register</references>
+        <referencedby refid="group__topic-linalg_1ga8ce09a22e339c8a076415d047c23a5cd" compoundref="gemv_8hpp" startline="73" endline="78">batmat::linalg::gemv</referencedby>
+        <referencedby refid="group__topic-linalg_1ga4d4c245f7f41a9e595292defaf3f55cf" compoundref="gemv_8hpp" startline="93" endline="97">batmat::linalg::gemv_add</referencedby>
+        <referencedby refid="group__topic-linalg_1gaabdf90658a0013e1858d377dcecf5d6f" compoundref="gemv_8hpp" startline="83" endline="88">batmat::linalg::gemv_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1gac4246c2e6b61282811138d8232f9d737" compoundref="gemv_8hpp" startline="108" endline="112">batmat::linalg::gemv_sub</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1a8664a4b53357eef277b5bff5f06a9d04" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>shift_opt...</type>
+            <declname>Opts</declname>
+            <defname>Opts</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig" kindref="compound">micro_kernels::gemv::KernelConfig</ref></type>
+        <definition>micro_kernels::gemv::KernelConfig batmat::linalg::detail::apply_gemv_options</definition>
+        <argsstring>(micro_kernels::gemv::KernelConfig conf, Opts...)</argsstring>
+        <name>apply_gemv_options</name>
+        <qualifiedname>batmat::linalg::detail::apply_gemv_options</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig" kindref="compound">micro_kernels::gemv::KernelConfig</ref></type>
+          <declname>conf</declname>
+        </param>
+        <param>
+          <type>Opts...</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/gemv.hpp" line="48" column="1" bodyfile="batmat/include/batmat/linalg/gemv.hpp" bodystart="48" bodyend="60"/>
+        <references refid="namespacebatmat_1_1linalg_1a5f3d7bfa8cda00a0b262b6eac578e96e" compoundref="shift_8hpp" startline="59">batmat::linalg::mask_D</references>
+        <references refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig_1a293c6e5c7b33f0381f5931f04472e0ff" compoundref="micro-kernels_2gemv_8hpp" startline="17">batmat::linalg::micro_kernels::gemv::KernelConfig::mask_D</references>
+        <references refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig_1a99299a5578f652fcb29f9497fb979b81" compoundref="micro-kernels_2gemv_8hpp" startline="15">batmat::linalg::micro_kernels::gemv::KernelConfig::rotate_C</references>
+        <references refid="namespacebatmat_1_1linalg_1a46cf975c68ece97777d8e4dfd6b1dadf" compoundref="shift_8hpp" startline="45">batmat::linalg::rotate_C</references>
+        <references refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig_1a431afc40aa9c0caba784c811cefc356b" compoundref="micro-kernels_2gemv_8hpp" startline="16">batmat::linalg::micro_kernels::gemv::KernelConfig::rotate_D</references>
+        <references refid="namespacebatmat_1_1linalg_1ab04a87d2e13b965d6fe2684355159478" compoundref="shift_8hpp" startline="52">batmat::linalg::rotate_D</references>
+        <references refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig_1aa8e49a43c4f99211ea7f3393d2517355" compoundref="micro-kernels_2gemv_8hpp" startline="13">batmat::linalg::micro_kernels::gemv::KernelConfig::shift_A</references>
+        <references refid="namespacebatmat_1_1linalg_1ae3b515432262221f9e530afd77291b7c" compoundref="shift_8hpp" startline="31">batmat::linalg::shift_A</references>
+        <references refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemv_1_1KernelConfig_1ae342b663e2f3624254fe3d3ab4535c43" compoundref="micro-kernels_2gemv_8hpp" startline="14">batmat::linalg::micro_kernels::gemv::KernelConfig::shift_B</references>
+        <references refid="namespacebatmat_1_1linalg_1a9e7784af0901e8887da8390a2554f8eb" compoundref="shift_8hpp" startline="38">batmat::linalg::shift_B</references>
+        <referencedby refid="group__topic-linalg_1ga8ce09a22e339c8a076415d047c23a5cd" compoundref="gemv_8hpp" startline="73" endline="78">batmat::linalg::gemv</referencedby>
+        <referencedby refid="group__topic-linalg_1ga4d4c245f7f41a9e595292defaf3f55cf" compoundref="gemv_8hpp" startline="93" endline="97">batmat::linalg::gemv_add</referencedby>
+        <referencedby refid="group__topic-linalg_1gaabdf90658a0013e1858d377dcecf5d6f" compoundref="gemv_8hpp" startline="83" endline="88">batmat::linalg::gemv_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1gac4246c2e6b61282811138d8232f9d737" compoundref="gemv_8hpp" startline="108" endline="112">batmat::linalg::gemv_sub</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1a6356ece5808d89381635b59246a158d6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>micro_kernels::hyhound::KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OL</declname>
+            <defname>OL</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::hyhound_diag</definition>
+        <argsstring>(view&lt; T, Abi, OL &gt; L, view&lt; T, Abi, OA &gt; A, view&lt; const T, Abi &gt; D)</argsstring>
+        <name>hyhound_diag</name>
+        <qualifiedname>batmat::linalg::detail::hyhound_diag</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OL &gt;</type>
+          <declname>L</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>D</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/hyhound.hpp" line="20" column="6" bodyfile="batmat/include/batmat/linalg/hyhound.hpp" bodystart="20" bodyend="30"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" compoundref="flops_8hpp" startline="173" endline="176">batmat::linalg::flops::hyh</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a2c5a2006331870dacb985bf041677d2f" compoundref="hyhound_8tpp" startline="264" endline="329">batmat::linalg::micro_kernels::hyhound::hyhound_diag_register</references>
+        <referencedby refid="group__topic-linalg_1gae6733a70513ebef849110b4842708820" compoundref="hyhound_8hpp" startline="152" endline="156">batmat::linalg::hyhound_diag</referencedby>
+        <referencedby refid="group__topic-linalg_1ga333ab34077b524480da3a9835b51e166" compoundref="hyhound_8hpp" startline="161" endline="165">batmat::linalg::hyhound_diag</referencedby>
+        <referencedby refid="group__topic-linalg_1ga71aaa795868e76c82b95bdd6230b9519" compoundref="hyhound_8hpp" startline="212" endline="215">batmat::linalg::hyhound_sign</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1ae9bdcfd57ff8c62767691f16fd19676b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>micro_kernels::hyhound::KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OL</declname>
+            <defname>OL</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::hyhound_diag</definition>
+        <argsstring>(view&lt; T, Abi, OL &gt; L, view&lt; T, Abi, OA &gt; A, view&lt; const T, Abi &gt; D, view&lt; T, Abi &gt; W)</argsstring>
+        <name>hyhound_diag</name>
+        <qualifiedname>batmat::linalg::detail::hyhound_diag</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OL &gt;</type>
+          <declname>L</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi &gt;</type>
+          <declname>W</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/hyhound.hpp" line="34" column="6" bodyfile="batmat/include/batmat/linalg/hyhound.hpp" bodystart="34" bodyend="46"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" compoundref="flops_8hpp" startline="173" endline="176">batmat::linalg::flops::hyh</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1a02dfdae9c62e6e04a1883300a5596774" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>micro_kernels::hyhound::KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OL</declname>
+            <defname>OL</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::hyhound_diag_apply</definition>
+        <argsstring>(view&lt; T, Abi, OL &gt; L, view&lt; const T, Abi, OA &gt; Ain, view&lt; T, Abi, OA &gt; Aout, view&lt; const T, Abi, OA &gt; B, view&lt; const T, Abi &gt; D, view&lt; const T, Abi &gt; W, index_t kA_in_offset=0)</argsstring>
+        <name>hyhound_diag_apply</name>
+        <qualifiedname>batmat::linalg::detail::hyhound_diag_apply</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OL &gt;</type>
+          <declname>L</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>Ain</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OA &gt;</type>
+          <declname>Aout</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>W</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>kA_in_offset</declname>
+          <defval>0</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/hyhound.hpp" line="50" column="6" bodyfile="batmat/include/batmat/linalg/hyhound.hpp" bodystart="50" bodyend="70"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="group__topic-linalg-flops_1ga907a77af15c3cba01ac8b66c3388adb4" compoundref="flops_8hpp" startline="161" endline="167">batmat::linalg::flops::hyh_apply</references>
+        <referencedby refid="group__topic-linalg_1gaa675e1f6e044ea392f0ee072bcd38890" compoundref="hyhound_8hpp" startline="202" endline="206">batmat::linalg::hyhound_diag_apply</referencedby>
+        <referencedby refid="group__topic-linalg_1ga3e2338ff100c3544cad0105effc729c0" compoundref="hyhound_8hpp" startline="188" endline="192">batmat::linalg::hyhound_diag_apply</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1ae08f58a280ea099e7cefd16ac7e2810f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>micro_kernels::hyhound::KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OL1</declname>
+            <defname>OL1</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA1</declname>
+            <defname>OA1</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OL2</declname>
+            <defname>OL2</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA2</declname>
+            <defname>OA2</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::hyhound_diag_2</definition>
+        <argsstring>(view&lt; T, Abi, OL1 &gt; L11, view&lt; T, Abi, OA1 &gt; A1, view&lt; T, Abi, OL2 &gt; L21, view&lt; T, Abi, OA2 &gt; A2, view&lt; const T, Abi &gt; D)</argsstring>
+        <name>hyhound_diag_2</name>
+        <qualifiedname>batmat::linalg::detail::hyhound_diag_2</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OL1 &gt;</type>
+          <declname>L11</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OA1 &gt;</type>
+          <declname>A1</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OL2 &gt;</type>
+          <declname>L21</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OA2 &gt;</type>
+          <declname>A2</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>D</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/hyhound.hpp" line="74" column="6" bodyfile="batmat/include/batmat/linalg/hyhound.hpp" bodystart="74" bodyend="88"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" compoundref="flops_8hpp" startline="173" endline="176">batmat::linalg::flops::hyh</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1ae92a1b550b2c03dd1a8bc9497d365b64" compoundref="hyhound_8tpp" startline="428" endline="479">batmat::linalg::micro_kernels::hyhound::hyhound_diag_2_register</references>
+        <referencedby refid="group__topic-linalg_1gae5ae03b84e9ada852009a47cfb1a101b" compoundref="hyhound_8hpp" startline="226" endline="229">batmat::linalg::hyhound_diag_2</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1a899e19f752b26f44ee94ecb94c7a1c8b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>micro_kernels::hyhound::KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OL</declname>
+            <defname>OL</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OW</declname>
+            <defname>OW</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OY</declname>
+            <defname>OY</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OU</declname>
+            <defname>OU</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::hyhound_diag_cyclic</definition>
+        <argsstring>(view&lt; T, Abi, OL &gt; L11, view&lt; T, Abi, OW &gt; A1, view&lt; T, Abi, OY &gt; L21, view&lt; const T, Abi, OW &gt; A22, view&lt; T, Abi, OW &gt; A2_out, view&lt; T, Abi, OU &gt; L31, view&lt; const T, Abi, OW &gt; A31, view&lt; T, Abi, OW &gt; A3_out, view&lt; const T, Abi &gt; D)</argsstring>
+        <name>hyhound_diag_cyclic</name>
+        <qualifiedname>batmat::linalg::detail::hyhound_diag_cyclic</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OL &gt;</type>
+          <declname>L11</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OW &gt;</type>
+          <declname>A1</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OY &gt;</type>
+          <declname>L21</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OW &gt;</type>
+          <declname>A22</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OW &gt;</type>
+          <declname>A2_out</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OU &gt;</type>
+          <declname>L31</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OW &gt;</type>
+          <declname>A31</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OW &gt;</type>
+          <declname>A3_out</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>D</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/hyhound.hpp" line="92" column="6" bodyfile="batmat/include/batmat/linalg/hyhound.hpp" bodystart="92" bodyend="113"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" compoundref="flops_8hpp" startline="173" endline="176">batmat::linalg::flops::hyh</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a296680bfcaddeb3c87b4da48edd2c531" compoundref="hyhound_8tpp" startline="490" endline="571">batmat::linalg::micro_kernels::hyhound::hyhound_diag_cyclic_register</references>
+        <referencedby refid="group__topic-linalg_1gaf619c0c15ef61d2dd2eaa585f525a93f" compoundref="hyhound_8hpp" startline="240" endline="245">batmat::linalg::hyhound_diag_cyclic</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1a533820c033d4bc11f8969555ab6c47cc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>micro_kernels::hyhound::KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OL</declname>
+            <defname>OL</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OLu</declname>
+            <defname>OLu</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OAu</declname>
+            <defname>OAu</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::hyhound_diag_riccati</definition>
+        <argsstring>(view&lt; T, Abi, OL &gt; L11, view&lt; T, Abi, OA &gt; A1, view&lt; T, Abi, OL &gt; L21, view&lt; const T, Abi, OA &gt; A2, view&lt; T, Abi, OA &gt; A2_out, view&lt; T, Abi, OLu &gt; Lu1, view&lt; T, Abi, OAu &gt; Au_out, view&lt; const T, Abi &gt; D, bool shift_A_out)</argsstring>
+        <name>hyhound_diag_riccati</name>
+        <qualifiedname>batmat::linalg::detail::hyhound_diag_riccati</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OL &gt;</type>
+          <declname>L11</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OA &gt;</type>
+          <declname>A1</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OL &gt;</type>
+          <declname>L21</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A2</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OA &gt;</type>
+          <declname>A2_out</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OLu &gt;</type>
+          <declname>Lu1</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OAu &gt;</type>
+          <declname>Au_out</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>shift_A_out</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/hyhound.hpp" line="117" column="6" bodyfile="batmat/include/batmat/linalg/hyhound.hpp" bodystart="117" bodyend="139"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="group__topic-linalg-flops_1ga22fb37ad334eed64381a27c3f1bf21c0" compoundref="flops_8hpp" startline="173" endline="176">batmat::linalg::flops::hyh</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a5180c328f7daee0ec80eb04fe70a8707" compoundref="hyhound_8tpp" startline="584" endline="662">batmat::linalg::micro_kernels::hyhound::hyhound_diag_riccati_register</references>
+        <referencedby refid="group__topic-linalg_1ga623445a546acac724601551447aaef5a" compoundref="hyhound_8hpp" startline="258" endline="263">batmat::linalg::hyhound_diag_riccati</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1a12bb42faad627a179c5fa5e810b2186e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>micro_kernels::potrf::KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OCD</declname>
+            <defname>OCD</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::potrf</definition>
+        <argsstring>(view&lt; const T, Abi, OA &gt; A, view&lt; const T, Abi, OCD &gt; C, view&lt; T, Abi, OCD &gt; D, T regularization)</argsstring>
+        <name>potrf</name>
+        <qualifiedname>batmat::linalg::detail::potrf</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OCD &gt;</type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OCD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type>T</type>
+          <declname>regularization</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/potrf.hpp" line="20" column="6" bodyfile="batmat/include/batmat/linalg/potrf.hpp" bodystart="20" bodyend="33"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a700219e236a2235161b7db469747c2eb" compoundref="potrf_8tpp" startline="185" endline="228">batmat::linalg::micro_kernels::potrf::potrf_copy_register</references>
+        <references refid="group__topic-linalg-flops_1ga5bc716f7288da381eb1c0120a7d3182c" compoundref="flops_8hpp" startline="182" endline="185">batmat::linalg::flops::syrk_potrf</references>
+        <referencedby refid="group__topic-linalg_1gaa5a48352d831fa72f651dfb4a53bba9e" compoundref="potrf_8hpp" startline="75" endline="79">batmat::linalg::potrf</referencedby>
+        <referencedby refid="group__topic-linalg_1ga0d94954d9b08608b3d7f3c2bdaec531d" compoundref="potrf_8hpp" startline="83" endline="87">batmat::linalg::potrf</referencedby>
+        <referencedby refid="group__topic-linalg_1ga12c3f866950fd1c70288d50280b7fb6b" compoundref="potrf_8hpp" startline="45" endline="49">batmat::linalg::syrk_add_potrf</referencedby>
+        <referencedby refid="group__topic-linalg_1ga9b273b45f515781eb285544bbcca8143" compoundref="potrf_8hpp" startline="60" endline="64">batmat::linalg::syrk_sub_potrf</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1aef2ec4540dc4cbc963fd37e80434b020" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>MatrixStructure</type>
+            <declname>SA</declname>
+            <defname>SA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::symm</definition>
+        <argsstring>(view&lt; const T, Abi, OA &gt; A, view&lt; const T, Abi &gt; B, std::optional&lt; view&lt; const T, Abi &gt; &gt; C, view&lt; T, Abi &gt; D)</argsstring>
+        <name>symm</name>
+        <qualifiedname>batmat::linalg::detail::symm</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; <ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt; &gt;</type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi &gt;</type>
+          <declname>D</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/symm.hpp" line="15" column="6" bodyfile="batmat/include/batmat/linalg/symm.hpp" bodystart="15" bodyend="52"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="unroll_8h_1a3b47b5e0ab192416373a2afa12ef97cd" compoundref="unroll_8h" startline="29">BATMAT_UNROLLED_IVDEP_FOR</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a84e59bc69f5cb0f4f3dd9da7bf78afdf" compoundref="uview_8hpp" startline="100" endline="102">batmat::linalg::uview&lt; T, Abi, Order &gt;::load</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a4542c3d6af85ceb8fd44acf1dd3ab5b1" compoundref="uview_8hpp" startline="104" endline="108">batmat::linalg::uview&lt; T, Abi, Order &gt;::store</references>
+        <referencedby refid="group__topic-linalg_1ga86ace4b801d8635578413dafc05539d3" compoundref="symm_8hpp" startline="76" endline="79">batmat::linalg::symm_add</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1a88e3a02794e19050db3bd09ae27ac43a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>micro_kernels::symv::KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+            <defval>{}</defval>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::symv</definition>
+        <argsstring>(view&lt; const T, Abi, OA &gt; A, view&lt; const T, Abi &gt; B, std::optional&lt; view&lt; const T, Abi &gt; &gt; C, view&lt; T, Abi &gt; D)</argsstring>
+        <name>symv</name>
+        <qualifiedname>batmat::linalg::detail::symv</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt;</type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; <ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi &gt; &gt;</type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi &gt;</type>
+          <declname>D</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/symv.hpp" line="17" column="6" bodyfile="batmat/include/batmat/linalg/symv.hpp" bodystart="17" bodyend="34"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" compoundref="structure_8hpp" startline="8">batmat::linalg::LowerTriangular</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1symv_1a7983f41d91ff84c3ab71e3ce41bc8718" compoundref="symv_8tpp" startline="65" endline="91">batmat::linalg::micro_kernels::symv::symv_copy_register</references>
+        <referencedby refid="group__topic-linalg_1gaf56b3f892871b53ff7dc0efedb0eac36" compoundref="symv_8hpp" startline="47" endline="52">batmat::linalg::symv</referencedby>
+        <referencedby refid="group__topic-linalg_1ga6be77cce642739acb04a594098a57ffe" compoundref="symv_8hpp" startline="67" endline="71">batmat::linalg::symv_add</referencedby>
+        <referencedby refid="group__topic-linalg_1ga9577422bc277329e6409043853208764" compoundref="symv_8hpp" startline="57" endline="62">batmat::linalg::symv_neg</referencedby>
+        <referencedby refid="group__topic-linalg_1ga126f2b74ab3588969d16c1ea34febd99" compoundref="symv_8hpp" startline="82" endline="86">batmat::linalg::symv_sub</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1aad5eae1a9a7c923fe97aa8062e74beec" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>micro_kernels::trsm::KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::trsm</definition>
+        <argsstring>(view&lt; const T, Abi, OA &gt; A, view&lt; const T, Abi, OB &gt; B, view&lt; T, Abi, OD &gt; D)</argsstring>
+        <name>trsm</name>
+        <qualifiedname>batmat::linalg::detail::trsm</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OB &gt;</type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/trsm.hpp" line="29" column="6" bodyfile="batmat/include/batmat/linalg/trsm.hpp" bodystart="29" bodyend="42"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="group__topic-linalg-flops_1ga982c62c85e182a49c333bb2eef903625" compoundref="flops_8hpp" startline="191" endline="193">batmat::linalg::flops::trsm</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trsm_1a99e84b46532140e0b84a1a60002bd82f" compoundref="trsm_8tpp" startline="85" endline="142">batmat::linalg::micro_kernels::trsm::trsm_copy_register</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1a7c0391dc95024cb883f25c65e495ad58" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>micro_kernels::trtri::KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::trtri</definition>
+        <argsstring>(view&lt; const T, Abi, OA &gt; A, view&lt; T, Abi, OD &gt; D)</argsstring>
+        <name>trtri</name>
+        <qualifiedname>batmat::linalg::detail::trtri</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/trtri.hpp" line="17" column="6" bodyfile="batmat/include/batmat/linalg/trtri.hpp" bodystart="17" bodyend="29"/>
+        <references refid="assume_8hpp_1a64f9b433541d79ef4ca7cd707bcbb2bd" compoundref="assume_8hpp" startline="14">BATMAT_ASSERT</references>
+        <references refid="group__topic-linalg-flops_1ga5f151f75e2a3092103903fb8f8f3cae3" compoundref="flops_8hpp" startline="199" endline="201">batmat::linalg::flops::trtri</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1abad0e2c032d6297bf7a2f0a68b771d40" compoundref="trtri_8tpp" startline="132" endline="178">batmat::linalg::micro_kernels::trtri::trtri_copy_register</references>
+        <referencedby refid="group__topic-linalg_1ga5a6901e33f6891995b0c147814b06230" compoundref="trtri_8hpp" startline="41" endline="46">batmat::linalg::trtri</referencedby>
+        <referencedby refid="group__topic-linalg_1gaa4e16632065fd0d673234b06e71ea4c0" compoundref="trtri_8hpp" startline="58" endline="62">batmat::linalg::trtri</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/compress.hpp" line="13" column="1"/>
+  </compounddef>
+</doxygen>

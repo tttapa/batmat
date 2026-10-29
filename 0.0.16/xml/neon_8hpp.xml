@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="neon_8hpp" kind="file" language="C++">
+    <compoundname>neon.hpp</compoundname>
+    <includes local="no">batmat/config.hpp</includes>
+    <includes refid="simd_8hpp" local="no">batmat/simd.hpp</includes>
+    <incdepgraph>
+      <node id="1">
+        <label>batmat/include/batmat/platform/neon.hpp</label>
+        <link refid="neon_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>batmat/unroll.h</label>
+        <link refid="unroll_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/config.hpp</label>
+      </node>
+      <node id="7">
+        <label>cstddef</label>
+      </node>
+      <node id="6">
+        <label>experimental/simd</label>
+      </node>
+      <node id="5">
+        <label>guanaqo/stringify.h</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg">batmat::linalg</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels">batmat::linalg::micro_kernels</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm">batmat::linalg::micro_kernels::gemm</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1ops">batmat::ops</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;batmat/config.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="simd_8hpp" kindref="compound">batmat/simd.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat" kindref="compound">batmat</ref><sp/>{</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm" kindref="compound">linalg::micro_kernels::gemm</ref><sp/>{</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment"></highlight></codeline>
+<codeline lineno="9"><highlight class="comment">///<sp/>Register<sp/>block<sp/>size<sp/>of<sp/>the<sp/>matrix-matrix<sp/>multiplication<sp/>micro-kernels.</highlight></codeline>
+<codeline lineno="10"><highlight class="comment">///<sp/>NEON<sp/>has<sp/>32<sp/>vector<sp/>registers,<sp/>we<sp/>use<sp/>16<sp/>registers<sp/>for<sp/>a<sp/>4×4<sp/>accumulator</highlight></codeline>
+<codeline lineno="11"><highlight class="comment">///<sp/>block<sp/>of<sp/>matrix<sp/>C<sp/>(leaving<sp/>plenty<sp/>of<sp/>registers<sp/>for<sp/>loading<sp/>A<sp/>and<sp/>B):</highlight></codeline>
+<codeline lineno="12"><highlight class="comment">///<sp/>@todo<sp/><sp/><sp/>On<sp/>the<sp/>Raspberry<sp/>Pi<sp/>3B+<sp/>(Cortex<sp/>A53)<sp/>I<sp/>used<sp/>for<sp/>testing,<sp/>a<sp/>5×5<sp/>accumulator</highlight></codeline>
+<codeline lineno="13"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>was<sp/>&gt;6%<sp/>slower<sp/>for<sp/>15×15<sp/>matrix-matrix<sp/>multiplication,<sp/>and<sp/>&gt;5%<sp/>slower<sp/>for</highlight></codeline>
+<codeline lineno="14"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>20×20<sp/>matrices.</highlight></codeline>
+<codeline lineno="15"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>My<sp/>conjecture<sp/>is<sp/>that<sp/>since<sp/>pre-loading<sp/>the<sp/>elements<sp/>of<sp/>A<sp/>and<sp/>B<sp/>requires</highlight></codeline>
+<codeline lineno="16"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RowsReg+ColsReg<sp/>registers,<sp/>the<sp/>total<sp/>number<sp/>of<sp/>registers<sp/>required<sp/>is<sp/>then<sp/>35</highlight></codeline>
+<codeline lineno="17"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>for<sp/>the<sp/>5×5<sp/>case,<sp/>and<sp/>the<sp/>compiler<sp/>prevents<sp/>spilling<sp/>those<sp/>three<sp/>extra</highlight></codeline>
+<codeline lineno="18"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>registers<sp/>by<sp/>interleaving<sp/>the<sp/>loads<sp/>of<sp/>A<sp/>and<sp/>B<sp/>with<sp/>FMA<sp/>instructions,<sp/>and</highlight></codeline>
+<codeline lineno="19"><highlight class="comment">///<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this<sp/>is<sp/>suboptimal<sp/>because<sp/>of<sp/>the<sp/>higher<sp/>instruction<sp/>latencies.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__linalg__views_1gabed7475ccfc9ffbfefa79146942dd1ab" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">index_t</ref><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref><sp/>=<sp/>4;</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Vectors<sp/>greater<sp/>than<sp/>the<sp/>physical<sp/>vector<sp/>length<sp/>use<sp/>more<sp/>registers,<sp/>so<sp/>decrease<sp/>the<sp/>block<sp/>size.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal">(datapar::simd_size&lt;T,<sp/>Abi&gt;::value<sp/>*<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(T)<sp/>&gt;<sp/>16)</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>index_t<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg&lt;T, Abi&gt;</ref><sp/>=<sp/>3;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>linalg::micro_kernels::gemm</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1ops" kindref="compound">ops</ref><sp/>{</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T&gt;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__linalg__views_1gabed7475ccfc9ffbfefa79146942dd1ab" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">index_t</ref><sp/><ref refid="namespacebatmat_1_1ops_1a1c03064f61a66762167720552b17492d" kindref="member">RowsRegTranspose</ref><sp/>=<sp/>4;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T&gt;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/><ref refid="group__linalg__views_1gabed7475ccfc9ffbfefa79146942dd1ab" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">index_t</ref><sp/><ref refid="namespacebatmat_1_1ops_1aba08c59c6da886c90e67b44012ac10db" kindref="member">ColsRegTranspose</ref><sp/>=<sp/>4;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>ops</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/platform/neon.hpp"/>
+  </compounddef>
+</doxygen>

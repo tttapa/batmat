@@ -1,0 +1,288 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="micro-kernels_2potrf_8hpp" kind="file" language="C++">
+    <compoundname>potrf.hpp</compoundname>
+    <includes refid="structure_8hpp" local="no">batmat/linalg/structure.hpp</includes>
+    <includes refid="uview_8hpp" local="no">batmat/linalg/uview.hpp</includes>
+    <includes refid="lut_8hpp" local="no">batmat/lut.hpp</includes>
+    <includes refid="platform_8hpp" local="no">batmat/platform/platform.hpp</includes>
+    <includedby refid="potrf_8tpp" local="no">batmat/include/batmat/linalg/micro-kernels/potrf.tpp</includedby>
+    <includedby refid="potrf_8hpp" local="no">batmat/include/batmat/linalg/potrf.hpp</includedby>
+    <incdepgraph>
+      <node id="5">
+        <label>batmat/assume.hpp</label>
+        <link refid="assume_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/micro-kernels/potrf.hpp</label>
+        <link refid="micro-kernels_2potrf_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/linalg/structure.hpp</label>
+        <link refid="structure_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>batmat/linalg/uview.hpp</label>
+        <link refid="uview_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>batmat/lut.hpp</label>
+        <link refid="lut_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+      </node>
+      <node id="16">
+        <label>batmat/matrix/layout.hpp</label>
+        <link refid="layout_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>batmat/matrix/matrix.hpp</label>
+        <link refid="matrix_8hpp"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>batmat/matrix/storage.hpp</label>
+        <link refid="storage_8hpp"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>batmat/matrix/view.hpp</label>
+        <link refid="view_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+      </node>
+      <node id="26">
+        <label>generic.hpp</label>
+        <link refid="generic_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="25">
+        <label>batmat/platform/platform.hpp</label>
+        <link refid="platform_8hpp"/>
+        <childnode refid="26" relation="include">
+        </childnode>
+      </node>
+      <node id="19">
+        <label>batmat/simd.hpp</label>
+        <link refid="simd_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="20">
+        <label>batmat/unroll.h</label>
+        <link refid="unroll_8h"/>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>batmat/config.hpp</label>
+      </node>
+      <node id="10">
+        <label>cstddef</label>
+      </node>
+      <node id="3">
+        <label>cstdint</label>
+      </node>
+      <node id="22">
+        <label>experimental/simd</label>
+      </node>
+      <node id="7">
+        <label>guanaqo/assume.hpp</label>
+      </node>
+      <node id="24">
+        <label>guanaqo/lut.hpp</label>
+      </node>
+      <node id="17">
+        <label>guanaqo/mat-view.hpp</label>
+      </node>
+      <node id="21">
+        <label>guanaqo/stringify.h</label>
+      </node>
+      <node id="11">
+        <label>memory</label>
+      </node>
+      <node id="12">
+        <label>new</label>
+      </node>
+      <node id="13">
+        <label>tuple</label>
+      </node>
+      <node id="14">
+        <label>type_traits</label>
+      </node>
+      <node id="18">
+        <label>utility</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>batmat/include/batmat/linalg/micro-kernels/potrf.hpp</label>
+        <link refid="micro-kernels_2potrf_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/include/batmat/linalg/micro-kernels/potrf.tpp</label>
+        <link refid="potrf_8tpp"/>
+      </node>
+      <node id="3">
+        <label>batmat/include/batmat/linalg/potrf.hpp</label>
+        <link refid="potrf_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>/home/runner/work/batmat/batmat/test_package/src/example.cpp</label>
+        <link refid="example_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig" prot="public">batmat::linalg::micro_kernels::potrf::KernelConfig</innerclass>
+    <innernamespace refid="namespacebatmat">batmat</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg">batmat::linalg</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels">batmat::linalg::micro_kernels</innernamespace>
+    <innernamespace refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf">batmat::linalg::micro_kernels::potrf</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="structure_8hpp" kindref="compound">batmat/linalg/structure.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="uview_8hpp" kindref="compound">batmat/linalg/uview.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="lut_8hpp" kindref="compound">batmat/lut.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="platform_8hpp" kindref="compound">batmat/platform/platform.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf" kindref="compound">batmat::linalg::micro_kernels::potrf</ref><sp/>{</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig" kindref="compound">KernelConfig</ref><sp/>{</highlight></codeline>
+<codeline lineno="11" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1ada105bb42463d5bbe94ce27ca7ac32a1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1ada105bb42463d5bbe94ce27ca7ac32a1" kindref="member">negate_A</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;<sp/></highlight><highlight class="comment">///&lt;<sp/>Whether<sp/>to<sp/>compute<sp/>chol(C<sp/>-<sp/>AAᵀ)<sp/>instead<sp/>of<sp/>chol(C<sp/>+<sp/>AAᵀ)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="13" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a3e7683f0ba8402225c7348789af1e099a154a31ef679d3225faff9555209943ab" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a3e7683f0ba8402225c7348789af1e099a154a31ef679d3225faff9555209943ab" kindref="member">none</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">///&lt;<sp/>chol(C<sp/>±<sp/>AAᵀ)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a3e7683f0ba8402225c7348789af1e099af0b291977ffe9a05d5456a1efb05554c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a3e7683f0ba8402225c7348789af1e099af0b291977ffe9a05d5456a1efb05554c" kindref="member">diag</ref>,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">///&lt;<sp/>chol(C<sp/>±<sp/>AΣAᵀ)<sp/>with<sp/>Σ<sp/>diagonal</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a3e7683f0ba8402225c7348789af1e099a886c4a3a3949d7b84fb8988e7eeda89d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a3e7683f0ba8402225c7348789af1e099a886c4a3a3949d7b84fb8988e7eeda89d" kindref="member">diag_sign_only</ref>,<sp/></highlight><highlight class="comment">///&lt;<sp/>chol(C<sp/>±<sp/>AΣAᵀ)<sp/>with<sp/>Σ<sp/>diagonal<sp/>and<sp/>containing<sp/>only<sp/>±0<sp/>(just<sp/>sign<sp/>bits)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a20833ec519481422bd9bc1631fa59868" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a20833ec519481422bd9bc1631fa59868" kindref="member">diag_A</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a3e7683f0ba8402225c7348789af1e099a154a31ef679d3225faff9555209943ab" kindref="member">none</ref>;</highlight></codeline>
+<codeline lineno="17" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1ac48c38281b3af8627212821e877ece06" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref><sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1ac48c38281b3af8627212821e877ece06" kindref="member">struc_C</ref><sp/>=<sp/><ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" kindref="member">MatrixStructure::LowerTriangular</ref>;</highlight></codeline>
+<codeline lineno="18" refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a522fcb6201164793a58462099beb28a9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a522fcb6201164793a58462099beb28a9" kindref="member">with_diag</ref>()<sp/>const<sp/>noexcept<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a20833ec519481422bd9bc1631fa59868" kindref="member">diag_A</ref><sp/>!=<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig_1a3e7683f0ba8402225c7348789af1e099a154a31ef679d3225faff9555209943ab" kindref="member">none</ref>;<sp/>}</highlight></codeline>
+<codeline lineno="19"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf&gt;</highlight></codeline>
+<codeline lineno="22" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a6d97a42fcc9cb4c6ec3bc1fecc25ee03" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a6d97a42fcc9cb4c6ec3bc1fecc25ee03" kindref="member">diag_uview_type</ref><sp/>=<sp/>std::conditional_t&lt;Conf.with_diag(),<sp/><ref refid="structbatmat_1_1linalg_1_1uview__vec" kindref="compound">uview_vec&lt;T, Abi&gt;</ref>,<sp/>std::false_type&gt;;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf&gt;</highlight></codeline>
+<codeline lineno="24" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1ac8c97a705deb67e219cdf6e4c0549c3f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1ac8c97a705deb67e219cdf6e4c0549c3f" kindref="member">diag_view_type</ref><sp/>=<sp/>std::conditional_t&lt;Conf.with_diag(),<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi&gt;</ref>,<sp/>std::false_type&gt;;</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>index_t<sp/>RowsReg,<sp/>StorageOrder<sp/>O1,<sp/>StorageOrder<sp/>O2&gt;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1add686c799a211b971e9a8453d122bedc" kindref="member">potrf_copy_microkernel</ref>(<ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, O1&gt;</ref><sp/>A1,<sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, O2&gt;</ref><sp/>A2,</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, O2&gt;</ref><sp/>C,<sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, O2&gt;</ref><sp/>D,<sp/>T<sp/>*invD,<sp/>index_t<sp/>k1,</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>index_t<sp/>k2,<sp/>T<sp/>regularization,</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a6d97a42fcc9cb4c6ec3bc1fecc25ee03" kindref="member">diag_uview_type&lt;const T, Abi, Conf&gt;</ref><sp/>diag)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">T,<sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Abi,<sp/><ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig" kindref="compound">KernelConfig</ref><sp/>Conf,<sp/>index_t<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>,<sp/>index_t<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a1af456782f0f08207d0c9ca6a9d65df4" kindref="member">ColsReg</ref>,<sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>O1,</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref><sp/>O2&gt;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a7409608f7378a6391ad092fbaf087932" kindref="member">trsm_copy_microkernel</ref>(<ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, O1&gt;</ref><sp/>A1,<sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, O1&gt;</ref><sp/>B1,</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, O2&gt;</ref><sp/>A2,<sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, O2&gt;</ref><sp/>B2,</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, O2&gt;</ref><sp/>L,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>T<sp/>*invL,<sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;const T, Abi, O2&gt;</ref><sp/>C,</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview&lt;T, Abi, O2&gt;</ref><sp/>D,<sp/>index_t<sp/>k1,<sp/>index_t<sp/>k2,</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a6d97a42fcc9cb4c6ec3bc1fecc25ee03" kindref="member">diag_uview_type&lt;const T, Abi, Conf&gt;</ref><sp/>diag)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>StorageOrder<sp/>OA,<sp/>StorageOrder<sp/>OCD&gt;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a8bf1deb6078071adb45021570fadae23" kindref="member">potrf_copy_register</ref>(<ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OA&gt;</ref><sp/>A,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;const T, Abi, OCD&gt;</ref><sp/>C,<sp/><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view&lt;T, Abi, OCD&gt;</ref><sp/>D,</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>T<sp/>regularization,<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1ac8c97a705deb67e219cdf6e4c0549c3f" kindref="member">diag_view_type&lt;const T, Abi, Conf&gt;</ref><sp/>diag)<sp/></highlight><highlight class="keyword">noexcept</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Square<sp/>block<sp/>sizes<sp/>greatly<sp/>simplify<sp/>handling<sp/>of<sp/>triangular<sp/>matrices.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1gemm_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">gemm::RowsReg</ref>;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi&gt;</highlight></codeline>
+<codeline lineno="47" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a1af456782f0f08207d0c9ca6a9d65df4" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>index_t<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a1af456782f0f08207d0c9ca6a9d65df4" kindref="member">ColsReg</ref><sp/>=<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg&lt;T, Abi&gt;</ref>;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>StorageOrder<sp/>OA,<sp/>StorageOrder<sp/>OC&gt;</highlight></codeline>
+<codeline lineno="50" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a6aa231e11d4fdeeef42148191cf288df" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constinit</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a6aa231e11d4fdeeef42148191cf288df" kindref="member">potrf_copy_lut</ref><sp/>=</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__topic-utils_1ga91b0a07e3a00c803e9859ace6b86828f" kindref="member">make_1d_lut&lt;RowsReg&lt;T, Abi&gt;</ref>&gt;([]&lt;index_t<sp/>Row&gt;(<ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant&lt;Row&gt;</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1add686c799a211b971e9a8453d122bedc" kindref="member">potrf_copy_microkernel&lt;T, Abi, Conf, Row + 1, OA, OC&gt;</ref>;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>Abi,<sp/>KernelConfig<sp/>Conf,<sp/>StorageOrder<sp/>O1,<sp/>StorageOrder<sp/>O2&gt;</highlight></codeline>
+<codeline lineno="56" refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1abae632b1484c889c2f362b44dcae8c4e" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constinit</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1abae632b1484c889c2f362b44dcae8c4e" kindref="member">trsm_copy_lut</ref><sp/>=<sp/><ref refid="group__topic-utils_1gae259627b9bd8c02e66d1e244c969e2bc" kindref="member">make_2d_lut&lt;RowsReg&lt;T, Abi&gt;</ref>,<sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a1af456782f0f08207d0c9ca6a9d65df4" kindref="member">ColsReg&lt;T, Abi&gt;</ref>&gt;(</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>[]&lt;index_t<sp/>Row,<sp/>index_t<sp/>Col&gt;(<ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant&lt;Row&gt;</ref>,<sp/><ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant&lt;Col&gt;</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a7409608f7378a6391ad092fbaf087932" kindref="member">trsm_copy_microkernel&lt;T, Abi, Conf, Row + 1, Col + 1, O1, O2&gt;</ref>;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>batmat::linalg::micro_kernels::potrf</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="batmat/include/batmat/linalg/micro-kernels/potrf.hpp"/>
+  </compounddef>
+</doxygen>

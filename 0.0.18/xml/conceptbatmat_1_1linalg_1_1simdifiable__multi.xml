@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="conceptbatmat_1_1linalg_1_1simdifiable__multi" kind="concept">
+    <compoundname>batmat::linalg::simdifiable_multi</compoundname>
+    <includes refid="simdify_8hpp" local="no">batmat/linalg/simdify.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>class V</type>
+      </param>
+    </templateparamlist>
+    <initializer>template&lt;class V&gt;
+concept <ref refid="conceptbatmat_1_1linalg_1_1simdifiable__multi" kindref="compound">batmat::linalg::simdifiable_multi</ref> = 
+    requires { typename <ref refid="namespacebatmat_1_1linalg_1a3f72f46ab5a64618b0df6098b8540343" kindref="member">simdified_multi_view_type</ref>&lt;std::remove_reference_t&lt;V&gt;&gt;::type; }</initializer>
+    <conceptparts>
+      <codepart line="227">    <programlisting>
+<codeline><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>V&gt;</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">concept<sp/></highlight><highlight class="normal">simdifiable_multi<sp/>=</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">requires</highlight><highlight class="normal"><sp/>{<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>simdified_multi_view_type&lt;std::remove_reference_t&lt;V&gt;&gt;::type;<sp/>}</highlight></codeline>
+    </programlisting>
+</codepart>
+    </conceptparts>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/simdify.hpp" line="227" column="1"/>
+  </compounddef>
+</doxygen>

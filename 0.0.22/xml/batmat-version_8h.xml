@@ -1,0 +1,181 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="batmat-version_8h" kind="file" language="C++">
+    <compoundname>batmat-version.h</compoundname>
+    <includes local="no">batmat/export.h</includes>
+    <includedby refid="example_8cpp" local="no">/home/runner/work/batmat/batmat/test_package/src/example.cpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>/home/runner/work/batmat/batmat/build/src/include/batmat-version.h</label>
+        <link refid="batmat-version_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>batmat/export.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>/home/runner/work/batmat/batmat/build/src/include/batmat-version.h</label>
+        <link refid="batmat-version_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>/home/runner/work/batmat/batmat/test_package/src/example.cpp</label>
+        <link refid="example_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="batmat-version_8h_1a58ea23794517aa2becf6d0714cc52e0e" prot="public" static="no">
+        <name>BATMAT_VERSION_MAJOR</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" line="4" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" bodystart="4" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="batmat-version_8h_1a2fcb01f524d576d46be6f53f1c949e52" prot="public" static="no">
+        <name>BATMAT_VERSION_MINOR</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" line="5" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" bodystart="5" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="batmat-version_8h_1aa87f6527fe88544ca94be7dbc759df38" prot="public" static="no">
+        <name>BATMAT_VERSION_PATCH</name>
+        <initializer>22</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" line="6" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" bodystart="6" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="batmat-version_8h_1a5220a76cdcd2bea291ee2fb375b5a4ea" prot="public" static="no">
+        <name>BATMAT_VERSION_SUFFIX</name>
+        <initializer>&quot;&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" line="7" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="batmat-version_8h_1acc797f41c47bb085ca182702e86822ba" prot="public" static="no">
+        <name>BATMAT_VERSION</name>
+        <initializer>&quot;0.0.22&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" line="8" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" bodystart="8" bodyend="-1"/>
+        <referencedby refid="example_8cpp_1ae66f6b31b5ad750f1fe042a706a4e3d4" compoundref="example_8cpp" startline="20" endline="67">main</referencedby>
+      </memberdef>
+      <memberdef kind="define" id="batmat-version_8h_1a2bfc669f9e7fdb610169f6d83c834afa" prot="public" static="no">
+        <name>BATMAT_VERSION_FULL</name>
+        <initializer>&quot;0.0.22&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" line="9" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="batmat-version_8h_1a6b584e4f97b35e81f16c2ed16b1dffff" prot="public" static="no">
+        <name>BATMAT_BUILD_TIME</name>
+        <initializer><ref refid="batmat-version_8h_1a8771c6d9a5e9e4cef12c259099f83fce" kindref="member">batmat_build_time</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" line="10" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="batmat-version_8h_1a249ad5f1b1701617af8dd9c273bcabbf" prot="public" static="no">
+        <name>BATMAT_COMMIT_HASH</name>
+        <initializer><ref refid="batmat-version_8h_1a801befc8f3946b7412cb8a19e38dd439" kindref="member">batmat_commit_hash</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" line="11" column="9" bodyfile="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" bodystart="11" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="batmat-version_8h_1a8771c6d9a5e9e4cef12c259099f83fce" prot="public" static="no" extern="yes" mutable="no">
+        <type>const char *const</type>
+        <definition>const char* const batmat_build_time</definition>
+        <argsstring></argsstring>
+        <name>batmat_build_time</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" line="18" column="26" declfile="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" declline="18" declcolumn="26"/>
+        <referencedby refid="example_8cpp_1ae66f6b31b5ad750f1fe042a706a4e3d4" compoundref="example_8cpp" startline="20" endline="67">main</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="batmat-version_8h_1a801befc8f3946b7412cb8a19e38dd439" prot="public" static="no" extern="yes" mutable="no">
+        <type>const char *const</type>
+        <definition>const char* const batmat_commit_hash</definition>
+        <argsstring></argsstring>
+        <name>batmat_commit_hash</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" line="19" column="26" declfile="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h" declline="19" declcolumn="26"/>
+        <referencedby refid="example_8cpp_1ae66f6b31b5ad750f1fe042a706a4e3d4" compoundref="example_8cpp" startline="20" endline="67">main</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/>NOLINTBEGIN(*-macro-to-enum)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4" refid="batmat-version_8h_1a58ea23794517aa2becf6d0714cc52e0e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_VERSION_MAJOR<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5" refid="batmat-version_8h_1a2fcb01f524d576d46be6f53f1c949e52" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_VERSION_MINOR<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6" refid="batmat-version_8h_1aa87f6527fe88544ca94be7dbc759df38" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_VERSION_PATCH<sp/>22</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7" refid="batmat-version_8h_1a5220a76cdcd2bea291ee2fb375b5a4ea" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_VERSION_SUFFIX<sp/>&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8" refid="batmat-version_8h_1acc797f41c47bb085ca182702e86822ba" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_VERSION<sp/>&quot;0.0.22&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9" refid="batmat-version_8h_1a2bfc669f9e7fdb610169f6d83c834afa" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_VERSION_FULL<sp/>&quot;0.0.22&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10" refid="batmat-version_8h_1a6b584e4f97b35e81f16c2ed16b1dffff" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_BUILD_TIME<sp/>batmat_build_time</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11" refid="batmat-version_8h_1a249ad5f1b1701617af8dd9c273bcabbf" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BATMAT_COMMIT_HASH<sp/>batmat_commit_hash</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//<sp/>NOLINTEND(*-macro-to-enum)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;batmat/export.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>__cplusplus</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="stringliteral">&quot;C&quot;</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/>BATMAT_EXPORT<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="batmat-version_8h_1a8771c6d9a5e9e4cef12c259099f83fce" kindref="member">batmat_build_time</ref>;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/>BATMAT_EXPORT<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="batmat-version_8h_1a801befc8f3946b7412cb8a19e38dd439" kindref="member">batmat_commit_hash</ref>;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>__cplusplus</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/home/runner/work/batmat/batmat/build/src/include/batmat-version.h"/>
+  </compounddef>
+</doxygen>

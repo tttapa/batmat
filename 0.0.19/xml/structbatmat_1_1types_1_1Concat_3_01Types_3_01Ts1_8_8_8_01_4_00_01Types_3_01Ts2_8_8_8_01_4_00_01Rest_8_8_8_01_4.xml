@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1types_1_1Concat_3_01Types_3_01Ts1_8_8_8_01_4_00_01Types_3_01Ts2_8_8_8_01_4_00_01Rest_8_8_8_01_4" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::types::Concat&lt; Types&lt; Ts1... &gt;, Types&lt; Ts2... &gt;, Rest... &gt;</compoundname>
+    <includes refid="dtypes_8hpp" local="no">batmat/dtypes.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>class...</type>
+        <declname>Ts1</declname>
+        <defname>Ts1</defname>
+      </param>
+      <param>
+        <type>class...</type>
+        <declname>Ts2</declname>
+        <defname>Ts2</defname>
+      </param>
+      <param>
+        <type>class...</type>
+        <declname>Rest</declname>
+        <defname>Rest</defname>
+      </param>
+    </templateparamlist>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structbatmat_1_1types_1_1Concat_3_01Types_3_01Ts1_8_8_8_01_4_00_01Types_3_01Ts2_8_8_8_01_4_00_01Rest_8_8_8_01_4_1a61dd542800510e463518b5cd0cada2b6" prot="public" static="no">
+        <type>typename <ref refid="structbatmat_1_1types_1_1Concat" kindref="compound">Concat</ref>&lt; <ref refid="structbatmat_1_1types_1_1Types" kindref="compound">Types</ref>&lt; Ts1..., Ts2... &gt;, Rest... &gt;::type</type>
+        <definition>using batmat::types::Concat&lt; Types&lt; Ts1... &gt;, Types&lt; Ts2... &gt;, Rest... &gt;::type = typename Concat&lt;Types&lt;Ts1..., Ts2...&gt;, Rest...&gt;::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <qualifiedname>batmat::types::Concat&lt; Types&lt; Ts1... &gt;, Types&lt; Ts2... &gt;, Rest... &gt;::type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/dtypes.hpp" line="43" column="5" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="43" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::types::Concat&lt; Types&lt; Ts1... &gt;, Types&lt; Ts2... &gt;, Rest... &gt;</label>
+        <link refid="structbatmat_1_1types_1_1Concat_3_01Types_3_01Ts1_8_8_8_01_4_00_01Types_3_01Ts2_8_8_8_01_4_00_01Rest_8_8_8_01_4"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/dtypes.hpp" line="42" column="1" bodyfile="batmat/include/batmat/dtypes.hpp" bodystart="42" bodyend="44"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1types_1_1Concat_3_01Types_3_01Ts1_8_8_8_01_4_00_01Types_3_01Ts2_8_8_8_01_4_00_01Rest_8_8_8_01_4_1a61dd542800510e463518b5cd0cada2b6" prot="public" virt="non-virtual"><scope>batmat::types::Concat&lt; Types&lt; Ts1... &gt;, Types&lt; Ts2... &gt;, Rest... &gt;</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

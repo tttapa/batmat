@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1detail" kind="namespace" language="C++">
+    <compoundname>batmat::detail</compoundname>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacebatmat_1_1detail_1af4ebcc103086a296893602f9b5866fb9" prot="public" static="no" extern="yes" mutable="no">
+        <type>std::mutex</type>
+        <definition>std::mutex batmat::detail::pool_mtx</definition>
+        <argsstring></argsstring>
+        <name>pool_mtx</name>
+        <qualifiedname>batmat::detail::pool_mtx</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="104" column="19" bodyfile="batmat/src/thread-pool.cpp" bodystart="6" bodyend="-1" declfile="batmat/include/batmat/thread-pool.hpp" declline="104" declcolumn="19"/>
+        <referencedby refid="group__topic-utils_1ga9d3db6b0fa567b730dae54e1f1012165" compoundref="thread-pool_8cpp" startline="11" endline="15">batmat::pool_set_num_threads</referencedby>
+        <referencedby refid="group__topic-utils_1ga536ae1dd079e87845527154b7f4ecc06" compoundref="thread-pool_8hpp" startline="117" endline="122">batmat::pool_sync_run_all</referencedby>
+        <referencedby refid="group__topic-utils_1ga72f329f3122a76019f71f597fa44bae7" compoundref="thread-pool_8hpp" startline="129" endline="134">batmat::pool_sync_run_n</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1detail_1a20bcf72347bb0bdb2eebbeadcdd5e0b2" prot="public" static="no" extern="yes" mutable="no">
+        <type>std::optional&lt; <ref refid="classbatmat_1_1thread__pool" kindref="compound">thread_pool</ref> &gt;</type>
+        <definition>std::optional&lt; thread_pool &gt; batmat::detail::pool</definition>
+        <argsstring></argsstring>
+        <name>pool</name>
+        <qualifiedname>batmat::detail::pool</qualifiedname>
+        <initializer>{
+     std::nullopt ,
+}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="105" column="22" bodyfile="batmat/src/thread-pool.cpp" bodystart="7" bodyend="9" declfile="batmat/include/batmat/thread-pool.hpp" declline="105" declcolumn="22"/>
+        <referencedby refid="group__topic-utils_1ga9d3db6b0fa567b730dae54e1f1012165" compoundref="thread-pool_8cpp" startline="11" endline="15">batmat::pool_set_num_threads</referencedby>
+        <referencedby refid="group__topic-utils_1ga536ae1dd079e87845527154b7f4ecc06" compoundref="thread-pool_8hpp" startline="117" endline="122">batmat::pool_sync_run_all</referencedby>
+        <referencedby refid="group__topic-utils_1ga72f329f3122a76019f71f597fa44bae7" compoundref="thread-pool_8hpp" startline="129" endline="134">batmat::pool_sync_run_n</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/thread-pool.hpp" line="103" column="1"/>
+  </compounddef>
+</doxygen>

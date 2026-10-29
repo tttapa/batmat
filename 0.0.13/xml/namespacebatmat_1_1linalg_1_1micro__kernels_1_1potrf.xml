@@ -1,0 +1,541 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf" kind="namespace" language="C++">
+    <compoundname>batmat::linalg::micro_kernels::potrf</compoundname>
+    <innerclass refid="structbatmat_1_1linalg_1_1micro__kernels_1_1potrf_1_1KernelConfig" prot="public">batmat::linalg::micro_kernels::potrf::KernelConfig</innerclass>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a1af456782f0f08207d0c9ca6a9d65df4" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::micro_kernels::potrf::ColsReg</definition>
+        <argsstring></argsstring>
+        <name>ColsReg</name>
+        <qualifiedname>batmat::linalg::micro_kernels::potrf::ColsReg</qualifiedname>
+        <initializer>= <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>&lt;T, Abi&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/potrf.hpp" line="34" column="19" bodyfile="batmat/include/batmat/linalg/micro-kernels/potrf.hpp" bodystart="34" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a700219e236a2235161b7db469747c2eb" compoundref="potrf_8tpp" startline="185" endline="228">potrf_copy_register</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a7a3744f989a8df63de26c39485592f56" compoundref="potrf_8tpp" startline="126" endline="182">trsm_copy_microkernel</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a6aa231e11d4fdeeef42148191cf288df" prot="public" static="no" constinit="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OC</declname>
+            <defname>OC</defname>
+          </param>
+        </templateparamlist>
+        <type>const constinit auto</type>
+        <definition>const constinit auto batmat::linalg::micro_kernels::potrf::potrf_copy_lut</definition>
+        <argsstring></argsstring>
+        <name>potrf_copy_lut</name>
+        <qualifiedname>batmat::linalg::micro_kernels::potrf::potrf_copy_lut</qualifiedname>
+        <initializer>                                       =
+<ref refid="group__topic-utils_1ga91b0a07e3a00c803e9859ace6b86828f" kindref="member">make_1d_lut</ref>&lt;<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>&lt;T, Abi&gt;&gt;([]&lt;index_t Row&gt;(<ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant</ref>&lt;Row&gt;) {
+    return <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a4cf72cfb5e51291483e7b258efc0efc4" kindref="member">potrf_copy_microkernel</ref>&lt;T, Abi, Conf, Row + 1, OA, OC&gt;;
+})</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/potrf.hpp" line="37" column="29" bodyfile="batmat/include/batmat/linalg/micro-kernels/potrf.hpp" bodystart="37" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a700219e236a2235161b7db469747c2eb" compoundref="potrf_8tpp" startline="185" endline="228">potrf_copy_register</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1abae632b1484c889c2f362b44dcae8c4e" prot="public" static="no" constinit="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>O1</declname>
+            <defname>O1</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>O2</declname>
+            <defname>O2</defname>
+          </param>
+        </templateparamlist>
+        <type>const constinit auto</type>
+        <definition>const constinit auto batmat::linalg::micro_kernels::potrf::trsm_copy_lut</definition>
+        <argsstring></argsstring>
+        <name>trsm_copy_lut</name>
+        <qualifiedname>batmat::linalg::micro_kernels::potrf::trsm_copy_lut</qualifiedname>
+        <initializer>                                      = <ref refid="group__topic-utils_1gae259627b9bd8c02e66d1e244c969e2bc" kindref="member">make_2d_lut</ref>&lt;<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>&lt;T, Abi&gt;, <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a1af456782f0f08207d0c9ca6a9d65df4" kindref="member">ColsReg</ref>&lt;T, Abi&gt;&gt;(
+[]&lt;index_t Row, index_t Col&gt;(<ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant</ref>&lt;Row&gt;, <ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant</ref>&lt;Col&gt;) {
+    return <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a7a3744f989a8df63de26c39485592f56" kindref="member">trsm_copy_microkernel</ref>&lt;T, Abi, Conf, Row + 1, Col + 1, O1, O2&gt;;
+})</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/potrf.hpp" line="43" column="29" bodyfile="batmat/include/batmat/linalg/micro-kernels/potrf.hpp" bodystart="43" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a700219e236a2235161b7db469747c2eb" compoundref="potrf_8tpp" startline="185" endline="228">potrf_copy_register</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a52c9ed1b17421bb6dbc28e5a7c75fdac" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::micro_kernels::gemm::RowsReg</definition>
+        <argsstring></argsstring>
+        <name>RowsReg</name>
+        <qualifiedname>batmat::linalg::micro_kernels::potrf::RowsReg</qualifiedname>
+        <briefdescription>
+<para>Register block size of the matrix-matrix multiplication micro-kernels. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>AVX-512 has 32 vector registers, we use 25 registers for a 5×5 accumulator block of matrix C (leaving some registers for loading A and B):</para>
+<para>AVX2 has 16 vector registers, we use 9 registers for a 3×3 accumulator block of matrix C (leaving some registers for loading A and B): <simplesect kind="note"><para>A block size of 4×4 is slightly faster than 3×3 for large matrices, because the even block size results in full cache lines being consumed. For small matrices, 3×3 is faster because it does not spill any registers in the micro-kernels. 2×2 is slower than 3×3 for both small and large matrices (tested using GCC 15.1 on an i7-10750H).</para>
+</simplesect>
+Assumes that the platform has at least 16 vector registers, we use 9 registers for a 3×3 accumulator block of matrix C (leaving some registers for loading A and B):</para>
+<para>NEON has 32 vector registers, we use 16 registers for a 4×4 accumulator block of matrix C (leaving plenty of registers for loading A and B):  </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/potrf.hpp" line="32" column="1" bodyfile="batmat/include/batmat/platform/avx-512.hpp" bodystart="13" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a4cf72cfb5e51291483e7b258efc0efc4" compoundref="potrf_8tpp" startline="24" endline="111">potrf_copy_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a700219e236a2235161b7db469747c2eb" compoundref="potrf_8tpp" startline="185" endline="228">potrf_copy_register</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a7a3744f989a8df63de26c39485592f56" compoundref="potrf_8tpp" startline="126" endline="182">trsm_copy_microkernel</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a4cf72cfb5e51291483e7b258efc0efc4" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>RowsReg</declname>
+            <defname>RowsReg</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>O1</declname>
+            <defname>O1</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>O2</declname>
+            <defname>O2</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::potrf::potrf_copy_microkernel</definition>
+        <argsstring>(uview&lt; const T, Abi, O1 &gt; A1, uview&lt; const T, Abi, O2 &gt; A2, uview&lt; const T, Abi, O2 &gt; C, uview&lt; T, Abi, O2 &gt; D, T *invD, index_t k1, index_t k2, T regularization) noexcept</argsstring>
+        <name>potrf_copy_microkernel</name>
+        <qualifiedname>batmat::linalg::micro_kernels::potrf::potrf_copy_microkernel</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, O1 &gt;</type>
+          <declname>A1</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, O2 &gt;</type>
+          <declname>A2</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, O2 &gt;</type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, O2 &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type>T *</type>
+          <declname>invD</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k1</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k2</declname>
+        </param>
+        <param>
+          <type>T</type>
+          <declname>regularization</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>A1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>RowsReg×k1. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>A2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>RowsReg×k2. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>C</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>RowsReg×RowsReg. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>D</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>RowsReg×RowsReg. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>invD</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Inverse diagonal of <computeroutput>D</computeroutput>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>k1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of columns in A1. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>k2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of columns in A2. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>regularization</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Regularization added to the diagonal of C before factorization. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/potrf.tpp" line="24" column="1" bodyfile="batmat/include/batmat/linalg/micro-kernels/potrf.tpp" bodystart="24" bodyend="111" declfile="batmat/include/batmat/linalg/micro-kernels/potrf.hpp" declline="16" declcolumn="6"/>
+        <references refid="namespacebatmat_1_1datapar_1a37a115c835b05841a7f348320e1e43b6" compoundref="simd_8hpp" startline="121" endline="123">batmat::datapar::aligned_store</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" compoundref="structure_8hpp" startline="8">batmat::linalg::LowerTriangular</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a52c9ed1b17421bb6dbc28e5a7c75fdac" compoundref="avx-512_8hpp" startline="13">RowsReg</references>
+        <references refid="group__topic-low-level-ops_1ga179fee4bcade5a062eeae2b0b2d74478" compoundref="rsqrt_8hpp" startline="15" endline="18">batmat::ops::rsqrt</references>
+        <references refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" compoundref="gemm-diag_8tpp" startline="9">UNROLL_FOR</references>
+        <references refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" compoundref="uview_8hpp" startline="228" endline="230">batmat::linalg::with_cached_access</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a7a3744f989a8df63de26c39485592f56" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>RowsReg</declname>
+            <defname>RowsReg</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>ColsReg</declname>
+            <defname>ColsReg</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>O1</declname>
+            <defname>O1</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>O2</declname>
+            <defname>O2</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::potrf::trsm_copy_microkernel</definition>
+        <argsstring>(uview&lt; const T, Abi, O1 &gt; A1, uview&lt; const T, Abi, O1 &gt; B1, uview&lt; const T, Abi, O2 &gt; A2, uview&lt; const T, Abi, O2 &gt; B2, uview&lt; const T, Abi, O2 &gt; L, const T *invL, uview&lt; const T, Abi, O2 &gt; C, uview&lt; T, Abi, O2 &gt; D, index_t k1, index_t k2) noexcept</argsstring>
+        <name>trsm_copy_microkernel</name>
+        <qualifiedname>batmat::linalg::micro_kernels::potrf::trsm_copy_microkernel</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, O1 &gt;</type>
+          <declname>A1</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, O1 &gt;</type>
+          <declname>B1</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, O2 &gt;</type>
+          <declname>A2</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, O2 &gt;</type>
+          <declname>B2</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, O2 &gt;</type>
+          <declname>L</declname>
+        </param>
+        <param>
+          <type>const T *</type>
+          <declname>invL</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, O2 &gt;</type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, O2 &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k1</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>A1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>RowsReg×k1. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>B1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>ColsReg×k1. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>A2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>RowsReg×k2. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>B2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>ColsReg×k2. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>L</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>ColsReg×ColsReg. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>invL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>ColsReg (inverted diagonal of L). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>C</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>RowsReg×ColsReg. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>D</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>RowsReg×ColsReg. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>k1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of columns in A1 and B1. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>k2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of columns in A2 and B2. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/potrf.tpp" line="126" column="6" bodyfile="batmat/include/batmat/linalg/micro-kernels/potrf.tpp" bodystart="126" bodyend="182" declfile="batmat/include/batmat/linalg/micro-kernels/potrf.hpp" declline="22" declcolumn="6"/>
+        <references refid="namespacebatmat_1_1datapar_1a9e5512aee8f62a9475578de6da9dd666" compoundref="simd_8hpp" startline="111" endline="113">batmat::datapar::aligned_load</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a1af456782f0f08207d0c9ca6a9d65df4" compoundref="micro-kernels_2potrf_8hpp" startline="34">ColsReg</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" compoundref="structure_8hpp" startline="8">batmat::linalg::LowerTriangular</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a52c9ed1b17421bb6dbc28e5a7c75fdac" compoundref="avx-512_8hpp" startline="13">RowsReg</references>
+        <references refid="group__topic-low-level-ops_1ga179fee4bcade5a062eeae2b0b2d74478" compoundref="rsqrt_8hpp" startline="15" endline="18">batmat::ops::rsqrt</references>
+        <references refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" compoundref="gemm-diag_8tpp" startline="9">UNROLL_FOR</references>
+        <references refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" compoundref="uview_8hpp" startline="228" endline="230">batmat::linalg::with_cached_access</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a700219e236a2235161b7db469747c2eb" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OCD</declname>
+            <defname>OCD</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::potrf::potrf_copy_register</definition>
+        <argsstring>(view&lt; const T, Abi, OA &gt; A, view&lt; const T, Abi, OCD &gt; C, view&lt; T, Abi, OCD &gt; D, T regularization) noexcept</argsstring>
+        <name>potrf_copy_register</name>
+        <qualifiedname>batmat::linalg::micro_kernels::potrf::potrf_copy_register</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OCD &gt;</type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OCD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type>T</type>
+          <declname>regularization</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/potrf.tpp" line="185" column="6" bodyfile="batmat/include/batmat/linalg/micro-kernels/potrf.tpp" bodystart="185" bodyend="228" declfile="batmat/include/batmat/linalg/micro-kernels/potrf.hpp" declline="28" declcolumn="6"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a294edbebb26413734307376578d417d1" compoundref="uview_8hpp" startline="110" endline="112">batmat::linalg::uview&lt; T, Abi, Order &gt;::block</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a1af456782f0f08207d0c9ca6a9d65df4" compoundref="micro-kernels_2potrf_8hpp" startline="34">ColsReg</references>
+        <references refid="group__topic-utils_1gab76a36340644bbf7c8093caa45aef12f" compoundref="loop_8hpp" startline="43" endline="61">batmat::foreach_chunked_merged</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" compoundref="structure_8hpp" startline="8">batmat::linalg::LowerTriangular</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a8b369f4dec638935df8ff5ebfb37b6f8" compoundref="uview_8hpp" startline="114" endline="116">batmat::linalg::uview&lt; T, Abi, Order &gt;::middle_rows</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a6aa231e11d4fdeeef42148191cf288df" compoundref="micro-kernels_2potrf_8hpp" startline="37">potrf_copy_lut</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a52c9ed1b17421bb6dbc28e5a7c75fdac" compoundref="avx-512_8hpp" startline="13">RowsReg</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1abae632b1484c889c2f362b44dcae8c4e" compoundref="micro-kernels_2potrf_8hpp" startline="43">trsm_copy_lut</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a12bb42faad627a179c5fa5e810b2186e" compoundref="potrf_8hpp" startline="20" endline="33">batmat::linalg::detail::potrf</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/micro-kernels/potrf.hpp" line="8" column="1"/>
+  </compounddef>
+</doxygen>

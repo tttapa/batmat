@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1thread__pool_1_1Signals" kind="struct" language="C++" prot="private">
+    <compoundname>batmat::thread_pool::Signals</compoundname>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1thread__pool_1_1Signals_1a77f6dfd98ebe69ceb1416cadea1faa75" prot="public" static="no" mutable="no">
+        <type>std::mutex</type>
+        <definition>std::mutex batmat::thread_pool::Signals::mtx</definition>
+        <argsstring></argsstring>
+        <name>mtx</name>
+        <qualifiedname>batmat::thread_pool::Signals::mtx</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="19" column="20" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1thread__pool_1_1Signals_1a8c952637ba7cf88cd63fa3ffb9cf359e" prot="public" static="no" mutable="no">
+        <type>std::condition_variable_any</type>
+        <definition>std::condition_variable_any batmat::thread_pool::Signals::cv</definition>
+        <argsstring></argsstring>
+        <name>cv</name>
+        <qualifiedname>batmat::thread_pool::Signals::cv</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/thread-pool.hpp" line="20" column="37" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="20" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::thread_pool::Signals</label>
+        <link refid="structbatmat_1_1thread__pool_1_1Signals"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>+mtx</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>std::mutex</label>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/thread-pool.hpp" line="18" column="5" bodyfile="batmat/include/batmat/thread-pool.hpp" bodystart="18" bodyend="21"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1thread__pool_1_1Signals_1a8c952637ba7cf88cd63fa3ffb9cf359e" prot="public" virt="non-virtual"><scope>batmat::thread_pool::Signals</scope><name>cv</name></member>
+      <member refid="structbatmat_1_1thread__pool_1_1Signals_1a77f6dfd98ebe69ceb1416cadea1faa75" prot="public" virt="non-virtual"><scope>batmat::thread_pool::Signals</scope><name>mtx</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

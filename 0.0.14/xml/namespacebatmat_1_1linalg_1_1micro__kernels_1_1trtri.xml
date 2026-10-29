@@ -1,0 +1,379 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri" kind="namespace" language="C++">
+    <compoundname>batmat::linalg::micro_kernels::trtri</compoundname>
+    <innerclass refid="structbatmat_1_1linalg_1_1micro__kernels_1_1trtri_1_1KernelConfig" prot="public">batmat::linalg::micro_kernels::trtri::KernelConfig</innerclass>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af75df864a9e8b9d493afec89b432ef62" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::micro_kernels::trtri::ColsReg</definition>
+        <argsstring></argsstring>
+        <name>ColsReg</name>
+        <qualifiedname>batmat::linalg::micro_kernels::trtri::ColsReg</qualifiedname>
+        <initializer>= <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>&lt;T, Abi&gt;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/trtri.hpp" line="26" column="19" bodyfile="batmat/include/batmat/linalg/micro-kernels/trtri.hpp" bodystart="26" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a83a92100dec173181dece5d96bf9ca1c" compoundref="trtri_8tpp" startline="98" endline="129">trmm_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1abad0e2c032d6297bf7a2f0a68b771d40" compoundref="trtri_8tpp" startline="132" endline="178">trtri_copy_register</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a66af129bc17c5d94f9fdb76b92edac7b" prot="public" static="no" constinit="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>const constinit auto</type>
+        <definition>const constinit auto batmat::linalg::micro_kernels::trtri::trtri_copy_lut</definition>
+        <argsstring></argsstring>
+        <name>trtri_copy_lut</name>
+        <qualifiedname>batmat::linalg::micro_kernels::trtri::trtri_copy_lut</qualifiedname>
+        <initializer>                                       =
+<ref refid="group__topic-utils_1ga91b0a07e3a00c803e9859ace6b86828f" kindref="member">make_1d_lut</ref>&lt;<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>&lt;T, Abi&gt;&gt;([]&lt;index_t Row&gt;(<ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant</ref>&lt;Row&gt;) {
+    return <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af85745fbec819255a01a9b9513324512" kindref="member">trtri_copy_microkernel</ref>&lt;T, Abi, Conf, Row + 1, OA, OD&gt;;
+})</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/trtri.hpp" line="29" column="29" bodyfile="batmat/include/batmat/linalg/micro-kernels/trtri.hpp" bodystart="29" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1abad0e2c032d6297bf7a2f0a68b771d40" compoundref="trtri_8tpp" startline="132" endline="178">trtri_copy_register</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a03e2c492eb817c0169071450de2d341f" prot="public" static="no" constinit="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>const constinit auto</type>
+        <definition>const constinit auto batmat::linalg::micro_kernels::trtri::trmm_lut</definition>
+        <argsstring></argsstring>
+        <name>trmm_lut</name>
+        <qualifiedname>batmat::linalg::micro_kernels::trtri::trmm_lut</qualifiedname>
+        <initializer>                                 = <ref refid="group__topic-utils_1gae259627b9bd8c02e66d1e244c969e2bc" kindref="member">make_2d_lut</ref>&lt;<ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" kindref="member">RowsReg</ref>&lt;T, Abi&gt;, <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af75df864a9e8b9d493afec89b432ef62" kindref="member">ColsReg</ref>&lt;T, Abi&gt;&gt;(
+[]&lt;index_t Row, index_t Col&gt;(<ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant</ref>&lt;Row&gt;, <ref refid="namespacebatmat_1a611ec3d948295cbf26c374f5849a98d9" kindref="member">index_constant</ref>&lt;Col&gt;) {
+    return <ref refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a83a92100dec173181dece5d96bf9ca1c" kindref="member">trmm_microkernel</ref>&lt;T, Abi, Conf, Row + 1, Col + 1, OD&gt;;
+})</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/trtri.hpp" line="35" column="29" bodyfile="batmat/include/batmat/linalg/micro-kernels/trtri.hpp" bodystart="35" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1abad0e2c032d6297bf7a2f0a68b771d40" compoundref="trtri_8tpp" startline="132" endline="178">trtri_copy_register</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::linalg::micro_kernels::gemm::RowsReg</definition>
+        <argsstring></argsstring>
+        <name>RowsReg</name>
+        <qualifiedname>batmat::linalg::micro_kernels::trtri::RowsReg</qualifiedname>
+        <briefdescription>
+<para>Register block size of the matrix-matrix multiplication micro-kernels. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>AVX-512 has 32 vector registers, we use 25 registers for a 5×5 accumulator block of matrix C (leaving some registers for loading A and B):</para>
+<para>AVX2 has 16 vector registers, we use 9 registers for a 3×3 accumulator block of matrix C (leaving some registers for loading A and B): <simplesect kind="note"><para>A block size of 4×4 is slightly faster than 3×3 for large matrices, because the even block size results in full cache lines being consumed. For small matrices, 3×3 is faster because it does not spill any registers in the micro-kernels. 2×2 is slower than 3×3 for both small and large matrices (tested using GCC 15.1 on an i7-10750H).</para>
+</simplesect>
+Assumes that the platform has at least 16 vector registers, we use 9 registers for a 3×3 accumulator block of matrix C (leaving some registers for loading A and B):</para>
+<para>NEON has 32 vector registers, we use 16 registers for a 4×4 accumulator block of matrix C (leaving plenty of registers for loading A and B):  </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/trtri.hpp" line="24" column="1" bodyfile="batmat/include/batmat/platform/avx-512.hpp" bodystart="13" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a83a92100dec173181dece5d96bf9ca1c" compoundref="trtri_8tpp" startline="98" endline="129">trmm_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af85745fbec819255a01a9b9513324512" compoundref="trtri_8tpp" startline="19" endline="90">trtri_copy_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1abad0e2c032d6297bf7a2f0a68b771d40" compoundref="trtri_8tpp" startline="132" endline="178">trtri_copy_register</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af85745fbec819255a01a9b9513324512" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>RowsReg</declname>
+            <defname>RowsReg</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::trtri::trtri_copy_microkernel</definition>
+        <argsstring>(uview&lt; const T, Abi, OA &gt; A, uview&lt; T, Abi, OD &gt; D, index_t k) noexcept</argsstring>
+        <name>trtri_copy_microkernel</name>
+        <qualifiedname>batmat::linalg::micro_kernels::trtri::trtri_copy_microkernel</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>A</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>k×RowsReg. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>D</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>k×RowsReg. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>k</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of rows in A and D. Invert the top block of A and store it in the top block of D. Then multiply the bottom blocks of D by this block (on the right). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/trtri.tpp" line="19" column="7" bodyfile="batmat/include/batmat/linalg/micro-kernels/trtri.tpp" bodystart="19" bodyend="90" declfile="batmat/include/batmat/linalg/micro-kernels/trtri.hpp" declline="15" declcolumn="6"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" compoundref="structure_8hpp" startline="8">batmat::linalg::LowerTriangular</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" compoundref="avx-512_8hpp" startline="13">RowsReg</references>
+        <references refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" compoundref="gemm-diag_8tpp" startline="9">UNROLL_FOR</references>
+        <references refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" compoundref="uview_8hpp" startline="228" endline="230">batmat::linalg::with_cached_access</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a83a92100dec173181dece5d96bf9ca1c" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>RowsReg</declname>
+            <defname>RowsReg</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>ColsReg</declname>
+            <defname>ColsReg</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::trtri::trmm_microkernel</definition>
+        <argsstring>(uview&lt; const T, Abi, OD &gt; Dr, uview&lt; T, Abi, OD &gt; D, index_t k) noexcept</argsstring>
+        <name>trmm_microkernel</name>
+        <qualifiedname>batmat::linalg::micro_kernels::trtri::trmm_microkernel</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; const T, Abi, OD &gt;</type>
+          <declname>Dr</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>k</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>Dr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>RowsReg×k lower trapezoidal </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>D</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>k×ColsReg </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>k</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of rows in D. Compute product Dr D and store the result in the bottom block of D </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/trtri.tpp" line="98" column="6" bodyfile="batmat/include/batmat/linalg/micro-kernels/trtri.tpp" bodystart="98" bodyend="129" declfile="batmat/include/batmat/linalg/micro-kernels/trtri.hpp" declline="18" declcolumn="6"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af75df864a9e8b9d493afec89b432ef62" compoundref="micro-kernels_2trtri_8hpp" startline="26">ColsReg</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" compoundref="structure_8hpp" startline="8">batmat::linalg::LowerTriangular</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" compoundref="avx-512_8hpp" startline="13">RowsReg</references>
+        <references refid="gemm-diag_8tpp_1ab877d246d1ab0f1819d52fb010ea4185" compoundref="gemm-diag_8tpp" startline="9">UNROLL_FOR</references>
+        <references refid="namespacebatmat_1_1linalg_1aee3afbdb581ed14b9dd038531243570d" compoundref="uview_8hpp" startline="228" endline="230">batmat::linalg::with_cached_access</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1abad0e2c032d6297bf7a2f0a68b771d40" compoundref="trtri_8tpp" startline="132" endline="178">trtri_copy_register</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1abad0e2c032d6297bf7a2f0a68b771d40" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>KernelConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OD</declname>
+            <defname>OD</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::micro_kernels::trtri::trtri_copy_register</definition>
+        <argsstring>(view&lt; const T, Abi, OA &gt; A, view&lt; T, Abi, OD &gt; D) noexcept</argsstring>
+        <name>trtri_copy_register</name>
+        <qualifiedname>batmat::linalg::micro_kernels::trtri::trtri_copy_register</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OD &gt;</type>
+          <declname>D</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/trtri.tpp" line="132" column="6" bodyfile="batmat/include/batmat/linalg/micro-kernels/trtri.tpp" bodystart="132" bodyend="178" declfile="batmat/include/batmat/linalg/micro-kernels/trtri.hpp" declline="21" declcolumn="6"/>
+        <references refid="group__topic-utils_1ggaa625a055ebbfa5ba05a1fd8f1f104807ab3263eb38f8903efc271cc7a760da510" compoundref="loop_8hpp" startline="14">batmat::Backward</references>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="structbatmat_1_1linalg_1_1uview_1a294edbebb26413734307376578d417d1" compoundref="uview_8hpp" startline="110" endline="112">batmat::linalg::uview&lt; T, Abi, Order &gt;::block</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1af75df864a9e8b9d493afec89b432ef62" compoundref="micro-kernels_2trtri_8hpp" startline="26">ColsReg</references>
+        <references refid="group__topic-utils_1gab76a36340644bbf7c8093caa45aef12f" compoundref="loop_8hpp" startline="43" endline="61">batmat::foreach_chunked_merged</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" compoundref="structure_8hpp" startline="8">batmat::linalg::LowerTriangular</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a52c9ed1b17421bb6dbc28e5a7c75fdac" compoundref="avx-512_8hpp" startline="13">RowsReg</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a03e2c492eb817c0169071450de2d341f" compoundref="micro-kernels_2trtri_8hpp" startline="35">trmm_lut</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a83a92100dec173181dece5d96bf9ca1c" compoundref="trtri_8tpp" startline="98" endline="129">trmm_microkernel</references>
+        <references refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1trtri_1a66af129bc17c5d94f9fdb76b92edac7b" compoundref="micro-kernels_2trtri_8hpp" startline="29">trtri_copy_lut</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a7c0391dc95024cb883f25c65e495ad58" compoundref="trtri_8hpp" startline="17" endline="29">batmat::linalg::detail::trtri</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/micro-kernels/trtri.hpp" line="8" column="1"/>
+  </compounddef>
+</doxygen>

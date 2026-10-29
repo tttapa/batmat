@@ -1,0 +1,742 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1matrix_1_1Layout" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::matrix::Layout</compoundname>
+    <includes refid="layout_8hpp" local="no">batmat/matrix/layout.hpp</includes>
+    <innerclass refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout" prot="public">batmat::matrix::Layout::PlainLayout</innerclass>
+    <templateparamlist>
+      <param>
+        <type>class I</type>
+        <defval>index_t</defval>
+      </param>
+      <param>
+        <type>class S</type>
+        <defval>std::integral_constant&lt;I, 1&gt;</defval>
+      </param>
+      <param>
+        <type>class D</type>
+        <defval>I</defval>
+      </param>
+      <param>
+        <type>class L</type>
+        <defval><ref refid="structbatmat_1_1matrix_1_1DefaultStride" kindref="compound">DefaultStride</ref></defval>
+      </param>
+      <param>
+        <type><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref></type>
+        <declname>O</declname>
+        <defname>O</defname>
+        <defval>StorageOrder::ColMajor</defval>
+      </param>
+    </templateparamlist>
+    <sectiondef kind="user-defined">
+      <header>Compile-time properties</header>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" prot="public" static="no">
+        <type>I</type>
+        <definition>using batmat::matrix::Layout&lt; I, S, D, L, O &gt;::index_type = I</definition>
+        <argsstring></argsstring>
+        <name>index_type</name>
+        <qualifiedname>batmat::matrix::Layout::index_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="49" column="5" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1Layout_1a5e721839d51c94a99b049d07bcabef34" prot="public" static="no">
+        <type>S</type>
+        <definition>using batmat::matrix::Layout&lt; I, S, D, L, O &gt;::batch_size_type = S</definition>
+        <argsstring></argsstring>
+        <name>batch_size_type</name>
+        <qualifiedname>batmat::matrix::Layout::batch_size_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="50" column="5" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1Layout_1aa395557491ef36ac1fe975805f79ce9d" prot="public" static="no">
+        <type>D</type>
+        <definition>using batmat::matrix::Layout&lt; I, S, D, L, O &gt;::depth_type = D</definition>
+        <argsstring></argsstring>
+        <name>depth_type</name>
+        <qualifiedname>batmat::matrix::Layout::depth_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="51" column="5" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1Layout_1adbd044655112aa290a95525908ad8da2" prot="public" static="no">
+        <type>L</type>
+        <definition>using batmat::matrix::Layout&lt; I, S, D, L, O &gt;::layer_stride_type = L</definition>
+        <argsstring></argsstring>
+        <name>layer_stride_type</name>
+        <qualifiedname>batmat::matrix::Layout::layer_stride_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="52" column="5" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1matrix_1_1Layout_1adf0f222ddc1393633a863b59c1ff5f5c" prot="public" static="no">
+        <type>std::conditional_t&lt; requires { S::value; }, std::integral_constant&lt; index_t, S::value &gt;, index_t &gt;</type>
+        <definition>using batmat::matrix::Layout&lt; I, S, D, L, O &gt;::standard_stride_type = std::conditional_t&lt;requires {
+       S::value;
+   }, std::integral_constant&lt;index_t, S::value&gt;, index_t&gt;</definition>
+        <argsstring></argsstring>
+        <name>standard_stride_type</name>
+        <qualifiedname>batmat::matrix::Layout::standard_stride_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="58" column="5" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="58" bodyend="60"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1Layout_1ad635fd9e2c04bb18318948e8d24eedd2" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref></type>
+        <definition>StorageOrder batmat::matrix::Layout&lt; I, S, D, L, O &gt;::storage_order</definition>
+        <argsstring></argsstring>
+        <name>storage_order</name>
+        <qualifiedname>batmat::matrix::Layout::storage_order</qualifiedname>
+        <initializer>= O</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="53" column="35" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1Layout_1a4ab5b96fbdbb92e59359e2968358815f" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>bool</type>
+        <definition>bool batmat::matrix::Layout&lt; I, S, D, L, O &gt;::is_column_major</definition>
+        <argsstring></argsstring>
+        <name>is_column_major</name>
+        <qualifiedname>batmat::matrix::Layout::is_column_major</qualifiedname>
+        <initializer>= O == StorageOrder::ColMajor</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="54" column="27" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1Layout_1a7876840d7f3a002ffd73707c0d578051" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>bool</type>
+        <definition>bool batmat::matrix::Layout&lt; I, S, D, L, O &gt;::is_row_major</definition>
+        <argsstring></argsstring>
+        <name>is_row_major</name>
+        <qualifiedname>batmat::matrix::Layout::is_row_major</qualifiedname>
+        <initializer>= O == StorageOrder::RowMajor</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="55" column="27" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1Layout_1a8b1a891a9f69dbcbc550488127c225d4" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>std::integral_constant&lt; <ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref>, 1 &gt;</type>
+        <definition>std::integral_constant&lt;index_type, 1&gt; batmat::matrix::Layout&lt; I, S, D, L, O &gt;::inner_stride</definition>
+        <argsstring></argsstring>
+        <name>inner_stride</name>
+        <qualifiedname>batmat::matrix::Layout::inner_stride</qualifiedname>
+        <initializer>{}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="56" column="45" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="56" bodyend="56"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Layout description</header>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1Layout_1aebbbef0c379cf86bde10b75ee7e1b1c4" prot="public" static="no" mutable="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1aa395557491ef36ac1fe975805f79ce9d" kindref="member">depth_type</ref></type>
+        <definition>depth_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::depth</definition>
+        <argsstring></argsstring>
+        <name>depth</name>
+        <qualifiedname>batmat::matrix::Layout::depth</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="66" column="17" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="66" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Layout_1ab26ef5aa697ece13f346d91d30226230" compoundref="layout_8hpp" startline="142" endline="145">batmat::matrix::Layout&lt; I, S, D, L, O &gt;::has_full_layer_stride</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1Layout_1aa6cf1ff5b51545b4affcc54fb7a3907f" prot="public" static="no" mutable="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::rows</definition>
+        <argsstring></argsstring>
+        <name>rows</name>
+        <qualifiedname>batmat::matrix::Layout::rows</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="67" column="16" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1Layout_1a4a47a151637b07b2914041e812ad3b89" prot="public" static="no" mutable="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::cols</definition>
+        <argsstring></argsstring>
+        <name>cols</name>
+        <qualifiedname>batmat::matrix::Layout::cols</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="68" column="16" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1Layout_1af7c1cc246c31ebe62393ddca4bea6b84" prot="public" static="no" mutable="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::outer_stride</definition>
+        <argsstring></argsstring>
+        <name>outer_stride</name>
+        <qualifiedname>batmat::matrix::Layout::outer_stride</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="69" column="16" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1Layout_1a95f2a085f27e819b459d224585a7ff1e" prot="public" static="no" mutable="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a5e721839d51c94a99b049d07bcabef34" kindref="member">batch_size_type</ref></type>
+        <definition>batch_size_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::batch_size</definition>
+        <argsstring></argsstring>
+        <name>batch_size</name>
+        <qualifiedname>batmat::matrix::Layout::batch_size</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="70" column="22" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1matrix_1_1Layout_1afb8a312aa8127b4a4654e1a8bf26bb73" prot="public" static="no" mutable="no">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1adbd044655112aa290a95525908ad8da2" kindref="member">layer_stride_type</ref></type>
+        <definition>layer_stride_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::layer_stride</definition>
+        <argsstring></argsstring>
+        <name>layer_stride</name>
+        <qualifiedname>batmat::matrix::Layout::layer_stride</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="71" column="24" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="71" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Initialization</header>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1a12965e8c230436dda76f22e40e1cb8bc" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>constexpr</type>
+        <definition>batmat::matrix::Layout&lt; I, S, D, L, O &gt;::Layout</definition>
+        <argsstring>(PlainLayout p={})</argsstring>
+        <name>Layout</name>
+        <qualifiedname>batmat::matrix::Layout::Layout</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1Layout_1_1PlainLayout" kindref="compound">PlainLayout</ref></type>
+          <declname>p</declname>
+          <defval>{}</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="89" column="15" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="89" bodyend="91"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1aff9b51a402154b4a2077dfcdd6fbde84" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::outer_size</definition>
+        <argsstring>() const</argsstring>
+        <name>outer_size</name>
+        <qualifiedname>batmat::matrix::Layout::outer_size</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="95" column="27" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="95" bodyend="95"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Layout_1a258898385db70de79cdeeda9bad108ab" compoundref="layout_8hpp" startline="136" endline="141">batmat::matrix::Layout&lt; I, S, D, L, O &gt;::get_layer_stride</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Layout_1ab26ef5aa697ece13f346d91d30226230" compoundref="layout_8hpp" startline="142" endline="145">batmat::matrix::Layout&lt; I, S, D, L, O &gt;::has_full_layer_stride</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Layout_1a9596303c45c45f6656503fe09a905de0" compoundref="layout_8hpp" startline="146" endline="148">batmat::matrix::Layout&lt; I, S, D, L, O &gt;::has_full_outer_stride</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1a5e74756b01a91b41e93ac8389a12ca53" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::inner_size</definition>
+        <argsstring>() const</argsstring>
+        <name>inner_size</name>
+        <qualifiedname>batmat::matrix::Layout::inner_size</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="96" column="27" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="96" bodyend="96"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Layout_1a9596303c45c45f6656503fe09a905de0" compoundref="layout_8hpp" startline="146" endline="148">batmat::matrix::Layout&lt; I, S, D, L, O &gt;::has_full_outer_stride</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1a04399d68bc20cb524716cb574b193647" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::num_batches</definition>
+        <argsstring>() const</argsstring>
+        <name>num_batches</name>
+        <qualifiedname>batmat::matrix::Layout::num_batches</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="97" column="27" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="97" bodyend="101"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1a8b023b5a0c5b2b038e8619ad6361d011" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto batmat::matrix::Layout&lt; I, S, D, L, O &gt;::row_stride</definition>
+        <argsstring>() const</argsstring>
+        <name>row_stride</name>
+        <qualifiedname>batmat::matrix::Layout::row_stride</qualifiedname>
+        <briefdescription>
+<para>The row stride of the matrices, i.e. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>the distance between elements in consecutive rows in a given column. Should be multiplied by the batch size to get the actual number of elements. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="104" column="21" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="104" bodyend="109"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1a3f2cb01ff9772103e2396e416f8f3374" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto batmat::matrix::Layout&lt; I, S, D, L, O &gt;::col_stride</definition>
+        <argsstring>() const</argsstring>
+        <name>col_stride</name>
+        <qualifiedname>batmat::matrix::Layout::col_stride</qualifiedname>
+        <briefdescription>
+<para>The column stride of the matrices, i.e. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>the distance between elements in consecutive columns in a given row. Should be multiplied by the batch size to get the actual number of elements. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="112" column="21" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="112" bodyend="117"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1a1985ab91f33e988053608fa3ba5013e1" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::ceil_depth</definition>
+        <argsstring>(index_type n) const</argsstring>
+        <name>ceil_depth</name>
+        <qualifiedname>batmat::matrix::Layout::ceil_depth</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+<para>Round up the given size <computeroutput>n</computeroutput> to a multiple of <ref refid="structbatmat_1_1matrix_1_1Layout_1a95f2a085f27e819b459d224585a7ff1e" kindref="member">batch_size</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="119" column="27" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="119" bodyend="122"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1ad2db83d1e69032d91bc28abc53cea63b" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::ceil_depth</definition>
+        <argsstring>() const</argsstring>
+        <name>ceil_depth</name>
+        <qualifiedname>batmat::matrix::Layout::ceil_depth</qualifiedname>
+        <briefdescription>
+<para>Round up the <ref refid="structbatmat_1_1matrix_1_1Layout_1aebbbef0c379cf86bde10b75ee7e1b1c4" kindref="member">depth</ref> to a multiple of <ref refid="structbatmat_1_1matrix_1_1Layout_1a95f2a085f27e819b459d224585a7ff1e" kindref="member">batch_size</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="124" column="27" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="124" bodyend="126"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Layout_1ad2db83d1e69032d91bc28abc53cea63b" compoundref="layout_8hpp" startline="124" endline="126">batmat::matrix::Layout&lt; I, S, D, L, O &gt;::ceil_depth</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Layout_1ac8b472536cee6d2dccd6a6341f561af3" compoundref="layout_8hpp" startline="150" endline="155">batmat::matrix::Layout&lt; I, S, D, L, O &gt;::layer_index</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Layout_1ae147f07e960409dee05088e8edc8e8b1" compoundref="layout_8hpp" startline="184" endline="184">batmat::matrix::Layout&lt; I, S, D, L, O &gt;::padded_size</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1aa097c475737f4ddeb81dfc0e532d5127" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::floor_depth</definition>
+        <argsstring>(index_type n) const</argsstring>
+        <name>floor_depth</name>
+        <qualifiedname>batmat::matrix::Layout::floor_depth</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+<para>Round down the given size <computeroutput>n</computeroutput> to a multiple of <ref refid="structbatmat_1_1matrix_1_1Layout_1a95f2a085f27e819b459d224585a7ff1e" kindref="member">batch_size</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="128" column="27" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="128" bodyend="131"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1a442c2a8194f8abeb9c2a12d24c779477" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::floor_depth</definition>
+        <argsstring>() const</argsstring>
+        <name>floor_depth</name>
+        <qualifiedname>batmat::matrix::Layout::floor_depth</qualifiedname>
+        <briefdescription>
+<para>Round down the <ref refid="structbatmat_1_1matrix_1_1Layout_1aebbbef0c379cf86bde10b75ee7e1b1c4" kindref="member">depth</ref> to a multiple of <ref refid="structbatmat_1_1matrix_1_1Layout_1a95f2a085f27e819b459d224585a7ff1e" kindref="member">batch_size</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="133" column="27" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="133" bodyend="135"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Layout_1a442c2a8194f8abeb9c2a12d24c779477" compoundref="layout_8hpp" startline="133" endline="135">batmat::matrix::Layout&lt; I, S, D, L, O &gt;::floor_depth</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1a258898385db70de79cdeeda9bad108ab" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto batmat::matrix::Layout&lt; I, S, D, L, O &gt;::get_layer_stride</definition>
+        <argsstring>() const</argsstring>
+        <name>get_layer_stride</name>
+        <qualifiedname>batmat::matrix::Layout::get_layer_stride</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="136" column="21" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="136" bodyend="141"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Layout_1ab26ef5aa697ece13f346d91d30226230" compoundref="layout_8hpp" startline="142" endline="145">batmat::matrix::Layout&lt; I, S, D, L, O &gt;::has_full_layer_stride</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Layout_1ad235cde7c8a8d7c9ae3f09744c5082ed" compoundref="layout_8hpp" startline="156" endline="158">batmat::matrix::Layout&lt; I, S, D, L, O &gt;::layer_index</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Layout_1ae147f07e960409dee05088e8edc8e8b1" compoundref="layout_8hpp" startline="184" endline="184">batmat::matrix::Layout&lt; I, S, D, L, O &gt;::padded_size</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1ab26ef5aa697ece13f346d91d30226230" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool batmat::matrix::Layout&lt; I, S, D, L, O &gt;::has_full_layer_stride</definition>
+        <argsstring>() const</argsstring>
+        <name>has_full_layer_stride</name>
+        <qualifiedname>batmat::matrix::Layout::has_full_layer_stride</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="142" column="21" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="142" bodyend="145"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1a9596303c45c45f6656503fe09a905de0" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool batmat::matrix::Layout&lt; I, S, D, L, O &gt;::has_full_outer_stride</definition>
+        <argsstring>() const</argsstring>
+        <name>has_full_outer_stride</name>
+        <qualifiedname>batmat::matrix::Layout::has_full_outer_stride</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="146" column="21" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="146" bodyend="148"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1ae5813060653ef3008bac823d55ad2488" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool batmat::matrix::Layout&lt; I, S, D, L, O &gt;::has_full_inner_stride</definition>
+        <argsstring>() const</argsstring>
+        <name>has_full_inner_stride</name>
+        <qualifiedname>batmat::matrix::Layout::has_full_inner_stride</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="149" column="21" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="149" bodyend="149"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1ac8b472536cee6d2dccd6a6341f561af3" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::layer_index</definition>
+        <argsstring>(index_type l, index_type s) const</argsstring>
+        <name>layer_index</name>
+        <qualifiedname>batmat::matrix::Layout::layer_index</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+          <declname>s</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="150" column="27" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="150" bodyend="155"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Layout_1ad235cde7c8a8d7c9ae3f09744c5082ed" compoundref="layout_8hpp" startline="156" endline="158">batmat::matrix::Layout&lt; I, S, D, L, O &gt;::layer_index</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Layout_1ad1a0d7d66c1b46d14f35f6b6f35e84e5" compoundref="layout_8hpp" startline="169" endline="175">batmat::matrix::Layout&lt; I, S, D, L, O &gt;::operator()</referencedby>
+        <referencedby refid="structbatmat_1_1matrix_1_1Layout_1a2049ae7c85f75e751c4fc3ca9a608d6b" compoundref="layout_8hpp" startline="177" endline="181">batmat::matrix::Layout&lt; I, S, D, L, O &gt;::operator()</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1ad235cde7c8a8d7c9ae3f09744c5082ed" prot="public" static="no" nodiscard="yes" constexpr="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::layer_index</definition>
+        <argsstring>(index_type l) const</argsstring>
+        <name>layer_index</name>
+        <qualifiedname>batmat::matrix::Layout::layer_index</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+          <declname>l</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="156" column="27" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="156" bodyend="158"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1ad1a0d7d66c1b46d14f35f6b6f35e84e5" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structguanaqo_1_1MatrixView" kindref="compound" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">guanaqo::MatrixView</ref>&lt; T, I, <ref refid="structbatmat_1_1matrix_1_1Layout_1adf0f222ddc1393633a863b59c1ff5f5c" kindref="member">standard_stride_type</ref>, <ref refid="structbatmat_1_1matrix_1_1Layout_1ad635fd9e2c04bb18318948e8d24eedd2" kindref="member">storage_order</ref> &gt;</type>
+        <definition>guanaqo::MatrixView&lt; T, I, standard_stride_type, storage_order &gt; batmat::matrix::Layout&lt; I, S, D, L, O &gt;::operator()</definition>
+        <argsstring>(T *data, index_type l) const</argsstring>
+        <name>operator()</name>
+        <qualifiedname>batmat::matrix::Layout::operator()</qualifiedname>
+        <param>
+          <type>T *</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+          <declname>l</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="169" column="5" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="169" bodyend="175"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1a2049ae7c85f75e751c4fc3ca9a608d6b" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>T &amp;</type>
+        <definition>T &amp; batmat::matrix::Layout&lt; I, S, D, L, O &gt;::operator()</definition>
+        <argsstring>(T *data, index_type l, index_type r, index_type c) const</argsstring>
+        <name>operator()</name>
+        <qualifiedname>batmat::matrix::Layout::operator()</qualifiedname>
+        <param>
+          <type>T *</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+          <declname>r</declname>
+        </param>
+        <param>
+          <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="177" column="8" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="177" bodyend="181"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1a8fa978b1da954fe460c4a75a7c09db54" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::size</definition>
+        <argsstring>() const</argsstring>
+        <name>size</name>
+        <qualifiedname>batmat::matrix::Layout::size</qualifiedname>
+        <briefdescription>
+<para>Total number of elements in the view (excluding padding). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="183" column="17" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="183" bodyend="183"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1ae147f07e960409dee05088e8edc8e8b1" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" kindref="member">index_type</ref></type>
+        <definition>index_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::padded_size</definition>
+        <argsstring>() const</argsstring>
+        <name>padded_size</name>
+        <qualifiedname>batmat::matrix::Layout::padded_size</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="184" column="17" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="184" bodyend="184"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="structbatmat_1_1matrix_1_1Layout_1a2b9425bddfcd050a33ea5808e41b0dc6" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1matrix_1_1Layout_1adf0f222ddc1393633a863b59c1ff5f5c" kindref="member">standard_stride_type</ref></type>
+        <definition>static standard_stride_type batmat::matrix::Layout&lt; I, S, D, L, O &gt;::convert_to_standard_stride</definition>
+        <argsstring>(auto s)</argsstring>
+        <name>convert_to_standard_stride</name>
+        <qualifiedname>batmat::matrix::Layout::convert_to_standard_stride</qualifiedname>
+        <param>
+          <type>auto</type>
+          <declname>s</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/matrix/layout.hpp" line="160" column="33" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="160" bodyend="165"/>
+        <referencedby refid="structbatmat_1_1matrix_1_1Layout_1ad1a0d7d66c1b46d14f35f6b6f35e84e5" compoundref="layout_8hpp" startline="169" endline="175">batmat::matrix::Layout&lt; I, S, D, L, O &gt;::operator()</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Shape and strides describing a batch of matrices, independent of any storage. </para>
+    </briefdescription>
+    <detaileddescription>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>I</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Index type. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>S</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Inner stride (batch size). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>D</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Depth type. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>L</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Layer stride type. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>O</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Storage order (column or row major). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="2">
+        <label>batmat::matrix::DefaultStride</label>
+        <link refid="structbatmat_1_1matrix_1_1DefaultStride"/>
+      </node>
+      <node id="1">
+        <label>batmat::matrix::Layout&lt; I, S, D, L, O &gt;</label>
+        <link refid="structbatmat_1_1matrix_1_1Layout"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>+layer_stride</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/matrix/layout.hpp" line="46" column="1" bodyfile="batmat/include/batmat/matrix/layout.hpp" bodystart="46" bodyend="185"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a95f2a085f27e819b459d224585a7ff1e" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>batch_size</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a5e721839d51c94a99b049d07bcabef34" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>batch_size_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a1985ab91f33e988053608fa3ba5013e1" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>ceil_depth</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1ad2db83d1e69032d91bc28abc53cea63b" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>ceil_depth</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a3f2cb01ff9772103e2396e416f8f3374" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>col_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a4a47a151637b07b2914041e812ad3b89" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>cols</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a2b9425bddfcd050a33ea5808e41b0dc6" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>convert_to_standard_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1aebbbef0c379cf86bde10b75ee7e1b1c4" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>depth</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1aa395557491ef36ac1fe975805f79ce9d" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>depth_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1aa097c475737f4ddeb81dfc0e532d5127" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>floor_depth</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a442c2a8194f8abeb9c2a12d24c779477" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>floor_depth</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a258898385db70de79cdeeda9bad108ab" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>get_layer_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1ae5813060653ef3008bac823d55ad2488" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>has_full_inner_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1ab26ef5aa697ece13f346d91d30226230" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>has_full_layer_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a9596303c45c45f6656503fe09a905de0" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>has_full_outer_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a226e7a5ce3a87ae357f1e3ce0f6e1f77" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>index_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a5e74756b01a91b41e93ac8389a12ca53" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>inner_size</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a8b1a891a9f69dbcbc550488127c225d4" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>inner_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a4ab5b96fbdbb92e59359e2968358815f" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>is_column_major</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a7876840d7f3a002ffd73707c0d578051" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>is_row_major</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1ac8b472536cee6d2dccd6a6341f561af3" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>layer_index</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1ad235cde7c8a8d7c9ae3f09744c5082ed" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>layer_index</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1afb8a312aa8127b4a4654e1a8bf26bb73" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>layer_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1adbd044655112aa290a95525908ad8da2" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>layer_stride_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a12965e8c230436dda76f22e40e1cb8bc" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>Layout</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a04399d68bc20cb524716cb574b193647" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>num_batches</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1ad1a0d7d66c1b46d14f35f6b6f35e84e5" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>operator()</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a2049ae7c85f75e751c4fc3ca9a608d6b" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>operator()</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1aff9b51a402154b4a2077dfcdd6fbde84" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>outer_size</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1af7c1cc246c31ebe62393ddca4bea6b84" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>outer_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1ae147f07e960409dee05088e8edc8e8b1" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>padded_size</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a8b023b5a0c5b2b038e8619ad6361d011" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>row_stride</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1aa6cf1ff5b51545b4affcc54fb7a3907f" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>rows</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1a8fa978b1da954fe460c4a75a7c09db54" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>size</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1adf0f222ddc1393633a863b59c1ff5f5c" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>standard_stride_type</name></member>
+      <member refid="structbatmat_1_1matrix_1_1Layout_1ad635fd9e2c04bb18318948e8d24eedd2" prot="public" virt="non-virtual"><scope>batmat::matrix::Layout</scope><name>storage_order</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

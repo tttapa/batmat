@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1ops" kind="namespace" language="C++">
+    <compoundname>batmat::ops</compoundname>
+    <innernamespace refid="namespacebatmat_1_1ops_1_1detail">batmat::ops::detail</innernamespace>
+    <sectiondef kind="user-defined">
+      <header>Gathering elements from memory</header>
+      <member refid="group__topic-low-level-ops_1ga7edc1a8ca0fbd5557bd397cfd28a743e" kind="function"><name>gather</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Lane-wise rotations of SIMD vectors</header>
+      <member refid="group__topic-low-level-ops_1ga247b1215d2f350a55c60a922efc98e4e" kind="function"><name>rotl</name></member>
+      <member refid="group__topic-low-level-ops_1ga99482a68bf78d2c163dcd663b24131c5" kind="function"><name>rotr</name></member>
+      <member refid="group__topic-low-level-ops_1gaaa3114a23628a7f5db3d380c07e6d03a" kind="function"><name>shiftl</name></member>
+      <member refid="group__topic-low-level-ops_1gafd42e3bbc4c662e3384ffc8653fdc6a8" kind="function"><name>shiftr</name></member>
+      <member refid="group__topic-low-level-ops_1gaf86c438318c89dd7be953a0633285ef8" kind="function"><name>rot</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Inverse square root</header>
+      <member refid="group__topic-low-level-ops_1ga179fee4bcade5a062eeae2b0b2d74478" kind="function"><name>rsqrt</name></member>
+      <member refid="group__topic-low-level-ops_1ga633648536facc16ec0c0ff27cc9932d0" kind="function"><name>rsqrt</name></member>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Transposition</header>
+      <member refid="group__topic-low-level-ops_1gaa7e113b52b9b2f919ea0cd6b700c0e40" kind="function"><name>transpose_dyn</name></member>
+      <member refid="group__topic-low-level-ops_1ga4d57a10ef71c7ecf19366ed11bc793d7" kind="function"><name>transpose</name></member>
+    </sectiondef>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacebatmat_1_1ops_1a1c03064f61a66762167720552b17492d" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::ops::RowsRegTranspose</definition>
+        <argsstring></argsstring>
+        <name>RowsRegTranspose</name>
+        <qualifiedname>batmat::ops::RowsRegTranspose</qualifiedname>
+        <initializer>= 8</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/platform/avx-512.hpp" line="23" column="26" bodyfile="batmat/include/batmat/platform/avx-512.hpp" bodystart="23" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a026a036e2e49617672190bba15b87859" compoundref="copy_8hpp" startline="133" endline="166">batmat::linalg::detail::copy::copy</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1ops_1aba08c59c6da886c90e67b44012ac10db" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::ops::ColsRegTranspose</definition>
+        <argsstring></argsstring>
+        <name>ColsRegTranspose</name>
+        <qualifiedname>batmat::ops::ColsRegTranspose</qualifiedname>
+        <initializer>= 8</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/platform/avx-512.hpp" line="25" column="26" bodyfile="batmat/include/batmat/platform/avx-512.hpp" bodystart="25" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a026a036e2e49617672190bba15b87859" compoundref="copy_8hpp" startline="133" endline="166">batmat::linalg::detail::copy::copy</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1ops_1a1779d107ba7ae64b4f6b8f005636884d" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::ops::RowsRegTranspose&lt; double &gt;</definition>
+        <argsstring></argsstring>
+        <name>RowsRegTranspose&lt; double &gt;</name>
+        <qualifiedname>batmat::ops::RowsRegTranspose&lt; double &gt;</qualifiedname>
+        <initializer>= 4</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/platform/avx-512.hpp" line="29" column="18" bodyfile="batmat/include/batmat/platform/avx-512.hpp" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacebatmat_1_1ops_1a109f73f14ca73aef5e13389450570fae" prot="public" static="no" constexpr="yes" mutable="no">
+        <templateparamlist>
+        </templateparamlist>
+        <type>index_t</type>
+        <definition>index_t batmat::ops::ColsRegTranspose&lt; double &gt;</definition>
+        <argsstring></argsstring>
+        <name>ColsRegTranspose&lt; double &gt;</name>
+        <qualifiedname>batmat::ops::ColsRegTranspose&lt; double &gt;</qualifiedname>
+        <initializer>= 4</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/platform/avx-512.hpp" line="31" column="18" bodyfile="batmat/include/batmat/platform/avx-512.hpp" bodystart="31" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1ops_1a0de59f8bf5b1c4058c2e188fa3c556e1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>T</type>
+        <definition>T batmat::ops::detail::cneg</definition>
+        <argsstring>(T x, T signs)</argsstring>
+        <name>cneg</name>
+        <qualifiedname>batmat::ops::cneg</qualifiedname>
+        <param>
+          <type>T</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>T</type>
+          <declname>signs</declname>
+        </param>
+        <briefdescription>
+<para>Conditionally negates the sign bit of <computeroutput>x</computeroutput>, depending on <computeroutput>signs</computeroutput>, which should contain only ±0 (i.e. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>only the sign bit of an IEEE-754 floating point number). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/cneg.hpp" line="81" column="1" bodyfile="batmat/include/batmat/ops/cneg.hpp" bodystart="42" bodyend="45"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a635ee44454b128a7c62293a99b0083eb" compoundref="potrf_8tpp" startline="24" endline="32">batmat::linalg::micro_kernels::potrf::apply_diag</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a9c8b334cabf1bbba060325ee859a1c7b" compoundref="hyhound_8tpp" startline="19" endline="68">batmat::linalg::micro_kernels::hyhound::hyhound_diag_diag_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a1ceb252ea60212d3273bcd59dcb46ba8" compoundref="hyhound_8tpp" startline="72" endline="113">batmat::linalg::micro_kernels::hyhound::hyhound_diag_full_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a534cdfdc1e56dcd5573a5fc39eac7176" compoundref="hyhound_8tpp" startline="136" endline="259">batmat::linalg::micro_kernels::hyhound::hyhound_diag_tail_microkernel</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/ops/cneg.hpp" line="11" column="1"/>
+  </compounddef>
+</doxygen>
