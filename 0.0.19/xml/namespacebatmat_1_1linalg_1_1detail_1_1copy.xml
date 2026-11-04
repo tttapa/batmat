@@ -1,0 +1,266 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg_1_1detail_1_1copy" kind="namespace" language="C++">
+    <compoundname>batmat::linalg::detail::copy</compoundname>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1FillConfig" prot="public">batmat::linalg::detail::copy::FillConfig</innerclass>
+    <innerclass refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig" prot="public">batmat::linalg::detail::copy::CopyConfig</innerclass>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a2734a86018fe0537b59c91e9f85c5fbb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>FillConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+            <defval>{}</defval>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::copy::fill</definition>
+        <argsstring>(T a, view&lt; T, Abi, OB &gt; B)</argsstring>
+        <name>fill</name>
+        <qualifiedname>batmat::linalg::detail::copy::fill</qualifiedname>
+        <param>
+          <type>T</type>
+          <declname>a</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OB &gt;</type>
+          <declname>B</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/copy.hpp" line="27" column="7" bodyfile="batmat/include/batmat/linalg/copy.hpp" bodystart="27" bodyend="59"/>
+        <references refid="unroll_8h_1a3b47b5e0ab192416373a2afa12ef97cd" compoundref="unroll_8h" startline="29">BATMAT_UNROLLED_IVDEP_FOR</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" compoundref="structure_8hpp" startline="8">batmat::linalg::General</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" compoundref="structure_8hpp" startline="8">batmat::linalg::LowerTriangular</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629cace546798a67931b38dee5a153f9cf688" compoundref="structure_8hpp" startline="8">batmat::linalg::UpperTriangular</references>
+        <referencedby refid="group__topic-linalg_1ga3b16436bd7456f60369fd1db2d67442e" compoundref="copy_8hpp" startline="210" endline="213">batmat::linalg::fill</referencedby>
+        <referencedby refid="group__topic-linalg_1gaf53b173cc76dd28168d422b8812298a3" compoundref="copy_8hpp" startline="204" endline="206">batmat::linalg::fill</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1a2c3d3424f62a8393a28b1d360f411f69" compoundref="gemm-diag_8hpp" startline="21" endline="49">batmat::linalg::detail::gemm_diag::gemm_diag</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1aafe5abf07c832375ed47675bfc9f5a86" compoundref="gemm_8hpp" startline="160" endline="190">batmat::linalg::detail::gemmt</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ab2140481ceabb6a2dbe49a62479b2d47" compoundref="gemv_8hpp" startline="17" endline="44">batmat::linalg::detail::gemv</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a986cbb6d34a89fe9f0a7e475746934e7" compoundref="gemm_8hpp" startline="195" endline="226">batmat::linalg::detail::trmm</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1_1copy_1ac74ffd0a7e0af8bcd39fb94b587e66b1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>CopyConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+            <defval>{}</defval>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::copy::copy</definition>
+        <argsstring>(view&lt; const T, Abi, OA &gt; A, view&lt; T, Abi, OB &gt; B)</argsstring>
+        <name>copy</name>
+        <qualifiedname>batmat::linalg::detail::copy::copy</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OB &gt;</type>
+          <declname>B</declname>
+        </param>
+    <requiresclause>(!std::same_as&lt;Abi, <ref refid="namespacebatmat_1_1datapar_1a55556a636c771c6e0f5805c2d186f1ec" kindref="member">datapar::scalar_abi</ref>&lt;T&gt;&gt; || Conf.struc != <ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref>)    </requiresclause>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/copy.hpp" line="68" column="7" bodyfile="batmat/include/batmat/linalg/copy.hpp" bodystart="68" bodyend="107"/>
+        <references refid="unroll_8h_1a3b47b5e0ab192416373a2afa12ef97cd" compoundref="unroll_8h" startline="29">BATMAT_UNROLLED_IVDEP_FOR</references>
+        <references refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1ac74ffd0a7e0af8bcd39fb94b587e66b1" compoundref="copy_8hpp" startline="68" endline="107">copy</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" compoundref="structure_8hpp" startline="8">batmat::linalg::General</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca8b6fd06efea0c23bd14af4292b609553" compoundref="structure_8hpp" startline="8">batmat::linalg::LowerTriangular</references>
+        <references refid="group__topic-low-level-ops_1ga247b1215d2f350a55c60a922efc98e4e" compoundref="rotate_8hpp" startline="226" endline="233">batmat::ops::rotl</references>
+        <references refid="group__topic-low-level-ops_1ga99482a68bf78d2c163dcd663b24131c5" compoundref="rotate_8hpp" startline="239" endline="246">batmat::ops::rotr</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629cace546798a67931b38dee5a153f9cf688" compoundref="structure_8hpp" startline="8">batmat::linalg::UpperTriangular</references>
+        <referencedby refid="group__topic-linalg_1ga0c62a1596a13149c17223ca93a4de7bd" compoundref="copy_8hpp" startline="196" endline="200">batmat::linalg::copy</referencedby>
+        <referencedby refid="group__topic-linalg_1ga9df61b993f7e79ad21eddb76b4c2089e" compoundref="copy_8hpp" startline="187" endline="191">batmat::linalg::copy</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1ac74ffd0a7e0af8bcd39fb94b587e66b1" compoundref="copy_8hpp" startline="68" endline="107">copy</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1a2c3d3424f62a8393a28b1d360f411f69" compoundref="gemm-diag_8hpp" startline="21" endline="49">batmat::linalg::detail::gemm_diag::gemm_diag</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1aafe5abf07c832375ed47675bfc9f5a86" compoundref="gemm_8hpp" startline="160" endline="190">batmat::linalg::detail::gemmt</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ab2140481ceabb6a2dbe49a62479b2d47" compoundref="gemv_8hpp" startline="17" endline="44">batmat::linalg::detail::gemv</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a986cbb6d34a89fe9f0a7e475746934e7" compoundref="gemm_8hpp" startline="195" endline="226">batmat::linalg::detail::trmm</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1_1copy_1aeb609e925d7e85aaa5f7ffdf4c385ecb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>CopyConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+            <defval>{}</defval>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::copy::copy</definition>
+        <argsstring>(view&lt; const T, Abi, OA &gt; A, view&lt; T, Abi, OB &gt; B)</argsstring>
+        <name>copy</name>
+        <qualifiedname>batmat::linalg::detail::copy::copy</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OB &gt;</type>
+          <declname>B</declname>
+        </param>
+    <requiresclause>(std::same_as&lt;Abi, <ref refid="namespacebatmat_1_1datapar_1a55556a636c771c6e0f5805c2d186f1ec" kindref="member">datapar::scalar_abi</ref>&lt;T&gt;&gt; &amp;&amp; OA == OB &amp;&amp; Conf.struc == <ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref>)    </requiresclause>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/copy.hpp" line="110" column="7" bodyfile="batmat/include/batmat/linalg/copy.hpp" bodystart="110" bodyend="130"/>
+        <references refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1ac74ffd0a7e0af8bcd39fb94b587e66b1" compoundref="copy_8hpp" startline="68" endline="107">copy</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" compoundref="structure_8hpp" startline="8">batmat::linalg::General</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a026a036e2e49617672190bba15b87859" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>CopyConfig</type>
+            <declname>Conf</declname>
+            <defname>Conf</defname>
+            <defval>{}</defval>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OA</declname>
+            <defname>OA</defname>
+          </param>
+          <param>
+            <type>StorageOrder</type>
+            <declname>OB</declname>
+            <defname>OB</defname>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::detail::copy::copy</definition>
+        <argsstring>(view&lt; const T, Abi, OA &gt; A, view&lt; T, Abi, OB &gt; B)</argsstring>
+        <name>copy</name>
+        <qualifiedname>batmat::linalg::detail::copy::copy</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; const T, Abi, OA &gt;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacebatmat_1_1linalg_1af59c1c63861a8066d20dd35ac5f915e0" kindref="member">view</ref>&lt; T, Abi, OB &gt;</type>
+          <declname>B</declname>
+        </param>
+    <requiresclause>(std::same_as&lt;Abi, <ref refid="namespacebatmat_1_1datapar_1a55556a636c771c6e0f5805c2d186f1ec" kindref="member">datapar::scalar_abi</ref>&lt;T&gt;&gt; &amp;&amp; OA != OB &amp;&amp; Conf.struc == <ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref>)    </requiresclause>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/copy.hpp" line="133" column="7" bodyfile="batmat/include/batmat/linalg/copy.hpp" bodystart="133" bodyend="166"/>
+        <references refid="namespacebatmat_1_1ops_1aba08c59c6da886c90e67b44012ac10db" compoundref="avx-512_8hpp" startline="25">batmat::ops::ColsRegTranspose</references>
+        <references refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1ac74ffd0a7e0af8bcd39fb94b587e66b1" compoundref="copy_8hpp" startline="68" endline="107">copy</references>
+        <references refid="group__topic-utils_1gab76a36340644bbf7c8093caa45aef12f" compoundref="loop_8hpp" startline="43" endline="61">batmat::foreach_chunked_merged</references>
+        <references refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" compoundref="structure_8hpp" startline="8">batmat::linalg::General</references>
+        <references refid="group__topic-utils_1gae259627b9bd8c02e66d1e244c969e2bc" compoundref="lut_8hpp" startline="25" endline="27">batmat::make_2d_lut</references>
+        <references refid="namespacebatmat_1_1ops_1a1c03064f61a66762167720552b17492d" compoundref="avx-512_8hpp" startline="23">batmat::ops::RowsRegTranspose</references>
+        <references refid="group__topic-low-level-ops_1ga4d57a10ef71c7ecf19366ed11bc793d7" compoundref="transpose_8hpp" startline="63" endline="65">batmat::ops::transpose</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a8769b73dad2efc43ad5032114321f591" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class...</type>
+            <declname>Opts</declname>
+            <defname>Opts</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig" kindref="compound">CopyConfig</ref></type>
+        <definition>CopyConfig batmat::linalg::detail::copy::apply_options</definition>
+        <argsstring>(CopyConfig conf, Opts...)</argsstring>
+        <name>apply_options</name>
+        <qualifiedname>batmat::linalg::detail::copy::apply_options</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig" kindref="compound">CopyConfig</ref></type>
+          <declname>conf</declname>
+        </param>
+        <param>
+          <type>Opts...</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/copy.hpp" line="169" column="22" bodyfile="batmat/include/batmat/linalg/copy.hpp" bodystart="169" bodyend="175"/>
+        <references refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a8769b73dad2efc43ad5032114321f591" compoundref="copy_8hpp" startline="169" endline="175">apply_options</references>
+        <references refid="namespacebatmat_1_1linalg_1a94c3eba4eaabc3dcb64cf1fa7727f802" compoundref="shift_8hpp" startline="99">batmat::linalg::get_mask</references>
+        <references refid="namespacebatmat_1_1linalg_1a8c727e255c0df5a8041151fd6889b4fc" compoundref="shift_8hpp" startline="92">batmat::linalg::get_rotate</references>
+        <references refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig_1a9ef690d1d341c35f6fa331f17cef1af6" compoundref="copy_8hpp" startline="63">batmat::linalg::detail::copy::CopyConfig::mask</references>
+        <references refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1CopyConfig_1a5cd259cce90a6051d960624bab1569c5" compoundref="copy_8hpp" startline="62">batmat::linalg::detail::copy::CopyConfig::rotate</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a8769b73dad2efc43ad5032114321f591" compoundref="copy_8hpp" startline="169" endline="175">apply_options</referencedby>
+        <referencedby refid="group__topic-linalg_1ga0c62a1596a13149c17223ca93a4de7bd" compoundref="copy_8hpp" startline="196" endline="200">batmat::linalg::copy</referencedby>
+        <referencedby refid="group__topic-linalg_1ga9df61b993f7e79ad21eddb76b4c2089e" compoundref="copy_8hpp" startline="187" endline="191">batmat::linalg::copy</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/copy.hpp" line="20" column="1"/>
+  </compounddef>
+</doxygen>

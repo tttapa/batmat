@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1detail_1_1simdified__value" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::detail::simdified_value</compoundname>
+    <templateparamlist>
+      <param>
+        <type>class</type>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::detail::simdified_value&lt; class &gt;</label>
+        <link refid="structbatmat_1_1linalg_1_1detail_1_1simdified__value"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/simdify.hpp" line="184" column="1" bodyfile="batmat/include/batmat/linalg/simdify.hpp" bodystart="184" bodyend="-1"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

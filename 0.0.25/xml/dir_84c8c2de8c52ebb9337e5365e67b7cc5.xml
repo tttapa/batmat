@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="dir_84c8c2de8c52ebb9337e5365e67b7cc5" kind="dir">
+    <compoundname>/home/runner/work/batmat/batmat/build/Debug/src/include/batmat</compoundname>
+    <innerfile refid="config_8hpp">config.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/runner/work/batmat/batmat/build/Debug/src/include/batmat/"/>
+  </compounddef>
+</doxygen>

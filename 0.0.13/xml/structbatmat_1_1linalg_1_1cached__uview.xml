@@ -1,0 +1,261 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1cached__uview" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::cached_uview</compoundname>
+    <includes refid="uview_8hpp" local="no">batmat/linalg/uview.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>index_t</type>
+        <declname>Size</declname>
+        <defname>Size</defname>
+      </param>
+      <param>
+        <type>class T</type>
+      </param>
+      <param>
+        <type>class Abi</type>
+      </param>
+      <param>
+        <type><ref refid="group__linalg__views_1gac0a39236f11af6725f2dc1d339c95bae" kindref="member" external="/home/runner/work/batmat/batmat/build/docs/guanaqo.tag">StorageOrder</ref></type>
+        <declname>Order</declname>
+        <defname>Order</defname>
+      </param>
+    </templateparamlist>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1cached__uview_1a8e2f9db81dff43b91c0edaac613becd8" prot="public" static="no">
+        <type>T</type>
+        <definition>using batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::value_type = T</definition>
+        <argsstring></argsstring>
+        <name>value_type</name>
+        <qualifiedname>batmat::linalg::cached_uview::value_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="185" column="5" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="185" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1cached__uview_1a36a2f806209fdf679ea23f54474deb2c" prot="public" static="no">
+        <type><ref refid="structbatmat_1_1linalg_1_1simd__view__types" kindref="compound">simd_view_types</ref>&lt; std::remove_const_t&lt; T &gt;, Abi &gt;</type>
+        <definition>using batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::types = simd_view_types&lt;std::remove_const_t&lt;T&gt;, Abi&gt;</definition>
+        <argsstring></argsstring>
+        <name>types</name>
+        <qualifiedname>batmat::linalg::cached_uview::types</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="188" column="5" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="188" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structbatmat_1_1linalg_1_1cached__uview_1aa62482ac588c02254c8e9ed8ba45c31f" prot="public" static="no">
+        <type>typename <ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a55758cb5da1d68a5c7725952a85bc5e2" kindref="member">types::simd</ref></type>
+        <definition>using batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::simd = typename types::simd</definition>
+        <argsstring></argsstring>
+        <name>simd</name>
+        <qualifiedname>batmat::linalg::cached_uview::simd</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="189" column="5" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="189" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1cached__uview_1a21e50d2ee4b95d15fd4571f8386eaf57" prot="public" static="no" mutable="no">
+        <type><ref refid="structbatmat_1_1linalg_1_1cached__uview_1a8e2f9db81dff43b91c0edaac613becd8" kindref="member">value_type</ref> *const</type>
+        <definition>value_type* const batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::data[Size]</definition>
+        <argsstring>[Size]</argsstring>
+        <name>data</name>
+        <qualifiedname>batmat::linalg::cached_uview::data</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="186" column="22" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="186" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1linalg_1_1cached__uview_1a2c204d90b25dc7a0d661c3791748b993" compoundref="uview_8hpp" startline="209" endline="211">batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::cached_uview</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1cached__uview_1a25193968b972a0287a22ac7b38b897a6" compoundref="uview_8hpp" startline="192" endline="197">batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::operator()</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1cached__uview_1a95a6c418dd1bf524de7746ca3d956257" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>ptrdiff_t</type>
+        <definition>ptrdiff_t batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::inner_stride</definition>
+        <argsstring></argsstring>
+        <name>inner_stride</name>
+        <qualifiedname>batmat::linalg::cached_uview::inner_stride</qualifiedname>
+        <initializer>= typename <ref refid="structbatmat_1_1linalg_1_1simd__view__types_1a42c8cc3abab740150c78041ab96af477" kindref="member">types::simd_stride_t</ref>()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="190" column="32" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="190" bodyend="-1"/>
+        <referencedby refid="structbatmat_1_1linalg_1_1cached__uview_1a25193968b972a0287a22ac7b38b897a6" compoundref="uview_8hpp" startline="192" endline="197">batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::operator()</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1cached__uview_1a25193968b972a0287a22ac7b38b897a6" prot="public" static="no" const="yes" explicit="no" inline="yes" noexcept="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1linalg_1_1cached__uview_1a8e2f9db81dff43b91c0edaac613becd8" kindref="member">value_type</ref> &amp;</type>
+        <definition>value_type &amp; batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::operator()</definition>
+        <argsstring>(index_t r, index_t c) const noexcept</argsstring>
+        <name>operator()</name>
+        <qualifiedname>batmat::linalg::cached_uview::operator()</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>r</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="192" column="17" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="192" bodyend="197"/>
+        <references refid="structbatmat_1_1linalg_1_1cached__uview_1a21e50d2ee4b95d15fd4571f8386eaf57" compoundref="uview_8hpp" startline="186">batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::data</references>
+        <references refid="structbatmat_1_1linalg_1_1cached__uview_1a95a6c418dd1bf524de7746ca3d956257" compoundref="uview_8hpp" startline="190">batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::inner_stride</references>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1cached__uview_1a9243059b2b9e81a0db1654ea15c66161" prot="public" static="no" const="yes" explicit="no" inline="yes" noexcept="yes" virt="non-virtual">
+        <type><ref refid="structbatmat_1_1linalg_1_1cached__uview_1aa62482ac588c02254c8e9ed8ba45c31f" kindref="member">simd</ref></type>
+        <definition>simd batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::load</definition>
+        <argsstring>(index_t r, index_t c) const noexcept</argsstring>
+        <name>load</name>
+        <qualifiedname>batmat::linalg::cached_uview::load</qualifiedname>
+        <param>
+          <type>index_t</type>
+          <declname>r</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="198" column="11" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="198" bodyend="200"/>
+        <references refid="structbatmat_1_1linalg_1_1simd__view__types_1a8783ebeb530f419aaaf36873cdadd876" compoundref="uview_8hpp" startline="41" endline="41">batmat::linalg::simd_view_types&lt; std::remove_const_t&lt; T &gt;, Abi &gt;::aligned_load</references>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1cached__uview_1ab8195f3eafaaef631fc89df4e7984cb7" prot="public" static="no" const="yes" explicit="no" inline="yes" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>MaskL</declname>
+            <defname>MaskL</defname>
+            <defval>0</defval>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::store</definition>
+        <argsstring>(simd x, index_t r, index_t c) const noexcept</argsstring>
+        <name>store</name>
+        <qualifiedname>batmat::linalg::cached_uview::store</qualifiedname>
+        <param>
+          <type><ref refid="structbatmat_1_1linalg_1_1cached__uview_1aa62482ac588c02254c8e9ed8ba45c31f" kindref="member">simd</ref></type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>r</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>c</declname>
+        </param>
+    <requiresclause>(!std::is_const_v&lt;T&gt;)    </requiresclause>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="202" column="11" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="202" bodyend="206"/>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1cached__uview_1a2c204d90b25dc7a0d661c3791748b993" prot="public" static="no" const="no" explicit="no" inline="yes" noexcept="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>index_t...</type>
+            <declname>Is</declname>
+            <defname>Is</defname>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::cached_uview</definition>
+        <argsstring>(const uview&lt; T, Abi, Order &gt; &amp;o, std::integer_sequence&lt; index_t, Is... &gt;) noexcept</argsstring>
+        <name>cached_uview</name>
+        <qualifiedname>batmat::linalg::cached_uview::cached_uview</qualifiedname>
+        <param>
+          <type>const <ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, Order &gt; &amp;</type>
+          <declname>o</declname>
+        </param>
+        <param>
+          <type>std::integer_sequence&lt; index_t, Is... &gt;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="209" column="6" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="209" bodyend="211"/>
+        <references refid="structbatmat_1_1linalg_1_1cached__uview_1a21e50d2ee4b95d15fd4571f8386eaf57" compoundref="uview_8hpp" startline="186">batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::data</references>
+        <referencedby refid="structbatmat_1_1linalg_1_1cached__uview_1a6fdf9bb04d18ec5ba460ca105f6714bd" compoundref="uview_8hpp" startline="212" endline="213">batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::cached_uview</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="structbatmat_1_1linalg_1_1cached__uview_1a6fdf9bb04d18ec5ba460ca105f6714bd" prot="public" static="no" const="no" explicit="no" inline="yes" noexcept="yes" virt="non-virtual">
+        <type></type>
+        <definition>batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::cached_uview</definition>
+        <argsstring>(const uview&lt; T, Abi, Order &gt; &amp;o) noexcept</argsstring>
+        <name>cached_uview</name>
+        <qualifiedname>batmat::linalg::cached_uview::cached_uview</qualifiedname>
+        <param>
+          <type>const <ref refid="structbatmat_1_1linalg_1_1uview" kindref="compound">uview</ref>&lt; T, Abi, Order &gt; &amp;</type>
+          <declname>o</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/uview.hpp" line="212" column="6" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="212" bodyend="213"/>
+        <references refid="structbatmat_1_1linalg_1_1cached__uview_1a2c204d90b25dc7a0d661c3791748b993" compoundref="uview_8hpp" startline="209" endline="211">batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;::cached_uview</references>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::cached_uview&lt; Size, T, Abi, Order &gt;</label>
+        <link refid="structbatmat_1_1linalg_1_1cached__uview"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/uview.hpp" line="184" column="1" bodyfile="batmat/include/batmat/linalg/uview.hpp" bodystart="184" bodyend="214"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1linalg_1_1cached__uview_1a2c204d90b25dc7a0d661c3791748b993" prot="public" virt="non-virtual"><scope>batmat::linalg::cached_uview</scope><name>cached_uview</name></member>
+      <member refid="structbatmat_1_1linalg_1_1cached__uview_1a6fdf9bb04d18ec5ba460ca105f6714bd" prot="public" virt="non-virtual"><scope>batmat::linalg::cached_uview</scope><name>cached_uview</name></member>
+      <member refid="structbatmat_1_1linalg_1_1cached__uview_1a21e50d2ee4b95d15fd4571f8386eaf57" prot="public" virt="non-virtual"><scope>batmat::linalg::cached_uview</scope><name>data</name></member>
+      <member refid="structbatmat_1_1linalg_1_1cached__uview_1a95a6c418dd1bf524de7746ca3d956257" prot="public" virt="non-virtual"><scope>batmat::linalg::cached_uview</scope><name>inner_stride</name></member>
+      <member refid="structbatmat_1_1linalg_1_1cached__uview_1a9243059b2b9e81a0db1654ea15c66161" prot="public" virt="non-virtual"><scope>batmat::linalg::cached_uview</scope><name>load</name></member>
+      <member refid="structbatmat_1_1linalg_1_1cached__uview_1a25193968b972a0287a22ac7b38b897a6" prot="public" virt="non-virtual"><scope>batmat::linalg::cached_uview</scope><name>operator()</name></member>
+      <member refid="structbatmat_1_1linalg_1_1cached__uview_1aa62482ac588c02254c8e9ed8ba45c31f" prot="public" virt="non-virtual"><scope>batmat::linalg::cached_uview</scope><name>simd</name></member>
+      <member refid="structbatmat_1_1linalg_1_1cached__uview_1ab8195f3eafaaef631fc89df4e7984cb7" prot="public" virt="non-virtual"><scope>batmat::linalg::cached_uview</scope><name>store</name></member>
+      <member refid="structbatmat_1_1linalg_1_1cached__uview_1a36a2f806209fdf679ea23f54474deb2c" prot="public" virt="non-virtual"><scope>batmat::linalg::cached_uview</scope><name>types</name></member>
+      <member refid="structbatmat_1_1linalg_1_1cached__uview_1a8e2f9db81dff43b91c0edaac613becd8" prot="public" virt="non-virtual"><scope>batmat::linalg::cached_uview</scope><name>value_type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

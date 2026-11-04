@@ -1,0 +1,506 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="group__topic-low-level-ops" kind="group">
+    <compoundname>topic-low-level-ops</compoundname>
+    <title>Low-level operations</title>
+    <sectiondef kind="user-defined">
+      <header>Conditional negation of floating point numbers</header>
+      <memberdef kind="function" id="group__topic-low-level-ops_1ga0de59f8bf5b1c4058c2e188fa3c556e1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>T</type>
+        <definition>T batmat::ops::detail::cneg</definition>
+        <argsstring>(T x, T signs)</argsstring>
+        <name>cneg</name>
+        <qualifiedname>batmat::ops::detail::cneg</qualifiedname>
+        <param>
+          <type>T</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>T</type>
+          <declname>signs</declname>
+        </param>
+        <briefdescription>
+<para>Conditionally negates the sign bit of <computeroutput>x</computeroutput>, depending on <computeroutput>signs</computeroutput>, which should contain only ±0 (i.e. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>only the sign bit of an IEEE-754 floating point number). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/cneg.hpp" line="42" column="3" bodyfile="batmat/include/batmat/ops/cneg.hpp" bodystart="42" bodyend="45"/>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-low-level-ops_1ga3c252012a50af49aceac433f2104ff41" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>T</type>
+        <definition>T batmat::ops::detail::cneg</definition>
+        <argsstring>(T x, T signs)</argsstring>
+        <name>cneg</name>
+        <qualifiedname>batmat::ops::detail::cneg</qualifiedname>
+        <param>
+          <type>T</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>T</type>
+          <declname>signs</declname>
+        </param>
+        <briefdescription>
+<para>Conditionally negates the sign bit of <computeroutput>x</computeroutput>, depending on <computeroutput>signs</computeroutput>, which should contain only ±0 (i.e.    </para>
+        </briefdescription>
+        <detaileddescription>
+<para>only the sign bit of an IEEE-754 floating point number).    </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/cneg.hpp" line="51" column="11" bodyfile="batmat/include/batmat/ops/cneg.hpp" bodystart="51" bodyend="56"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-low-level-ops_1gac3333193d8a7f69c46423b137922ed16" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>datapar::simd&lt; T, Abi &gt;</type>
+        <definition>datapar::simd&lt; T, Abi &gt; batmat::ops::detail::cneg</definition>
+        <argsstring>(datapar::simd&lt; T, Abi &gt; x, datapar::simd&lt; T, Abi &gt; signs)</argsstring>
+        <name>cneg</name>
+        <qualifiedname>batmat::ops::detail::cneg</qualifiedname>
+        <param>
+          <type>datapar::simd&lt; T, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>datapar::simd&lt; T, Abi &gt;</type>
+          <declname>signs</declname>
+        </param>
+        <briefdescription>
+<para>Conditionally negates the sign bit of <computeroutput>x</computeroutput>, depending on <computeroutput>signs</computeroutput>, which should contain only ±0 (i.e.    </para>
+        </briefdescription>
+        <detaileddescription>
+<para>only the sign bit of an IEEE-754 floating point number).    </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/cneg.hpp" line="63" column="23" bodyfile="batmat/include/batmat/ops/cneg.hpp" bodystart="63" bodyend="73"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Gathering elements from memory</header>
+      <memberdef kind="function" id="group__topic-low-level-ops_1ga7edc1a8ca0fbd5557bd397cfd28a743e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class AbiT</type>
+          </param>
+          <param>
+            <type>class I</type>
+          </param>
+          <param>
+            <type>class AbiI</type>
+          </param>
+          <param>
+            <type>class M</type>
+          </param>
+        </templateparamlist>
+        <type>datapar::simd&lt; T, AbiT &gt;</type>
+        <definition>datapar::simd&lt; T, AbiT &gt; batmat::ops::gather</definition>
+        <argsstring>(const T *p, datapar::simd&lt; I, AbiI &gt; idx, M mask)</argsstring>
+        <name>gather</name>
+        <qualifiedname>batmat::ops::gather</qualifiedname>
+        <param>
+          <type>const T *</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>datapar::simd&lt; I, AbiI &gt;</type>
+          <declname>idx</declname>
+        </param>
+        <param>
+          <type>M</type>
+          <declname>mask</declname>
+        </param>
+        <briefdescription>
+<para>Gathers elements from memory at the addresses specified by <computeroutput>idx</computeroutput>, which should be an integer SIMD vector, and returns them in a SIMD vector of type <computeroutput><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt;T, AbiT&gt;</computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The elements are gathered relative to the base address <computeroutput>p</computeroutput>. The gathering is masked by <computeroutput>mask</computeroutput>, </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/gather.hpp" line="56" column="23" bodyfile="batmat/include/batmat/ops/gather.hpp" bodystart="56" bodyend="69"/>
+        <references refid="namespacebatmat_1_1ops_1_1detail_1a7a2eefc87ffd67db8b263046db94a373" compoundref="mask_8hpp" startline="21" endline="31">batmat::ops::detail::convert_mask</references>
+        <references refid="namespacebatmat_1_1ops_1_1detail_1a371e08d0c4b13352046afed85365a4bf" compoundref="gather_8hpp" startline="12" endline="15">batmat::ops::detail::gather</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a71184afe3c389f21d064930a43a7049c" compoundref="compress_8hpp" startline="16" endline="120">batmat::linalg::detail::compress_masks_impl</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Lane-wise rotations of SIMD vectors</header>
+      <memberdef kind="function" id="group__topic-low-level-ops_1ga247b1215d2f350a55c60a922efc98e4e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>S</declname>
+            <defname>S</defname>
+          </param>
+          <param>
+            <type>class F</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>datapar::simd&lt; F, Abi &gt;</type>
+        <definition>datapar::simd&lt; F, Abi &gt; batmat::ops::rotl</definition>
+        <argsstring>(datapar::simd&lt; F, Abi &gt; x)</argsstring>
+        <name>rotl</name>
+        <qualifiedname>batmat::ops::rotl</qualifiedname>
+        <param>
+          <type>datapar::simd&lt; F, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+<para>Rotates the elements of <computeroutput>x</computeroutput> by <computeroutput>s</computeroutput> positions to the left. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>For example, <computeroutput><ref refid="group__topic-low-level-ops_1ga247b1215d2f350a55c60a922efc98e4e" kindref="member">rotl</ref>&lt;1&gt;([x0, x1, x2, x3]) == [x1, x2, x3, x0]</computeroutput> and <computeroutput><ref refid="group__topic-low-level-ops_1ga247b1215d2f350a55c60a922efc98e4e" kindref="member">rotl</ref>&lt;-1&gt;([x0, x1, x2, x3]) == [x3, x0, x1, x2]</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/rotate.hpp" line="226" column="23" bodyfile="batmat/include/batmat/ops/rotate.hpp" bodystart="226" bodyend="233"/>
+        <references refid="namespacebatmat_1_1ops_1_1detail_1a9210fe01d8e36639fb10c5145d2fd373" compoundref="rotate_8hpp" startline="26" endline="30">batmat::ops::detail::rotl</references>
+        <references refid="namespacebatmat_1_1ops_1_1detail_1a5cbbec102f5a2e6220a1d32149ad373d" compoundref="rotate_8hpp" startline="33" endline="37">batmat::ops::detail::rotr</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1ac74ffd0a7e0af8bcd39fb94b587e66b1" compoundref="copy_8hpp" startline="68" endline="107">batmat::linalg::detail::copy::copy</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-low-level-ops_1ga99482a68bf78d2c163dcd663b24131c5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>S</declname>
+            <defname>S</defname>
+          </param>
+          <param>
+            <type>class F</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>datapar::simd&lt; F, Abi &gt;</type>
+        <definition>datapar::simd&lt; F, Abi &gt; batmat::ops::rotr</definition>
+        <argsstring>(datapar::simd&lt; F, Abi &gt; x)</argsstring>
+        <name>rotr</name>
+        <qualifiedname>batmat::ops::rotr</qualifiedname>
+        <param>
+          <type>datapar::simd&lt; F, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+<para>Rotate the elements of <computeroutput>x</computeroutput> to the right by <computeroutput>S</computeroutput> positions. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>For example, <computeroutput><ref refid="group__topic-low-level-ops_1ga99482a68bf78d2c163dcd663b24131c5" kindref="member">rotr</ref>&lt;1&gt;([x0, x1, x2, x3]) == [x3, x0, x1, x2]</computeroutput> and <computeroutput><ref refid="group__topic-low-level-ops_1ga99482a68bf78d2c163dcd663b24131c5" kindref="member">rotr</ref>&lt;-1&gt;([x0, x1, x2, x3]) == [x1, x2, x3, x0]</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/rotate.hpp" line="239" column="23" bodyfile="batmat/include/batmat/ops/rotate.hpp" bodystart="239" bodyend="246"/>
+        <references refid="namespacebatmat_1_1ops_1_1detail_1a9210fe01d8e36639fb10c5145d2fd373" compoundref="rotate_8hpp" startline="26" endline="30">batmat::ops::detail::rotl</references>
+        <references refid="namespacebatmat_1_1ops_1_1detail_1a5cbbec102f5a2e6220a1d32149ad373d" compoundref="rotate_8hpp" startline="33" endline="37">batmat::ops::detail::rotr</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1ac74ffd0a7e0af8bcd39fb94b587e66b1" compoundref="copy_8hpp" startline="68" endline="107">batmat::linalg::detail::copy::copy</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1detail_1ad044144d29b80f6db7a6765e234a91ea" compoundref="hyhound_8tpp" startline="118" endline="121">batmat::linalg::micro_kernels::hyhound::detail::rotate</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-low-level-ops_1gaaa3114a23628a7f5db3d380c07e6d03a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>S</declname>
+            <defname>S</defname>
+          </param>
+          <param>
+            <type>class F</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>datapar::simd&lt; F, Abi &gt;</type>
+        <definition>datapar::simd&lt; F, Abi &gt; batmat::ops::shiftl</definition>
+        <argsstring>(datapar::simd&lt; F, Abi &gt; x)</argsstring>
+        <name>shiftl</name>
+        <qualifiedname>batmat::ops::shiftl</qualifiedname>
+        <param>
+          <type>datapar::simd&lt; F, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+<para>Shift the elements of <computeroutput>x</computeroutput> to the left by <computeroutput>S</computeroutput> positions, shifting in zeros. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>For example, <computeroutput><ref refid="group__topic-low-level-ops_1gaaa3114a23628a7f5db3d380c07e6d03a" kindref="member">shiftl</ref>&lt;1&gt;([x0, x1, x2, x3]) == [x1, x2, x3, 0]</computeroutput> and <computeroutput><ref refid="group__topic-low-level-ops_1gaaa3114a23628a7f5db3d380c07e6d03a" kindref="member">shiftl</ref>&lt;-1&gt;([x0, x1, x2, x3]) == [0, x0, x1, x2]</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/rotate.hpp" line="252" column="23" bodyfile="batmat/include/batmat/ops/rotate.hpp" bodystart="252" bodyend="261"/>
+        <references refid="namespacebatmat_1_1ops_1_1detail_1a25773d280715f4b8bbf625cbb8653e42" compoundref="rotate_8hpp" startline="40" endline="44">batmat::ops::detail::shiftl</references>
+        <references refid="namespacebatmat_1_1ops_1_1detail_1a952bfdf95e53d22d4e6b28c39c701dae" compoundref="rotate_8hpp" startline="47" endline="50">batmat::ops::detail::shiftr</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1ae86f50db44ab72f6cc46375603241750" compoundref="syomv_8tpp" startline="17" endline="52">batmat::linalg::micro_kernels::syomv::syomv_microkernel</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-low-level-ops_1gafd42e3bbc4c662e3384ffc8653fdc6a8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>int</type>
+            <declname>S</declname>
+            <defname>S</defname>
+          </param>
+          <param>
+            <type>class F</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>datapar::simd&lt; F, Abi &gt;</type>
+        <definition>datapar::simd&lt; F, Abi &gt; batmat::ops::shiftr</definition>
+        <argsstring>(datapar::simd&lt; F, Abi &gt; x)</argsstring>
+        <name>shiftr</name>
+        <qualifiedname>batmat::ops::shiftr</qualifiedname>
+        <param>
+          <type>datapar::simd&lt; F, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+<para>Shift the elements of <computeroutput>x</computeroutput> to the right by <computeroutput>S</computeroutput> positions, shifting in zeros. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>For example, <computeroutput><ref refid="group__topic-low-level-ops_1gafd42e3bbc4c662e3384ffc8653fdc6a8" kindref="member">shiftr</ref>&lt;1&gt;([x0, x1, x2, x3]) == [0, x0, x1, x2]</computeroutput> and <computeroutput><ref refid="group__topic-low-level-ops_1gafd42e3bbc4c662e3384ffc8653fdc6a8" kindref="member">shiftr</ref>&lt;-1&gt;([x0, x1, x2, x3]) == [x1, x2, x3, 0]</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/rotate.hpp" line="267" column="23" bodyfile="batmat/include/batmat/ops/rotate.hpp" bodystart="267" bodyend="276"/>
+        <references refid="namespacebatmat_1_1ops_1_1detail_1a25773d280715f4b8bbf625cbb8653e42" compoundref="rotate_8hpp" startline="40" endline="44">batmat::ops::detail::shiftl</references>
+        <references refid="namespacebatmat_1_1ops_1_1detail_1a952bfdf95e53d22d4e6b28c39c701dae" compoundref="rotate_8hpp" startline="47" endline="50">batmat::ops::detail::shiftr</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1syomv_1ae86f50db44ab72f6cc46375603241750" compoundref="syomv_8tpp" startline="17" endline="52">batmat::linalg::micro_kernels::syomv::syomv_microkernel</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-low-level-ops_1gaf86c438318c89dd7be953a0633285ef8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class F</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>datapar::simd&lt; F, Abi &gt;</type>
+        <definition>datapar::simd&lt; F, Abi &gt; batmat::ops::detail::rot</definition>
+        <argsstring>(datapar::simd&lt; F, Abi &gt; x, int s)</argsstring>
+        <name>rot</name>
+        <qualifiedname>batmat::ops::rot</qualifiedname>
+        <param>
+          <type>datapar::simd&lt; F, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>s</declname>
+        </param>
+        <briefdescription>
+<para>Rotate the elements of <computeroutput>x</computeroutput> to the right by <computeroutput>s</computeroutput> positions. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>For example, <computeroutput><ref refid="group__topic-low-level-ops_1ga99482a68bf78d2c163dcd663b24131c5" kindref="member">rotr</ref>&lt;1&gt;([x0, x1, x2, x3]) == [x3, x0, x1, x2]</computeroutput> and <computeroutput><ref refid="group__topic-low-level-ops_1ga99482a68bf78d2c163dcd663b24131c5" kindref="member">rotr</ref>&lt;-1&gt;([x0, x1, x2, x3]) == [x1, x2, x3, x0]</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/rotate.hpp" line="278" column="1" bodyfile="batmat/include/batmat/ops/rotate.hpp" bodystart="18" bodyend="23"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1detail_1a464493e37ef99c3ed930c5d86bedb2d6" compoundref="hyhound_8tpp" startline="124" endline="127">batmat::linalg::micro_kernels::hyhound::detail::rotate</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Inverse square root</header>
+      <memberdef kind="function" id="group__topic-low-level-ops_1ga179fee4bcade5a062eeae2b0b2d74478" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>std::floating_point</type>
+            <declname>T</declname>
+            <defname>T</defname>
+          </param>
+        </templateparamlist>
+        <type>T</type>
+        <definition>T batmat::ops::rsqrt</definition>
+        <argsstring>(T x)</argsstring>
+        <name>rsqrt</name>
+        <qualifiedname>batmat::ops::rsqrt</qualifiedname>
+        <param>
+          <type>T</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+<para>Inverse square root. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/rsqrt.hpp" line="15" column="3" bodyfile="batmat/include/batmat/ops/rsqrt.hpp" bodystart="15" bodyend="18"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a4cf72cfb5e51291483e7b258efc0efc4" compoundref="potrf_8tpp" startline="24" endline="111">batmat::linalg::micro_kernels::potrf::potrf_copy_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a7a3744f989a8df63de26c39485592f56" compoundref="potrf_8tpp" startline="126" endline="182">batmat::linalg::micro_kernels::potrf::trsm_copy_microkernel</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-low-level-ops_1ga633648536facc16ec0c0ff27cc9932d0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>datapar::simd&lt; T, Abi &gt;</type>
+        <definition>datapar::simd&lt; T, Abi &gt; batmat::ops::rsqrt</definition>
+        <argsstring>(datapar::simd&lt; T, Abi &gt; x)</argsstring>
+        <name>rsqrt</name>
+        <qualifiedname>batmat::ops::rsqrt</qualifiedname>
+        <param>
+          <type>datapar::simd&lt; T, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+<para>Inverse square root. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>May be implemented using an <computeroutput><ref refid="group__topic-low-level-ops_1ga179fee4bcade5a062eeae2b0b2d74478" kindref="member">rsqrt</ref></computeroutput> instruction followed by Newton iterations for better performance, depending on the SIMD ABI. This allows it to be performed in parallel with a normal square root instruction, enabling better performance of the Cholesky micro-kernels. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/rsqrt.hpp" line="25" column="15" bodyfile="batmat/include/batmat/ops/rsqrt.hpp" bodystart="25" bodyend="27"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="user-defined">
+      <header>Transposition</header>
+      <memberdef kind="function" id="group__topic-low-level-ops_1gaa7e113b52b9b2f919ea0cd6b700c0e40" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>index_t</type>
+            <declname>R</declname>
+            <defname>R</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>C</declname>
+            <defname>C</defname>
+          </param>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::ops::transpose_dyn</definition>
+        <argsstring>(const T *pa, index_t lda, T *pb, index_t ldb, index_t d=R)</argsstring>
+        <name>transpose_dyn</name>
+        <qualifiedname>batmat::ops::transpose_dyn</qualifiedname>
+        <param>
+          <type>const T *</type>
+          <declname>pa</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>lda</declname>
+        </param>
+        <param>
+          <type>T *</type>
+          <declname>pb</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>ldb</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>d</declname>
+          <defval>R</defval>
+        </param>
+        <briefdescription>
+<para>Transposes the <computeroutput>R</computeroutput> × <computeroutput>C</computeroutput> matrix at <computeroutput>pa</computeroutput> with leading dimension <computeroutput>lda</computeroutput>, writing the result to <computeroutput>pb</computeroutput> with leading dimension <computeroutput>ldb</computeroutput>, writing only the <computeroutput>d</computeroutput> first columns of the result. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/transpose.hpp" line="20" column="13" bodyfile="batmat/include/batmat/ops/transpose.hpp" bodystart="20" bodyend="29"/>
+        <references refid="assume_8hpp_1a3faa5ac45bae73eaef7408258e817e5f" compoundref="assume_8hpp" startline="17">BATMAT_ASSUME</references>
+        <references refid="unroll_8h_1addb39c3474d8e234f06b9ca62ed0bf75" compoundref="unroll_8h" startline="27">BATMAT_FULLY_UNROLLED_FOR</references>
+        <referencedby refid="group__topic-low-level-ops_1ga4d57a10ef71c7ecf19366ed11bc793d7" compoundref="transpose_8hpp" startline="63" endline="65">batmat::ops::transpose</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="group__topic-low-level-ops_1ga4d57a10ef71c7ecf19366ed11bc793d7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>index_t</type>
+            <declname>R</declname>
+            <defname>R</defname>
+          </param>
+          <param>
+            <type>index_t</type>
+            <declname>C</declname>
+            <defname>C</defname>
+          </param>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::ops::transpose</definition>
+        <argsstring>(const T *pa, index_t lda, T *pb, index_t ldb)</argsstring>
+        <name>transpose</name>
+        <qualifiedname>batmat::ops::transpose</qualifiedname>
+        <param>
+          <type>const T *</type>
+          <declname>pa</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>lda</declname>
+        </param>
+        <param>
+          <type>T *</type>
+          <declname>pb</declname>
+        </param>
+        <param>
+          <type>index_t</type>
+          <declname>ldb</declname>
+        </param>
+        <briefdescription>
+<para>Transposes the <computeroutput>R</computeroutput> × <computeroutput>C</computeroutput> matrix at <computeroutput>pa</computeroutput> with leading dimension <computeroutput>lda</computeroutput>, writing the result to <computeroutput>pb</computeroutput> with leading dimension <computeroutput>ldb</computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/ops/transpose.hpp" line="63" column="13" bodyfile="batmat/include/batmat/ops/transpose.hpp" bodystart="63" bodyend="65"/>
+        <references refid="group__topic-low-level-ops_1gaa7e113b52b9b2f919ea0cd6b700c0e40" compoundref="transpose_8hpp" startline="20" endline="29">batmat::ops::transpose_dyn</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1copy_1a026a036e2e49617672190bba15b87859" compoundref="copy_8hpp" startline="133" endline="166">batmat::linalg::detail::copy::copy</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Low-level operations such as gathers, transposes, lane-wise rotations, inverse square roots, conditional negations, etc. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

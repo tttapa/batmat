@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="dir_49963b07cc1ee01c8c0c2caacff1ea40" kind="dir">
+    <compoundname>batmat/include/batmat/ops</compoundname>
+    <innerfile refid="cneg_8hpp">cneg.hpp</innerfile>
+    <innerfile refid="gather_8hpp">gather.hpp</innerfile>
+    <innerfile refid="mask_8hpp">mask.hpp</innerfile>
+    <innerfile refid="rotate_8hpp">rotate.hpp</innerfile>
+    <innerfile refid="rsqrt_8hpp">rsqrt.hpp</innerfile>
+    <innerfile refid="transpose_8hpp">transpose.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/ops/"/>
+  </compounddef>
+</doxygen>

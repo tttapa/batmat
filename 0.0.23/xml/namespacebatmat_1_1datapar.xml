@@ -1,0 +1,657 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1datapar" kind="namespace" language="C++">
+    <compoundname>batmat::datapar</compoundname>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class Tp</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>stdx::simd&lt; Tp, Abi &gt;</type>
+        <definition>using batmat::datapar::simd = stdx::simd&lt;Tp, Abi&gt;</definition>
+        <argsstring></argsstring>
+        <name>simd</name>
+        <qualifiedname>batmat::datapar::simd</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="148" column="1" bodyfile="batmat/include/batmat/simd.hpp" bodystart="148" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1datapar_1aa3c7c9554d61e55ae3384b5e4c5ce7af" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class Tp</type>
+          </param>
+          <param>
+            <type>std::size_t</type>
+            <declname>Np</declname>
+            <defname>Np</defname>
+          </param>
+        </templateparamlist>
+        <type>stdx::simd_abi::deduce_t&lt; Tp, Np &gt;</type>
+        <definition>using batmat::datapar::deduced_abi = stdx::simd_abi::deduce_t&lt;Tp, Np&gt;</definition>
+        <argsstring></argsstring>
+        <name>deduced_abi</name>
+        <qualifiedname>batmat::datapar::deduced_abi</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="150" column="1" bodyfile="batmat/include/batmat/simd.hpp" bodystart="150" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1datapar_1ac2f2c9f35f77cfd396640965c5ff04d4" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class Tp</type>
+          </param>
+          <param>
+            <type>std::size_t</type>
+            <declname>Np</declname>
+            <defname>Np</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">simd</ref>&lt; Tp, <ref refid="namespacebatmat_1_1datapar_1aa3c7c9554d61e55ae3384b5e4c5ce7af" kindref="member">deduced_abi</ref>&lt; Tp, Np &gt; &gt;</type>
+        <definition>using batmat::datapar::deduced_simd = simd&lt;Tp, deduced_abi&lt;Tp, Np&gt;&gt;</definition>
+        <argsstring></argsstring>
+        <name>deduced_simd</name>
+        <qualifiedname>batmat::datapar::deduced_simd</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="152" column="1" bodyfile="batmat/include/batmat/simd.hpp" bodystart="152" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1datapar_1a497d8b4d202d9476ad67782ba4d4feef" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class Tp</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>stdx::simd_size&lt; Tp, Abi &gt;</type>
+        <definition>using batmat::datapar::simd_size = stdx::simd_size&lt;Tp, Abi&gt;</definition>
+        <argsstring></argsstring>
+        <name>simd_size</name>
+        <qualifiedname>batmat::datapar::simd_size</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="233" column="1" bodyfile="batmat/include/batmat/simd.hpp" bodystart="233" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1datapar_1a3cbb75e6685dbd98807439ac0dca33f0" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class Tp</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>stdx::memory_alignment&lt; <ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">simd</ref>&lt; Tp, Abi &gt; &gt;</type>
+        <definition>using batmat::datapar::simd_align = stdx::memory_alignment&lt;simd&lt;Tp, Abi&gt;&gt;</definition>
+        <argsstring></argsstring>
+        <name>simd_align</name>
+        <qualifiedname>batmat::datapar::simd_align</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="235" column="1" bodyfile="batmat/include/batmat/simd.hpp" bodystart="235" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1datapar_1a8c13bd77d282b3132fca8a1273d05488" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class V</type>
+          </param>
+        </templateparamlist>
+        <type>stdx::rebind_simd_t&lt; T, V &gt;</type>
+        <definition>using batmat::datapar::rebind_simd_t = stdx::rebind_simd_t&lt;T, V&gt;</definition>
+        <argsstring></argsstring>
+        <name>rebind_simd_t</name>
+        <qualifiedname>batmat::datapar::rebind_simd_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="237" column="1" bodyfile="batmat/include/batmat/simd.hpp" bodystart="237" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacebatmat_1_1datapar_1a55556a636c771c6e0f5805c2d186f1ec" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>class Tp</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="namespacebatmat_1_1datapar_1aa3c7c9554d61e55ae3384b5e4c5ce7af" kindref="member">deduced_abi</ref>&lt; Tp, 1 &gt;</type>
+        <definition>using batmat::datapar::scalar_abi = deduced_abi&lt;Tp, 1&gt;</definition>
+        <argsstring></argsstring>
+        <name>scalar_abi</name>
+        <qualifiedname>batmat::datapar::scalar_abi</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="239" column="1" bodyfile="batmat/include/batmat/simd.hpp" bodystart="239" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1a149c22d1c48e31a930932999a6959700" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+        </templateparamlist>
+        <type>V</type>
+        <definition>V batmat::datapar::unaligned_load</definition>
+        <argsstring>(const typename V::value_type *p)</argsstring>
+        <name>unaligned_load</name>
+        <qualifiedname>batmat::datapar::unaligned_load</qualifiedname>
+        <param>
+          <type>const typename V::value_type *</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="155" column="3" bodyfile="batmat/include/batmat/simd.hpp" bodystart="155" bodyend="157"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1small__potrf_1a6b16d5bb281a8c8dc8fb284f88ae8e0f" compoundref="small-potrf_8tpp" startline="72" endline="115">batmat::linalg::micro_kernels::small_potrf::potrf_syrk_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1small__potrf_1a731b8daf7abc4dd88a8f430adaeefd64" compoundref="small-potrf_8tpp" startline="18" endline="65">batmat::linalg::micro_kernels::small_potrf::potrf_trsm_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1small__potrf_1ac6b1718d811d07b3780cd126178c6289" compoundref="small-potrf_8tpp" startline="209" endline="278">batmat::linalg::micro_kernels::small_potrf::syrk_potrf_trsm_microkernel</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1a9e5512aee8f62a9475578de6da9dd666" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+        </templateparamlist>
+        <type>V</type>
+        <definition>V batmat::datapar::aligned_load</definition>
+        <argsstring>(const typename V::value_type *p)</argsstring>
+        <name>aligned_load</name>
+        <qualifiedname>batmat::datapar::aligned_load</qualifiedname>
+        <param>
+          <type>const typename V::value_type *</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="160" column="3" bodyfile="batmat/include/batmat/simd.hpp" bodystart="160" bodyend="162"/>
+        <referencedby refid="structbatmat_1_1linalg_1_1simd__view__types_1a8783ebeb530f419aaaf36873cdadd876" compoundref="uview_8hpp" startline="41" endline="41">batmat::linalg::template view&lt; T, Order &gt;::aligned_load</referencedby>
+        <referencedby refid="namespacebatmat_1_1datapar_1adb66c808eb0fedc04313ed3a65838b4a" compoundref="simd_8hpp" startline="257" endline="261">from_values</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1triangular__accessor_1ad59bf1e14e93a6feca376d8ba40bfe73" compoundref="uview_8hpp" startline="283" endline="285">batmat::linalg::triangular_accessor&lt; T, Abi, R &gt;::load</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1a7409608f7378a6391ad092fbaf087932" compoundref="potrf_8tpp" startline="166" endline="225">batmat::linalg::micro_kernels::potrf::trsm_copy_microkernel</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1ac0a83627dacddc05ffd7c3bc54716ba5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::datapar::unaligned_store</definition>
+        <argsstring>(V v, typename V::value_type *p)</argsstring>
+        <name>unaligned_store</name>
+        <qualifiedname>batmat::datapar::unaligned_store</qualifiedname>
+        <param>
+          <type>V</type>
+          <declname>v</declname>
+        </param>
+        <param>
+          <type>typename V::value_type *</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="165" column="6" bodyfile="batmat/include/batmat/simd.hpp" bodystart="165" bodyend="167"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1small__potrf_1a6b16d5bb281a8c8dc8fb284f88ae8e0f" compoundref="small-potrf_8tpp" startline="72" endline="115">batmat::linalg::micro_kernels::small_potrf::potrf_syrk_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1small__potrf_1a731b8daf7abc4dd88a8f430adaeefd64" compoundref="small-potrf_8tpp" startline="18" endline="65">batmat::linalg::micro_kernels::small_potrf::potrf_trsm_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1small__potrf_1ac6b1718d811d07b3780cd126178c6289" compoundref="small-potrf_8tpp" startline="209" endline="278">batmat::linalg::micro_kernels::small_potrf::syrk_potrf_trsm_microkernel</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1a37a115c835b05841a7f348320e1e43b6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::datapar::aligned_store</definition>
+        <argsstring>(V v, typename V::value_type *p)</argsstring>
+        <name>aligned_store</name>
+        <qualifiedname>batmat::datapar::aligned_store</qualifiedname>
+        <param>
+          <type>V</type>
+          <declname>v</declname>
+        </param>
+        <param>
+          <type>typename V::value_type *</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="170" column="6" bodyfile="batmat/include/batmat/simd.hpp" bodystart="170" bodyend="172"/>
+        <referencedby refid="structbatmat_1_1linalg_1_1simd__view__types_1a12f35661aee4a078b8b0b15358c3df5f" compoundref="uview_8hpp" startline="44" endline="66">batmat::linalg::template view&lt; T, Order &gt;::aligned_store</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ad5285a8604b72e9ed9102afde642b324" compoundref="compress_8hpp" startline="185" endline="202">batmat::linalg::detail::compress_masks</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1potrf_1add686c799a211b971e9a8453d122bedc" compoundref="potrf_8tpp" startline="59" endline="149">batmat::linalg::micro_kernels::potrf::potrf_copy_microkernel</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1triangular__accessor_1a44693bf37ffcb42528550d4cb4e59c52" compoundref="uview_8hpp" startline="286" endline="290">batmat::linalg::triangular_accessor&lt; T, Abi, R &gt;::store</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1adcc0818ece98ecdbff36acf289e5b658" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+        </templateparamlist>
+        <type>V</type>
+        <definition>V batmat::datapar::masked_aligned_load</definition>
+        <argsstring>(const typename V::value_type *p, typename V::mask_type m)</argsstring>
+        <name>masked_aligned_load</name>
+        <qualifiedname>batmat::datapar::masked_aligned_load</qualifiedname>
+        <param>
+          <type>const typename V::value_type *</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>typename V::mask_type</type>
+          <declname>m</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="175" column="3" bodyfile="batmat/include/batmat/simd.hpp" bodystart="175" bodyend="179"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1a98bc079b5dd63a3fbddfccfae5446646" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+        </templateparamlist>
+        <type>V</type>
+        <definition>V batmat::datapar::masked_unaligned_load</definition>
+        <argsstring>(const typename V::value_type *p, typename V::mask_type m)</argsstring>
+        <name>masked_unaligned_load</name>
+        <qualifiedname>batmat::datapar::masked_unaligned_load</qualifiedname>
+        <param>
+          <type>const typename V::value_type *</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>typename V::mask_type</type>
+          <declname>m</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="182" column="3" bodyfile="batmat/include/batmat/simd.hpp" bodystart="182" bodyend="186"/>
+        <referencedby refid="namespacebatmat_1_1datapar_1a1f03f806e48fcd636feacf02542bdafd" compoundref="simd_8hpp" startline="221" endline="224">partial_load</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1ac9b1641243fc46c499b326c12e68ff4f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::datapar::masked_aligned_store</definition>
+        <argsstring>(V v, typename V::mask_type m, typename V::value_type *p)</argsstring>
+        <name>masked_aligned_store</name>
+        <qualifiedname>batmat::datapar::masked_aligned_store</qualifiedname>
+        <param>
+          <type>V</type>
+          <declname>v</declname>
+        </param>
+        <param>
+          <type>typename V::mask_type</type>
+          <declname>m</declname>
+        </param>
+        <param>
+          <type>typename V::value_type *</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="189" column="6" bodyfile="batmat/include/batmat/simd.hpp" bodystart="189" bodyend="191"/>
+        <referencedby refid="structbatmat_1_1linalg_1_1simd__view__types_1a12f35661aee4a078b8b0b15358c3df5f" compoundref="uview_8hpp" startline="44" endline="66">batmat::linalg::template view&lt; T, Order &gt;::aligned_store</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1a065f46b66665c31b92845a8701017eee" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void batmat::datapar::masked_unaligned_store</definition>
+        <argsstring>(V v, typename V::mask_type m, typename V::value_type *p)</argsstring>
+        <name>masked_unaligned_store</name>
+        <qualifiedname>batmat::datapar::masked_unaligned_store</qualifiedname>
+        <param>
+          <type>V</type>
+          <declname>v</declname>
+        </param>
+        <param>
+          <type>typename V::mask_type</type>
+          <declname>m</declname>
+        </param>
+        <param>
+          <type>typename V::value_type *</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="194" column="6" bodyfile="batmat/include/batmat/simd.hpp" bodystart="194" bodyend="196"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1small__potrf_1ac6b1718d811d07b3780cd126178c6289" compoundref="small-potrf_8tpp" startline="209" endline="278">batmat::linalg::micro_kernels::small_potrf::syrk_potrf_trsm_microkernel</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1a9a9e70b4dcb62958e9593fd116e8cd12" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+          <param>
+            <type>size_t</type>
+            <declname>I</declname>
+            <defname>I</defname>
+          </param>
+          <param>
+            <type>bool</type>
+            <declname>Value</declname>
+            <defname>Value</defname>
+            <defval>true</defval>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::datapar::generate_mask</definition>
+        <argsstring>()</argsstring>
+        <name>generate_mask</name>
+        <qualifiedname>batmat::datapar::generate_mask</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="199" column="6" bodyfile="batmat/include/batmat/simd.hpp" bodystart="199" bodyend="203"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1small__potrf_1ac6b1718d811d07b3780cd126178c6289" compoundref="small-potrf_8tpp" startline="209" endline="278">batmat::linalg::micro_kernels::small_potrf::syrk_potrf_trsm_microkernel</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1af0fc5300d21fb5e75135f6352acc677b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+          <param>
+            <type>bool</type>
+            <declname>Value</declname>
+            <defname>Value</defname>
+            <defval>true</defval>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::datapar::generate_mask</definition>
+        <argsstring>(size_t i)</argsstring>
+        <name>generate_mask</name>
+        <qualifiedname>batmat::datapar::generate_mask</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="206" column="6" bodyfile="batmat/include/batmat/simd.hpp" bodystart="206" bodyend="210"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1add04525e0daa9c8949ef97f0ff1b50b5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+          <param>
+            <type>size_t</type>
+            <declname>N</declname>
+            <defname>N</defname>
+          </param>
+          <param>
+            <type>bool</type>
+            <declname>Value</declname>
+            <defname>Value</defname>
+            <defval>true</defval>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::datapar::generate_mask_until</definition>
+        <argsstring>()</argsstring>
+        <name>generate_mask_until</name>
+        <qualifiedname>batmat::datapar::generate_mask_until</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="213" column="6" bodyfile="batmat/include/batmat/simd.hpp" bodystart="213" bodyend="218"/>
+        <references refid="unroll_8h_1addb39c3474d8e234f06b9ca62ed0bf75" compoundref="unroll_8h" startline="27">BATMAT_FULLY_UNROLLED_FOR</references>
+        <referencedby refid="namespacebatmat_1_1datapar_1a1f03f806e48fcd636feacf02542bdafd" compoundref="simd_8hpp" startline="221" endline="224">partial_load</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1small__potrf_1ac6b1718d811d07b3780cd126178c6289" compoundref="small-potrf_8tpp" startline="209" endline="278">batmat::linalg::micro_kernels::small_potrf::syrk_potrf_trsm_microkernel</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1a1f03f806e48fcd636feacf02542bdafd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+          <param>
+            <type>size_t</type>
+            <declname>N</declname>
+            <defname>N</defname>
+          </param>
+        </templateparamlist>
+        <type>V</type>
+        <definition>V batmat::datapar::partial_load</definition>
+        <argsstring>(const typename V::value_type *p)</argsstring>
+        <name>partial_load</name>
+        <qualifiedname>batmat::datapar::partial_load</qualifiedname>
+        <param>
+          <type>const typename V::value_type *</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="221" column="3" bodyfile="batmat/include/batmat/simd.hpp" bodystart="221" bodyend="224"/>
+        <references refid="namespacebatmat_1_1datapar_1add04525e0daa9c8949ef97f0ff1b50b5" compoundref="simd_8hpp" startline="213" endline="218">generate_mask_until</references>
+        <references refid="namespacebatmat_1_1datapar_1a98bc079b5dd63a3fbddfccfae5446646" compoundref="simd_8hpp" startline="182" endline="186">masked_unaligned_load</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1small__potrf_1ac6b1718d811d07b3780cd126178c6289" compoundref="small-potrf_8tpp" startline="209" endline="278">batmat::linalg::micro_kernels::small_potrf::syrk_potrf_trsm_microkernel</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1a50d5b6b45672aa2c632b8fa168f7908c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::datapar::to_intrin</definition>
+        <argsstring>(V v)</argsstring>
+        <name>to_intrin</name>
+        <qualifiedname>batmat::datapar::to_intrin</qualifiedname>
+        <param>
+          <type>V</type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="227" column="6" bodyfile="batmat/include/batmat/simd.hpp" bodystart="227" bodyend="229"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1a722b9edce8253cf9198fcf60f3052939" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto batmat::datapar::reduce_count</definition>
+        <argsstring>(auto v)</argsstring>
+        <name>reduce_count</name>
+        <qualifiedname>batmat::datapar::reduce_count</qualifiedname>
+        <param>
+          <type>auto</type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="244" column="6" bodyfile="batmat/include/batmat/simd.hpp" bodystart="244" bodyend="244"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a86f65f38e1de024143f611d38d6ec764" compoundref="compress_8hpp" startline="122" endline="182">batmat::linalg::detail::compress_masks_count</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1a71184afe3c389f21d064930a43a7049c" compoundref="compress_8hpp" startline="17" endline="119">batmat::linalg::detail::compress_masks_impl</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a700d60d5449ce87cf06705451628e369" compoundref="sterf_8tpp" startline="180" endline="190">batmat::linalg::micro_kernels::sterf::sterf_dynamic_step_squared_e_inplace</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1ad0c6f39983831e00225b0ebc6088c5eb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto batmat::datapar::select</definition>
+        <argsstring>(auto cond, auto t, auto f)</argsstring>
+        <name>select</name>
+        <qualifiedname>batmat::datapar::select</qualifiedname>
+        <param>
+          <type>auto</type>
+          <declname>cond</declname>
+        </param>
+        <param>
+          <type>auto</type>
+          <declname>t</declname>
+        </param>
+        <param>
+          <type>auto</type>
+          <declname>f</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="245" column="6" bodyfile="batmat/include/batmat/simd.hpp" bodystart="245" bodyend="248"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1a4f4baa4113d13acb6849ca1f33e820a2" compoundref="geqrf_8tpp" startline="42" endline="92">batmat::linalg::micro_kernels::geqrf::geqrf_diag_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1geqrf_1af4fb98c87b43cf096056240e8d269f62" compoundref="geqrf_8tpp" startline="97" endline="144">batmat::linalg::micro_kernels::geqrf::geqrf_full_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a9c8b334cabf1bbba060325ee859a1c7b" compoundref="hyhound_8tpp" startline="43" endline="95">batmat::linalg::micro_kernels::hyhound::hyhound_diag_diag_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a1ceb252ea60212d3273bcd59dcb46ba8" compoundref="hyhound_8tpp" startline="99" endline="143">batmat::linalg::micro_kernels::hyhound::hyhound_diag_full_microkernel</referencedby>
+        <referencedby refid="structbatmat_1_1linalg_1_1norms_1_1result__simd_1a3e5090751dadb61f0f726862fc0e7047" compoundref="norms_8hpp" startline="43" endline="46">batmat::linalg::norms&lt; T, simd &gt;::result_simd::norm_inf</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a84fedac3bd0f80b387a4972bc46b37d8" compoundref="sterf_8tpp" startline="21" endline="36">batmat::linalg::micro_kernels::sterf::safe_scaling_factor</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1a34de8f8dc3e427338ce4f9116ba446ac" compoundref="sterf_8tpp" startline="98" endline="136">batmat::linalg::micro_kernels::sterf::sterf_ql_sweep_squared_e_inplace</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf_1ab0b02d4f8b9034c5d8e0ac1c2a4faa49" compoundref="sterf_8tpp" startline="139" endline="177">batmat::linalg::micro_kernels::sterf::sterf_qr_sweep_squared_e_inplace</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1small__potrf_1ac6b1718d811d07b3780cd126178c6289" compoundref="small-potrf_8tpp" startline="209" endline="278">batmat::linalg::micro_kernels::small_potrf::syrk_potrf_trsm_microkernel</referencedby>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sytrd_1a1bd67119ddb719fe9011efee9a6a4bd2" compoundref="sytrd_8tpp" startline="24" endline="203">batmat::linalg::micro_kernels::sytrd::sytrd_diag_microkernel</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1adb66c808eb0fedc04313ed3a65838b4a" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class V</type>
+          </param>
+        </templateparamlist>
+        <type>V</type>
+        <definition>V batmat::datapar::from_values</definition>
+        <argsstring>(auto... values)</argsstring>
+        <name>from_values</name>
+        <qualifiedname>batmat::datapar::from_values</qualifiedname>
+        <param>
+          <type>auto...</type>
+          <declname>values</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="257" column="13" bodyfile="batmat/include/batmat/simd.hpp" bodystart="257" bodyend="261"/>
+        <references refid="namespacebatmat_1_1datapar_1a9e5512aee8f62a9475578de6da9dd666" compoundref="simd_8hpp" startline="160" endline="162">aligned_load</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1datapar_1a90005c6b7f7d1309a96e4b7c695f3525" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>auto</type>
+        <definition>auto batmat::datapar::select</definition>
+        <argsstring>(bool cond, auto t, auto f)</argsstring>
+        <name>select</name>
+        <qualifiedname>batmat::datapar::select</qualifiedname>
+        <param>
+          <type>bool</type>
+          <declname>cond</declname>
+        </param>
+        <param>
+          <type>auto</type>
+          <declname>t</declname>
+        </param>
+        <param>
+          <type>auto</type>
+          <declname>f</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/simd.hpp" line="263" column="6" bodyfile="batmat/include/batmat/simd.hpp" bodystart="263" bodyend="263"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/simd.hpp" line="144" column="1"/>
+  </compounddef>
+</doxygen>

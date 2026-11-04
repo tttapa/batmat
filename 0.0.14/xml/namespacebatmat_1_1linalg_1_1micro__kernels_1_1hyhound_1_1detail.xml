@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1detail" kind="namespace" language="C++">
+    <compoundname>batmat::linalg::micro_kernels::hyhound::detail</compoundname>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1detail_1ad044144d29b80f6db7a6765e234a91ea" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+          <param>
+            <type>int</type>
+            <declname>S</declname>
+            <defname>S</defname>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::linalg::micro_kernels::hyhound::detail::rotate</definition>
+        <argsstring>(datapar::simd&lt; T, Abi &gt; x, std::integral_constant&lt; int, S &gt;)</argsstring>
+        <name>rotate</name>
+        <qualifiedname>batmat::linalg::micro_kernels::hyhound::detail::rotate</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>std::integral_constant&lt; int, S &gt;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/hyhound.tpp" line="118" column="14" bodyfile="batmat/include/batmat/linalg/micro-kernels/hyhound.tpp" bodystart="118" bodyend="121"/>
+        <references refid="group__topic-low-level-ops_1ga99482a68bf78d2c163dcd663b24131c5" compoundref="rotate_8hpp" startline="239" endline="246">batmat::ops::rotr</references>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1a534cdfdc1e56dcd5573a5fc39eac7176" compoundref="hyhound_8tpp" startline="136" endline="259">batmat::linalg::micro_kernels::hyhound::hyhound_diag_tail_microkernel</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacebatmat_1_1linalg_1_1micro__kernels_1_1hyhound_1_1detail_1a464493e37ef99c3ed930c5d86bedb2d6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class Abi</type>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto batmat::linalg::micro_kernels::hyhound::detail::rotate</definition>
+        <argsstring>(datapar::simd&lt; T, Abi &gt; x, int s)</argsstring>
+        <name>rotate</name>
+        <qualifiedname>batmat::linalg::micro_kernels::hyhound::detail::rotate</qualifiedname>
+        <param>
+          <type><ref refid="namespacebatmat_1_1datapar_1ae43364c190b4dce7b9759b4bcdabe4ff" kindref="member">datapar::simd</ref>&lt; T, Abi &gt;</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>s</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/hyhound.tpp" line="124" column="14" bodyfile="batmat/include/batmat/linalg/micro-kernels/hyhound.tpp" bodystart="124" bodyend="127"/>
+        <references refid="group__topic-low-level-ops_1gaf86c438318c89dd7be953a0633285ef8" compoundref="rotate_8hpp" startline="18" endline="23">batmat::ops::rot</references>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/linalg/micro-kernels/hyhound.tpp" line="115" column="1"/>
+  </compounddef>
+</doxygen>

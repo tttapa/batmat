@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1_1KernelConfig" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::micro_kernels::gemm_diag::KernelConfig</compoundname>
+    <includes refid="micro-kernels_2gemm-diag_8hpp" local="no">batmat/linalg/micro-kernels/gemm-diag.hpp</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1_1KernelConfig_1a63008f895200c725ae06a16db50d69f8" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool batmat::linalg::micro_kernels::gemm_diag::KernelConfig::negate</definition>
+        <argsstring></argsstring>
+        <name>negate</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm_diag::KernelConfig::negate</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" line="14" column="10" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1_1KernelConfig_1a70cdd1a05da1d6764e1591202cf81329" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool batmat::linalg::micro_kernels::gemm_diag::KernelConfig::track_zeros</definition>
+        <argsstring></argsstring>
+        <name>track_zeros</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm_diag::KernelConfig::track_zeros</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" line="15" column="10" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" bodystart="15" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1_1gemm__diag_1ab0a59bf5060c11684f2c13aee1a997d1" compoundref="gemm-diag_8hpp" startline="76" endline="80">batmat::linalg::detail::gemm_diag::apply_options</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1_1KernelConfig_1a3ac50215097efdc084e00923a4dbd18e" prot="public" static="no" mutable="no">
+        <type><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref></type>
+        <definition>MatrixStructure batmat::linalg::micro_kernels::gemm_diag::KernelConfig::struc_C</definition>
+        <argsstring></argsstring>
+        <name>struc_C</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm_diag::KernelConfig::struc_C</qualifiedname>
+        <initializer>= <ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" line="16" column="21" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" bodystart="16" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::micro_kernels::gemm_diag::KernelConfig</label>
+        <link refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1_1KernelConfig"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" line="13" column="1" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm-diag.hpp" bodystart="13" bodyend="17"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1_1KernelConfig_1a63008f895200c725ae06a16db50d69f8" prot="public" virt="non-virtual"><scope>batmat::linalg::micro_kernels::gemm_diag::KernelConfig</scope><name>negate</name></member>
+      <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1_1KernelConfig_1a3ac50215097efdc084e00923a4dbd18e" prot="public" virt="non-virtual"><scope>batmat::linalg::micro_kernels::gemm_diag::KernelConfig</scope><name>struc_C</name></member>
+      <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm__diag_1_1KernelConfig_1a70cdd1a05da1d6764e1591202cf81329" prot="public" virt="non-virtual"><scope>batmat::linalg::micro_kernels::gemm_diag::KernelConfig</scope><name>track_zeros</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

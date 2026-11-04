@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="dir_63a8bd2941168c96d494403d8e78330f" kind="dir">
+    <compoundname>batmat/include/batmat</compoundname>
+    <innerdir refid="dir_6b3c116c82570f1db015b5f9324a36e3">batmat/include/batmat/linalg</innerdir>
+    <innerdir refid="dir_2285d197d30045dcff418b8c8e7f58c8">batmat/include/batmat/matrix</innerdir>
+    <innerdir refid="dir_49963b07cc1ee01c8c0c2caacff1ea40">batmat/include/batmat/ops</innerdir>
+    <innerdir refid="dir_72c4fd12b1e5011133266bc60516aaac">batmat/include/batmat/platform</innerdir>
+    <innerfile refid="assume_8hpp">assume.hpp</innerfile>
+    <innerfile refid="kib_8hpp">kib.hpp</innerfile>
+    <innerfile refid="loop_8hpp">loop.hpp</innerfile>
+    <innerfile refid="lut_8hpp">lut.hpp</innerfile>
+    <innerfile refid="openmp_8h">openmp.h</innerfile>
+    <innerfile refid="simd_8hpp">simd.hpp</innerfile>
+    <innerfile refid="thread-pool_8hpp">thread-pool.hpp</innerfile>
+    <innerfile refid="timing_8hpp">timing.hpp</innerfile>
+    <innerfile refid="unroll_8h">unroll.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="batmat/include/batmat/"/>
+  </compounddef>
+</doxygen>

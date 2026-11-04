@@ -1,0 +1,814 @@
+<!-- HTML header for doxygen 1.16.1-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.16.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>batmat: batmat::linalg::micro_kernels::sterf Namespace Reference</title>
+<link rel="icon" href="batmat-small.png" type="image/x-icon" />
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+window.MathJax = {
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  },
+  loader: {
+    load: ['[tex]/ams']
+  },
+  tex: {
+    macros: {    Reals: "{\\mathrm{I\\!R}}",
+    Nats: "{\\mathrm{I\\!N}}",
+    Cplx: "{\\mathbb{C}}",
+    R: "{\\Reals}",
+    N: "{\\Nats}",
+    C: "{\\Cplx}",
+    Rn: "{\\Reals^n}",
+    Rm: "{\\Reals^m}",
+    gph: "{\\operatorname{\\mathbf{gph}}}",
+    zer: "{\\operatorname{\\mathbf{zer}}}",
+    fix: "{\\operatorname{\\mathbf{fix}}}",
+    minimize: "{\\operatorname*{\\mathbf{minimize}}}",
+    st: "{\\operatorname*{\\mathbf{s.\\!t.}}}",
+    argmin: "{\\operatorname*{\\mathbf{arg\\,min}}}",
+    argmax: "{\\operatorname*{\\mathbf{arg\\,max}}}",
+    subjto: "{\\operatorname*{\\mathbf{subject\\;to}}}",
+    prox: "{\\operatorname{\\mathbf{prox}}}",
+    Hilb: "{\\mathcal{H}}",
+    proj: ["{\\operatorname{\\mathbf{\\Pi}_\\mathnormal{#1}}}",1],
+    dist: "{\\operatorname{\\mathbf{dist}}}",
+    Id: "{\\mathrm{Id}}",
+    I: "{\\mathrm{I}}",
+    one: "{\\mathbf{1}}",
+    defeq: "{\\triangleq}",
+    inprod: ["{\\left\\langle {#1} \\,\\middle|\\, {#2} \\right\\rangle}",2],
+    norm: ["{\\left\\| {#1} \\vphantom{X} \\right\\|}",1],
+    normsq: ["{\\norm{#1}^2}",1],
+    defset: ["{\\left\\{ {#1} \\;\\middle|\\; {#2} \\right\\}}",2],
+    tp: ["{#1^\\top}",1],
+    ttp: ["{#1^{\\!\\top\\!}}",1],
+    herm: ["{#1^\\mathrm{H}}",1],
+    invherm: ["{#1^{-\\mathrm{H}}}",1],
+    inv: ["{#1^{-1}}",1],
+    pinv: ["{#1^\\dagger}",1],
+    lconj: "{\\overline}",
+    sconj: ["{#1^*}",1],
+    iddots: "{\\mathinner{\\kern1mu\\raise1pt{.}\\kern2mu\\raise4pt{.}\\kern2mu\\raise7pt{\\Rule{0pt}{7pt}{0pt}.}\\kern1mu}}",
+    imagfun: ["{\\left(#1\\right)\\left(#2\\right)}",2],
+    Lagr: "{\\mathcal{L}}",
+    jac: "{\\mathrm{J}}",
+    dft: "{\\operatorname{\\mathbf{dft}}}",
+    cbrt: ["{\\sqrt[3]{#1}}",1],
+    sgn: "{\\operatorname{\\mathbf{sgn}}}",
+    setmap: "{\\rightrightarrows}",
+    lammin: "{\\lambda_\\text{min}}",
+    lammax: "{\\lambda_\\text{max}}",
+    Sc: "{\\mathcal{S}}",
+    Scstar: "{\\mathcal{S}^*}",
+    diag: "{\\operatorname{\\mathbf{diag}}}",
+    blkdiag: "{\\operatorname{\\mathbf{blkdiag}}}",
+    posdef: "{\\succ}",
+    possdef: "{\\succeq}",
+    half: "{\\tfrac{1}{2}}",
+    hhbar: "{\\hbar}",
+    barxuk: "{\\bar x^k\\!, \\bar u^k}",
+    },
+    packages: ['base','configmacros','newcommand','ams']
+  }
+};
+window.MathJax.tex.tags = 'ams';
+</script>
+<script type="text/javascript" id="MathJax-script" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script type="text/javascript" src="darkmode_toggle.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="batmat-small.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">batmat<span id="projectnumber">&#160;<code><a href="/batmat/index.html">0.0.23</a></code></span>
+   </div>
+   <div id="projectbrief">Batched linear algebra routines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.16.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">batmat::linalg::micro_kernels::sterf Namespace Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:SterfOptions_5Fstructbatmat_5F1_5F1linalg_5F1_5F1micro_5F_5Fkernels_5F1_5F1sterf_5F1_5F1SterfOptions" id="r_SterfOptions_5Fstructbatmat_5F1_5F1linalg_5F1_5F1micro_5F_5Fkernels_5F1_5F1sterf_5F1_5F1SterfOptions"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="#structbatmat_1_1linalg_1_1micro__kernels_1_1sterf_1_1SterfOptions">SterfOptions</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a079bd908454a6eb4e87b9fcaa3844f25" id="r_a079bd908454a6eb4e87b9fcaa3844f25"><td class="memTemplParams" colspan="2">template&lt;class T, class Abi&gt; </td></tr>
+<tr class="memitem:a079bd908454a6eb4e87b9fcaa3844f25 template"><td class="memItemLeft">std::expected&lt; <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a>, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a079bd908454a6eb4e87b9fcaa3844f25">sterf</a> (<a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; T, Abi, StorageOrder::ColMajor &gt; diag, <a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; T, Abi, StorageOrder::ColMajor &gt; subdiag, <a class="el" href="#structbatmat_1_1linalg_1_1micro__kernels_1_1sterf_1_1SterfOptions">SterfOptions</a> options) noexcept</td></tr>
+<tr class="memdesc:a079bd908454a6eb4e87b9fcaa3844f25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Eigenvalues of a symmetric tridiagonal matrix given by <span class="tt">diag</span> and <span class="tt">subdiag</span>, computed in-place using the Pal-Walker-Kahan variant of the implicit QR/QL method with Wilkinson shifts.  <br /></td></tr>
+<tr class="memitem:a98514341ee88222ca2f105f9e7c3677f" id="r_a98514341ee88222ca2f105f9e7c3677f"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="#a98514341ee88222ca2f105f9e7c3677f">default_tolerance</a> (auto user_tol) noexcept</td></tr>
+<tr class="memitem:a84fedac3bd0f80b387a4972bc46b37d8" id="r_a84fedac3bd0f80b387a4972bc46b37d8"><td class="memTemplParams" colspan="2">template&lt;class T, class Abi&gt; </td></tr>
+<tr class="memitem:a84fedac3bd0f80b387a4972bc46b37d8 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a84fedac3bd0f80b387a4972bc46b37d8">safe_scaling_factor</a> (<a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt; anorm) noexcept</td></tr>
+<tr class="memitem:acf89453f12694b1bdc021a6fe472e3e8" id="r_acf89453f12694b1bdc021a6fe472e3e8"><td class="memTemplParams" colspan="2">template&lt;class T, class Abi&gt; </td></tr>
+<tr class="memitem:acf89453f12694b1bdc021a6fe472e3e8 template"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#acf89453f12694b1bdc021a6fe472e3e8">all_zero</a> (<a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt; x) noexcept</td></tr>
+<tr class="memitem:ae572e052c5b681a0255e1906d6b65bed" id="r_ae572e052c5b681a0255e1906d6b65bed"><td class="memTemplParams" colspan="2">template&lt;class T, class Abi&gt; </td></tr>
+<tr class="memitem:ae572e052c5b681a0255e1906d6b65bed template"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ae572e052c5b681a0255e1906d6b65bed">negligible_squared_e</a> (<a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt; e0_sq, <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt; d0, <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt; d1, T ε_sq) noexcept</td></tr>
+<tr class="memitem:abfe7ebb67090f6ed3a12de3fbf3a4ff1" id="r_abfe7ebb67090f6ed3a12de3fbf3a4ff1"><td class="memTemplParams" colspan="2">template&lt;class T, class Abi&gt; </td></tr>
+<tr class="memitem:abfe7ebb67090f6ed3a12de3fbf3a4ff1 template"><td class="memItemLeft">std::pair&lt; <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt;, <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#abfe7ebb67090f6ed3a12de3fbf3a4ff1">stable_2x2_eigenvalues</a> (<a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt; a, <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt; b, <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt; c) noexcept</td></tr>
+<tr class="memdesc:abfe7ebb67090f6ed3a12de3fbf3a4ff1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Eigenvalues of [a b; b c].  <br /></td></tr>
+<tr class="memitem:abfe3376bd6a03c92460fae606c9ea134" id="r_abfe3376bd6a03c92460fae606c9ea134"><td class="memTemplParams" colspan="2">template&lt;class T, class Abi&gt; </td></tr>
+<tr class="memitem:abfe3376bd6a03c92460fae606c9ea134 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#abfe3376bd6a03c92460fae606c9ea134">solve_2x2_squared_e_inplace</a> (<a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt; d, <a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt; e, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> l) noexcept</td></tr>
+<tr class="memitem:aef6b59b06c70f97e5b4572a26450df7e" id="r_aef6b59b06c70f97e5b4572a26450df7e"><td class="memTemplParams" colspan="2">template&lt;class T, class Abi&gt; </td></tr>
+<tr class="memitem:aef6b59b06c70f97e5b4572a26450df7e template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aef6b59b06c70f97e5b4572a26450df7e">scale_diag_only</a> (<a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt; d, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> l, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> m, <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt; factor) noexcept</td></tr>
+<tr class="memitem:ac54f1b498ffa0f5c3f67489648c9ab25" id="r_ac54f1b498ffa0f5c3f67489648c9ab25"><td class="memTemplParams" colspan="2">template&lt;class T, class Abi&gt; </td></tr>
+<tr class="memitem:ac54f1b498ffa0f5c3f67489648c9ab25 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ac54f1b498ffa0f5c3f67489648c9ab25">scale_squared_e</a> (<a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt; d, <a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt; e, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> l, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> m, <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt; factor) noexcept</td></tr>
+<tr class="memitem:a34de8f8dc3e427338ce4f9116ba446ac" id="r_a34de8f8dc3e427338ce4f9116ba446ac"><td class="memTemplParams" colspan="2">template&lt;class T, class Abi&gt; </td></tr>
+<tr class="memitem:a34de8f8dc3e427338ce4f9116ba446ac template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a34de8f8dc3e427338ce4f9116ba446ac">sterf_ql_sweep_squared_e_inplace</a> (<a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt; d, <a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt; e, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> l, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> m) noexcept</td></tr>
+<tr class="memitem:ab0b02d4f8b9034c5d8e0ac1c2a4faa49" id="r_ab0b02d4f8b9034c5d8e0ac1c2a4faa49"><td class="memTemplParams" colspan="2">template&lt;class T, class Abi&gt; </td></tr>
+<tr class="memitem:ab0b02d4f8b9034c5d8e0ac1c2a4faa49 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab0b02d4f8b9034c5d8e0ac1c2a4faa49">sterf_qr_sweep_squared_e_inplace</a> (<a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt; d, <a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt; e, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> l, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> m) noexcept</td></tr>
+<tr class="memitem:a700d60d5449ce87cf06705451628e369" id="r_a700d60d5449ce87cf06705451628e369"><td class="memTemplParams" colspan="2">template&lt;class T, class Abi&gt; </td></tr>
+<tr class="memitem:a700d60d5449ce87cf06705451628e369 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a700d60d5449ce87cf06705451628e369">sterf_dynamic_step_squared_e_inplace</a> (<a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt; d, <a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt; e, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> l, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> m) noexcept</td></tr>
+<tr class="memitem:a3a4c378b882fdef1bbb927cf752cdb65" id="r_a3a4c378b882fdef1bbb927cf752cdb65"><td class="memTemplParams" colspan="2">template&lt;class T, class Abi&gt; </td></tr>
+<tr class="memitem:a3a4c378b882fdef1bbb927cf752cdb65 template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a3a4c378b882fdef1bbb927cf752cdb65">squared_block_norm_estimate_from_squared_e</a> (<a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt; d, <a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt; e_sq, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> l, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> m) noexcept</td></tr>
+<tr class="memitem:a9cb65083c8cf52f255c38ac2658ffc8d" id="r_a9cb65083c8cf52f255c38ac2658ffc8d"><td class="memTemplParams" colspan="2">template&lt;class T, class Abi&gt; </td></tr>
+<tr class="memitem:a9cb65083c8cf52f255c38ac2658ffc8d template"><td class="memItemLeft"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a9cb65083c8cf52f255c38ac2658ffc8d">block_norm_estimate_from_squared_e</a> (<a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt; d, <a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt; e_sq, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> l, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> m) noexcept</td></tr>
+</table>
+<hr/><h2 id="header-inline_5Fclasses" class="groupheader">Class Documentation</h2>
+<a name="structbatmat_1_1linalg_1_1micro__kernels_1_1sterf_1_1SterfOptions" id="structbatmat_1_1linalg_1_1micro__kernels_1_1sterf_1_1SterfOptions"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structbatmat_1_1linalg_1_1micro__kernels_1_1sterf_1_1SterfOptions">&#9670;&#160;</a></span>batmat::linalg::micro_kernels::sterf::SterfOptions</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct batmat::linalg::micro_kernels::sterf::SterfOptions</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="a05ced62fef19142d7c35485ee2a7e524" name="a05ced62fef19142d7c35485ee2a7e524"></a>double</td>
+<td class="fieldname">
+relative_tolerance = 0.0</td>
+<td class="fielddoc">
+If &lt;= 0, machine epsilon is used. </td></tr>
+<tr><td class="fieldtype">
+<a id="a0327cc594e40b5ebb278ac8d194c6cd9" name="a0327cc594e40b5ebb278ac8d194c6cd9"></a><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>
+<td class="fieldname">
+max_iterations_per_eigenvalue = 64</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a079bd908454a6eb4e87b9fcaa3844f25" name="a079bd908454a6eb4e87b9fcaa3844f25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a079bd908454a6eb4e87b9fcaa3844f25">&#9670;&#160;</a></span>sterf()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::expected&lt; <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a>, <a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a> &gt; batmat::linalg::micro_kernels::sterf::sterf </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>diag</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat_1_1linalg.html#af59c1c63861a8066d20dd35ac5f915e0">view</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>subdiag</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#structbatmat_1_1linalg_1_1micro__kernels_1_1sterf_1_1SterfOptions">SterfOptions</a></td>          <td class="paramname"><span class="paramname"><em>options</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Eigenvalues of a symmetric tridiagonal matrix given by <span class="tt">diag</span> and <span class="tt">subdiag</span>, computed in-place using the Pal-Walker-Kahan variant of the implicit QR/QL method with Wilkinson shifts. </p>
+<p>Based on LAPACK 3.12.1's <span class="tt">STERF</span>: <a href="https://netlib.org/lapack//explore-html/d4/d9d/group__sterf_gad293bb81da1c7785b42796d1e197f08c.html">https://netlib.org/lapack//explore-html/d4/d9d/group__sterf_gad293bb81da1c7785b42796d1e197f08c.html</a> </p>
+
+<p class="definition">Definition at line <a class="el" href="sterf_8tpp_source.html#l00227">227</a> of file <a class="el" href="sterf_8tpp_source.html">sterf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="a98514341ee88222ca2f105f9e7c3677f" name="a98514341ee88222ca2f105f9e7c3677f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98514341ee88222ca2f105f9e7c3677f">&#9670;&#160;</a></span>default_tolerance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto batmat::linalg::micro_kernels::sterf::default_tolerance </td>
+          <td>(</td>
+          <td class="paramtype">auto</td>          <td class="paramname"><span class="paramname"><em>user_tol</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="sterf_8tpp_source.html#l00016">16</a> of file <a class="el" href="sterf_8tpp_source.html">sterf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="a84fedac3bd0f80b387a4972bc46b37d8" name="a84fedac3bd0f80b387a4972bc46b37d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84fedac3bd0f80b387a4972bc46b37d8">&#9670;&#160;</a></span>safe_scaling_factor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt; batmat::linalg::micro_kernels::sterf::safe_scaling_factor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt;</td>          <td class="paramname"><span class="paramname"><em>anorm</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="sterf_8tpp_source.html#l00021">21</a> of file <a class="el" href="sterf_8tpp_source.html">sterf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="acf89453f12694b1bdc021a6fe472e3e8" name="acf89453f12694b1bdc021a6fe472e3e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf89453f12694b1bdc021a6fe472e3e8">&#9670;&#160;</a></span>all_zero()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool batmat::linalg::micro_kernels::sterf::all_zero </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt;</td>          <td class="paramname"><span class="paramname"><em>x</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="sterf_8tpp_source.html#l00039">39</a> of file <a class="el" href="sterf_8tpp_source.html">sterf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="ae572e052c5b681a0255e1906d6b65bed" name="ae572e052c5b681a0255e1906d6b65bed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae572e052c5b681a0255e1906d6b65bed">&#9670;&#160;</a></span>negligible_squared_e()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool batmat::linalg::micro_kernels::sterf::negligible_squared_e </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt;</td>          <td class="paramname"><span class="paramname"><em>e0_sq</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt;</td>          <td class="paramname"><span class="paramname"><em>d0</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt;</td>          <td class="paramname"><span class="paramname"><em>d1</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T</td>          <td class="paramname"><span class="paramname"><em>ε_sq</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="sterf_8tpp_source.html#l00045">45</a> of file <a class="el" href="sterf_8tpp_source.html">sterf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="abfe7ebb67090f6ed3a12de3fbf3a4ff1" name="abfe7ebb67090f6ed3a12de3fbf3a4ff1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfe7ebb67090f6ed3a12de3fbf3a4ff1">&#9670;&#160;</a></span>stable_2x2_eigenvalues()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt; <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt;, <a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt; &gt; batmat::linalg::micro_kernels::sterf::stable_2x2_eigenvalues </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt;</td>          <td class="paramname"><span class="paramname"><em>c</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Eigenvalues of [a b; b c]. </p>
+
+<p class="definition">Definition at line <a class="el" href="sterf_8tpp_source.html#l00055">55</a> of file <a class="el" href="sterf_8tpp_source.html">sterf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="abfe3376bd6a03c92460fae606c9ea134" name="abfe3376bd6a03c92460fae606c9ea134"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfe3376bd6a03c92460fae606c9ea134">&#9670;&#160;</a></span>solve_2x2_squared_e_inplace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void batmat::linalg::micro_kernels::sterf::solve_2x2_squared_e_inplace </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>d</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>e</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>l</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="sterf_8tpp_source.html#l00070">70</a> of file <a class="el" href="sterf_8tpp_source.html">sterf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="aef6b59b06c70f97e5b4572a26450df7e" name="aef6b59b06c70f97e5b4572a26450df7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef6b59b06c70f97e5b4572a26450df7e">&#9670;&#160;</a></span>scale_diag_only()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void batmat::linalg::micro_kernels::sterf::scale_diag_only </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>d</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>m</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt;</td>          <td class="paramname"><span class="paramname"><em>factor</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="sterf_8tpp_source.html#l00081">81</a> of file <a class="el" href="sterf_8tpp_source.html">sterf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="ac54f1b498ffa0f5c3f67489648c9ab25" name="ac54f1b498ffa0f5c3f67489648c9ab25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac54f1b498ffa0f5c3f67489648c9ab25">&#9670;&#160;</a></span>scale_squared_e()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void batmat::linalg::micro_kernels::sterf::scale_squared_e </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>d</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>e</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>m</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt;</td>          <td class="paramname"><span class="paramname"><em>factor</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="sterf_8tpp_source.html#l00088">88</a> of file <a class="el" href="sterf_8tpp_source.html">sterf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="a34de8f8dc3e427338ce4f9116ba446ac" name="a34de8f8dc3e427338ce4f9116ba446ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34de8f8dc3e427338ce4f9116ba446ac">&#9670;&#160;</a></span>sterf_ql_sweep_squared_e_inplace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void batmat::linalg::micro_kernels::sterf::sterf_ql_sweep_squared_e_inplace </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>d</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>e</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>m</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="sterf_8tpp_source.html#l00098">98</a> of file <a class="el" href="sterf_8tpp_source.html">sterf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="ab0b02d4f8b9034c5d8e0ac1c2a4faa49" name="ab0b02d4f8b9034c5d8e0ac1c2a4faa49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0b02d4f8b9034c5d8e0ac1c2a4faa49">&#9670;&#160;</a></span>sterf_qr_sweep_squared_e_inplace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void batmat::linalg::micro_kernels::sterf::sterf_qr_sweep_squared_e_inplace </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>d</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>e</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>m</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="sterf_8tpp_source.html#l00139">139</a> of file <a class="el" href="sterf_8tpp_source.html">sterf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="a700d60d5449ce87cf06705451628e369" name="a700d60d5449ce87cf06705451628e369"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a700d60d5449ce87cf06705451628e369">&#9670;&#160;</a></span>sterf_dynamic_step_squared_e_inplace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void batmat::linalg::micro_kernels::sterf::sterf_dynamic_step_squared_e_inplace </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>d</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>e</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>m</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="sterf_8tpp_source.html#l00180">180</a> of file <a class="el" href="sterf_8tpp_source.html">sterf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="a3a4c378b882fdef1bbb927cf752cdb65" name="a3a4c378b882fdef1bbb927cf752cdb65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a4c378b882fdef1bbb927cf752cdb65">&#9670;&#160;</a></span>squared_block_norm_estimate_from_squared_e()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt; batmat::linalg::micro_kernels::sterf::squared_block_norm_estimate_from_squared_e </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>d</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>e_sq</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>m</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="sterf_8tpp_source.html#l00194">194</a> of file <a class="el" href="sterf_8tpp_source.html">sterf.tpp</a>.</p>
+
+</div>
+</div>
+<a id="a9cb65083c8cf52f255c38ac2658ffc8d" name="a9cb65083c8cf52f255c38ac2658ffc8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9cb65083c8cf52f255c38ac2658ffc8d">&#9670;&#160;</a></span>block_norm_estimate_from_squared_e()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T, class Abi&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacebatmat_1_1datapar.html#ae43364c190b4dce7b9759b4bcdabe4ff">datapar::simd</a>&lt; T, Abi &gt; batmat::linalg::micro_kernels::sterf::block_norm_estimate_from_squared_e </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>d</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structbatmat_1_1linalg_1_1uview.html">uview</a>&lt; T, Abi, StorageOrder::ColMajor &gt;</td>          <td class="paramname"><span class="paramname"><em>e_sq</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacebatmat.html#a67314e2becdee2c795c5ea0bd5626451">index_t</a></td>          <td class="paramname"><span class="paramname"><em>m</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="sterf_8tpp_source.html#l00215">215</a> of file <a class="el" href="sterf_8tpp_source.html">sterf.tpp</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="namespacebatmat.html">batmat</a></li><li class="navelem"><a href="namespacebatmat_1_1linalg.html">linalg</a></li><li class="navelem"><a href="namespacebatmat_1_1linalg_1_1micro__kernels.html">micro_kernels</a></li><li class="navelem"><a href="namespacebatmat_1_1linalg_1_1micro__kernels_1_1sterf.html">sterf</a></li>
+    <li class="footer">Generated on <span class="timestamp"></span> for batmat by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
+  </ul>
+</div>
+</body>
+</html>

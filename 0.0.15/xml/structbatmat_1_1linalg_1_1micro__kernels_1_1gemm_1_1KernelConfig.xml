@@ -1,0 +1,171 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::micro_kernels::gemm::KernelConfig</compoundname>
+    <includes refid="micro-kernels_2gemm_8hpp" local="no">batmat/linalg/micro-kernels/gemm.hpp</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a6937f14081ae940d272c7c464578a43b" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool batmat::linalg::micro_kernels::gemm::KernelConfig::negate</definition>
+        <argsstring></argsstring>
+        <name>negate</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm::KernelConfig::negate</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" line="12" column="10" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1ac07d69d32b78b4fd372f97c9d68ecad6" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int batmat::linalg::micro_kernels::gemm::KernelConfig::shift_A</definition>
+        <argsstring></argsstring>
+        <name>shift_A</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm::KernelConfig::shift_A</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" line="13" column="9" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" bodystart="13" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ace93b35f0993d2bcf550c1ea6ed92d96" compoundref="gemm_8hpp" startline="230" endline="242">batmat::linalg::detail::apply_gemm_options</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a9fbc41cdde379c1d115b4db5f50dfe88" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int batmat::linalg::micro_kernels::gemm::KernelConfig::rotate_B</definition>
+        <argsstring></argsstring>
+        <name>rotate_B</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm::KernelConfig::rotate_B</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" line="14" column="9" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" bodystart="14" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ace93b35f0993d2bcf550c1ea6ed92d96" compoundref="gemm_8hpp" startline="230" endline="242">batmat::linalg::detail::apply_gemm_options</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a42650cfb9258d04d593659b9990c8126" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int batmat::linalg::micro_kernels::gemm::KernelConfig::rotate_C</definition>
+        <argsstring></argsstring>
+        <name>rotate_C</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm::KernelConfig::rotate_C</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" line="15" column="9" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" bodystart="15" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ace93b35f0993d2bcf550c1ea6ed92d96" compoundref="gemm_8hpp" startline="230" endline="242">batmat::linalg::detail::apply_gemm_options</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a95102697df9e6fda3d450aa887a3da47" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int batmat::linalg::micro_kernels::gemm::KernelConfig::rotate_D</definition>
+        <argsstring></argsstring>
+        <name>rotate_D</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm::KernelConfig::rotate_D</qualifiedname>
+        <initializer>= <ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a42650cfb9258d04d593659b9990c8126" kindref="member">rotate_C</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" line="16" column="9" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" bodystart="16" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ace93b35f0993d2bcf550c1ea6ed92d96" compoundref="gemm_8hpp" startline="230" endline="242">batmat::linalg::detail::apply_gemm_options</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a0f5606d67c564645801e662208877740" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int batmat::linalg::micro_kernels::gemm::KernelConfig::mask_D</definition>
+        <argsstring></argsstring>
+        <name>mask_D</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm::KernelConfig::mask_D</qualifiedname>
+        <initializer>= <ref refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a95102697df9e6fda3d450aa887a3da47" kindref="member">rotate_D</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" line="17" column="9" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" bodystart="17" bodyend="-1"/>
+        <referencedby refid="namespacebatmat_1_1linalg_1_1detail_1ace93b35f0993d2bcf550c1ea6ed92d96" compoundref="gemm_8hpp" startline="230" endline="242">batmat::linalg::detail::apply_gemm_options</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a65ca04f142e3f848a91ba61e03672b9b" prot="public" static="no" mutable="no">
+        <type><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref></type>
+        <definition>MatrixStructure batmat::linalg::micro_kernels::gemm::KernelConfig::struc_A</definition>
+        <argsstring></argsstring>
+        <name>struc_A</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm::KernelConfig::struc_A</qualifiedname>
+        <initializer>= <ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" line="18" column="21" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a6892a56d289ad9c3c75dd2a21d7b2721" prot="public" static="no" mutable="no">
+        <type><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref></type>
+        <definition>MatrixStructure batmat::linalg::micro_kernels::gemm::KernelConfig::struc_B</definition>
+        <argsstring></argsstring>
+        <name>struc_B</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm::KernelConfig::struc_B</qualifiedname>
+        <initializer>= <ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" line="19" column="21" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1ad5be56833f315fc97ab30fd421e7c804" prot="public" static="no" mutable="no">
+        <type><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref></type>
+        <definition>MatrixStructure batmat::linalg::micro_kernels::gemm::KernelConfig::struc_C</definition>
+        <argsstring></argsstring>
+        <name>struc_C</name>
+        <qualifiedname>batmat::linalg::micro_kernels::gemm::KernelConfig::struc_C</qualifiedname>
+        <initializer>= <ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" line="20" column="21" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" bodystart="20" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::micro_kernels::gemm::KernelConfig</label>
+        <link refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" line="11" column="1" bodyfile="batmat/include/batmat/linalg/micro-kernels/gemm.hpp" bodystart="11" bodyend="21"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a0f5606d67c564645801e662208877740" prot="public" virt="non-virtual"><scope>batmat::linalg::micro_kernels::gemm::KernelConfig</scope><name>mask_D</name></member>
+      <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a6937f14081ae940d272c7c464578a43b" prot="public" virt="non-virtual"><scope>batmat::linalg::micro_kernels::gemm::KernelConfig</scope><name>negate</name></member>
+      <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a9fbc41cdde379c1d115b4db5f50dfe88" prot="public" virt="non-virtual"><scope>batmat::linalg::micro_kernels::gemm::KernelConfig</scope><name>rotate_B</name></member>
+      <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a42650cfb9258d04d593659b9990c8126" prot="public" virt="non-virtual"><scope>batmat::linalg::micro_kernels::gemm::KernelConfig</scope><name>rotate_C</name></member>
+      <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a95102697df9e6fda3d450aa887a3da47" prot="public" virt="non-virtual"><scope>batmat::linalg::micro_kernels::gemm::KernelConfig</scope><name>rotate_D</name></member>
+      <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1ac07d69d32b78b4fd372f97c9d68ecad6" prot="public" virt="non-virtual"><scope>batmat::linalg::micro_kernels::gemm::KernelConfig</scope><name>shift_A</name></member>
+      <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a65ca04f142e3f848a91ba61e03672b9b" prot="public" virt="non-virtual"><scope>batmat::linalg::micro_kernels::gemm::KernelConfig</scope><name>struc_A</name></member>
+      <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1a6892a56d289ad9c3c75dd2a21d7b2721" prot="public" virt="non-virtual"><scope>batmat::linalg::micro_kernels::gemm::KernelConfig</scope><name>struc_B</name></member>
+      <member refid="structbatmat_1_1linalg_1_1micro__kernels_1_1gemm_1_1KernelConfig_1ad5be56833f315fc97ab30fd421e7c804" prot="public" virt="non-virtual"><scope>batmat::linalg::micro_kernels::gemm::KernelConfig</scope><name>struc_C</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

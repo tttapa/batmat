@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="structbatmat_1_1linalg_1_1detail_1_1copy_1_1FillConfig" kind="struct" language="C++" prot="public">
+    <compoundname>batmat::linalg::detail::copy::FillConfig</compoundname>
+    <includes refid="copy_8hpp" local="no">batmat/linalg/copy.hpp</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1detail_1_1copy_1_1FillConfig_1a426f6c59a65766c3ae904f980e15a081" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int batmat::linalg::detail::copy::FillConfig::mask</definition>
+        <argsstring></argsstring>
+        <name>mask</name>
+        <qualifiedname>batmat::linalg::detail::copy::FillConfig::mask</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/copy.hpp" line="22" column="9" bodyfile="batmat/include/batmat/linalg/copy.hpp" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbatmat_1_1linalg_1_1detail_1_1copy_1_1FillConfig_1a9257a8791ee3a6a2ec59b1afd5f74f4f" prot="public" static="no" mutable="no">
+        <type><ref refid="group__topic-linalg_1ga90f301363f149f1f28ee20000558629c" kindref="member">MatrixStructure</ref></type>
+        <definition>MatrixStructure batmat::linalg::detail::copy::FillConfig::struc</definition>
+        <argsstring></argsstring>
+        <name>struc</name>
+        <qualifiedname>batmat::linalg::detail::copy::FillConfig::struc</qualifiedname>
+        <initializer>= <ref refid="group__topic-linalg_1gga90f301363f149f1f28ee20000558629ca0db377921f4ce762c62526131097968f" kindref="member">MatrixStructure::General</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="batmat/include/batmat/linalg/copy.hpp" line="23" column="21" bodyfile="batmat/include/batmat/linalg/copy.hpp" bodystart="23" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>batmat::linalg::detail::copy::FillConfig</label>
+        <link refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1FillConfig"/>
+      </node>
+    </collaborationgraph>
+    <location file="batmat/include/batmat/linalg/copy.hpp" line="21" column="1" bodyfile="batmat/include/batmat/linalg/copy.hpp" bodystart="21" bodyend="24"/>
+    <listofallmembers>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1FillConfig_1a426f6c59a65766c3ae904f980e15a081" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::copy::FillConfig</scope><name>mask</name></member>
+      <member refid="structbatmat_1_1linalg_1_1detail_1_1copy_1_1FillConfig_1a9257a8791ee3a6a2ec59b1afd5f74f4f" prot="public" virt="non-virtual"><scope>batmat::linalg::detail::copy::FillConfig</scope><name>struc</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>
