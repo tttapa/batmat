@@ -9,7 +9,7 @@ from conan.tools.scm import Git
 
 class BatmatRecipe(ConanFile):
     name = "batmat"
-    version = "0.0.25"
+    version = "0.0.26"
 
     license = "LGPL-3.0-or-later"
     author = "Pieter P <pieter.p.dev@outlook.com>"
