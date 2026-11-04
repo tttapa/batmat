@@ -184,7 +184,7 @@ TYPED_TEST_P(SmallPotrfTest, syrkAddPotrfLinplaceTallLeft) {
     using batmat::linalg::small_syrk_add_potrf_left;
     using batmat::linalg::tril;
     using EMat = Eigen::MatrixX<typename TypeParam::value_type>;
-    for (index_t n : {0, 1, 2, 3, 4, 5, 6, 31})
+    for (batmat::index_t n : {0, 1, 2, 3, 4, 5, 6, 31})
         for (auto m : batmat::tests::sizes)
             for (auto k : batmat::tests::sizes) {
                 const auto ε  = static_cast<TypeParam::value_type>(k + 1) * this->tolerance / 5;
@@ -227,7 +227,7 @@ TYPED_TEST_P(SmallPotrfTest, syrkSubPotrfLinplaceTallLeft) {
     using batmat::linalg::syrk_add;
     using batmat::linalg::tril;
     using EMat = Eigen::MatrixX<typename TypeParam::value_type>;
-    for (index_t n : {0, 1, 2, 3, 4, 5, 6, 31})
+    for (batmat::index_t n : {0, 1, 2, 3, 4, 5, 6, 31})
         for (auto m : batmat::tests::sizes)
             for (auto k : batmat::tests::sizes) {
                 const auto ε  = static_cast<TypeParam::value_type>(k + 1) * this->tolerance / 5;
